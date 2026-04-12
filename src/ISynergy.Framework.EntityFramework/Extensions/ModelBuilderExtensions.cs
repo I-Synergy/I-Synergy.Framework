@@ -118,9 +118,8 @@ public static class ModelBuilderExtensions
             else
             {
                 // Filter out nulls to satisfy the non-nullable IEnumerable<LambdaExpression> parameter
-                var filters = new[] { (LambdaExpression?)existingFilter.Expression, tenantFilter }
-                    .Where(f => f is not null)!
-                    .Cast<LambdaExpression>();
+                var filters = new[] { existingFilter.Expression, tenantFilter }
+                    .OfType<LambdaExpression>();
 
                 var combinedFilter = CombineQueryFilters(type, filters);
 
@@ -173,9 +172,8 @@ public static class ModelBuilderExtensions
             else
             {
                 // Filter out nulls to satisfy the non-nullable IEnumerable<LambdaExpression> parameter
-                var filters = new[] { (LambdaExpression?)existingFilter.Expression, softDeleteFilter }
-                    .Where(f => f is not null)!
-                    .Cast<LambdaExpression>();
+                var filters = new[] { existingFilter.Expression, softDeleteFilter }
+                    .OfType<LambdaExpression>();
 
                 var combinedFilter = CombineQueryFilters(type, filters);
 
@@ -245,7 +243,7 @@ public static class ModelBuilderExtensions
     /// Prefer the <see cref="ApplyModelBuilderConfigurations(ModelBuilder, IReadOnlyList{Type})"/> overload
     /// that accepts an explicit list of configuration types for AOT/trimming compatibility.
     /// </remarks>
-    [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")]
+    [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")] // NOSONAR
     [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use the IReadOnlyList<Type> overload instead.")]
     [RequiresDynamicCode("Assembly scanning uses reflection.")]
     public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, Assembly[] assemblies)

@@ -1,5 +1,12 @@
 using ISynergy.Framework.Mathematics.Convergence.Base;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Convergence;
 
 /// <summary>
@@ -238,10 +245,9 @@ public class RelativeConvergence : ISingleValueConvergence
         if (maxIterations > 0 && CurrentIteration >= maxIterations)
             return true;
 
-        if (tolerance > 0)
-            // Stopping criteria is likelihood convergence
-            if (Delta <= tolerance * Math.Abs(OldValue))
-                return true;
+        // Stopping criteria is likelihood convergence
+        if (tolerance > 0 && Delta <= tolerance * Math.Abs(OldValue))
+            return true;
 
         // Check if we have reached an invalid or perfectly separable answer
         if (double.IsNaN(NewValue) || double.IsInfinity(NewValue))

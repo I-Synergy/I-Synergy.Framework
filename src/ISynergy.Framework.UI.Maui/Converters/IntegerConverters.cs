@@ -123,16 +123,13 @@ public class IntegerToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is string stringValue && !string.IsNullOrWhiteSpace(stringValue))
+        // Use culture-aware parsing with number group separators support
+        // NumberStyles.Integer includes AllowLeadingSign, AllowLeadingWhite, and AllowTrailingWhite
+        // NumberStyles.AllowThousands enables parsing of group separators like "1,000" or "1.000"
+        if (value is string stringValue && !string.IsNullOrWhiteSpace(stringValue) &&
+            int.TryParse(stringValue, NumberStyles.Integer | NumberStyles.AllowThousands, culture, out var result))
         {
-            // Use culture-aware parsing with number group separators support
-            // NumberStyles.Integer includes AllowLeadingSign, AllowLeadingWhite, and AllowTrailingWhite
-            // NumberStyles.AllowThousands enables parsing of group separators like "1,000" or "1.000"
-            if (int.TryParse(stringValue, NumberStyles.Integer | NumberStyles.AllowThousands, culture, 
-                out var result))
-            {
-                return result;
-            }
+            return result;
         }
 
         return 0;

@@ -2,6 +2,8 @@ using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
+#pragma warning disable S3267 // foreach loop builds key list with early-return; cannot be converted to LINQ
+
 namespace ISynergy.Framework.AspNetCore.Filters;
 
 /// <summary>
@@ -9,6 +11,7 @@ namespace ISynergy.Framework.AspNetCore.Filters;
 /// and tries to add a model error to the model state.
 /// Only optional parameters with a default value of null are allowed.
 /// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public sealed class NoNullModelsFilterAttribute : ActionFilterAttribute
 {
     /// <summary>
@@ -30,7 +33,7 @@ public sealed class NoNullModelsFilterAttribute : ActionFilterAttribute
         if (context.ActionArguments.Any(arg => arg.Value is null && !optionalParameters.Contains(arg.Key)))
         {
             var args = context.ActionArguments.Where(arg => arg.Value is null).ToList();
-            foreach (var arg in args.EnsureNotNull())
+            foreach (var arg in args.EnsureNotNull()) // NOSONAR
             {
                 context.ModelState.TryAddModelError(arg.Key, $"The {arg.Key} field is required.");
             }

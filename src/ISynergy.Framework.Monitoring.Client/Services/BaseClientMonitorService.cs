@@ -46,7 +46,7 @@ public abstract class BaseClientMonitorService : IClientMonitorService
     [RequiresUnreferencedCode("SignalR HubConnectionBuilder may use reflection for message deserialization. Configure AddJsonProtocol with a JsonSerializerContext for AOT compatibility.")]
     public virtual Task ConnectAsync(string? token, Action<HubConnection> connectionAction)
     {
-        _logger.LogInformation($"Connecting to {_clientMonitorOptions.EndpointUrl}");
+        _logger.LogInformation("Connecting to {EndpointUrl}", _clientMonitorOptions.EndpointUrl);
 
         _connection = new HubConnectionBuilder()
             .WithUrl(_clientMonitorOptions.EndpointUrl, options =>

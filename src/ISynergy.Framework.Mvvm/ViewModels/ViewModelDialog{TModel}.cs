@@ -91,7 +91,7 @@ public abstract class ViewModelDialog<TModel> : ViewModel, IViewModelDialog<TMod
     /// </summary>
     private void SelectedItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        _logger.LogTrace($"SelectedItem property '{e.PropertyName}' changed in {GetType().Name}");
+        _logger.LogTrace("SelectedItem property '{PropertyName}' changed in {ViewModelName}", e.PropertyName, GetType().Name);
 
         // When any property in SelectedItem changes, notify that SelectedItem itself changed
         // This ensures the UI and commands re-evaluate

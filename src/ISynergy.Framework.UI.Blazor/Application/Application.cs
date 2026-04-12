@@ -91,21 +91,21 @@ public abstract class Application : ComponentBase
             if (_settingsService.LocalSettings is not null)
                 _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
-            _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
+            _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional
 
             _messengerService.Register<ShowInformationMessage>(this, async m =>
             {
-                var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+                await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
             });
 
             _messengerService.Register<ShowWarningMessage>(this, async m =>
             {
-                var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+                await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
             });
 
             _messengerService.Register<ShowErrorMessage>(this, async m =>
             {
-                var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+                await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
             });
 
             // Initialize environment variables from configuration and command-line parameters
@@ -163,7 +163,7 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
     /// </summary>
-    private string NormalizeEnvironmentValue(string value)
+    private static string NormalizeEnvironmentValue(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return value;

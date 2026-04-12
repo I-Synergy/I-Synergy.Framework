@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using System.Globalization;
-//using Windows.UI;
 
 namespace ISynergy.Framework.UI.Helpers;
 
@@ -22,8 +21,6 @@ public static class ColorHelper
 
         if (hc.Length != 6)
         {
-            // you can choose whether to throw an exception
-            //throw new ArgumentException("hexColor is not exactly 6 digits.");
             return Colors.Transparent;
         }
 
@@ -31,26 +28,18 @@ public static class ColorHelper
         var g = hc.Substring(2, 2);
         var b = hc.Substring(4, 2);
 
-        var color = Colors.Transparent;
-
         try
         {
-            var ri
-               = byte.Parse(r, NumberStyles.HexNumber);
-            var gi
-               = byte.Parse(g, NumberStyles.HexNumber);
-            var bi
-               = byte.Parse(b, NumberStyles.HexNumber);
+            var ri = byte.Parse(r, NumberStyles.HexNumber);
+            var gi = byte.Parse(g, NumberStyles.HexNumber);
+            var bi = byte.Parse(b, NumberStyles.HexNumber);
 
-            color = Windows.UI.Color.FromArgb(255, ri, gi, bi);
+            return Windows.UI.Color.FromArgb(255, ri, gi, bi);
         }
         catch
         {
-            // you can choose whether to throw an exception
-            //throw new ArgumentException("Conversion failed.");
             return Colors.Transparent;
         }
-        return color;
     }
 
     /// <summary>

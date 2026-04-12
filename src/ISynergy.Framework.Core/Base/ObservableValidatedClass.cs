@@ -3,6 +3,9 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using System.Collections;
 using System.Collections.ObjectModel;
+
+#pragma warning disable S3267 // foreach loops used to unsubscribe delegates; cannot be LINQ due to collection mutation
+#pragma warning disable S3172 // delegate subtraction is intentional for event handler cleanup
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -61,7 +64,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
     [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Equality comparison intentionally uses runtime reflection. Not safe for AOT, but this is a framework base class fallback.")]
-    public override bool Equals(object? obj)
+    public override bool Equals(object? obj) // NOSONAR
     {
         if (ReferenceEquals(this, obj))
         {
@@ -155,7 +158,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         RaisePropertyChanged(nameof(Errors));
     }
 
-    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents)
+    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents) // NOSONAR - used via base class SetValue which calls into this override path
     {
         if (propertyName is null)
             return;

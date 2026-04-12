@@ -114,6 +114,8 @@ public class ControlsViewModel : ViewModelNavigation<object>
 
     private void TestVm_Submitted(object? sender, SubmitEventArgs<object> e)
     {
+        // Intentionally empty: this handler is subscribed to clean up the event subscription,
+        // but no action is required when the test exception dialog is submitted.
     }
 
     private async Task NavigateToDetailAsync()
@@ -213,14 +215,11 @@ public class ControlsViewModel : ViewModelNavigation<object>
     {
         base.Dispose(disposing);
 
-        if (disposing)
+        if (disposing && _timer is not null)
         {
-            if (_timer is not null)
-            {
-                _timer.Stop();
-                _timer.Elapsed -= Timer_Elapsed;
-                _timer.Dispose();
-            }
+            _timer.Stop();
+            _timer.Elapsed -= Timer_Elapsed;
+            _timer.Dispose();
         }
     }
 }

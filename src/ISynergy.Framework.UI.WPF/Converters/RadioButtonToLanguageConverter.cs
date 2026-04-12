@@ -18,8 +18,8 @@ public class RadioButtonToLanguageConverter : IValueConverter
         return value?.Equals(Language) ?? false;
     }
 
-    public object ConvertBack(object? isChecked, Type targetType, object? parameter, CultureInfo culture)
-        => isChecked is bool checkedValue && checkedValue  // Is this the checked RadioButton? If so...
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is bool checkedValue && checkedValue  // Is this the checked RadioButton? If so...
         ? Language          // Send 'Language' back to update the associated binding. Otherwise...
         : _value;           // Return de converterd value, telling the binding 'ignore this change'
 }

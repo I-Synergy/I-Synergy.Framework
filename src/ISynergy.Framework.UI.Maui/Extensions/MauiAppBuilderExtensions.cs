@@ -163,7 +163,7 @@ public static class MauiAppBuilderExtensions
     [RequiresUnreferencedCode(
         "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
         "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this MauiAppBuilder appBuilder,
         Action<MauiAppBuilder> action,
         Assembly assembly,
@@ -244,9 +244,6 @@ public static class MauiAppBuilderExtensions
                 fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
                 fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
             });
-
-        // Is not needed. Is resolved via MauiInitializeService
-        // ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
 
         return appBuilder;
     }

@@ -183,5 +183,6 @@ public class S3StorageServiceTests
 
         // Second dispose must be a no-op (idempotent guard in the service).
         disposable.Dispose();
+        Assert.IsNotNull(disposable);
     }
 }

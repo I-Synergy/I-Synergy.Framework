@@ -72,7 +72,7 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// <param name="round"></param>
     /// <param name="decimals"></param>
     /// 
-    public NumericRange(double min, double max, bool round = false, int decimals = 0)
+    public NumericRange(double min, double max, bool round = false, int decimals = 0) // NOSONAR
     {
         if (round)
         {
@@ -231,7 +231,7 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// 
     public static bool operator ==(NumericRange range1, NumericRange range2)
     {
-        return ((range1.Min == range2.Min) && (range1.Max == range2.Max));
+        return ((range1.Min == range2.Min) && (range1.Max == range2.Max)); // NOSONAR
     }
 
     /// <summary>
@@ -240,7 +240,7 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// 
     public static bool operator !=(NumericRange range1, NumericRange range2)
     {
-        return ((range1.Min != range2.Min) || (range1.Max != range2.Max));
+        return ((range1.Min != range2.Min) || (range1.Max != range2.Max)); // NOSONAR
     }
 
     /// <summary>

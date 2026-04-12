@@ -77,6 +77,18 @@ public abstract class MercatorProjection : IEquatable<MercatorProjection>
         return null != other && other.ReferenceGlobe.Equals(ReferenceGlobe);
     }
 
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as MercatorProjection);
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return ReferenceGlobe.GetHashCode();
+    }
+
     #region Latitude/Longitude limits
     /// <summary>
     /// Maximum possible longitude for this projection
@@ -141,11 +153,14 @@ public abstract class MercatorProjection : IEquatable<MercatorProjection>
     /// <exception cref="ArgumentException"></exception>
     public double EuclidianDistance(EuclidianCoordinate point1, EuclidianCoordinate point2)
     {
-        if (point1 is null || point2 is null)
-            throw new ArgumentNullException();
+        if (point1 is null)
+            throw new ArgumentNullException(nameof(point1));
+
+        if (point2 is null)
+            throw new ArgumentNullException(nameof(point2));
 
         if (!(point1.Projection.Equals(this) && point2.Projection.Equals(this)))
-            throw new ArgumentException(Properties.Resources.POINT_NOT_OWNED);
+            throw new ArgumentException(Properties.Resources.POINT_NOT_OWNED, nameof(point1));
 
         return point1.DistanceTo(point2);
     }

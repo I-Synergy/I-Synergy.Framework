@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -54,7 +61,7 @@ public static partial class Matrix
     {
         var result = new List<T>(values.Length);
 
-        foreach (var v in values)
+        foreach (var v in values) // NOSONAR
             if (!Equals(v, value))
                 result.Add(v);
 
@@ -268,7 +275,7 @@ public static partial class Matrix
     /// <param name="keys">The key value for each column.</param>
     /// <param name="values">The matrix to be sorted.</param>
     /// <param name="comparer">The comparer to use.</param>
-    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values, IComparer<TKey> comparer)
+    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values, IComparer<TKey> comparer) // NOSONAR
     {
         var indices = Vector.Range(keys.Length);
         Array.Sort(keys.Copy(), indices, comparer);

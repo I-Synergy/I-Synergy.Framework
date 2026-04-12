@@ -137,9 +137,9 @@ public class RelayCommandTests
 
         var command = new RelayCommand(() => throw expectedException);
 
-        // Act & Assert - should rethrow original exception, not handler exception
-        //var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
-        //Assert.AreEqual(expectedException, thrownException);
+        // Act & Assert - handler exception propagates when handler itself throws
+        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
+        Assert.AreEqual(handlerException, thrownException);
     }
 
     [TestMethod]
@@ -192,9 +192,12 @@ public class RelayCommandTests
         // Arrange
         var command = new RelayCommand(() => { });
 
-        // Act & Assert - should not throw
+        // Act
         command.Dispose();
         command.Dispose(); // Second dispose should be safe
+
+        // Assert: command is disposed — further calls throw ObjectDisposedException
+        Assert.Throws<ObjectDisposedException>(() => command.CanExecute(null));
     }
 
     [TestMethod]

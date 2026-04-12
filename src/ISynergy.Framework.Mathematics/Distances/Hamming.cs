@@ -4,6 +4,13 @@ using ISynergy.Framework.Mathematics.Distances.Base;
 using System;
 using System.Collections;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 /// <summary>
 ///   Hamming distance.
 /// </summary>
@@ -109,10 +116,6 @@ public struct Hamming : IMetric<byte[]>, IMetric<string>, IDistance<double[]>, I
     public double Distance(BitArray x, BitArray y)
     {
         BitArray bytes = x.Xor(y);
-
-        int numBytes = bytes.Length / 8;
-        if (x.Length % 8 != 0)
-            numBytes++;
 
         byte b = 0;
         double sum = 0;

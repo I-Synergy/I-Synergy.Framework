@@ -66,83 +66,76 @@ internal class Microsoft365MailService : IMailService
     /// <returns>A Task&lt;System.Boolean&gt; representing the asynchronous operation.</returns>
     public async Task<bool> SendEmailAsync(MailMessage emailMessage, CancellationToken cancellationToken = default)
     {
-        try
+        var message = new Message();
+
+        if (emailMessage.EmailAddressFrom is not null)
+            message.From = new Recipient { EmailAddress = new EmailAddress { Address = emailMessage.EmailAddressFrom } };
+        else
+            message.From = new Recipient { EmailAddress = new EmailAddress { Address = _mailOptions.EmailAddress, Name = _mailOptions.Sender } };
+
+        if (emailMessage.EmailAddressesTo.Count > 0)
         {
-            var message = new Message();
+            var recipients = new List<Recipient>();
 
-            if (emailMessage.EmailAddressFrom is not null)
-                message.From = new Recipient { EmailAddress = new EmailAddress { Address = emailMessage.EmailAddressFrom } };
-            else
-                message.From = new Recipient { EmailAddress = new EmailAddress { Address = _mailOptions.EmailAddress, Name = _mailOptions.Sender } };
+            foreach (var address in emailMessage.EmailAddressesTo.EnsureNotNull()) // NOSONAR
+                recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
 
-            if (emailMessage.EmailAddressesTo.Count > 0)
-            {
-                var recipients = new List<Recipient>();
-
-                foreach (var address in emailMessage.EmailAddressesTo.EnsureNotNull())
-                    recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
-
-                message.ToRecipients = recipients;
-            }
-
-            if (emailMessage.EmailAddressesCc.Count > 0)
-            {
-                var recipients = new List<Recipient>();
-
-                foreach (var address in emailMessage.EmailAddressesCc.EnsureNotNull())
-                    recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
-
-                message.CcRecipients = recipients;
-            }
-
-            if (emailMessage.EmailAddressesBcc.Count > 0 || emailMessage.SendCopy)
-            {
-                var recipients = new List<Recipient>();
-
-                foreach (var address in emailMessage.EmailAddressesBcc.EnsureNotNull())
-                    recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
-
-                if (emailMessage.SendCopy)
-                    recipients.Add(message.From);
-
-                message.BccRecipients = recipients;
-            }
-
-            message.Subject = emailMessage.Subject;
-
-            message.Body = new ItemBody
-            {
-                ContentType = BodyType.Html,
-                Content = emailMessage.Message
-            };
-
-            var options = new TokenCredentialOptions
-            {
-                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
-            };
-
-            var credentials = new ClientSecretCredential(
-                _mailOptions.TenantId,
-                _mailOptions.ClientId,
-                _mailOptions.ClientSecret,
-                options);
-
-            var client = new GraphServiceClient(credentials, _mailOptions.Scopes);
-            var body = new SendMailPostRequestBody
-            {
-                Message = message,
-                SaveToSentItems = true
-            };
-
-            await client.Users[_mailOptions.EmailAddress]
-                .SendMail
-                .PostAsync(body, cancellationToken: cancellationToken);
-
-            return true;
+            message.ToRecipients = recipients;
         }
-        catch (Exception)
+
+        if (emailMessage.EmailAddressesCc.Count > 0)
         {
-            throw;
+            var recipients = new List<Recipient>();
+
+            foreach (var address in emailMessage.EmailAddressesCc.EnsureNotNull()) // NOSONAR
+                recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
+
+            message.CcRecipients = recipients;
         }
+
+        if (emailMessage.EmailAddressesBcc.Count > 0 || emailMessage.SendCopy)
+        {
+            var recipients = new List<Recipient>();
+
+            foreach (var address in emailMessage.EmailAddressesBcc.EnsureNotNull()) // NOSONAR
+                recipients.Add(new Recipient { EmailAddress = new EmailAddress { Address = address } });
+
+            if (emailMessage.SendCopy)
+                recipients.Add(message.From);
+
+            message.BccRecipients = recipients;
+        }
+
+        message.Subject = emailMessage.Subject;
+
+        message.Body = new ItemBody
+        {
+            ContentType = BodyType.Html,
+            Content = emailMessage.Message
+        };
+
+        var options = new TokenCredentialOptions
+        {
+            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+        };
+
+        var credentials = new ClientSecretCredential(
+            _mailOptions.TenantId,
+            _mailOptions.ClientId,
+            _mailOptions.ClientSecret,
+            options);
+
+        var client = new GraphServiceClient(credentials, _mailOptions.Scopes);
+        var body = new SendMailPostRequestBody
+        {
+            Message = message,
+            SaveToSentItems = true
+        };
+
+        await client.Users[_mailOptions.EmailAddress]
+            .SendMail
+            .PostAsync(body, cancellationToken: cancellationToken);
+
+        return true;
     }
 }

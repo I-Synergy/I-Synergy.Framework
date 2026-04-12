@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
 /// <summary>
@@ -55,8 +62,6 @@ public class AccuracyLoss : ZeroOneLoss
 public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
     ILoss<double[][]>, ILoss<double[]>
 {
-    private bool mean = true;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="ZeroOneLoss" /> class.
     /// </summary>
@@ -131,11 +136,7 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
     /// <value>
     ///     <c>true</c> if the average accuracy loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Mean
-    {
-        get => mean;
-        set => mean = value;
-    }
+    public bool Mean { get; set; } = true;
 
     /// <summary>
     ///     Gets or sets the number of classes.
@@ -210,7 +211,7 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
             if (Expected[i] != actual[i])
                 error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)Expected.Length;
         return error;
     }

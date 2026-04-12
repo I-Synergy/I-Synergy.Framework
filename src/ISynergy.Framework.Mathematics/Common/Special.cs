@@ -21,6 +21,14 @@
 
 using ISynergy.Framework.Mathematics.Functions;
 
+#pragma warning disable S907  // goto is required in ported numerical algorithms
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Common;
 
 /// <summary>
@@ -237,7 +245,7 @@ public static class Special
     /// </summary>
     public static double Log1pexp(double x)
     {
-        // Computes Math.Log(1.0 / (1.0 + Math.Exp(-sum)));
+        // Computes Math.Log(1.0 / (1.0 + Math.Exp(-sum))); // NOSONAR - reference formula comment
         // https://cran.r-project.org/web/packages/Rmpfr/vignettes/log1mexp-note.pdf
 
         if (x < -37)
@@ -371,9 +379,13 @@ public static class Special
             // Factorial for n between 0 and 1 is 1, so log(factorial(n)) is 0.
             return 0.0;
         if (n <= 100)
+        {
             // Compute the factorial using ln(gamma(n)) approximation, using the cache
             // if the value has been previously computed.
-            return lnfcache[n] > 0 ? lnfcache[n] : lnfcache[n] = Gamma.Log(n + 1.0);
+            if (lnfcache[n] <= 0)
+                lnfcache[n] = Gamma.Log(n + 1.0);
+            return lnfcache[n];
+        }
         return Gamma.Log(n + 1.0);
     }
 

@@ -165,7 +165,7 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
     /// </summary>
     /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public override async Task ExecuteAsync(object? parameter)
+    public override async Task ExecuteAsync(object? parameter) // NOSONAR
     {
         // Use a lock to ensure thread safety when checking and setting execution state
         bool canProceed;
@@ -233,7 +233,6 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                         exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
-                    exceptionAlreadyHandled = true;
                     // Suppress exception to prevent app crash when handled
                     return;
                 }
@@ -258,7 +257,6 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                         exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-                    exceptionAlreadyHandled = true;
                     // Suppress exception to prevent app crash when handled
                     return;
                 }

@@ -7,10 +7,9 @@ namespace Sample.Api.Performance;
 [MemoryDiagnoser]
 public class ApiBenchmarks
 {
-    private WebApplicationFactory<Sample.Api.Program> _factory;
-    private HttpClient _client;
+    private readonly WebApplicationFactory<Sample.Api.Program> _factory;
+    private readonly HttpClient _client;
 
-    //[Params(1, 10, 50, 100, 1000)]
     [Params(1, 10)]
     public int NumberOfRequests { get; set; }
 
@@ -89,7 +88,6 @@ public class ApiBenchmarks
         Console.WriteLine($"\nStarting {NumberOfRequests} GET requests");
         Console.WriteLine(metricsBefore);
 
-        var tasks = new List<Task>();
         for (int i = 0; i < NumberOfRequests; i++)
         {
             try
@@ -135,7 +133,6 @@ public class ApiBenchmarks
         Console.WriteLine($"\nStarting {NumberOfRequests} GET requests");
         Console.WriteLine(metricsBefore);
 
-        var tasks = new List<Task>();
         for (int i = 0; i < NumberOfRequests; i++)
         {
             try
@@ -170,124 +167,7 @@ public class ApiBenchmarks
     }
 
 
-    //[Benchmark(Description = "Benchmark: Create Entities Async All the way")]
-    //public async Task CreateEntityBenchmarkAsync()
-    //{
-    //    var metricsBefore = CaptureThreadMetrics();
-    //    var stopwatch = Stopwatch.StartNew();
-    //    var successCount = 0;
-    //    var failCount = 0;
-    //    var maxThreads = 0;
-
-    //    Console.WriteLine($"\nStarting {NumberOfRequests} POST requests");
-    //    Console.WriteLine(metricsBefore);
-
-    //    var tasks = new List<Task>();
-    //    for (int i = 0; i < NumberOfRequests; i++)
-    //    {
-    //        tasks.Add(Task.Run(async () =>
-    //        {
-    //            try
-    //            {
-    //                var entity = new TestEntity
-    //                {
-    //                    Name = $"New Entity {i}",
-    //                    Description = $"Created during benchmark {i}",
-    //                    CreatedDate = DateTime.UtcNow
-    //                };
-
-    //                var json = JsonSerializer.Serialize(entity);
-    //                var content = new StringContent(json, Encoding.UTF8, "application/json");
-    //                var response = await _client.PostAsync("/synchronous", content);
-
-    //                if (response.IsSuccessStatusCode)
-    //                    Interlocked.Increment(ref successCount);
-    //                else
-    //                    Interlocked.Increment(ref failCount);
-
-    //                var currentThreads = CaptureThreadMetrics().TotalThreads;
-    //                Interlocked.Exchange(ref maxThreads, Math.Max(maxThreads, currentThreads));
-    //            }
-    //            catch
-    //            {
-    //                Interlocked.Increment(ref failCount);
-    //            }
-    //        }));
-    //    }
-
-    //    await Task.WhenAll(tasks);
-    //    stopwatch.Stop();
-    //    var metricsAfter = CaptureThreadMetrics();
-
-    //    LogThreadMetricsChange("POST Requests", metricsBefore, metricsAfter);
-    //    Console.WriteLine($"""
-    //        Performance Metrics:
-    //        Maximum threads: {maxThreads}
-    //        Successful requests: {successCount}
-    //        Failed requests: {failCount}
-    //        Total time: {stopwatch.ElapsedMilliseconds}ms
-    //        Average time per request: {stopwatch.ElapsedMilliseconds / (double)NumberOfRequests}ms
-    //        """);
-    //}
-
-    //[Benchmark(Description = "Benchmark: Create Entities synchronous")]
-    //public void CreateEntityBenchmark()
-    //{
-    //    var metricsBefore = CaptureThreadMetrics();
-    //    var stopwatch = Stopwatch.StartNew();
-    //    var successCount = 0;
-    //    var failCount = 0;
-    //    var maxThreads = 0;
-
-    //    Console.WriteLine($"\nStarting {NumberOfRequests} POST requests");
-    //    Console.WriteLine(metricsBefore);
-
-    //    var tasks = new List<Task>();
-    //    for (int i = 0; i < NumberOfRequests; i++)
-    //    {
-    //        try
-    //        {
-    //            var entity = new TestEntity
-    //            {
-    //                Name = $"New Entity {i}",
-    //                Description = $"Created during benchmark {i}",
-    //                CreatedDate = DateTime.UtcNow
-    //            };
-
-    //            var json = JsonSerializer.Serialize(entity);
-    //            var content = new StringContent(json, Encoding.UTF8, "application/json");
-    //            var response = _client.PostAsync("/synchronous", content).Result;
-
-    //            if (response.IsSuccessStatusCode)
-    //                Interlocked.Increment(ref successCount);
-    //            else
-    //                Interlocked.Increment(ref failCount);
-
-    //            var currentThreads = CaptureThreadMetrics().TotalThreads;
-    //            Interlocked.Exchange(ref maxThreads, Math.Max(maxThreads, currentThreads));
-    //        }
-    //        catch
-    //        {
-    //            Interlocked.Increment(ref failCount);
-    //        }
-    //    }
-
-    //    stopwatch.Stop();
-    //    var metricsAfter = CaptureThreadMetrics();
-
-    //    LogThreadMetricsChange("POST Requests", metricsBefore, metricsAfter);
-    //    Console.WriteLine($"""
-    //        Performance Metrics:
-    //        Maximum threads: {maxThreads}
-    //        Successful requests: {successCount}
-    //        Failed requests: {failCount}
-    //        Total time: {stopwatch.ElapsedMilliseconds}ms
-    //        Average time per request: {stopwatch.ElapsedMilliseconds / (double)NumberOfRequests}ms
-    //        """);
-    //}
-
-
-    public ThreadMetrics CaptureThreadMetrics()
+    public static ThreadMetrics CaptureThreadMetrics()
     {
         ThreadPool.GetMinThreads(out int minWorkerThreads, out int minCompletionPortThreads);
         ThreadPool.GetMaxThreads(out int maxWorkerThreads, out int maxCompletionPortThreads);
@@ -313,7 +193,7 @@ public class ApiBenchmarks
         };
     }
 
-    public void LogThreadMetricsChange(string operation, ThreadMetrics before, ThreadMetrics after)
+    public static void LogThreadMetricsChange(string operation, ThreadMetrics before, ThreadMetrics after)
     {
         Console.WriteLine($"""
 

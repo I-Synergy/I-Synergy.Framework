@@ -133,7 +133,9 @@ namespace ISynergy.Framework.UI.ViewModels.Base
  try
  {
  if (sender is LanguageViewModel vm)
+ {
  vm.Submitted -= LanguageVM_Submitted;
+ }
 
  _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
  _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
@@ -264,7 +266,9 @@ namespace ISynergy.Framework.UI.ViewModels.Base
  if (disposing)
  {
  if (_navigationService is not null)
+ {
  _navigationService.BackStackChanged -= NavigationService_BackStackChanged;
+ }
 
  Validator = null;
 

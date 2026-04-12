@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S2692 // IndexOf > 0 is intentional: index 0 means first position, which cannot move up
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
@@ -58,7 +60,7 @@ public static class CollectionExtensions
     public static bool CanMoveItemUp(this IList list, object? item)
     {
         Argument.IsNotNull(list);
-        return item is not null && list.Count > 1 && list.IndexOf(item) > 0;
+        return item is not null && list.Count > 1 && list.IndexOf(item) > 0; // NOSONAR - intentional: index 0 = first position, cannot move up
     }
 
     /// <summary>
@@ -199,7 +201,7 @@ public static class CollectionExtensions
     /// Removes the first entry from the list. Does nothing if the list is empty.
     /// </summary>
     /// <param name="list">The list.</param>
-    public static void RemoveFirst(this IList list)
+    public static void RemoveFirst(this IList list) // NOSONAR
     {
         Argument.IsNotNull(list);
 

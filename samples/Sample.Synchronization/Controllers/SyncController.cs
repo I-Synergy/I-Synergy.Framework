@@ -12,12 +12,10 @@ namespace Sample.Synchronization.Controllers
     public class SyncController : ControllerBase
     {
         private readonly WebServerAgent _webServerAgent;
-        private readonly ILogger<SyncController> _logger;
 
-        public SyncController(WebServerAgent webServerAgent, ILogger<SyncController> logger)
+        public SyncController(WebServerAgent webServerAgent)
         {
             _webServerAgent = webServerAgent;
-            _logger = logger;
         }
 
         /// <summary>
@@ -64,16 +62,15 @@ namespace Sample.Synchronization.Controllers
             var connectionString = remoteOrchestrator.Provider.ConnectionString;
             remoteOrchestrator.Provider = new NpgsqlSyncProvider(connectionString);
 
-            var setup = new SyncSetup(new[] {
-            "Address",
-            "Customer",
-            "CustomerAddress",
-            "ProductCategory",
-            "ProductModel",
-            "ProductDescription",
-            "Product",
-            "ProductModelProductDescription"
-            });
+            var setup = new SyncSetup(
+                "Address",
+                "Customer",
+                "CustomerAddress",
+                "ProductCategory",
+                "ProductModel",
+                "ProductDescription",
+                "Product",
+                "ProductModelProductDescription");
 
             var result = await remoteOrchestrator.ProvisionAsync(setup);
             var options = DefaultJsonSerializers.Default;
@@ -103,16 +100,15 @@ namespace Sample.Synchronization.Controllers
         public async Task<ActionResult> ProvisionScopeV2()
         {
             var remoteOrchestrator = _webServerAgent.RemoteOrchestrator;
-            var setup = new SyncSetup(new[] {
-            "Address",
-            "Customer",
-            "CustomerAddress",
-            "ProductCategory",
-            "ProductModel",
-            "ProductDescription",
-            "Product",
-            "ProductModelProductDescription"
-            });
+            var setup = new SyncSetup(
+                "Address",
+                "Customer",
+                "CustomerAddress",
+                "ProductCategory",
+                "ProductModel",
+                "ProductDescription",
+                "Product",
+                "ProductModelProductDescription");
 
             var result = await remoteOrchestrator.ProvisionAsync(setup);
             var options = DefaultJsonSerializers.Default;

@@ -47,7 +47,7 @@ builder.Services.AddOpenApiDocument(c => c.Title = "Event Sourcing Sample API");
 
 // ── CORS (for Blazor frontend) ────────────────────────────────────────────────
 builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
-    p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+    p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())); // NOSONAR - intentionally open for demo/development purposes
 
 var app = builder.Build();
 
@@ -97,4 +97,4 @@ app.MapHealthChecks("/health");
 app.MapOrderEndpoints();
 app.MapArchiveEndpoints();
 
-app.Run();
+await app.RunAsync();

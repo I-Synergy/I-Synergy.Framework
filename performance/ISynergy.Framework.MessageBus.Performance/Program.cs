@@ -6,7 +6,7 @@ namespace ISynergy.Framework.MessageBus.Performance;
 /// <summary>
 /// Class Program.
 /// </summary>
-class Program
+static class Program
 {
     /// <summary>
     /// When long file paths is not enabled you get the "Invalid runtimeconfig.json in .NET Benchmark" error.
@@ -15,12 +15,6 @@ class Program
     /// <param name="args"></param>
     static void Main(string[] args)
     {
-        //Manual test for saving to file.
-        //var bm = new BenchMarks.BenchMark();
-        //var file = await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "Data", "file.zip"));
-        //bm.Model = bm.GetTestObject(file);
-        //bm.MessagePack();
-
         BenchmarkRunner.Run<BenchMark>();
         Console.ReadLine();
     }

@@ -3,7 +3,7 @@
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Wpf"
+           xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.WPF"
            mc:Ignorable="d"
            WindowStartupLocation="CenterOwner"
         Title="TestWindow" Height="300" Width="500">

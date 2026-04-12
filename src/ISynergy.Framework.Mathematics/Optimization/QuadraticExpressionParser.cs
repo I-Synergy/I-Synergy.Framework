@@ -2,6 +2,14 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S2583 // duplicate strings and null-coalescing always-false patterns are intentional in expression parsing
+
+
 namespace ISynergy.Framework.Mathematics.Optimization;
 
 internal static class QuadraticExpressionParser

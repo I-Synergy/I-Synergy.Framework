@@ -53,7 +53,7 @@ public sealed class ItemObservableCollection<T> : ObservableCollection<T>, IDisp
 
     private void item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is not null && sender is T item)
+        if (sender is T item)
             OnItemPropertyChanged(item, e.PropertyName);
     }
 

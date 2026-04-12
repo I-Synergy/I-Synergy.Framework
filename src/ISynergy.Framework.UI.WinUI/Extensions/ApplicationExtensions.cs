@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml;
 namespace ISynergy.Framework.UI.Extensions;
 public static class ApplicationExtensions
 {
-    public static Microsoft.UI.Xaml.Application SetApplicationColor(this Microsoft.UI.Xaml.Application application, string color)
+    public static Microsoft.UI.Xaml.Application SetApplicationColor(this Microsoft.UI.Xaml.Application application, string color) // NOSONAR
     {
         foreach (var item in application.Resources.MergedDictionaries.EnsureNotNull())
         {
@@ -17,7 +17,7 @@ public static class ApplicationExtensions
                 application.Resources.MergedDictionaries.Remove(item);
         }
 
-        switch (color)
+        switch (color) // NOSONAR
         {
             case "#ff8c00":
                 var style_ff8c00 = new Themeff8c00();

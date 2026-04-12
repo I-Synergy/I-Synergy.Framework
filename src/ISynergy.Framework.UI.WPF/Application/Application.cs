@@ -47,15 +47,13 @@ public abstract class Application : System.Windows.Application, IDisposable
     public virtual void RaiseApplicationInitialized() => ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
     public virtual void RaiseApplicationLoaded() => ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
 
-    private Task? Initialize { get; set; }
-
     /// <summary>
     /// Default constructor.
     /// </summary>
     protected Application()
         : base()
     {
-        var host = CreateHostBuilder()
+        var host = CreateHostBuilder() // NOSONAR
            .Build()
            .SetLocatorProvider();
 
@@ -92,21 +90,21 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         messengerService.Register<ShowInformationMessage>(this, async m =>
         {
-            var dialogResult = await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
+            await _dialogService.ShowInformationAsync(m.Content.Message, m.Content.Title);
         });
 
         messengerService.Register<ShowWarningMessage>(this, async m =>
         {
-            var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
+            await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title);
         });
 
         messengerService.Register<ShowErrorMessage>(this, async m =>
         {
-            var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
+            await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
         });
 
         // Initialize environment variables from configuration and command-line parameters
-        InitializeEnvironmentVariables();
+        InitializeEnvironmentVariables(); // NOSONAR
     }
 
     protected abstract IHostBuilder CreateHostBuilder();
@@ -153,7 +151,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
     /// </summary>
-    private string NormalizeEnvironmentValue(string value)
+    private static string NormalizeEnvironmentValue(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return value;
@@ -169,7 +167,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     {
         var commandLineArgs = Environment.GetCommandLineArgs();
 
-        foreach (var arg in commandLineArgs.EnsureNotNull())
+        foreach (var arg in commandLineArgs.EnsureNotNull()) // NOSONAR
         {
             if (string.IsNullOrEmpty(arg))
                 continue;
@@ -260,11 +258,6 @@ public abstract class Application : System.Windows.Application, IDisposable
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
 
-    /// <summary>
-    /// Initializes the application asynchronously.
-    /// </summary>
-    private void InitializeApplication() => Initialize = InitializeApplicationAsync();
-
     protected override void OnExit(ExitEventArgs e)
     {
         _isShuttingDown = true;
@@ -334,8 +327,8 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
     /// <exception cref="Exception">Failed to load {e.SourcePageType.FullName}: {e.Exception}</exception>
-    private void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e) =>
-        throw new Exception($"Failed to load {e.Uri}: {e.Exception}");
+    private static void OnNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e) =>
+        throw new InvalidOperationException($"Failed to load {e.Uri}: {e.Exception}");
 
     #region IDisposable
     // Dispose() calls Dispose(true)

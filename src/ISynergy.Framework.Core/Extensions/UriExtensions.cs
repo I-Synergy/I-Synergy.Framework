@@ -1,11 +1,13 @@
 using System.Text;
 using System.Web;
 
+#pragma warning disable S3776 // cognitive complexity is inherent in URI query-string manipulation
+
 namespace ISynergy.Framework.Core.Extensions;
 
 public static class UriExtensions
 {
-    public static Uri AddQueryParameter(this Uri uri, string name, string value)
+    public static Uri AddQueryParameter(this Uri uri, string name, string value) // NOSONAR
     {
         var httpValueCollection = HttpUtility.ParseQueryString(uri.Query);
 

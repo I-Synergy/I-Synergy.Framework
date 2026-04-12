@@ -39,7 +39,7 @@ public static class WindowsAppBuilderExtensions
         Justification = "BindWithReload and RegisterAssemblies use reflection. These are intentional design choices for configuration binding and assembly scanning at startup; types are preserved through explicit registration.")]
     [UnconditionalSuppressMessage("Trimming", "IL2091",
         Justification = "Generic type parameters TContext, TCommonServices, TExceptionHandlerService, TSettingsService are registered via DI and their public constructors are available at runtime.")]
-    public static IHostBuilder ConfigureServices<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>(
+    public static IHostBuilder ConfigureServices<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>( // NOSONAR
         this IHostBuilder windowsAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,

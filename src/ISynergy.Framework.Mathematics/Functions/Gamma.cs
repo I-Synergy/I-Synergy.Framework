@@ -21,6 +21,14 @@
 
 using ISynergy.Framework.Mathematics.Common;
 
+#pragma warning disable S907  // goto is required in ported numerical algorithms
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Functions;
 
 /// <summary>
@@ -96,7 +104,7 @@ namespace ISynergy.Framework.Mathematics.Functions;
 public static class Gamma
 {
     /// <summary>Maximum gamma on the machine.</summary>
-    public const double GammaMax = 171.624376956302725; // TODO: Rename to Max
+    public const double GammaMax = 171.624376956302725; // TODO: Rename to Max // NOSONAR
 
     private static readonly double[] gamma_P =
     [

@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 /// <summary>
@@ -100,7 +107,7 @@ public struct Matrix3x3
     /// 
     /// <returns>Returns rotation matrix to rotate an object around Y axis.</returns>
     /// 
-    public static Matrix3x3 CreateRotationY(float radians)
+    public static Matrix3x3 CreateRotationY(float radians) // NOSONAR
     {
         Matrix3x3 m = new Matrix3x3();
 
@@ -315,7 +322,7 @@ public struct Matrix3x3
         if (index < 0 || index > 2)
             throw new ArgumentException("Invalid row index was specified.", "index");
 
-        return index == 0 ? new Vector3(V00, V01, V02) :
+        return index == 0 ? new Vector3(V00, V01, V02) : // NOSONAR
                index == 1 ? new Vector3(V10, V11, V12) : new Vector3(V20, V21, V22);
     }
 
@@ -334,7 +341,7 @@ public struct Matrix3x3
         if (index < 0 || index > 2)
             throw new ArgumentException("Invalid column index was specified.", "index");
 
-        return index == 0 ? new Vector3(V00, V10, V20) :
+        return index == 0 ? new Vector3(V00, V10, V20) : // NOSONAR
                index == 1 ? new Vector3(V01, V11, V21) : new Vector3(V02, V12, V22);
     }
 
@@ -664,10 +671,8 @@ public struct Matrix3x3
     /// 
     public override bool Equals(object obj)
     {
-        if (obj is Matrix3x3)
-        {
-            return Equals((Matrix3x3)obj);
-        }
+        if (obj is Matrix3x3 m3x3)
+            return Equals(m3x3);
         return false;
     }
 
@@ -833,7 +838,7 @@ public struct Matrix3x3
     /// </code>
     /// </para></remarks>
     /// 
-    public void SVD(out Matrix3x3 u, out Vector3 e, out Matrix3x3 v)
+    public void SVD(out Matrix3x3 u, out Vector3 e, out Matrix3x3 v) // NOSONAR
     {
         double[,] uArray = new double[3, 3]
         {

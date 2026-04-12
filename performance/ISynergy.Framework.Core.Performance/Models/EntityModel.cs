@@ -12,6 +12,6 @@ public class EntityModel : BaseEntity
     {
         Id = Guid.NewGuid();
         Name = $"Name {Id}";
-        Age = new Random().Next();
+        Age = Random.Shared.Next();
     }
 }

@@ -2,6 +2,8 @@ using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
+#pragma warning disable S3267 // foreach loop builds result with early-return pattern; cannot be safely converted to LINQ
+
 namespace ISynergy.Framework.AspNetCore.Extensions;
 
 /// <summary>
@@ -54,7 +56,7 @@ public static class HttpRequestExtensions
         }
 
         // Copy the request headers
-        foreach (var header in request.Headers.EnsureNotNull())
+        foreach (var header in request.Headers.EnsureNotNull()) // NOSONAR
         {
             if (!result.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && result.Content is not null)
             {

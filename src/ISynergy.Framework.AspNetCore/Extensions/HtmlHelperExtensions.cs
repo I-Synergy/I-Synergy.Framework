@@ -38,7 +38,7 @@ public static class HtmlHelperExtensions
             return "image/webp";
         }
 
-        throw new ArgumentException("Unknown file type");
+        throw new ArgumentException("Unknown file type", nameof(path));
     }
 
     /// <summary>

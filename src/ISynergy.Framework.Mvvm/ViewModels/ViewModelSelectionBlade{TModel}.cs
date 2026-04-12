@@ -156,11 +156,10 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
     /// Submits selection
     /// </summary>
     /// <param name="e"></param>
-    /// <param name="validateUnderlayingProperties"></param>
     /// <returns></returns>
-    private async Task SelectAsync(List<object> e, bool validateUnderlayingProperties = true)
+    private async Task SelectAsync(List<object> e)
     {
-        if (Validate(validateUnderlayingProperties))
+        if (Validate())
         {
             var result = new List<TModel>();
 

@@ -98,8 +98,8 @@ public class BinaryTree<TNode> : IEnumerable<TNode>
 
     private sealed class BinaryTreeTraversal : IEnumerable<TNode>
     {
-        private BinaryTree<TNode> tree;
-        private BinaryTraversalMethod<TNode> method;
+        private readonly BinaryTree<TNode> tree;
+        private readonly BinaryTraversalMethod<TNode> method;
 
         public BinaryTreeTraversal(BinaryTree<TNode> tree, BinaryTraversalMethod<TNode> method)
         {

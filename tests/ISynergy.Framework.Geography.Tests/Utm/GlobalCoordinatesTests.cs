@@ -28,7 +28,7 @@ public class GlobalCoordinatesTests
     {
         GlobalCoordinates g = new(-181, 9);
         Assert.AreEqual(1, g.Latitude.Degrees);
-        Assert.AreEqual(g.Longitude.Degrees, -171);
+        Assert.AreEqual(-171, g.Longitude.Degrees);
     }
 
     /// <summary>
@@ -38,8 +38,8 @@ public class GlobalCoordinatesTests
     public void TestConstructor3()
     {
         GlobalCoordinates g = new(-811, 0);
-        Assert.AreEqual(g.Latitude.Degrees, -89);
-        Assert.AreEqual(g.Longitude.Degrees, -180);
+        Assert.AreEqual(-89, g.Latitude.Degrees);
+        Assert.AreEqual(-180, g.Longitude.Degrees);
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public class GlobalCoordinatesTests
     {
         GlobalCoordinates g = new(-0, -811);
         Assert.AreEqual(0, g.Latitude.Degrees);
-        Assert.AreEqual(g.Longitude.Degrees, -91);
+        Assert.AreEqual(-91, g.Longitude.Degrees);
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ public class GlobalCoordinatesTests
         {
             Longitude = -10.0
         };
-        Assert.AreEqual(a.Longitude.Degrees, -10);
+        Assert.AreEqual(-10, a.Longitude.Degrees);
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public class GlobalCoordinatesTests
     {
         GlobalCoordinates a = new(45, 9);
         GlobalCoordinates b = new(46, 9);
-        Assert.AreEqual(a.CompareTo(b), -1);
+        Assert.AreEqual(-1, a.CompareTo(b));
     }
 
     /// <summary>
@@ -120,7 +120,7 @@ public class GlobalCoordinatesTests
     {
         GlobalCoordinates a = new(45, 9);
         GlobalCoordinates b = new(45, 10);
-        Assert.AreEqual(a.CompareTo(b), -1);
+        Assert.AreEqual(-1, a.CompareTo(b));
     }
 
     /// <summary>
@@ -131,7 +131,7 @@ public class GlobalCoordinatesTests
     {
         GlobalCoordinates a = new(44, 9);
         GlobalCoordinates b = new(45, 9);
-        Assert.AreEqual(a.CompareTo(b), -1);
+        Assert.AreEqual(-1, a.CompareTo(b));
     }
 
     /// <summary>

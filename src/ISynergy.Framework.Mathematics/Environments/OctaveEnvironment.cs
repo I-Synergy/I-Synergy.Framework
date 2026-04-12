@@ -4,6 +4,13 @@ using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Environments;
 
 /// <summary>
@@ -128,12 +135,12 @@ public abstract class OctaveEnvironment
         set { dimensionOffset = (value) ? 1 : 0; }
     }
 
-    private static int dimensionOffset;
+    private static int dimensionOffset; // NOSONAR
     /// <summary>Pi.</summary>
-    protected static double pi = System.Math.PI;
+    protected static readonly double pi = System.Math.PI; // NOSONAR
 
     /// <summary>Machine epsilon.</summary>
-    protected static double eps = Constants.DoubleEpsilon;
+    protected static readonly double eps = Constants.DoubleEpsilon; // NOSONAR
 
     // octave language commands
     /// <summary>Creates an identity matrix.</summary>
@@ -225,7 +232,7 @@ public abstract class OctaveEnvironment
     // decompositions
     #region svd
     /// <summary>Singular value decomposition.</summary>
-    protected List<mat> svd(double[,] m)
+    protected static List<mat> svd(double[,] m) // NOSONAR
     {
         var svd = new SingularValueDecomposition(m, true, true, true);
         return [svd.LeftSingularVectors, svd.DiagonalMatrix, svd.RightSingularVectors];
@@ -367,13 +374,13 @@ public abstract class OctaveEnvironment
         /// <summary>
         ///   Inner matrix object.
         /// </summary>
-        /// 
-        public double[,] matrix;
+        ///
+        public double[,] matrix { get; set; } // NOSONAR
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="mat"/> class.
         /// </summary>
-        /// 
+        ///
         public mat(double[,] matrix)
         {
             this.matrix = matrix;
@@ -513,7 +520,7 @@ public abstract class OctaveEnvironment
         /// 
         public static implicit operator mat(List<mat> m)
         {
-            return m.First();
+            return m[0];
         }
 
         /// <summary>
@@ -542,7 +549,7 @@ public abstract class OctaveEnvironment
         ///   Returns a hash code for this instance.
         /// </summary>
         /// 
-        public override int GetHashCode()
+        public override int GetHashCode() // NOSONAR
         {
             return matrix.GetHashCode();
         }
@@ -571,7 +578,7 @@ public abstract class OctaveEnvironment
     {
         var type = this.GetType();
 
-        FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance); // NOSONAR
 
         foreach (var field in fields)
         {

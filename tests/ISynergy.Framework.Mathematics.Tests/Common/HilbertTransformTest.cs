@@ -15,15 +15,15 @@ public class HilbertTransformTest
 
         HilbertTransform.FHT(actual, FourierTransform.Direction.Forward);
 
-        Assert.AreEqual(actual[0].Real, 1);
-        Assert.AreEqual(actual[1].Real, 2);
-        Assert.AreEqual(actual[2].Real, 3);
-        Assert.AreEqual(actual[3].Real, 4);
+        Assert.AreEqual(1, actual[0].Real);
+        Assert.AreEqual(2, actual[1].Real);
+        Assert.AreEqual(3, actual[2].Real);
+        Assert.AreEqual(4, actual[3].Real);
 
-        Assert.AreEqual(actual[0].Imaginary, +1, 0.000000001);
-        Assert.AreEqual(actual[1].Imaginary, -1, 0.000000001);
-        Assert.AreEqual(actual[2].Imaginary, -1, 0.000000001);
-        Assert.AreEqual(actual[3].Imaginary, +1, 0.000000001);
+        Assert.AreEqual(+1, actual[0].Imaginary, 0.000000001);
+        Assert.AreEqual(-1, actual[1].Imaginary, 0.000000001);
+        Assert.AreEqual(-1, actual[2].Imaginary, 0.000000001);
+        Assert.AreEqual(+1, actual[3].Imaginary, 0.000000001);
 
         HilbertTransform.FHT(actual, FourierTransform.Direction.Backward);
 

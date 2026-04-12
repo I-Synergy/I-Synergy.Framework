@@ -87,7 +87,7 @@ public class Authorization : Behavior<Control>
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(Action));
             }
         }
     }

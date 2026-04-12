@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace ISynergy.Framework.Core.Exceptions;
 
 /// <summary>
@@ -44,6 +46,18 @@ public class ArgumentBelowZeroException : ArgumentOutOfRangeException
     public ArgumentBelowZeroException()
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ArgumentBelowZeroException"/> class with serialized data.
+    /// </summary>
+    /// <param name="info">The object that holds the serialized object data.</param>
+    /// <param name="context">The contextual information about the source or destination.</param>
+#pragma warning disable SYSLIB0051
+    protected ArgumentBelowZeroException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
+#pragma warning restore SYSLIB0051
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ArgumentBelowZeroException"/> class.

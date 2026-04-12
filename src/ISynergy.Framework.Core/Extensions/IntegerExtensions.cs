@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ISynergy.Framework.Core.Extensions;
@@ -27,18 +28,12 @@ public static class IntegerExtensions
     /// <returns>System.String.</returns>
     public static string GenerateAlphaNumericKey(this int _self)
     {
-        var rawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
-        var result = new StringBuilder();
-
-        for (var i = 1; i <= _self; i++)
-        {
-            result.Append(rawChars.Trim().Substring(
-                Convert.ToInt32(
-                        new Random().Next(int.MaxValue) * (rawChars.Length - 1))
-                    , 1)
-                );
-        }
-
+        if (_self <= 0)
+            return string.Empty;
+        const string rawChars = "23456789abcdefghjkmnpqrstuwvxyzABCDEFGHJKMNPQRSTUVWXYZ";
+        var result = new StringBuilder(_self);
+        for (var i = 0; i < _self; i++)
+            result.Append(rawChars[RandomNumberGenerator.GetInt32(rawChars.Length)]);
         return result.ToString();
     }
 
@@ -49,18 +44,12 @@ public static class IntegerExtensions
     /// <returns>System.String.</returns>
     public static string GenerateNumericKey(this int _self)
     {
-        var rawChars = "0123456789";
-        var result = new StringBuilder();
-
-        for (var i = 1; i <= _self; i++)
-        {
-            result.Append(rawChars.Trim().Substring(
-                Convert.ToInt32(
-                    new Random().Next(int.MaxValue) * (rawChars.Length - 1))
-                , 1)
-            );
-        }
-
+        if (_self <= 0)
+            return string.Empty;
+        const string rawChars = "0123456789";
+        var result = new StringBuilder(_self);
+        for (var i = 0; i < _self; i++)
+            result.Append(rawChars[RandomNumberGenerator.GetInt32(rawChars.Length)]);
         return result.ToString();
     }
 

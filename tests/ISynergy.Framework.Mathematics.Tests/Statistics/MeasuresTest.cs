@@ -155,7 +155,7 @@ public class MeasuresTest
         Assert.AreEqual(3.796312193730190, ewVar, Tolerance);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 4.8, 16d / 3)]
     [DataRow(0.2, 5.3708532126850983, 5.2012181301523794)]
     [DataRow(0.5, 6.1216162602618489, 4.3349406414990694)]
@@ -172,7 +172,7 @@ public class MeasuresTest
         Assert.IsTrue(ewmas.IsEqual(expected, Tolerance), "EWMA does not agree with expected");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0.0)]
     [DataRow(0.2)]
     [DataRow(0.5)]
@@ -199,7 +199,7 @@ public class MeasuresTest
         Assert.AreEqual(ewmas[1], ewma2, Tolerance);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0.0)]
     [DataRow(0.2)]
     [DataRow(0.5)]
@@ -227,7 +227,7 @@ public class MeasuresTest
         Assert.AreEqual(ewmas[1], ewma2, Tolerance);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0.0)]
     [DataRow(0.2)]
     [DataRow(0.5)]
@@ -255,7 +255,7 @@ public class MeasuresTest
         Assert.AreEqual(ewmas[1, 1], ewma2, Tolerance);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0.0)]
     [DataRow(0.2)]
     [DataRow(0.5)]
@@ -282,7 +282,7 @@ public class MeasuresTest
         Assert.AreEqual(ewmas[1, 1], ewma2, Tolerance);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 5.6, 2.28571428571429, 10.0952380952381)]
     [DataRow(0.2, 4.31014623570092, 0.625302929087394, 14.7567276814633)]
     [DataRow(0.5, 2.2476817067779, -2.04530939646465, 18.1801422111128)]
@@ -303,7 +303,7 @@ public class MeasuresTest
         Assert.IsTrue(ewmCov.IsEqual(expected, Tolerance), "EWM Covariance does not agree with expected");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0.0, 5.22666666666667, 2.13333333333333, 9.422222222222222)]
     [DataRow(0.2, 3.79631219373019, 0.550757446419597, 12.9975045330648)]
     [DataRow(0.5, 1.49840874058829, -1.36349798444697, 12.1197249201803)]

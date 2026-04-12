@@ -41,10 +41,10 @@ public partial class UnitConversionService : IUnitConversionService
             return value;
 
         if (source is SIUnit && target is SIUnit)
-            throw new ArgumentException("For conversion the source and target cannot be both an SI unit. e.g. metre and metre ");
+            throw new ArgumentException("For conversion the source and target cannot be both an SI unit. e.g. metre and metre ", nameof(source));
 
         if (!target.UnitTypes.Intersect(source.UnitTypes).Any())
-            throw new ArgumentException("For conversion the source and target must have the same UnitType. e.g. Time and Length");
+            throw new ArgumentException("For conversion the source and target must have the same UnitType. e.g. Time and Length", nameof(target));
 
         // source is SI Unit
         if (source is SIUnit && target is Unit t)
@@ -57,20 +57,10 @@ public partial class UnitConversionService : IUnitConversionService
         // if both units are non-SI units and have an intersecting SI unit
         if (source is Unit s2 && target is Unit t2 && t2.UnitTypes.Intersect(s2.UnitTypes).Any())
         {
-            //Get SI unit of source
-            var sourceSI = Units
-                .Where(q => q.UnitTypes.Intersect(s2.UnitTypes).Any() && q is SIUnit)
-                .Single();
-
-            //Get SI unit of target
-            var targetSI = Units
-                .Where(q => q.UnitTypes.Intersect(t2.UnitTypes).Any() && q is SIUnit)
-                .Single();
-
             return t2.FormulaConvertBack(s2.FormulaConvert(value));
         }
 
-        throw new Exception("Conversion exception occured.");
+        throw new InvalidOperationException("Conversion exception occured.");
     }
 
     /// <summary>
@@ -93,7 +83,7 @@ public partial class UnitConversionService : IUnitConversionService
             Units.Where(q => q.Symbol.Equals(targetSymbol)).Single() is { } target)
             return Convert(source, value, target);
 
-        throw new ArgumentException("Converter failed to get the corresponding units.");
+        throw new ArgumentException("Converter failed to get the corresponding units.", nameof(sourceSymbol));
     }
 
     /// <summary>
@@ -117,6 +107,6 @@ public partial class UnitConversionService : IUnitConversionService
             Units.Where(q => q.Symbol.Equals(targetUnit.GetSymbol())).Single() is { } target)
             return Convert(source, value, target);
 
-        throw new ArgumentException("Converter failed to get the corresponding units.");
+        throw new ArgumentException("Converter failed to get the corresponding units.", nameof(sourceUnit));
     }
 }

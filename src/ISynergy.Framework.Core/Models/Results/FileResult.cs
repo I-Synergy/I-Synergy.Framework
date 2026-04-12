@@ -10,12 +10,12 @@ public sealed class FileResult : IDisposable
     /// <summary>
     /// Backing store for the FileName property
     /// </summary>
-    private string _fileName;
+    private readonly string _fileName;
 
     /// <summary>
     /// Backing store for the FilePath property
     /// </summary>
-    private string _filePath;
+    private readonly string _filePath;
 
     /// <summary>
     /// Function to get a stream to the picked file.

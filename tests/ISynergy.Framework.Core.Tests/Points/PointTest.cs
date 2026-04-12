@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Core.Points;
 [TestClass]
 public class PointTest
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0)]
     [DataRow(0, 1, 1)]
     [DataRow(0, 10, 10)]
@@ -21,7 +21,7 @@ public class PointTest
         Assert.AreEqual(expectedNorm, point.EuclideanNorm(true, 1));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0, 0)]
     [DataRow(1, 2, 1, 2)]
     [DataRow(-1, -2, -1, -2)]
@@ -50,7 +50,7 @@ public class PointTest
         Assert.AreEqual(point1 == point2, areEqual);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1.1f, 2.2f, 1.1f, 2.2f, false)]
     [DataRow(1.1f, 2.2f, 3.3f, 2.2f, true)]
     [DataRow(1.1f, 2.2f, 1.1f, 4.4f, true)]

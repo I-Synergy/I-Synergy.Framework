@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.UI.Helpers;
 
-internal class NativeHelper
+internal static class NativeHelper
 {
     public const int ERROR_SUCCESS = 0;
     public const int ERROR_INSUFFICIENT_BUFFER = 122;

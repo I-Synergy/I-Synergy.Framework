@@ -66,7 +66,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
         if (e.NewValue is INotifyCollectionChanged newValue)
         {
             behavior.AssociatedObject.SelectedItems.Clear();
-            foreach (var item in ((IEnumerable<object>)newValue).EnsureNotNull())
+            foreach (var item in (newValue as IEnumerable<object>).EnsureNotNull())
             {
                 behavior.AssociatedObject.SelectedItems.Add(item);
             }

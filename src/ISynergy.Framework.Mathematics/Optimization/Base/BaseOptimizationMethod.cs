@@ -1,5 +1,12 @@
 using ISynergy.Framework.Mathematics.Exceptions;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Base;
 
 /// <summary>
@@ -132,7 +139,7 @@ public abstract class BaseOptimizationMethod
     ///     In this case, the found value will also be available at the <see cref="Value" />
     ///     property.
     /// </returns>
-    public bool Maximize(double[] values)
+    public bool Maximize(double[] values) // NOSONAR
     {
         Solution = values;
         return Maximize();
@@ -147,7 +154,7 @@ public abstract class BaseOptimizationMethod
     ///     In this case, the found value will also be available at the <see cref="Value" />
     ///     property.
     /// </returns>
-    public bool Minimize(double[] values)
+    public bool Minimize(double[] values) // NOSONAR
     {
         Solution = values;
         return Minimize();

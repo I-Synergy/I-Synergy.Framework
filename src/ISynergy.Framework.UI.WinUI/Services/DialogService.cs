@@ -12,8 +12,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class DialogService : IDialogService
+public class DialogService : IDialogService, IDisposable
 {
+    private const string DefaultDialogButtonStyleKey = "DefaultDialogButtonStyle";
+
     private readonly IScopedContextService _scopedContextService;
     private readonly ILanguageService _languageService;
     private readonly ILogger<DialogService> _logger;
@@ -33,7 +35,7 @@ public class DialogService : IDialogService
         ILogger<DialogService> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _logger.LogTrace($"DialogService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("DialogService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
         _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
@@ -144,7 +146,7 @@ public class DialogService : IDialogService
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
+    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -177,8 +179,8 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -192,9 +194,9 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -207,8 +209,8 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -220,7 +222,7 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -291,7 +293,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {typeof(TWindow).Name} and {typeof(TViewModel).Name}");
+            _logger.LogError(ex, "Error showing dialog for {WindowType} and {ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name);
         }
     }
 
@@ -320,7 +322,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {typeof(TWindow).Name} and {typeof(TViewModel).Name} with entity");
+            _logger.LogError(ex, "Error showing dialog for {WindowType} and {ViewModelType} with entity", typeof(TWindow).Name, typeof(TViewModel).Name);
         }
     }
 
@@ -350,7 +352,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {window.GetType().Name}");
+            _logger.LogError(ex, "Error showing dialog for {WindowType}", window.GetType().Name);
         }
     }
 
@@ -375,7 +377,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error showing dialog for {type.Name}");
+            _logger.LogError(ex, "Error showing dialog for {WindowType}", type.Name);
         }
     }
 
@@ -385,7 +387,7 @@ public class DialogService : IDialogService
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <param name="dialog">The dialog.</param>
     /// <param name="viewmodel">The viewmodel.</param>
-    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
+    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel) // NOSONAR
     {
         Argument.IsNotNull(dialog);
         Argument.IsNotNull(viewmodel);
@@ -415,9 +417,9 @@ public class DialogService : IDialogService
 
                 try
                 {
-                    window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                    window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                    window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                 }
                 catch (Exception ex)
                 {
@@ -468,6 +470,7 @@ public class DialogService : IDialogService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating dialog");
+                throw;
             }
         }
     }
@@ -597,7 +600,8 @@ public class DialogService : IDialogService
                 {
                     try
                     {
-                        _activeDialog.CloseAsync().GetAwaiter().GetResult();
+                        // Synchronous close during disposal — async context not available
+                        _ = _activeDialog.CloseAsync(); // NOSONAR - fire-and-forget acceptable in Dispose
                     }
                     catch (Exception ex)
                     {

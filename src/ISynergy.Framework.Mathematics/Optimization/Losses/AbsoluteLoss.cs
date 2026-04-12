@@ -1,5 +1,12 @@
 using ISynergy.Framework.Mathematics.Common;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
 /// <summary>
@@ -8,8 +15,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 [Serializable]
 public class AbsoluteLoss : LossBase<double[][]>
 {
-    private bool mean;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="AbsoluteLoss" /> class.
     /// </summary>
@@ -18,6 +23,7 @@ public class AbsoluteLoss : LossBase<double[][]>
     {
         Expected = expected;
     }
+
     /// <summary>
     ///     Gets or sets a value indicating whether the
     ///     mean absolute loss should be computed.
@@ -25,11 +31,7 @@ public class AbsoluteLoss : LossBase<double[][]>
     /// <value>
     ///     <c>true</c> if the mean absolute loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Mean
-    {
-        get => mean;
-        set => mean = value;
-    }
+    public bool Mean { get; set; }
 
     /// <summary>
     ///     Computes the loss between the expected values (ground truth)
@@ -46,7 +48,7 @@ public class AbsoluteLoss : LossBase<double[][]>
         for (var i = 0; i < Expected.Length; i++)
             error += Distance.Manhattan(Expected[i], actual[i]);
 
-        if (mean)
+        if (Mean)
             error = error / Expected.Length;
 
         return error;

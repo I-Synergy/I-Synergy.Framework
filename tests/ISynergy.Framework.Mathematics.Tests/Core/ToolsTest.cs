@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Mathematics.Core;
 [TestClass]
 public class ToolsTest
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, false)]
     [DataRow(1, true)]
     [DataRow(2, true)]

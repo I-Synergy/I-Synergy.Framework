@@ -33,13 +33,6 @@ public sealed partial class App : Application
     /// </summary>
     public App()
         : base()
-    //: base(new SplashScreenOptions
-    //{
-    //    AssetStreamProvider = () => Task.FromResult(
-    //        Assembly.GetAssembly(typeof(App))?.GetManifestResourceStream("Sample.Assets.gta.mp4")!),
-    //    ContentType = "video/mp4",
-    //    SplashScreenType = SplashScreenTypes.Video
-    //})
     {
         try
         {
@@ -135,9 +128,7 @@ public sealed partial class App : Application
         {
             _commonServices?.BusyService.StartBusy();
 
-            bool navigateToAuthentication = true;
-
-            if (navigateToAuthentication && _navigationService != null)
+            if (_navigationService != null)
             {
                 _logger?.LogTrace("Navigate to SignIn page");
                 try
@@ -213,7 +204,6 @@ public sealed partial class App : Application
             if (_commonServices?.BusyService != null)
             {
                 _commonServices.BusyService.UpdateMessage("Applying migrations");
-                //await _migrationService.ApplyMigrationAsync<_001>();
                 await Task.Delay(2000);
                 _commonServices.BusyService.UpdateMessage("Done applying migrations");
                 await Task.Delay(2000);

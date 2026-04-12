@@ -5,6 +5,13 @@ using ISynergy.Framework.Mathematics.Distances.Base;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Common;
 
 /// <summary>
@@ -89,11 +96,9 @@ public static partial class Distance
             {
                 var t = Type.GetType("ISynergy.Framework.Mathematics.Distances." + method.Name);
 
-                if (t is null)
-                    // TODO: Remove the following special case, as it is needed only
-                    // for preserving compatibility for a few next releases more.
-                    if (methodInfo.Name == "BitwiseHamming")
-                        return new Hamming() as IDistance<T>;
+                // TODO: Remove the following special case, as it is needed only for preserving compatibility. // NOSONAR
+                if (t is null && methodInfo.Name == "BitwiseHamming")
+                    return new Hamming() as IDistance<T>;
 
                 return (IDistance<T>)Activator.CreateInstance(t);
             }

@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Functions;
 
 /// <summary>
@@ -161,33 +168,38 @@ public static class Gabor
             case GaborKernelKind.Real:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
-                        sum += kernel[i, j] = RealFunction2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                    {
+                        kernel[i, j] = RealFunction2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                        sum += kernel[i, j];
+                    }
                 break;
 
             case GaborKernelKind.Imaginary:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
-                        sum += kernel[i, j] = ImaginaryFunction2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                    {
+                        kernel[i, j] = ImaginaryFunction2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                        sum += kernel[i, j];
+                    }
                 break;
 
             case GaborKernelKind.Magnitude:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
-                        sum += kernel[i, j] = Function2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
+                    {
+                        kernel[i, j] = Function2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
+                        sum += kernel[i, j];
+                    }
                 break;
 
             case GaborKernelKind.SquaredMagnitude:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
                     {
-                        var v = Function2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
-                        sum += kernel[i, j] = v * v;
+                        var v = Function2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
+                        kernel[i, j] = v * v;
+                        sum += kernel[i, j];
                     }
-
                 break;
         }
 

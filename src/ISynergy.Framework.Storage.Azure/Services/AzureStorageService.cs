@@ -57,7 +57,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        await blobContainer
+        _ = await blobContainer
             .CreateIfNotExistsAsync(
                 publicAccessType: PublicAccessType.None,
                 cancellationToken: cancellationToken)
@@ -98,7 +98,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        await blobContainer
+        _ = await blobContainer
             .CreateIfNotExistsAsync(
                 publicAccessType: PublicAccessType.None,
                 cancellationToken: cancellationToken)
@@ -138,7 +138,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        await blobContainer
+        _ = await blobContainer
             .CreateIfNotExistsAsync(
                 publicAccessType: PublicAccessType.None,
                 cancellationToken: cancellationToken)
@@ -146,7 +146,7 @@ internal class AzureStorageService : IStorageService
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
-            await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken)
+            _ = await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             await blobClient.UploadAsync(
@@ -182,7 +182,7 @@ internal class AzureStorageService : IStorageService
         var connectionString = _options.GetEffectiveConnectionString();
         var blobContainer = new BlobContainerClient(connectionString, containerName);
 
-        await blobContainer
+        _ = await blobContainer
             .CreateIfNotExistsAsync(
                 publicAccessType: PublicAccessType.None,
                 cancellationToken: cancellationToken)

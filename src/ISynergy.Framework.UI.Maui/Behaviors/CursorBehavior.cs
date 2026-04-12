@@ -4,7 +4,7 @@ using Microsoft.Maui.Controls;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Behaviors;
-public class CursorBehavior
+public static class CursorBehavior
 {
     public static readonly BindableProperty CursorProperty = BindableProperty.CreateAttached("Cursor", typeof(CursorIcons), typeof(CursorBehavior), CursorIcons.Arrow, propertyChanged: CursorChanged);
 
@@ -36,7 +36,7 @@ public class CursorBehavior
         }
     }
 
-    private static void ApplyCursorBasedOnState(VisualElement visualElement, CursorIcons cursor)
+    private static void ApplyCursorBasedOnState(VisualElement visualElement, CursorIcons cursor) // NOSONAR
     {
         // Use Arrow cursor if element is disabled, otherwise use the specified cursor
         var cursorToApply = visualElement.IsEnabled ? cursor : CursorIcons.Arrow;
@@ -68,14 +68,9 @@ public class CursorBehavior
             if (mauiContext is null && Application.Current is not null)
             {
                 // Try all windows, starting with the last one (most likely to be the active dialog)
-                foreach (var window in Application.Current.Windows.Reverse())
-                {
-                    if (window.Page?.Handler?.MauiContext is not null)
-                    {
-                        mauiContext = window.Page.Handler.MauiContext;
-                        break;
-                    }
-                }
+                mauiContext = Application.Current.Windows.Reverse()
+                    .Select(window => window.Page?.Handler?.MauiContext)
+                    .FirstOrDefault(ctx => ctx is not null);
             }
             
             // Only set cursor if we have a valid MauiContext

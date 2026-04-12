@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Formats;
 using ISynergy.Framework.Mathematics.Formats.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Vectors;
 
 public static partial class Vector
@@ -64,7 +71,7 @@ public static partial class Vector
     /// </result>
     public static bool TryParse(string s, IMatrixFormatProvider provider, out double[] vector)
     {
-        // TODO: Create a proper TryParse method without
+        // TODO: Create a proper TryParse method without // NOSONAR
         //       resorting to a underlying try-catch block.
         try
         {

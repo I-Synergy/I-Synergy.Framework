@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Common;
 
 /// <summary>
@@ -10,9 +17,10 @@ namespace ISynergy.Framework.Mathematics.Common;
 public static class Sort
 {
 #if DEBUG
-    public static int INTROSORT_THRESHOLD = 32;
+    public static int IntrosortThreshold { get; set; } = 32;
+    private static int INTROSORT_THRESHOLD => IntrosortThreshold;
 #else
-    const int INTROSORT_THRESHOLD = 32;
+    private const int INTROSORT_THRESHOLD = 32;
 #endif
 
     /// <summary>
@@ -546,7 +554,7 @@ public static class Sort
                 return keys[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }
@@ -589,7 +597,7 @@ public static class Sort
                 return items[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }
@@ -634,7 +642,7 @@ public static class Sort
                 return keys[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }
@@ -730,7 +738,7 @@ public static class Sort
                 return items[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }

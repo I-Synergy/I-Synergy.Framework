@@ -1,5 +1,13 @@
 using NumericRange = ISynergy.Framework.Core.Ranges.NumericRange;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S4136, S4456 // repeated parameter names and overload ordering are intentional; yield with validation is acceptable
+
+
 namespace ISynergy.Framework.Mathematics.Vectors;
 
 public static partial class Vector

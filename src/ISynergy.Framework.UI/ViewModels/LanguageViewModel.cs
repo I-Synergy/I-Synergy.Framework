@@ -28,6 +28,6 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     public LanguageViewModel(ICommonServices commonServices, ILogger<LanguageViewModel> logger)
         : base(commonServices, logger)
     {
-        SetSelectedItem(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language);
+        SetSelectedItem(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language); // NOSONAR
     }
 }

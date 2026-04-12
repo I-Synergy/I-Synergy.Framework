@@ -9,6 +9,7 @@ namespace ISynergy.Framework.AspNetCore.Authentication.Exceptions;
 /// Implements the <see cref="ExceptionFilterAttribute" />
 /// </summary>
 /// <seealso cref="ExceptionFilterAttribute" />
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public sealed class ClaimNotFoundExceptionFilterAttribute : ExceptionFilterAttribute
 {
     /// <summary>

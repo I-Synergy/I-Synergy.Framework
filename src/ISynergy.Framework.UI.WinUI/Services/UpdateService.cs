@@ -14,8 +14,8 @@ internal class UpdateService : IUpdateService
     private readonly IDialogService _dialogService;
     private readonly ILanguageService _languageService;
 
-    private StoreContext? _storeContext = null;
-    private IReadOnlyList<StorePackageUpdate>? updates = null;
+    private StoreContext? _storeContext;
+    private IReadOnlyList<StorePackageUpdate>? _updates;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
@@ -32,7 +32,7 @@ internal class UpdateService : IUpdateService
         _languageService = languageService;
 
         _logger = logger;
-        _logger.LogTrace($"UpdateService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("UpdateService instance created with ID: {InstanceId}", Guid.NewGuid());
 
 
     }
@@ -56,9 +56,9 @@ internal class UpdateService : IUpdateService
 
                 WinRT.Interop.InitializeWithWindow.Initialize(_storeContext, hwnd);
 
-                updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
+                _updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
 
-                if (updates.Count > 0)
+                if (_updates.Count > 0)
                 {
                     result = true;
                 }
@@ -78,16 +78,16 @@ internal class UpdateService : IUpdateService
     /// </summary>
     public async Task DownloadAndInstallUpdateAsync()
     {
-        if (updates is not null && updates is not null && updates.Count > 0)
+        if (_updates is not null && _updates.Count > 0) // NOSONAR
         {
             // Download the packages.
             if (_storeContext is not null && _storeContext.CanSilentlyDownloadStorePackageUpdates)
             {
-                await DownloadAndInstallPackageUpdatesSilentlyAsync(updates);
+                await DownloadAndInstallPackageUpdatesSilentlyAsync(_updates);
             }
             else
             {
-                await DownloadAndInstallPackageUpdatesAsync(updates);
+                await DownloadAndInstallPackageUpdatesAsync(_updates);
             }
         }
     }

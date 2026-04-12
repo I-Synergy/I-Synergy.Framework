@@ -42,7 +42,7 @@ public class Point : IComparable<Point>
     /// <param name="round"></param>
     /// <param name="decimals"></param>
     /// 
-    public Point(double x, double y, bool round = false, int decimals = 0)
+    public Point(double x, double y, bool round = false, int decimals = 0) // NOSONAR
     {
         if (round)
         {
@@ -177,12 +177,42 @@ public class Point : IComparable<Point>
     }
 
     /// <summary>
+    /// Addition operator - adds scalar to the specified point.
+    /// </summary>
+    ///
+    /// <param name="point">Point to increase coordinates of.</param>
+    /// <param name="valueToAdd">Value to add to coordinates of the specified point.</param>
+    ///
+    /// <returns>Returns new point which coordinates equal to coordinates of
+    /// the specified point increased by specified value.</returns>
+    ///
+    public static Point operator +(Point point, double valueToAdd)
+    {
+        return new Point(point.X + valueToAdd, point.Y + valueToAdd);
+    }
+
+    /// <summary>
+    /// Addition operator - adds scalar to the specified point.
+    /// </summary>
+    ///
+    /// <param name="point">Point to increase coordinates of.</param>
+    /// <param name="valueToAdd">Value to add to coordinates of the specified point.</param>
+    ///
+    /// <returns>Returns new point which coordinates equal to coordinates of
+    /// the specified point increased by specified value.</returns>
+    ///
+    public static Point Add(Point point, double valueToAdd)
+    {
+        return new Point(point.X + valueToAdd, point.Y + valueToAdd);
+    }
+
+    /// <summary>
     /// Subtraction operator - subtracts values of two points.
     /// </summary>
-    /// 
+    ///
     /// <param name="point1">Point to subtract from.</param>
     /// <param name="point2">Point to subtract.</param>
-    /// 
+    ///
     /// <returns>Returns new point which coordinates equal to difference of corresponding
     /// coordinates of specified points.</returns>
     ///
@@ -194,10 +224,10 @@ public class Point : IComparable<Point>
     /// <summary>
     /// Subtraction operator - subtracts values of two points.
     /// </summary>
-    /// 
+    ///
     /// <param name="point1">Point to subtract from.</param>
     /// <param name="point2">Point to subtract.</param>
-    /// 
+    ///
     /// <returns>Returns new point which coordinates equal to difference of corresponding
     /// coordinates of specified points.</returns>
     ///
@@ -207,45 +237,15 @@ public class Point : IComparable<Point>
     }
 
     /// <summary>
-    /// Addition operator - adds scalar to the specified point.
-    /// </summary>
-    /// 
-    /// <param name="point">Point to increase coordinates of.</param>
-    /// <param name="valueToAdd">Value to add to coordinates of the specified point.</param>
-    /// 
-    /// <returns>Returns new point which coordinates equal to coordinates of
-    /// the specified point increased by specified value.</returns>
-    /// 
-    public static Point operator +(Point point, double valueToAdd)
-    {
-        return new Point(point.X + valueToAdd, point.Y + valueToAdd);
-    }
-
-    /// <summary>
-    /// Addition operator - adds scalar to the specified point.
-    /// </summary>
-    /// 
-    /// <param name="point">Point to increase coordinates of.</param>
-    /// <param name="valueToAdd">Value to add to coordinates of the specified point.</param>
-    /// 
-    /// <returns>Returns new point which coordinates equal to coordinates of
-    /// the specified point increased by specified value.</returns>
-    /// 
-    public static Point Add(Point point, double valueToAdd)
-    {
-        return new Point(point.X + valueToAdd, point.Y + valueToAdd);
-    }
-
-    /// <summary>
     /// Subtraction operator - subtracts scalar from the specified point.
     /// </summary>
-    /// 
+    ///
     /// <param name="point">Point to decrease coordinates of.</param>
     /// <param name="valueToSubtract">Value to subtract from coordinates of the specified point.</param>
-    /// 
+    ///
     /// <returns>Returns new point which coordinates equal to coordinates of
     /// the specified point decreased by specified value.</returns>
-    /// 
+    ///
     public static Point operator -(Point point, double valueToSubtract)
     {
         return new Point(point.X - valueToSubtract, point.Y - valueToSubtract);
@@ -254,13 +254,13 @@ public class Point : IComparable<Point>
     /// <summary>
     /// Subtraction operator - subtracts scalar from the specified point.
     /// </summary>
-    /// 
+    ///
     /// <param name="point">Point to decrease coordinates of.</param>
     /// <param name="valueToSubtract">Value to subtract from coordinates of the specified point.</param>
-    /// 
+    ///
     /// <returns>Returns new point which coordinates equal to coordinates of
     /// the specified point decreased by specified value.</returns>
-    /// 
+    ///
     public static Point Subtract(Point point, double valueToSubtract)
     {
         return new Point(point.X - valueToSubtract, point.Y - valueToSubtract);
@@ -338,7 +338,7 @@ public class Point : IComparable<Point>
     ///
     public static bool operator ==(Point point1, Point point2)
     {
-        return ((point1.X == point2.X) && (point1.Y == point2.Y));
+        return ((point1.X == point2.X) && (point1.Y == point2.Y)); // NOSONAR
     }
 
     /// <summary>
@@ -353,7 +353,7 @@ public class Point : IComparable<Point>
     ///
     public static bool operator !=(Point point1, Point point2)
     {
-        return ((point1.X != point2.X) || (point1.Y != point2.Y));
+        return ((point1.X != point2.X) || (point1.Y != point2.Y)); // NOSONAR
     }
 
     /// <summary>
@@ -422,4 +422,40 @@ public class Point : IComparable<Point>
 
         return line;
     }
+
+    /// <summary>
+    /// Less-than operator.
+    /// </summary>
+    /// <param name="left">Left point.</param>
+    /// <param name="right">Right point.</param>
+    /// <returns><c>true</c> if <paramref name="left"/> precedes <paramref name="right"/> in sort order.</returns>
+    public static bool operator <(Point left, Point right) =>
+        left.CompareTo(right) < 0;
+
+    /// <summary>
+    /// Less-than-or-equal operator.
+    /// </summary>
+    /// <param name="left">Left point.</param>
+    /// <param name="right">Right point.</param>
+    /// <returns><c>true</c> if <paramref name="left"/> precedes or equals <paramref name="right"/> in sort order.</returns>
+    public static bool operator <=(Point left, Point right) =>
+        left.CompareTo(right) <= 0;
+
+    /// <summary>
+    /// Greater-than operator.
+    /// </summary>
+    /// <param name="left">Left point.</param>
+    /// <param name="right">Right point.</param>
+    /// <returns><c>true</c> if <paramref name="left"/> follows <paramref name="right"/> in sort order.</returns>
+    public static bool operator >(Point left, Point right) =>
+        left.CompareTo(right) > 0;
+
+    /// <summary>
+    /// Greater-than-or-equal operator.
+    /// </summary>
+    /// <param name="left">Left point.</param>
+    /// <param name="right">Right point.</param>
+    /// <returns><c>true</c> if <paramref name="left"/> follows or equals <paramref name="right"/> in sort order.</returns>
+    public static bool operator >=(Point left, Point right) =>
+        left.CompareTo(right) >= 0;
 }

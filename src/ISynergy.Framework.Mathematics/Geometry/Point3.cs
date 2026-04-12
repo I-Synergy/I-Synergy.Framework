@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Geometry;
 
 /// <summary>
@@ -10,7 +17,7 @@ namespace ISynergy.Framework.Mathematics.Geometry;
 [Serializable]
 public struct Point3
 {
-    [NonSerialized] // TODO: Remove when AForge releases a newer version
+    [NonSerialized] // TODO: Remove when AForge releases a newer version // NOSONAR
     Vector3 coordinates;
 
     /// <summary>
@@ -210,10 +217,10 @@ public struct Point3
     /// 
     public override bool Equals(object obj)
     {
-        if (!(obj is Point3))
-            return false;
+        if (obj is Point3 other)
+            return Equals(other);
 
-        return Equals((Point3)obj);
+        return false;
     }
 
     /// <summary>

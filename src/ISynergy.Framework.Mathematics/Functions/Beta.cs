@@ -24,6 +24,15 @@ namespace ISynergy.Framework.Mathematics.Functions;
 using ISynergy.Framework.Mathematics.Common;
 using System;
 
+#pragma warning disable S907  // goto is required in ported numerical algorithms
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S1854 // duplicate strings and useless assignments are inherent in ported numerical algorithms
+
+
 /// <summary>
 ///   Beta functions.
 /// </summary>
@@ -308,7 +317,6 @@ public static class Beta
         k5 = 1.0;
         k6 = a + b;
         k7 = a + 1.0;
-        ;
         k8 = a + 2.0;
 
         pkm2 = 0.0;
@@ -441,10 +449,7 @@ public static class Beta
         y = 2.0 * y;
 
         if (y < Constants.LogMin)
-        {
-            x0 = 1.0;
             throw new ArithmeticException("underflow");
-        }
 
         x = a / (a + b * Math.Exp(y));
         y = Incomplete(a, b, x);

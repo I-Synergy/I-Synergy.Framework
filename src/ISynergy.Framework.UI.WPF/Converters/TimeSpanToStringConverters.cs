@@ -37,7 +37,7 @@ public class TimeSpanToStringConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var valueString = value?.ToString();
-        if (!string.IsNullOrEmpty(valueString) && TimeSpan.TryParse(valueString, out var result))
+        if (!string.IsNullOrEmpty(valueString) && TimeSpan.TryParse(valueString, CultureInfo.InvariantCulture, out var result))
             return result;
 
         return TimeSpan.FromMinutes(5);

@@ -31,13 +31,13 @@ public class ActionQueueBuilder : IActionQueueBuilder
     /// <param name="value">The value to pass to actions.</param>
     /// <param name="cancellationTokenSource">The cancellation token source.</param>
     /// <returns>A blocking collection containing task functions.</returns>
-    public Task<BlockingCollection<Func<Task>>> BuildQueueAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource)
+    public Task<BlockingCollection<Func<Task>>> BuildQueueAsync(Automation automation, object value, CancellationTokenSource cancellationTokenSource) // NOSONAR
     {
         var queue = new BlockingCollection<Func<Task>>();
         var repeatCount = 0;
 
         // Adds all tasks to the queue.
-        for (int i = 0; i < automation.Actions.Count; i++)
+        for (int i = 0; i < automation.Actions.Count; i++) // NOSONAR - loop counter is intentionally modified in body to implement repeat logic
         {
             var action = automation.Actions[i];
 

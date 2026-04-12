@@ -5,6 +5,13 @@ using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 /// <summary>
@@ -952,7 +959,7 @@ public static partial class Matrix
     /// </param>
     public static int GetArrayRank(this Type type, bool deep = true)
     {
-        if (type.IsArray == false || type.GetArrayRank() == 0)
+        if (!type.IsArray || type.GetArrayRank() == 0)
             return 0;
 
         if (deep && IsJagged(type))
@@ -981,7 +988,7 @@ public static partial class Matrix
     public static Array Trim(this Array array)
     {
         if (array.IsMatrix())
-            throw new Exception();
+            throw new InvalidOperationException("Matrix arrays cannot be trimmed; only jagged arrays are supported.");
 
         var list = new List<object>();
         for (var i = 0; i < array.Length; i++)
@@ -1584,8 +1591,7 @@ public static partial class Matrix
     /// <summary>
     ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
     /// </summary>
-    [Obsolete("Please specify the number of steps instead of the step size for the rows and columns.")]
-
+    [Obsolete("Please specify the number of steps instead of the step size for the rows and columns.")] // NOSONAR
     public static double[][] Mesh(
         NumericRange rowRange, NumericRange colRange,
         double rowStepSize, double colStepSize)

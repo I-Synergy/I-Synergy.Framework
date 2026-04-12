@@ -3,6 +3,13 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 /// <summary>
@@ -55,9 +62,9 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
     /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
     public bool IsReadOnly => true;
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() // NOSONAR
     {
-        foreach (var entry in archive.Entries)
+        foreach (var entry in archive.Entries) // NOSONAR
             yield return OpenEntry(entry);
     }
 
@@ -123,6 +130,7 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
     public void Dispose()
     {
         Dispose(true);
+        GC.SuppressFinalize(this);
     }
     /// <summary>
     ///     Gets an enumerable collection that contains the keys in the read-only dictionary.

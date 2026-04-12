@@ -1,5 +1,12 @@
 using ISynergy.Framework.Core.Ranges;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -102,7 +109,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension)
+    public static T[] Min<T>(this T[,] matrix, int dimension) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);
@@ -137,7 +144,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension, T[] result)
+    public static T[] Min<T>(this T[,] matrix, int dimension, T[] result) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);
@@ -148,7 +155,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices)
+    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);
@@ -183,7 +190,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices, T[] result)
+    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices, T[] result) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);

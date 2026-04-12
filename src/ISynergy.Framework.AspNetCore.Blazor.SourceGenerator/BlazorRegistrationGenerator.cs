@@ -15,6 +15,8 @@ namespace ISynergy.Framework.AspNetCore.Blazor.SourceGenerator
     [Generator(LanguageNames.CSharp)]
     public sealed class BlazorRegistrationGenerator : IIncrementalGenerator
     {
+        private const string GlobalQualifierPrefix = "global::";
+
         // Fully-qualified names of the base UI interfaces (without global::)
         private const string IViewFullName = "ISynergy.Framework.Mvvm.Abstractions.IView";
         private const string IWindowFullName = "ISynergy.Framework.Mvvm.Abstractions.IWindow";
@@ -25,7 +27,7 @@ namespace ISynergy.Framework.AspNetCore.Blazor.SourceGenerator
 
         // Lifetimes enum values (from ISynergy.Framework.Core.Enumerations.Lifetimes)
         // Scoped = 0, Singleton = 1
-        private const int LifetimesScoped = 0;
+        private const int LifetimesScoped = 0; // NOSONAR - kept for documentation of enum value
         private const int LifetimesSingleton = 1;
 
         /// <summary>
@@ -158,7 +160,7 @@ namespace ISynergy.Framework.AspNetCore.Blazor.SourceGenerator
             foreach (var iface in typeSymbol.AllInterfaces)
             {
                 var name = iface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                               .Replace("global::", string.Empty);
+                               .Replace(GlobalQualifierPrefix, string.Empty);
                 if (name == baseInterfaceFullName)
                     return true;
             }
@@ -176,7 +178,7 @@ namespace ISynergy.Framework.AspNetCore.Blazor.SourceGenerator
             foreach (var iface in typeSymbol.AllInterfaces)
             {
                 var ifaceName = iface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                                     .Replace("global::", string.Empty);
+                                     .Replace(GlobalQualifierPrefix, string.Empty);
 
                 if (ifaceName == baseInterfaceFullName)
                     continue;
@@ -184,7 +186,7 @@ namespace ISynergy.Framework.AspNetCore.Blazor.SourceGenerator
                 foreach (var parentIface in iface.AllInterfaces)
                 {
                     var parentName = parentIface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                                                .Replace("global::", string.Empty);
+                                                .Replace(GlobalQualifierPrefix, string.Empty);
                     if (parentName == baseInterfaceFullName)
                     {
                         return iface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -208,7 +210,7 @@ namespace ISynergy.Framework.AspNetCore.Blazor.SourceGenerator
                     continue;
 
                 var attrFullName = attrClass.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                                            .Replace("global::", string.Empty);
+                                            .Replace(GlobalQualifierPrefix, string.Empty);
 
                 if (attrFullName != LifetimeAttributeFullName)
                     continue;

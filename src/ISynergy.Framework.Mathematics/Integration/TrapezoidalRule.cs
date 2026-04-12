@@ -1,6 +1,13 @@
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Integration.Base;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Integration;
 
 /// <summary>
@@ -68,7 +75,7 @@ namespace ISynergy.Framework.Mathematics.Integration;
 /// <seealso cref="NonAdaptiveGaussKronrod" />
 /// <seealso cref="InfiniteAdaptiveGaussKronrod" />
 /// <seealso cref="MonteCarloIntegration" />
-public class TrapezoidalRule : INumericalIntegration, IUnivariateIntegration
+public class TrapezoidalRule : IUnivariateIntegration
 {
     private NumericRange range;
 

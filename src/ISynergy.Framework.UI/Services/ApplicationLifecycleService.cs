@@ -105,20 +105,17 @@ public sealed class ApplicationLifecycleService : IApplicationLifecycleService
     private void TryRaiseApplicationLoaded()
     {
         // Only proceed if both signals have been received
-        if (_applicationUIReadyPublished == 1 && _applicationInitializedPublished == 1)
+        if (_applicationUIReadyPublished == 1 && _applicationInitializedPublished == 1
+            && Interlocked.CompareExchange(ref _applicationLoadedPublished, 1, 0) == 0)
         {
-            // Use CompareExchange to atomically check and set the published flag
-            if (Interlocked.CompareExchange(ref _applicationLoadedPublished, 1, 0) == 0)
+            try
             {
-                try
-                {
-                    _logger.LogTrace("ApplicationLoaded: Both UI and initialization complete, raising ApplicationLoaded");
-                    ApplicationLoaded?.Invoke(this, EventArgs.Empty);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error in ApplicationLoaded event handlers");
-                }
+                _logger.LogTrace("ApplicationLoaded: Both UI and initialization complete, raising ApplicationLoaded");
+                ApplicationLoaded?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in ApplicationLoaded event handlers");
             }
         }
     }

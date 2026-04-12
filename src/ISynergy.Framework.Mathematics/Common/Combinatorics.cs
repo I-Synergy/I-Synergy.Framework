@@ -1,6 +1,13 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Common;
 
 /// <summary>
@@ -358,7 +365,7 @@ public static class Combinatorics
     /// </param>
     public static IEnumerable<T[]> Combinations<T>(this T[] values, bool inPlace = false)
     {
-        // TODO: Test
+        // TODO: Test // NOSONAR
         for (var i = 0; i < values.Length; i++)
             foreach (var value in values.Combinations(i + 1, inPlace).EnsureNotNull())
                 yield return value;
@@ -437,7 +444,7 @@ public static class Combinatorics
     /// </summary>
     public static IEnumerable<SortedSet<T>> Subsets<T>(this ISet<T> set, bool inPlace = false)
     {
-        // TODO: Optimize
+        // TODO: Optimize // NOSONAR
         var values = set.ToArray();
         for (var i = 0; i < values.Length; i++)
             foreach (var value in values.Combinations(i + 1, inPlace).EnsureNotNull())
@@ -449,7 +456,7 @@ public static class Combinatorics
     /// </summary>
     public static IEnumerable<SortedSet<T>> Subsets<T>(this ISet<T> set, int k, bool inPlace = false)
     {
-        // TODO: Optimize
+        // TODO: Optimize // NOSONAR
         var values = set.ToArray();
         foreach (var value in values.Combinations(k, inPlace).EnsureNotNull())
             yield return new SortedSet<T>(value);

@@ -187,7 +187,7 @@ public class ModelBuilderExtensionsTests
         // Assert
         Assert.IsNotNull(result);
         Assert.IsTrue(result.Body.NodeType == ExpressionType.Constant);
-        Assert.AreEqual(true, ((ConstantExpression)result.Body).Value);
+        Assert.IsTrue((bool)((ConstantExpression)result.Body).Value!);
     }
 
     [TestMethod]

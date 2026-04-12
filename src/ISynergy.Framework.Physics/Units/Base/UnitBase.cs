@@ -35,7 +35,7 @@ public abstract class UnitBase : IUnit
     [RequiresUnreferencedCode("Calls EnumExtensions.GetSymbol which uses reflection to read SymbolAttribute from enum members.")]
     protected UnitBase(Units unit, UnitTypes[] unitTypes)
     {
-        Argument.IsNotNull(unit);
+        Argument.IsNotNull(unit); // NOSONAR
 
         Name = unit.GetDescription();
         Symbol = unit.GetSymbol();

@@ -6,7 +6,7 @@ using ISynergy.Framework.Mvvm.Enumerations;
 namespace ISynergy.Framework.UI.Windows;
 
 [XamlCompilation(XamlCompilationOptions.Skip)]
-public partial class SelectionWindow : ISelectionWindow, IDisposable
+public partial class SelectionWindow : ISelectionWindow
 {
     private bool _isDisposed = false;
 
@@ -23,21 +23,15 @@ public partial class SelectionWindow : ISelectionWindow, IDisposable
         {
             // Only initialize DataSummary selection if ViewModel has pre-selected items
             // Don't clear existing selections when BindingContext changes
-            if (viewModel.SelectedItems is not null && viewModel.SelectedItems.Count > 0)
+            if (viewModel.SelectedItems is not null && viewModel.SelectedItems.Count > 0 &&
+                viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItems.Count == 1)
             {
-                if (viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItems.Count == 1)
-                {
-                    DataSummary.SelectedItem = viewModel.SelectedItems.Single();
-                }
-                else if (viewModel.SelectionMode == SelectionModes.Multiple)
-                {
-                    DataSummary.SelectedItems = new List<object>();
-
-                    foreach (var item in viewModel.SelectedItems.EnsureNotNull())
-                    {
-                        DataSummary.SelectedItems.Add(item);
-                    }
-                }
+                DataSummary.SelectedItem = viewModel.SelectedItems.Single();
+            }
+            else if (viewModel.SelectedItems is not null && viewModel.SelectedItems.Count > 0 &&
+                     viewModel.SelectionMode == SelectionModes.Multiple)
+            {
+                DataSummary.SelectedItems = viewModel.SelectedItems.EnsureNotNull().ToList<object>();
             }
         }
     }
@@ -55,10 +49,9 @@ public partial class SelectionWindow : ISelectionWindow, IDisposable
             }
             else
             {
-                foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
+                foreach (var item in DataSummary.SelectedItems.EnsureNotNull().Where(item => item is not null)) // NOSONAR
                 {
-                    if (item is not null)
-                        viewModel.SelectedItems.Add(item);
+                    viewModel.SelectedItems.Add(item);
                 }
             }
 
@@ -87,10 +80,6 @@ public partial class SelectionWindow : ISelectionWindow, IDisposable
         }
 
         _isDisposed = true;
-    }
-
-    ~SelectionWindow()
-    {
-        Dispose(false);
+        base.Dispose(disposing);
     }
 }

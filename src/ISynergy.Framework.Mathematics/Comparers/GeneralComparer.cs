@@ -1,3 +1,10 @@
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 namespace ISynergy.Framework.Mathematics.Comparers;
 
 /// <summary>
@@ -38,7 +45,7 @@ public enum ComparerDirection
 public class GeneralComparer : IComparer<double>, IComparer<int>
 {
     private readonly Func<double, double> map;
-    private int direction = 1;
+    private int direction;
 
     /// <summary>
     ///     Constructs a new General Comparer.
@@ -130,7 +137,7 @@ public class GeneralComparer : IComparer<double>, IComparer<int>
 /// <seealso cref="CustomComparer{T}" />
 public class GeneralComparer<T> : IComparer<T> where T : IComparable<T>
 {
-    private int direction = 1;
+    private int direction;
 
     /// <summary>
     ///     Constructs a new General Comparer.

@@ -178,7 +178,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b);
         bool isSuccess = search.FindRoot();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.RootNotBracketed, search.Status);
     }
 
@@ -207,7 +207,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b);
         bool isSuccess = search.FindRoot();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.RootNotBracketed, search.Status);
     }
 
@@ -236,7 +236,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b, maxIterations: 5);
         bool isSuccess = search.FindRoot();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.MaxIterationsReached, search.Status);
 
         Assert.IsTrue(search.Solution > a && search.Solution < b);
@@ -267,7 +267,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b, maxIterations: 10);
         bool isSuccess = search.Maximize();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.MaxIterationsReached, search.Status);
 
         Assert.IsTrue(search.Solution > a && search.Solution < b);

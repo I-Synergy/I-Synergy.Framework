@@ -83,7 +83,7 @@ public class AutomationService : IAutomationService
 
                     await nextTask
                         .Invoke()
-                        .ContinueWith(x => _logger.LogInformation("Task completed!"), cancellationTokenSource.Token);
+                        .ContinueWith(_ => _logger.LogInformation("Task completed!"), cancellationTokenSource.Token);
                 }
 
                 return new ActionResult(true, value);

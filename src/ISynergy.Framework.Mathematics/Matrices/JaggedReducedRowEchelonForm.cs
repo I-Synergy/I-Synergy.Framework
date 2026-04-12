@@ -1,3 +1,10 @@
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 /// <summary>
@@ -7,11 +14,11 @@ namespace ISynergy.Framework.Mathematics.Matrices;
 public class JaggedReducedRowEchelonForm
 {
 
-    private double[][] rref;
-    private int rows;
-    private int cols;
+    private readonly double[][] rref;
+    private readonly int rows;
+    private readonly int cols;
 
-    private int[] pivot;
+    private readonly int[] pivot;
     private int? freeCount;
 
     /// <summary>

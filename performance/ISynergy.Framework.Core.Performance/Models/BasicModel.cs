@@ -10,6 +10,6 @@ public class BasicModel
     {
         Id = Guid.NewGuid();
         Name = $"Name {Id}";
-        Age = new Random().Next();
+        Age = Random.Shared.Next();
     }
 }

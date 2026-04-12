@@ -82,7 +82,6 @@ public sealed partial class ImageBrowser : UserControl
                 DateTime = System.DateTime.Now;
             }
         }
-        ;
     }
 
     /// <summary>
@@ -103,7 +102,6 @@ public sealed partial class ImageBrowser : UserControl
                 DateTime = System.DateTime.Now;
             }
         }
-        ;
     }
 
     /// <summary>

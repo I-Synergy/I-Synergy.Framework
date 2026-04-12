@@ -39,7 +39,7 @@ public static class EnumExtensions
         Type type = enumerationValue.GetType();
 
         if (!type.IsEnum)
-            throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
+            throw new ArgumentException("EnumerationValue must be of Enum type", nameof(enumerationValue));
 
         //Tries to find a DescriptionAttribute for a potential friendly name
         //for the enum

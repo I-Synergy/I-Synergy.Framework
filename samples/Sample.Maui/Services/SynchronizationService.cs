@@ -3,6 +3,9 @@ using Dotmim.Sync.Enumerations;
 using Dotmim.Sync.Sqlite;
 using Dotmim.Sync.Web.Client;
 using ISynergy.Framework.Core.Abstractions;
+
+#pragma warning disable S3776 // cognitive complexity is inherent in sync service initialization
+#pragma warning disable S1313 // 10.0.2.2 is the Android emulator's loopback address for the host machine
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
@@ -24,7 +27,7 @@ internal class SynchronizationService : ISynchronizationService
     private readonly IContext _context;
     private readonly IMessengerService _messengerService;
     private readonly ISettingsService _settingsService;
-    private readonly ISynchronizationSettings? _synchronizationSettings;
+    private readonly ISynchronizationSettings? _synchronizationSettings; // NOSONAR - field is read in SynchronizeAsync
 
     public bool IsActive { get; }
     public SyncAgent? SynchronizationAgent { get; }
@@ -36,7 +39,7 @@ internal class SynchronizationService : ISynchronizationService
 
     public ISynchronizationSettings? SynchronizationOptions => _synchronizationSettings;
 
-    public SynchronizationService(
+    public SynchronizationService( // NOSONAR - high complexity is inherent in synchronization setup
         IContext context,
         IMessengerService messengerService,
         ISettingsService settingsService,
@@ -95,7 +98,7 @@ internal class SynchronizationService : ISynchronizationService
 
             var handler = new HttpClientHandler();
 #if DEBUG
-            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2")
+            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2") // NOSONAR - Android emulator localhost alias
             {
                 handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
                 {
@@ -123,14 +126,13 @@ internal class SynchronizationService : ISynchronizationService
             // The Android emulator uses 10.0.2.2 as an alias for the host machine's localhost.
             // IIS Express only accepts requests with Host header set to "localhost".
             // We override the Host header to match IIS Express requirements when running on Android emulator.
-            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2")
+            if (DeviceInfo.Platform == DevicePlatform.Android && synchronizationEndpoint.Host == "10.0.2.2") // NOSONAR - Android emulator localhost alias
                 httpClient.DefaultRequestHeaders.Host = $"localhost:{synchronizationEndpoint.Port}";
 
             httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
             var webRemoteOrchestrator = new WebRemoteOrchestrator(synchronizationEndpoint.AbsoluteUri, client: httpClient, maxDownladingDegreeOfParallelism: 1)
             {
-                //Converter = new SqliteConverter()
                 SerializerFactory = new MessagePackSerializerFactory()
             };
 

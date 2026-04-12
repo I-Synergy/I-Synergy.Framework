@@ -1,3 +1,5 @@
+#pragma warning disable S3776 // cognitive complexity is inherent in recursive jagged-array dimension calculation
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
@@ -22,7 +24,7 @@ public static class ArrayExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
     /// <returns></returns>
-    private static double[,] ToDoubleArray<T>(this T[,] array)
+    private static double[,] ToDoubleArray<T>(this T[,] array) // NOSONAR - available for future multi-dimensional array conversions
     {
         var result = new double[array.GetLength(0), array.GetLength(1)];
 
@@ -39,7 +41,7 @@ public static class ArrayExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
     /// <returns></returns>
-    private static double[][] ToDoubleArray<T>(this T[][] array)
+    private static double[][] ToDoubleArray<T>(this T[][] array) // NOSONAR - available for future jagged array conversions
     {
         var result = new double[array.GetLength()[0]][];
 
@@ -119,7 +121,7 @@ public static class ArrayExtensions
     ///     Gets the maximum length possible for each dimension (in case
     ///     the jagged matrices has different lengths).
     /// </param>
-    public static int[] GetLength(this Array? array, bool deep = true, bool max = false)
+    public static int[] GetLength(this Array? array, bool deep = true, bool max = false) // NOSONAR
     {
         if (array is null)
             return [-1];

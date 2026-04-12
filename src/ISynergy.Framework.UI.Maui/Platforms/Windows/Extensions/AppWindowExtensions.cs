@@ -64,7 +64,7 @@ public static class AppWindowExtensions
         }
     }
 
-    public static MauiAppBuilder ConfigureSingleInstanceApp(this MauiAppBuilder builder, Action<string[]> defaultAction, Action<ProtocolActivatedEventArgs> protocolAction, Action<LaunchActivatedEventArgs> launchAction)
+    public static MauiAppBuilder ConfigureSingleInstanceApp(this MauiAppBuilder builder, Action<string[]> defaultAction, Action<ProtocolActivatedEventArgs> protocolAction, Action<LaunchActivatedEventArgs> launchAction) // NOSONAR
     {
 #if WINDOWS
         builder.ConfigureLifecycleEvents(configureDelegate =>

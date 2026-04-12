@@ -36,7 +36,7 @@ public static class WpfAppBuilderExtensions
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
     [RequiresUnreferencedCode("Assembly scanning via RegisterAssemblies and configuration binding via BindWithReload are not trim-safe.")]
-    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>(
+    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>( // NOSONAR
         this IHostBuilder wpfAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,

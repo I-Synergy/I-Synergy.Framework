@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.Core.Abstractions.Services;
+using System.Globalization;
 
 #if WINDOWS
 using Windows.Security.Credentials;
@@ -48,7 +49,7 @@ public class TokenStorageService : ITokenStorageService
         if (string.IsNullOrEmpty(expiryString))
             return null;
 
-        if (DateTimeOffset.TryParse(expiryString, out var expiry))
+        if (DateTimeOffset.TryParse(expiryString, CultureInfo.InvariantCulture, DateTimeStyles.None, out var expiry))
             return expiry;
 
         return null;
@@ -108,6 +109,7 @@ public class TokenStorageService : ITokenStorageService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to clear tokens");
+            throw;
         }
     }
 
@@ -121,8 +123,9 @@ public class TokenStorageService : ITokenStorageService
             credential.RetrievePassword();
             return Task.FromResult<string?>(credential.Password);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogDebug(ex, "Credential not found in PasswordVault for key: {Key}", key);
             return Task.FromResult<string?>(null);
         }
 #elif ANDROID
@@ -158,7 +161,10 @@ public class TokenStorageService : ITokenStorageService
                 var oldCredential = vault.Retrieve(_infoService.ProductName, key);
                 vault.Remove(oldCredential);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "No existing credential to remove for key: {Key}", key);
+            }
 
             vault.Add(new PasswordCredential(_infoService.ProductName, key, value));
         }
@@ -195,7 +201,10 @@ public class TokenStorageService : ITokenStorageService
             var credential = vault.Retrieve(_infoService.ProductName, key);
             vault.Remove(credential);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Credential not found for deletion, key: {Key}", key);
+        }
 #elif ANDROID
         var preferences = Android.App.Application.Context.GetSharedPreferences(_infoService.ProductName, Android.Content.FileCreationMode.Private);
         var editor = preferences?.Edit();
