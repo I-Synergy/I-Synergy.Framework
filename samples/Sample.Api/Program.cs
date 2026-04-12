@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace Sample.Api;
 
-public static class Program
+public class Program
 {
     public static void Main(string[] args)
     {

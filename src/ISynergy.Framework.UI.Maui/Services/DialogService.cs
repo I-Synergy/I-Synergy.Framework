@@ -386,7 +386,7 @@ public class DialogService : IDialogService
         _logger?.LogError("All fallback notification methods failed for: {Title} - {Message}", title, message);
     }
 
-    private static async Task TryEmergencyFallbackAsync(string message, string title)
+    private async Task TryEmergencyFallbackAsync(string message, string title)
     {
         try
         {

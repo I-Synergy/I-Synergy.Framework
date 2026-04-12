@@ -159,7 +159,7 @@ public class Matrix4x4Test
         );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0)]
     [DataRow(30)]
     [DataRow(45)]
@@ -187,7 +187,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, expectedArray);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0)]
     [DataRow(30)]
     [DataRow(45)]
@@ -215,7 +215,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, expectedArray);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0)]
     [DataRow(30)]
     [DataRow(45)]
@@ -243,7 +243,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, expectedArray);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0)]
     [DataRow(30, 45, 60)]
     [DataRow(45, 60, 30)]
@@ -269,7 +269,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, rotationMatrix.ToArray());
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0)]
     [DataRow(30, 45, 60)]
     [DataRow(45, 60, 30)]
@@ -294,7 +294,7 @@ public class Matrix4x4Test
         Assert.AreEqual(radiansRoll, extractedRoll, Epsilon);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4)]
     [DataRow(-1, -2, -3, -4)]
     public void CreateDiagonalTest(float v00, float v11, float v22, float v33)

@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Core.Ranges;
 [TestClass]
 public class IntRangeTest
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 1, 1, 2, true)]
     [DataRow(0, 1, 2, 3, false)]
     [DataRow(0, 10, 2, 4, true)]
@@ -22,7 +22,7 @@ public class IntRangeTest
         Assert.AreEqual(expectedResult, range1.IsOverlapping(range2));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 1, 0, 1)]
     [DataRow(-1, 0, -1, 0)]
     public void ToRangeTest(int iMin, int iMax, float fMin, float fMax)
@@ -34,7 +34,7 @@ public class IntRangeTest
         Assert.AreEqual(fMax, range.Max);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 1, 2, true)]
     [DataRow(-2, -1, -2, -1, true)]
     [DataRow(1, 2, 2, 3, false)]

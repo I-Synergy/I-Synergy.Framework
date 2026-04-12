@@ -26,7 +26,7 @@ namespace Sample.TokenService.Integration.Tests.Basic
             _fixture = new PrincipalFixture();
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("/swagger", "text/html")]
         public async Task GetEnpointsReturnSuccessAndCorrectContentType(string url, string contentType)
         {
@@ -134,7 +134,7 @@ namespace Sample.TokenService.Integration.Tests.Basic
             Assert.AreEqual(GenericConstants.JsonContentType, response.Content.Headers.ContentType.ToString());
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(ClaimType.RoleType)]
         public async Task PostGetListOfClaimTypeSuccessAndCorrectContentType(string claimType)
         {
@@ -157,7 +157,7 @@ namespace Sample.TokenService.Integration.Tests.Basic
             Assert.AreEqual(GenericConstants.JsonContentType, response.Content.Headers.ContentType.ToString());
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(CustomClaimTypes.DocumentIdType)]
         public async Task PostGetSingleOfClaimTypeSuccessAndCorrectContentType(string claimType)
         {

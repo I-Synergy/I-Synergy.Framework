@@ -64,7 +64,7 @@ public class ViewModelExtensionTests
     public interface ITestViewModel : IViewModel { }
 
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(ViewModels.MapsViewModel), "MapsViewModel")]
     [DataRow(typeof(ViewModels.NoteViewModel), "NoteViewModel")]
     public void GetNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
@@ -86,7 +86,7 @@ public class ViewModelExtensionTests
         Assert.AreEqual("GenericViewModel", result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(ViewModels.MapsViewModel), "ISynergy.Framework.Mvvm.ViewModels.MapsViewModel")]
     [DataRow(typeof(ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
     public void GetFullNameOfViewModelByTypeTest(Type viewModelType, string expectedName)

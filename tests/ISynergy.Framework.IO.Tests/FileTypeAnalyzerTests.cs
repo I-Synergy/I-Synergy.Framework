@@ -54,7 +54,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectAdobeTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("PDF")]
     [DataRow("FDF")]
     public void CanDetectAdobeTest(string extension)
@@ -66,7 +66,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectImagesTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("BMP")]
     [DataRow("GIF")]
     [DataRow("ICO")]
@@ -84,7 +84,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectVideoTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("3GP")]
     [DataRow("AVI")]
     [DataRow("FLV")]
@@ -100,7 +100,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectAudioTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("AC3")]
     [DataRow("AIFF")]
     [DataRow("FLAC")]
@@ -116,7 +116,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectOfficeTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("DOC")]
     [DataRow("DOCX")]
     [DataRow("PPT")]
@@ -132,7 +132,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectFontTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("OTF")]
     [DataRow("TTF")]
     [DataRow("WOFF")]
@@ -145,7 +145,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectCompressedTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("7Z")]
     [DataRow("RAR")]
     [DataRow("ZIP")]
@@ -158,7 +158,7 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectXmlFileTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("XML")]
     public void CanDetectXmlFileTest(string extension)
     {
@@ -169,14 +169,14 @@ public partial class FileTypeAnalyzerTests
     /// Defines the test method CanDetectEmailFileTest.
     /// </summary>
     /// <param name="extension">The extension.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("MSG")]
     public void CanDetectEmailFileTest(string extension)
     {
         DetectType(extension);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("XML", "application/xml")]
     [DataRow("ZIP", "application/zip")]
     [DataRow("DOC", "application/msword")]

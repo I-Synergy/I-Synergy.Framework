@@ -14,7 +14,7 @@ public class QueryableExtensionTests
     /// <param name="size">The size.</param>
     /// <param name="pageSize">Size of the page.</param>
     /// <param name="pages">The pages.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(35, 10, 4)]
     [DataRow(20, 10, 2)]
     [DataRow(8, 10, 1)]
@@ -31,7 +31,7 @@ public class QueryableExtensionTests
     /// <param name="pageSize">Size of the page.</param>
     /// <param name="pageIndex">The page.</param>
     /// <param name="count">The count.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(35, 10, 0, 10)]
     [DataRow(35, 10, 1, 10)]
     [DataRow(35, 10, 2, 10)]

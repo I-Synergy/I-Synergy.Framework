@@ -31,7 +31,7 @@ public class FileService : IFileService<FileResult>
                 result.AddRange(
                     files.EnsureNotNull()
                          .Where(file => file is not null)
-                         .Select(file => file.ToFileResult())
+                         .Select(file => file!.ToFileResult())
                          .Where(fileResult => fileResult is not null)
                          .Select(fileResult => fileResult!));
             }

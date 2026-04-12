@@ -14,7 +14,7 @@ public class TypeExtensionsTests
     /// Defines the test method BasicTypeActivatorTest.
     /// </summary>
     /// <param name="type">The type.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(string))]
     [DataRow(typeof(bool))]
     [DataRow(typeof(object))]

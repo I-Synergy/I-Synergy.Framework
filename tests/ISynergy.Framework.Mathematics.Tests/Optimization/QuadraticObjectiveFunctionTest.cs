@@ -510,7 +510,7 @@ public class QuadraticObjectiveFunctionTest
                 }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", "x² + 1")]
     [DataRow("x² + 1", "2x²")]
     [DataRow("-x*y + y*z", "-x*y + y*z")]
@@ -586,7 +586,7 @@ public class QuadraticObjectiveFunctionTest
         Assert.AreEqual(result, check);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", "x² + 1", 3, 5)]
     [DataRow("x² + 1", "2x²", 1, 0)]
     [DataRow("-x*y + y*z", "-x*y + y*z", 2, 2)]
@@ -626,7 +626,7 @@ public class QuadraticObjectiveFunctionTest
                 }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", "x² + 1")]
     [DataRow("x² + 1", "2x²")]
     [DataRow("-x*y + y*z", "-x*y + y*z")]
@@ -695,7 +695,7 @@ public class QuadraticObjectiveFunctionTest
                 }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", 6)]
     [DataRow("-x*y + y*z", 7)]
     [DataRow("-2x² + xy - y² - 10xz + z²", 0)]
