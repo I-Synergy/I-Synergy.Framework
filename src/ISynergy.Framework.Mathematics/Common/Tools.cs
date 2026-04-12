@@ -108,7 +108,7 @@ public static class Tools
         x |= x >> 4;
         x |= x >> 8;
         x |= x >> 16;
-        return ++x;
+        return x + 1;
     }
 
     /// <summary>
@@ -409,7 +409,7 @@ public static class Tools
     /// </returns>
     public static bool IsPowerOf2(int x)
     {
-        return x > 0 ? (x & x - 1) == 0 : false;
+        return x > 0 && (x & x - 1) == 0;
     }
 
     /// <summary>

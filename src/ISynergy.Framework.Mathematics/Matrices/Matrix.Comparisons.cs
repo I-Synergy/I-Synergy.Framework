@@ -7,6 +7,7 @@ using ISynergy.Framework.Mathematics.Common;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S4136, S1871, S1066, S2234 // generated comparison code: overload ordering, duplicate branches, collapsible ifs, argument order are intentional
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 

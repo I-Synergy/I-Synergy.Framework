@@ -245,7 +245,7 @@ public static class Special
     /// </summary>
     public static double Log1pexp(double x)
     {
-        // Computes Math.Log(1.0 / (1.0 + Math.Exp(-sum)));
+        // Computes Math.Log(1.0 / (1.0 + Math.Exp(-sum))); // NOSONAR - reference formula comment
         // https://cran.r-project.org/web/packages/Rmpfr/vignettes/log1mexp-note.pdf
 
         if (x < -37)
@@ -381,7 +381,9 @@ public static class Special
         if (n <= 100)
             // Compute the factorial using ln(gamma(n)) approximation, using the cache
             // if the value has been previously computed.
-            return lnfcache[n] > 0 ? lnfcache[n] : lnfcache[n] = Gamma.Log(n + 1.0);
+            if (lnfcache[n] <= 0)
+                lnfcache[n] = Gamma.Log(n + 1.0);
+            return lnfcache[n];
         return Gamma.Log(n + 1.0);
     }
 

@@ -12,6 +12,7 @@ using System.Diagnostics;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1450, S1481, S1066, S2234, S1939 // FORTRAN port: write-only fields, unused locals, collapsible ifs, argument order, and redundant interfaces are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -114,7 +115,6 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     private double[] iwuv;
     private double[] iwzv;
 
-    //private double[] work;
     private int r;
     private double[] work;
 
@@ -667,7 +667,7 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         // (among the entries corresponding to inequalities constraints). 
 
         l1 = 0;
-        var it1 = 0;
+        var it1 = 0; // NOSONAR - initialized to default, may be conditionally set in loop
         double t1 = 0;
         var t1inf = true;
 

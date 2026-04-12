@@ -293,7 +293,8 @@ public static class Normal
             term = sum;
 
             // Next term
-            nextTerm *= pwr / (i += 2);
+            i += 2;
+            nextTerm *= pwr / i;
 
             sum += nextTerm;
         }

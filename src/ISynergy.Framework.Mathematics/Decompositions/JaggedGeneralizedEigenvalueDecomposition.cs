@@ -8,6 +8,7 @@ using ISynergy.Framework.Mathematics.Vectors;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S108 // empty blocks are required as goto targets in EISPACK port
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -812,7 +813,7 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
                     z[i][k] += t * v2;
                 }
 
-            L260: { }
+            L260: { } // intentional empty block - goto target
         }
 
         goto L70; // End QZ step
@@ -1121,7 +1122,7 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
             L505:
             isw = 3 - isw;
 
-        L510: { }
+        L510: { } // intentional empty block - goto target
         }
 
         b[n - 1][0] = epsb;
@@ -1220,7 +1221,7 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
             L690:
                 isw = 3 - isw;
 
-            L700: { }
+            L700: { } // intentional empty block - goto target
             }
 
             // End real vector
@@ -1337,14 +1338,14 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
                 b[i][na] = t1;
                 b[i][en] = t2;
 
-            L790: { }
+            L790: { } // intentional empty block - goto target
             }
 
         // End complex vector
         L795:
             isw = 3 - isw;
 
-        L800: { }
+        L800: { } // intentional empty block - goto target
         }
 
         // End back substitution. Transform to original coordinate system.
@@ -1403,7 +1404,7 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
         L945:
             isw = 3 - isw;
 
-        L950: { }
+        L950: { } // intentional empty block - goto target
         }
 
         return 0;

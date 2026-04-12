@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1117 // algorithm code and variable shadowing is intentional
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -169,11 +170,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 //  than columns. If this is the case, you should compute SVD on the
                 //  transpose of A and then swap the left and right eigenvectors.
 
-                // However, as the solution found can still be useful, the exception below
-                // will not be thrown, and only a warning will be output in the trace.
-
-                // throw new ArgumentException("Matrix should have more rows than columns.");
-
+                // The solution found can still be useful, so only a warning will be output.
                 Trace.WriteLine("WARNING: Computing SVD on a matrix with more columns than rows.");
 
                 // Proceed anyway
@@ -377,12 +374,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                     // For the proper correction, compute the decomposition of the
                     //  transpose of A and swap the left and right eigenvectors
 
-                    // Original line:
-                    //   for (var j = k + 1; j < nu; j++)
-                    // Pseudo correction:
-                    //   for (var j = k + 1; j < n; j++)
-
-                    for (var j = k + 1; j < n; j++) // pseudo-correction
+                    for (var j = k + 1; j < n; j++) // pseudo-correction: original used nu, not n
                     {
                         double t = 0;
                         for (var i = k + 1; i < RightSingularVectors.Rows(); i++)

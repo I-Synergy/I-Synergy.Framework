@@ -214,7 +214,6 @@ public class MatReader : IDisposable
     {
         Transpose = autoTranspose;
 
-        long startOffset = reader.BaseStream.Position;
         this.reader = reader;
 
         char[] title = reader.ReadChars(116);
@@ -324,16 +323,13 @@ public class MatReader : IDisposable
     /// 
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
+        if (disposing && reader is not null)
         {
             // free managed resources
-            if (reader is not null)
-            {
 #if !NETSTANDARD1_4
-                reader.Close();
+            reader.Close();
 #endif
-                reader = null;
-            }
+            reader = null;
         }
     }
 

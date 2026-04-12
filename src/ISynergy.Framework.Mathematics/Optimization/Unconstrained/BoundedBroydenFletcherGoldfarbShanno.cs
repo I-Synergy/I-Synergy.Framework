@@ -9,6 +9,7 @@ using System.ComponentModel;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S108 // duplicate strings and empty blocks are intentional in ported algorithms
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -281,6 +282,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         // c
         else if (task.StartsWith("NEW_X", StringComparison.OrdinalIgnoreCase))
         {
+            // intentional empty block - NEW_X task requires no action here; continue loop
         }
         else
         {

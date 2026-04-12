@@ -299,8 +299,8 @@ public static partial class Matrix
         if (n == 0)
             return Matrix.Identity(matrix.GetLength(0));
 
-        // TODO: Reduce the number of memory allocations
-        // TODO: Use bitwise operations instead of strings
+        // TODO: Reduce the number of memory allocations // NOSONAR
+        // TODO: Use bitwise operations instead of strings // NOSONAR
 
         var result = matrix;
         var bin = System.Convert.ToString(n, 2);

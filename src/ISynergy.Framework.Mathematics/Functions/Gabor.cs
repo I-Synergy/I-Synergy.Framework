@@ -168,33 +168,38 @@ public static class Gabor
             case GaborKernelKind.Real:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
-                        sum += kernel[i, j] = RealFunction2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                    {
+                        kernel[i, j] = RealFunction2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                        sum += kernel[i, j];
+                    }
                 break;
 
             case GaborKernelKind.Imaginary:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
-                        sum += kernel[i, j] = ImaginaryFunction2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                    {
+                        kernel[i, j] = ImaginaryFunction2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma);
+                        sum += kernel[i, j];
+                    }
                 break;
 
             case GaborKernelKind.Magnitude:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
-                        sum += kernel[i, j] = Function2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
+                    {
+                        kernel[i, j] = Function2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
+                        sum += kernel[i, j];
+                    }
                 break;
 
             case GaborKernelKind.SquaredMagnitude:
                 for (var i = 0; i < xValues.Length; i++)
                     for (var j = 0; j < yValues.Length; j++)
                     {
-                        var v = Function2D(
-                            xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
-                        sum += kernel[i, j] = v * v;
+                        var v = Function2D(xValues[i], yValues[j], lambda, theta, psi, sigma, gamma).Magnitude;
+                        kernel[i, j] = v * v;
+                        sum += kernel[i, j];
                     }
-
                 break;
         }
 

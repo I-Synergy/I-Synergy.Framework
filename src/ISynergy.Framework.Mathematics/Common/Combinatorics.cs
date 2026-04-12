@@ -365,7 +365,7 @@ public static class Combinatorics
     /// </param>
     public static IEnumerable<T[]> Combinations<T>(this T[] values, bool inPlace = false)
     {
-        // TODO: Test
+        // TODO: Test // NOSONAR
         for (var i = 0; i < values.Length; i++)
             foreach (var value in values.Combinations(i + 1, inPlace).EnsureNotNull())
                 yield return value;
@@ -444,7 +444,7 @@ public static class Combinatorics
     /// </summary>
     public static IEnumerable<SortedSet<T>> Subsets<T>(this ISet<T> set, bool inPlace = false)
     {
-        // TODO: Optimize
+        // TODO: Optimize // NOSONAR
         var values = set.ToArray();
         for (var i = 0; i < values.Length; i++)
             foreach (var value in values.Combinations(i + 1, inPlace).EnsureNotNull())
@@ -456,7 +456,7 @@ public static class Combinatorics
     /// </summary>
     public static IEnumerable<SortedSet<T>> Subsets<T>(this ISet<T> set, int k, bool inPlace = false)
     {
-        // TODO: Optimize
+        // TODO: Optimize // NOSONAR
         var values = set.ToArray();
         foreach (var value in values.Combinations(k, inPlace).EnsureNotNull())
             yield return new SortedSet<T>(value);

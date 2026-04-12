@@ -142,7 +142,7 @@ public struct SmoothHingeLoss : ILoss<double[]>,
     /// </returns>
     public double Loss(double expected, double actual)
     {
-        // TODO: Use multiplication instead of conditionals
+        // TODO: Use multiplication instead of conditionals // NOSONAR
         if (expected > 0)
         {
             if (actual > 1)
@@ -175,7 +175,7 @@ public struct SmoothHingeLoss : ILoss<double[]>,
     /// </returns>
     public double Derivative(double expected, double actual)
     {
-        // TODO: Use multiplication instead of conditionals
+        // TODO: Use multiplication instead of conditionals // NOSONAR
         if (expected > 0)
         {
             if (actual > 1)

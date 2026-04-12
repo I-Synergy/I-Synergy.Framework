@@ -7,6 +7,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125 // algorithm comments are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Differentiation;
@@ -249,7 +250,7 @@ public class FiniteDifferences
             throw new DimensionMismatchException("gradient",
                 "Gradient vector must have at least the same size as x.");
 
-        if (Function is null)
+        if (Function is null) // NOSONAR - null check is a valid guard clause
             throw new InvalidOperationException("The Function has not been defined.");
 
         var pointCache = points.Value[0];
@@ -307,11 +308,7 @@ public class FiniteDifferences
     private double derivative(Func<double[], double> func, double[] x, int index, double[] points,
         double centerValue)
     {
-        //if (order >= coefficients.Length)
-        //{
-        //    throw new ArgumentOutOfRangeException("The derivative order needs to be less than the number of " +
-        //        "interpolation points. To use a higher order, please adjust the NumberOfPoints property first.");
-        //}
+
 
         var step = GetUniformlySampledPoints(func, x, index, centerValue, points);
 
@@ -438,7 +435,7 @@ public class FiniteDifferences
     public static double Derivative(Func<double, double> function, double value, int order, double stepSize)
     {
         // This method is specific for univariate functions.
-        // TODO: Separate FiniteDifferences into classes for univariate, multivariate and vector-valued functions
+        // TODO: Separate FiniteDifferences into classes for univariate, multivariate and vector-valued functions // NOSONAR
 
         var output = function(value);
         var original = value;

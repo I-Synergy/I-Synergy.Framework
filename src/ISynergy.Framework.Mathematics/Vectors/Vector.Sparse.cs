@@ -39,7 +39,7 @@ public static partial class Vector
             {
                 i++;
             }
-            else //if (posx > posy)
+            else
             {
                 j++;
             }
@@ -75,7 +75,7 @@ public static partial class Vector
             {
                 i++;
             }
-            else // if (posx > posy)
+            else
             {
                 j++;
             }

@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S3427, S3626, S4136 // duplicate strings, overload ordering, redundant jumps are intentional in statistical calculations
 
 
 namespace ISynergy.Framework.Mathematics.Statistics;
@@ -475,8 +476,8 @@ public static partial class Measures
             return matrix.GetRow(-1);
 
         double[][] truncatedSeries = window == matrix.Rows()
-            ? truncatedSeries = matrix
-            : truncatedSeries = matrix.Get(-window, 0);
+            ? matrix
+            : matrix.Get(-window, 0);
 
         if (alpha == 0)
             return truncatedSeries.Mean(0);
@@ -562,8 +563,8 @@ public static partial class Measures
         double[] decayWeights = GetDecayWeights(window, alpha);
 
         double[][] truncatedSeries = window == rows
-            ? truncatedSeries = matrix
-            : truncatedSeries = matrix.Get(-window, 0);
+            ? matrix
+            : matrix.Get(-window, 0);
 
         if (unbiased)
             return truncatedSeries.WeightedCovariance(decayWeights);
@@ -1149,14 +1150,6 @@ public static partial class Measures
 
             if (weightType == WeightType.Fraction)
             {
-                /*
-                if (Math.Abs(weightSum - 1.0) >= 1e-8)
-                {
-                    throw new ArgumentException("An unbiased variance estimate"
-                      + " cannot be computed if weights do not sum to one. The"
-                      + " given weights sum up to " + squareSum, "weights");
-                }*/
-
                 return sum / (weightSum - (squareSum / weightSum));
             }
             if (weightType == WeightType.Repetition)

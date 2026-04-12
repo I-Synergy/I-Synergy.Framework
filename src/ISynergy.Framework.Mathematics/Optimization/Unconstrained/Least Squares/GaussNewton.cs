@@ -35,7 +35,7 @@ namespace ISynergy.Framework.Mathematics.Optimization;
 /// </example>
 /// <seealso cref="LevenbergMarquardt" />
 /// <seealso cref="FiniteDifferences" />
-public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod, IConvergenceLearning
+public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
 {
     private JaggedSingularValueDecomposition decomposition;
 

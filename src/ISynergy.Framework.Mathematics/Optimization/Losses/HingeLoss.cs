@@ -19,16 +19,10 @@ public struct HingeLoss : ILoss<double[]>,
     IDifferentiableLoss<bool, double, double>,
     IDifferentiableLoss<double, double, double>
 {
-    private bool[][] expected;
-
     /// <summary>
-    ///     Gets the expected outputs (the ground truth).
+    ///     Gets or sets the expected outputs (the ground truth).
     /// </summary>
-    public bool[][] Expected
-    {
-        get => expected;
-        set => expected = value;
-    }
+    public bool[][] Expected { get; set; }
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="HingeLoss" /> class.
@@ -36,7 +30,7 @@ public struct HingeLoss : ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HingeLoss(double[][] expected)
     {
-        this.expected = Classes.Decide(expected);
+        Expected = Classes.Decide(expected);
     }
 
     /// <summary>
@@ -45,7 +39,7 @@ public struct HingeLoss : ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HingeLoss(double[] expected)
     {
-        this.expected = Classes.Decide(Jagged.ColumnVector(expected));
+        Expected = Classes.Decide(Jagged.ColumnVector(expected));
     }
 
     /// <summary>
@@ -59,7 +53,7 @@ public struct HingeLoss : ILoss<double[]>,
         if (Classes.IsMinusOnePlusOne(expected))
             expected = expected.ToZeroOne();
 
-        this.expected = Jagged.OneHot<bool>(expected);
+        Expected = Jagged.OneHot<bool>(expected);
     }
 
     /// <summary>
@@ -68,7 +62,7 @@ public struct HingeLoss : ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HingeLoss(bool[] expected)
     {
-        this.expected = Jagged.ColumnVector(expected);
+        Expected = Jagged.ColumnVector(expected);
     }
 
     /// <summary>

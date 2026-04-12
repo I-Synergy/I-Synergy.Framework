@@ -15,7 +15,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 ///   Linear Constraint Collection.
 /// </summary>
 /// 
-public class LinearConstraintCollection : Collection<LinearConstraint>, IEnumerable<LinearConstraint>
+public class LinearConstraintCollection : Collection<LinearConstraint>
 {
 
     /// <summary>

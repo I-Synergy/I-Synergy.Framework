@@ -65,7 +65,7 @@ public static partial class Jagged
     /// 
     public static bool TryParse(string s, IMatrixFormatProvider provider, out double[][] matrix)
     {
-        // TODO: Create a proper TryParse method without
+        // TODO: Create a proper TryParse method without // NOSONAR
         //       resorting to a underlying try-catch block.
         try
         {

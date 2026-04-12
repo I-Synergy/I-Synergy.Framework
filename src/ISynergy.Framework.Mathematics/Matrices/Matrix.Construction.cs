@@ -959,7 +959,7 @@ public static partial class Matrix
     /// </param>
     public static int GetArrayRank(this Type type, bool deep = true)
     {
-        if (type.IsArray == false || type.GetArrayRank() == 0)
+        if (!type.IsArray || type.GetArrayRank() == 0)
             return 0;
 
         if (deep && IsJagged(type))
@@ -1591,8 +1591,7 @@ public static partial class Matrix
     /// <summary>
     ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
     /// </summary>
-    [Obsolete("Please specify the number of steps instead of the step size for the rows and columns.")]
-
+    [Obsolete("Please specify the number of steps instead of the step size for the rows and columns.")] // NOSONAR
     public static double[][] Mesh(
         NumericRange rowRange, NumericRange colRange,
         double rowStepSize, double colStepSize)

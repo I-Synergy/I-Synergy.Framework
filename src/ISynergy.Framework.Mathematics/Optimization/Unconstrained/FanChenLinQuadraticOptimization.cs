@@ -747,7 +747,7 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
                         Gmax1 = G[i];
             }
 
-        if (unshrink == false && Gmax1 + Gmax2 <= Tolerance * 10)
+        if (!unshrink && Gmax1 + Gmax2 <= Tolerance * 10)
         {
             unshrink = true;
             reconstruct_gradient();
