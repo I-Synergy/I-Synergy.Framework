@@ -235,8 +235,8 @@ public abstract class ObservableClass : IObservableClass
         if (_propertyChanged != null)
         {
             // Invoke each handler individually to prevent one exception from stopping others
-            var handlers = _propertyChanged.GetInvocationList();
-            foreach (PropertyChangedEventHandler handler in handlers)
+            var handlers = _propertyChanged.GetInvocationList().OfType<PropertyChangedEventHandler>();
+            foreach (var handler in handlers)
             {
                 try
                 {

@@ -155,7 +155,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         RaisePropertyChanged(nameof(Errors));
     }
 
-    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents)
+    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents) // NOSONAR - used via base class SetValue which calls into this override path
     {
         if (propertyName is null)
             return;

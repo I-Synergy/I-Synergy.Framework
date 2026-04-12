@@ -247,7 +247,7 @@ public static class ReflectionExtensions
                 e => e.IsDefined(typeof(TitleAttribute))
             );
 
-        if (result is not null && result.Count() > 0)
+        if (result is not null && result.Any())
             return result.First().GetValue(_self)?.ToString() ?? string.Empty;
 
         return string.Empty;

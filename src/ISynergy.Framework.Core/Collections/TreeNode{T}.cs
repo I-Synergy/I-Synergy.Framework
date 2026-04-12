@@ -120,13 +120,12 @@ public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMembe
     /// Adds the child.
     /// </summary>
     /// <param name="node">The node.</param>
-    private TreeNode<TKey, TModel> AddChild(TreeNode<TKey, TModel> node)
+    private void AddChild(TreeNode<TKey, TModel> node)
     {
         Argument.IsNotNull(node);
 
         node.Parent = this;
         Children.Add(node);
-        return node;
     }
 
     /// <summary>

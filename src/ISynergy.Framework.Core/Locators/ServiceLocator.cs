@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Core.Locators;
 /// framework defines such an ambient container, use ServiceLocator.Current
 /// to get it.
 /// </summary>
-public class ServiceLocator
+public class ServiceLocator : IDisposable
 {
     private static IServiceProvider? _serviceProvider;
     private static ServiceLocator? _default;

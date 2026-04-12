@@ -11,7 +11,12 @@ public class NullScope : IDisposable
     {
     }
 
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// This is a no-op scope — there are no resources to release.
+    /// </summary>
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
     }
 }

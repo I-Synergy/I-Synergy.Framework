@@ -146,14 +146,14 @@ public static class ExceptionExtensions
                 {
                     AppendAggregateException(sb, aggregateException, verbosity, sanitizeSensitiveData);
                 }
-                else if (exception is not null && exception.InnerException is not null)
+                else if (exception is not null && exception.InnerException is not null) // NOSONAR - defensive null checks retained for safety
                 {
                     // Add inner exception details with recursion limit
                     AppendInnerExceptions(sb, exception.InnerException, verbosity, sanitizeSensitiveData);
                 }
             }
 
-            if (verbosity == ExceptionVerbosityLevel.Full && exception is not null)
+            if (verbosity == ExceptionVerbosityLevel.Full && exception is not null) // NOSONAR - defensive null check retained for safety
             {
                 // Add stack trace information
                 var stackTrace = exception.StackTrace ?? string.Empty;
@@ -252,22 +252,19 @@ public static class ExceptionExtensions
         sb.AppendLine($"Inner exception: {innerException.GetType().FullName}");
         sb.AppendLine($"Message: {innerMessage}");
 
-        if (verbosity == ExceptionVerbosityLevel.Full)
+        if (verbosity == ExceptionVerbosityLevel.Full && innerException.Data.Count > 0)
         {
-            if (innerException.Data.Count > 0)
+            sb.AppendLine("Exception Data:");
+            foreach (DictionaryEntry entry in innerException.Data)
             {
-                sb.AppendLine("Exception Data:");
-                foreach (DictionaryEntry entry in innerException.Data)
-                {
-                    var value = entry.Value?.ToString() ?? string.Empty;
-                    if (sanitizeSensitiveData)
-                        value = SanitizeSensitiveData(value);
-                    sb.AppendLine($"  {entry.Key}: {value}");
-                }
+                var value = entry.Value?.ToString() ?? string.Empty;
+                if (sanitizeSensitiveData)
+                    value = SanitizeSensitiveData(value);
+                sb.AppendLine($"  {entry.Key}: {value}");
             }
         }
 
-        if (innerException is not null && innerException.InnerException is not null)
+        if (innerException is not null && innerException.InnerException is not null) // NOSONAR - defensive null check retained for safety
             AppendInnerExceptions(sb, innerException.InnerException, verbosity, sanitizeSensitiveData, currentDepth + 1, maxDepth);
     }
 

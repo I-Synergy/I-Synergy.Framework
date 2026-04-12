@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 /// <summary>
 /// Interface IObservableClass
 /// </summary>
-public interface IObservableValidatedClass : IObservableClass, IAsyncDisposable, IDataErrorInfo, INotifyDataErrorInfo
+public interface IObservableValidatedClass : IObservableClass, IDataErrorInfo, INotifyDataErrorInfo
 {
     /// <summary>
     /// Validates this instance and optionally validates underlying properties.
