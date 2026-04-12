@@ -22,15 +22,15 @@ public class ServiceLocator : IDisposable
 
     public ServiceLocator(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        _serviceProvider = serviceProvider; // NOSONAR - intentional singleton pattern; static field updated by design
 
         // Try to get IScopedContextService from DI container first (DIP compliance)
         // If not registered, create a new instance as fallback
-        _scopedContextService = serviceProvider.GetService<IScopedContextService>() 
+        _scopedContextService = serviceProvider.GetService<IScopedContextService>()
             ?? new ScopedContextService(serviceProvider);
         _scopedContextService.ScopedChanged += (s, e) => ScopedChanged?.Invoke(s, e);
 
-        _default = this;
+        _default = this; // NOSONAR - intentional singleton pattern; static field updated by design
     }
 
     public static ServiceLocator Default => _default ?? new ServiceLocator(_serviceProvider ??

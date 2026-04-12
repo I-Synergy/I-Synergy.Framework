@@ -468,13 +468,8 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
             this.owner = owner;
         }
 
-        public bool Contains(TValue item)
-        {
-            foreach (var node in owner)
-                if (item!.Equals(node.Value.Value))
-                    return true;
-            return false;
-        }
+        public bool Contains(TValue item) =>
+            owner.Any(node => item!.Equals(node.Value.Value));
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {

@@ -126,7 +126,7 @@ public static class ClaimsPrincipalExtensions
         if (principal is not null)
             return principal.GetSingleClaimAs<Guid>(claimType, Guid.TryParse);
 
-        return default;
+        return Guid.Empty;
     }
 
 

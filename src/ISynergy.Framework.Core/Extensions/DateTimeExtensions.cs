@@ -30,8 +30,8 @@ public static class DateTimeExtensions
     /// <returns>System.Int32.</returns>
     public static int AgeInDays(this DateTime self)
     {
-        var result = (DateTime.Now - self).TotalDays;
-        return (int)Math.Floor(result);
+        var result = (DateTime.Today - self.Date).TotalDays;
+        return (int)result;
     }
 
     /// <summary>

@@ -146,14 +146,14 @@ public static class ExceptionExtensions
                 {
                     AppendAggregateException(sb, aggregateException, verbosity, sanitizeSensitiveData);
                 }
-                else if (exception is not null && exception.InnerException is not null) // NOSONAR - defensive null checks retained for safety
+                else if (exception.InnerException is not null)
                 {
                     // Add inner exception details with recursion limit
                     AppendInnerExceptions(sb, exception.InnerException, verbosity, sanitizeSensitiveData);
                 }
             }
 
-            if (verbosity == ExceptionVerbosityLevel.Full && exception is not null) // NOSONAR - defensive null check retained for safety
+            if (verbosity == ExceptionVerbosityLevel.Full)
             {
                 // Add stack trace information
                 var stackTrace = exception.StackTrace ?? string.Empty;
@@ -264,7 +264,7 @@ public static class ExceptionExtensions
             }
         }
 
-        if (innerException is not null && innerException.InnerException is not null) // NOSONAR - defensive null check retained for safety
+        if (innerException.InnerException is not null)
             AppendInnerExceptions(sb, innerException.InnerException, verbosity, sanitizeSensitiveData, currentDepth + 1, maxDepth);
     }
 
