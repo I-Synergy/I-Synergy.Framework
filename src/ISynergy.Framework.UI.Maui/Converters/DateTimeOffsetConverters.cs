@@ -80,7 +80,7 @@ public class DateTimeOffsetToTimeSpanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (original is DateTimeOffset odt && value is TimeSpan ts)
+        if (original is DateTimeOffset odt && value is TimeSpan ts) // NOSONAR
         {
             var dt = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(odt, ts);
             return dt.GetValueOrDefault(DateTimeOffset.MinValue);

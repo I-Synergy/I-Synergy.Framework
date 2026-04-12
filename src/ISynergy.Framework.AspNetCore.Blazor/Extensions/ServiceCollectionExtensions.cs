@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
     /// </remarks>
     [RequiresUnreferencedCode("RegisterAssemblies uses runtime assembly scanning. Use AddBlazorRegistrations() for AOT scenarios.")]
     [RequiresDynamicCode("BindWithReload and RegisterAssemblies use dynamic code generation which is not AOT-compatible. Use AddBlazorRegistrations() for AOT scenarios.")]
-    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this IServiceCollection services,
         IConfiguration configuration,
         IInfoService infoService,

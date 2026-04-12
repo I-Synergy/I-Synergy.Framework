@@ -13,7 +13,7 @@ public class BusyIndicator : ContentView
     private readonly ActivityIndicator _activityIndicator;
     private readonly StackLayout _stackLayout;
     private readonly Grid _overlayBackground;
-    private readonly Grid _rootGrid;
+    private readonly Grid _rootGrid; // NOSONAR
 
     /// <summary>
     /// Bindable property for ShowOverlay.

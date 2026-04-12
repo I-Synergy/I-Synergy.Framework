@@ -91,7 +91,7 @@ public abstract class Application : ComponentBase
             if (_settingsService.LocalSettings is not null)
                 _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
-            _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
+            _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional
 
             _messengerService.Register<ShowInformationMessage>(this, async m =>
             {
@@ -163,7 +163,7 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
     /// </summary>
-    private string NormalizeEnvironmentValue(string value)
+    private static string NormalizeEnvironmentValue(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return value;

@@ -1,5 +1,5 @@
 namespace ISynergy.Framework.UI.Constants;
-public class MessageConstants
+public static class MessageConstants
 {
     public const string MESSAGES_NOTIFICATION_CENTER = "NOTIFICATION_CENTER";
     public const string MESSAGES_TOP = "TOP";

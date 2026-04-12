@@ -134,14 +134,11 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         // This handles the case where the binding sets the initial value
         entry.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(10), () =>
         {
-            if (!string.IsNullOrWhiteSpace(entry.Text))
+            if (!string.IsNullOrWhiteSpace(entry.Text) && TryParseInput(entry.Text, out var initialValue) && IsValueValid(initialValue))
             {
-                if (TryParseInput(entry.Text, out var initialValue) && IsValueValid(initialValue))
-                {
-                    var formatted = FormatValue(initialValue);
-                    entry.Text = formatted;
-                    _lastValidText = formatted;
-                }
+                var formatted = FormatValue(initialValue);
+                entry.Text = formatted;
+                _lastValidText = formatted;
             }
         });
     }
@@ -222,12 +219,11 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         }
     }
 
-    private void OnTextChanged(object? sender, TextChangedEventArgs e)
+    private static void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         // Do nothing during typing - let the user type freely
         // The binding will update the ViewModel property automatically
         // Formatting and validation will happen on blur (OnUnfocused)
-        return;
     }
 
     /// <summary>
@@ -242,8 +238,8 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         if (string.IsNullOrWhiteSpace(cleanedInput))
             return false;
 
-        var hasNegative = cleanedInput.StartsWith("-") ||
-                         cleanedInput.StartsWith(Culture.NumberFormat.NegativeSign);
+        var hasNegative = cleanedInput.StartsWith('-') ||
+                         cleanedInput.StartsWith(Culture.NumberFormat.NegativeSign, StringComparison.Ordinal);
 
         if (hasNegative && !AllowNegative)
             return false;

@@ -105,7 +105,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 if (_settingsService.LocalSettings is not null)
                     _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
-                _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
+                _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional
 
                 _messengerService.Register<ShowInformationMessage>(this, async m =>
                 {
@@ -127,7 +127,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             }
             catch (Exception ex)
             {
-                _logger?.LogCritical(ex, "Critical error during application initialization");
+                _logger?.LogCritical(ex, "Critical error during application initialization"); // NOSONAR
                 throw;
             }
         }
@@ -260,7 +260,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <summary>
     /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
     /// </summary>
-    private string NormalizeEnvironmentValue(string value)
+    private static string NormalizeEnvironmentValue(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return value;

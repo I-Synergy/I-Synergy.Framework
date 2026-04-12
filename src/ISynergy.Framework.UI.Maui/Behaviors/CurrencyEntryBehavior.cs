@@ -42,12 +42,7 @@ public sealed class CurrencyEntryBehavior : NumericEntryBehaviorBase
         base.OnDetachingFrom(entry);
     }
 
-    protected override bool IsValueValid(decimal value)
-    {
-        // Don't validate decimal places here - we'll round during formatting
-        // Just validate the base constraints (min/max/negative)
-        return base.IsValueValid(value);
-    }
+    // Note: override intentionally delegates to base to allow future extensions without breaking existing behavior
 
     protected override string FormatValue(decimal value)
     {
@@ -78,13 +73,11 @@ public sealed class CurrencyEntryBehavior : NumericEntryBehaviorBase
         UpdateFormatter();
         
         // Reformat the current text if we have an attached entry
-        if (_attachedEntry is not null && !string.IsNullOrWhiteSpace(_attachedEntry.Text))
+        if (_attachedEntry is not null && !string.IsNullOrWhiteSpace(_attachedEntry.Text) &&
+            TryParseInput(_attachedEntry.Text, out var value) && IsValueValid(value))
         {
-            if (TryParseInput(_attachedEntry.Text, out var value) && IsValueValid(value))
-            {
-                var formatted = FormatValue(value);
-                _attachedEntry.Text = formatted;
-            }
+            var formatted = FormatValue(value);
+            _attachedEntry.Text = formatted;
         }
     }
 

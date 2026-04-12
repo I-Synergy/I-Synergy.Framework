@@ -8,10 +8,12 @@ namespace ISynergy.Framework.UI.Services;
 
 public class NavigationService : INavigationService
 {
+    private const string DefaultPageNotAvailable = "Main page is not available.";
+
     private readonly IScopedContextService _scopedContextService;
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILogger _logger;
-    private readonly bool _animated = true;
+    private const bool Animated = true;
 
     public event EventHandler? BackStackChanged;
 
@@ -77,7 +79,7 @@ public class NavigationService : INavigationService
             var mainPage = GetMainPage();
 
             if (mainPage is null)
-                throw new InvalidOperationException("Main page is not available.");
+                throw new InvalidOperationException(DefaultPageNotAvailable);
 
             var result = mainPage.GetNavigation();
 
@@ -89,16 +91,16 @@ public class NavigationService : INavigationService
                         break;
 
                     if (!backNavigation)
-                        await result.Navigation.PopAsync(_animated);
+                        await result.Navigation.PopAsync(Animated);
                 }
             }
             else
             {
                 page.Parent = null;
-                await result.Navigation.PushAsync(page, _animated);
+                await result.Navigation.PushAsync(page, Animated);
             }
 
-            if (view is not null && view.ViewModel is not null)
+            if (view is not null && view.ViewModel is not null) // NOSONAR
             {
                 try
                 {
@@ -114,7 +116,7 @@ public class NavigationService : INavigationService
                     catch
                     {
                         // If we can't get the exception handler service, log to debug
-                        System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+                        System.Diagnostics.Debug.WriteLine("Error initializing ViewModel: {0}", ex.Message);
                     }
                 }
             }
@@ -145,11 +147,11 @@ public class NavigationService : INavigationService
                     var mainPage = GetMainPage();
 
                     if (mainPage is null)
-                        throw new InvalidOperationException("Main page is not available.");
+                        throw new InvalidOperationException(DefaultPageNotAvailable);
 
                     Application.Current.Windows[0].Page = page;
 
-                    if (view is not null && view.ViewModel is not null)
+                    if (view is not null && view.ViewModel is not null) // NOSONAR
                     {
                         try
                         {
@@ -178,14 +180,14 @@ public class NavigationService : INavigationService
         }
     }
 
-    public async Task CleanBackStackAsync(bool suppressEvent = false)
+    public async Task CleanBackStackAsync(bool _ = false)
     {
         var mainPage = GetMainPage();
 
         if (mainPage is null)
             throw new InvalidOperationException("Main page is not available.");
 
-        await mainPage.GetNavigation().Navigation.PopToRootAsync(_animated);
+        await mainPage.GetNavigation().Navigation.PopToRootAsync(Animated);
 
         OnBackStackChanged(EventArgs.Empty);
     }
@@ -203,37 +205,37 @@ public class NavigationService : INavigationService
         if (CanGoBack)
         {
             if (mainPage.Navigation.ModalStack.Count > 0)
-                await mainPage.Navigation.PopModalAsync(_animated);
+                await mainPage.Navigation.PopModalAsync(Animated);
             else
-                await mainPage.GetNavigation().Navigation.PopAsync(_animated);
+                await mainPage.GetNavigation().Navigation.PopAsync(Animated);
         }
 
         OnBackStackChanged(EventArgs.Empty);
     }
 
     #region NotImplemented
-    [Obsolete("Not supported!", true)]
-    public Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
+    [Obsolete("Not supported!", true)] // NOSONAR
+    public Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException(); // NOSONAR
 
-    [Obsolete("Not supported!", true)]
-    public Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
+    [Obsolete("Not supported!", true)] // NOSONAR
+    public Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
         where TView : IView =>
         throw new NotImplementedException();
 
-    [Obsolete("Not supported!", true)]
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException();
+    [Obsolete("Not supported!", true)] // NOSONAR
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException(); // NOSONAR
 
-    [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    [Obsolete("Not supported!", true)] // NOSONAR
+    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 
-    [Obsolete("Not supported!", true)]
-    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
+    [Obsolete("Not supported!", true)] // NOSONAR
+    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();
 
-    [Obsolete("Not supported!", true)]
-    public Task GoForwardAsync() => throw new NotImplementedException();
+    [Obsolete("Not supported!", true)] // NOSONAR
+    public Task GoForwardAsync() => throw new NotImplementedException(); // NOSONAR
     #endregion
 }

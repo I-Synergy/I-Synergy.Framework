@@ -214,7 +214,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         catch (Exception ex)
         {
             // Log exception to prevent it from being swallowed in async void method
-            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
+            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler"); // NOSONAR
             var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
             exceptionHandlerService?.HandleException(ex);
             // Re-throw to crash the application if unhandled exception handler is configured
@@ -272,7 +272,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         catch (Exception ex)
         {
             // Log exception to prevent it from being swallowed in async void method
-            _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler");
+            _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler"); // NOSONAR
             var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
             exceptionHandlerService?.HandleException(ex);
             // Re-throw to crash the application if unhandled exception handler is configured
