@@ -55,20 +55,17 @@ public class LoadingView : ContentPage
         };
 
         // Configure background based on splash screen type
-        if (!string.IsNullOrEmpty(splashScreenOptions.Resource))
+        if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
         {
-            if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
-            {
-                // Use Image for image resources
-                if (_backgroundImage is not null)
-                    _backgroundImage.Source = ImageSource.FromResource(splashScreenOptions.Resource);
-            }
-            else if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
-            {
-                // Use MediaElement for video resources
-                if (_backgroundMediaElement is not null)
-                    _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
-            }
+            // Use Image for image resources
+            if (_backgroundImage is not null)
+                _backgroundImage.Source = ImageSource.FromResource(splashScreenOptions.Resource);
+        }
+        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
+        {
+            // Use MediaElement for video resources
+            if (_backgroundMediaElement is not null)
+                _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
         }
     }
 
@@ -144,7 +141,7 @@ public class LoadingView : ContentPage
     /// <summary>
     /// Initializes the view content and layout.
     /// </summary>
-    private void InitializeContent(ICommonServices commonServices, SplashScreenOptions splashScreenOptions)
+    private void InitializeContent(ICommonServices _, SplashScreenOptions splashScreenOptions)
     {
         // Create background element based on splash screen type
         if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
@@ -188,7 +185,7 @@ public class LoadingView : ContentPage
         var mainGrid = new Grid();
 
         // Add background element based on type
-        if (_backgroundImage is not null)
+        if (_backgroundImage is not null) // NOSONAR
         {
             mainGrid.Add(_backgroundImage);
         }

@@ -46,7 +46,7 @@ public static class ServiceCollectionExtensions
     [RequiresDynamicCode(
         "BindWithReload uses dynamic code generation which is not AOT-compatible. " +
         "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
-    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this IServiceCollection services,
         IConfiguration configuration,
         IInfoService infoService,

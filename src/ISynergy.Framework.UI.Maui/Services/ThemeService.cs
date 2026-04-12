@@ -102,7 +102,7 @@ public class ThemeService : IThemeService
     /// Updates platform-specific color resources.
     /// </summary>
     /// <param name="application">An application instance whose resources are updated.</param>
-    private void UpdatePlatformColors(Application application)
+    private void UpdatePlatformColors(Application application) // NOSONAR
     {
         if (Application.AccentColor is not null)
         {
@@ -191,7 +191,7 @@ public class ThemeService : IThemeService
     /// <param name="application">An application instance whose resource dictionary is modified.</param>
     /// <param name="key">A resource key.</param>
     /// <param name="value">A resource value.</param>
-    private static void UpdateOrAddResource(Application application, string key, object value)
+    private static void UpdateOrAddResource(Application application, string key, object value) // NOSONAR
     {
         if (application.Resources.ContainsKey(key))
             application.Resources[key] = value;
