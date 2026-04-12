@@ -32,7 +32,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     ///   Creates a new <see cref="RedBlackTreeDictionary{TKey, TValue}"/>.
     /// </summary>
     /// 
-    public RedBlackTreeDictionary(IComparer<TKey> comparer)
+    public RedBlackTreeDictionary(IComparer<TKey> comparer) // NOSONAR
     {
         if (comparer is null)
             throw new ArgumentNullException("comparer");

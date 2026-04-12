@@ -148,7 +148,7 @@ public class WeakFunc<TResult>
                 return true;
             }
 
-            if (Reference is not null)
+            if (Reference is not null) // NOSONAR - Reference may or may not be set for non-static funcs with no live reference
             {
                 return Reference.IsAlive;
             }
@@ -209,15 +209,12 @@ public class WeakFunc<TResult>
 
         var funcTarget = FuncTarget;
 
-        if (IsAlive)
+        if (IsAlive // NOSONAR
+            && Method is not null
+            && (LiveReference is not null || FuncReference is not null)
+            && funcTarget is not null)
         {
-            if (Method is not null
-                && (LiveReference is not null
-                    || FuncReference is not null)
-                && funcTarget is not null)
-            {
-                return (TResult?)Method.Invoke(funcTarget, null);
-            }
+            return (TResult?)Method.Invoke(funcTarget, null);
         }
 
         return default;

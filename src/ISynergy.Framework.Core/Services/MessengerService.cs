@@ -476,10 +476,9 @@ public sealed class MessengerService : IMessengerService
                 && item.Action.IsAlive
                 && item.Action.Target is not null
                 && (targetType is null
-                    || item.Action.Target.GetType() == targetType
-                    || targetType.IsAssignableFrom(item.Action.Target.GetType()))
+                    || targetType.IsInstanceOfType(item.Action.Target))
                 && ((item.Token is null && token is null)
-                    || item.Token is not null && item.Token.Equals(token)))
+                    || item.Token is not null && item.Token.Equals(token))) // NOSONAR - item.Token can be null or non-null; both branches are reachable
             {
                 try
                 {
@@ -498,7 +497,7 @@ public sealed class MessengerService : IMessengerService
         }
     }
 
-    private void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>>? lists)
+    private static void UnregisterFromLists(object recipient, Dictionary<Type, List<WeakActionAndToken>>? lists)
     {
         if (recipient is null || lists is null || lists.Count == 0)
         {
@@ -593,7 +592,7 @@ public sealed class MessengerService : IMessengerService
         }
     }
 
-    private class WeakActionAndToken
+    private sealed class WeakActionAndToken
     {
         public WeakAction? Action { get; set; }
         public object? Token { get; set; }

@@ -100,6 +100,26 @@ public sealed class ScopedContextService : IScopedContextService
     /// <summary>
     /// Gets the instance.
     /// </summary>
+    /// <typeparam name="TService">The type of the t service.</typeparam>
+    /// <returns>TService.</returns>
+    public TService GetService<TService>()
+    {
+        if (_disposed)
+            throw new ObjectDisposedException(nameof(ScopedContextService));
+
+        EnsureScopeInitialized();
+
+        if (_serviceScope is not null)
+            return _serviceScope.ServiceProvider.GetService<TService>() ??
+                   throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered");
+
+        return _serviceProvider.GetService<TService>() ??
+               throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered");
+    }
+
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
     /// <param name="serviceType">Type of the service.</param>
     /// <returns>System.Object.</returns>
     [RequiresUnreferencedCode("Non-generic service resolution by runtime Type is not AOT-safe. Use GetRequiredService<TService>() instead.")]
@@ -117,26 +137,6 @@ public sealed class ScopedContextService : IScopedContextService
 
         return _serviceProvider.GetRequiredService(serviceType) ??
                throw new InvalidOperationException($"Service of type {serviceType.Name} is not registered");
-    }
-
-    /// <summary>
-    /// Gets the instance.
-    /// </summary>
-    /// <typeparam name="TService">The type of the t service.</typeparam>
-    /// <returns>TService.</returns>
-    public TService GetService<TService>()
-    {
-        if (_disposed)
-            throw new ObjectDisposedException(nameof(ScopedContextService));
-
-        EnsureScopeInitialized();
-
-        if (_serviceScope is not null)
-            return _serviceScope.ServiceProvider.GetService<TService>() ??
-                   throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered");
-
-        return _serviceProvider.GetService<TService>() ??
-               throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered");
     }
 
     /// <summary>

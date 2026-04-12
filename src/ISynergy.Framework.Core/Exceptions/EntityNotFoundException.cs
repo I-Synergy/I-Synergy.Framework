@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace ISynergy.Framework.Core.Exceptions;
 
 /// <summary>
@@ -33,4 +35,16 @@ public class EntityNotFoundException : Exception
         : base(message, innerException)
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EntityNotFoundException"/> class with serialized data.
+    /// </summary>
+    /// <param name="info">The object that holds the serialized object data.</param>
+    /// <param name="context">The contextual information about the source or destination.</param>
+#pragma warning disable SYSLIB0051
+    protected EntityNotFoundException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
+#pragma warning restore SYSLIB0051
 }

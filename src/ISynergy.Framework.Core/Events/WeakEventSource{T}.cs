@@ -88,7 +88,7 @@ public class WeakEventSource<TEventArgs>
         /// <summary>
         /// The open handler cache
         /// </summary>
-        private static readonly ConcurrentDictionary<MethodInfo, OpenEventHandler> _openHandlerCache =
+        private static readonly ConcurrentDictionary<MethodInfo, OpenEventHandler> _openHandlerCache = // NOSONAR - intentional per-type static cache; WeakDelegate is private and non-generic
             new ConcurrentDictionary<MethodInfo, OpenEventHandler>();
 
         /// <summary>

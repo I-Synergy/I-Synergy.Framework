@@ -58,7 +58,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
                 return true;
             }
 
-            return Reference?.IsAlive ?? false;
+            return Reference?.IsAlive ?? false; // NOSONAR - Reference may or may not be set for non-static actions
         }
     }
 
@@ -127,19 +127,16 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
 
         var actionTarget = ActionTarget;
 
-        if (IsAlive) // NOSONAR
+        if (IsAlive // NOSONAR
+            && Method is not null
+            && (LiveReference is not null || ActionReference is not null)
+            && actionTarget is not null)
         {
-            if (Method is not null
-                && (LiveReference is not null
-                    || ActionReference is not null)
-                && actionTarget is not null)
-            {
-                Method.Invoke(
-                    actionTarget,
-                    [
-                        parameter
-                    ]);
-            }
+            Method.Invoke(
+                actionTarget,
+                [
+                    parameter
+                ]);
         }
     }
 

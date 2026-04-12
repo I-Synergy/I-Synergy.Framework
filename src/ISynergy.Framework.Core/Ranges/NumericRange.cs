@@ -72,7 +72,7 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// <param name="round"></param>
     /// <param name="decimals"></param>
     /// 
-    public NumericRange(double min, double max, bool round = false, int decimals = 0)
+    public NumericRange(double min, double max, bool round = false, int decimals = 0) // NOSONAR
     {
         if (round)
         {

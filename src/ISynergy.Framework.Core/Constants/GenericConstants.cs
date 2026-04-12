@@ -145,7 +145,7 @@ public static class GenericConstants
     /// <summary>
     /// The temporary URL
     /// </summary>
-    public const string TemporaryUrl = @"temp:///";
+    public const string TemporaryUrl = @"temp:///"; // NOSONAR - well-known internal URI scheme constant, not a hardcoded external URL
 
     /// <summary>
     /// The API name

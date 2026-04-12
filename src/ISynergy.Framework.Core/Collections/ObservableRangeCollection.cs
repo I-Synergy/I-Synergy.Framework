@@ -93,12 +93,16 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>
         }
 
         var changedItems = collection is List<T> ? (List<T>)collection : new List<T>(collection);
-        for (var i = 0; i < changedItems.Count; i++)
+        var index = 0;
+        while (index < changedItems.Count)
         {
-            if (!Items.Remove(changedItems[i]))
+            if (!Items.Remove(changedItems[index]))
             {
-                changedItems.RemoveAt(i); //Can't use a foreach because changedItems is intended to be (carefully) modified
-                i--;
+                changedItems.RemoveAt(index); // Item not found: remove it from changedItems to keep the notification list accurate
+            }
+            else
+            {
+                index++;
             }
         }
 

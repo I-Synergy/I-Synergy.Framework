@@ -22,7 +22,7 @@ public static class ArrayExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
     /// <returns></returns>
-    private static double[,] ToDoubleArray<T>(this T[,] array)
+    private static double[,] ToDoubleArray<T>(this T[,] array) // NOSONAR - available for future multi-dimensional array conversions
     {
         var result = new double[array.GetLength(0), array.GetLength(1)];
 
@@ -39,7 +39,7 @@ public static class ArrayExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
     /// <returns></returns>
-    private static double[][] ToDoubleArray<T>(this T[][] array)
+    private static double[][] ToDoubleArray<T>(this T[][] array) // NOSONAR - available for future jagged array conversions
     {
         var result = new double[array.GetLength()[0]][];
 

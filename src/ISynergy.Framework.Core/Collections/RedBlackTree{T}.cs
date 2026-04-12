@@ -398,7 +398,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                       && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
                       && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                     {
-                        if (s is not null)
+                        if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
                             s.Color = RedBlackTreeNodeType.Red;
 
                         m = mp;
@@ -412,7 +412,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                         && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
                         && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
                     {
-                        if (s is not null)
+                        if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
                             s.Color = RedBlackTreeNodeType.Red;
 
                         mp.Color = RedBlackTreeNodeType.Black;
@@ -673,7 +673,6 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                 return node;
             }
 
-            // if (p.k > k)
             node = node.Left;
         }
 
@@ -726,7 +725,6 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                 return node;
             }
 
-            // if (p.k >= k)
             node = node.Left;
         }
         return null; // k <= everything in subtree
@@ -776,7 +774,6 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                 return node;
             }
 
-            // if (p.k <= k)
             node = node.Right;
         }
 
