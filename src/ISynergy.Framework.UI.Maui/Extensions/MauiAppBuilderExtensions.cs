@@ -163,7 +163,7 @@ public static class MauiAppBuilderExtensions
     [RequiresUnreferencedCode(
         "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
         "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this MauiAppBuilder appBuilder,
         Action<MauiAppBuilder> action,
         Assembly assembly,

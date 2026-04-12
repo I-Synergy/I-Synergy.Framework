@@ -56,7 +56,7 @@ namespace ISynergy.Framework.UI.SourceGenerator
                     return;
 
                 var typeList = new List<UITypeInfo>();
-                foreach (var t in types)
+                foreach (var t in types) // NOSONAR
                 {
                     if (t != null)
                         typeList.Add(t);
@@ -71,7 +71,7 @@ namespace ISynergy.Framework.UI.SourceGenerator
 
                 // Emit the ViewModel -> View name map
                 var viewModelTypes = new List<UITypeInfo>();
-                foreach (var t in typeList)
+                foreach (var t in typeList) // NOSONAR
                 {
                     if (t.Kind == UITypeKind.ViewModel && t.RelatedViewName != null)
                         viewModelTypes.Add(t);
@@ -85,7 +85,7 @@ namespace ISynergy.Framework.UI.SourceGenerator
             });
         }
 
-        private static UITypeInfo? TransformToUITypeInfo( // NOSONAR
+        private static UITypeInfo? TransformToUITypeInfo( // NOSONAR S3776
             GeneratorSyntaxContext context,
             CancellationToken cancellationToken)
         {

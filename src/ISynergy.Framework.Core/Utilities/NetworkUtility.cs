@@ -57,7 +57,7 @@ public static class NetworkUtility
             }
             catch
             {
-                continue;
+                // Continue to next service
             }
         }
 

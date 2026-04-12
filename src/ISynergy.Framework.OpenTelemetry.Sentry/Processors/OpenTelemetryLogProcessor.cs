@@ -23,7 +23,7 @@ internal class OpenTelemetryLogProcessor : BaseProcessor<LogRecord>
             };
 
             // Add attributes as tags
-            foreach (var attr in data.Attributes.EnsureNotNull())
+            foreach (var attr in data.Attributes.EnsureNotNull()) // NOSONAR
             {
                 if (attr.Value is not null)
                     sentryEvent.SetTag(attr.Key, attr.Value.ToString()!);

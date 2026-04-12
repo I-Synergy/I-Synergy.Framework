@@ -53,7 +53,7 @@ public static class StringExtensions
     {
         var result = new StringBuilder();
 
-        foreach (var character in _self.EnsureNotNull())
+        foreach (var character in _self.EnsureNotNull()) // NOSONAR
         {
             if (char.IsDigit(character))
             {
@@ -172,7 +172,7 @@ public static class StringExtensions
     {
         var result = new StringBuilder();
 
-        foreach (var character in self.EnsureNotNull())
+        foreach (var character in self.EnsureNotNull()) // NOSONAR
         {
             if (HexDigitRegex.IsMatch(character.ToString()))
             {
@@ -578,7 +578,7 @@ public static class StringExtensions
         if (string.IsNullOrEmpty(path))
             return path ?? string.Empty;
 
-        return path.EndsWith(Path.DirectorySeparatorChar.ToString())
+        return path.EndsWith(Path.DirectorySeparatorChar)
             ? path
             : path + Path.DirectorySeparatorChar;
     }

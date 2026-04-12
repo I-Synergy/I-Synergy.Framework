@@ -4,7 +4,7 @@ namespace ISynergy.Framework.CQRS.Commands;
 /// Command handler interface for commands without explicit result
 /// </summary>
 /// <typeparam name="TCommand">Type of command</typeparam>
-public interface ICommandHandler<TCommand>
+public interface ICommandHandler<in TCommand>
     where TCommand : ICommand
 {
     /// <summary>

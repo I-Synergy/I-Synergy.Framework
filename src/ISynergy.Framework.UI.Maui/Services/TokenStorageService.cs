@@ -109,6 +109,7 @@ public class TokenStorageService : ITokenStorageService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to clear tokens");
+            throw;
         }
     }
 

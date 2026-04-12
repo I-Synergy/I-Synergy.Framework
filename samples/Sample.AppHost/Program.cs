@@ -54,4 +54,4 @@ builder.AddProject<Projects.Sample_Synchronization>("synchronization")
 // Demonstrates JWT and WOPI token generation via ISynergy.Framework.AspNetCore.Authentication.
 builder.AddProject<Projects.Sample_TokenService>("token-service");
 
-builder.Build().Run();
+await builder.Build().RunAsync();

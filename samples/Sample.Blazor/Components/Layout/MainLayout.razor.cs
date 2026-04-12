@@ -11,7 +11,7 @@ using System.ComponentModel;
 
 namespace Sample.Components.Layout;
 
-public partial class MainLayout
+public partial class MainLayout : IDisposable
 {
     // Add cancellation token source and disposal tracking
     private readonly CancellationTokenSource _cts = new();
@@ -68,7 +68,7 @@ public partial class MainLayout
 
         _commonServices.BusyService.PropertyChanged += BusyService_PropertyChanged;
 
-        _commonServices.MessengerService.Register<ShowInformationMessage>(this, async m =>
+        _commonServices.MessengerService.Register<ShowInformationMessage>(this, async m => // NOSONAR - async void event handler pattern required by messenger service
         {
             var dialogResult = await _dialogService.ShowInfoAsync(m.Content.Message, m.Content.Title, _commonServices.LanguageService.GetString("OK"));
 
@@ -78,7 +78,7 @@ public partial class MainLayout
             }
         });
 
-        _commonServices.MessengerService.Register<ShowWarningMessage>(this, async m =>
+        _commonServices.MessengerService.Register<ShowWarningMessage>(this, async m => // NOSONAR - async void event handler pattern required by messenger service
         {
             var dialogResult = await _dialogService.ShowWarningAsync(m.Content.Message, m.Content.Title, _commonServices.LanguageService.GetString("OK"));
 
@@ -88,7 +88,7 @@ public partial class MainLayout
             }
         });
 
-        _commonServices.MessengerService.Register<ShowErrorMessage>(this, async m =>
+        _commonServices.MessengerService.Register<ShowErrorMessage>(this, async m => // NOSONAR - async void event handler pattern required by messenger service
         {
             var dialogResult = await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title, _commonServices.LanguageService.GetString("OK"));
 

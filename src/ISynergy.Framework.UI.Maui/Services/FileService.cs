@@ -28,16 +28,12 @@ public class FileService : IFileService<FileResult>
             {
                 var files = await FilePicker.Default.PickMultipleAsync(pickOptions);
 
-                foreach (var file in files.EnsureNotNull())
-                {
-                    if (file is not null)
-                    {
-                        var fileResult = file.ToFileResult();
-
-                        if (fileResult is not null)
-                            result.Add(fileResult);
-                    }
-                }
+                result.AddRange(
+                    files.EnsureNotNull()
+                         .Where(file => file is not null)
+                         .Select(file => file.ToFileResult())
+                         .Where(fileResult => fileResult is not null)
+                         .Select(fileResult => fileResult!));
             }
             else
             {

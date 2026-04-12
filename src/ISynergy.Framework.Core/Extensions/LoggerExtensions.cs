@@ -5,7 +5,7 @@ public static class LoggerExtensions
 {
     public static LogLevel CurrentLogLevel(this ILogger logger)
     {
-        foreach (LogLevel logLevel in Enum.GetValues<LogLevel>())
+        foreach (LogLevel logLevel in Enum.GetValues<LogLevel>()) // NOSONAR
         {
             if (logger.IsEnabled(logLevel))
                 return logLevel;

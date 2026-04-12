@@ -97,4 +97,4 @@ app.MapHealthChecks("/health");
 app.MapOrderEndpoints();
 app.MapArchiveEndpoints();
 
-app.Run();
+await app.RunAsync();

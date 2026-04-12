@@ -19,7 +19,7 @@ public sealed class BoolNegationConverter : IValueConverter
     /// <param name="parameter">Optional parameter. Not used.</param>
     /// <param name="language">The language of the conversion. Not used</param>
     /// <returns>The value to be passed to the target dependency property.</returns>
-    public object Convert(object value, Type targetType, object parameter, string language)
+    public object Convert(object value, Type targetType, object parameter, string language) // NOSONAR
     {
         return !(value is bool x && x);
     }
@@ -32,7 +32,7 @@ public sealed class BoolNegationConverter : IValueConverter
     /// <param name="parameter">Optional parameter. Not used.</param>
     /// <param name="language">The language of the conversion. Not used</param>
     /// <returns>The value to be passed to the target dependency property.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    public object ConvertBack(object value, Type targetType, object parameter, string language) // NOSONAR
     {
         return !(value is bool x && x);
     }

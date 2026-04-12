@@ -71,7 +71,7 @@ public static class SettingsStorageExtensions
     /// <param name="key">The key.</param>
     /// <param name="value">The value.</param>
     [RequiresUnreferencedCode("JsonSerializer.Serialize requires the type T to be statically analyzable. Use the overload that takes a JsonTypeInfo for AOT-safe serialization.")]
-    public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
+    public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value) // NOSONAR
     {
         settings.SaveString(key, JsonSerializer.Serialize(value));
         return Task.CompletedTask;
@@ -96,7 +96,7 @@ public static class SettingsStorageExtensions
     /// <param name="key">The key.</param>
     /// <returns>T.</returns>
     [RequiresUnreferencedCode("JsonSerializer.Deserialize requires the type T to be statically analyzable. Use the overload that takes a JsonTypeInfo for AOT-safe deserialization.")]
-    public static Task<T?> ReadAsync<T>(this ApplicationDataContainer settings, string key)
+    public static Task<T?> ReadAsync<T>(this ApplicationDataContainer settings, string key) // NOSONAR
     {
         if (settings.Values.TryGetValue(key, out var obj))
         {

@@ -189,10 +189,15 @@ else
         try
         {
             var result = await Api.RunArchiveAsync();
-            _archiveMessage = result is null
-                ? "Archive completed."
-                : $"Archive complete: {result.StreamsArchived} stream(s), {result.EventsArchived} event(s) archived" +
-                  (result.Errors > 0 ? $" ({result.Errors} error(s))" : ".");
+            if (result is null)
+            {
+                _archiveMessage = "Archive completed.";
+            }
+            else
+            {
+                var errorSuffix = result.Errors > 0 ? $" ({result.Errors} error(s))" : ".";
+                _archiveMessage = $"Archive complete: {result.StreamsArchived} stream(s), {result.EventsArchived} event(s) archived{errorSuffix}";
+            }
         }
         catch (Exception ex)
         {

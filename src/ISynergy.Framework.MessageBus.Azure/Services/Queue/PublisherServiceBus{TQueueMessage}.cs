@@ -82,7 +82,7 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// <exception cref="ArgumentException">Entity should be type of IQueueMessage{TModel} instead of {queueMessage.GetType().FullName}</exception>
     [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresUnreferencedCode] constructor.")]
     [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresDynamicCode] constructor.")]
-    public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
+    public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId) // NOSONAR
     {
         if (queueMessage is { } model)
         {

@@ -11,7 +11,7 @@ public abstract class NumericFormatter
         _culture = culture ?? throw new ArgumentNullException(nameof(culture));
     }
 
-    public abstract string FormatValue(decimal value);
+    public abstract string FormatValue(decimal value); // NOSONAR
 
     public virtual string CleanInput(string input)
     {

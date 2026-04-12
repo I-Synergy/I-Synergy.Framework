@@ -29,7 +29,7 @@ public static class StringUtility
             placeholder = value.ToString() + input;
         }
 
-        if (placeholder.StartsWith("0") && placeholder.Length > 1)
+        if (placeholder.StartsWith('0') && placeholder.Length > 1)
         {
             placeholder = placeholder.Remove(0, 1);
         }

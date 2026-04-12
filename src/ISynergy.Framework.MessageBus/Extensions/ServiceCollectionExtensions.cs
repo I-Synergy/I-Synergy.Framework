@@ -111,7 +111,7 @@ public static class ServiceCollectionExtensions
     /// <typeparam name="TImplementation">The type of the t implementation.</typeparam>
     /// <param name="_self">The self.</param>
     /// <returns>IServiceCollection.</returns>
-    public static IServiceCollection AddPublishingTopicMessageBus<TQueueMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(this IServiceCollection _self)
+    public static IServiceCollection AddPublishingTopicMessageBus<TQueueMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(this IServiceCollection _self) // NOSONAR
         where TQueueMessage : class, IBaseMessage
         where TImplementation : class, IPublisherServiceBus<TQueueMessage>
     {

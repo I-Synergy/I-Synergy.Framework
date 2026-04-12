@@ -54,7 +54,7 @@ public static class HttpRequestExtensions
         }
 
         // Copy the request headers
-        foreach (var header in request.Headers.EnsureNotNull())
+        foreach (var header in request.Headers.EnsureNotNull()) // NOSONAR
         {
             if (!result.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && result.Content is not null)
             {

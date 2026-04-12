@@ -213,13 +213,25 @@ internal class S3StorageService : IStorageService, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
         if (!_disposed)
         {
-            _client.Dispose();
+            if (disposing)
+            {
+                _client.Dispose();
+            }
+
             _disposed = true;
         }
-
-        GC.SuppressFinalize(this);
     }
 
     private static string GetObjectKey(string folder, string filename)

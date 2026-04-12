@@ -48,7 +48,7 @@ public static class NavigationHelper
     {
         // confirm parent is valid.
         if (parent is null) return default;
-        if (parent is T) return (T)parent;
+        if (parent is T typedParent) return typedParent;
 
         DependencyObject? foundChild = null;
 

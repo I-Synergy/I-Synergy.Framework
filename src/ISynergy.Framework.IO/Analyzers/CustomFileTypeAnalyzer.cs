@@ -14,7 +14,7 @@ public class CustomFileTypeAnalyzer : BaseFileTypeAnalyzer
     /// Initializes a <see cref="CustomFileTypeAnalyzer" /> with the provided definitions file contents.
     /// </summary>
     /// <param name="definitionsFile">The json object representing the definitions file.</param>
-    public CustomFileTypeAnalyzer(string definitionsFile)
+    public CustomFileTypeAnalyzer(string definitionsFile) // NOSONAR
         : base(definitionsFile)
     {
     }

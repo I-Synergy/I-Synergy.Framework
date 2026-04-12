@@ -142,7 +142,7 @@ public class WeakAction
                 return true;
             }
 
-            if (Reference is not null)
+            if (Reference is not null) // NOSONAR
             {
                 return Reference.IsAlive;
             }

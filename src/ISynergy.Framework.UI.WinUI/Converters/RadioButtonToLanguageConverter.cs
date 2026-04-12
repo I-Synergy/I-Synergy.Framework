@@ -7,12 +7,12 @@ public class RadioButtonToLanguageConverter : IValueConverter
 {
     private Languages _value;
 
-    public object Convert(object value, Type targetType, object parameter, string culture)
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is Languages languages)
-            _value = languages;
+        if (value is Languages lang)
+            _value = lang;
 
-        if (Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var language) && value.Equals(language))
+        if (Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var parsedLanguage) && value.Equals(parsedLanguage))
         {
             return true;
         }
@@ -20,11 +20,11 @@ public class RadioButtonToLanguageConverter : IValueConverter
         return false;
     }
 
-    public object ConvertBack(object isChecked, Type targetType, object parameter, string culture)
+    public object ConvertBack(object isChecked, Type targetType, object parameter, string language)
     {
-        if ((bool)isChecked && Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var language))
+        if ((bool)isChecked && Enum.TryParse(typeof(Languages), parameter.ToString(), true, out var parsedLanguage))
         {
-            return language;
+            return parsedLanguage;
         }
 
         return _value;
