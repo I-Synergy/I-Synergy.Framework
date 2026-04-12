@@ -43,9 +43,6 @@ public class EuclideanLoss : SquareLoss
 [Serializable]
 public class SquareLoss : LossBase<double[][]>
 {
-    private bool mean = true;
-    private bool root;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="SquareLoss" /> class.
     /// </summary>
@@ -72,11 +69,7 @@ public class SquareLoss : LossBase<double[][]>
     /// <value>
     ///     <c>true</c> if the root square loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Root
-    {
-        get => root;
-        set => root = value;
-    }
+    public bool Root { get; set; }
 
     /// <summary>
     ///     Gets or sets a value indicating whether the
@@ -86,11 +79,7 @@ public class SquareLoss : LossBase<double[][]>
     /// <value>
     ///     <c>true</c> if the mean square loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Mean
-    {
-        get => mean;
-        set => mean = value;
-    }
+    public bool Mean { get; set; } = true;
 
     /// <summary>
     ///     Computes the loss between the expected values (ground truth)
@@ -107,10 +96,10 @@ public class SquareLoss : LossBase<double[][]>
         for (var i = 0; i < Expected.Length; i++)
             error += Distance.SquareEuclidean(actual[i], Expected[i]);
 
-        if (root)
+        if (Root)
             error = Math.Sqrt(error);
 
-        if (mean)
+        if (Mean)
             error = error / Expected.Length;
 
         return error;
@@ -134,10 +123,10 @@ public class SquareLoss : LossBase<double[][]>
             error += u * u;
         }
 
-        if (root)
+        if (Root)
             error = Math.Sqrt(error);
 
-        if (mean)
+        if (Mean)
             error = error / Expected.Length;
 
         return error;

@@ -20,16 +20,10 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     IDifferentiableLoss<bool, double, double>,
     IDifferentiableLoss<double, double, double>
 {
-    private double[][] expected;
-
     /// <summary>
-    ///     Gets the expected outputs (the ground truth).
+    ///     Gets or sets the expected outputs (the ground truth).
     /// </summary>
-    public double[][] Expected
-    {
-        get => expected;
-        set => expected = value;
-    }
+    public double[][] Expected { get; set; }
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="LogisticLoss" /> class.
@@ -37,7 +31,7 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public LogisticLoss(double[] expected)
     {
-        this.expected = Jagged.ColumnVector(expected);
+        Expected = Jagged.ColumnVector(expected);
     }
 
     /// <summary>
@@ -46,7 +40,7 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public LogisticLoss(double[][] expected)
     {
-        this.expected = expected;
+        Expected = expected;
     }
 
     /// <summary>
@@ -61,7 +55,7 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
             expected = expected.ToZeroOne();
 
         var oneHot = Jagged.OneHot<bool>(expected);
-        this.expected = Classes.ToMinusOnePlusOne(oneHot);
+        Expected = Classes.ToMinusOnePlusOne(oneHot);
     }
 
     /// <summary>

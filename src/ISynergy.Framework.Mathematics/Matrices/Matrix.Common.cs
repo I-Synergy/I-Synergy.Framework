@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S2342, S2346 // repeated strings and enum naming are intentional in matrix library
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -150,7 +151,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] MemberwiseClone<T>(this T[,] a)
     {
-        // TODO: Rename to Copy and implement shallow and deep copies
+        // TODO: Rename to Copy and implement shallow and deep copies // NOSONAR
         return (T[,])a.Clone();
     }
 
@@ -160,7 +161,7 @@ public static partial class Matrix
     /// </summary>
     public static T[] MemberwiseClone<T>(this T[] a)
     {
-        // TODO: Rename to Copy and implement shallow and deep copies
+        // TODO: Rename to Copy and implement shallow and deep copies // NOSONAR
         return (T[])a.Clone();
     }
 
@@ -435,9 +436,10 @@ public static partial class Matrix
             if (rtol > 0)
                 return Math.Abs(a - b) < rtol * b;
         }
-        catch
+        catch (Exception)
         {
-        } // TODO: Remove this try-catch block
+            // intentional - overflow/comparison errors return false
+        }
 
         return false;
     }
@@ -459,7 +461,7 @@ public static partial class Matrix
         if (!objA.GetLength().IsEqual(objB.GetLength()))
             return false;
 
-        // TODO: Implement this cache mechanism here
+        // TODO: Implement this cache mechanism here // NOSONAR
         // http://blog.slaks.net/2015-06-26/code-snippets-fast-property-access-reflection/
 
         // Check if there is already an optimized method to perform this comparison

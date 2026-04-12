@@ -109,12 +109,11 @@ public static partial class Matrix
         T? max = null;
 
         for (var i = 0; i < values.Length; i++)
-            if (values[i].HasValue)
-                if (max is null || values[i].Value.CompareTo(max.Value) > 0)
-                {
-                    max = values[i];
-                    imax = i;
-                }
+            if (values[i].HasValue && (max is null || values[i].Value.CompareTo(max.Value) > 0))
+            {
+                max = values[i];
+                imax = i;
+            }
 
         return max;
     }
@@ -129,12 +128,11 @@ public static partial class Matrix
         T? min = null;
 
         for (var i = 0; i < values.Length; i++)
-            if (values[i].HasValue)
-                if (min is null || values[i].Value.CompareTo(min.Value) < 0)
-                {
-                    min = values[i];
-                    imin = i;
-                }
+            if (values[i].HasValue && (min is null || values[i].Value.CompareTo(min.Value) < 0))
+            {
+                min = values[i];
+                imin = i;
+            }
 
         return min;
     }

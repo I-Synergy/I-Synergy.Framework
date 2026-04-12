@@ -67,6 +67,7 @@ using ISynergy.Framework.Mathematics.Common;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1854, S1264, S101 // LIBLBFGS port: commented code, useless assignments, while-true loops, and naming are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;

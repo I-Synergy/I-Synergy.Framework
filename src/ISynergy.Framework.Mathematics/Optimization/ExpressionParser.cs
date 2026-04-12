@@ -44,8 +44,6 @@ internal static class ExpressionParser
     public static Expression<Func<double[], double[]>> Replace(Expression<Func<double[]>> expr,
         IDictionary<string, int> variables)
     {
-        int variableCount = variables.Count;
-
         ParameterExpression parameter = Expression.Parameter(typeof(double[]), "input");
 
         var newBody = Replace(parameter, expr.Body, variables);
@@ -56,8 +54,6 @@ internal static class ExpressionParser
     public static Expression<Func<double[], double>> Replace(Expression<Func<double>> expr,
         IDictionary<string, int> variables)
     {
-        int variableCount = variables.Count;
-
         ParameterExpression parameter = Expression.Parameter(typeof(double[]), "input");
 
         var newBody = Replace(parameter, expr.Body, variables);

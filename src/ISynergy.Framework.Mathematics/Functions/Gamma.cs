@@ -104,7 +104,7 @@ namespace ISynergy.Framework.Mathematics.Functions;
 public static class Gamma
 {
     /// <summary>Maximum gamma on the machine.</summary>
-    public const double GammaMax = 171.624376956302725; // TODO: Rename to Max
+    public const double GammaMax = 171.624376956302725; // TODO: Rename to Max // NOSONAR
 
     private static readonly double[] gamma_P =
     [

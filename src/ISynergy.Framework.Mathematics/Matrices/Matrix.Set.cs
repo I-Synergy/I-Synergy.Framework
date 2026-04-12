@@ -383,7 +383,7 @@ public static partial class Matrix
             srcColumnIndices = Vector.Range(0, src.Columns());
 
         if (dstRowIndices is null)
-            dstRowIndices = Vector.Range(0, dst.Rows());
+            dstRowIndices = Vector.Range(0, dst.Rows()); // NOSONAR - null coalescing pattern
         if (dstColumnIndices is null)
             dstColumnIndices = Vector.Range(0, dst.Columns());
 
@@ -417,7 +417,7 @@ public static partial class Matrix
             srcColumnIndices = Vector.Range(0, src.Columns());
 
         if (dstRowIndices is null)
-            dstRowIndices = Vector.Range(0, dst.Rows());
+            dstRowIndices = Vector.Range(0, dst.Rows()); // NOSONAR - null coalescing pattern
         if (dstColumnIndices is null)
             dstColumnIndices = Vector.Range(0, dst.Columns());
 

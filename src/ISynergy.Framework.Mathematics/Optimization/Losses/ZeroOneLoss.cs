@@ -62,8 +62,6 @@ public class AccuracyLoss : ZeroOneLoss
 public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
     ILoss<double[][]>, ILoss<double[]>
 {
-    private bool mean = true;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="ZeroOneLoss" /> class.
     /// </summary>
@@ -138,11 +136,7 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
     /// <value>
     ///     <c>true</c> if the average accuracy loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Mean
-    {
-        get => mean;
-        set => mean = value;
-    }
+    public bool Mean { get; set; } = true;
 
     /// <summary>
     ///     Gets or sets the number of classes.
@@ -217,7 +211,7 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
             if (Expected[i] != actual[i])
                 error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)Expected.Length;
         return error;
     }

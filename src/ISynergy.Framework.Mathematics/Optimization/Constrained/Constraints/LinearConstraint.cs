@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1192, S1135, S1117 // duplicate strings, TODO comments, and local variable shadowing are acceptable in constraint parsing code
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 

@@ -257,7 +257,7 @@ public static class Classes
                 idx[j] = i;
 
             a = b;
-        };
+        }
 
         // Shuffle the indices vector
         Vector.Shuffle(idx);

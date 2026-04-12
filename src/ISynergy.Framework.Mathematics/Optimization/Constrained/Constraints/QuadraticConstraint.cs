@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 /// <summary>
 ///     Constraint with only quadratic terms.
 /// </summary>
-public class QuadraticConstraint : NonlinearConstraint, IConstraint
+public class QuadraticConstraint : NonlinearConstraint
 {
     /// <summary>
     ///     Constructs a new quadratic constraint in the form <c>x'Ax + x'b</c>.

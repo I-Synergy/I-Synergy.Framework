@@ -153,7 +153,7 @@ public static partial class NpyFormat
         writer.Write((byte)147);
         writer.Write(magic);
         writer.Write((byte)1); // major
-        writer.Write((byte)0); // minor;
+        writer.Write((byte)0); // minor version
 
         var tuple = string.Join(", ", shape.Select(i => i.ToString()).ToArray());
         var header = "{{'descr': '{0}', 'fortran_order': False, 'shape': ({1}), }}";

@@ -7,6 +7,7 @@ using ISynergy.Framework.Mathematics.Vectors;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1117, S1121 // variable shadowing and assignments in expressions are intentional in EISPACK-ported eigenvalue algorithm
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -156,7 +157,8 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
                 if (RealEigenvalues[i] > tol)
                     r++;
 
-            return (int)(rank = r);
+            rank = r;
+            return (int)rank;
         }
     }
     /// <summary>Returns the real parts of the eigenvalues.</summary>

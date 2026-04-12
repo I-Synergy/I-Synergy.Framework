@@ -33,6 +33,7 @@ using System.ComponentModel;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S1854 // duplicate strings and useless assignments are inherent in ported optimization algorithms
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;

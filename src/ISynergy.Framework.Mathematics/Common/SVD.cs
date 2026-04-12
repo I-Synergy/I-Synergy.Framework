@@ -4,13 +4,14 @@
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S101, S1118 // SVD is a standard mathematical naming convention; class is a utility with only static methods
 
 namespace ISynergy.Framework.Mathematics.Common;
 
 // Just a copy-paste of SVD algorithm from Numerical Recipes but updated for C#
 // (as authors state, the code is aimed to be machine readable, so blame them
 // for all those c/f/g/h/s variable)
-internal class svd
+internal static class svd
 {
     public static void svdcmp(double[,] a, out double[] w, out double[,] v)
     {
@@ -247,7 +248,7 @@ internal class svd
 
                 if (flag != 0)
                 {
-                    c = 0.0;
+                    c = 0.0; // NOSONAR - SVD algorithm initialization, overwritten conditionally in loop
                     s = 1.0;
                     for (i = l; i <= k; i++)
                     {

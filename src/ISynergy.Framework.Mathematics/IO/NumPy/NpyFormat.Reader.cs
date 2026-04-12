@@ -402,7 +402,7 @@ public static partial class NpyFormat
         bool? isLittleEndian;
         t = GetType(type, out bytes, out isLittleEndian);
 
-        if (isLittleEndian.HasValue && isLittleEndian.Value == false)
+        if (isLittleEndian.HasValue && !isLittleEndian.Value)
             throw new NotSupportedException("Big-endian NumPy format is not supported.");
 
         mark = "'fortran_order': ";

@@ -17,9 +17,10 @@ namespace ISynergy.Framework.Mathematics.Common;
 public static class Sort
 {
 #if DEBUG
-    public static int INTROSORT_THRESHOLD = 32;
+    public static int IntrosortThreshold { get; set; } = 32;
+    private static int INTROSORT_THRESHOLD => IntrosortThreshold;
 #else
-    const int INTROSORT_THRESHOLD = 32;
+    private const int INTROSORT_THRESHOLD = 32;
 #endif
 
     /// <summary>
@@ -553,7 +554,7 @@ public static class Sort
                 return keys[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }
@@ -596,7 +597,7 @@ public static class Sort
                 return items[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }
@@ -641,7 +642,7 @@ public static class Sort
                 return keys[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }
@@ -737,7 +738,7 @@ public static class Sort
                 return items[n];
             if (n > pivotIndex)
                 first = pivotIndex + 1;
-            else // if (n < pivotIndex)
+            else
                 last = pivotIndex;
             Debug.Assert(last >= first);
         }

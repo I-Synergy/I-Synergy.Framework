@@ -8,6 +8,7 @@ using System.Collections;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1135 // commented code and TODO comments are deferred template generation notes
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;

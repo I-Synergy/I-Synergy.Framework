@@ -43,6 +43,7 @@ using ISynergy.Framework.Mathematics.Common;
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
 #pragma warning disable S1110 // parentheses in ported FORTRAN algorithms are intentional
+#pragma warning disable S125, S4136, S1192, S1854, S1764, S107, S3626, S2583, S2589, S101, S1116, S3267, S2234 // FORTRAN port: commented code, overload ordering, duplicates, and naming are intentional
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 

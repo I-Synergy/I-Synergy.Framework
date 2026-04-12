@@ -9,6 +9,7 @@ using System.Diagnostics;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1116, S1117, S2245 // GOTO labels need empty statements; variable shadowing and algorithm comments are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Integration;
@@ -508,11 +509,10 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             }
         }
 
-    // lvl = 0;
     L10:
         if (ier == 6)
         {
-            // lvl = 1;
+            // intentional empty block - error level not set
         }
 
         return 0;

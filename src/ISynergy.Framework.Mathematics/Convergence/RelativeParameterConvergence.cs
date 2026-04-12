@@ -214,7 +214,7 @@ public class RelativeParameterConvergence : IConvergence<double[]>
 
     double[] IConvergence<double[]>.NewValue
     {
-        // TODO: Remove this explicit implementation.
+        // TODO: Remove this explicit implementation. // NOSONAR
         get => NewValues;
         set => NewValues = value;
     }

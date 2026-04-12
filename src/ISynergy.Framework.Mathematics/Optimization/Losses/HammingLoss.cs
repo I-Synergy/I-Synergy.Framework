@@ -19,7 +19,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 public class HammingLoss : LossBase<int[][]>,
     ILoss<bool[][]>, ILoss<double[][]>, ILoss<int[]>
 {
-    private bool mean = true;
     private int total;
 
     /// <summary>
@@ -71,11 +70,7 @@ public class HammingLoss : LossBase<int[][]>,
     /// <value>
     ///     <c>true</c> if the mean accuracy loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Mean
-    {
-        get => mean;
-        set => mean = value;
-    }
+    public bool Mean { get; set; } = true;
 
     /// <summary>
     ///     Computes the loss between the expected values (ground truth)
@@ -94,7 +89,7 @@ public class HammingLoss : LossBase<int[][]>,
                 if (Classes.Decide(Expected[i][j]) != actual[i][j])
                     error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }
@@ -116,7 +111,7 @@ public class HammingLoss : LossBase<int[][]>,
                 if (Classes.Decide(Expected[i][j]) != Classes.Decide(actual[i][j]))
                     error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }
@@ -137,7 +132,7 @@ public class HammingLoss : LossBase<int[][]>,
             if (Expected[i][0] != actual[i])
                 error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }
@@ -159,7 +154,7 @@ public class HammingLoss : LossBase<int[][]>,
                 if (Classes.Decide(Expected[i][j]) != Classes.Decide(actual[i][j]))
                     error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }

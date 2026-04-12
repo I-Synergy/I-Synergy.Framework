@@ -117,10 +117,6 @@ public struct Hamming : IMetric<byte[]>, IMetric<string>, IDistance<double[]>, I
     {
         BitArray bytes = x.Xor(y);
 
-        int numBytes = bytes.Length / 8;
-        if (x.Length % 8 != 0)
-            numBytes++;
-
         byte b = 0;
         double sum = 0;
         for (int i = 0, j = 0; i < bytes.Length; i++, j++)

@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Mathematics.Common;
 /// <typeparam name="T">The type for the non-zero elements in this vector.</typeparam>
 /// 
 [Serializable]
-public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFormattable
+public sealed class Sparse<T> : ICloneable, IList<T>, IList, IFormattable
     where T : IEquatable<T>
 {
     /// <summary>

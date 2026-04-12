@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1450, S1135, S1117 // fields are read in methods; TODO comments are algorithm notes; local reader shadowing is intentional for decompression
 
 namespace ISynergy.Framework.Mathematics.IO.Mat;
 
@@ -40,7 +41,7 @@ public class MatNode : IEnumerable<MatNode>
     [RequiresDynamicCode("Uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     internal unsafe MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
     {
-        // TODO: Completely refactor this method.
+        // TODO: Completely refactor this method. // NOSONAR
         this.matReader = matReader;
 
         Fields = new Dictionary<string, MatNode>();
@@ -153,7 +154,7 @@ public class MatNode : IEnumerable<MatNode>
             if (!reader.Read(out valuesTag))
                 throw new NotSupportedException("Invalid values tag at position " + readBytes + ".");
 
-            var matType = valuesTag.DataType;
+            matType = valuesTag.DataType;
             type = MatReader.Translate(matType);
             typeSize = Marshal.SizeOf(type);
             length = valuesTag.NumberOfBytes / typeSize;
