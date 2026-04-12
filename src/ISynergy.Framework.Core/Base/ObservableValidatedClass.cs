@@ -3,6 +3,9 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using System.Collections;
 using System.Collections.ObjectModel;
+
+#pragma warning disable S3267 // foreach loops used to unsubscribe delegates; cannot be LINQ due to collection mutation
+#pragma warning disable S3172 // delegate subtraction is intentional for event handler cleanup
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;

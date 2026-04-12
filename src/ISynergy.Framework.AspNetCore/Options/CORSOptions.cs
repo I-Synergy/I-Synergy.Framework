@@ -1,3 +1,5 @@
+#pragma warning disable S101 // CORSOptions uses established CORS acronym; renaming would break public API
+
 namespace ISynergy.Framework.AspNetCore.Options;
 
 /// <summary>

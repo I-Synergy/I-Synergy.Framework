@@ -1,6 +1,8 @@
 using System.Text;
 using System.Web;
 
+#pragma warning disable S3776 // cognitive complexity is inherent in URI query-string manipulation
+
 namespace ISynergy.Framework.Core.Extensions;
 
 public static class UriExtensions

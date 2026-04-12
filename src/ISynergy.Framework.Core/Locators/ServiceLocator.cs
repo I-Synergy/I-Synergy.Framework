@@ -4,6 +4,8 @@ using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S3010 // static fields intentionally set in constructor (ambient singleton pattern)
+
 namespace ISynergy.Framework.Core.Locators;
 
 /// <summary>

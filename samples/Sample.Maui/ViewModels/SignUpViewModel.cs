@@ -3,6 +3,9 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
+
+#pragma warning disable S3776 // cognitive complexity is inherent in sign-up constructor
+#pragma warning disable S1066 // nested if is intentional for readability of multi-step validation
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;

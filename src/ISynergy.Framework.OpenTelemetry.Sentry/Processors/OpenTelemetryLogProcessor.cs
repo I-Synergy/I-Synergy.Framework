@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 
+#pragma warning disable S3267 // foreach loop uses side-effects; cannot be simplified to LINQ
+
 namespace ISynergy.Framework.OpenTelemetry.Sentry.Processors;
 /// <summary>
 /// Processor to convert OpenTelemetry logs to Sentry events

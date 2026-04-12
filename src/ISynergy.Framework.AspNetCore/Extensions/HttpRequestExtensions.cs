@@ -2,6 +2,8 @@ using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
+#pragma warning disable S3267 // foreach loop builds result with early-return pattern; cannot be safely converted to LINQ
+
 namespace ISynergy.Framework.AspNetCore.Extensions;
 
 /// <summary>

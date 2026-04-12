@@ -3,6 +3,8 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+
+#pragma warning disable S3776 // cognitive complexity is inherent in reflection-based property equality comparison
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;

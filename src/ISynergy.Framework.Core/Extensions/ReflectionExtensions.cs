@@ -198,8 +198,8 @@ public static class ReflectionExtensions
     {
         Expression body = selector;
 
-        if (body is LambdaExpression)
-            body = ((LambdaExpression)body).Body;
+        if (body is LambdaExpression lambdaExpr)
+            body = lambdaExpr.Body;
 
         switch (body.NodeType)
         {
@@ -223,8 +223,8 @@ public static class ReflectionExtensions
     {
         Expression body = selector;
 
-        if (body is LambdaExpression)
-            body = ((LambdaExpression)body).Body;
+        if (body is LambdaExpression lambdaBody)
+            body = lambdaBody.Body;
 
         if (body.NodeType == ExpressionType.MemberAccess)
         {
@@ -247,7 +247,7 @@ public static class ReflectionExtensions
                 e => e.IsDefined(typeof(TitleAttribute))
             );
 
-        if (result is not null && result.Any())
+        if (result.Any())
             return result.First().GetValue(_self)?.ToString() ?? string.Empty;
 
         return string.Empty;
