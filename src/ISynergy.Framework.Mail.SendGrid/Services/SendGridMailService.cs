@@ -25,7 +25,6 @@ namespace ISynergy.Framework.Mail.SendGrid.Services;
 [RequiresDynamicCode("Newtonsoft.Json requires dynamic code generation.")]
 internal class SendGridMailService : IMailService
 {
-    private readonly SendGridMailOptions _sendGridOptions;
     private readonly SendGridClient _sendGridClient;
     private readonly ILogger _logger;
 
@@ -38,15 +37,15 @@ internal class SendGridMailService : IMailService
         IOptions<SendGridMailOptions> sendGridOptions,
         ILogger<SendGridMailService> logger)
     {
-        _sendGridOptions = sendGridOptions.Value;
+        var options = sendGridOptions.Value;
         _logger = logger;
 
-        Argument.IsNotNullOrEmpty(_sendGridOptions.EmailAddress);
-        Argument.IsNotNullOrEmpty(_sendGridOptions.Sender);
-        Argument.IsNotNullOrEmpty(_sendGridOptions.Key);
+        Argument.IsNotNullOrEmpty(options.EmailAddress);
+        Argument.IsNotNullOrEmpty(options.Sender);
+        Argument.IsNotNullOrEmpty(options.Key);
 
         // Create the client once to avoid exposing the API key in stack traces on every call.
-        _sendGridClient = new SendGridClient(_sendGridOptions.Key);
+        _sendGridClient = new SendGridClient(options.Key);
     }
 
     /// <summary>

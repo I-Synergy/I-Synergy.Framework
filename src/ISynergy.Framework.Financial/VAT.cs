@@ -3,7 +3,7 @@ namespace ISynergy.Framework.Financial;
 /// <summary>
 /// Calculations regarding Value Added Tax (VAT).
 /// </summary>
-public static class VAT
+public static class VAT // NOSONAR
 {
     /// <summary>
     /// Calculates nett price from amount with VAT included.

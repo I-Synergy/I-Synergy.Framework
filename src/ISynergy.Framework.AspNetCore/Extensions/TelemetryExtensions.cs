@@ -60,7 +60,6 @@ public static class TelemetryExtensions
                 if (hostBuilderContext.Environment.IsDevelopment())
                     loggerOptions.AddConsoleExporter();
 
-                //loggerOptions.AddProcessor(new UserContextEnrichingLogProcessor());
             });
         });
 

@@ -78,7 +78,6 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
                 Compute();
             return _scaleFactor;
         }
-        private set { _scaleFactor = value; }
     }
 
     /// <summary>
@@ -93,7 +92,6 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
                 Compute();
             return Angle.RadToDeg(_meridianConvergence);
         }
-        private set { _meridianConvergence = value.Radians; }
     }
 
     /// <summary>

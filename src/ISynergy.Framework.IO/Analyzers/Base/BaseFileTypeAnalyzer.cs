@@ -23,18 +23,21 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// The lazy file types
     /// </summary>
     private readonly Lazy<IEnumerable<FileTypeInfo>> lazyFileTypes;
+    private const string TextPlainMimeType = "text/plain";
+    private const string TxtExtension = "txt";
+
     /// <summary>
     /// The ASCII file type
     /// </summary>
-    private readonly FileTypeInfo asciiFileType = new() { Name = "ASCII Text", Extension = "txt", MimeType = "text/plain", Signature = null };
+    private readonly FileTypeInfo asciiFileType = new() { Name = "ASCII Text", Extension = TxtExtension, MimeType = TextPlainMimeType, Signature = null };
     /// <summary>
     /// The UTF8 file type
     /// </summary>
-    private readonly FileTypeInfo utf8FileType = new() { Name = "UTF-8 Text", Extension = "txt", MimeType = "text/plain", Signature = null };
+    private readonly FileTypeInfo utf8FileType = new() { Name = "UTF-8 Text", Extension = TxtExtension, MimeType = TextPlainMimeType, Signature = null };
     /// <summary>
     /// The UTF8 file type with bom
     /// </summary>
-    private readonly FileTypeInfo utf8FileTypeWithBOM = new() { Name = "UTF-8 Text with BOM", Extension = "txt", MimeType = "text/plain", Signature = null };
+    private readonly FileTypeInfo utf8FileTypeWithBOM = new() { Name = "UTF-8 Text with BOM", Extension = TxtExtension, MimeType = TextPlainMimeType, Signature = null };
 
     /// <summary>
     /// Initializes a <see cref="BaseFileTypeAnalyzer" /> with the provided json definition.
@@ -73,7 +76,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
             inputStream.Position = 0;
 
         byte[] byteBuffer = new byte[inputStream.Length];
-        inputStream.Read(byteBuffer, 0, byteBuffer.Length);
+        _ = inputStream.Read(byteBuffer, 0, byteBuffer.Length);
 
         if (inputStream.CanSeek)
             inputStream.Position = 0;
@@ -95,7 +98,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
             throw new ArgumentNullException(nameof(fileContent));
 
         if (fileContent.Length == 0)
-            throw new ArgumentException("input must not be empty");
+            throw new ArgumentException("input must not be empty", nameof(fileContent));
 
         // iterate over each type and determine if we have a match based on file signature.
         foreach (var fileTypeInfo in AvailableTypes
@@ -268,7 +271,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <param name="input">The input.</param>
     /// <param name="hasBOM">if set to <c>true</c> [has bom].</param>
     /// <returns><c>true</c> if the specified input is text; otherwise, <c>false</c>.</returns>
-    private bool IsText(byte[] input, out bool hasBOM)
+    private static bool IsText(byte[] input, out bool hasBOM)
     {
         hasBOM = false;
 

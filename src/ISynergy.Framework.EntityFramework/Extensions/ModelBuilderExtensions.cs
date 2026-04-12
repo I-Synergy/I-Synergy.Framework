@@ -118,9 +118,8 @@ public static class ModelBuilderExtensions
             else
             {
                 // Filter out nulls to satisfy the non-nullable IEnumerable<LambdaExpression> parameter
-                var filters = new[] { (LambdaExpression?)existingFilter.Expression, tenantFilter }
-                    .Where(f => f is not null)!
-                    .Cast<LambdaExpression>();
+                var filters = new[] { existingFilter.Expression, tenantFilter }
+                    .OfType<LambdaExpression>();
 
                 var combinedFilter = CombineQueryFilters(type, filters);
 
@@ -173,9 +172,8 @@ public static class ModelBuilderExtensions
             else
             {
                 // Filter out nulls to satisfy the non-nullable IEnumerable<LambdaExpression> parameter
-                var filters = new[] { (LambdaExpression?)existingFilter.Expression, softDeleteFilter }
-                    .Where(f => f is not null)!
-                    .Cast<LambdaExpression>();
+                var filters = new[] { existingFilter.Expression, softDeleteFilter }
+                    .OfType<LambdaExpression>();
 
                 var combinedFilter = CombineQueryFilters(type, filters);
 
