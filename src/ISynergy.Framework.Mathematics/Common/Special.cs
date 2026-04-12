@@ -379,11 +379,13 @@ public static class Special
             // Factorial for n between 0 and 1 is 1, so log(factorial(n)) is 0.
             return 0.0;
         if (n <= 100)
+        {
             // Compute the factorial using ln(gamma(n)) approximation, using the cache
             // if the value has been previously computed.
             if (lnfcache[n] <= 0)
                 lnfcache[n] = Gamma.Log(n + 1.0);
             return lnfcache[n];
+        }
         return Gamma.Log(n + 1.0);
     }
 
