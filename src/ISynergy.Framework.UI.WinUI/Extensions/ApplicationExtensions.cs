@@ -17,7 +17,7 @@ public static class ApplicationExtensions
                 application.Resources.MergedDictionaries.Remove(item);
         }
 
-        switch (color)
+        switch (color) // NOSONAR
         {
             case "#ff8c00":
                 var style_ff8c00 = new Themeff8c00();

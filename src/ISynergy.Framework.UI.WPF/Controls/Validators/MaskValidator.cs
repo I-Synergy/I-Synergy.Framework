@@ -141,7 +141,7 @@ public static class MaskValidator
         textBox.GotFocus -= Textbox_GotFocus;
         textBox.Loaded += Textbox_Loaded;
 
-        Textbox_Loaded(textBox, new RoutedEventArgs());
+        Textbox_Loaded(textBox, new RoutedEventArgs()); // NOSONAR
     }
 
     private static void Textbox_Loaded(object sender, RoutedEventArgs e) // NOSONAR
@@ -436,13 +436,10 @@ public static class MaskValidator
             && textBox.Text.Length <= oldText.Length - oldSelectionLength)
         {
             isDeleteOrBackspace = true;
-            if (oldSelectionLength == 0)
+            // backspace else delete
+            if (oldSelectionLength == 0 && oldSelectionStart != textBox.SelectionStart)
             {
-                // backspace else delete
-                if (oldSelectionStart != textBox.SelectionStart)
-                {
-                    deleteBackspaceIndex++;
-                }
+                deleteBackspaceIndex++;
             }
         }
 

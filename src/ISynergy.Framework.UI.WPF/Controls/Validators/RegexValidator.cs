@@ -204,37 +204,24 @@ public static class RegexValidator
     {
         var textBox = (TextBox)sender;
 
-        ValidationMode validationMode = ValidationMode.Normal;
-
-        if (_control is null)
-            validationMode = (ValidationMode)textBox.GetValue(ValidationModeProperty);
-        else
-            validationMode = (ValidationMode)_control.GetValue(ValidationModeProperty);
-
+        var validationMode = _control is null
+            ? (ValidationMode)textBox.GetValue(ValidationModeProperty)
+            : (ValidationMode)_control.GetValue(ValidationModeProperty);
 
         ValidateTextBox(textBox, validationMode == ValidationMode.Dynamic);
     }
 
-    private static void TextBox_Loaded(object sender, RoutedEventArgs e)
-    {
-        var textBox = (TextBox)sender;
-        ValidateTextBox(textBox);
-    }
+    private static void TextBox_Loaded(object sender, RoutedEventArgs e) =>
+        ValidateTextBox((TextBox)sender);
 
-    private static void TextBox_LostFocus(object sender, RoutedEventArgs e)
-    {
-        var textBox = (TextBox)sender;
-        ValidateTextBox(textBox);
-    }
+    private static void TextBox_LostFocus(object sender, RoutedEventArgs e) =>
+        ValidateTextBox((TextBox)sender);
 
     private static void ValidateTextBox(TextBox textBox, bool force = true) // NOSONAR
     {
-        ValidationType validationType = ValidationType.Custom;
-
-        if (_control is null)
-            validationType = (ValidationType)textBox.GetValue(ValidationTypeProperty);
-        else
-            validationType = (ValidationType)_control.GetValue(ValidationTypeProperty);
+        var validationType = _control is null
+            ? (ValidationType)textBox.GetValue(ValidationTypeProperty)
+            : (ValidationType)_control.GetValue(ValidationTypeProperty);
 
         var regex = string.Empty;
         var regexMatch = false;
@@ -266,27 +253,21 @@ public static class RegexValidator
                 break;
         }
 
-        if (!regexMatch && force)
+        if (!regexMatch && force && !string.IsNullOrEmpty(textBox.Text))
         {
-            if (!string.IsNullOrEmpty(textBox.Text))
+            var validationMode = _control is null
+                ? (ValidationMode)textBox.GetValue(ValidationModeProperty)
+                : (ValidationMode)_control.GetValue(ValidationModeProperty);
+
+            if (validationMode == ValidationMode.Forced)
             {
-                ValidationMode validationMode = ValidationMode.Normal;
-
-                if (_control is null)
-                    validationMode = (ValidationMode)textBox.GetValue(ValidationModeProperty);
-                else
-                    validationMode = (ValidationMode)_control.GetValue(ValidationModeProperty);
-
-                if (validationMode == ValidationMode.Forced)
-                {
-                    textBox.Text = string.Empty;
-                }
-                else if (validationMode == ValidationMode.Dynamic)
-                {
-                    int selectionStart = textBox.SelectionStart == 0 ? textBox.SelectionStart : textBox.SelectionStart - 1;
-                    textBox.Text = textBox.Text.Remove(selectionStart, 1);
-                    textBox.SelectionStart = selectionStart;
-                }
+                textBox.Text = string.Empty;
+            }
+            else if (validationMode == ValidationMode.Dynamic)
+            {
+                int selectionStart = textBox.SelectionStart == 0 ? textBox.SelectionStart : textBox.SelectionStart - 1;
+                textBox.Text = textBox.Text.Remove(selectionStart, 1);
+                textBox.SelectionStart = selectionStart;
             }
         }
 

@@ -127,7 +127,7 @@ public static class CredentialManager
     static extern bool CredDelete(string target, CredentialTypes type, int reservedFlag);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    private struct CREDENTIAL
+    private struct CREDENTIAL // NOSONAR - Win32 API naming convention
     {
         public UInt32 Flags;
         public CredentialTypes Type;

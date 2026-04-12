@@ -77,7 +77,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
             try
             {
-                host = CreateHostBuilder()
+                host = CreateHostBuilder() // NOSONAR
                     .Build()
                     .SetLocatorProvider();
             }
@@ -146,7 +146,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 });
 
                 // Initialize environment variables from configuration and command-line parameters
-                InitializeEnvironmentVariables();
+                InitializeEnvironmentVariables(); // NOSONAR
             }
             catch (Exception ex)
             {
@@ -211,7 +211,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
     /// </summary>
-    private string NormalizeEnvironmentValue(string value)
+    private static string NormalizeEnvironmentValue(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return value;

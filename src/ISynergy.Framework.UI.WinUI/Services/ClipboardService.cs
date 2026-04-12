@@ -28,6 +28,7 @@ public class ClipboardService : IClipboardService
 #if WINDOWS
     public async Task<ImageResult?> GetImageFromClipboardAsync()
     {
+        _logger.LogTrace("Getting image from clipboard");
         var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
 
         if (dataPackageView.Contains(StandardDataFormats.Bitmap) &&
