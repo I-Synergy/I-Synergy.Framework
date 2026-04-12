@@ -79,7 +79,7 @@ namespace ISynergy.Framework.Mathematics.Integration;
 /// <seealso cref="NonAdaptiveGaussKronrod" />
 /// <seealso cref="InfiniteAdaptiveGaussKronrod" />
 /// <seealso cref="MonteCarloIntegration" />
-public class RombergMethod : IUnivariateIntegration, INumericalIntegration
+public class RombergMethod : IUnivariateIntegration
 {
     private NumericRange range;
 

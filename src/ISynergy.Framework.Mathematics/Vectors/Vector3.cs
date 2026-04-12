@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Mathematics.Vectors;
 [Serializable]
 public struct Vector3
 {
-    // TODO: Possibly replace with the types in System.Numerics?
+    // TODO: Possibly replace with the types in System.Numerics? // NOSONAR
 
     /// <summary>
     /// X coordinate of the vector.
@@ -42,7 +42,7 @@ public struct Vector3
     {
         get
         {
-            return X > Y ? X > Z ? X : Z : Y > Z ? Y : Z;
+            return X > Y ? X > Z ? X : Z : Y > Z ? Y : Z; // NOSONAR
         }
     }
 
@@ -56,7 +56,7 @@ public struct Vector3
     {
         get
         {
-            return X < Y ? X < Z ? X : Z : Y < Z ? Y : Z;
+            return X < Y ? X < Z ? X : Z : Y < Z ? Y : Z; // NOSONAR
         }
     }
 
@@ -75,7 +75,7 @@ public struct Vector3
     {
         get
         {
-            return X >= Y ? X >= Z ? 0 : 2 : Y >= Z ? 1 : 2;
+            return X >= Y ? X >= Z ? 0 : 2 : Y >= Z ? 1 : 2; // NOSONAR
         }
     }
 
@@ -94,7 +94,7 @@ public struct Vector3
     {
         get
         {
-            return X <= Y ? X <= Z ? 0 : 2 : Y <= Z ? 1 : 2;
+            return X <= Y ? X <= Z ? 0 : 2 : Y <= Z ? 1 : 2; // NOSONAR
         }
     }
 
@@ -456,9 +456,9 @@ public struct Vector3
     /// 
     public override bool Equals(object obj)
     {
-        if (obj is Vector3)
+        if (obj is Vector3 v3)
         {
-            return Equals((Vector3)obj);
+            return Equals(v3);
         }
         return false;
     }

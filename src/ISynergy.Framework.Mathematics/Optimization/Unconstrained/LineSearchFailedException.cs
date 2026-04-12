@@ -59,4 +59,13 @@ public class LineSearchFailedException : Exception
     /// </summary>
     /// <value>The error code information returned by the line search routine.</value>
     public int Information { get; }
+
+#pragma warning disable SYSLIB0051
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="LineSearchFailedException"/> class.
+    /// </summary>
+    /// <param name="info">The serialization info.</param>
+    /// <param name="context">The streaming context.</param>
+    protected LineSearchFailedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+#pragma warning restore SYSLIB0051
 }

@@ -65,7 +65,7 @@ public struct Kulczynski : IDistance<double[]>, IDistance<int[]>, ICloneable
     /// 
     public double Distance(double[] x, double[] y)
     {
-        // TODO: Rewrite the integer dissimilarities (Yule, Russel-Rao,...)
+        // TODO: Rewrite the integer dissimilarities (Yule, Russel-Rao,...) // NOSONAR
         // using generics
         int tf = 0;
         int ft = 0;

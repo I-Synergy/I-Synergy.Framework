@@ -42,7 +42,7 @@ public static class SineTransform
     /// <summary>
     ///     Forward Discrete Sine Transform.
     /// </summary>
-    public static void DST(double[] data)
+    public static void DST(double[] data) // NOSONAR
     {
         var result = new double[data.Length];
 

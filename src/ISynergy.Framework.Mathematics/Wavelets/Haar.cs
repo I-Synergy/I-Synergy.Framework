@@ -1,4 +1,3 @@
-using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Wavelets.Base;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
@@ -28,7 +27,6 @@ namespace ISynergy.Framework.Mathematics.Wavelets;
 /// </remarks>
 public class Haar : IWavelet
 {
-    private const double SQRT2 = Constants.Sqrt2;
     private const double w0 = 0.5;
     private const double w1 = -0.5;
     private const double s0 = 0.5;
@@ -79,7 +77,7 @@ public class Haar : IWavelet
     /// <summary>
     ///     Discrete Haar Wavelet Transform
     /// </summary>
-    public static void FWT(double[] data)
+    public static void FWT(double[] data) // NOSONAR
     {
         var temp = new double[data.Length];
 

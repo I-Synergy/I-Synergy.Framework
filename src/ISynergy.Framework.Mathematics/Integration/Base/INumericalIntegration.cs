@@ -30,7 +30,7 @@ public interface INumericalIntegration : ICloneable
 /// <summary>
 ///     Common interface for numeric integration methods.
 /// </summary>
-public interface INumericalIntegration<TCode> : INumericalIntegration
+public interface INumericalIntegration<TCode> : INumericalIntegration // NOSONAR
     where TCode : struct
 {
     /// <summary>

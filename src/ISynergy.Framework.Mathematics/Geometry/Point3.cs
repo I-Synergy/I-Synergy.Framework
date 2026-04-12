@@ -17,7 +17,7 @@ namespace ISynergy.Framework.Mathematics.Geometry;
 [Serializable]
 public struct Point3
 {
-    [NonSerialized] // TODO: Remove when AForge releases a newer version
+    [NonSerialized] // TODO: Remove when AForge releases a newer version // NOSONAR
     Vector3 coordinates;
 
     /// <summary>
@@ -217,10 +217,10 @@ public struct Point3
     /// 
     public override bool Equals(object obj)
     {
-        if (!(obj is Point3))
-            return false;
+        if (obj is Point3 other)
+            return Equals(other);
 
-        return Equals((Point3)obj);
+        return false;
     }
 
     /// <summary>

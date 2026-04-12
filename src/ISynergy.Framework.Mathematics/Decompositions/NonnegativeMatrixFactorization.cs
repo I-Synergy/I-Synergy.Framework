@@ -47,13 +47,13 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 /// </remarks>
 public class NonnegativeMatrixFactorization
 {
-    private double[,] X;  // X is m x n (input data, must be positive)
+    private readonly double[,] X;  // X is m x n (input data, must be positive)
     private double[,] W;  // W is m x r (weights)
     private double[,] H;  // H is r x n (transformed data) (transposed)
 
-    private int n;   // number of input data vectors
-    private int m;   // dimension of input vector
-    private int r;   // dimension of output vector (reduced dimension)
+    private readonly int n;   // number of input data vectors
+    private readonly int m;   // dimension of input vector
+    private readonly int r;   // dimension of output vector (reduced dimension)
     /// <summary>
     ///   Gets the nonnegative factor matrix W.
     /// </summary>

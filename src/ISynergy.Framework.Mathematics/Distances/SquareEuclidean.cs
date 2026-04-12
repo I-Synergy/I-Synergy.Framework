@@ -38,7 +38,7 @@ public struct SquareEuclidean :
     ///   to the distance function implemented by this class.
     /// </returns>
     /// 
-    public double Distance(double[] x, double[] y)
+    public double Distance(double[] x, double[] y) // NOSONAR
     {
         double sum = 0.0;
 

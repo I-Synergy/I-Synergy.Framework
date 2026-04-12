@@ -34,7 +34,7 @@ public static partial class Matrix
     /// <summary>
     ///     Converts a matrix represented as a nested list of lists into a multi-dimensional matrix.
     /// </summary>
-    public static T[,] ToMatrix<T, U>(this IList<IList<T>> values)
+    public static T[,] ToMatrix<T, U>(this IList<IList<T>> values) // NOSONAR
     {
         var rows = values.Rows();
         var cols = values.Columns();

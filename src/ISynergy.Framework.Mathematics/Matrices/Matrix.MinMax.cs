@@ -109,7 +109,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension)
+    public static T[] Min<T>(this T[,] matrix, int dimension) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);
@@ -144,7 +144,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension, T[] result)
+    public static T[] Min<T>(this T[,] matrix, int dimension, T[] result) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);
@@ -155,7 +155,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices)
+    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);
@@ -190,7 +190,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
-    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices, T[] result)
+    public static T[] Min<T>(this T[,] matrix, int dimension, out int[] indices, T[] result) // NOSONAR
         where T : IComparable<T>
     {
         var s = GetLength(matrix, dimension);

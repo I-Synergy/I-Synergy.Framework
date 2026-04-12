@@ -12,6 +12,7 @@ namespace ISynergy.Framework.Mathematics.Statistics;
 
 public static partial class Measures
 {
+    private const string InvalidDimension = "Invalid dimension.";
     /// <summary>
     ///   Computes the mean value across all dimensions of the given matrix.
     /// </summary>
@@ -98,7 +99,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException(InvalidDimension, "dimension");
         }
 
         return mean;
@@ -173,7 +174,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException(InvalidDimension, "dimension");
         }
 
         return mean;
@@ -1224,7 +1225,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException(InvalidDimension, "dimension");
         }
 
         return cov;
@@ -1441,7 +1442,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException(InvalidDimension, "dimension");
         }
 
         return cov;

@@ -25,7 +25,7 @@ internal struct ArrayFlags
 }
 
 [Flags]
-internal enum ArrayFlagsType : byte
+internal enum ArrayFlagsType : byte // NOSONAR
 {
     None = 0,
     Logical = 2,

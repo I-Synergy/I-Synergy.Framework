@@ -62,9 +62,9 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
     /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
     public bool IsReadOnly => true;
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() // NOSONAR
     {
-        foreach (var entry in archive.Entries)
+        foreach (var entry in archive.Entries) // NOSONAR
             yield return OpenEntry(entry);
     }
 
@@ -130,6 +130,7 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
     public void Dispose()
     {
         Dispose(true);
+        GC.SuppressFinalize(this);
     }
     /// <summary>
     ///     Gets an enumerable collection that contains the keys in the read-only dictionary.

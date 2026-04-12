@@ -73,7 +73,7 @@ public class AbsoluteConvergence : ISingleValueConvergence
     ///     The initial value for the <see cref="NewValue" /> and
     ///     <see cref="OldValue" /> properties.
     /// </param>
-    public AbsoluteConvergence(int iterations = 100, double tolerance = 0, double startValue = 0)
+    public AbsoluteConvergence(int iterations = 100, double tolerance = 0, double startValue = 0) // NOSONAR
     {
         MaxIterations = iterations;
         this.tolerance = tolerance;

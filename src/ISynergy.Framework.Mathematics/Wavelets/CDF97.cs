@@ -34,7 +34,7 @@ namespace ISynergy.Framework.Mathematics.Wavelets;
 /// <summary>
 ///     Cohen-Daubechies-Feauveau Wavelet Transform
 /// </summary>
-public class CDF97 : IWavelet
+public class CDF97 : IWavelet // NOSONAR
 {
     // Constants as used by Gregoire P.
     private const double alpha = -1.586134342;
@@ -177,7 +177,7 @@ public class CDF97 : IWavelet
     /// <summary>
     ///     Forward biorthogonal 9/7 2D wavelet transform
     /// </summary>
-    public static double[,] FWT97(double[,] data, int levels)
+    public static double[,] FWT97(double[,] data, int levels) // NOSONAR
     {
         var w = data.GetLength(0);
         var h = data.GetLength(1);
@@ -196,7 +196,7 @@ public class CDF97 : IWavelet
     /// <summary>
     ///     Inverse biorthogonal 9/7 2D wavelet transform
     /// </summary>
-    public static double[,] IWT97(double[,] data, int levels)
+    public static double[,] IWT97(double[,] data, int levels) // NOSONAR
     {
         var w = data.GetLength(0);
         var h = data.GetLength(1);

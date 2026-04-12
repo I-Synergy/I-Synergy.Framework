@@ -14,11 +14,11 @@ namespace ISynergy.Framework.Mathematics.Matrices;
 public class JaggedReducedRowEchelonForm
 {
 
-    private double[][] rref;
-    private int rows;
-    private int cols;
+    private readonly double[][] rref;
+    private readonly int rows;
+    private readonly int cols;
 
-    private int[] pivot;
+    private readonly int[] pivot;
     private int? freeCount;
 
     /// <summary>

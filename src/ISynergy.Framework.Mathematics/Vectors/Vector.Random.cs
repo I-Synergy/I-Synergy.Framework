@@ -69,7 +69,7 @@ public static partial class Vector
     {
         if ((int)sampleSize > populationSize)
         {
-            throw new ArgumentOutOfRangeException("size", String.Format(
+            throw new ArgumentOutOfRangeException(nameof(sampleSize), String.Format(
                 "The sample size {0} must be less than the size of the population {1}.",
                 sampleSize, populationSize));
         }
@@ -103,7 +103,7 @@ public static partial class Vector
     {
         if (percentage < 0 || percentage > 1)
         {
-            throw new ArgumentOutOfRangeException("percentage", String.Format(
+            throw new ArgumentOutOfRangeException(nameof(percentage), String.Format(
                 "The sample percentage {0} must be between 0 and 1.", percentage));
         }
 
@@ -151,10 +151,10 @@ public static partial class Vector
     ///   Creates a vector with uniformly distributed random data.
     /// </summary>
     /// 
-    public static double[] Random(int size, double min, double max)
+    public static double[] Random(int size, double min, double max) // NOSONAR
     {
         if (size < 0)
-            throw new ArgumentOutOfRangeException("size", size, "Size must be a positive integer.");
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -171,7 +171,7 @@ public static partial class Vector
     public static int[] Random(int size, int min, int max)
     {
         if (size < 0)
-            throw new ArgumentOutOfRangeException("size", size, "Size must be a positive integer.");
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 

@@ -311,7 +311,7 @@ public static class FourierTransform
     private static int[] GetReversedBits(int numberOfBits)
     {
         if ((numberOfBits < minBits) || (numberOfBits > maxBits))
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(numberOfBits));
 
         // check if the array is already calculated
         if (reversedBits[numberOfBits - 1] is null)

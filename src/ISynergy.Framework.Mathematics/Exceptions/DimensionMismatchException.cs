@@ -55,4 +55,13 @@ public class DimensionMismatchException : ArgumentException
     public DimensionMismatchException(string message, Exception innerException) :
         base(message, innerException)
     { }
+
+#pragma warning disable SYSLIB0051
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="DimensionMismatchException"/> class.
+    /// </summary>
+    /// <param name="info">The serialization info.</param>
+    /// <param name="context">The streaming context.</param>
+    protected DimensionMismatchException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+#pragma warning restore SYSLIB0051
 }

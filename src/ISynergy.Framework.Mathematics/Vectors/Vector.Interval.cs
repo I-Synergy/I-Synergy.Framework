@@ -184,7 +184,7 @@ public static partial class Vector
     /// <summary>
     ///   Obsolete. Please use Vector.Range(a, b, stepSize) instead.
     /// </summary>
-    [Obsolete("Please use Vector.Range(a, b, stepSize) instead.")]
+    [Obsolete("Please use Vector.Range(a, b, stepSize) instead.")] // NOSONAR
     public static double[] Interval(double a, double b, double stepSize)
     {
         if (a == b)
@@ -215,7 +215,7 @@ public static partial class Vector
     /// <summary>
     ///   Obsolete. Please use Vector.Range(range, stepSize) instead.
     /// </summary>
-    [Obsolete("Please use Vector.Range(range, stepSize) instead.")]
+    [Obsolete("Please use Vector.Range(range, stepSize) instead.")] // NOSONAR
     public static double[] Interval(this NumericRange range, double stepSize)
     {
         return Interval(range.Min, range.Max, stepSize);

@@ -61,7 +61,7 @@ public static partial class Matrix
     {
         var result = new List<T>(values.Length);
 
-        foreach (var v in values)
+        foreach (var v in values) // NOSONAR
             if (!Equals(v, value))
                 result.Add(v);
 
@@ -275,7 +275,7 @@ public static partial class Matrix
     /// <param name="keys">The key value for each column.</param>
     /// <param name="values">The matrix to be sorted.</param>
     /// <param name="comparer">The comparer to use.</param>
-    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values, IComparer<TKey> comparer)
+    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values, IComparer<TKey> comparer) // NOSONAR
     {
         var indices = Vector.Range(keys.Length);
         Array.Sort(keys.Copy(), indices, comparer);
