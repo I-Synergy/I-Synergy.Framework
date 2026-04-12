@@ -58,7 +58,7 @@ public static class CollectionExtensions
     public static bool CanMoveItemUp(this IList list, object? item)
     {
         Argument.IsNotNull(list);
-        return item is not null && list.Count > 1 && list.IndexOf(item) > 0;
+        return item is not null && list.Count > 1 && list.IndexOf(item) > 0; // NOSONAR - intentional: index 0 = first position, cannot move up
     }
 
     /// <summary>
