@@ -10,6 +10,8 @@ namespace ISynergy.Framework.UI.Extensions;
 /// </summary>
 public static class DispatcherQueueExtensions
 {
+    private const string FailedToEnqueueMessage = "Failed to enqueue the operation";
+
     /// <summary>
     /// Invokes a given function on the target <see cref="DispatcherQueue"/> and returns a
     /// <see cref="Task"/> that completes when the invocation of the function is completed.
@@ -56,7 +58,7 @@ public static class DispatcherQueueExtensions
                 }
             }))
             {
-                taskCompletionSource.SetException(GetEnqueueException("Failed to enqueue the operation"));
+                taskCompletionSource.SetException(GetEnqueueException(FailedToEnqueueMessage));
             }
 
             return taskCompletionSource.Task;
@@ -105,7 +107,7 @@ public static class DispatcherQueueExtensions
                 }
             }))
             {
-                taskCompletionSource.SetException(GetEnqueueException("Failed to enqueue the operation"));
+                taskCompletionSource.SetException(GetEnqueueException(FailedToEnqueueMessage));
             }
 
             return taskCompletionSource.Task;
@@ -171,7 +173,7 @@ public static class DispatcherQueueExtensions
                 }
             }))
             {
-                taskCompletionSource.SetException(GetEnqueueException("Failed to enqueue the operation"));
+                taskCompletionSource.SetException(GetEnqueueException(FailedToEnqueueMessage));
             }
 
             return taskCompletionSource.Task;
@@ -234,7 +236,7 @@ public static class DispatcherQueueExtensions
                 }
             }))
             {
-                taskCompletionSource.SetException(GetEnqueueException("Failed to enqueue the operation"));
+                taskCompletionSource.SetException(GetEnqueueException(FailedToEnqueueMessage));
             }
 
             return taskCompletionSource.Task;

@@ -46,6 +46,7 @@ public sealed partial class Console : UserControl
     /// <param name="args">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     private static void OnShowDiagnosticsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
     {
+        // Intentionally empty — ShowDiagnostics property change handling is reserved for future implementation.
     }
 
     /// <summary>

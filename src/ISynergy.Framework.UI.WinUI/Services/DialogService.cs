@@ -12,8 +12,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class DialogService : IDialogService
+public class DialogService : IDialogService, IDisposable
 {
+    private const string DefaultDialogButtonStyleKey = "DefaultDialogButtonStyle";
+
     private readonly IScopedContextService _scopedContextService;
     private readonly ILanguageService _languageService;
     private readonly ILogger<DialogService> _logger;
@@ -177,8 +179,8 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -192,9 +194,9 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -207,8 +209,8 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -220,7 +222,7 @@ public class DialogService : IDialogService
 
                     try
                     {
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                     }
                     catch (Exception ex)
                     {
@@ -415,9 +417,9 @@ public class DialogService : IDialogService
 
                 try
                 {
-                    window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                    window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
-                    window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources["DefaultDialogButtonStyle"];
+                    window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
                 }
                 catch (Exception ex)
                 {
@@ -468,6 +470,7 @@ public class DialogService : IDialogService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating dialog");
+                throw;
             }
         }
     }
@@ -597,7 +600,8 @@ public class DialogService : IDialogService
                 {
                     try
                     {
-                        _activeDialog.CloseAsync().GetAwaiter().GetResult();
+                        // Synchronous close during disposal — async context not available
+                        _ = _activeDialog.CloseAsync(); // NOSONAR - fire-and-forget acceptable in Dispose
                     }
                     catch (Exception ex)
                     {

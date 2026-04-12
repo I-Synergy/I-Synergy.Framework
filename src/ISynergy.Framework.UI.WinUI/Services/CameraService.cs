@@ -43,6 +43,7 @@ public class CameraService : ICameraService
     /// <returns>FileResult.</returns>
     public async Task<FileResult?> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024)
     {
+        _logger.LogTrace("Taking picture with max file size: {MaxFileSize}", maxFileSize);
         var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
         var device = devices.FirstOrDefault(); // Finds one device, my webcam
         if (device is not null)

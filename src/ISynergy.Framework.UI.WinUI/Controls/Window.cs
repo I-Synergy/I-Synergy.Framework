@@ -54,7 +54,7 @@ public partial class Window : ContentDialog, IWindow
         return Task.CompletedTask;
     }
 
-    private void Window_Unloaded(object? sender, RoutedEventArgs e)
+    private static void Window_Unloaded(object? sender, RoutedEventArgs e)
     {
         throw new NotImplementedException();
     }

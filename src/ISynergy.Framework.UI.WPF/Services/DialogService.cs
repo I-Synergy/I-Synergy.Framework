@@ -19,6 +19,8 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class DialogService : IDialogService
 {
+    private const string TitleWelcomeKey = "TitleWelcome";
+
     private readonly IScopedContextService _scopedContextService;
     private readonly ILanguageService _languageService;
     private readonly ILogger _logger;
@@ -85,21 +87,21 @@ public class DialogService : IDialogService
         if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
         }
 
         if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
         }
         if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
         }
         return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
-            _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+            _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
     }
 
     /// <summary>
@@ -110,9 +112,8 @@ public class DialogService : IDialogService
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
+    public Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR - default value required by interface
     {
-        var result = MessageBoxResult.None;
         var button = System.Windows.MessageBoxButton.OK;
 
         switch (buttons)
@@ -136,7 +137,7 @@ public class DialogService : IDialogService
             MessageBoxImage.Information,
             System.Windows.MessageBoxResult.Cancel);
 
-        result = dialog switch
+        var result = dialog switch
         {
             System.Windows.MessageBoxResult.None => MessageBoxResult.None,
             System.Windows.MessageBoxResult.OK => MessageBoxResult.OK,

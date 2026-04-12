@@ -28,24 +28,18 @@ public static class ColorHelper
         var g = hc.Substring(2, 2);
         var b = hc.Substring(4, 2);
 
-        var color = Colors.Transparent;
-
         try
         {
-            var ri
-               = byte.Parse(r, NumberStyles.HexNumber);
-            var gi
-               = byte.Parse(g, NumberStyles.HexNumber);
-            var bi
-               = byte.Parse(b, NumberStyles.HexNumber);
+            var ri = byte.Parse(r, NumberStyles.HexNumber);
+            var gi = byte.Parse(g, NumberStyles.HexNumber);
+            var bi = byte.Parse(b, NumberStyles.HexNumber);
 
-            color = Windows.UI.Color.FromArgb(255, ri, gi, bi);
+            return Windows.UI.Color.FromArgb(255, ri, gi, bi);
         }
         catch
         {
             return Colors.Transparent;
         }
-        return color;
     }
 
     /// <summary>

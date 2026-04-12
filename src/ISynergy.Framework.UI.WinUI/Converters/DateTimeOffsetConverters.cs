@@ -84,7 +84,7 @@ public class DateTimeOffsetToTimeSpanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        if (original is DateTimeOffset odt && value is TimeSpan ts)
+        if (original is DateTimeOffset odt && value is TimeSpan ts) // NOSONAR
         {
             var dt = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(odt, ts);
             return dt.GetValueOrDefault(DateTimeOffset.MinValue);
@@ -242,11 +242,9 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
             if (!string.IsNullOrEmpty(language))
                 culture = new CultureInfo(language);
 
-            var offset = TimeZoneInfo.Local.BaseUtcOffset;
-
             var scopedContextService = ServiceLocator.Default.GetRequiredService<IScopedContextService>();
 
-            offset = scopedContextService.GetRequiredService<IContext>().TimeZone!.BaseUtcOffset;
+            var offset = scopedContextService.GetRequiredService<IContext>().TimeZone!.BaseUtcOffset;
 
             if (parameter is not null)
                 return datetime.ToLocalDateString(parameter.ToString()!, offset, culture);

@@ -241,7 +241,7 @@ public partial class BladeView : UserControl, IDisposable
                 disposableView.Dispose();
             }
 
-            if (state.ViewModel is not null && state.ViewModel.TryGetTarget(out var viewModel) &&
+            if (state.ViewModel is not null && state.ViewModel.TryGetTarget(out var viewModel) && // NOSONAR
                 viewModel is IDisposable disposableViewModel)
             {
                 disposableViewModel.Dispose();

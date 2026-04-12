@@ -21,7 +21,7 @@ namespace ISynergy.Framework.UI.Services;
 /// Implements the <see cref="INavigationService" />
 /// </summary>
 /// <seealso cref="INavigationService" />
-public class NavigationService : INavigationService
+public class NavigationService : INavigationService, IDisposable
 {
     private readonly IScopedContextService _scopedContextService;
     private readonly IExceptionHandlerService _exceptionHandlerService;
@@ -79,13 +79,13 @@ public class NavigationService : INavigationService
     /// Handles the <see cref="E:BackStackChanged" /> event.
     /// </summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnBackStackChanged(EventArgs e)
+    public virtual void OnBackStackChanged(EventArgs e) // NOSONAR
     {
         // Create a copy to avoid modification during iteration
         var handlers = _backStackChanged?.GetInvocationList();
         if (handlers is not null)
         {
-            foreach (EventHandler handler in handlers)
+            foreach (var handler in handlers.OfType<EventHandler>())
             {
                 try
                 {
@@ -473,25 +473,6 @@ public class NavigationService : INavigationService
     }
 
     /// <summary>
-    /// Navigates to a specified viewmodel asynchronous.
-    /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Assembly scanning for view resolution is intentional; callers must ensure types are preserved.")]
-    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel =>
-        NavigateAsync(default(TViewModel)!, parameter, backNavigation);
-
-    /// <summary>
-    /// Navigates viewmodel to a specified view.
-    /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Runtime type-based service resolution is intentional; callers must ensure types are preserved.")]
-    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView =>
-        NavigateAsync<TViewModel, TView>(default!, parameter, backNavigation);
-
-    /// <summary>
     /// Common navigation logic for handling current ViewModel
     /// </summary>
     [RequiresUnreferencedCode("Calls CancelAllCommands and SafeOnNavigatedFrom which use runtime reflection over property types.")]
@@ -586,6 +567,15 @@ public class NavigationService : INavigationService
     }
 
     /// <summary>
+    /// Navigates to a specified viewmodel asynchronous.
+    /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Assembly scanning for view resolution is intentional; callers must ensure types are preserved.")]
+    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel =>
+        NavigateAsync(default(TViewModel)!, parameter, backNavigation);
+
+    /// <summary>
     /// navigate as an asynchronous operation.
     /// </summary>
     [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
@@ -653,6 +643,16 @@ public class NavigationService : INavigationService
             }
         }
     }
+
+    /// <summary>
+    /// Navigates viewmodel to a specified view.
+    /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Interface INavigationService does not carry RequiresUnreferencedCodeAttribute; suppressed on implementation side.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Runtime type-based service resolution is intentional; callers must ensure types are preserved.")]
+    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel
+        where TView : IView =>
+        NavigateAsync<TViewModel, TView>(default!, parameter, backNavigation);
 
     /// <summary>
     /// Navigates viewmodel to a specified view.

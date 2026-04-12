@@ -467,21 +467,6 @@ public class NavigationService : INavigationService
     }
 
     /// <summary>
-    /// Navigates to a specified viewmodel asynchronous.
-    /// </summary>
-    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel =>
-        NavigateAsync(default(TViewModel)!, parameter, backNavigation);
-
-    /// <summary>
-    /// Navigates viewmodel to a specified view.
-    /// </summary>
-    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView =>
-        NavigateAsync<TViewModel, TView>(default!, parameter, backNavigation);
-
-    /// <summary>
     /// Common navigation logic for handling current ViewModel
     /// </summary>
     [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
@@ -562,6 +547,13 @@ public class NavigationService : INavigationService
     }
 
     /// <summary>
+    /// Navigates to a specified viewmodel asynchronous.
+    /// </summary>
+    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel =>
+        NavigateAsync(default(TViewModel)!, parameter, backNavigation);
+
+    /// <summary>
     /// navigate as an asynchronous operation.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
@@ -629,6 +621,14 @@ public class NavigationService : INavigationService
             }
         }
     }
+
+    /// <summary>
+    /// Navigates viewmodel to a specified view (short form, resolves ViewModel from DI).
+    /// </summary>
+    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel
+        where TView : IView =>
+        NavigateAsync<TViewModel, TView>(default!, parameter, backNavigation);
 
     /// <summary>
     /// Navigates viewmodel to a specified view.

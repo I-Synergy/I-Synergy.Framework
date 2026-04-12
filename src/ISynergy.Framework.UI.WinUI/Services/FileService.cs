@@ -48,6 +48,7 @@ public class FileService : IFileService<FileResult>
     /// <returns>FileResult.</returns>
     public async Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file)
     {
+        _logger.LogTrace("Saving file: {Filename} to folder: {Folder}", filename, folder);
         var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
         var createdFile = await storageFolder.CreateFileAsync(
                 filename,
@@ -87,7 +88,7 @@ public class FileService : IFileService<FileResult>
         return result;
     }
 
-    private List<string> GetFilters(string filter)
+    private static List<string> GetFilters(string filter)
     {
         var result = new List<string>();
         var fileFilter = string.Empty;

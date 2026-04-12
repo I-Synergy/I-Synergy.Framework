@@ -96,7 +96,7 @@ internal class UpdateService : IUpdateService
         }
     }
 
-    private async Task<bool> CheckVersionAsync(int applicationId)
+    private async Task<bool> CheckVersionAsync(int applicationId) // NOSONAR - parameter reserved for future use
     {
         var version = string.Empty;
 
@@ -166,21 +166,5 @@ internal class UpdateService : IUpdateService
                     _languageService.GetString("CannotInstallUpdate")));
             }
         }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Helper method for handling the scenario where a mandatory package update fails to
-    /// download or install. Add code to this method to perform whatever actions you want
-    /// to take, such as notifying the user and disabling features in your app.
-    /// </summary>
-    /// <returns>Task.</returns>
-    private Task HandleMandatoryPackageErrorAsync()
-    {
-        return _dialogService.ShowErrorAsync(
-                    _languageService.GetString("WarningMandatoryUpdateFailed"));
     }
 }
