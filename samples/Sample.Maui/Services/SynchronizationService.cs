@@ -3,6 +3,9 @@ using Dotmim.Sync.Enumerations;
 using Dotmim.Sync.Sqlite;
 using Dotmim.Sync.Web.Client;
 using ISynergy.Framework.Core.Abstractions;
+
+#pragma warning disable S3776 // cognitive complexity is inherent in sync service initialization
+#pragma warning disable S1313 // 10.0.2.2 is the Android emulator's loopback address for the host machine
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;

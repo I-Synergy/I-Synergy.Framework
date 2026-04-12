@@ -2,6 +2,8 @@ using ISynergy.Framework.Core.Extensions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
+#pragma warning disable S3267 // foreach loop builds key list with early-return; cannot be converted to LINQ
+
 namespace ISynergy.Framework.AspNetCore.Filters;
 
 /// <summary>

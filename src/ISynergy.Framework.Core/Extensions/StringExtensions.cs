@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#pragma warning disable S3267 // foreach loops use early-return or mutation; cannot be safely converted to LINQ
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>

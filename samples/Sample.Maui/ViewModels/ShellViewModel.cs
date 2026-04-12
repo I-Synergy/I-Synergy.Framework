@@ -3,6 +3,8 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+
+#pragma warning disable S2583 // FluentUI icon constants may be null at runtime; null-coalescing guard is intentional
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;

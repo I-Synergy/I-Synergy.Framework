@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 #pragma warning disable S3776 // cognitive complexity is inherent in exception formatting logic
+#pragma warning disable S3427 // 2-param overload is intentional backward-compatible wrapper; default params in full overload are by design
 
 namespace ISynergy.Framework.Core.Extensions;
 
