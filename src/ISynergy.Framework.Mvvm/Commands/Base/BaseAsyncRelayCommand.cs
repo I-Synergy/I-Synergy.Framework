@@ -195,55 +195,38 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                 _executionTask = value;
             }
 
-            if (valueChanged)
+            // valueChanged is always true here (we return early above if !valueChanged) // NOSONAR
+            // Collect all property changes to batch them
+            var propertyChanges = new List<PropertyChangedEventArgs> { ExecutionTaskChangedEventArgs };
+
+            // Only raise IsRunning changed if the running state actually changed
+            bool wasRunning = oldTask is { IsCompleted: false };
+            bool isNewTaskRunning = value is { IsCompleted: false };
+            if (wasRunning != isNewTaskRunning)
             {
-                // Collect all property changes to batch them
-                var propertyChanges = new List<PropertyChangedEventArgs> { ExecutionTaskChangedEventArgs };
+                propertyChanges.Add(IsRunningChangedEventArgs);
+            }
 
-                // Only raise IsRunning changed if the running state actually changed
-                bool wasRunning = oldTask is { IsCompleted: false };
-                bool isRunning = value is { IsCompleted: false };
-                if (wasRunning != isRunning)
+            bool isAlreadyCompletedOrNull = value?.IsCompleted ?? true;
+
+            lock (_syncLock)
+            {
+                if (_cancellationTokenSource is not null)
                 {
-                    propertyChanges.Add(IsRunningChangedEventArgs);
-                }
-
-                bool isAlreadyCompletedOrNull = value?.IsCompleted ?? true;
-
-                lock (_syncLock)
-                {
-                    if (_cancellationTokenSource is not null)
-                    {
-                        propertyChanges.Add(CanBeCanceledChangedEventArgs);
-                        propertyChanges.Add(IsCancellationRequestedChangedEventArgs);
-                    }
-                }
-
-                // Batch raise all property changes
-                RaisePropertyChangedBatch(propertyChanges.ToArray());
-
-                if (!isAlreadyCompletedOrNull && value is not null)
-                {
-                    MonitorTask(value);
+                    propertyChanges.Add(CanBeCanceledChangedEventArgs);
+                    propertyChanges.Add(IsCancellationRequestedChangedEventArgs);
                 }
             }
-        }
-    }
 
-    /// <summary>
-    /// Raises a property changed event.
-    /// </summary>
-    /// <param name="args">The property changed event args.</param>
-    private void RaisePropertyChanged(PropertyChangedEventArgs args)
-    {
-        PropertyChangedEventHandler? handler;
-        lock (_syncLock)
-        {
-            if (_isDisposed) return;
-            handler = PropertyChanged;
-        }
+            // Batch raise all property changes
+            RaisePropertyChangedBatch(propertyChanges.ToArray());
 
-        handler?.Invoke(this, args);
+            // value is not null when !isAlreadyCompletedOrNull (null value would make it true) // NOSONAR
+            if (!isAlreadyCompletedOrNull)
+            {
+                MonitorTask(value!);
+            }
+        }
     }
 
     /// <summary>
@@ -575,7 +558,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// handled in ExecuteAsync, so this method only re-throws for FlowExceptionsToTaskScheduler scenarios.
     /// </summary>
     /// <param name="executionTask">The task to await.</param>
-    internal async void AwaitAndThrowIfFailed(Task executionTask)
+    internal static async void AwaitAndThrowIfFailed(Task executionTask)
     {
         try
         {
@@ -921,9 +904,10 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                 {
                     entry.Value.Value.Dispose();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Ignore disposal errors
+                    // Ignore disposal errors during static cleanup
+                    System.Diagnostics.Debug.WriteLine($"Error disposing timeout token: {ex.Message}");
                 }
             }
         }

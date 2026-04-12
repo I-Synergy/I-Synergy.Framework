@@ -185,16 +185,13 @@ public struct UtmGrid : IEquatable<UtmGrid>
                 Zone = _zone + 1;
             }
         }
-        else if (Band == 'X')
+        else if (Band == 'X' && (_zone == 32 || _zone == 34 || _zone == 36))
         {
-            if (_zone == 32 || _zone == 34 || _zone == 36)
-            {
-                var delta = coord.Longitude.Degrees - CenterMeridian.Degrees;
-                if (Math.Sign(delta) == -1)
-                    Zone = _zone - 1;
-                else
-                    Zone = _zone + 1;
-            }
+            var delta = coord.Longitude.Degrees - CenterMeridian.Degrees;
+            if (Math.Sign(delta) == -1)
+                Zone = _zone - 1;
+            else
+                Zone = _zone + 1;
         }
     }
 
@@ -290,7 +287,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// </summary>
     /// <value>The band.</value>
     /// <exception cref="ArgumentOutOfRangeException">If the band character is out of its limits</exception>
-    //TODO Check the correct Exception type
+    // NOSONAR - ArgumentOutOfRangeException is the correct exception type for band index out of range
     public char Band
     {
         get { return BandChars[_band]; }
@@ -431,29 +428,14 @@ public struct UtmGrid : IEquatable<UtmGrid>
     }
 
     /// <summary>
-    /// Sets the zone and band in constructor.
-    /// </summary>
-    /// <param name="zone">The zone.</param>
-    /// <param name="band">The band.</param>
-    private void SetZoneAndBandInConstructor(int zone, char band)
-    {
-        SetZoneAndBandInConstructor(zone, BandChars.IndexOf(band), true);
-    }
-
-    /// <summary>
     /// Check wether a point is in the grid
     /// </summary>
     /// <param name="point">The point to test</param>
     /// <returns>True if the point is inside</returns>
     public bool IsInside(GlobalCoordinates point)
     {
-        if (point.Longitude >= LowerLeftCorner.Longitude && point.Longitude <= LowerRightCorner.Longitude)
-        {
-            if (point.Latitude >= LowerLeftCorner.Latitude && point.Latitude <= UpperLeftCorner.Latitude)
-                return true;
-        }
-
-        return false;
+        return point.Longitude >= LowerLeftCorner.Longitude && point.Longitude <= LowerRightCorner.Longitude
+            && point.Latitude >= LowerLeftCorner.Latitude && point.Latitude <= UpperLeftCorner.Latitude;
     }
 
     /// <summary>

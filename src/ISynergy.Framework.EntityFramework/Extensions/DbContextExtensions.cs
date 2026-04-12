@@ -54,7 +54,7 @@ public static class DbContextExtensions
         var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
 
         if (entityPropertyName is null)
-            throw new ArgumentException(ErrorEntity);
+            throw new ArgumentException(ErrorEntity, typeof(TEntity).Name);
 
         var parameterExpression = Expression.Parameter(typeof(TEntity));
         var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(id));

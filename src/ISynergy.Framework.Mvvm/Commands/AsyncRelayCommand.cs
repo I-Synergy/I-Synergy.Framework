@@ -233,7 +233,6 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                         exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
-                    exceptionAlreadyHandled = true;
                     // Suppress exception to prevent app crash when handled
                     return;
                 }
@@ -258,7 +257,6 @@ public sealed class AsyncRelayCommand : BaseAsyncRelayCommand
                         exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-                    exceptionAlreadyHandled = true;
                     // Suppress exception to prevent app crash when handled
                     return;
                 }

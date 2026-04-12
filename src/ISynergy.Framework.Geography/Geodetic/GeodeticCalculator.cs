@@ -96,7 +96,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
         var sigma = sOverbA;
         var prevSigma = sOverbA;
 
-        for (; ; )
+        for (; ; ) // NOSONAR
         {
             // eq. 5
             sigmaM2 = 2.0 * sigma1 + sigma;

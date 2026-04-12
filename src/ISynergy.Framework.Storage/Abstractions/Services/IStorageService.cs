@@ -17,7 +17,7 @@ public interface IStorageService
     /// <param name="overwrite">if set to <c>true</c> [overwrite].</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;Uri&gt;.</returns>
-    Task<Uri> UploadFileAsync(string connectionStringName, string containerName, byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default);
+    Task<Uri> UploadFileAsync(string connectionStringName, string containerName, byte[] fileBytes, string contentType, string filename, string folder, bool overwrite = false, CancellationToken cancellationToken = default); // NOSONAR
     /// <summary>
     /// Downloads the file asynchronous.
     /// </summary>

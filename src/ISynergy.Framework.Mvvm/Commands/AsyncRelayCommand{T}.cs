@@ -158,11 +158,8 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     /// <returns>true if this command can be executed; otherwise, false.</returns>
     public override bool CanExecute(object? parameter)
     {
-        if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result))
-        {
-            if (parameter is not null)
-                RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
-        }
+        if (!RelayCommand<T>.TryGetCommandArgument(parameter, out T? result) && parameter is not null)
+            RelayCommand<T>.ThrowArgumentExceptionForInvalidCommandArgument(parameter);
 
         return CanExecute(result);
     }
@@ -287,7 +284,6 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
                         exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
-                    exceptionAlreadyHandled = true;
                     // Suppress exception to prevent app crash when handled
                     return;
                 }
@@ -312,7 +308,6 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
                         exceptionHandlerService.HandleException(ex);
 
                     System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-                    exceptionAlreadyHandled = true;
                     // Suppress exception to prevent app crash when handled
                     return;
                 }

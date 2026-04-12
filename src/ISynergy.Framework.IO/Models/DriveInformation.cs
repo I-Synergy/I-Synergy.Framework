@@ -21,7 +21,7 @@ public static class DriveInformation
         Argument.IsMinimal(fileSize, 1);
 
         if (!Path.IsPathRooted(path))
-            throw new ArgumentException($"The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.");
+            throw new ArgumentException($"The path '{path}' was not a rooted path and IsFreeSpaceAvailable does not support relative paths.", nameof(path));
 
         if (path.StartsWith(@"\\"))
             return true;
@@ -44,7 +44,7 @@ public static class DriveInformation
         Argument.IsNotNullOrEmpty(path);
 
         if (!Path.IsPathRooted(path))
-            throw new ArgumentException($"The path '{path}' was not a rooted path.");
+            throw new ArgumentException($"The path '{path}' was not a rooted path.", nameof(path));
 
         if (path.StartsWith(@"\\"))
             return true;
@@ -70,10 +70,10 @@ public static class DriveInformation
         Argument.IsNotNullOrEmpty(path);
 
         if (!Path.IsPathRooted(path))
-            throw new ArgumentException($"The path '{path}' was not a rooted path.");
+            throw new ArgumentException($"The path '{path}' was not a rooted path.", nameof(path));
 
         if (path.StartsWith(@"\\"))
-            throw new ArgumentException("A UNC path was passed to GetDriveName");
+            throw new ArgumentException("A UNC path was passed to GetDriveName", nameof(path));
 
         return Directory.GetDirectoryRoot(path);
     }
@@ -90,7 +90,7 @@ public static class DriveInformation
         Argument.IsNotNullOrEmpty(path);
 
         if (!Path.IsPathRooted(path))
-            throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.");
+            throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToRootUNC does not support relative paths.", nameof(path));
 
         if (path.StartsWith(@"\\"))
             return Directory.GetDirectoryRoot(path);
@@ -114,7 +114,7 @@ public static class DriveInformation
         Argument.IsNotNullOrEmpty(path);
 
         if (!Path.IsPathRooted(path))
-            throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.");
+            throw new ArgumentException($"The path '{path}' was not a rooted path and ResolveToUNC does not support relative paths.", nameof(path));
 
         // Is the path already in the UNC format?
         if (path.StartsWith(@"\\"))

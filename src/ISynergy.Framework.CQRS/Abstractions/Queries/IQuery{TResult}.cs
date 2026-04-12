@@ -4,4 +4,4 @@ namespace ISynergy.Framework.CQRS.Queries;
 /// Query interface with specified result type
 /// </summary>
 /// <typeparam name="TResult">The type of query result</typeparam>
-public interface IQuery<TResult> { }
+public interface IQuery<TResult> { } // NOSONAR

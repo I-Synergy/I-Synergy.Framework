@@ -37,7 +37,7 @@ public class ActionQueueBuilder : IActionQueueBuilder
         var repeatCount = 0;
 
         // Adds all tasks to the queue.
-        for (int i = 0; i < automation.Actions.Count; i++)
+        for (int i = 0; i < automation.Actions.Count; i++) // NOSONAR - loop counter is intentionally modified in body to implement repeat logic
         {
             var action = automation.Actions[i];
 

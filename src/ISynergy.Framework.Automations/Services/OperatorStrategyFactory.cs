@@ -10,7 +10,6 @@ namespace ISynergy.Framework.Automations.Services;
 /// </summary>
 public class OperatorStrategyFactory : IOperatorStrategyFactory
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly Dictionary<OperatorTypes, IOperatorStrategy> _strategies;
 
     /// <summary>
@@ -19,11 +18,10 @@ public class OperatorStrategyFactory : IOperatorStrategyFactory
     /// <param name="serviceProvider">The service provider for resolving strategies.</param>
     public OperatorStrategyFactory(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
         _strategies = new Dictionary<OperatorTypes, IOperatorStrategy>
         {
-            { OperatorTypes.And, _serviceProvider.GetRequiredService<AndOperatorStrategy>() },
-            { OperatorTypes.Or, _serviceProvider.GetRequiredService<OrOperatorStrategy>() }
+            { OperatorTypes.And, serviceProvider.GetRequiredService<AndOperatorStrategy>() },
+            { OperatorTypes.Or, serviceProvider.GetRequiredService<OrOperatorStrategy>() }
         };
     }
 

@@ -41,10 +41,10 @@ public partial class UnitConversionService : IUnitConversionService
             return value;
 
         if (source is SIUnit && target is SIUnit)
-            throw new ArgumentException("For conversion the source and target cannot be both an SI unit. e.g. metre and metre ");
+            throw new ArgumentException("For conversion the source and target cannot be both an SI unit. e.g. metre and metre ", nameof(source));
 
         if (!target.UnitTypes.Intersect(source.UnitTypes).Any())
-            throw new ArgumentException("For conversion the source and target must have the same UnitType. e.g. Time and Length");
+            throw new ArgumentException("For conversion the source and target must have the same UnitType. e.g. Time and Length", nameof(target));
 
         // source is SI Unit
         if (source is SIUnit && target is Unit t)
@@ -83,7 +83,7 @@ public partial class UnitConversionService : IUnitConversionService
             Units.Where(q => q.Symbol.Equals(targetSymbol)).Single() is { } target)
             return Convert(source, value, target);
 
-        throw new ArgumentException("Converter failed to get the corresponding units.");
+        throw new ArgumentException("Converter failed to get the corresponding units.", nameof(sourceSymbol));
     }
 
     /// <summary>
@@ -107,6 +107,6 @@ public partial class UnitConversionService : IUnitConversionService
             Units.Where(q => q.Symbol.Equals(targetUnit.GetSymbol())).Single() is { } target)
             return Convert(source, value, target);
 
-        throw new ArgumentException("Converter failed to get the corresponding units.");
+        throw new ArgumentException("Converter failed to get the corresponding units.", nameof(sourceUnit));
     }
 }
