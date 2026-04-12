@@ -6,6 +6,8 @@ using System.Collections;
 #pragma warning disable S2368 // object overloads are part of the library API
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S2589 // null checks after null-forgiving operator are intentional defensive runtime guards
+#pragma warning disable S2589 // null checks after null-forgiving operator are defensive runtime guards
 
 
 namespace ISynergy.Framework.Core.Collections;

@@ -4,6 +4,8 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
+#pragma warning disable S3776 // cognitive complexity is inherent in DataTable projection with type inspection
+
 namespace ISynergy.Framework.Core.Extensions.Base;
 
 /// <summary>

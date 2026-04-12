@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S2692 // IndexOf > 0 is intentional: index 0 means first position, which cannot move up
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>

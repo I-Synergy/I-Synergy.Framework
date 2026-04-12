@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S3776 // cognitive complexity is inherent in deep equality comparison of generic dictionaries
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>

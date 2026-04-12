@@ -1,5 +1,7 @@
 using System.Collections;
 
+#pragma warning disable S3267 // foreach loops with early-return cannot be simplified to LINQ without losing short-circuit semantics
+
 namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>

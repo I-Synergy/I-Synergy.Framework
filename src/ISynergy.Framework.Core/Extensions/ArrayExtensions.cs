@@ -1,3 +1,5 @@
+#pragma warning disable S3776 // cognitive complexity is inherent in recursive jagged-array dimension calculation
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
