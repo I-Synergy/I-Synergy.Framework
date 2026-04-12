@@ -3,6 +3,8 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
+#pragma warning disable S3267 // foreach loop uses prop.SetValue side effects; cannot be simplified to LINQ
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>

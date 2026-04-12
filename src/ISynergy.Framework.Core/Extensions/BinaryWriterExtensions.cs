@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
 
+#pragma warning disable S2368 // jagged and multidimensional array parameters are intentional public API for binary serialization
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>

@@ -4,6 +4,8 @@ using System.Collections;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#pragma warning disable S3776 // cognitive complexity is inherent in exception formatting logic
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
