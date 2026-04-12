@@ -11,7 +11,7 @@ using Windows.UI.Core;
 namespace ISynergy.Framework.UI.Extensions;
 public static class CursorExtensions
 {
-    public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext)
+    public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext) // NOSONAR
     {
         if (mauiContext is null)
         {
@@ -104,10 +104,10 @@ public static class CursorExtensions
         }
     }
 
-    static void ChangeCursor(this UIElement uiElement, InputCursor cursor)
+    static void ChangeCursor(this UIElement uiElement, InputCursor cursor) // NOSONAR
     {
         Type type = typeof(UIElement);
-        type.InvokeMember("ProtectedCursor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.SetProperty | BindingFlags.Instance, null, uiElement, new object[] { cursor });
+        type.InvokeMember("ProtectedCursor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.SetProperty | BindingFlags.Instance, null, uiElement, new object[] { cursor }); // NOSONAR
     }
 
     static CoreCursorType GetCursor(CursorIcons cursor)

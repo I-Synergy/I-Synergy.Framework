@@ -230,9 +230,6 @@ public sealed class BooleanToBooleanConverter : BooleanConverter<bool>
 /// <seealso cref="IValueConverter" />
 public abstract class BooleanConverter<T> : IValueConverter
 {
-    private T? _true;
-    private T? _false;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="BooleanConverter{T}"/> class.
     /// </summary>
@@ -255,21 +252,13 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// Gets or sets the false value.
     /// </summary>
     /// <value>The false.</value>
-    public T? False 
-    { 
-        get => _false;
-        set => _false = value;
-    }
+    public T? False { get; set; }
 
     /// <summary>
     /// Gets or sets the true value.
     /// </summary>
     /// <value>The true.</value>
-    public T? True
-    { 
-        get => _true;
-        set => _true = value;
-    }
+    public T? True { get; set; }
 
     /// <summary>
     /// Converts the specified value.

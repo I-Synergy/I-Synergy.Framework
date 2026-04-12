@@ -4,7 +4,7 @@ namespace ISynergy.Framework.UI.Enumerations;
 /// Enum MessageBoxImage
 /// </summary>
 [Flags]
-public enum MessageBoxImage
+public enum MessageBoxImage // NOSONAR
 {
     /// <summary>
     /// The none

@@ -24,7 +24,7 @@ public class DownloadFileService : IDownloadFileService
         ILogger<DownloadFileService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"DownloadFileService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("DownloadFileService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _fileService = fileservice;
     }
@@ -37,6 +37,7 @@ public class DownloadFileService : IDownloadFileService
     /// <param name="filename">The filename.</param>
     public async Task DownloadFileAsync(string folder, string filename, byte[] file)
     {
+        _logger.LogTrace("Downloading file: {Filename} to folder: {Folder}", filename, folder);
         if (await _fileService.SaveFileAsync(folder, filename, file) is { } savedFile)
         {
 #if WINDOWS

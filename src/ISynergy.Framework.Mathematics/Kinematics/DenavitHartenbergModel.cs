@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Kinematics;
 
 /// <summary>
@@ -57,7 +64,7 @@ namespace ISynergy.Framework.Mathematics.Kinematics;
 [Serializable]
 public class DenavitHartenbergModel : IEnumerable<DenavitHartenbergJoint>
 {
-    // TODO: remove the NonSerialized tags in case AForge.NET implements 
+    // TODO: remove the NonSerialized tags in case AForge.NET implements // NOSONAR
     // [Serializable] for those structs in the future (AForge.NET Issue 349)
     /// <summary>
     ///     Initializes a new instance of the <see cref="DenavitHartenbergModel" />

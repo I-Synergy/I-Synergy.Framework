@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
 
+#pragma warning disable S2368 // jagged and multidimensional array parameters are intentional public API for binary serialization
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
@@ -27,7 +29,7 @@ public static class BinaryWriterExtensions
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
     ///
-    public static bool Write<T>(this BinaryWriter stream, T[][] array)
+    public static bool Write<T>(this BinaryWriter stream, T[][] array) // NOSONAR
         where T : struct
     {
         int size = Marshal.SizeOf<T>();
@@ -46,7 +48,7 @@ public static class BinaryWriterExtensions
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
     ///
-    public static bool Write<T>(this BinaryWriter stream, T[,] array)
+    public static bool Write<T>(this BinaryWriter stream, T[,] array) // NOSONAR
         where T : struct
     {
         int size = Marshal.SizeOf<T>();

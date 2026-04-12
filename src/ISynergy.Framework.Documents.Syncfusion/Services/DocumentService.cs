@@ -64,14 +64,6 @@ internal class DocumentService : IDocumentService
             using var engine = new ExcelEngine();
             workbook = engine.Excel.Workbooks.Create(1);
 
-            var importDataOptions = new ExcelImportDataOptions
-            {
-                FirstRow = 1,
-                FirstColumn = 1,
-                IncludeHeader = true,
-                PreserveTypes = false
-            };
-
             workbook.Worksheets[0].ImportDataTable(table, true, 1, 1);
             workbook.Worksheets[0].UsedRange.AutofitColumns();
             workbook.Worksheets[0].UsedRange.WrapText = true;
@@ -97,7 +89,7 @@ internal class DocumentService : IDocumentService
     /// <param name="exportAsPdf">if set to <c>true</c> [export as PDF].</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task.</returns>
-    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default)
+    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default) // NOSONAR S3776
     {
         Argument.IsNotNull(documentRequest);
 
@@ -148,11 +140,11 @@ internal class DocumentService : IDocumentService
                     document.MailMerge.RemoveEmptyParagraphs = true;
                     document.MailMerge.ExecuteNestedGroup(dataSet, commands);
 
-                    foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull())
+                    foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull()) // NOSONAR
                     {
                         if (paragraph.ChildEntities is not null)
                         {
-                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull())
+                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull()) // NOSONAR
                             {
                                 if (paraItem is WPicture picture && paragraph.OwnerTextBody is WTableCell cell)
                                 {
@@ -190,7 +182,6 @@ internal class DocumentService : IDocumentService
                             pdfDocument.Save(result);
                             pdfDocument.Close();
                         }
-                        ;
                     }
                     else
                     {

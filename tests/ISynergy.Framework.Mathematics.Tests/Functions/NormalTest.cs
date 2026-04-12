@@ -86,10 +86,10 @@ public class NormalTest
             double c = Normal.Bivariate(+0, -1, 0.0);
             double d = Normal.Bivariate(-1, -1, 0.0);
 
-            Assert.AreEqual(a, 0.25);
-            Assert.AreEqual(b, 0.07932762696572859, 1e-10);
-            Assert.AreEqual(c, 0.07932762696572859, 1e-10);
-            Assert.AreEqual(d, 0.02517148960005514, 1e-10);
+            Assert.AreEqual(0.25, a);
+            Assert.AreEqual(0.07932762696572859, b, 1e-10);
+            Assert.AreEqual(0.07932762696572859, c, 1e-10);
+            Assert.AreEqual(0.02517148960005514, d, 1e-10);
         }
 
         {
@@ -98,10 +98,10 @@ public class NormalTest
             double c = Normal.Bivariate(0, 1, 0.0);
             double d = Normal.Bivariate(1, 1, 0.0);
 
-            Assert.AreEqual(a, 0.25);
-            Assert.AreEqual(b, 0.4206723730342714, 1e-10);
-            Assert.AreEqual(c, 0.4206723730342714, 1e-10);
-            Assert.AreEqual(d, 0.707860981737141, 1e-10);
+            Assert.AreEqual(0.25, a);
+            Assert.AreEqual(0.4206723730342714, b, 1e-10);
+            Assert.AreEqual(0.4206723730342714, c, 1e-10);
+            Assert.AreEqual(0.707860981737141, d, 1e-10);
         }
 
         {
@@ -110,10 +110,10 @@ public class NormalTest
             double c = Normal.Bivariate(+0, -1, 0.99);
             double d = Normal.Bivariate(-1, -1, 0.99);
 
-            Assert.AreEqual(a, 0.477473293177794, 1e-6);
-            Assert.AreEqual(b, 0.1586552539314527, 1e-10);
-            Assert.AreEqual(c, 0.1586552539314527, 1e-10);
-            Assert.AreEqual(d, 0.1450035348479944, 1e-8);
+            Assert.AreEqual(0.477473293177794, a, 1e-6);
+            Assert.AreEqual(0.1586552539314527, b, 1e-10);
+            Assert.AreEqual(0.1586552539314527, c, 1e-10);
+            Assert.AreEqual(0.1450035348479944, d, 1e-8);
         }
 
         {
@@ -122,10 +122,10 @@ public class NormalTest
             double c = Normal.Bivariate(0, 1, 0.99);
             double d = Normal.Bivariate(1, 1, 0.99);
 
-            Assert.AreEqual(a, 0.477473293177794, 1e-6);
-            Assert.AreEqual(b, 0.4999999999999956, 1e-10);
-            Assert.AreEqual(c, 0.4999999999999956, 1e-10);
-            Assert.AreEqual(d, 0.8276930269850803, 1e-8);
+            Assert.AreEqual(0.477473293177794, a, 1e-6);
+            Assert.AreEqual(0.4999999999999956, b, 1e-10);
+            Assert.AreEqual(0.4999999999999956, c, 1e-10);
+            Assert.AreEqual(0.8276930269850803, d, 1e-8);
         }
 
         {
@@ -139,13 +139,13 @@ public class NormalTest
             double g = Normal.Bivariate(-1, -1, 0.42);
 
 
-            Assert.AreEqual(a, 0.3189849652491711, 1e-10);
-            Assert.AreEqual(b, 0.4611405565191831, 1e-10);
-            Assert.AreEqual(c, 0.4611405565191831, 1e-10);
-            Assert.AreEqual(d, 0.7379699765574815, 1e-10);
-            Assert.AreEqual(e, 0.1197958104506402, 1e-10);
-            Assert.AreEqual(f, 0.1197958104506402, 1e-10);
-            Assert.AreEqual(g, 0.05528048442039563, 1e-10);
+            Assert.AreEqual(0.3189849652491711, a, 1e-10);
+            Assert.AreEqual(0.4611405565191831, b, 1e-10);
+            Assert.AreEqual(0.4611405565191831, c, 1e-10);
+            Assert.AreEqual(0.7379699765574815, d, 1e-10);
+            Assert.AreEqual(0.1197958104506402, e, 1e-10);
+            Assert.AreEqual(0.1197958104506402, f, 1e-10);
+            Assert.AreEqual(0.05528048442039563, g, 1e-10);
         }
 
     }

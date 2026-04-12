@@ -43,6 +43,13 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
 using QFunc = Func<int, int[], int, double[], double[]>;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 /// <summary>
 ///     General Sequential Minimal Optimization algorithm for Quadratic Programming problems.
 /// </summary>
@@ -477,14 +484,6 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
             for (var i = 0; i < l; i++)
                 alpha[active_set[i]] = solution[i];
         }
-
-        // juggle everything back
-        /*{
-            for(int i=0;i<l;i++)
-                while(active_set[i] != i)
-                    swap_index(i,active_set[i]);
-                    // or Q.swap_index(i,active_set[i]);
-        }*/
         Trace.WriteLine("optimization finished, #iter = " + iter);
 
         return iter < max_iter;
@@ -748,7 +747,7 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
                         Gmax1 = G[i];
             }
 
-        if (unshrink == false && Gmax1 + Gmax2 <= Tolerance * 10)
+        if (!unshrink && Gmax1 + Gmax2 <= Tolerance * 10)
         {
             unshrink = true;
             reconstruct_gradient();

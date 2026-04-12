@@ -3,6 +3,14 @@
 using ISynergy.Framework.Mathematics.Decompositions;
 using System.Collections;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1135 // commented code and TODO comments are deferred template generation notes
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -369,7 +377,6 @@ public static partial class Matrix
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = 0; j < i + s; j++)
                 r[i][j] = matrix[i][j];
-        ;
         return r;
     }
 
@@ -383,7 +390,6 @@ public static partial class Matrix
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = i + s; j < matrix.Columns(); j++)
                 r[i][j] = matrix[i][j];
-        ;
         return r;
     }
 
@@ -409,7 +415,7 @@ public static partial class Matrix
                         result[i][j] = result[j][i] = matrix[i][j];
                 break;
             default:
-                throw new Exception("Matrix type can be either LowerTriangular or UpperTrianguler.");
+                throw new ArgumentException("Matrix type can be either LowerTriangular or UpperTriangular.", nameof(type));
         }
 
         return result;

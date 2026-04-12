@@ -219,7 +219,7 @@ public class DateTimeOffsetExtensionsTests
     /// <param name="format">The format.</param>
     /// <param name="expected">The expected.</param>
     /// <param name="culture">The culture.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("d", "6/15/2009", "en-US")]
     [DataRow("D", "Monday, June 15, 2009", "en-US")]
     [DataRow("f", "maandag 15 juni 2009 13:45", "nl-NL")]
@@ -243,7 +243,7 @@ public class DateTimeOffsetExtensionsTests
     /// <param name="datetime">The datetime.</param>
     /// <param name="offset">The offset.</param>
     /// <param name="hour">The hour.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("2021-01-29 19:56:18.3907747 +00:00", 1, 20)]
     [DataRow("2021-01-29 20:44:55.0977507 +00:00", 1, 21)]
     [DataRow("2021-01-29 20:55:47.8056804 +01:00", 1, 20)]

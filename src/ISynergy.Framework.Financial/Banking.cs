@@ -39,7 +39,7 @@ public static class Banking
 
         double CheckNum = NumTotal % 11;
 
-        if (CheckNum != 0)
+        if (CheckNum != 0) // NOSONAR
         {
             return false;
         }

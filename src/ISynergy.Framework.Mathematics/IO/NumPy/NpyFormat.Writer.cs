@@ -3,6 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 public static partial class NpyFormat
@@ -91,7 +98,7 @@ public static partial class NpyFormat
         ulong writtenBytes = 0;
         foreach (var arr in matrix.Enumerate<Array>(first))
         {
-            Array.Clear(buffer, arr.Length, buffer.Length - buffer.Length);
+            Array.Clear(buffer, arr.Length, 0);
             Buffer.BlockCopy(arr, 0, buffer, 0, buffer.Length);
             reader.Write(buffer, 0, buffer.Length);
             writtenBytes += (ulong)buffer.LongLength;
@@ -146,7 +153,7 @@ public static partial class NpyFormat
         writer.Write((byte)147);
         writer.Write(magic);
         writer.Write((byte)1); // major
-        writer.Write((byte)0); // minor;
+        writer.Write((byte)0); // minor version
 
         var tuple = string.Join(", ", shape.Select(i => i.ToString()).ToArray());
         var header = "{{'descr': '{0}', 'fortran_order': False, 'shape': ({1}), }}";
@@ -162,7 +169,7 @@ public static partial class NpyFormat
         headerSize = header.Length + preamble;
 
         if (headerSize % 16 != 0)
-            throw new Exception();
+            throw new InvalidOperationException("NumPy header size must be a multiple of 16.");
 
         writer.Write((ushort)header.Length);
         for (var i = 0; i < header.Length; i++)

@@ -51,11 +51,8 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     {
         ThrowIfDisposed();
 
-        if (!TryGetCommandArgument(parameter, out T? result))
-        {
-            if (parameter is not null)
-                ThrowArgumentExceptionForInvalidCommandArgument(parameter);
-        }
+        if (!TryGetCommandArgument(parameter, out T? result) && parameter is not null)
+            ThrowArgumentExceptionForInvalidCommandArgument(parameter);
 
         return CanExecute(result);
     }
@@ -129,9 +126,9 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
         // Slower path for type conversion (only executed if the above checks fail)
         try
         {
-            if (parameter != null && typeof(T).IsAssignableFrom(parameter.GetType()))
+            if (parameter != null && parameter is T converted)
             {
-                result = (T)parameter;
+                result = converted;
                 return true;
             }
         }

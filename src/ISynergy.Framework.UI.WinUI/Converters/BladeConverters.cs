@@ -21,12 +21,9 @@ public class BladeVisibilityConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is ObservableCollection<IView>)
+        if (value is ObservableCollection<IView> blades && blades.Count > 0)
         {
-            if (value is ObservableCollection<IView> blades && blades.Count > 0)
-            {
-                return true;
-            }
+            return true;
         }
 
         return false;

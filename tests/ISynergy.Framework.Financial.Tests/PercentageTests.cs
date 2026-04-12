@@ -14,7 +14,7 @@ public class PercentageTests
     /// <param name="amount">The amount.</param>
     /// <param name="mainamount">The mainamount.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 50, 49)]
     [DataRow(100, 120, 0.2)]
     [DataRow(0, 0, 0)]
@@ -57,7 +57,7 @@ public class PercentageTests
     /// <param name="purchasePrice">The purchase price.</param>
     /// <param name="salesPrice">The sales price.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 50, 49)]
     [DataRow(10, 100, 9)]
     [DataRow(10, 20, 1)]

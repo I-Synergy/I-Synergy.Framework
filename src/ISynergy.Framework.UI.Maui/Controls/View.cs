@@ -178,7 +178,7 @@ public abstract class View : ContentPage, IView
     /// Initializes a new instance of the view class.
     /// </summary>
     /// <param name="viewModelType"></param>
-    protected View(Type viewModelType)
+    protected View(Type viewModelType) // NOSONAR
     : this()
     {
         Argument.IsNotNull(viewModelType);

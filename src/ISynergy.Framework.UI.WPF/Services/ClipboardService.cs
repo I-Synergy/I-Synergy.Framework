@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Services;
 public class ClipboardService : IClipboardService
 {
     [StructLayout(LayoutKind.Sequential)]
-    private struct BITMAPINFOHEADER
+    private struct BITMAPINFOHEADER // NOSONAR - Win32 naming convention
     {
         public int biSize;
         public int biWidth;
@@ -31,7 +31,7 @@ public class ClipboardService : IClipboardService
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
-    private struct BITMAPFILEHEADER
+    private struct BITMAPFILEHEADER // NOSONAR - Win32 naming convention
     {
         public static readonly short BM = 0x4d42;
 
@@ -52,7 +52,7 @@ public class ClipboardService : IClipboardService
         if ((Clipboard.GetData("DeviceIndependentBitmap") is MemoryStream memoryStream))
         {
             var buffer = new byte[Convert.ToInt32(memoryStream.Length - 1) + 1];
-            memoryStream.Read(buffer, 0, buffer.Length);
+            _ = memoryStream.Read(buffer, 0, buffer.Length);
 
             BITMAPINFOHEADER iInfoHeader = BinaryConverter.FromByteArray<BITMAPINFOHEADER>(buffer);
 

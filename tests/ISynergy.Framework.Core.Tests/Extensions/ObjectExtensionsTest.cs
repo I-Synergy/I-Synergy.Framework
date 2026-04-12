@@ -14,7 +14,7 @@ public class ObjectExtensionTests
     /// Defines the test method NonNullableTypeTest.
     /// </summary>
     /// <param name="type">The type.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(int))]
     [DataRow(typeof(bool))]
     public void NonNullableTypeTest(Type type)
@@ -26,7 +26,7 @@ public class ObjectExtensionTests
     /// Defines the test method NullableTypeTest.
     /// </summary>
     /// <param name="type">The type.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(string))]
     [DataRow(typeof(object))]
     [DataRow(typeof(Product))]

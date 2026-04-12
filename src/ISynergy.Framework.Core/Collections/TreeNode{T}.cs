@@ -120,13 +120,12 @@ public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMembe
     /// Adds the child.
     /// </summary>
     /// <param name="node">The node.</param>
-    private TreeNode<TKey, TModel> AddChild(TreeNode<TKey, TModel> node)
+    private void AddChild(TreeNode<TKey, TModel> node)
     {
         Argument.IsNotNull(node);
 
         node.Parent = this;
         Children.Add(node);
-        return node;
     }
 
     /// <summary>
@@ -237,7 +236,7 @@ public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMembe
     /// </summary>
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     /// The bulk of the clean-up code is implemented in Dispose(bool)
-    protected override void Dispose(bool disposing)
+    protected override void Dispose(bool disposing) // NOSONAR
     {
         if (disposing)
         {

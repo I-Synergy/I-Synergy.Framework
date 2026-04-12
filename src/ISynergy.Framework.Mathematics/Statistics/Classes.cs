@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
@@ -250,7 +257,7 @@ public static class Classes
                 idx[j] = i;
 
             a = b;
-        };
+        }
 
         // Shuffle the indices vector
         Vector.Shuffle(idx);

@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Common;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Vectors;
 
 public static partial class Vector
@@ -195,7 +202,7 @@ public static partial class Vector
     /// 
     [RequiresUnreferencedCode("Calls OneHot<T>(int, T[]) which uses reflection-based type conversion.")]
     [RequiresDynamicCode("Calls OneHot<T>(int, T[]) which requires dynamic code generation.")]
-    public static T[] OneHot<T>(bool mask)
+    public static T[] OneHot<T>(bool mask) // NOSONAR
     {
         return OneHot<T>(mask, new T[2]);
     }
@@ -210,7 +217,7 @@ public static partial class Vector
     /// 
     [RequiresUnreferencedCode("Calls OneHot<T>(int, T[]) which uses reflection-based type conversion.")]
     [RequiresDynamicCode("Calls OneHot<T>(int, T[]) which requires dynamic code generation.")]
-    public static T[] OneHot<T>(bool mask, T[] result)
+    public static T[] OneHot<T>(bool mask, T[] result) // NOSONAR
     {
         return OneHot<T>(mask ? 0 : 1, result);
     }
@@ -330,7 +337,7 @@ public static partial class Vector
     /// 
     [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
     [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
-    public static T[] KHot<T>(bool[] mask, T[] result)
+    public static T[] KHot<T>(bool[] mask, T[] result) // NOSONAR
     {
         var one = Constants.One<T>();
         for (var i = 0; i < mask.Length; i++)

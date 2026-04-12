@@ -14,8 +14,17 @@ public class CustomFileTypeAnalyzer : BaseFileTypeAnalyzer
     /// Initializes a <see cref="CustomFileTypeAnalyzer" /> with the provided definitions file contents.
     /// </summary>
     /// <param name="definitionsFile">The json object representing the definitions file.</param>
-    public CustomFileTypeAnalyzer(string definitionsFile)
+    public CustomFileTypeAnalyzer(string definitionsFile) // NOSONAR
         : base(definitionsFile)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a <see cref="CustomFileTypeAnalyzer" /> with the definitions from the provided stream.
+    /// </summary>
+    /// <param name="definitionStream">Definitions stream.</param>
+    public CustomFileTypeAnalyzer(Stream definitionStream)
+        : base(new StreamReader(definitionStream).ReadToEnd())
     {
     }
 
@@ -44,14 +53,5 @@ public class CustomFileTypeAnalyzer : BaseFileTypeAnalyzer
             throw new FileNotFoundException("The definitions file was not found at the resolved path.", resolvedPath);
 
         return File.ReadAllText(resolvedPath, encoding);
-    }
-
-    /// <summary>
-    /// Initializes a <see cref="CustomFileTypeAnalyzer" /> with the definitions from the provided stream.
-    /// </summary>
-    /// <param name="definitionStream">Definitions stream.</param>
-    public CustomFileTypeAnalyzer(Stream definitionStream)
-        : base(new StreamReader(definitionStream).ReadToEnd())
-    {
     }
 }

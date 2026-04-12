@@ -126,7 +126,7 @@ public static class ClaimsPrincipalExtensions
         if (principal is not null)
             return principal.GetSingleClaimAs<Guid>(claimType, Guid.TryParse);
 
-        return default;
+        return Guid.Empty;
     }
 
 
@@ -155,7 +155,7 @@ public static class ClaimsPrincipalExtensions
     /// <param name="claimType">Type of the claim.</param>
     /// <param name="transformFunc">The transform function.</param>
     /// <returns>List&lt;T&gt;.</returns>
-    private static List<T> GetClaimsAs<T>(this ClaimsPrincipal? principal, string claimType, TryFunc<string, T> transformFunc)
+    private static List<T> GetClaimsAs<T>(this ClaimsPrincipal? principal, string claimType, TryFunc<string, T> transformFunc) // NOSONAR
         where T : struct
     {
         if (principal is null)

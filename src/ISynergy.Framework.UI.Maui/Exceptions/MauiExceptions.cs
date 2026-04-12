@@ -9,7 +9,7 @@ public static class MauiExceptions
     // We'll route all unhandled exceptions through this one event.
     public static event UnhandledExceptionEventHandler? UnhandledException;
 
-    static MauiExceptions()
+    static MauiExceptions() // NOSONAR
     {
         // This is the normal event expected, and should still be used.
         // It will fire for exceptions from iOS and Mac Catalyst,

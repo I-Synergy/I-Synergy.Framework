@@ -1,5 +1,12 @@
 using ISynergy.Framework.Mathematics.Vectors;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Geometry;
 
 /// <summary>
@@ -11,7 +18,6 @@ public class Plane : IEquatable<Plane>, IFormattable
 {
     [NonSerialized]
     private Vector3 _normal;
-    private float _offset;
 
     /// <summary>
     ///   Creates a new <see cref="Plane"/> object
@@ -52,7 +58,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     public Plane(float a, float b, float c, float offset)
     {
         _normal = new Vector3(a, b, c);
-        _offset = offset;
+        Offset = offset;
     }
 
     /// <summary>
@@ -65,7 +71,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     public Plane(Vector3 normal, float offset)
     {
         _normal = normal;
-        _offset = offset;
+        Offset = offset;
     }
     /// <summary>
     ///   Constructs a new <see cref="Plane"/> object from three points.
@@ -139,15 +145,11 @@ public class Plane : IEquatable<Plane>, IFormattable
     }
 
     /// <summary>
-    ///   Gets or sets the distance offset 
+    ///   Gets or sets the distance offset
     ///   between the plane and the origin.
     /// </summary>
-    /// 
-    public float Offset
-    {
-        get { return _offset; }
-        set { _offset = value; }
-    }
+    ///
+    public float Offset { get; set; }
     /// <summary>
     ///   Computes the distance from point to plane.
     /// </summary>
@@ -162,7 +164,7 @@ public class Plane : IEquatable<Plane>, IFormattable
         float b = _normal.Y;
         float c = _normal.Z;
 
-        double num = Math.Abs(a * point.X + b * point.Y + c * point.Z + _offset);
+        double num = Math.Abs(a * point.X + b * point.Y + c * point.Z + Offset);
         double den = Math.Sqrt(a * a + b * b + c * c);
 
         return num / den;
@@ -176,7 +178,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     public void Normalize()
     {
         float norm = _normal.Normalize();
-        _offset /= norm;
+        Offset /= norm;
     }
 
     /// <summary>
@@ -190,7 +192,7 @@ public class Plane : IEquatable<Plane>, IFormattable
         if ((object)a is null || (object)b is null)
             return false;
 
-        return a._offset == b._offset && a._normal == b._normal;
+        return a.Offset == b.Offset && a._normal == b._normal;
     }
 
     /// <summary>
@@ -204,7 +206,7 @@ public class Plane : IEquatable<Plane>, IFormattable
         if ((object)a is null || (object)b is null)
             return true;
 
-        return a._offset != b._offset || a._normal != b._normal;
+        return a.Offset != b.Offset || a._normal != b._normal;
     }
 
     /// <summary>
@@ -220,7 +222,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     /// 
     public bool Equals(Plane other, double tolerance)
     {
-        return (Math.Abs(_offset - other._offset) < tolerance)
+        return (Math.Abs(Offset - other.Offset) < tolerance)
             && (Math.Abs(_normal.X - other._normal.X) < tolerance)
             && (Math.Abs(_normal.Y - other._normal.Y) < tolerance)
             && (Math.Abs(_normal.Z - other._normal.Z) < tolerance);
@@ -238,7 +240,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     /// 
     public bool Equals(Plane other)
     {
-        return _offset == other._offset && _normal == other._normal;
+        return Offset == other.Offset && _normal == other._normal;
     }
 
     /// <summary>
@@ -269,9 +271,9 @@ public class Plane : IEquatable<Plane>, IFormattable
     ///   algorithms and data structures like a hash table. 
     /// </returns>
     /// 
-    public override int GetHashCode()
+    public override int GetHashCode() // NOSONAR
     {
-        return _offset.GetHashCode() + 13 * _normal.GetHashCode();
+        return Offset.GetHashCode() + 13 * _normal.GetHashCode();
     }
     /// <summary>
     ///   Returns a <see cref="System.String"/> that represents this instance.
@@ -359,7 +361,7 @@ public class Plane : IEquatable<Plane>, IFormattable
         }
     }
 
-    private class Formatter
+    private sealed class Formatter
     {
         public IFormatProvider provider;
         public string format = "g";

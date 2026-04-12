@@ -38,7 +38,7 @@ public class SpecialTest
 
         double b = Math.Log(1 - 7e-32);
         double c = Special.Log1p(7e-32);
-        Assert.AreEqual(c, 7e-32);
+        Assert.AreEqual(7e-32, c);
 
 
         Assert.AreEqual(-0.2941782295312541, Special.Log1p(-0.254856327), precision);

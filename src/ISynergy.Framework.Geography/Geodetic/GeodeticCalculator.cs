@@ -96,7 +96,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
         var sigma = sOverbA;
         var prevSigma = sOverbA;
 
-        for (; ; )
+        for (; ; ) // NOSONAR
         {
             // eq. 5
             sigmaM2 = 2.0 * sigma1 + sigma;
@@ -136,9 +136,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
         // This fixes the pole crossing defect spotted by Matt Feemster.  When a path
         // passes a pole and essentially crosses a line of latitude twice - once in
         // each direction - the longitude calculation got messed up.  Using Atan2
-        // instead of Atan fixes the defect.  The change is in the next 3 lines.
-        //double tanLambda = sinSigma * sinAlpha1 / (cosU1 * cosSigma - sinU1*sinSigma*cosAlpha1);
-        //double lambda = Math.Atan(tanLambda);
+        // instead of Atan fixes the defect.
         var lambda = Math.Atan2(sinSigma * sinAlpha1, cosU1 * cosSigma - sinU1 * sinSigma * cosAlpha1);
 
         // eq. 10
@@ -192,7 +190,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
     /// <param name="start">starting coordinates</param>
     /// <param name="end">ending coordinates</param>
     /// <returns>The geodetic curve information to get from start to end</returns>
-    public GeodeticCurve CalculateGeodeticCurve(
+    public GeodeticCurve CalculateGeodeticCurve( // NOSONAR
         GlobalCoordinates start,
         GlobalCoordinates end)
     {

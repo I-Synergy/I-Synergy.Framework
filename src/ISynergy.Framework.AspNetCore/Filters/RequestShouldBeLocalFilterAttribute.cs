@@ -9,6 +9,7 @@ namespace ISynergy.Framework.AspNetCore.Filters;
 /// Implements the <see cref="ActionFilterAttribute" />
 /// </summary>
 /// <seealso cref="ActionFilterAttribute" />
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public sealed class RequestShouldBeLocalFilterAttribute : ActionFilterAttribute
 {
     /// <summary>

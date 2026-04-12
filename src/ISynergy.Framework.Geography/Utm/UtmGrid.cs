@@ -160,7 +160,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// <param name="projection">The projection to use</param>
     /// <param name="coord">Latitude/Longitude of the location</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection)
+    public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection) // NOSONAR
     {
         if (coord.Latitude < projection.MinLatitude || coord.Latitude > projection.MaxLatitude)
             throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_LATITUDE);
@@ -185,16 +185,13 @@ public struct UtmGrid : IEquatable<UtmGrid>
                 Zone = _zone + 1;
             }
         }
-        else if (Band == 'X')
+        else if (Band == 'X' && (_zone == 32 || _zone == 34 || _zone == 36))
         {
-            if (_zone == 32 || _zone == 34 || _zone == 36)
-            {
-                var delta = coord.Longitude.Degrees - CenterMeridian.Degrees;
-                if (Math.Sign(delta) == -1)
-                    Zone = _zone - 1;
-                else
-                    Zone = _zone + 1;
-            }
+            var delta = coord.Longitude.Degrees - CenterMeridian.Degrees;
+            if (Math.Sign(delta) == -1)
+                Zone = _zone - 1;
+            else
+                Zone = _zone + 1;
         }
     }
 
@@ -290,7 +287,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// </summary>
     /// <value>The band.</value>
     /// <exception cref="ArgumentOutOfRangeException">If the band character is out of its limits</exception>
-    //TODO Check the correct Exception type
+    // NOSONAR - ArgumentOutOfRangeException is the correct exception type for band index out of range
     public char Band
     {
         get { return BandChars[_band]; }
@@ -431,29 +428,14 @@ public struct UtmGrid : IEquatable<UtmGrid>
     }
 
     /// <summary>
-    /// Sets the zone and band in constructor.
-    /// </summary>
-    /// <param name="zone">The zone.</param>
-    /// <param name="band">The band.</param>
-    private void SetZoneAndBandInConstructor(int zone, char band)
-    {
-        SetZoneAndBandInConstructor(zone, BandChars.IndexOf(band), true);
-    }
-
-    /// <summary>
     /// Check wether a point is in the grid
     /// </summary>
     /// <param name="point">The point to test</param>
     /// <returns>True if the point is inside</returns>
     public bool IsInside(GlobalCoordinates point)
     {
-        if (point.Longitude >= LowerLeftCorner.Longitude && point.Longitude <= LowerRightCorner.Longitude)
-        {
-            if (point.Latitude >= LowerLeftCorner.Latitude && point.Latitude <= UpperLeftCorner.Latitude)
-                return true;
-        }
-
-        return false;
+        return point.Longitude >= LowerLeftCorner.Longitude && point.Longitude <= LowerRightCorner.Longitude
+            && point.Latitude >= LowerLeftCorner.Latitude && point.Latitude <= UpperLeftCorner.Latitude;
     }
 
     /// <summary>
@@ -628,12 +610,12 @@ public struct UtmGrid : IEquatable<UtmGrid>
         {
             if (Band == 'U' && _zone == 31 ||
                 Band == 'W' && (_zone == 32 || _zone == 34 || _zone == 36))
-                throw new Exception(Properties.Resources.NO_UNIQUE_NORTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_UNIQUE_NORTH_NEIGHBOR);
 
             var newBand = _band + 1;
 
             if (newBand > MaxBand)
-                throw new Exception(Properties.Resources.NO_NORTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_NORTH_NEIGHBOR);
 
             return new UtmGrid(Projection, _zone, newBand);
         }
@@ -649,12 +631,12 @@ public struct UtmGrid : IEquatable<UtmGrid>
         get
         {
             if (Band == 'W' && _zone == 31 || Band == 'X' && _zone >= 31 && _zone <= 37)
-                throw new Exception(Properties.Resources.NO_UNIQUE_SOUTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_UNIQUE_SOUTH_NEIGHBOR);
 
             var newBand = _band - 1;
 
             if (newBand < MinBand)
-                throw new Exception(Properties.Resources.NO_SOUTH_NEIGHBOR);
+                throw new InvalidOperationException(Properties.Resources.NO_SOUTH_NEIGHBOR);
 
             return new UtmGrid(Projection, _zone, newBand);
         }

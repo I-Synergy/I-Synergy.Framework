@@ -102,6 +102,7 @@ public class OctaveEnvironmentTest : OctaveEnvironment
     public void initTest()
     {
         MyAlgorithm al = new();
+        Assert.IsNotNull(al);
     }
 
     public class MyAlgorithm : OctaveEnvironment

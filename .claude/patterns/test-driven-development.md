@@ -1037,7 +1037,7 @@ public sealed class BudgetHandlerTests
         // This test won't run
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("Name1", 100)]
     [DataRow("Name2", 200)]
     [DataRow("Name3", 300)]

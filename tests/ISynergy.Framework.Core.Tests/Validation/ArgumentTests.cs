@@ -194,9 +194,10 @@ public class ArgumentTests
     public void IsNotOutOfRangeWithCustomValidationPassTest()
     {
         int test = 8;
+        // Assert: no exception thrown for valid in-range even value
         Argument.IsNotOutOfRange(test, 0, 10,
             (value, min, max) => value % 2 == 0 && value >= min && value <= max);
-        // No exception should be thrown
+        Assert.IsTrue(test >= 0 && test <= 10);
     }
 
     /// <summary>
@@ -217,8 +218,9 @@ public class ArgumentTests
     public void IsMinimalWithCustomValidationPassTest()
     {
         int test = 15;
+        // Assert: no exception thrown for value exceeding minimum
         Argument.IsMinimal(test, 10, (value, min) => value > min);
-        // No exception should be thrown
+        Assert.IsTrue(test > 10);
     }
 
     /// <summary>
@@ -239,8 +241,9 @@ public class ArgumentTests
     public void IsMaximumWithCustomValidationPassTest()
     {
         int test = 5;
+        // Assert: no exception thrown for value below maximum
         Argument.IsMaximum(test, 10, (value, max) => value < max);
-        // No exception should be thrown
+        Assert.IsTrue(test < 10);
     }
 
     /// <summary>
@@ -285,8 +288,9 @@ public class ArgumentTests
     public void IsNotOutOfRangePassTest()
     {
         int test = 2010;
+        // Assert: no exception thrown for value in range
         Argument.IsNotOutOfRange(test, 2000, 2021);
-        // No exception should be thrown
+        Assert.IsTrue(test >= 2000 && test <= 2021);
     }
 
     private enum TestEnum

@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
 /// <summary>
@@ -36,9 +43,6 @@ public class EuclideanLoss : SquareLoss
 [Serializable]
 public class SquareLoss : LossBase<double[][]>
 {
-    private bool mean = true;
-    private bool root;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="SquareLoss" /> class.
     /// </summary>
@@ -65,11 +69,7 @@ public class SquareLoss : LossBase<double[][]>
     /// <value>
     ///     <c>true</c> if the root square loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Root
-    {
-        get => root;
-        set => root = value;
-    }
+    public bool Root { get; set; }
 
     /// <summary>
     ///     Gets or sets a value indicating whether the
@@ -79,11 +79,7 @@ public class SquareLoss : LossBase<double[][]>
     /// <value>
     ///     <c>true</c> if the mean square loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Mean
-    {
-        get => mean;
-        set => mean = value;
-    }
+    public bool Mean { get; set; } = true;
 
     /// <summary>
     ///     Computes the loss between the expected values (ground truth)
@@ -100,10 +96,10 @@ public class SquareLoss : LossBase<double[][]>
         for (var i = 0; i < Expected.Length; i++)
             error += Distance.SquareEuclidean(actual[i], Expected[i]);
 
-        if (root)
+        if (Root)
             error = Math.Sqrt(error);
 
-        if (mean)
+        if (Mean)
             error = error / Expected.Length;
 
         return error;
@@ -127,10 +123,10 @@ public class SquareLoss : LossBase<double[][]>
             error += u * u;
         }
 
-        if (root)
+        if (Root)
             error = Math.Sqrt(error);
 
-        if (mean)
+        if (Mean)
             error = error / Expected.Length;
 
         return error;

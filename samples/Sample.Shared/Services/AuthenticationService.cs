@@ -44,7 +44,7 @@ public class AuthenticationService : IAuthenticationService
     {
         _scopedContextService = scopedContextService;
         _logger = logger;
-        _logger.LogTrace($"AuthenticationService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("AuthenticationService instance created with ID: {InstanceId}", Guid.NewGuid());
     }
 
     public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
@@ -177,7 +177,7 @@ public class AuthenticationService : IAuthenticationService
     /// Generates a demo token for testing purposes.
     /// This is NOT a real JWT token, just a random string for demo use.
     /// </summary>
-    private string GenerateToken()
+    private static string GenerateToken()
     {
         return Convert.ToBase64String(Guid.NewGuid().ToByteArray()) +
           Convert.ToBase64String(Guid.NewGuid().ToByteArray());

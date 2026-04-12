@@ -6,6 +6,13 @@ using System.Data;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -309,7 +316,7 @@ public static partial class Matrix
             return array;
 
         if (!outputType.IsArray && array.Length == 1)
-            foreach (var obj in array)
+            foreach (var obj in array) // NOSONAR - loop invariant is intentional for single-element array
                 return obj.To(outputType);
 
         Array result;
@@ -1264,15 +1271,13 @@ public static partial class Matrix
     /// 
     public static float[,,] ToSingle(this double[,,] value, float[,,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (float* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Single)src[i];
-            }
-        }
+        int d0 = value.GetLength(0);
+        int d1 = value.GetLength(1);
+        int d2 = value.GetLength(2);
+        for (int i = 0; i < d0; i++)
+            for (int j = 0; j < d1; j++)
+                for (int k = 0; k < d2; k++)
+                    result[i, j, k] = (Single)value[i, j, k];
 
         return result;
     }
@@ -1292,15 +1297,11 @@ public static partial class Matrix
     /// 
     public static float[,] ToSingle(this double[,] value, float[,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (float* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Single)src[i];
-            }
-        }
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Single)value[i, j];
 
         return result;
     }
@@ -1329,15 +1330,11 @@ public static partial class Matrix
     /// 
     public static short[,] ToInt16(this double[,] value, short[,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (short* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Int16)src[i];
-            }
-        }
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Int16)value[i, j];
 
         return result;
     }
@@ -1348,15 +1345,11 @@ public static partial class Matrix
     /// 
     public static int[,] ToInt32(this double[,] value, int[,] result)
     {
-        unsafe
-        {
-            fixed (double* src = value)
-            fixed (int* dst = result)
-            {
-                for (int i = 0; i < value.Length; i++)
-                    dst[i] = (Int32)src[i];
-            }
-        }
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Int32)value[i, j];
 
         return result;
     }
@@ -1400,7 +1393,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = Single.Parse(value[i, j]); ;
+                result[i, j] = Single.Parse(value[i, j]);
 
         return result;
     }
@@ -1457,7 +1450,7 @@ public static partial class Matrix
     public static int[] ToInt32(this string[] value, int[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Int32.Parse(value[i]); ;
+            result[i] = Int32.Parse(value[i]);
         return result;
     }
 
@@ -1471,7 +1464,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = Int32.Parse(value[i, j]); ;
+                result[i, j] = Int32.Parse(value[i, j]);
 
         return result;
     }
@@ -1488,7 +1481,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Int32.Parse(value[i, j, k]); ;
+                    result[i, j, k] = Int32.Parse(value[i, j, k]);
 
         return result;
     }
@@ -1501,7 +1494,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Int32.Parse(value[i, j]); ;
+                result[i][j] = Int32.Parse(value[i, j]);
         return result;
     }
 
@@ -1513,7 +1506,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Int32.Parse(value[i][j]); ;
+                result[i][j] = Int32.Parse(value[i][j]);
         return result;
     }
 
@@ -1526,7 +1519,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Int32.Parse(value[i][j][k]); ;
+                    result[i][j][k] = Int32.Parse(value[i][j][k]);
         return result;
     }
 
@@ -1538,7 +1531,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Int32.Parse(value[i][j]); ;
+                result[i, j] = Int32.Parse(value[i][j]);
         return result;
     }
     /// <summary>
@@ -1596,7 +1589,7 @@ public static partial class Matrix
     public static short[] ToInt16(this string[] value, short[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Int16.Parse(value[i]); ;
+            result[i] = Int16.Parse(value[i]);
         return result;
     }
 
@@ -1610,7 +1603,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = Int16.Parse(value[i, j]); ;
+                result[i, j] = Int16.Parse(value[i, j]);
 
         return result;
     }
@@ -1627,7 +1620,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Int16.Parse(value[i, j, k]); ;
+                    result[i, j, k] = Int16.Parse(value[i, j, k]);
 
         return result;
     }
@@ -1640,7 +1633,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Int16.Parse(value[i, j]); ;
+                result[i][j] = Int16.Parse(value[i, j]);
         return result;
     }
 
@@ -1652,7 +1645,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Int16.Parse(value[i][j]); ;
+                result[i][j] = Int16.Parse(value[i][j]);
         return result;
     }
 
@@ -1665,7 +1658,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Int16.Parse(value[i][j][k]); ;
+                    result[i][j][k] = Int16.Parse(value[i][j][k]);
         return result;
     }
 
@@ -1677,7 +1670,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Int16.Parse(value[i][j]); ;
+                result[i, j] = Int16.Parse(value[i][j]);
         return result;
     }
 
@@ -1727,7 +1720,7 @@ public static partial class Matrix
     public static float[] ToSingle(this string[] value, float[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Single.Parse(value[i]); ;
+            result[i] = Single.Parse(value[i]);
         return result;
     }
 
@@ -1743,7 +1736,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Single.Parse(value[i, j, k]); ;
+                    result[i, j, k] = Single.Parse(value[i, j, k]);
 
         return result;
     }
@@ -1756,7 +1749,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Single.Parse(value[i, j]); ;
+                result[i][j] = Single.Parse(value[i, j]);
         return result;
     }
 
@@ -1768,7 +1761,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Single.Parse(value[i][j]); ;
+                result[i][j] = Single.Parse(value[i][j]);
         return result;
     }
 
@@ -1781,7 +1774,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Single.Parse(value[i][j][k]); ;
+                    result[i][j][k] = Single.Parse(value[i][j][k]);
         return result;
     }
 
@@ -1793,7 +1786,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Single.Parse(value[i][j]); ;
+                result[i, j] = Single.Parse(value[i][j]);
         return result;
     }
 
@@ -1849,7 +1842,7 @@ public static partial class Matrix
     public static long[] ToInt64(this string[] value, long[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Int64.Parse(value[i]); ;
+            result[i] = Int64.Parse(value[i]);
         return result;
     }
 
@@ -1863,7 +1856,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = Int64.Parse(value[i, j]); ;
+                result[i, j] = Int64.Parse(value[i, j]);
 
         return result;
     }
@@ -1880,7 +1873,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Int64.Parse(value[i, j, k]); ;
+                    result[i, j, k] = Int64.Parse(value[i, j, k]);
 
         return result;
     }
@@ -1893,7 +1886,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Int64.Parse(value[i, j]); ;
+                result[i][j] = Int64.Parse(value[i, j]);
         return result;
     }
 
@@ -1905,7 +1898,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Int64.Parse(value[i][j]); ;
+                result[i][j] = Int64.Parse(value[i][j]);
         return result;
     }
 
@@ -1918,7 +1911,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Int64.Parse(value[i][j][k]); ;
+                    result[i][j][k] = Int64.Parse(value[i][j][k]);
         return result;
     }
 
@@ -1930,7 +1923,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Int64.Parse(value[i][j]); ;
+                result[i, j] = Int64.Parse(value[i][j]);
         return result;
     }
     /// <summary>
@@ -1988,7 +1981,7 @@ public static partial class Matrix
     public static byte[] ToByte(this string[] value, byte[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Byte.Parse(value[i]); ;
+            result[i] = Byte.Parse(value[i]);
         return result;
     }
 
@@ -2002,7 +1995,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = Byte.Parse(value[i, j]); ;
+                result[i, j] = Byte.Parse(value[i, j]);
 
         return result;
     }
@@ -2019,7 +2012,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Byte.Parse(value[i, j, k]); ;
+                    result[i, j, k] = Byte.Parse(value[i, j, k]);
 
         return result;
     }
@@ -2032,7 +2025,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Byte.Parse(value[i, j]); ;
+                result[i][j] = Byte.Parse(value[i, j]);
         return result;
     }
 
@@ -2044,7 +2037,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Byte.Parse(value[i][j]); ;
+                result[i][j] = Byte.Parse(value[i][j]);
         return result;
     }
 
@@ -2057,7 +2050,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Byte.Parse(value[i][j][k]); ;
+                    result[i][j][k] = Byte.Parse(value[i][j][k]);
         return result;
     }
 
@@ -2069,7 +2062,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Byte.Parse(value[i][j]); ;
+                result[i, j] = Byte.Parse(value[i][j]);
         return result;
     }
     /// <summary>
@@ -2127,7 +2120,7 @@ public static partial class Matrix
     public static sbyte[] ToSByte(this string[] value, sbyte[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = SByte.Parse(value[i]); ;
+            result[i] = SByte.Parse(value[i]);
         return result;
     }
 
@@ -2141,7 +2134,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = SByte.Parse(value[i, j]); ;
+                result[i, j] = SByte.Parse(value[i, j]);
 
         return result;
     }
@@ -2158,7 +2151,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = SByte.Parse(value[i, j, k]); ;
+                    result[i, j, k] = SByte.Parse(value[i, j, k]);
 
         return result;
     }
@@ -2171,7 +2164,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = SByte.Parse(value[i, j]); ;
+                result[i][j] = SByte.Parse(value[i, j]);
         return result;
     }
 
@@ -2183,7 +2176,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = SByte.Parse(value[i][j]); ;
+                result[i][j] = SByte.Parse(value[i][j]);
         return result;
     }
 
@@ -2196,7 +2189,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = SByte.Parse(value[i][j][k]); ;
+                    result[i][j][k] = SByte.Parse(value[i][j][k]);
         return result;
     }
 
@@ -2208,7 +2201,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = SByte.Parse(value[i][j]); ;
+                result[i, j] = SByte.Parse(value[i][j]);
         return result;
     }
     /// <summary>
@@ -2266,7 +2259,7 @@ public static partial class Matrix
     public static decimal[] ToDecimal(this string[] value, decimal[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Decimal.Parse(value[i]); ;
+            result[i] = Decimal.Parse(value[i]);
         return result;
     }
 
@@ -2280,7 +2273,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = Decimal.Parse(value[i, j]); ;
+                result[i, j] = Decimal.Parse(value[i, j]);
 
         return result;
     }
@@ -2297,7 +2290,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Decimal.Parse(value[i, j, k]); ;
+                    result[i, j, k] = Decimal.Parse(value[i, j, k]);
 
         return result;
     }
@@ -2310,7 +2303,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Decimal.Parse(value[i, j]); ;
+                result[i][j] = Decimal.Parse(value[i, j]);
         return result;
     }
 
@@ -2322,7 +2315,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Decimal.Parse(value[i][j]); ;
+                result[i][j] = Decimal.Parse(value[i][j]);
         return result;
     }
 
@@ -2335,7 +2328,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Decimal.Parse(value[i][j][k]); ;
+                    result[i][j][k] = Decimal.Parse(value[i][j][k]);
         return result;
     }
 
@@ -2347,7 +2340,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Decimal.Parse(value[i][j]); ;
+                result[i, j] = Decimal.Parse(value[i][j]);
         return result;
     }
     /// <summary>
@@ -2405,7 +2398,7 @@ public static partial class Matrix
     public static bool[] ToBoolean(this string[] value, bool[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Boolean.Parse(value[i]); ;
+            result[i] = Boolean.Parse(value[i]);
         return result;
     }
 
@@ -2419,7 +2412,7 @@ public static partial class Matrix
         int c = value.GetLength(1);
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
-                result[i, j] = Boolean.Parse(value[i, j]); ;
+                result[i, j] = Boolean.Parse(value[i, j]);
 
         return result;
     }
@@ -2436,7 +2429,7 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Boolean.Parse(value[i, j, k]); ;
+                    result[i, j, k] = Boolean.Parse(value[i, j, k]);
 
         return result;
     }
@@ -2449,7 +2442,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Boolean.Parse(value[i, j]); ;
+                result[i][j] = Boolean.Parse(value[i, j]);
         return result;
     }
 
@@ -2461,7 +2454,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Boolean.Parse(value[i][j]); ;
+                result[i][j] = Boolean.Parse(value[i][j]);
         return result;
     }
 
@@ -2474,7 +2467,7 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Boolean.Parse(value[i][j][k]); ;
+                    result[i][j][k] = Boolean.Parse(value[i][j][k]);
         return result;
     }
 
@@ -2486,7 +2479,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Boolean.Parse(value[i][j]); ;
+                result[i, j] = Boolean.Parse(value[i][j]);
         return result;
     }
 

@@ -1,5 +1,12 @@
 using ISynergy.Framework.Mathematics.Matrices;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Environments;
 
 /// <summary>
@@ -12,7 +19,7 @@ public abstract class REnvironment
     ///   Creates a new vector.
     /// </summary>
     /// 
-    protected vec c(params double[] values)
+    protected static vec c(params double[] values) // NOSONAR
     {
         return values;
     }
@@ -21,7 +28,7 @@ public abstract class REnvironment
     ///   Creates a new matrix.
     /// </summary>
     /// 
-    protected mat matrix(double[] values, int rows, int cols)
+    protected static mat matrix(double[] values, int rows, int cols) // NOSONAR
     {
         return Matrix.Reshape(values, rows, cols, MatrixOrder.FortranColumnMajor);
     }
@@ -42,13 +49,13 @@ public abstract class REnvironment
         /// <summary>
         ///   Inner vector object
         /// </summary>
-        /// 
-        public double[] vector;
+        ///
+        public double[] vector { get; set; } // NOSONAR
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="vec"/> class.
         /// </summary>
-        /// 
+        ///
         public vec(double[] values)
         {
             this.vector = values;
@@ -112,13 +119,13 @@ public abstract class REnvironment
         /// <summary>
         ///   Inner matrix object.
         /// </summary>
-        /// 
-        public double[,] matrix;
+        ///
+        public double[,] matrix { get; set; } // NOSONAR
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="mat"/> class.
         /// </summary>
-        /// 
+        ///
         public mat(double[,] values)
         {
             this.matrix = values;

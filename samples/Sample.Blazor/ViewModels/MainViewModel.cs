@@ -30,17 +30,17 @@ public class MainViewModel : ViewModel
         _navigationService.NavigateTo("/commanddemoview");
     }
 
-    private void ExecuteNavigateToWeather()
+    private static void ExecuteNavigateToWeather()
     {
         throw new NotImplementedException();
     }
 
-    private void ExecuteNavigateToCounter()
+    private static void ExecuteNavigateToCounter()
     {
         throw new NotImplementedException();
     }
 
-    private void ExecuteNavigateToHome()
+    private static void ExecuteNavigateToHome()
     {
         throw new NotImplementedException();
     }

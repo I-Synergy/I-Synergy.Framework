@@ -38,6 +38,9 @@ public class DisabledCommandTests
         command.Execute(null);
         command.Execute("some parameter");
         command.Execute(42);
+
+        // Command remains disabled after execution
+        Assert.IsFalse(command.CanExecute(null));
     }
 
     [TestMethod]
@@ -67,5 +70,8 @@ public class DisabledCommandTests
         command.CanExecuteChanged += handler2;
         command.CanExecuteChanged -= handler1;
         command.CanExecuteChanged -= handler2;
+
+        // Command is still disabled after subscription changes
+        Assert.IsFalse(command.CanExecute(null));
     }
 }

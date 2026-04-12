@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Behaviors;
 /// <summary>
 /// Behavior for auto focus
 /// </summary>
-public class AutoFocusBehavior
+public static class AutoFocusBehavior
 {
     /// <summary>
     /// Gets the automatic selectable.

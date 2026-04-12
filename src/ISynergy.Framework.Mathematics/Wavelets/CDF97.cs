@@ -22,12 +22,19 @@
 
 using ISynergy.Framework.Mathematics.Wavelets.Base;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Wavelets;
 
 /// <summary>
 ///     Cohen-Daubechies-Feauveau Wavelet Transform
 /// </summary>
-public class CDF97 : IWavelet
+public class CDF97 : IWavelet // NOSONAR
 {
     // Constants as used by Gregoire P.
     private const double alpha = -1.586134342;
@@ -170,7 +177,7 @@ public class CDF97 : IWavelet
     /// <summary>
     ///     Forward biorthogonal 9/7 2D wavelet transform
     /// </summary>
-    public static double[,] FWT97(double[,] data, int levels)
+    public static double[,] FWT97(double[,] data, int levels) // NOSONAR
     {
         var w = data.GetLength(0);
         var h = data.GetLength(1);
@@ -189,7 +196,7 @@ public class CDF97 : IWavelet
     /// <summary>
     ///     Inverse biorthogonal 9/7 2D wavelet transform
     /// </summary>
-    public static double[,] IWT97(double[,] data, int levels)
+    public static double[,] IWT97(double[,] data, int levels) // NOSONAR
     {
         var w = data.GetLength(0);
         var h = data.GetLength(1);

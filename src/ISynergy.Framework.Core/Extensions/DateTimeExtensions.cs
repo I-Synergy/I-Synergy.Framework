@@ -30,8 +30,8 @@ public static class DateTimeExtensions
     /// <returns>System.Int32.</returns>
     public static int AgeInDays(this DateTime self)
     {
-        var result = (DateTime.Now - self).TotalDays;
-        return Convert.ToInt32(Math.Floor(result));
+        var result = (DateTime.Today - self.Date).TotalDays;
+        return (int)result;
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public static class DateTimeExtensions
     /// <returns>DateTime.</returns>
     public static DateTime ToStartOfDay(this DateTime self)
     {
-        return new DateTime(self.Year, self.Month, self.Day, 0, 0, 0, 0);
+        return new DateTime(self.Year, self.Month, self.Day, 0, 0, 0, 0, DateTimeKind.Unspecified);
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public static class DateTimeExtensions
     /// <returns>DateTime.</returns>
     public static DateTime ToEndOfDay(this DateTime self)
     {
-        return new DateTime(self.Year, self.Month, self.Day, 0, 0, 0, 0).AddDays(1).AddTicks(-1);
+        return new DateTime(self.Year, self.Month, self.Day, 0, 0, 0, 0, DateTimeKind.Unspecified).AddDays(1).AddTicks(-1);
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public static class DateTimeExtensions
             return self;
         }
 
-        return new DateTime(self.Year, self.Month, 1, 0, 0, 0, 0);
+        return new DateTime(self.Year, self.Month, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public static class DateTimeExtensions
             return self;
         }
 
-        return new DateTime(self.Year, self.Month, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+        return new DateTime(self.Year, self.Month, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddMonths(1).AddTicks(-1);
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public static class DateTimeExtensions
     /// <returns>DateTime.</returns>
     public static DateTime ToStartOfYear(this int year)
     {
-        return new DateTime(year, 1, 1, 0, 0, 0, 0);
+        return new DateTime(year, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
     }
 
     /// <summary>
@@ -112,7 +112,7 @@ public static class DateTimeExtensions
     /// <returns>DateTime.</returns>
     public static DateTime ToEndOfYear(this int year)
     {
-        return new DateTime(year, 1, 1, 0, 0, 0, 0).AddYears(1).AddTicks(-1);
+        return new DateTime(year, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddYears(1).AddTicks(-1);
     }
 
     /// <summary>
@@ -176,7 +176,7 @@ public static class DateTimeExtensions
     /// <returns>DateTime.</returns>
     public static DateTime FirstOfYear(this DateTime current)
     {
-        return new DateTime(current.Year, 1, 1);
+        return new DateTime(current.Year, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
     }
 
     /// <summary>
@@ -323,18 +323,18 @@ public static class DateTimeExtensions
 
         if (self.Month <= 3)
         {
-            return new DateTime(self.Year, 1, 1, 0, 0, 0, 0);
+            return new DateTime(self.Year, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
         }
         if (self.Month <= 6)
         {
-            return new DateTime(self.Year, 4, 1, 0, 0, 0, 0);
+            return new DateTime(self.Year, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
         }
         if (self.Month <= 9)
         {
-            return new DateTime(self.Year, 7, 1, 0, 0, 0, 0);
+            return new DateTime(self.Year, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
         }
 
-        return new DateTime(self.Year, 10, 1, 0, 0, 0, 0);
+        return new DateTime(self.Year, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified);
     }
 
     /// <summary>
@@ -351,17 +351,17 @@ public static class DateTimeExtensions
 
         if (self.Month <= 3)
         {
-            return new DateTime(self.Year, 3, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+            return new DateTime(self.Year, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddMonths(1).AddTicks(-1);
         }
         if (self.Month <= 6)
         {
-            return new DateTime(self.Year, 6, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+            return new DateTime(self.Year, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddMonths(1).AddTicks(-1);
         }
         if (self.Month <= 9)
         {
-            return new DateTime(self.Year, 9, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+            return new DateTime(self.Year, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddMonths(1).AddTicks(-1);
         }
 
-        return new DateTime(self.Year, 12, 1, 0, 0, 0, 0).AddMonths(1).AddTicks(-1);
+        return new DateTime(self.Year, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddMonths(1).AddTicks(-1);
     }
 }

@@ -109,5 +109,6 @@ public class SubscriberServiceBusTests
 
         // Second dispose must be a no-op (_disposed guard in the service).
         await subscriber.DisposeAsync();
+        Assert.IsNotNull(subscriber);
     }
 }

@@ -37,6 +37,14 @@
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.Diagnostics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1264 // LIBLINEAR port: FORTRAN call comments and while(true) loops are intentional
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
 /// <summary>
@@ -266,7 +274,7 @@ public class TrustRegionNewtonMethod : BaseGradientOptimizationMethod
                     break;
             }
 
-            // TODO: Use these status codes in a TrustRegionNewtonMethodStatus enumeration
+            // TODO: Use these status codes in a TrustRegionNewtonMethodStatus enumeration // NOSONAR
 
             if (f < -1.0e+32)
             {

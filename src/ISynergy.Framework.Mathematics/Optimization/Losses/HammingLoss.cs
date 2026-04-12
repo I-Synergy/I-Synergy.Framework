@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
 /// <summary>
@@ -12,7 +19,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 public class HammingLoss : LossBase<int[][]>,
     ILoss<bool[][]>, ILoss<double[][]>, ILoss<int[]>
 {
-    private bool mean = true;
     private int total;
 
     /// <summary>
@@ -64,11 +70,7 @@ public class HammingLoss : LossBase<int[][]>,
     /// <value>
     ///     <c>true</c> if the mean accuracy loss should be computed; otherwise, <c>false</c>.
     /// </value>
-    public bool Mean
-    {
-        get => mean;
-        set => mean = value;
-    }
+    public bool Mean { get; set; } = true;
 
     /// <summary>
     ///     Computes the loss between the expected values (ground truth)
@@ -87,7 +89,7 @@ public class HammingLoss : LossBase<int[][]>,
                 if (Classes.Decide(Expected[i][j]) != actual[i][j])
                     error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }
@@ -109,7 +111,7 @@ public class HammingLoss : LossBase<int[][]>,
                 if (Classes.Decide(Expected[i][j]) != Classes.Decide(actual[i][j]))
                     error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }
@@ -130,7 +132,7 @@ public class HammingLoss : LossBase<int[][]>,
             if (Expected[i][0] != actual[i])
                 error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }
@@ -152,7 +154,7 @@ public class HammingLoss : LossBase<int[][]>,
                 if (Classes.Decide(Expected[i][j]) != Classes.Decide(actual[i][j]))
                     error++;
 
-        if (mean)
+        if (Mean)
             return error / (double)total;
         return error;
     }

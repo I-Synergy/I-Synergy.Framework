@@ -15,7 +15,7 @@ public class WopiTokenInput
     public List<string> Roles { get; }
     public TimeSpan Expiration { get; }
 
-    public WopiTokenInput(
+    public WopiTokenInput( // NOSONAR - many parameters required by WOPI token specification
         string applicationId,
         Guid tenantId,
         Guid userId,

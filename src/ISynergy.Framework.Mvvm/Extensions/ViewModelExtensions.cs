@@ -39,16 +39,16 @@ internal static class ViewTypeRegistry
 /// </summary>
 public static class ViewModelExtensions
 {
-    private static Func<Assembly, bool> assemblyFilter =>
+    private static Func<Assembly, bool> assemblyFilter => // NOSONAR
         (x =>
-        !x.FullName!.StartsWith("System") &&
-        !x.FullName!.StartsWith("WinRT") &&
-        !x.FullName!.StartsWith("Microsoft") &&
-        !x.FullName!.StartsWith("Syncfusion") &&
-        !x.FullName!.StartsWith("Snippets") &&
-        !x.FullName!.StartsWith("Xamarin") &&
-        !x.FullName!.StartsWith("netstandard") &&
-        !x.FullName!.StartsWith("mscorlib"));
+        !x.FullName!.StartsWith("System", StringComparison.Ordinal) &&
+        !x.FullName!.StartsWith("WinRT", StringComparison.Ordinal) &&
+        !x.FullName!.StartsWith("Microsoft", StringComparison.Ordinal) &&
+        !x.FullName!.StartsWith("Syncfusion", StringComparison.Ordinal) &&
+        !x.FullName!.StartsWith("Snippets", StringComparison.Ordinal) &&
+        !x.FullName!.StartsWith("Xamarin", StringComparison.Ordinal) &&
+        !x.FullName!.StartsWith("netstandard", StringComparison.Ordinal) &&
+        !x.FullName!.StartsWith("mscorlib", StringComparison.Ordinal));
 
     /// <summary>
     /// In case of an generic viewmodel, this function returns the base name from IViewModel. 
@@ -91,7 +91,7 @@ public static class ViewModelExtensions
     public static string GetViewModelFullName(this Type type)
     {
         if (type.FullName is null)
-            throw new NullReferenceException($"{type}: FullName is null");
+            throw new InvalidOperationException($"{type}: FullName is null");
 
         var result = type.FullName;
 
@@ -107,7 +107,7 @@ public static class ViewModelExtensions
     {
         var result = viewModelType.Name;
 
-        if (viewModelType.IsInterface && result.StartsWith("I"))
+        if (viewModelType.IsInterface && result.StartsWith('I'))
             result = result.Substring(1, result.Length - 1);
 
         result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.View);
@@ -119,7 +119,7 @@ public static class ViewModelExtensions
     {
         var result = viewModelType.Name;
 
-        if (viewModelType.IsInterface && result.StartsWith("I"))
+        if (viewModelType.IsInterface && result.StartsWith('I'))
             result = result.Substring(1, result.Length - 1);
 
         result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.Window);
@@ -138,7 +138,7 @@ public static class ViewModelExtensions
     {
         var result = type.Name;
 
-        if (type.IsInterface && result.StartsWith("I"))
+        if (type.IsInterface && result.StartsWith('I'))
             result = result.Substring(1, result.Length - 1);
 
         if (type.GetInterfaces().Contains(typeof(IWindow)))

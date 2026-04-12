@@ -61,8 +61,7 @@ internal sealed class CancelCommand : ICommand, IDisposable
         if (disposing)
         {
             // free managed resources
-            if (_command is not null)
-                _command.PropertyChanged -= OnPropertyChanged;
+            _command?.PropertyChanged -= OnPropertyChanged;
         }
 
         // free native resources if there are any.

@@ -20,7 +20,7 @@ public sealed class InverseBooleanConverter : IValueConverter
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="InvalidOperationException">The target must be a boolean</exception>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) // NOSONAR
     {
         if (value is bool x)
             return !x;
@@ -37,7 +37,7 @@ public sealed class InverseBooleanConverter : IValueConverter
     /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="InvalidOperationException">The target must be a boolean</exception>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) // NOSONAR
     {
         if (value is bool x)
             return !x;
@@ -106,7 +106,7 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
-    public virtual object Convert(object value, Type targetType, object parameter, CultureInfo language)
+    public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is null)
         {
@@ -122,9 +122,9 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <param name="value">The value.</param>
     /// <param name="targetType">Type of the target.</param>
     /// <param name="parameter">The parameter.</param>
-    /// <param name="language">The language.</param>
+    /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
-    public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo language)
+    public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value is not null && value.Equals(True);
     }

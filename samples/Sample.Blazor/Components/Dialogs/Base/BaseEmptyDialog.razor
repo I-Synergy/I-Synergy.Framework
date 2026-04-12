@@ -154,15 +154,12 @@
 	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
 	protected virtual void Dispose(bool disposing)
 	{
-		if (disposing)
+		if (disposing && _viewModel is not null)
 		{
-			if (_viewModel is not null)
-			{
-				_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
-				_viewModel.Closed -= OnViewModelClosed;
-				UnsubscribeFromViewModelCommands();
-				_viewModel.Dispose();
-			}
+			_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+			_viewModel.Closed -= OnViewModelClosed;
+			UnsubscribeFromViewModelCommands();
+			_viewModel.Dispose();
 		}
 
 		// free native resources if there are any.

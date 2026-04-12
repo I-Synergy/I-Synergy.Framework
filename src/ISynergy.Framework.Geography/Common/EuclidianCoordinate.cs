@@ -51,11 +51,11 @@ public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
     /// </summary>
     /// <param name="projection">The projection owning these coordinates</param>
     /// <param name="xy">List of xy coordinates</param>
-    /// <exception cref="IndexOutOfRangeException"></exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="xy"/> does not contain exactly 2 elements.</exception>
     public EuclidianCoordinate(MercatorProjection projection, IReadOnlyList<double> xy)
     {
         if (xy.Count != 2)
-            throw new IndexOutOfRangeException(Properties.Resources.COORD_ARRAY_MUST_BE_2DIM);
+            throw new ArgumentException(Properties.Resources.COORD_ARRAY_MUST_BE_2DIM, nameof(xy));
 
         Projection = projection;
         X = xy[0];
@@ -87,7 +87,7 @@ public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
     public virtual double DistanceTo(EuclidianCoordinate other)
     {
         if (!IsSameProjection(other))
-            throw new ArgumentException(Properties.Resources.POINT_NOT_SAME_PROJECTION);
+            throw new ArgumentException(Properties.Resources.POINT_NOT_SAME_PROJECTION, nameof(other));
 
         return Math.Sqrt((X - other.X) * (X - other.X) + (Y - other.Y) * (Y - other.Y));
     }

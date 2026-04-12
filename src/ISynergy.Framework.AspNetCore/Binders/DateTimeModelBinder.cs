@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Globalization;
 
 namespace ISynergy.Framework.AspNetCore.Binders;
 
@@ -55,7 +56,7 @@ public class DateTimeModelBinder : IModelBinder
         if (valueResult.FirstValue is null)
             return Task.CompletedTask;
 
-        if (!DateTime.TryParse(valueResult.FirstValue, out var value))
+        if (!DateTime.TryParse(valueResult.FirstValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out var value))
             return Task.CompletedTask;
 
         EnumUtility.ThrowIfUndefined(typeof(DateTimeKind), value.Kind);

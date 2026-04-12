@@ -40,7 +40,7 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
     /// <summary>
     /// Get/set global coordinates.
     /// </summary>
-    public GlobalCoordinates Coordinates;
+    public GlobalCoordinates Coordinates; // NOSONAR - must remain a field (not property) as it is a mutable struct set via sub-property assignment
 
     /// <summary>
     /// Get/set latitude.
@@ -98,7 +98,7 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
     {
         var hash = Coordinates.GetHashCode();
 
-        if (Elevation != 0) hash *= (int)Elevation;
+        if (Elevation != 0) hash *= (int)Elevation; // NOSONAR
 
         return hash;
     }

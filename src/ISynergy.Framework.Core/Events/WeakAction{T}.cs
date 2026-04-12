@@ -58,7 +58,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
                 return true;
             }
 
-            return Reference?.IsAlive ?? false;
+            return Reference?.IsAlive ?? false; // NOSONAR - Reference may or may not be set for non-static actions
         }
     }
 
@@ -68,7 +68,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// <param name="action">The action.</param>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
     public WeakAction(Action<T> action, bool keepTargetAlive = false)
-        : this(action is null ? null : action.Target, action, keepTargetAlive)
+        : this(action.Target, action, keepTargetAlive)
     {
     }
 
@@ -127,19 +127,16 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
 
         var actionTarget = ActionTarget;
 
-        if (IsAlive)
+        if (IsAlive // NOSONAR
+            && Method is not null
+            && (LiveReference is not null || ActionReference is not null)
+            && actionTarget is not null)
         {
-            if (Method is not null
-                && (LiveReference is not null
-                    || ActionReference is not null)
-                && actionTarget is not null)
-            {
-                Method.Invoke(
-                    actionTarget,
-                    [
-                        parameter
-                    ]);
-            }
+            Method.Invoke(
+                actionTarget,
+                [
+                    parameter
+                ]);
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿
+#pragma warning disable S6640, S4136, S2368, S3776, S1192 // unsafe/overloads/params are intentional in numerical matrix library
 using ISynergy.Framework.Mathematics.Exceptions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -193,10 +194,12 @@ public static partial class Matrix
     {
         int cols = matrix.Columns();
         int rows = matrix.Rows();
-#if DEBUG
+
+        // Validate dimensions in all build configurations.
+        // In Release the pointer arithmetic pa2 = a + cols would stride out of bounds
+        // if the dimensions were wrong, so this guard must not be DEBUG-only.
         if (rowVector.Length != rows || cols != columnVector.Length)
             throw new DimensionMismatchException();
-#endif
         double result = 0;
 
         unsafe
@@ -310,7 +313,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -333,7 +336,6 @@ public static partial class Matrix
         var C = Jagged.CreateAs(result).To<double[,]>();
         C = Dot(a.ToMatrix().To<double[,]>(), b.ToMatrix().To<double[,]>(), C);
 #endif
-        int N = result.Length;
         int K = a.Columns();
         int M = result.Columns();
 
@@ -354,7 +356,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.ToMatrix().To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -377,7 +379,6 @@ public static partial class Matrix
         var C = Matrix.CreateAs(result).To<double[,]>();
         C = Dot(a.ToMatrix().To<double[,]>(), b.To<double[,]>(), C);
 #endif
-        int N = result.Length;
         int K = a.Columns();
         int M = result.Columns();
         int stride = b.Columns();
@@ -409,7 +410,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.ToMatrix().To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -458,7 +459,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.ToMatrix().To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -658,7 +659,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -745,7 +746,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (!C.IsEqual(result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
 
         return result;
@@ -804,7 +805,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -847,7 +848,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -884,7 +885,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1007,7 +1008,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (!C.IsEqual(result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
 
         return result;
@@ -1050,7 +1051,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1081,7 +1082,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1113,7 +1114,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1183,7 +1184,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1252,7 +1253,7 @@ public static partial class Matrix
                 result[j, i] = (a[i, j] * diagonal[i]);
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1278,7 +1279,7 @@ public static partial class Matrix
                 result[j][i] = (a[i][j] * diagonal[i]);
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1328,7 +1329,7 @@ public static partial class Matrix
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1354,7 +1355,7 @@ public static partial class Matrix
                 result[i][j] = (a[i][j] * diagonal[j]);
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
-            throw new Exception();
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return result;
     }
@@ -1498,7 +1499,6 @@ public static partial class Matrix
         int brows = b.Rows();
         int bcols = b.Columns();
 
-        //int crows = arows * brows;
         int ccols = acols * bcols;
         int block = brows * ccols;
 

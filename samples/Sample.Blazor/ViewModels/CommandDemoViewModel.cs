@@ -43,7 +43,7 @@ public class CommandDemoViewModel : ViewModel
         viewModel.SetSelectedItem(new Budget(), false);
         viewModel.Submitted += HandleDialog;
 
-        var dialog = await _dialogService.ShowDialogAsync<SampleDialog>(viewModel, new()
+        _ = await _dialogService.ShowDialogAsync<SampleDialog>(viewModel, new()
         {
             Title = "Open Sample Dialog",
             Width = "600px", // Increased width for the wizard
@@ -62,25 +62,5 @@ public class CommandDemoViewModel : ViewModel
     {
         if (sender is SampleDialogViewModel vm)
             vm.Submitted -= HandleDialog;
-
-        //await RefreshAsync();
     }
-
-    //private async Task HandleDialog(DialogResult result)
-    //{
-    //    if (result.Cancelled)
-    //    {
-    //        await Task.Run(() => Debug.WriteLine($"Dialog cancelled"));
-    //        return;
-    //    }
-
-    //    if (result.Data is not null)
-    //    {
-    //        var budget = result.Data as Budget;
-    //        await Task.Run(() => Debug.WriteLine($"Dialog closed by {budget?.StartingDate} {budget?.EndingDate} ({budget?.CreatedDate})"));
-    //        return;
-    //    }
-
-    //    await Task.Run(() => Debug.WriteLine($"Dialog closed"));
-    //}
 }

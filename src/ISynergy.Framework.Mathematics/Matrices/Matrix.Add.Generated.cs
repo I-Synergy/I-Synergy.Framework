@@ -1,6 +1,14 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ISynergy.Framework.Mathematics.Enumerations;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -8411,19 +8419,11 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, int[,] b, int[,] result)
     {
         check<int, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -8433,12 +8433,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[][] Add(this int[][] a, int b, int[][] result)
     {
         check<int, int, int>(a: a, b: b, result: result);
@@ -8478,17 +8478,10 @@ public static partial class Elementwise
     public static int[,] Add(this int a, int[,] b, int[,] result)
     {
         check<int, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -8496,26 +8489,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[,] Add(this int[,] a, int b, int[,] result)
     {
         check<int, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -8703,17 +8689,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -8731,17 +8710,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -8759,17 +8731,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -8787,17 +8752,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -8843,19 +8801,11 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, int[,] b, double[,] result)
     {
         check<int, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -8865,12 +8815,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Add(this int[][] a, int b, double[][] result)
     {
         check<int, int, double>(a: a, b: b, result: result);
@@ -8910,17 +8860,10 @@ public static partial class Elementwise
     public static double[,] Add(this int a, int[,] b, double[,] result)
     {
         check<int, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -8928,26 +8871,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static double[,] Add(this int[,] a, int b, double[,] result)
     {
         check<int, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -9135,17 +9071,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -9163,17 +9092,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -9191,17 +9113,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -9219,17 +9134,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -9275,19 +9183,11 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, float[,] b, int[,] result)
     {
         check<int, float, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -9297,12 +9197,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[][] Add(this int[][] a, float b, int[][] result)
     {
         check<int, float, int>(a: a, b: b, result: result);
@@ -9342,17 +9242,10 @@ public static partial class Elementwise
     public static int[,] Add(this int a, float[,] b, int[,] result)
     {
         check<int, float, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -9360,26 +9253,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[,] Add(this int[,] a, float b, int[,] result)
     {
         check<int, float, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -9394,7 +9280,7 @@ public static partial class Elementwise
     /// <param name="b">The vector <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[] Add(this int[] a, float[] b, int[] result)
     {
         check<int, float, int>(a: a, b: b, result: result);
@@ -9567,17 +9453,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -9595,17 +9474,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -9623,17 +9495,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -9651,17 +9516,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -9707,19 +9565,11 @@ public static partial class Elementwise
     public static float[,] Add(this int[,] a, float[,] b, float[,] result)
     {
         check<int, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -9729,12 +9579,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static float[][] Add(this int[][] a, float b, float[][] result)
     {
         check<int, float, float>(a: a, b: b, result: result);
@@ -9774,17 +9624,10 @@ public static partial class Elementwise
     public static float[,] Add(this int a, float[,] b, float[,] result)
     {
         check<int, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -9792,26 +9635,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static float[,] Add(this int[,] a, float b, float[,] result)
     {
         check<int, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -9999,17 +9835,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -10027,17 +9856,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -10055,17 +9877,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -10083,17 +9898,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -10139,19 +9947,11 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, float[,] b, double[,] result)
     {
         check<int, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -10161,12 +9961,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Add(this int[][] a, float b, double[][] result)
     {
         check<int, float, double>(a: a, b: b, result: result);
@@ -10206,17 +10006,10 @@ public static partial class Elementwise
     public static double[,] Add(this int a, float[,] b, double[,] result)
     {
         check<int, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -10224,26 +10017,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static double[,] Add(this int[,] a, float b, double[,] result)
     {
         check<int, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -10431,17 +10217,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -10459,17 +10238,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -10487,17 +10259,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -10515,17 +10280,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -10571,19 +10329,11 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, double[,] b, int[,] result)
     {
         check<int, double, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -10593,12 +10343,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[][] Add(this int[][] a, double b, int[][] result)
     {
         check<int, double, int>(a: a, b: b, result: result);
@@ -10638,17 +10388,10 @@ public static partial class Elementwise
     public static int[,] Add(this int a, double[,] b, int[,] result)
     {
         check<int, double, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -10656,26 +10399,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[,] Add(this int[,] a, double b, int[,] result)
     {
         check<int, double, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -10863,17 +10599,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -10891,17 +10620,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -10919,17 +10641,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -10947,17 +10662,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -11003,19 +10711,11 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, double[,] b, double[,] result)
     {
         check<int, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -11025,12 +10725,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static double[][] Add(this int[][] a, double b, double[][] result)
     {
         check<int, double, double>(a: a, b: b, result: result);
@@ -11070,17 +10770,10 @@ public static partial class Elementwise
     public static double[,] Add(this int a, double[,] b, double[,] result)
     {
         check<int, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -11088,26 +10781,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static double[,] Add(this int[,] a, double b, double[,] result)
     {
         check<int, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -11295,17 +10981,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -11323,17 +11002,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -11351,17 +11023,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -11379,17 +11044,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -11435,19 +11093,11 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, byte[,] b, int[,] result)
     {
         check<int, byte, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -11457,12 +11107,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static int[][] Add(this int[][] a, byte b, int[][] result)
     {
         check<int, byte, int>(a: a, b: b, result: result);
@@ -11502,17 +11152,10 @@ public static partial class Elementwise
     public static int[,] Add(this int a, byte[,] b, int[,] result)
     {
         check<int, byte, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -11529,17 +11172,10 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, byte b, int[,] result)
     {
         check<int, byte, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -11727,17 +11363,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -11755,17 +11384,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -11783,17 +11405,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -11811,17 +11426,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < rows; j++)
+            spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -11867,19 +11475,11 @@ public static partial class Elementwise
     public static byte[,] Add(this int[,] a, byte[,] b, byte[,] result)
     {
         check<int, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -11889,12 +11489,12 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static byte[][] Add(this int[][] a, byte b, byte[][] result)
     {
         check<int, byte, byte>(a: a, b: b, result: result);
@@ -11934,17 +11534,10 @@ public static partial class Elementwise
     public static byte[,] Add(this int a, byte[,] b, byte[,] result)
     {
         check<int, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanB.Length; j++)
+            spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -11952,26 +11545,19 @@ public static partial class Elementwise
     /// <summary>
     ///   Elementwise addition between a matrix <c>A</c> and a scalar <c>b</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
-    /// 
+    ///
     public static byte[,] Add(this int[,] a, byte b, byte[,] result)
     {
         check<int, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var i = 0; i < spanA.Length; i++)
+            spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -12159,17 +11745,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -12187,17 +11766,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -12215,17 +11787,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -12243,17 +11808,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -12299,19 +11857,11 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, byte[,] b, double[,] result)
     {
         check<int, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -12366,17 +11916,10 @@ public static partial class Elementwise
     public static double[,] Add(this int a, byte[,] b, double[,] result)
     {
         check<int, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -12393,17 +11936,10 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, byte b, double[,] result)
     {
         check<int, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -12591,17 +12127,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -12619,17 +12148,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -12647,17 +12169,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -12675,17 +12190,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -12731,19 +12239,11 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, decimal[,] b, int[,] result)
     {
         check<int, decimal, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -12798,17 +12298,10 @@ public static partial class Elementwise
     public static int[,] Add(this int a, decimal[,] b, int[,] result)
     {
         check<int, decimal, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -12825,17 +12318,10 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, decimal b, int[,] result)
     {
         check<int, decimal, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -13023,17 +12509,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -13051,17 +12530,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -13079,17 +12551,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -13107,17 +12572,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -13163,19 +12621,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this int[,] a, decimal[,] b, decimal[,] result)
     {
         check<int, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -13230,17 +12680,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this int a, decimal[,] b, decimal[,] result)
     {
         check<int, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -13257,17 +12700,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this int[,] a, decimal b, decimal[,] result)
     {
         check<int, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -13455,17 +12891,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -13483,17 +12912,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -13511,17 +12933,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -13539,17 +12954,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -13595,19 +13003,11 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, decimal[,] b, double[,] result)
     {
         check<int, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -13662,17 +13062,10 @@ public static partial class Elementwise
     public static double[,] Add(this int a, decimal[,] b, double[,] result)
     {
         check<int, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -13689,17 +13082,10 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, decimal b, double[,] result)
     {
         check<int, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -13887,17 +13273,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -13915,17 +13294,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -13943,17 +13315,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -13971,17 +13336,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -14027,19 +13385,11 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, short[,] b, int[,] result)
     {
         check<int, short, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -14094,17 +13444,10 @@ public static partial class Elementwise
     public static int[,] Add(this int a, short[,] b, int[,] result)
     {
         check<int, short, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -14121,17 +13464,10 @@ public static partial class Elementwise
     public static int[,] Add(this int[,] a, short b, int[,] result)
     {
         check<int, short, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -14319,17 +13655,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -14347,17 +13676,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -14375,17 +13697,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -14403,17 +13718,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -14459,19 +13767,11 @@ public static partial class Elementwise
     public static short[,] Add(this int[,] a, short[,] b, short[,] result)
     {
         check<int, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -14526,17 +13826,10 @@ public static partial class Elementwise
     public static short[,] Add(this int a, short[,] b, short[,] result)
     {
         check<int, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -14553,17 +13846,10 @@ public static partial class Elementwise
     public static short[,] Add(this int[,] a, short b, short[,] result)
     {
         check<int, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -14751,17 +14037,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -14779,17 +14058,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -14807,17 +14079,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -14835,17 +14100,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -14891,19 +14149,11 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, short[,] b, double[,] result)
     {
         check<int, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -14958,17 +14208,10 @@ public static partial class Elementwise
     public static double[,] Add(this int a, short[,] b, double[,] result)
     {
         check<int, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -14985,17 +14228,10 @@ public static partial class Elementwise
     public static double[,] Add(this int[,] a, short b, double[,] result)
     {
         check<int, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -15183,17 +14419,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -15211,17 +14440,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -15239,17 +14461,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -15267,17 +14482,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -15323,19 +14531,11 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, int[,] b, float[,] result)
     {
         check<float, int, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -15390,17 +14590,10 @@ public static partial class Elementwise
     public static float[,] Add(this float a, int[,] b, float[,] result)
     {
         check<float, int, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -15417,17 +14610,10 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, int b, float[,] result)
     {
         check<float, int, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -15615,17 +14801,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -15643,17 +14822,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -15671,17 +14843,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -15699,17 +14864,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -15755,19 +14913,11 @@ public static partial class Elementwise
     public static int[,] Add(this float[,] a, int[,] b, int[,] result)
     {
         check<float, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -15822,17 +14972,10 @@ public static partial class Elementwise
     public static int[,] Add(this float a, int[,] b, int[,] result)
     {
         check<float, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -15849,17 +14992,10 @@ public static partial class Elementwise
     public static int[,] Add(this float[,] a, int b, int[,] result)
     {
         check<float, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -16047,17 +15183,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -16075,17 +15204,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -16103,17 +15225,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -16131,17 +15246,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -16187,19 +15295,11 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, int[,] b, double[,] result)
     {
         check<float, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -16254,17 +15354,10 @@ public static partial class Elementwise
     public static double[,] Add(this float a, int[,] b, double[,] result)
     {
         check<float, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -16281,17 +15374,10 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, int b, double[,] result)
     {
         check<float, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -16479,17 +15565,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -16507,17 +15586,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -16535,17 +15607,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -16563,17 +15628,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -16619,19 +15677,11 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, float[,] b, float[,] result)
     {
         check<float, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -16686,17 +15736,10 @@ public static partial class Elementwise
     public static float[,] Add(this float a, float[,] b, float[,] result)
     {
         check<float, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -16713,17 +15756,10 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, float b, float[,] result)
     {
         check<float, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -16911,17 +15947,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -16939,17 +15968,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -16967,17 +15989,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -16995,17 +16010,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -17051,19 +16059,11 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, float[,] b, double[,] result)
     {
         check<float, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -17118,17 +16118,10 @@ public static partial class Elementwise
     public static double[,] Add(this float a, float[,] b, double[,] result)
     {
         check<float, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -17145,17 +16138,10 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, float b, double[,] result)
     {
         check<float, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -17343,17 +16329,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -17371,17 +16350,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -17399,17 +16371,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -17427,17 +16392,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -17483,19 +16441,11 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, double[,] b, float[,] result)
     {
         check<float, double, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -17550,17 +16500,10 @@ public static partial class Elementwise
     public static float[,] Add(this float a, double[,] b, float[,] result)
     {
         check<float, double, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -17577,17 +16520,10 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, double b, float[,] result)
     {
         check<float, double, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -17775,17 +16711,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -17803,17 +16732,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -17831,17 +16753,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -17859,17 +16774,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -17915,19 +16823,11 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, double[,] b, double[,] result)
     {
         check<float, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -17982,17 +16882,10 @@ public static partial class Elementwise
     public static double[,] Add(this float a, double[,] b, double[,] result)
     {
         check<float, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -18009,17 +16902,10 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, double b, double[,] result)
     {
         check<float, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -18207,17 +17093,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -18235,17 +17114,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -18263,17 +17135,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -18291,17 +17156,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -18347,19 +17205,11 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, byte[,] b, float[,] result)
     {
         check<float, byte, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -18414,17 +17264,10 @@ public static partial class Elementwise
     public static float[,] Add(this float a, byte[,] b, float[,] result)
     {
         check<float, byte, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -18441,17 +17284,10 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, byte b, float[,] result)
     {
         check<float, byte, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -18639,17 +17475,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -18667,17 +17496,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -18695,17 +17517,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -18723,17 +17538,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -18779,19 +17587,11 @@ public static partial class Elementwise
     public static byte[,] Add(this float[,] a, byte[,] b, byte[,] result)
     {
         check<float, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -18846,17 +17646,10 @@ public static partial class Elementwise
     public static byte[,] Add(this float a, byte[,] b, byte[,] result)
     {
         check<float, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -18873,17 +17666,10 @@ public static partial class Elementwise
     public static byte[,] Add(this float[,] a, byte b, byte[,] result)
     {
         check<float, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -19071,17 +17857,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -19099,17 +17878,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -19127,17 +17899,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -19155,17 +17920,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -19211,19 +17969,11 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, byte[,] b, double[,] result)
     {
         check<float, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -19278,17 +18028,10 @@ public static partial class Elementwise
     public static double[,] Add(this float a, byte[,] b, double[,] result)
     {
         check<float, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -19305,17 +18048,10 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, byte b, double[,] result)
     {
         check<float, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -19503,17 +18239,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -19531,17 +18260,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -19559,17 +18281,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -19587,17 +18302,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -19643,19 +18351,11 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, decimal[,] b, float[,] result)
     {
         check<float, decimal, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -19710,17 +18410,10 @@ public static partial class Elementwise
     public static float[,] Add(this float a, decimal[,] b, float[,] result)
     {
         check<float, decimal, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -19737,17 +18430,10 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, decimal b, float[,] result)
     {
         check<float, decimal, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -19935,17 +18621,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -19963,17 +18642,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -19991,17 +18663,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -20019,17 +18684,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -20075,19 +18733,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this float[,] a, decimal[,] b, decimal[,] result)
     {
         check<float, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -20142,17 +18792,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this float a, decimal[,] b, decimal[,] result)
     {
         check<float, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -20169,17 +18812,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this float[,] a, decimal b, decimal[,] result)
     {
         check<float, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -20367,17 +19003,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -20395,17 +19024,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -20423,17 +19045,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -20451,17 +19066,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -20507,19 +19115,11 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, decimal[,] b, double[,] result)
     {
         check<float, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -20574,17 +19174,10 @@ public static partial class Elementwise
     public static double[,] Add(this float a, decimal[,] b, double[,] result)
     {
         check<float, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -20601,17 +19194,10 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, decimal b, double[,] result)
     {
         check<float, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -20799,17 +19385,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -20827,17 +19406,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -20855,17 +19427,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -20883,17 +19448,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -20939,19 +19497,11 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, short[,] b, float[,] result)
     {
         check<float, short, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -21006,17 +19556,10 @@ public static partial class Elementwise
     public static float[,] Add(this float a, short[,] b, float[,] result)
     {
         check<float, short, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -21033,17 +19576,10 @@ public static partial class Elementwise
     public static float[,] Add(this float[,] a, short b, float[,] result)
     {
         check<float, short, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -21231,17 +19767,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -21259,17 +19788,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -21287,17 +19809,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -21315,17 +19830,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -21371,19 +19879,11 @@ public static partial class Elementwise
     public static short[,] Add(this float[,] a, short[,] b, short[,] result)
     {
         check<float, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -21438,17 +19938,10 @@ public static partial class Elementwise
     public static short[,] Add(this float a, short[,] b, short[,] result)
     {
         check<float, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -21465,17 +19958,10 @@ public static partial class Elementwise
     public static short[,] Add(this float[,] a, short b, short[,] result)
     {
         check<float, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -21663,17 +20149,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -21691,17 +20170,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -21719,17 +20191,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -21747,17 +20212,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -21803,19 +20261,11 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, short[,] b, double[,] result)
     {
         check<float, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -21870,17 +20320,10 @@ public static partial class Elementwise
     public static double[,] Add(this float a, short[,] b, double[,] result)
     {
         check<float, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -21897,17 +20340,10 @@ public static partial class Elementwise
     public static double[,] Add(this float[,] a, short b, double[,] result)
     {
         check<float, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -22095,17 +20531,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -22123,17 +20552,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -22151,17 +20573,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -22179,17 +20594,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -22235,19 +20643,11 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, int[,] b, double[,] result)
     {
         check<double, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -22302,17 +20702,10 @@ public static partial class Elementwise
     public static double[,] Add(this double a, int[,] b, double[,] result)
     {
         check<double, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -22329,17 +20722,10 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, int b, double[,] result)
     {
         check<double, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -22527,17 +20913,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -22555,17 +20934,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -22583,17 +20955,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -22611,17 +20976,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -22667,19 +21025,11 @@ public static partial class Elementwise
     public static int[,] Add(this double[,] a, int[,] b, int[,] result)
     {
         check<double, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -22734,17 +21084,10 @@ public static partial class Elementwise
     public static int[,] Add(this double a, int[,] b, int[,] result)
     {
         check<double, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -22761,17 +21104,10 @@ public static partial class Elementwise
     public static int[,] Add(this double[,] a, int b, int[,] result)
     {
         check<double, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -22959,17 +21295,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -22987,17 +21316,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -23015,17 +21337,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -23043,17 +21358,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -23099,19 +21407,11 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, float[,] b, double[,] result)
     {
         check<double, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -23166,17 +21466,10 @@ public static partial class Elementwise
     public static double[,] Add(this double a, float[,] b, double[,] result)
     {
         check<double, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -23193,17 +21486,10 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, float b, double[,] result)
     {
         check<double, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -23391,17 +21677,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -23419,17 +21698,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -23447,17 +21719,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -23475,17 +21740,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -23531,19 +21789,11 @@ public static partial class Elementwise
     public static float[,] Add(this double[,] a, float[,] b, float[,] result)
     {
         check<double, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -23598,17 +21848,10 @@ public static partial class Elementwise
     public static float[,] Add(this double a, float[,] b, float[,] result)
     {
         check<double, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -23625,17 +21868,10 @@ public static partial class Elementwise
     public static float[,] Add(this double[,] a, float b, float[,] result)
     {
         check<double, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -23823,17 +22059,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -23851,17 +22080,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -23879,17 +22101,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -23907,17 +22122,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -23963,19 +22171,11 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, double[,] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -24030,17 +22230,10 @@ public static partial class Elementwise
     public static double[,] Add(this double a, double[,] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -24057,17 +22250,10 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, double b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -24255,17 +22441,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -24283,17 +22462,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -24311,17 +22483,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -24339,17 +22504,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -24395,19 +22553,11 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, byte[,] b, double[,] result)
     {
         check<double, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -24462,17 +22612,10 @@ public static partial class Elementwise
     public static double[,] Add(this double a, byte[,] b, double[,] result)
     {
         check<double, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -24489,17 +22632,10 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, byte b, double[,] result)
     {
         check<double, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -24687,17 +22823,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -24715,17 +22844,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -24743,17 +22865,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -24771,17 +22886,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -24827,19 +22935,11 @@ public static partial class Elementwise
     public static byte[,] Add(this double[,] a, byte[,] b, byte[,] result)
     {
         check<double, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -24894,17 +22994,10 @@ public static partial class Elementwise
     public static byte[,] Add(this double a, byte[,] b, byte[,] result)
     {
         check<double, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -24921,17 +23014,10 @@ public static partial class Elementwise
     public static byte[,] Add(this double[,] a, byte b, byte[,] result)
     {
         check<double, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -25119,17 +23205,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -25147,17 +23226,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -25175,17 +23247,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -25203,17 +23268,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -25259,19 +23317,11 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, decimal[,] b, double[,] result)
     {
         check<double, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -25326,17 +23376,10 @@ public static partial class Elementwise
     public static double[,] Add(this double a, decimal[,] b, double[,] result)
     {
         check<double, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -25353,17 +23396,10 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, decimal b, double[,] result)
     {
         check<double, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -25551,17 +23587,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -25579,17 +23608,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -25607,17 +23629,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -25635,17 +23650,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -25691,19 +23699,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this double[,] a, decimal[,] b, decimal[,] result)
     {
         check<double, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -25758,17 +23758,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this double a, decimal[,] b, decimal[,] result)
     {
         check<double, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -25785,17 +23778,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this double[,] a, decimal b, decimal[,] result)
     {
         check<double, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -25983,17 +23969,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -26011,17 +23990,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -26039,17 +24011,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -26067,17 +24032,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -26123,19 +24081,11 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, short[,] b, double[,] result)
     {
         check<double, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -26190,17 +24140,10 @@ public static partial class Elementwise
     public static double[,] Add(this double a, short[,] b, double[,] result)
     {
         check<double, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -26217,17 +24160,10 @@ public static partial class Elementwise
     public static double[,] Add(this double[,] a, short b, double[,] result)
     {
         check<double, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -26415,17 +24351,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -26443,17 +24372,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -26471,17 +24393,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -26499,17 +24414,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -26555,19 +24463,11 @@ public static partial class Elementwise
     public static short[,] Add(this double[,] a, short[,] b, short[,] result)
     {
         check<double, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -26622,17 +24522,10 @@ public static partial class Elementwise
     public static short[,] Add(this double a, short[,] b, short[,] result)
     {
         check<double, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -26649,17 +24542,10 @@ public static partial class Elementwise
     public static short[,] Add(this double[,] a, short b, short[,] result)
     {
         check<double, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -26847,17 +24733,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -26875,17 +24754,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -26903,17 +24775,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -26931,17 +24796,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -26987,19 +24845,11 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, int[,] b, byte[,] result)
     {
         check<byte, int, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -27054,17 +24904,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte a, int[,] b, byte[,] result)
     {
         check<byte, int, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -27081,17 +24924,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, int b, byte[,] result)
     {
         check<byte, int, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -27279,17 +25115,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -27307,17 +25136,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -27335,17 +25157,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -27363,17 +25178,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -27419,19 +25227,11 @@ public static partial class Elementwise
     public static int[,] Add(this byte[,] a, int[,] b, int[,] result)
     {
         check<byte, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -27486,17 +25286,10 @@ public static partial class Elementwise
     public static int[,] Add(this byte a, int[,] b, int[,] result)
     {
         check<byte, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -27513,17 +25306,10 @@ public static partial class Elementwise
     public static int[,] Add(this byte[,] a, int b, int[,] result)
     {
         check<byte, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -27711,17 +25497,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -27739,17 +25518,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -27767,17 +25539,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -27795,17 +25560,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -27851,19 +25609,11 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, int[,] b, double[,] result)
     {
         check<byte, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -27918,17 +25668,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte a, int[,] b, double[,] result)
     {
         check<byte, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -27945,17 +25688,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, int b, double[,] result)
     {
         check<byte, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -28143,17 +25879,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -28171,17 +25900,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -28199,17 +25921,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -28227,17 +25942,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -28283,19 +25991,11 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, float[,] b, byte[,] result)
     {
         check<byte, float, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -28350,17 +26050,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte a, float[,] b, byte[,] result)
     {
         check<byte, float, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -28377,17 +26070,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, float b, byte[,] result)
     {
         check<byte, float, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -28575,17 +26261,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -28603,17 +26282,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -28631,17 +26303,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -28659,17 +26324,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -28715,19 +26373,11 @@ public static partial class Elementwise
     public static float[,] Add(this byte[,] a, float[,] b, float[,] result)
     {
         check<byte, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -28782,17 +26432,10 @@ public static partial class Elementwise
     public static float[,] Add(this byte a, float[,] b, float[,] result)
     {
         check<byte, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -28809,17 +26452,10 @@ public static partial class Elementwise
     public static float[,] Add(this byte[,] a, float b, float[,] result)
     {
         check<byte, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -29007,17 +26643,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -29035,17 +26664,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -29063,17 +26685,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -29091,17 +26706,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -29147,19 +26755,11 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, float[,] b, double[,] result)
     {
         check<byte, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -29214,17 +26814,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte a, float[,] b, double[,] result)
     {
         check<byte, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -29241,17 +26834,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, float b, double[,] result)
     {
         check<byte, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -29439,17 +27025,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -29467,17 +27046,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -29495,17 +27067,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -29523,17 +27088,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -29579,19 +27137,11 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, double[,] b, byte[,] result)
     {
         check<byte, double, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -29646,17 +27196,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte a, double[,] b, byte[,] result)
     {
         check<byte, double, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -29673,17 +27216,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, double b, byte[,] result)
     {
         check<byte, double, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -29871,17 +27407,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -29899,17 +27428,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -29927,17 +27449,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -29955,17 +27470,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -30011,19 +27519,11 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, double[,] b, double[,] result)
     {
         check<byte, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -30078,17 +27578,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte a, double[,] b, double[,] result)
     {
         check<byte, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -30105,17 +27598,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, double b, double[,] result)
     {
         check<byte, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -30303,17 +27789,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -30331,17 +27810,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -30359,17 +27831,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -30387,17 +27852,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -30443,19 +27901,11 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, byte[,] b, byte[,] result)
     {
         check<byte, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -30510,17 +27960,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte a, byte[,] b, byte[,] result)
     {
         check<byte, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -30537,17 +27980,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, byte b, byte[,] result)
     {
         check<byte, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -30735,17 +28171,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -30763,17 +28192,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -30791,17 +28213,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -30819,17 +28234,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -30875,19 +28283,11 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, byte[,] b, double[,] result)
     {
         check<byte, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -30942,17 +28342,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte a, byte[,] b, double[,] result)
     {
         check<byte, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -30969,17 +28362,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, byte b, double[,] result)
     {
         check<byte, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -31167,17 +28553,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -31195,17 +28574,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -31223,17 +28595,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -31251,17 +28616,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -31307,19 +28665,11 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, decimal[,] b, byte[,] result)
     {
         check<byte, decimal, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -31374,17 +28724,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte a, decimal[,] b, byte[,] result)
     {
         check<byte, decimal, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -31401,17 +28744,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, decimal b, byte[,] result)
     {
         check<byte, decimal, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -31599,17 +28935,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -31627,17 +28956,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -31655,17 +28977,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -31683,17 +28998,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -31739,19 +29047,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this byte[,] a, decimal[,] b, decimal[,] result)
     {
         check<byte, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -31806,17 +29106,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this byte a, decimal[,] b, decimal[,] result)
     {
         check<byte, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -31833,17 +29126,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this byte[,] a, decimal b, decimal[,] result)
     {
         check<byte, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -32031,17 +29317,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -32059,17 +29338,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -32087,17 +29359,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -32115,17 +29380,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -32171,19 +29429,11 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, decimal[,] b, double[,] result)
     {
         check<byte, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -32238,17 +29488,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte a, decimal[,] b, double[,] result)
     {
         check<byte, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -32265,17 +29508,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, decimal b, double[,] result)
     {
         check<byte, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -32463,17 +29699,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -32491,17 +29720,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -32519,17 +29741,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -32547,17 +29762,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -32603,19 +29811,11 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, short[,] b, byte[,] result)
     {
         check<byte, short, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -32670,17 +29870,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte a, short[,] b, byte[,] result)
     {
         check<byte, short, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -32697,17 +29890,10 @@ public static partial class Elementwise
     public static byte[,] Add(this byte[,] a, short b, byte[,] result)
     {
         check<byte, short, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -32895,17 +30081,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -32923,17 +30102,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -32951,17 +30123,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -32979,17 +30144,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -33035,19 +30193,11 @@ public static partial class Elementwise
     public static short[,] Add(this byte[,] a, short[,] b, short[,] result)
     {
         check<byte, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -33102,17 +30252,10 @@ public static partial class Elementwise
     public static short[,] Add(this byte a, short[,] b, short[,] result)
     {
         check<byte, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -33129,17 +30272,10 @@ public static partial class Elementwise
     public static short[,] Add(this byte[,] a, short b, short[,] result)
     {
         check<byte, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -33327,17 +30463,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -33355,17 +30484,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -33383,17 +30505,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -33411,17 +30526,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -33467,19 +30575,11 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, short[,] b, double[,] result)
     {
         check<byte, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -33534,17 +30634,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte a, short[,] b, double[,] result)
     {
         check<byte, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -33561,17 +30654,10 @@ public static partial class Elementwise
     public static double[,] Add(this byte[,] a, short b, double[,] result)
     {
         check<byte, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -33759,17 +30845,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -33787,17 +30866,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -33815,17 +30887,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -33843,17 +30908,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -33899,19 +30957,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, int[,] b, decimal[,] result)
     {
         check<decimal, int, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -33966,17 +31016,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal a, int[,] b, decimal[,] result)
     {
         check<decimal, int, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -33993,17 +31036,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, int b, decimal[,] result)
     {
         check<decimal, int, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -34191,17 +31227,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -34219,17 +31248,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -34247,17 +31269,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -34275,17 +31290,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -34331,19 +31339,11 @@ public static partial class Elementwise
     public static int[,] Add(this decimal[,] a, int[,] b, int[,] result)
     {
         check<decimal, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -34398,17 +31398,10 @@ public static partial class Elementwise
     public static int[,] Add(this decimal a, int[,] b, int[,] result)
     {
         check<decimal, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -34425,17 +31418,10 @@ public static partial class Elementwise
     public static int[,] Add(this decimal[,] a, int b, int[,] result)
     {
         check<decimal, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -34623,17 +31609,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -34651,17 +31630,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -34679,17 +31651,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -34707,17 +31672,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -34763,19 +31721,11 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, int[,] b, double[,] result)
     {
         check<decimal, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -34830,17 +31780,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal a, int[,] b, double[,] result)
     {
         check<decimal, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -34857,17 +31800,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, int b, double[,] result)
     {
         check<decimal, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -35055,17 +31991,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -35083,17 +32012,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -35111,17 +32033,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -35139,17 +32054,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -35195,19 +32103,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, float[,] b, decimal[,] result)
     {
         check<decimal, float, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -35262,17 +32162,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal a, float[,] b, decimal[,] result)
     {
         check<decimal, float, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -35289,17 +32182,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, float b, decimal[,] result)
     {
         check<decimal, float, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -35487,17 +32373,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -35515,17 +32394,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -35543,17 +32415,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -35571,17 +32436,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -35627,19 +32485,11 @@ public static partial class Elementwise
     public static float[,] Add(this decimal[,] a, float[,] b, float[,] result)
     {
         check<decimal, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -35694,17 +32544,10 @@ public static partial class Elementwise
     public static float[,] Add(this decimal a, float[,] b, float[,] result)
     {
         check<decimal, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -35721,17 +32564,10 @@ public static partial class Elementwise
     public static float[,] Add(this decimal[,] a, float b, float[,] result)
     {
         check<decimal, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -35919,17 +32755,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -35947,17 +32776,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -35975,17 +32797,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -36003,17 +32818,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -36059,19 +32867,11 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, float[,] b, double[,] result)
     {
         check<decimal, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -36126,17 +32926,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal a, float[,] b, double[,] result)
     {
         check<decimal, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -36153,17 +32946,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, float b, double[,] result)
     {
         check<decimal, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -36351,17 +33137,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -36379,17 +33158,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -36407,17 +33179,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -36435,17 +33200,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -36491,19 +33249,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, double[,] b, decimal[,] result)
     {
         check<decimal, double, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -36558,17 +33308,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal a, double[,] b, decimal[,] result)
     {
         check<decimal, double, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -36585,17 +33328,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, double b, decimal[,] result)
     {
         check<decimal, double, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -36783,17 +33519,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -36811,17 +33540,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -36839,17 +33561,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -36867,17 +33582,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -36923,19 +33631,11 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, double[,] b, double[,] result)
     {
         check<decimal, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -36990,17 +33690,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal a, double[,] b, double[,] result)
     {
         check<decimal, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -37017,17 +33710,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, double b, double[,] result)
     {
         check<decimal, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -37215,17 +33901,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -37243,17 +33922,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -37271,17 +33943,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -37299,17 +33964,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -37355,19 +34013,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, byte[,] b, decimal[,] result)
     {
         check<decimal, byte, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -37422,17 +34072,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal a, byte[,] b, decimal[,] result)
     {
         check<decimal, byte, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -37449,17 +34092,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, byte b, decimal[,] result)
     {
         check<decimal, byte, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -37647,17 +34283,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -37675,17 +34304,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -37703,17 +34325,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -37731,17 +34346,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -37787,19 +34395,11 @@ public static partial class Elementwise
     public static byte[,] Add(this decimal[,] a, byte[,] b, byte[,] result)
     {
         check<decimal, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -37854,17 +34454,10 @@ public static partial class Elementwise
     public static byte[,] Add(this decimal a, byte[,] b, byte[,] result)
     {
         check<decimal, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -37881,17 +34474,10 @@ public static partial class Elementwise
     public static byte[,] Add(this decimal[,] a, byte b, byte[,] result)
     {
         check<decimal, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -38079,17 +34665,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -38107,17 +34686,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -38135,17 +34707,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -38163,17 +34728,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -38219,19 +34777,11 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, byte[,] b, double[,] result)
     {
         check<decimal, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -38286,17 +34836,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal a, byte[,] b, double[,] result)
     {
         check<decimal, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -38313,17 +34856,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, byte b, double[,] result)
     {
         check<decimal, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -38511,17 +35047,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -38539,17 +35068,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -38567,17 +35089,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -38595,17 +35110,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -38651,19 +35159,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, decimal[,] b, decimal[,] result)
     {
         check<decimal, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -38718,17 +35218,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal a, decimal[,] b, decimal[,] result)
     {
         check<decimal, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -38745,17 +35238,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, decimal b, decimal[,] result)
     {
         check<decimal, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -38943,17 +35429,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -38971,17 +35450,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -38999,17 +35471,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -39027,17 +35492,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -39083,19 +35541,11 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, decimal[,] b, double[,] result)
     {
         check<decimal, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -39150,17 +35600,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal a, decimal[,] b, double[,] result)
     {
         check<decimal, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -39177,17 +35620,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, decimal b, double[,] result)
     {
         check<decimal, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -39375,17 +35811,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -39403,17 +35832,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -39431,17 +35853,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -39459,17 +35874,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -39515,19 +35923,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, short[,] b, decimal[,] result)
     {
         check<decimal, short, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -39582,17 +35982,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal a, short[,] b, decimal[,] result)
     {
         check<decimal, short, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -39609,17 +36002,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this decimal[,] a, short b, decimal[,] result)
     {
         check<decimal, short, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -39807,17 +36193,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -39835,17 +36214,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -39863,17 +36235,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -39891,17 +36256,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -39947,19 +36305,11 @@ public static partial class Elementwise
     public static short[,] Add(this decimal[,] a, short[,] b, short[,] result)
     {
         check<decimal, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -40014,17 +36364,10 @@ public static partial class Elementwise
     public static short[,] Add(this decimal a, short[,] b, short[,] result)
     {
         check<decimal, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -40041,17 +36384,10 @@ public static partial class Elementwise
     public static short[,] Add(this decimal[,] a, short b, short[,] result)
     {
         check<decimal, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -40239,17 +36575,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -40267,17 +36596,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -40295,17 +36617,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -40323,17 +36638,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -40379,19 +36687,11 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, short[,] b, double[,] result)
     {
         check<decimal, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -40446,17 +36746,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal a, short[,] b, double[,] result)
     {
         check<decimal, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -40473,17 +36766,10 @@ public static partial class Elementwise
     public static double[,] Add(this decimal[,] a, short b, double[,] result)
     {
         check<decimal, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -40671,17 +36957,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -40699,17 +36978,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -40727,17 +36999,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -40755,17 +37020,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -40811,19 +37069,11 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, int[,] b, short[,] result)
     {
         check<short, int, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -40878,17 +37128,10 @@ public static partial class Elementwise
     public static short[,] Add(this short a, int[,] b, short[,] result)
     {
         check<short, int, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -40905,17 +37148,10 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, int b, short[,] result)
     {
         check<short, int, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -41103,17 +37339,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -41131,17 +37360,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -41159,17 +37381,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -41187,17 +37402,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -41243,19 +37451,11 @@ public static partial class Elementwise
     public static int[,] Add(this short[,] a, int[,] b, int[,] result)
     {
         check<short, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (int)((int)(*pa) + (int)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)spanB[i]);
 
         return result;
     }
@@ -41310,17 +37510,10 @@ public static partial class Elementwise
     public static int[,] Add(this short a, int[,] b, int[,] result)
     {
         check<short, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (int)((int)a + (int)spanB[j]);
 
         return result;
     }
@@ -41337,17 +37530,10 @@ public static partial class Elementwise
     public static int[,] Add(this short[,] a, int b, int[,] result)
     {
         check<short, int, int>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (int* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (int)((int)spanA[i] + (int)b);
 
         return result;
     }
@@ -41535,17 +37721,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -41563,17 +37742,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (int)((int)a[j] + (int)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)a[j] + (int)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -41591,17 +37763,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b);
         return result;
     }
 
@@ -41619,17 +37784,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (int* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (int)((int)(*pa) + (int)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (int)((int)spanA[j * (cols + 1)] + (int)b[j]);
         return result;
     }
 
@@ -41675,19 +37833,11 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, int[,] b, double[,] result)
     {
         check<short, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (int* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -41742,17 +37892,10 @@ public static partial class Elementwise
     public static double[,] Add(this short a, int[,] b, double[,] result)
     {
         check<short, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -41769,17 +37912,10 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, int b, double[,] result)
     {
         check<short, int, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -41967,17 +38103,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -41995,17 +38124,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (int* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -42023,17 +38145,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -42051,17 +38166,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -42107,19 +38215,11 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, float[,] b, short[,] result)
     {
         check<short, float, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -42174,17 +38274,10 @@ public static partial class Elementwise
     public static short[,] Add(this short a, float[,] b, short[,] result)
     {
         check<short, float, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -42201,17 +38294,10 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, float b, short[,] result)
     {
         check<short, float, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -42399,17 +38485,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -42427,17 +38506,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -42455,17 +38527,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -42483,17 +38548,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -42539,19 +38597,11 @@ public static partial class Elementwise
     public static float[,] Add(this short[,] a, float[,] b, float[,] result)
     {
         check<short, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (float)((float)(*pa) + (float)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)spanB[i]);
 
         return result;
     }
@@ -42606,17 +38656,10 @@ public static partial class Elementwise
     public static float[,] Add(this short a, float[,] b, float[,] result)
     {
         check<short, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (float)((float)a + (float)spanB[j]);
 
         return result;
     }
@@ -42633,17 +38676,10 @@ public static partial class Elementwise
     public static float[,] Add(this short[,] a, float b, float[,] result)
     {
         check<short, float, float>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (float* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (float)((float)spanA[i] + (float)b);
 
         return result;
     }
@@ -42831,17 +38867,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -42859,17 +38888,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (float)((float)a[j] + (float)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)a[j] + (float)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -42887,17 +38909,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b);
         return result;
     }
 
@@ -42915,17 +38930,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (float* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (float)((float)(*pa) + (float)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (float)((float)spanA[j * (cols + 1)] + (float)b[j]);
         return result;
     }
 
@@ -42971,19 +38979,11 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, float[,] b, double[,] result)
     {
         check<short, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (float* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -43038,17 +39038,10 @@ public static partial class Elementwise
     public static double[,] Add(this short a, float[,] b, double[,] result)
     {
         check<short, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -43065,17 +39058,10 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, float b, double[,] result)
     {
         check<short, float, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -43263,17 +39249,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -43291,17 +39270,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (float* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -43319,17 +39291,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -43347,17 +39312,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -43403,19 +39361,11 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, double[,] b, short[,] result)
     {
         check<short, double, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -43470,17 +39420,10 @@ public static partial class Elementwise
     public static short[,] Add(this short a, double[,] b, short[,] result)
     {
         check<short, double, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -43497,17 +39440,10 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, double b, short[,] result)
     {
         check<short, double, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -43695,17 +39631,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -43723,17 +39652,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -43751,17 +39673,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -43779,17 +39694,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -43835,19 +39743,11 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, double[,] b, double[,] result)
     {
         check<short, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -43902,17 +39802,10 @@ public static partial class Elementwise
     public static double[,] Add(this short a, double[,] b, double[,] result)
     {
         check<short, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -43929,17 +39822,10 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, double b, double[,] result)
     {
         check<short, double, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -44127,17 +40013,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -44155,17 +40034,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (double* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -44183,17 +40055,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -44211,17 +40076,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -44267,19 +40125,11 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, byte[,] b, short[,] result)
     {
         check<short, byte, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -44334,17 +40184,10 @@ public static partial class Elementwise
     public static short[,] Add(this short a, byte[,] b, short[,] result)
     {
         check<short, byte, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -44361,17 +40204,10 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, byte b, short[,] result)
     {
         check<short, byte, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -44559,17 +40395,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -44587,17 +40416,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -44615,17 +40437,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -44643,17 +40458,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -44699,19 +40507,11 @@ public static partial class Elementwise
     public static byte[,] Add(this short[,] a, byte[,] b, byte[,] result)
     {
         check<short, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)spanB[i]);
 
         return result;
     }
@@ -44766,17 +40566,10 @@ public static partial class Elementwise
     public static byte[,] Add(this short a, byte[,] b, byte[,] result)
     {
         check<short, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (byte)((byte)a + (byte)spanB[j]);
 
         return result;
     }
@@ -44793,17 +40586,10 @@ public static partial class Elementwise
     public static byte[,] Add(this short[,] a, byte b, byte[,] result)
     {
         check<short, byte, byte>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (byte* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (byte)((byte)spanA[i] + (byte)b);
 
         return result;
     }
@@ -44991,17 +40777,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -45019,17 +40798,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (byte)((byte)a[j] + (byte)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)a[j] + (byte)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -45047,17 +40819,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b);
         return result;
     }
 
@@ -45075,17 +40840,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (byte* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (byte)((byte)(*pa) + (byte)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (byte)((byte)spanA[j * (cols + 1)] + (byte)b[j]);
         return result;
     }
 
@@ -45131,19 +40889,11 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, byte[,] b, double[,] result)
     {
         check<short, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (byte* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -45198,17 +40948,10 @@ public static partial class Elementwise
     public static double[,] Add(this short a, byte[,] b, double[,] result)
     {
         check<short, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -45225,17 +40968,10 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, byte b, double[,] result)
     {
         check<short, byte, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -45423,17 +41159,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -45451,17 +41180,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (byte* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -45479,17 +41201,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -45507,17 +41222,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -45563,19 +41271,11 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, decimal[,] b, short[,] result)
     {
         check<short, decimal, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -45630,17 +41330,10 @@ public static partial class Elementwise
     public static short[,] Add(this short a, decimal[,] b, short[,] result)
     {
         check<short, decimal, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -45657,17 +41350,10 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, decimal b, short[,] result)
     {
         check<short, decimal, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -45855,17 +41541,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -45883,17 +41562,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -45911,17 +41583,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -45939,17 +41604,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -45995,19 +41653,11 @@ public static partial class Elementwise
     public static decimal[,] Add(this short[,] a, decimal[,] b, decimal[,] result)
     {
         check<short, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)spanB[i]);
 
         return result;
     }
@@ -46062,17 +41712,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this short a, decimal[,] b, decimal[,] result)
     {
         check<short, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (decimal)((decimal)a + (decimal)spanB[j]);
 
         return result;
     }
@@ -46089,17 +41732,10 @@ public static partial class Elementwise
     public static decimal[,] Add(this short[,] a, decimal b, decimal[,] result)
     {
         check<short, decimal, decimal>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (decimal* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (decimal)((decimal)spanA[i] + (decimal)b);
 
         return result;
     }
@@ -46287,17 +41923,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -46315,17 +41944,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (decimal)((decimal)a[j] + (decimal)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)a[j] + (decimal)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -46343,17 +41965,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b);
         return result;
     }
 
@@ -46371,17 +41986,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (decimal* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (decimal)((decimal)(*pa) + (decimal)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (decimal)((decimal)spanA[j * (cols + 1)] + (decimal)b[j]);
         return result;
     }
 
@@ -46427,19 +42035,11 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, decimal[,] b, double[,] result)
     {
         check<short, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (decimal* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -46494,17 +42094,10 @@ public static partial class Elementwise
     public static double[,] Add(this short a, decimal[,] b, double[,] result)
     {
         check<short, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -46521,17 +42114,10 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, decimal b, double[,] result)
     {
         check<short, decimal, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -46718,17 +42304,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -46746,17 +42325,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (decimal* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -46774,17 +42346,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -46802,17 +42367,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 
@@ -46859,19 +42417,11 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, short[,] b, short[,] result)
     {
         check<short, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (short)((short)(*pa) + (short)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)spanB[i]);
 
         return result;
     }
@@ -46927,17 +42477,10 @@ public static partial class Elementwise
     public static short[,] Add(this short a, short[,] b, short[,] result)
     {
         check<short, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (short)((short)a + (short)spanB[j]);
 
         return result;
     }
@@ -46954,17 +42497,10 @@ public static partial class Elementwise
     public static short[,] Add(this short[,] a, short b, short[,] result)
     {
         check<short, short, short>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (short)((short)spanA[i] + (short)b);
 
         return result;
     }
@@ -47155,17 +42691,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -47183,17 +42712,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (short)((short)a[j] + (short)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)a[j] + (short)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -47211,17 +42733,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b);
         return result;
     }
 
@@ -47239,17 +42754,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (short* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (short)((short)(*pa) + (short)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (short)((short)spanA[j * (cols + 1)] + (short)b[j]);
         return result;
     }
 
@@ -47296,19 +42804,11 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, short[,] b, double[,] result)
     {
         check<short, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (short* ptrB = b)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pb = ptrB;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pb++, pr++)
-                    *pr = (double)((double)(*pa) + (double)(*pb));
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)spanB[i]);
 
         return result;
     }
@@ -47364,17 +42864,10 @@ public static partial class Elementwise
     public static double[,] Add(this short a, short[,] b, double[,] result)
     {
         check<short, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < b.Length; j++, pr++, pb++)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < spanB.Length; j++)
+                    spanR[j] = (double)((double)a + (double)spanB[j]);
 
         return result;
     }
@@ -47391,17 +42884,10 @@ public static partial class Elementwise
     public static double[,] Add(this short[,] a, short b, double[,] result)
     {
         check<short, short, double>(a: a, b: b, result: result);
-        unsafe
-        {
-            fixed (short* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var i = 0; i < a.Length; i++, pa++, pr++)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var i = 0; i < spanA.Length; i++)
+                    spanR[i] = (double)((double)spanA[i] + (double)b);
 
         return result;
     }
@@ -47592,17 +43078,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -47620,17 +43099,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrB = b)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pb = ptrB;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pb += cols + 1)
-                    *pr = (double)((double)a[j] + (double)(*pb));
-            }
-        }
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)a[j] + (double)spanB[j * (cols + 1)]);
         return result;
     }
 
@@ -47648,17 +43120,10 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
         int cols = a.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pa = ptrA;
-                var pr = ptrR;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b);
         return result;
     }
 
@@ -47676,17 +43141,10 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
         int cols = b.GetLength(1);
 
-        unsafe 
-        {
-            fixed (short* ptrA = a)        
-            fixed (double* ptrR = result)        
-            {
-                var pr = ptrR;
-                var pa = ptrA;
-                for (var j = 0; j < rows; j++, pr += cols + 1, pa += cols + 1)
-                    *pr = (double)((double)(*pa) + (double)b[j]);
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+                var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+                for (var j = 0; j < rows; j++)
+                    spanR[j * (cols + 1)] = (double)((double)spanA[j * (cols + 1)] + (double)b[j]);
         return result;
     }
 

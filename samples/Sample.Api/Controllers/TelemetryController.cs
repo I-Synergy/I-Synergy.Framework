@@ -18,7 +18,7 @@ public class TelemetryController : ControllerBase
         _logger.LogInformation("Information: TelemetryController.Get called");
         _logger.LogWarning("Warning: TelemetryController.Get called");
         _logger.LogError(new NotImplementedException("Get"), "Error: TelemetryController.Get called");
-        _logger.LogCritical(new ArgumentNullException("Get"), "Critical: TelemetryController.Get called");
+        _logger.LogCritical(new ArgumentNullException(nameof(Get)), "Critical: TelemetryController.Get called");
         _logger.LogTrace("Trace: TelemetryController.Get called");
         _logger.LogDebug("Debug: TelemetryController.Get called");
 

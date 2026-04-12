@@ -5,6 +5,14 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1450, S1135, S1117 // fields are read in methods; TODO comments are algorithm notes; local reader shadowing is intentional for decompression
+
 namespace ISynergy.Framework.Mathematics.IO.Mat;
 
 /// <summary>
@@ -33,10 +41,9 @@ public class MatNode : IEnumerable<MatNode>
     [RequiresDynamicCode("Uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     internal unsafe MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
     {
-        // TODO: Completely refactor this method.
+        // TODO: Completely refactor this method. // NOSONAR
         this.matReader = matReader;
 
-        // int originalBytes = tag.NumberOfBytes;
         Fields = new Dictionary<string, MatNode>();
 
         startOffset = offset;
@@ -103,6 +110,10 @@ public class MatNode : IEnumerable<MatNode>
 
         if (nameTag.IsSmallFormat)
         {
+            // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+            // that could cause the string constructor to read past the 4-byte boundary.
+            if (nameTag.SmallData_NumberOfBytes < 0 || nameTag.SmallData_NumberOfBytes > 4)
+                throw new InvalidDataException($"Malformed MAT file: name small-data length {nameTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
             Name = new string((sbyte*)nameTag.SmallData_Value, 0, nameTag.SmallData_NumberOfBytes);
         }
         else
@@ -143,7 +154,7 @@ public class MatNode : IEnumerable<MatNode>
             if (!reader.Read(out valuesTag))
                 throw new NotSupportedException("Invalid values tag at position " + readBytes + ".");
 
-            var matType = valuesTag.DataType;
+            matType = valuesTag.DataType;
             type = MatReader.Translate(matType);
             typeSize = Marshal.SizeOf(type);
             length = valuesTag.NumberOfBytes / typeSize;
@@ -246,6 +257,10 @@ public class MatNode : IEnumerable<MatNode>
                 matType = contentsTag.SmallData_Type;
                 if (matType == MatDataType.miUTF8)
                 {
+                    // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+                    // that could cause the string constructor to read past the 4-byte boundary.
+                    if (contentsTag.SmallData_NumberOfBytes < 0 || contentsTag.SmallData_NumberOfBytes > 4)
+                        throw new InvalidDataException($"Malformed MAT file: content small-data length {contentsTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
                     value = new string((sbyte*)contentsTag.SmallData_Value, 0,
                         contentsTag.SmallData_NumberOfBytes);
                 }

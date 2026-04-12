@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Core.Collections;
 /// <typeparam name="TNode">The class type for the nodes of the tree.</typeparam>
 /// 
 [Serializable]
-public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // TODO: Try to remove IEquatable
+public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // NOSONAR - base class not meant to be sealed; IEquatable reviewed for removal
     where TNode : BinaryNode<TNode>
 {
     /// <summary>

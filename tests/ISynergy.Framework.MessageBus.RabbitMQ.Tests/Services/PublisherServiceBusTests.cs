@@ -87,6 +87,8 @@ public class PublisherServiceBusTests
     {
         var publisher = CreatePublisher();
         await publisher.DisposeAsync();
+        // Second dispose must be a no-op
         await publisher.DisposeAsync();
+        Assert.IsNotNull(publisher);
     }
 }

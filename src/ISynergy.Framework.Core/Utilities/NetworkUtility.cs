@@ -20,7 +20,7 @@ public static class NetworkUtility
             using var ping = new Ping();
 
             // Try multiple reliable DNS servers in case one fails
-            string[] hosts = { "8.8.8.8", "1.1.1.1", "8.8.4.4" };
+            string[] hosts = { "8.8.8.8", "1.1.1.1", "8.8.4.4" }; // NOSONAR - these are well-known public DNS server addresses, not sensitive data
 
             foreach (var host in hosts)
             {
@@ -57,7 +57,7 @@ public static class NetworkUtility
             }
             catch
             {
-                continue;
+                // Continue to next service
             }
         }
 
@@ -69,7 +69,7 @@ public static class NetworkUtility
     /// Consider using GetInternetIPAddressAsync() instead.
     /// </summary>
     /// <returns>The IP address or "127.0.0.1" if unable to retrieve.</returns>
-    [Obsolete("Use GetInternetIPAddressAsync() instead. This method can cause deadlocks.")]
+    [Obsolete("Use GetInternetIPAddressAsync() instead. This method can cause deadlocks.")] // NOSONAR
     public static string GetInternetIPAddress()
     {
         return GetInternetIPAddressAsync().GetAwaiter().GetResult();

@@ -18,7 +18,7 @@ public class ObjectDataTrigger : StateTriggerBase
     /// <value>The data value.</value>
     public object DataValue
     {
-        get => (object)GetValue(DataValueProperty);
+        get => GetValue(DataValueProperty);
         set => SetValue(DataValueProperty, value);
     }
 
@@ -50,7 +50,7 @@ public class ObjectDataTrigger : StateTriggerBase
     /// <value>The trigger value.</value>
     public object TriggerValue
     {
-        get => (object)GetValue(TriggerValueProperty);
+        get => GetValue(TriggerValueProperty);
         set => SetValue(TriggerValueProperty, value);
     }
 

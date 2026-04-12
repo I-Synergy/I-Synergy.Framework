@@ -1,5 +1,7 @@
 using System.Collections;
 
+#pragma warning disable S3267 // foreach loops with early-return cannot be simplified to LINQ without losing short-circuit semantics
+
 namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
@@ -32,7 +34,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     ///   Creates a new <see cref="RedBlackTreeDictionary{TKey, TValue}"/>.
     /// </summary>
     /// 
-    public RedBlackTreeDictionary(IComparer<TKey> comparer)
+    public RedBlackTreeDictionary(IComparer<TKey> comparer) // NOSONAR
     {
         if (comparer is null)
             throw new ArgumentNullException("comparer");
@@ -461,30 +463,33 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     [Serializable]
     internal class ValueCollection : ICollection<TValue>
     {
-        RedBlackTree<KeyValuePair<TKey, TValue>> owner;
+        private readonly RedBlackTree<KeyValuePair<TKey, TValue>> _owner;
 
         public ValueCollection(RedBlackTree<KeyValuePair<TKey, TValue>> owner)
         {
-            this.owner = owner;
+            _owner = owner;
         }
 
         public bool Contains(TValue item)
         {
-            foreach (var node in owner)
-                if (item!.Equals(node.Value.Value))
+            foreach (var node in _owner)
+            {
+                if (EqualityComparer<TValue>.Default.Equals(item, node.Value.Value))
                     return true;
+            }
+
             return false;
         }
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {
-            foreach (var node in owner)
+            foreach (var node in _owner)
                 array[arrayIndex++] = node.Value.Value;
         }
 
         public int Count
         {
-            get { return owner.Count; }
+            get { return _owner.Count; }
         }
 
         public bool IsReadOnly
@@ -509,7 +514,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 
         public IEnumerator<TValue> GetEnumerator()
         {
-            foreach (var node in owner)
+            foreach (var node in _owner)
                 yield return node.Value.Value;
         }
 

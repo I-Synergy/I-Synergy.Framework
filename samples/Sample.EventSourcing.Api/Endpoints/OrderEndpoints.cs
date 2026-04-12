@@ -244,8 +244,8 @@ public static class OrderEndpoints
 
     // ── Request records ───────────────────────────────────────────────────────
 
-    private record PlaceOrderRequest(string CustomerName, decimal Total);
-    private record EditOrderRequest(string CustomerName, decimal Total);
-    private record ShipOrderRequest(string TrackingNumber);
-    private record CancelOrderRequest(string Reason);
+    private sealed record PlaceOrderRequest(string CustomerName, decimal Total);
+    private sealed record EditOrderRequest(string CustomerName, decimal Total);
+    private sealed record ShipOrderRequest(string TrackingNumber);
+    private sealed record CancelOrderRequest(string Reason);
 }

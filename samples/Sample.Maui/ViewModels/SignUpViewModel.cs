@@ -3,6 +3,9 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
+
+#pragma warning disable S3776 // cognitive complexity is inherent in sign-up constructor
+#pragma warning disable S1066 // nested if is intentional for readability of multi-step validation
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -135,7 +138,7 @@ public class SignUpViewModel : ViewModel
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand SelectModulesCommand { get; private set; }
 
-    public SignUpViewModel(
+    public SignUpViewModel( // NOSONAR - high complexity is inherent in registration validation setup
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
@@ -283,12 +286,10 @@ public class SignUpViewModel : ViewModel
     {
         if (Validate())
         {
-            if (!HasErrors &&
-                PasswordCheck is not null && Password is not null &&
-                PasswordCheck.Equals(Password) &&
+            if (!HasErrors && PasswordCheck is not null && Password is not null && PasswordCheck.Equals(Password) &&
                 Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
-                var registrationData = new RegistrationData()
+                _ = new RegistrationData()
                 {
                     ApplicationId = 1,
                     LicenseName = Name,

@@ -3,6 +3,8 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
+#pragma warning disable S3267 // foreach loop uses prop.SetValue side effects; cannot be simplified to LINQ
+
 namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
@@ -27,7 +29,7 @@ public static class DataReaderExtensions
             var fieldNames = Enumerable.Range(0, datareader.FieldCount).Select(i => datareader.GetName(i)).ToArray();
             T? obj = TypeActivator.CreateInstance<T>();
 
-            foreach (var prop in typeof(T).GetProperties().EnsureNotNull())
+            foreach (var prop in typeof(T).GetProperties().EnsureNotNull()) // NOSONAR
             {
                 if (fieldNames.Contains(prop.Name) && !datareader.IsDBNull(prop.Name))
                 {

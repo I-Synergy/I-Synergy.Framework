@@ -35,6 +35,6 @@ public class ObservableModel : ObservableValidatedClass
     {
         Id = Guid.NewGuid();
         Name = $"Name {Id}";
-        Age = new Random().Next();
+        Age = Random.Shared.Next();
     }
 }

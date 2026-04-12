@@ -49,15 +49,4 @@ public class EnumCollection : MarkupExtension
         return EnumType!.ToList();
     }
 
-    /// <summary>
-    /// Gets the description.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>System.String.</returns>
-    /// <exception cref="ArgumentNullException">value</exception>
-    private static string GetDescription(Enum value)
-    {
-        Argument.IsNotNull(value);
-        return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(value.ToString());
-    }
 }

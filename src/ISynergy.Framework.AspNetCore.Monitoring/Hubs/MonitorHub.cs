@@ -35,7 +35,7 @@ public class MonitorHub : Hub
     /// <returns>A <see cref="T:System.Threading.Tasks.Task" /> that represents the asynchronous connect.</returns>
     public override async Task OnConnectedAsync()
     {
-        _logger.LogInformation($"Client connected: {Context.ConnectionId}");
+        _logger.LogInformation("Client connected: {ConnectionId}", Context.ConnectionId);
 
         Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);
@@ -61,7 +61,7 @@ public class MonitorHub : Hub
     /// <returns>A Task representing the asynchronous operation.</returns>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        _logger.LogInformation($"Client disconnected: {Context.ConnectionId}");
+        _logger.LogInformation("Client disconnected: {ConnectionId}", Context.ConnectionId);
 
         Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);

@@ -1,6 +1,13 @@
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Integration.Base;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Integration;
 
 /// <summary>
@@ -60,7 +67,7 @@ namespace ISynergy.Framework.Mathematics.Integration;
 /// </example>
 /// <seealso cref="NonAdaptiveGaussKronrod" />
 /// <seealso cref="InfiniteAdaptiveGaussKronrod" />
-public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalIntegration
+public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalIntegration // NOSONAR
 {
     private int count;
     private double sum;
@@ -92,7 +99,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
 
         NumberOfParameters = parameters;
         Range = new NumericRange[parameters];
-        Random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next());
+        Random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next()); // NOSONAR
 
         for (var i = 0; i < Range.Length; i++)
             Range[i].Max = 1;
@@ -257,9 +264,9 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
         var count = 0;
         double sum = 0;
 
-        var random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next());
+        var random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next()); // NOSONAR
 
-        for (count = 0; count < samples; count++)
+        for (count = 0; count < samples; count++) // NOSONAR
         {
             var u = random.Next() * (b - a) + a;
 

@@ -152,14 +152,11 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
+        if (disposing && ViewModel is not null)
         {
-            if (ViewModel is not null)
-            {
-                ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
-                UnsubscribeFromViewModelCommands();
-                ViewModel.Dispose();
-            }
+            ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            UnsubscribeFromViewModelCommands();
+            ViewModel.Dispose();
         }
 
         // free native resources if there are any.

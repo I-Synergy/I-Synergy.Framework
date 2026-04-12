@@ -1,9 +1,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:Converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Wpf"
-                    xmlns:Controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Wpf"
+                    xmlns:Converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.WPF"
+                    xmlns:Controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.WPF"
                     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-                    xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Wpf"
+                    xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.WPF"
                     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>

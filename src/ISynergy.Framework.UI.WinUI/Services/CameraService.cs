@@ -30,7 +30,7 @@ public class CameraService : ICameraService
         ILogger<CameraService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"CameraService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("CameraService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _dialogService = dialogService;
         _languageService = languageService;
@@ -43,6 +43,7 @@ public class CameraService : ICameraService
     /// <returns>FileResult.</returns>
     public async Task<FileResult?> TakePictureAsync(long maxFileSize = 1 * 1024 * 1024)
     {
+        _logger.LogTrace("Taking picture with max file size: {MaxFileSize}", maxFileSize);
         var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
         var device = devices.FirstOrDefault(); // Finds one device, my webcam
         if (device is not null)
@@ -57,7 +58,6 @@ public class CameraService : ICameraService
 
             var capture = await mediaCapture.PrepareLowLagPhotoCaptureAsync(ImageEncodingProperties.CreatePng()).AsTask();
             var photo = await capture.CaptureAsync().AsTask();
-            var bitmap = photo.Frame.SoftwareBitmap;
 
             if (photo.Frame is not null)
             {

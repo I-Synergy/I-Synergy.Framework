@@ -1,5 +1,14 @@
 
+using System.Runtime.InteropServices;
 using ISynergy.Framework.Mathematics.Common;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S4136, S1871, S1066, S2234 // generated comparison code: overload ordering, duplicate branches, collapsible ifs, argument order are intentional
+
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -127,91 +136,89 @@ public static partial class Matrix
             if (la[i] != lb[i])
                 return false;
 
-        unsafe
+        if (a.Length == 0)
+            return true;
+
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        if (rtol > 0)
         {
-            fixed (Double* ptrA = a)
-            fixed (Double* ptrB = b)
+            for (var i = 0; i < spanA.Length; i++)
             {
-                if (rtol > 0)
+                var A = spanA[i];
+                var B = spanB[i];
+                if (A == B)
+                    continue;
+                if (Double.IsNaN(A) && Double.IsNaN(B))
+                    continue;
+                if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                    return false;
+                if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                    return false;
+                if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                    return false;
+                var C = A;
+                var D = B;
+                var delta = Math.Abs(C - D);
+                if (C == 0)
                 {
-                    for (var i = 0; i < a.Length; i++)
-                    {
-                        var A = ptrA[i];
-                        var B = ptrB[i];
-                        if (A == B)
-                            continue;
-                        if (Double.IsNaN(A) && Double.IsNaN(B))
-                            continue;
-                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            return false;
-                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            return false;
-                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            return false;
-                        var C = A;
-                        var D = B;
-                        var delta = Math.Abs(C - D);
-                        if (C == 0)
-                        {
-                            if (delta <= rtol)
-                                continue;
-                        }
-                        else if (D == 0)
-                        {
-                            if (delta <= rtol)
-                                continue;
-                        }
-
-                        if (delta <= Math.Abs(C) * rtol)
-                            continue;
-                        return false;
-                    }
-
+                    if (delta <= rtol)
+                        continue;
                 }
-                else if (atol > 0)
+                else if (D == 0)
                 {
-                    for (var i = 0; i < a.Length; i++)
-                    {
-                        var A = ptrA[i];
-                        var B = ptrB[i];
-                        if (A == B)
-                            continue;
-                        if (Double.IsNaN(A) && Double.IsNaN(B))
-                            continue;
-                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            return false;
-                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            return false;
-                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            return false;
-                        var C = A;
-                        var D = B;
-                        if (Math.Abs(C - D) <= atol)
-                            continue;
-                        return false;
-                    }
-
+                    if (delta <= rtol)
+                        continue;
                 }
-                else
-                {
-                    for (var i = 0; i < a.Length; i++)
-                    {
-                        var A = ptrA[i];
-                        var B = ptrB[i];
-                        if (Double.IsNaN(A) && Double.IsNaN(B))
-                            continue;
-                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            return false;
-                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            return false;
-                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            return false;
-                        if (A != B)
-                            return false;
-                    }
 
-                }
+                if (delta <= Math.Abs(C) * rtol)
+                    continue;
+                return false;
             }
+
+        }
+        else if (atol > 0)
+        {
+            for (var i = 0; i < spanA.Length; i++)
+            {
+                var A = spanA[i];
+                var B = spanB[i];
+                if (A == B)
+                    continue;
+                if (Double.IsNaN(A) && Double.IsNaN(B))
+                    continue;
+                if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                    return false;
+                if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                    return false;
+                if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                    return false;
+                var C = A;
+                var D = B;
+                if (Math.Abs(C - D) <= atol)
+                    continue;
+                return false;
+            }
+
+        }
+        else
+        {
+            for (var i = 0; i < spanA.Length; i++)
+            {
+                var A = spanA[i];
+                var B = spanB[i];
+                if (Double.IsNaN(A) && Double.IsNaN(B))
+                    continue;
+                if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                    return false;
+                if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                    return false;
+                if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                    return false;
+                if (A != B)
+                    return false;
+            }
+
         }
 
         return true;
@@ -632,90 +639,88 @@ public static partial class Matrix
         if (a is null)
             return true;
 
-        unsafe
+        if (a.Length == 0)
+            return true;
+
+        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        if (rtol > 0)
         {
-            fixed (Double* ptrA = a)
+            for (var i = 0; i < spanA.Length; i++)
             {
-                if (rtol > 0)
+                var A = spanA[i];
+                var B = b;
+                if (A == B)
+                    continue;
+                if (Double.IsNaN(A) && Double.IsNaN(B))
+                    continue;
+                if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                    return false;
+                if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                    return false;
+                if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                    return false;
+                var C = A;
+                var D = B;
+                var delta = Math.Abs(C - D);
+                if (C == 0)
                 {
-                    for (var i = 0; i < a.Length; i++)
-                    {
-                        var A = ptrA[i];
-                        var B = b;
-                        if (A == B)
-                            continue;
-                        if (Double.IsNaN(A) && Double.IsNaN(B))
-                            continue;
-                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            return false;
-                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            return false;
-                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            return false;
-                        var C = A;
-                        var D = B;
-                        var delta = Math.Abs(C - D);
-                        if (C == 0)
-                        {
-                            if (delta <= rtol)
-                                continue;
-                        }
-                        else if (D == 0)
-                        {
-                            if (delta <= rtol)
-                                continue;
-                        }
-
-                        if (delta <= Math.Abs(C) * rtol)
-                            continue;
-                        return false;
-                    }
-
+                    if (delta <= rtol)
+                        continue;
                 }
-                else if (atol > 0)
+                else if (D == 0)
                 {
-                    for (var i = 0; i < a.Length; i++)
-                    {
-                        var A = ptrA[i];
-                        var B = b;
-                        if (A == B)
-                            continue;
-                        if (Double.IsNaN(A) && Double.IsNaN(B))
-                            continue;
-                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            return false;
-                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            return false;
-                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            return false;
-                        var C = A;
-                        var D = B;
-                        if (Math.Abs(C - D) <= atol)
-                            continue;
-                        return false;
-                    }
-
+                    if (delta <= rtol)
+                        continue;
                 }
-                else
-                {
-                    for (var i = 0; i < a.Length; i++)
-                    {
-                        var A = ptrA[i];
-                        var B = b;
-                        if (Double.IsNaN(A) && Double.IsNaN(B))
-                            continue;
-                        if (Double.IsNaN(A) ^ Double.IsNaN(B))
-                            return false;
-                        if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
-                            return false;
-                        if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
-                            return false;
-                        if (A != B)
-                            return false;
-                    }
 
-                }
+                if (delta <= Math.Abs(C) * rtol)
+                    continue;
+                return false;
             }
+
+        }
+        else if (atol > 0)
+        {
+            for (var i = 0; i < spanA.Length; i++)
+            {
+                var A = spanA[i];
+                var B = b;
+                if (A == B)
+                    continue;
+                if (Double.IsNaN(A) && Double.IsNaN(B))
+                    continue;
+                if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                    return false;
+                if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                    return false;
+                if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                    return false;
+                var C = A;
+                var D = B;
+                if (Math.Abs(C - D) <= atol)
+                    continue;
+                return false;
+            }
+
+        }
+        else
+        {
+            for (var i = 0; i < spanA.Length; i++)
+            {
+                var A = spanA[i];
+                var B = b;
+                if (Double.IsNaN(A) && Double.IsNaN(B))
+                    continue;
+                if (Double.IsNaN(A) ^ Double.IsNaN(B))
+                    return false;
+                if (Double.IsPositiveInfinity(A) ^ Double.IsPositiveInfinity(B))
+                    return false;
+                if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
+                    return false;
+                if (A != B)
+                    return false;
+            }
+
         }
 
         return true;

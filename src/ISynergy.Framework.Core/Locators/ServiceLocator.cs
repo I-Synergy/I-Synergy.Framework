@@ -4,6 +4,8 @@ using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable S3010 // static fields intentionally set in constructor (ambient singleton pattern)
+
 namespace ISynergy.Framework.Core.Locators;
 
 /// <summary>
@@ -11,7 +13,7 @@ namespace ISynergy.Framework.Core.Locators;
 /// framework defines such an ambient container, use ServiceLocator.Current
 /// to get it.
 /// </summary>
-public class ServiceLocator
+public class ServiceLocator : IDisposable
 {
     private static IServiceProvider? _serviceProvider;
     private static ServiceLocator? _default;
@@ -22,15 +24,15 @@ public class ServiceLocator
 
     public ServiceLocator(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        _serviceProvider = serviceProvider; // NOSONAR - intentional singleton pattern; static field updated by design
 
         // Try to get IScopedContextService from DI container first (DIP compliance)
         // If not registered, create a new instance as fallback
-        _scopedContextService = serviceProvider.GetService<IScopedContextService>() 
+        _scopedContextService = serviceProvider.GetService<IScopedContextService>()
             ?? new ScopedContextService(serviceProvider);
         _scopedContextService.ScopedChanged += (s, e) => ScopedChanged?.Invoke(s, e);
 
-        _default = this;
+        _default = this; // NOSONAR - intentional singleton pattern; static field updated by design
     }
 
     public static ServiceLocator Default => _default ?? new ServiceLocator(_serviceProvider ??

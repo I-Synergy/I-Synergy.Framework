@@ -51,7 +51,7 @@ public class GlobalMeshTests
         GlobalMesh theMesh = new(1000);
         long nr = theMesh.MeshNumber(Constants.MyHome);
         System.Collections.Generic.List<long> n0 = theMesh.Neighborhood(nr, 0);
-        Assert.IsTrue(n0.Count == 1);
+        Assert.AreEqual(1, n0.Count);
         Assert.AreEqual(nr, n0[0]);
         System.Collections.Generic.List<long> n1 = theMesh.Neighborhood(nr, 1);
         Assert.AreEqual(8, n1.Count);
@@ -67,29 +67,15 @@ public class GlobalMeshTests
     [TestMethod]
     public void TestMeshSizeInMetersValidation()
     {
-        try
-        {
-            new GlobalMesh(0);
-        }
-        catch (ArgumentOutOfRangeException)
-        { }
+        // Size 0 should throw ArgumentOutOfRangeException
+        Assert.Throws<ArgumentOutOfRangeException>(() => new GlobalMesh(0));
 
-        try
-        {
-            new GlobalMesh(1);
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            Assert.IsTrue(false);
-        }
+        // Size 1 should be valid
+        var mesh1 = new GlobalMesh(1);
+        Assert.IsNotNull(mesh1);
 
-        try
-        {
-            new GlobalMesh(2);
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            Assert.IsTrue(false);
-        }
+        // Size 2 should also be valid
+        var mesh2 = new GlobalMesh(2);
+        Assert.IsNotNull(mesh2);
     }
 }

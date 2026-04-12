@@ -1,5 +1,13 @@
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S4136, S1192, S3427 // method overloads and string literals are intentional in statistical APIs
+
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 static partial class Measures
@@ -72,8 +80,8 @@ static partial class Measures
             return values.Get(-1);
 
         double[] truncatedSeries = window == values.Length
-            ? truncatedSeries = values
-            : truncatedSeries = values.Get(-window, 0);
+            ? values
+            : values.Get(-window, 0);
 
         if (alpha == 0)
             return truncatedSeries.Mean();
@@ -147,15 +155,13 @@ static partial class Measures
         // Perform some basic error validation
         Validate(values, window, alpha);
 
-        //int rows = values.Rows();
-
         // Handle the trivial case
         if (alpha == 1)
             return 0;
 
         double[] truncatedSeries = window == values.Length
-            ? truncatedSeries = values
-            : truncatedSeries = values.Get(-window, 0);
+            ? values
+            : values.Get(-window, 0);
 
         // Now we create the weights
         double[] decayWeights = GetDecayWeights(window, alpha);

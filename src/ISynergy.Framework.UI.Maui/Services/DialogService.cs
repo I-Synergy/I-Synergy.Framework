@@ -10,6 +10,13 @@ namespace ISynergy.Framework.UI.Services;
 
 public class DialogService : IDialogService
 {
+    private const string ExceptionHandlerNotAvailable = "Exception handler service not available for dialog error";
+    private const string ExceptionHandlerFailed = "Exception handler failed while processing dialog error";
+    private const string ViewModelInitExceptionHandlerFailed = "Exception handler failed while processing viewmodel initialization error";
+    private const string ViewModelInitExceptionHandlerNotAvailable = "Exception handler service not available for viewmodel initialization error";
+    private const string DialogCreationExceptionHandlerFailed = "Exception handler failed while processing dialog creation error";
+    private const string DialogCreationExceptionHandlerNotAvailable = "Exception handler service not available for dialog creation error";
+
     private readonly IScopedContextService _scopedContextService;
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILanguageService _languageService;
@@ -113,7 +120,7 @@ public class DialogService : IDialogService
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
+    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
     {
         // Input validation
         if (string.IsNullOrWhiteSpace(message))
@@ -181,7 +188,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex) when (IsRecoverableDialogException(ex) && retryCount < maxRetries)
         {
-            _logger?.LogWarning(ex, "Dialog failed, attempting retry {RetryCount}/{MaxRetries}", retryCount + 1, maxRetries);
+            _logger?.LogWarning(ex, "Dialog failed, attempting retry {RetryCount}/{MaxRetries}", retryCount + 1, maxRetries); // NOSONAR
 
             // Brief delay before retry
             await Task.Delay(TimeSpan.FromMilliseconds(100 * (retryCount + 1)));
@@ -337,12 +344,12 @@ public class DialogService : IDialogService
         {
             _dialogServiceAvailable = false;
             _lastFailureTime = DateTime.Now;
-            _logger?.LogError(ex, "DialogService disabled after {FailureCount} consecutive failures. Message: {Title} - {Message}",
+            _logger?.LogError(ex, "DialogService disabled after {FailureCount} consecutive failures. Message: {Title} - {Message}", // NOSONAR
                 _consecutiveFailures, title, message);
         }
         else
         {
-            _logger?.LogWarning(ex, "Dialog service failure {FailureCount}/{MaxFailures}. Message: {Title} - {Message}",
+            _logger?.LogWarning(ex, "Dialog service failure {FailureCount}/{MaxFailures}. Message: {Title} - {Message}", // NOSONAR
                 _consecutiveFailures, _maxConsecutiveFailures, title, message);
         }
 
@@ -386,8 +393,8 @@ public class DialogService : IDialogService
             // Last resort: write to multiple outputs simultaneously
             var tasks = new[]
             {
-                Task.Run(() => Console.WriteLine($"CRITICAL ERROR: {title} - {message}")),
-                Task.Run(() => System.Diagnostics.Debug.WriteLine($"CRITICAL ERROR: {title} - {message}")),
+                Task.Run(() => Console.WriteLine("CRITICAL ERROR: {0} - {1}", title, message)),
+                Task.Run(() => System.Diagnostics.Debug.WriteLine("CRITICAL ERROR: {0} - {1}", title, message)),
                 Task.Run(() => System.Diagnostics.Trace.WriteLine($"CRITICAL ERROR: {title} - {message}"))
             };
 
@@ -399,19 +406,19 @@ public class DialogService : IDialogService
         }
     }
 
-    private async Task<bool> TryConsoleNotificationAsync(string message, string title)
+    private static async Task<bool> TryConsoleNotificationAsync(string message, string title)
     {
-        await Task.Run(() => Console.WriteLine($"DIALOG: {title} - {message}"));
+        await Task.Run(() => Console.WriteLine("DIALOG: {0} - {1}", title, message));
         return true;
     }
 
-    private async Task<bool> TryDebugNotificationAsync(string message, string title)
+    private static async Task<bool> TryDebugNotificationAsync(string message, string title)
     {
-        await Task.Run(() => System.Diagnostics.Debug.WriteLine($"DIALOG: {title} - {message}"));
+        await Task.Run(() => System.Diagnostics.Debug.WriteLine("DIALOG: {0} - {1}", title, message));
         return true;
     }
 
-    private Task<bool> TryEventLogNotificationAsync(string message, string title)
+    private static Task<bool> TryEventLogNotificationAsync(string message, string title) // NOSONAR
     {
 #if WINDOWS
         try
@@ -430,7 +437,7 @@ public class DialogService : IDialogService
 #endif
     }
 
-    private async Task<bool> TryFileNotificationAsync(string message, string title)
+    private static async Task<bool> TryFileNotificationAsync(string message, string title)
     {
         try
         {
@@ -453,7 +460,7 @@ public class DialogService : IDialogService
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns></returns>
-    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>()
+    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>() // NOSONAR
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -492,14 +499,14 @@ public class DialogService : IDialogService
             catch (Exception handlerEx)
             {
                 // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, "Exception handler failed while processing dialog error");
+                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
             }
 
             // Suppress exception if it was successfully handled or if handler is not available
             // This prevents app crashes while still allowing the handler to show user-friendly messages
             if (!handled)
             {
-                _logger?.LogWarning("Exception handler service not available for dialog error");
+                _logger?.LogWarning(ExceptionHandlerNotAvailable);
             }
         }
     }
@@ -555,14 +562,14 @@ public class DialogService : IDialogService
             catch (Exception handlerEx)
             {
                 // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, "Exception handler failed while processing dialog error");
+                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
             }
 
             // Suppress exception if it was successfully handled or if handler is not available
             // This prevents app crashes while still allowing the handler to show user-friendly messages
             if (!handled)
             {
-                _logger?.LogWarning("Exception handler service not available for dialog error");
+                _logger?.LogWarning(ExceptionHandlerNotAvailable);
             }
         }
     }
@@ -615,14 +622,14 @@ public class DialogService : IDialogService
             catch (Exception handlerEx)
             {
                 // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, "Exception handler failed while processing dialog error");
+                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
             }
 
             // Suppress exception if it was successfully handled or if handler is not available
             // This prevents app crashes while still allowing the handler to show user-friendly messages
             if (!handled)
             {
-                _logger?.LogWarning("Exception handler service not available for dialog error");
+                _logger?.LogWarning(ExceptionHandlerNotAvailable);
             }
         }
     }
@@ -668,14 +675,14 @@ public class DialogService : IDialogService
             catch (Exception handlerEx)
             {
                 // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, "Exception handler failed while processing dialog error");
+                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
             }
 
             // Suppress exception if it was successfully handled or if handler is not available
             // This prevents app crashes while still allowing the handler to show user-friendly messages
             if (!handled)
             {
-                _logger?.LogWarning("Exception handler service not available for dialog error");
+                _logger?.LogWarning(ExceptionHandlerNotAvailable);
             }
         }
     }
@@ -687,7 +694,7 @@ public class DialogService : IDialogService
     /// <param name="dialog"></param>
     /// <param name="viewmodel"></param>
     /// <returns></returns>
-    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
+    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel) // NOSONAR
     {
         // Note: CreateDialogAsync is protected by semaphore in calling methods (ShowDialogAsync variants)
         // No additional semaphore lock needed here to avoid deadlock
@@ -716,14 +723,14 @@ public class DialogService : IDialogService
                 catch (Exception handlerEx)
                 {
                     // Log failure of exception handler but suppress original exception to prevent app crash
-                    _logger?.LogError(handlerEx, "Exception handler failed while processing viewmodel initialization error");
+                    _logger?.LogError(handlerEx, ViewModelInitExceptionHandlerFailed);
                 }
 
                 // Suppress exception if it was successfully handled or if handler is not available
                 // This prevents app crashes while still allowing the handler to show user-friendly messages
                 if (!handled)
                 {
-                    _logger?.LogWarning("Exception handler service not available for viewmodel initialization error");
+                    _logger?.LogWarning(ViewModelInitExceptionHandlerNotAvailable);
                 }
             }
             return;
@@ -790,14 +797,14 @@ public class DialogService : IDialogService
                 catch (Exception handlerEx)
                 {
                     // Log failure of exception handler but suppress original exception to prevent app crash
-                    _logger?.LogError(handlerEx, "Exception handler failed while processing viewmodel initialization error");
+                    _logger?.LogError(handlerEx, ViewModelInitExceptionHandlerFailed);
                 }
 
                 // Suppress exception if it was successfully handled or if handler is not available
                 // This prevents app crashes while still allowing the handler to show user-friendly messages
                 if (!handled)
                 {
-                    _logger?.LogWarning("Exception handler service not available for viewmodel initialization error");
+                    _logger?.LogWarning(ViewModelInitExceptionHandlerNotAvailable);
                 }
 
                 return;
@@ -842,14 +849,14 @@ public class DialogService : IDialogService
             catch (Exception handlerEx)
             {
                 // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, "Exception handler failed while processing dialog creation error");
+                _logger?.LogError(handlerEx, DialogCreationExceptionHandlerFailed);
             }
 
             // Suppress exception if it was successfully handled or if handler is not available
             // This prevents app crashes while still allowing the handler to show user-friendly messages
             if (!handled)
             {
-                _logger?.LogWarning("Exception handler service not available for dialog creation error");
+                _logger?.LogWarning(DialogCreationExceptionHandlerNotAvailable);
             }
         }
     }

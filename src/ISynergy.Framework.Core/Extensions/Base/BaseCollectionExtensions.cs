@@ -4,6 +4,8 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
+#pragma warning disable S3776 // cognitive complexity is inherent in DataTable projection with type inspection
+
 namespace ISynergy.Framework.Core.Extensions.Base;
 
 /// <summary>
@@ -29,7 +31,7 @@ internal static class BaseCollectionExtensions
     /// <param name="type">The type.</param>
     /// <returns>DataTable.</returns>
     [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "PropertyInfo.PropertyType is preserved because 'type' is annotated with DynamicallyAccessedMemberTypes.PublicProperties, which preserves all public property types transitively.")]
-    public static DataTable ToDataTableBase(this IEnumerable collection, string name, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type)
+    public static DataTable ToDataTableBase(this IEnumerable collection, string name, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type) // NOSONAR
     {
         var dataTable = new DataTable()
         {

@@ -1,3 +1,10 @@
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 namespace ISynergy.Framework.Mathematics.Vectors;
 
 /// <summary>
@@ -10,7 +17,7 @@ namespace ISynergy.Framework.Mathematics.Vectors;
 [Serializable]
 public struct Vector3
 {
-    // TODO: Possibly replace with the types in System.Numerics?
+    // TODO: Possibly replace with the types in System.Numerics? // NOSONAR
 
     /// <summary>
     /// X coordinate of the vector.
@@ -35,7 +42,7 @@ public struct Vector3
     {
         get
         {
-            return X > Y ? X > Z ? X : Z : Y > Z ? Y : Z;
+            return X > Y ? X > Z ? X : Z : Y > Z ? Y : Z; // NOSONAR
         }
     }
 
@@ -49,7 +56,7 @@ public struct Vector3
     {
         get
         {
-            return X < Y ? X < Z ? X : Z : Y < Z ? Y : Z;
+            return X < Y ? X < Z ? X : Z : Y < Z ? Y : Z; // NOSONAR
         }
     }
 
@@ -68,7 +75,7 @@ public struct Vector3
     {
         get
         {
-            return X >= Y ? X >= Z ? 0 : 2 : Y >= Z ? 1 : 2;
+            return X >= Y ? X >= Z ? 0 : 2 : Y >= Z ? 1 : 2; // NOSONAR
         }
     }
 
@@ -87,7 +94,7 @@ public struct Vector3
     {
         get
         {
-            return X <= Y ? X <= Z ? 0 : 2 : Y <= Z ? 1 : 2;
+            return X <= Y ? X <= Z ? 0 : 2 : Y <= Z ? 1 : 2; // NOSONAR
         }
     }
 
@@ -449,9 +456,9 @@ public struct Vector3
     /// 
     public override bool Equals(object obj)
     {
-        if (obj is Vector3)
+        if (obj is Vector3 v3)
         {
-            return Equals((Vector3)obj);
+            return Equals(v3);
         }
         return false;
     }

@@ -1,6 +1,13 @@
 using System.Collections;
 using System.Text;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Common;
 
 /// <summary>
@@ -10,33 +17,22 @@ namespace ISynergy.Framework.Mathematics.Common;
 /// <typeparam name="T">The type for the non-zero elements in this vector.</typeparam>
 /// 
 [Serializable]
-public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFormattable
+public sealed class Sparse<T> : ICloneable, IList<T>, IList, IFormattable
     where T : IEquatable<T>
 {
-    private int[] indices;
-    private T[] values;
-
     /// <summary>
     ///   Gets or sets the vector of indices indicating the location
     ///   of the non-zero elements contained in this sparse vector.
     /// </summary>
-    /// 
-    public int[] Indices
-    {
-        get { return indices; }
-        set { indices = value; }
-    }
+    ///
+    public int[] Indices { get; set; }
 
     /// <summary>
     ///   Gets or sets the vector of values indicating which non-zero
     ///   value happens at each position indicated in <see cref="Indices"/>.
     /// </summary>
-    /// 
-    public T[] Values
-    {
-        get { return values; }
-        set { values = value; }
-    }
+    ///
+    public T[] Values { get; set; }
 
     /// <summary>
     ///   Creates a sparse vector with zero elements.
@@ -56,22 +52,22 @@ public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFo
     ///   
     public Sparse(int length)
     {
-        indices = new int[length];
-        values = new T[length];
+        Indices = new int[length];
+        Values = new T[length];
     }
 
     /// <summary>
     ///   Creates a sparse vector from a vector of indices
     ///   and a vector of values occuring at those indices.
     /// </summary>
-    /// 
+    ///
     /// <param name="indices">The indices for non-zero entries.</param>
     /// <param name="values">The non-zero values happening at each index.</param>
-    /// 
+    ///
     public Sparse(int[] indices, T[] values)
     {
-        this.indices = indices;
-        this.values = values;
+        Indices = indices;
+        Values = values;
     }
 
     /// <summary>
@@ -134,25 +130,25 @@ public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFo
             }
 
             T[] newValues = new T[Values.Length + 1];
-            int[] newIndices = new int[indices.Length + 1];
+            int[] newIndices = new int[Indices.Length + 1];
 
             int k;
-            for (k = 0; k < indices.Length && indices[k] < i; k++)
+            for (k = 0; k < Indices.Length && Indices[k] < i; k++)
             {
-                newIndices[k] = indices[k];
-                newValues[k] = values[k];
+                newIndices[k] = Indices[k];
+                newValues[k] = Values[k];
             }
             newIndices[k] = i;
             newValues[k] = value;
             k++;
             for (; k < newIndices.Length; k++)
             {
-                newIndices[k] = indices[k - 1];
-                newValues[k] = values[k - 1];
+                newIndices[k] = Indices[k - 1];
+                newValues[k] = Values[k - 1];
             }
 
-            indices = newIndices;
-            values = newValues;
+            Indices = newIndices;
+            Values = newValues;
         }
     }
 
@@ -166,7 +162,7 @@ public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFo
     /// 
     public object Clone()
     {
-        return new Sparse<T>((int[])indices.Clone(), (T[])values.Clone());
+        return new Sparse<T>((int[])Indices.Clone(), (T[])Values.Clone());
     }
 
     /// <summary>
@@ -226,12 +222,12 @@ public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFo
 
     void ICollection<T>.Clear()
     {
-        Array.Clear(values, 0, values.Length);
+        Array.Clear(Values, 0, Values.Length);
     }
 
     bool ICollection<T>.Contains(T item)
     {
-        return values.Contains(item);
+        return Values.Contains(item);
     }
 
     /// <summary>
@@ -241,8 +237,8 @@ public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFo
     /// <param name="arrayIndex">The zero-based index in <paramref name="array" /> at which copying begins.</param>
     public void CopyTo(T[] array, int arrayIndex)
     {
-        for (var i = 0; i < indices.Length; i++)
-            array[arrayIndex + indices[i]] = values[i];
+        for (var i = 0; i < Indices.Length; i++)
+            array[arrayIndex + Indices[i]] = Values[i];
     }
 
     int ICollection<T>.Count
@@ -279,7 +275,7 @@ public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFo
 
     void IList.Clear()
     {
-        Array.Clear(values, 0, values.Length);
+        Array.Clear(Values, 0, Values.Length);
     }
 
     bool IList.Contains(object value)
@@ -325,8 +321,8 @@ public sealed class Sparse<T> : IEnumerable<T>, ICloneable, IList<T>, IList, IFo
 
     void ICollection.CopyTo(Array array, int index)
     {
-        for (var i = 0; i < indices.Length; i++)
-            array.SetValue(values[i], index + indices[i]);
+        for (var i = 0; i < Indices.Length; i++)
+            array.SetValue(Values[i], index + Indices[i]);
     }
 
     int ICollection.Count

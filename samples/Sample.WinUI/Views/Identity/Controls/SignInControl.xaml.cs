@@ -101,28 +101,8 @@ public sealed partial class SignInControl : UserControl
         switch (e.Key)
         {
             case VirtualKey.Enter:
-                //UIElement FocusedElement = Keyboard.FocusedElement as UIElement;
-
-                //if ((FocusedElement is null) == false)
-                //{
-                //    if (FocusedElement.Uid == "Button_Submit" | FocusedElement.Uid == "TextBox_Password")
-                //    {
-                //        if (Button_Submit.Command.CanExecute(null) == true)
-                //        {
-                //            Button_Submit.Command.Execute(null);
-                //        }
-
-                //        e.Handled = true;
-                //    }
-                //    else
-                //    {
-                //        FocusedElement.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-                //        e.Handled = true;
-                //    }
-                //}
                 break;
             case VirtualKey.Escape:
-                //this.Close();
                 e.Handled = true;
                 break;
             default:

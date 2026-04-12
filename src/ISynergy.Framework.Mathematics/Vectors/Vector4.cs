@@ -1,3 +1,10 @@
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 namespace ISynergy.Framework.Mathematics.Vectors;
 
 /// <summary>
@@ -417,7 +424,7 @@ public struct Vector4
     /// <returns>Returns a vector which coordinates are equal to coordinates of the first vector divided by
     /// corresponding coordinates of the second vector.</returns>
     ///
-    public static Vector4 operator /(Vector4 vector1, Vector4 vector2)
+    public static Vector4 operator /(Vector4 vector1, Vector4 vector2) // NOSONAR
     {
         return new Vector4(vector1.X / vector2.X, vector1.Y / vector2.Y,
                             vector1.Z / vector2.Z, vector1.W / vector2.W);
@@ -519,9 +526,9 @@ public struct Vector4
     /// 
     public override bool Equals(object obj)
     {
-        if (obj is Vector4)
+        if (obj is Vector4 v4)
         {
-            return Equals((Vector4)obj);
+            return Equals(v4);
         }
         return false;
     }

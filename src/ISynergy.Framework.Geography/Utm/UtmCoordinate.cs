@@ -78,7 +78,6 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
                 Compute();
             return _scaleFactor;
         }
-        private set { _scaleFactor = value; }
     }
 
     /// <summary>
@@ -93,7 +92,6 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
                 Compute();
             return Angle.RadToDeg(_meridianConvergence);
         }
-        private set { _meridianConvergence = value.Radians; }
     }
 
     /// <summary>
@@ -128,7 +126,7 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
     public override double DistanceTo(EuclidianCoordinate other)
     {
         if (!(other is UtmCoordinate obj) || !Grid.Equals(obj.Grid))
-            throw new ArgumentException();
+            throw new ArgumentException(null, nameof(other));
         return base.DistanceTo(other);
     }
 

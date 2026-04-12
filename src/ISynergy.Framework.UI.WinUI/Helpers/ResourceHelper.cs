@@ -63,7 +63,7 @@ internal static class ResourceHelper
             throw new InvalidOperationException("Resource file not found.");
 
         var bytes = new byte[stream.Length];
-        stream.Read(bytes, 0, bytes.Length);
+        _ = stream.Read(bytes, 0, bytes.Length);
 
         return bytes;
     }

@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.MachineLearning;
 using ISynergy.Framework.Mathematics.Statistics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Optimization.Base;
 
 /// <summary>
@@ -134,7 +141,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
     ///     This method should be implemented by child classes to initialize
     ///     their fields once the <see cref="NumberOfParameters" /> is known.
     /// </summary>
-    protected abstract void Initialize();
+    protected abstract void Initialize(); // NOSONAR
 
     /// <summary>
     ///     Compute model error for a given data set.

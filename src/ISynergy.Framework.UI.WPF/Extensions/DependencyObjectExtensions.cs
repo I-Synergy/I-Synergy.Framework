@@ -31,7 +31,7 @@ public static class DependencyObjectExtensions
             var foundChild = child.FindDescendant<T>();
 
             if (foundChild is not null)
-                return (T)foundChild;
+                return foundChild;
         }
 
         return null;
@@ -50,8 +50,7 @@ public static class DependencyObjectExtensions
             var tmpFoundChild = GetDescendant<T>(childName, child);
             if (tmpFoundChild is not null)
             {
-                var foundChild = tmpFoundChild;
-                return foundChild;
+                return tmpFoundChild;
             }
         }
 
@@ -61,13 +60,13 @@ public static class DependencyObjectExtensions
     private static T? GetDescendant<T>(string childName, DependencyObject child) where T : DependencyObject
     {
         // If the child is not of the request child type child
-        if ((child is T childType) == false)
+        if (child is not T)
         {
             // recursively drill down the tree
             return FindDescendant<T>(child, childName);
         }
 
-        if (string.IsNullOrEmpty(childName) == false)
+        if (!string.IsNullOrEmpty(childName))
         {
             // If the child's name is set for search
             if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName)

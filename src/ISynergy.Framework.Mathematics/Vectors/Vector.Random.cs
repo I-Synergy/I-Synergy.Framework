@@ -2,6 +2,13 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
 using System.Diagnostics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Vectors;
 
 public static partial class Vector
@@ -62,7 +69,7 @@ public static partial class Vector
     {
         if ((int)sampleSize > populationSize)
         {
-            throw new ArgumentOutOfRangeException("size", String.Format(
+            throw new ArgumentOutOfRangeException(nameof(sampleSize), String.Format(
                 "The sample size {0} must be less than the size of the population {1}.",
                 sampleSize, populationSize));
         }
@@ -96,7 +103,7 @@ public static partial class Vector
     {
         if (percentage < 0 || percentage > 1)
         {
-            throw new ArgumentOutOfRangeException("percentage", String.Format(
+            throw new ArgumentOutOfRangeException(nameof(percentage), String.Format(
                 "The sample percentage {0} must be between 0 and 1.", percentage));
         }
 
@@ -144,10 +151,10 @@ public static partial class Vector
     ///   Creates a vector with uniformly distributed random data.
     /// </summary>
     /// 
-    public static double[] Random(int size, double min, double max)
+    public static double[] Random(int size, double min, double max) // NOSONAR
     {
         if (size < 0)
-            throw new ArgumentOutOfRangeException("size", size, "Size must be a positive integer.");
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -164,7 +171,7 @@ public static partial class Vector
     public static int[] Random(int size, int min, int max)
     {
         if (size < 0)
-            throw new ArgumentOutOfRangeException("size", size, "Size must be a positive integer.");
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 

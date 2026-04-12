@@ -241,16 +241,6 @@ public class ProcessInterface : IDisposable
     }
 
     /// <summary>
-    /// Fires the process input event.
-    /// </summary>
-    /// <param name="content">The content.</param>
-    private void FireProcessInputEvent(string content)
-    {
-        //  Get the event and fire it.
-        OnProcessInput?.Invoke(this, new ProcessEventArgs(content));
-    }
-
-    /// <summary>
     /// Fires the process exit event.
     /// </summary>
     /// <param name="code">The code.</param>

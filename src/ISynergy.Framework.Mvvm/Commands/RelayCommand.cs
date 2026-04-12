@@ -58,7 +58,7 @@ public sealed class RelayCommand : BaseRelayCommand
                     var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
                     if (exceptionHandlerService is not null)
                     {
-                        exceptionHandlerService.HandleException(ex);
+                        exceptionHandlerService.HandleException(ex); // NOSONAR
                         handled = true;
                     }
                 }
