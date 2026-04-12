@@ -18,7 +18,7 @@ public sealed class IntegerFormatter : NumericFormatter
         return value.ToString("N0", _culture);
     }
 
-    public static bool IsInteger(decimal value)
+    public bool IsInteger(decimal value)
     {
         return value == Math.Truncate(value);
     }

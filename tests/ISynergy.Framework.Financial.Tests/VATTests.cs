@@ -11,7 +11,7 @@ public class VATTests
     /// <summary>
     /// Defines the test method CalcPriceExclVATTest.
     /// </summary>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(100, 21, 121)]
     [DataRow(0, 21, 0)]
     public void CalculateAmountFromAmountExcludingVATTest(object amount, object percentage, object result)
@@ -23,7 +23,7 @@ public class VATTests
     /// <summary>
     /// Defines the test method CalcPriceInclVATTest.
     /// </summary>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(121, 21, 100)]
     [DataRow(0, 21, 0)]
     public void CalculateAmountFromAmountIncludingVATTest(object amount, object percentage, object result)
@@ -35,7 +35,7 @@ public class VATTests
     /// <summary>
     /// Defines the test method CalcVATExclVATTest.
     /// </summary>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(100, 21, 21)]
     [DataRow(0, 21, 0)]
     public void CalculateVATFromAmountExcludingVATTest(object amount, object percentage, object result)
@@ -47,7 +47,7 @@ public class VATTests
     /// <summary>
     /// Defines the test method CalcVATInclVATTest.
     /// </summary>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(121, 21, 21)]
     [DataRow(0, 21, 0)]
     public void CalculateVATFromAmountIncludingVATTest(object amount, object percentage, object result)

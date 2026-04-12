@@ -26,7 +26,7 @@ public class Vector3Test
         Assert.AreEqual(7, v3.Z);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0, 0, 0, 0, 0)]
     [DataRow(0, 7, 7, 0, 7, 0, 1)]
     [DataRow(0, 0, 7, 0, 7, 0, 2)]
@@ -50,7 +50,7 @@ public class Vector3Test
         Assert.AreEqual(expectedMaxIndex, vector.MaxIndex);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0, 0)]
     [DataRow(1, 0, 0, 1)]
     [DataRow(0, 2, 0, 2)]
@@ -67,7 +67,7 @@ public class Vector3Test
         Assert.AreEqual(vector.Square, norm * norm);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 1, 2, 3, true)]
     [DataRow(-1, -2, -3, -1, -2, -3, true)]
     [DataRow(-1, -2, -3, -1, -2, 3, false)]
@@ -83,7 +83,7 @@ public class Vector3Test
         Assert.AreEqual(expected, vector1.Equals((object)vector2));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4, 5, 6, 5, 7, 9)]
     [DataRow(1, 2, 3, -4, -5, -6, -3, -3, -3)]
     public void AdditionTest(float x1, float y1, float z1, float x2, float y2, float z2,
@@ -100,7 +100,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4, 5, 6, 7)]
     [DataRow(1, 2, 3, -4, -3, -2, -1)]
     public void AdditionWithConstTest(float x, float y, float z, float value,
@@ -116,7 +116,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4, 5, 6, -3, -3, -3)]
     [DataRow(1, 2, 3, -4, -5, -6, 5, 7, 9)]
     public void SubtractionTest(float x1, float y1, float z1, float x2, float y2, float z2,
@@ -133,7 +133,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4, -3, -2, -1)]
     [DataRow(1, 2, 3, -4, 5, 6, 7)]
     public void SubtractionWithConstTest(float x, float y, float z, float value,
@@ -149,7 +149,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4, 5, 6, 4, 10, 18)]
     [DataRow(1, 2, 3, -4, -5, -6, -4, -10, -18)]
     public void MultiplicationTest(float x1, float y1, float z1, float x2, float y2, float z2,
@@ -166,7 +166,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4, 4, 8, 12)]
     [DataRow(1, 2, 3, -4, -4, -8, -12)]
     public void MultiplicationWithConstTest(float x, float y, float z, float value,
@@ -182,7 +182,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1f, 2f, 3f, 1f, 4f, 2f, 1f, 0.5f, 1.5f)]
     [DataRow(1f, 2f, 3f, -1f, -4f, -2f, -1f, -0.5f, -1.5f)]
     public void DivisionTest(float x1, float y1, float z1, float x2, float y2, float z2,
@@ -199,7 +199,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1f, 2f, 3f, 2f, 0.5f, 1f, 1.5f)]
     [DataRow(1f, 2f, 3f, -2f, -0.5f, -1f, -1.5f)]
     public void DivisionWithConstTest(float x, float y, float z, float value,
@@ -215,7 +215,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 0, 0, 1, 0, 0)]
     [DataRow(0, 1, 0, 0, 1, 0)]
     [DataRow(0, 0, 1, 0, 0, 1)]
@@ -233,7 +233,7 @@ public class Vector3Test
         Assert.AreEqual(norm1, norm2);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 0, 0, 1, 0, 0)]
     [DataRow(0, 0, 0, 0, 0, 0)]
     [DataRow(2f, 4f, 8f, 0.5f, 0.25f, 0.125f)]
@@ -249,7 +249,7 @@ public class Vector3Test
         Assert.IsTrue(expectedResult == result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 0, 0, 0, 0)]
     [DataRow(1, 2, 3, 1, 1, 1, 6)]
     [DataRow(1, 2, 3, 3, 2, 1, 10)]
@@ -262,7 +262,7 @@ public class Vector3Test
         Assert.AreEqual(expectedResult, Vector3.Dot(vector1, vector2));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 0, 0, 0, 1, 0, 0, 0, 1)]
     [DataRow(1, 1, 1, 1, 1, 1, 0, 0, 0)]
     [DataRow(1, 2, 3, 4, 5, 6, -3, 6, -3)]

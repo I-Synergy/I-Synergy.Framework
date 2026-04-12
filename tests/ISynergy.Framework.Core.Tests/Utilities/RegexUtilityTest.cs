@@ -13,7 +13,7 @@ public class RegexUtilityTest
     /// </summary>
     /// <param name="mask"></param>
     /// <param name="result"></param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("0", @"\d")]
     [DataRow("9", @"[\d]?")]
     [DataRow("#", @"[\d+-]?")]
@@ -43,7 +43,7 @@ public class RegexUtilityTest
     /// </summary>
     /// <param name="mask"></param>
     /// <param name="value"></param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("000000", "123456")]
     [DataRow("000000", "457890")]
     [DataRow("0000>LL", "5981XC")]
@@ -61,7 +61,7 @@ public class RegexUtilityTest
     /// </summary>
     /// <param name="mask"></param>
     /// <param name="value"></param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("000000", "1234")]
     [DataRow("000000", "abcdef")]
     [DataRow("0000>LL", "XC5981")]

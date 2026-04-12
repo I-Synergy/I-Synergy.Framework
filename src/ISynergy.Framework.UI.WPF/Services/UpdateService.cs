@@ -138,9 +138,7 @@ internal class UpdateService : IUpdateService
 
     protected async Task GetUpdateAsync(int applicationId)
     {
-        try
-        {
-            if (!string.IsNullOrEmpty(_updateOptions.Filename) && await NetworkUtility.IsInternetConnectionAvailable())
+        if (!string.IsNullOrEmpty(_updateOptions.Filename) && await NetworkUtility.IsInternetConnectionAvailable())
             {
                 var updatePath = Path.Combine(Path.GetTempPath(), _updateOptions.Filename);
 
@@ -165,6 +163,5 @@ internal class UpdateService : IUpdateService
                     _languageService.GetString("NoInternetConnectionAvailable"),
                     _languageService.GetString("CannotInstallUpdate")));
             }
-        }
     }
 }

@@ -14,7 +14,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"C:\Temp", 0)]
     [DataRow(@"\\localhost\c$\temp", 1)]
     [DataRow(@"\\SERVER\Temp", 1)]
@@ -42,7 +42,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\")]
     [DataRow(@"C:\Temp", @"C:\")]
     [DataRow(@"\\localhost\c$\temp", null)]
@@ -71,7 +71,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\")]
     [DataRow(@"C:\Temp", @"C:\")]
     [DataRow(@"\\localhost\c$\temp", @"\\localhost\c$")]
@@ -100,7 +100,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\Temp\Sub-Folder")]
     [DataRow(@"C:\Temp", @"C:\Temp")]
     [DataRow(@"\\localhost\c$\temp", @"\\localhost\c$\temp")]
@@ -129,7 +129,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     //[DataRow(@"Z:\Temp\Sub-Folder", true)]
     [DataRow(@"C:\Temp", true)]
     [DataRow(@"\\localhost\c$\temp", true)]
