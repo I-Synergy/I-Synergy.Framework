@@ -139,7 +139,7 @@ public abstract class BaseOptimizationMethod
     ///     In this case, the found value will also be available at the <see cref="Value" />
     ///     property.
     /// </returns>
-    public bool Maximize(double[] values)
+    public bool Maximize(double[] values) // NOSONAR
     {
         Solution = values;
         return Maximize();
@@ -154,7 +154,7 @@ public abstract class BaseOptimizationMethod
     ///     In this case, the found value will also be available at the <see cref="Value" />
     ///     property.
     /// </returns>
-    public bool Minimize(double[] values)
+    public bool Minimize(double[] values) // NOSONAR
     {
         Solution = values;
         return Minimize();

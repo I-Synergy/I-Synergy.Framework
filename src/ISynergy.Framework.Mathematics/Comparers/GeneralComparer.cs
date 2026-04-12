@@ -45,7 +45,7 @@ public enum ComparerDirection
 public class GeneralComparer : IComparer<double>, IComparer<int>
 {
     private readonly Func<double, double> map;
-    private int direction = 1;
+    private int direction;
 
     /// <summary>
     ///     Constructs a new General Comparer.
@@ -137,7 +137,7 @@ public class GeneralComparer : IComparer<double>, IComparer<int>
 /// <seealso cref="CustomComparer{T}" />
 public class GeneralComparer<T> : IComparer<T> where T : IComparable<T>
 {
-    private int direction = 1;
+    private int direction;
 
     /// <summary>
     ///     Constructs a new General Comparer.

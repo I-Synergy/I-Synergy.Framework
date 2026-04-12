@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Mathematics.Enumerations;
 ///   Vector types.
 /// </summary>
 /// 
-public enum VectorType : int
+public enum VectorType
 {
     /// <summary>
     ///   The vector is a row vector, meaning it should have a size equivalent 

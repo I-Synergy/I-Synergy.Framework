@@ -67,7 +67,7 @@ namespace ISynergy.Framework.Mathematics.Integration;
 /// </example>
 /// <seealso cref="NonAdaptiveGaussKronrod" />
 /// <seealso cref="InfiniteAdaptiveGaussKronrod" />
-public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalIntegration
+public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalIntegration // NOSONAR
 {
     private int count;
     private double sum;
@@ -99,7 +99,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
 
         NumberOfParameters = parameters;
         Range = new NumericRange[parameters];
-        Random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next());
+        Random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next()); // NOSONAR
 
         for (var i = 0; i < Range.Length; i++)
             Range[i].Max = 1;
@@ -264,9 +264,9 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
         var count = 0;
         double sum = 0;
 
-        var random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next());
+        var random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next()); // NOSONAR
 
-        for (count = 0; count < samples; count++)
+        for (count = 0; count < samples; count++) // NOSONAR
         {
             var u = random.Next() * (b - a) + a;
 

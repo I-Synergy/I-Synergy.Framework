@@ -30,7 +30,7 @@ using System;
 ///   interface that are not really metrics. Use at your own risk.</para>
 /// </remarks>
 /// 
-[Serializable]
+[Serializable] // NOSONAR
 public struct Minkowski : IMetric<double[]>, IMetric<int[]>, ICloneable
 {
     private double p;

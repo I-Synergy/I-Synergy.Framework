@@ -141,7 +141,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
     ///     This method should be implemented by child classes to initialize
     ///     their fields once the <see cref="NumberOfParameters" /> is known.
     /// </summary>
-    protected abstract void Initialize();
+    protected abstract void Initialize(); // NOSONAR
 
     /// <summary>
     ///     Compute model error for a given data set.

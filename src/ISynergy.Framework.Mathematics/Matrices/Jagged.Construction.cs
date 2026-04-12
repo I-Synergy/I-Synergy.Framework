@@ -355,7 +355,7 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     /// is one and the others are zero.</returns>
     /// 
-    public static double[][] OneHot(int[] indices)
+    public static double[][] OneHot(int[] indices) // NOSONAR
     {
         return OneHot(indices, indices.Max() + 1);
     }

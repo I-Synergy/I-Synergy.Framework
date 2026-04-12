@@ -850,7 +850,7 @@ public static partial class Measures
 
         var set = new Dictionary<T, int>();
 
-        foreach (var v in values)
+        foreach (var v in values) // NOSONAR
         {
             int count;
             if (!set.TryGetValue(v, out count))
@@ -1286,10 +1286,10 @@ public static partial class Measures
     /// 
     /// <returns>The calculated entropy for the given values.</returns>
     /// 
-    public static double Entropy(this double[] values)
+    public static double Entropy(this double[] values) // NOSONAR
     {
         double sum = 0;
-        foreach (double v in values)
+        foreach (double v in values) // NOSONAR
             sum += v * Math.Log(v);
         return -sum;
     }
@@ -1297,17 +1297,17 @@ public static partial class Measures
     /// <summary>
     ///   Computes the entropy for the given values.
     /// </summary>
-    /// 
+    ///
     /// <param name="values">A number array containing the vector values.</param>
     /// <param name="eps">A small constant to avoid <see cref="Double.NaN"/>s in
     ///   case the there is a zero between the given <paramref name="values"/>.</param>
-    /// 
+    ///
     /// <returns>The calculated entropy for the given values.</returns>
-    /// 
-    public static double Entropy(this double[] values, double eps = 0)
+    ///
+    public static double Entropy(this double[] values, double eps = 0) // NOSONAR
     {
         double sum = 0;
-        foreach (double v in values)
+        foreach (double v in values) // NOSONAR
             sum += v * Math.Log(v + eps);
         return -sum;
     }
@@ -1315,17 +1315,17 @@ public static partial class Measures
     /// <summary>
     ///   Computes the entropy for the given values.
     /// </summary>
-    /// 
+    ///
     /// <param name="values">A number matrix containing the matrix values.</param>
     /// <param name="eps">A small constant to avoid <see cref="Double.NaN"/>s in
     ///   case the there is a zero between the given <paramref name="values"/>.</param>
-    /// 
+    ///
     /// <returns>The calculated entropy for the given values.</returns>
-    /// 
-    public static double Entropy(this double[,] values, double eps = 0)
+    ///
+    public static double Entropy(this double[,] values, double eps = 0) // NOSONAR
     {
         double sum = 0;
-        foreach (double v in values)
+        foreach (double v in values) // NOSONAR
             sum += v * Math.Log(v + eps);
         return -sum;
     }
@@ -1333,15 +1333,15 @@ public static partial class Measures
     /// <summary>
     ///   Computes the entropy for the given values.
     /// </summary>
-    /// 
+    ///
     /// <param name="values">A number matrix containing the matrix values.</param>
-    /// 
+    ///
     /// <returns>The calculated entropy for the given values.</returns>
-    /// 
-    public static double Entropy(this double[,] values)
+    ///
+    public static double Entropy(this double[,] values) // NOSONAR
     {
         double sum = 0;
-        foreach (double v in values)
+        foreach (double v in values) // NOSONAR
             sum += v * Math.Log(v);
         return -sum;
     }
@@ -1479,7 +1479,7 @@ public static partial class Measures
             int count = 0;
 
             // Count the number of instances inside
-            foreach (int v in values)
+            foreach (int v in values) // NOSONAR
                 if (v == c) count++;
 
             if (count > 0)

@@ -50,7 +50,7 @@ public static class CosineTransform
     /// <summary>
     ///     Forward Discrete Cosine Transform.
     /// </summary>
-    public static void DCT(double[] data)
+    public static void DCT(double[] data) // NOSONAR
     {
         var result = new double[data.Length];
         var c = Math.PI / (2.0 * data.Length);

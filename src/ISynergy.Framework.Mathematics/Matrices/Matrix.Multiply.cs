@@ -79,7 +79,7 @@ public static partial class Elementwise
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[,] Multiply(this double[,] a, double[,] b)
+    public static double[,] Multiply(this double[,] a, double[,] b) // NOSONAR
     {
         return Multiply(a, b, MatrixCreateAs<double, double>(a));
     }
@@ -322,7 +322,7 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[,] Multiply(this double[,] a, double[,] b, double[,] result)
+    public static double[,] Multiply(this double[,] a, double[,] b, double[,] result) // NOSONAR
     {
         check<double, double, double>(a: a, b: b, result: result);
         if (a.Length == 0)
@@ -603,7 +603,6 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         int rows = b.GetLength(0);
-        int cols = b.GetLength(1);
 
         for (var j = 0; j < rows; j++)
             result[j, j] = (double)((double)a * (double)b[j, j]);
@@ -622,7 +621,6 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         int rows = b.GetLength(0);
-        int cols = b.GetLength(1);
 
         for (var j = 0; j < rows; j++)
             result[j, j] = (double)((double)a[j] * (double)b[j, j]);
@@ -641,7 +639,6 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         int rows = a.GetLength(0);
-        int cols = a.GetLength(1);
 
         for (var j = 0; j < rows; j++)
             result[j, j] = (double)((double)a[j, j] * (double)b);
@@ -659,8 +656,7 @@ public static partial class Elementwise
     public static double[,] MultiplyWithDiagonal(this double[,] a, double[] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
-        int rows = b.GetLength(0);
-        int cols = b.GetLength(1);
+        int rows = b.Length;
 
         for (var j = 0; j < rows; j++)
             result[j, j] = (double)((double)a[j, j] * (double)b[j]);

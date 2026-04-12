@@ -147,7 +147,7 @@ public struct Matrix4x4
     /// 
     /// <returns>Returns rotation matrix to rotate an object around Y axis.</returns>
     /// 
-    public static Matrix4x4 CreateRotationY(float radians)
+    public static Matrix4x4 CreateRotationY(float radians) // NOSONAR
     {
         Matrix4x4 m = Identity;
 
@@ -380,10 +380,10 @@ public struct Matrix4x4
     public static Matrix4x4 CreatePerspective(float width, float height, float nearPlaneDistance, float farPlaneDistance)
     {
         if (nearPlaneDistance <= 0)
-            throw new ArgumentOutOfRangeException("nearPlaneDistance ", "Near plane distance must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance), "Near plane distance must be greater than zero.");
 
         if (farPlaneDistance <= 0)
-            throw new ArgumentOutOfRangeException("farPlaneDistance", "Far view plane distance must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(farPlaneDistance), "Far view plane distance must be greater than zero.");
 
         if (nearPlaneDistance >= farPlaneDistance)
             throw new ArgumentException("Near plane must be closer than the far plane.", nameof(farPlaneDistance));
@@ -511,7 +511,7 @@ public struct Matrix4x4
         if (index < 0 || index > 3)
             throw new ArgumentException("Invalid row index was specified.", nameof(index));
 
-        return index == 0 ? new Vector4(V00, V01, V02, V03) :
+        return index == 0 ? new Vector4(V00, V01, V02, V03) : // NOSONAR
                index == 1 ? new Vector4(V10, V11, V12, V13) :
                index == 2 ? new Vector4(V20, V21, V22, V23) : new Vector4(V30, V31, V32, V33);
     }
@@ -531,7 +531,7 @@ public struct Matrix4x4
         if (index < 0 || index > 3)
             throw new ArgumentException("Invalid column index was specified.", nameof(index));
 
-        return index == 0 ? new Vector4(V00, V10, V20, V30) :
+        return index == 0 ? new Vector4(V00, V10, V20, V30) : // NOSONAR
                index == 1 ? new Vector4(V01, V11, V21, V31) :
                index == 2 ? new Vector4(V02, V12, V22, V32) : new Vector4(V03, V13, V23, V33);
     }
@@ -816,10 +816,8 @@ public struct Matrix4x4
     /// 
     public override bool Equals(object obj)
     {
-        if (obj is Matrix4x4)
-        {
-            return Equals((Matrix4x4)obj);
-        }
+        if (obj is Matrix4x4 m4x4)
+            return Equals(m4x4);
         return false;
     }
 

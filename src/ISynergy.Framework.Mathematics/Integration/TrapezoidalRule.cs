@@ -75,7 +75,7 @@ namespace ISynergy.Framework.Mathematics.Integration;
 /// <seealso cref="NonAdaptiveGaussKronrod" />
 /// <seealso cref="InfiniteAdaptiveGaussKronrod" />
 /// <seealso cref="MonteCarloIntegration" />
-public class TrapezoidalRule : INumericalIntegration, IUnivariateIntegration
+public class TrapezoidalRule : IUnivariateIntegration
 {
     private NumericRange range;
 

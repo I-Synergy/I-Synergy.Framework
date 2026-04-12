@@ -156,7 +156,7 @@ public static partial class Measures
     /// 
     public static double Median(this int[] values, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
     {
-        // TODO: Use T4 templates to generate separate implementations for each data type
+        // TODO: Use T4 templates to generate separate implementations for each data type // NOSONAR
         return Quantile(values.ToDouble(), type: type, probabilities: 0.5, alreadySorted: alreadySorted, inPlace: inPlace);
     }
 

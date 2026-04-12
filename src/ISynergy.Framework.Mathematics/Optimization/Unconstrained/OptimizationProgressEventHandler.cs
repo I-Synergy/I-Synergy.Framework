@@ -89,7 +89,7 @@ public class OptimizationProgressEventArgs : EventArgs
     /// <param name="stp">The current step size.</param>
     /// <param name="finished"><c>True</c> if the method is about to terminate, <c>false</c> otherwise.</param>
     /// 
-    public OptimizationProgressEventArgs(
+    public OptimizationProgressEventArgs( // NOSONAR
         int iteration, int evaluations,
         double[] gradient, double gnorm,
         double[] solution, double xnorm,

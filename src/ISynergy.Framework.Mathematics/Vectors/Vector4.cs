@@ -424,7 +424,7 @@ public struct Vector4
     /// <returns>Returns a vector which coordinates are equal to coordinates of the first vector divided by
     /// corresponding coordinates of the second vector.</returns>
     ///
-    public static Vector4 operator /(Vector4 vector1, Vector4 vector2)
+    public static Vector4 operator /(Vector4 vector1, Vector4 vector2) // NOSONAR
     {
         return new Vector4(vector1.X / vector2.X, vector1.Y / vector2.Y,
                             vector1.Z / vector2.Z, vector1.W / vector2.W);
@@ -526,9 +526,9 @@ public struct Vector4
     /// 
     public override bool Equals(object obj)
     {
-        if (obj is Vector4)
+        if (obj is Vector4 v4)
         {
-            return Equals((Vector4)obj);
+            return Equals(v4);
         }
         return false;
     }

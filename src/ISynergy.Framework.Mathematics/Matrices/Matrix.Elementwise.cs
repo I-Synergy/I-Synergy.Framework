@@ -261,7 +261,7 @@ public static partial class Matrix
     /// <param name="value">A matrix.</param>
     /// <param name="y">A power.</param>
     /// 
-    public static double[,] SignedPow(this double[,] value, double y)
+    public static double[,] SignedPow(this double[,] value, double y) // NOSONAR
     {
         return SignedPow(value, y, MatrixCreateAs<double, double>(value));
     }
@@ -1016,11 +1016,6 @@ public static partial class Matrix
         return result;
     }
 
-    private static TOutput[] VectorCreateAs<TInput, TOutput>(TInput[] vector)
-    {
-        return new TOutput[vector.Length];
-    }
-
     private static TOutput[,] MatrixCreateAs<TInput, TOutput>(TInput[,] matrix)
     {
         return new TOutput[matrix.GetLength(0), matrix.GetLength(1)];
@@ -1031,19 +1026,6 @@ public static partial class Matrix
         var r = new TOutput[matrix.Length][];
         for (int i = 0; i < r.Length; i++)
             r[i] = new TOutput[matrix[i].Length];
-        return r;
-    }
-
-    private static TOutput[,] MatrixCreateAs<TInput, TOutput>(TInput[][] matrix)
-    {
-        return new TOutput[matrix.Length, matrix[0].Length];
-    }
-
-    private static TOutput[][] JaggedCreateAs<TInput, TOutput>(TInput[,] matrix)
-    {
-        var r = new TOutput[matrix.GetLength(0)][];
-        for (int i = 0; i < r.Length; i++)
-            r[i] = new TOutput[matrix.GetLength(1)];
         return r;
     }
 }

@@ -202,7 +202,7 @@ public static partial class Vector
     /// 
     [RequiresUnreferencedCode("Calls OneHot<T>(int, T[]) which uses reflection-based type conversion.")]
     [RequiresDynamicCode("Calls OneHot<T>(int, T[]) which requires dynamic code generation.")]
-    public static T[] OneHot<T>(bool mask)
+    public static T[] OneHot<T>(bool mask) // NOSONAR
     {
         return OneHot<T>(mask, new T[2]);
     }
@@ -217,7 +217,7 @@ public static partial class Vector
     /// 
     [RequiresUnreferencedCode("Calls OneHot<T>(int, T[]) which uses reflection-based type conversion.")]
     [RequiresDynamicCode("Calls OneHot<T>(int, T[]) which requires dynamic code generation.")]
-    public static T[] OneHot<T>(bool mask, T[] result)
+    public static T[] OneHot<T>(bool mask, T[] result) // NOSONAR
     {
         return OneHot<T>(mask ? 0 : 1, result);
     }
@@ -337,7 +337,7 @@ public static partial class Vector
     /// 
     [RequiresUnreferencedCode("Calls Constants.One<T>() which uses reflection-based type conversion.")]
     [RequiresDynamicCode("Calls Constants.One<T>() which requires dynamic code generation.")]
-    public static T[] KHot<T>(bool[] mask, T[] result)
+    public static T[] KHot<T>(bool[] mask, T[] result) // NOSONAR
     {
         var one = Constants.One<T>();
         for (var i = 0; i < mask.Length; i++)

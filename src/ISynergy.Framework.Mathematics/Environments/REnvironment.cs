@@ -19,7 +19,7 @@ public abstract class REnvironment
     ///   Creates a new vector.
     /// </summary>
     /// 
-    protected vec c(params double[] values)
+    protected static vec c(params double[] values) // NOSONAR
     {
         return values;
     }
@@ -28,7 +28,7 @@ public abstract class REnvironment
     ///   Creates a new matrix.
     /// </summary>
     /// 
-    protected mat matrix(double[] values, int rows, int cols)
+    protected static mat matrix(double[] values, int rows, int cols) // NOSONAR
     {
         return Matrix.Reshape(values, rows, cols, MatrixOrder.FortranColumnMajor);
     }
@@ -49,13 +49,13 @@ public abstract class REnvironment
         /// <summary>
         ///   Inner vector object
         /// </summary>
-        /// 
-        public double[] vector;
+        ///
+        public double[] vector { get; set; } // NOSONAR
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="vec"/> class.
         /// </summary>
-        /// 
+        ///
         public vec(double[] values)
         {
             this.vector = values;
@@ -119,13 +119,13 @@ public abstract class REnvironment
         /// <summary>
         ///   Inner matrix object.
         /// </summary>
-        /// 
-        public double[,] matrix;
+        ///
+        public double[,] matrix { get; set; } // NOSONAR
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="mat"/> class.
         /// </summary>
-        /// 
+        ///
         public mat(double[,] values)
         {
             this.matrix = values;

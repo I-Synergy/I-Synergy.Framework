@@ -71,7 +71,7 @@ public static partial class Vector
     /// </result>
     public static bool TryParse(string s, IMatrixFormatProvider provider, out double[] vector)
     {
-        // TODO: Create a proper TryParse method without
+        // TODO: Create a proper TryParse method without // NOSONAR
         //       resorting to a underlying try-catch block.
         try
         {

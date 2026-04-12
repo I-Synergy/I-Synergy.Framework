@@ -43,4 +43,13 @@ public class NonSymmetricMatrixException : InvalidOperationException
     public NonSymmetricMatrixException(string message, Exception innerException) :
         base(message, innerException)
     { }
+
+#pragma warning disable SYSLIB0051
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="NonSymmetricMatrixException"/> class.
+    /// </summary>
+    /// <param name="info">The serialization info.</param>
+    /// <param name="context">The streaming context.</param>
+    protected NonSymmetricMatrixException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+#pragma warning restore SYSLIB0051
 }
