@@ -61,7 +61,7 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 **Do NOT use the built-in `TaskCreate`/`TaskUpdate`/`TaskList` tools** — they store data globally in `~/.claude/todos/` and are not visible in the repository. Instead, use local markdown files in `.claude/progress/` for tracking task progress.
 
 ### Session Start
-1. Run `phantom_codebase_query` to recall relevant context
+1. Read [`.claude/session-context.md`](session-context.md) FIRST to recall prior context
 2. Check `.claude/progress/` for any in-flight tasks — resume from there
 
 ### Non-trivial Tasks (3+ steps / multi-file)
@@ -71,10 +71,10 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 4. **On completion (mandatory, not optional):**
    - Edit the progress file: add `**Status:** DONE` near the top
    - Move the file to `.claude/completed/`
-   - Feed key decisions and outcomes to Phantom via `phantom_ask`
+   - Update [`.claude/session-context.md`](session-context.md) with decisions, open questions, and next actions
    - **Do not end the session without completing this step**
 
-> **Why this matters:** Files left in `.claude/progress/` are treated as in-progress work in future sessions. Phantom + progress files replace the old session-handoff.md approach.
+> **Why this matters:** Files left in `.claude/progress/` are treated as in-progress work in future sessions.
 
 **When delegating to subagents**, include explicit progress file instructions — subagents do not inherit this CLAUDE.md.
 
@@ -88,15 +88,6 @@ These cause bugs if violated. Full examples in [`.claude/reference/critical-rule
 | File/codebase exploration | `Explore` |
 | Implementation planning | `Plan` |
 | Shell commands, git, build | `Bash` |
-
-## Phantom Knowledge Tracking
-
-Phantom (MCP) is the persistent knowledge base for this repository. It accumulates architectural decisions, completed work, conventions, and history across sessions.
-
-- **After completing a task:** feed key decisions and outcomes via `phantom_ask`
-- **At session start:** use `phantom_codebase_query` to recall context before re-exploring the codebase
-- **After significant refactors:** also update `.claude/completed/` and feed to Phantom
-- GitHub integration is not yet configured (no `gh` CLI token)
 
 ## Work-Type Context Files
 

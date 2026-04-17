@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Sample.EventSourcing.Web": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7201;http://localhost:5201"
+    }
+  }
+}

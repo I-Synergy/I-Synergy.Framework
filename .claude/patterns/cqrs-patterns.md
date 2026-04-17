@@ -553,13 +553,15 @@ public static class ServiceCollectionExtensions
     {
         var assembly = typeof(ServiceCollectionExtensions).Assembly;
 
-        // Register CQRS handlers
+        // Register CQRS handlers (reflection-based — NOT AOT-safe)
         services.AddCQRS().AddHandlers(assembly);
 
         return services;
     }
 }
 ```
+
+> **AOT publishing:** `AddHandlers(assembly)` uses reflection and is marked `[RequiresUnreferencedCode]`. For projects with `<PublishAot>true</PublishAot>` or `<IsAotCompatible>true</IsAotCompatible>`, use the source-generated registration from `ISynergy.Framework.CQRS.SourceGenerator` instead — it emits an `AddCQRSHandlers()` extension method at compile time that requires no runtime assembly scanning.
 
 ---
 

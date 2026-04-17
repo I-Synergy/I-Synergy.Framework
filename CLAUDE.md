@@ -747,7 +747,7 @@ performance/                           # Performance benchmarks
 - **Commands/Queries**: Immutable records inheriting from ICommand/IQuery
 - **Handlers**: Implement ICommandHandler/IQueryHandler with structured logging
 - **ViewModels**: Inherit from ViewModelBase or ViewModelNavigation<T>
-- **Validation**: Use guard clauses and FluentValidation
+- **Validation**: Use guard clauses and Data Annotations + `IValidatableObject`
 - **Events**: Use domain events for cross-aggregate communication
 
 ### When Uncertain
