@@ -1,12 +1,12 @@
 {
   "profiles": {
-    "Sample.Automation": {
+    "Sample.Blazor": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:7101;http://localhost:5101"
+      "applicationUrl": "https://localhost:7102;http://localhost:5102"
     }
   }
 }
