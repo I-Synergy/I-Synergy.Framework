@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
 		<ProjectReference Include="..\..\src\ISynergy.Framework.EntityFramework\ISynergy.Framework.EntityFramework.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.AspNetCore.Performance\ISynergy.Framework.AspNetCore.Performance.csproj" />
 	</ItemGroup>
 
 </Project>
