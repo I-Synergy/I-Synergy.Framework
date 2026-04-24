@@ -1,0 +1,225 @@
+// =============================================================================
+// CREATE COMMAND
+// =============================================================================
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Create{Entity}/Create{Entity}Command.cs
+
+using ISynergy.Framework.CQRS.Commands;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Create{Entity};
+
+/// <summary>
+/// Command to create a new {entity}.
+/// </summary>
+public sealed record Create{Entity}Command(
+    string Description,
+    DateTimeOffset StartingDate,
+    DateTimeOffset EndingDate) : ICommand<Create{Entity}Response>;
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Create{Entity}/Create{Entity}Response.cs
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Create{Entity};
+
+/// <summary>
+/// Response containing the created {entity} identifier.
+/// </summary>
+public sealed record Create{Entity}Response(Guid {Entity}Id);
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Create{Entity}/Create{Entity}CommandHandler.cs
+
+using ISynergy.Data;
+using ISynergy.Framework.CQRS.Abstractions.Commands;
+using Microsoft.Extensions.Logging;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Create{Entity};
+
+/// <summary>
+/// Handles the creation of a new {entity}.
+/// </summary>
+public sealed class Create{Entity}CommandHandler(
+    DataContext dataContext,
+    ILogger<Create{Entity}CommandHandler> logger)
+    : ICommandHandler<Create{Entity}Command, Create{Entity}Response>
+{
+    /// <inheritdoc />
+    public async Task<Create{Entity}Response> HandleAsync(
+        Create{Entity}Command command,
+        CancellationToken cancellationToken = default)
+    {
+        logger.LogInformation("Creating {entity} with description {Description}", command.Description);
+
+        var entity = new Entities.{Domain}.{Entity}
+        {
+            {Entity}Id = Guid.NewGuid(),
+            Description = command.Description,
+            StartingDate = command.StartingDate,
+            EndingDate = command.EndingDate
+        };
+
+        dataContext.{Entities}.Add(entity);
+        var rowsAffected = await dataContext.SaveChangesAsync(cancellationToken);
+
+        if (rowsAffected > 0)
+        {
+            logger.LogInformation("Successfully created {entity} {Id}", entity.{Entity}Id);
+            return new Create{Entity}Response(entity.{Entity}Id);
+        }
+
+        logger.LogWarning("Failed to create {entity} - no rows affected");
+        throw new InvalidOperationException("Failed to create {entity}");
+    }
+}
+
+
+// =============================================================================
+// UPDATE COMMAND
+// =============================================================================
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Update{Entity}/Update{Entity}Command.cs
+
+using ISynergy.Framework.CQRS.Commands;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Update{Entity};
+
+/// <summary>
+/// Command to update an existing {entity}.
+/// </summary>
+public sealed record Update{Entity}Command(
+    Guid {Entity}Id,
+    string Description,
+    DateTimeOffset StartingDate,
+    DateTimeOffset EndingDate) : ICommand<Update{Entity}Response>;
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Update{Entity}/Update{Entity}Response.cs
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Update{Entity};
+
+/// <summary>
+/// Response indicating update success.
+/// </summary>
+public sealed record Update{Entity}Response(bool Success);
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Update{Entity}/Update{Entity}CommandHandler.cs
+
+using ISynergy.Data;
+using ISynergy.Framework.CQRS.Abstractions.Commands;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Update{Entity};
+
+/// <summary>
+/// Handles updating an existing {entity}.
+/// </summary>
+public sealed class Update{Entity}CommandHandler(
+    DataContext dataContext,
+    ILogger<Update{Entity}CommandHandler> logger)
+    : ICommandHandler<Update{Entity}Command, Update{Entity}Response>
+{
+    /// <inheritdoc />
+    public async Task<Update{Entity}Response> HandleAsync(
+        Update{Entity}Command command,
+        CancellationToken cancellationToken = default)
+    {
+        logger.LogInformation("Updating {entity} {Id}", command.{Entity}Id);
+
+        var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == command.{Entity}Id, cancellationToken);
+
+        if (entity is null)
+        {
+            logger.LogWarning("{Entity} {Id} not found", command.{Entity}Id);
+            throw new InvalidOperationException("{Entity} " + command.{Entity}Id + " not found");
+        }
+
+        entity.Description = command.Description;
+        entity.StartingDate = command.StartingDate;
+        entity.EndingDate = command.EndingDate;
+
+        // No .Update() call needed — EF Core change tracker detects mutations on tracked entities
+        var rowsAffected = await dataContext.SaveChangesAsync(cancellationToken);
+
+        if (rowsAffected > 0)
+        {
+            logger.LogInformation("Successfully updated {entity} {Id}", command.{Entity}Id);
+            return new Update{Entity}Response(true);
+        }
+
+        logger.LogWarning("{Entity} {Id} not found or no changes made", command.{Entity}Id);
+        throw new InvalidOperationException("{Entity} not found or no changes made");
+    }
+}
+
+
+// =============================================================================
+// DELETE COMMAND
+// =============================================================================
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Delete{Entity}/Delete{Entity}Command.cs
+
+using ISynergy.Framework.CQRS.Commands;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Delete{Entity};
+
+/// <summary>
+/// Command to delete an {entity}.
+/// </summary>
+public sealed record Delete{Entity}Command(Guid {Entity}Id) : ICommand<Delete{Entity}Response>;
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Delete{Entity}/Delete{Entity}Response.cs
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Delete{Entity};
+
+/// <summary>
+/// Response indicating deletion success.
+/// </summary>
+public sealed record Delete{Entity}Response(bool Success);
+
+
+// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Commands/Delete{Entity}/Delete{Entity}CommandHandler.cs
+
+using ISynergy.Data;
+using ISynergy.Framework.CQRS.Abstractions.Commands;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands.Delete{Entity};
+
+/// <summary>
+/// Handles deleting an {entity}.
+/// </summary>
+public sealed class Delete{Entity}CommandHandler(
+    DataContext dataContext,
+    ILogger<Delete{Entity}CommandHandler> logger)
+    : ICommandHandler<Delete{Entity}Command, Delete{Entity}Response>
+{
+    /// <inheritdoc />
+    public async Task<Delete{Entity}Response> HandleAsync(
+        Delete{Entity}Command command,
+        CancellationToken cancellationToken = default)
+    {
+        var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == command.{Entity}Id, cancellationToken);
+
+        if (entity is null)
+        {
+            logger.LogWarning("{Entity} {Id} not found", command.{Entity}Id);
+            throw new InvalidOperationException($"{{Entity}} {command.{Entity}Id} not found");
+        }
+
+        dataContext.{Entities}.Remove(entity);
+        var rowsAffected = await dataContext.SaveChangesAsync(cancellationToken);
+
+        if (rowsAffected > 0)
+        {
+            logger.LogInformation("Successfully deleted {entity} {Id}", command.{Entity}Id);
+            return new Delete{Entity}Response(true);
+        }
+
+        logger.LogWarning("Failed to delete {entity} {Id} - no rows affected", command.{Entity}Id);
+        throw new InvalidOperationException($"Failed to delete {{Entity}} {command.{Entity}Id}");
+    }
+}

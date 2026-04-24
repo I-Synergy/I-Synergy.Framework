@@ -1,0 +1,260 @@
+#!/usr/bin/env python3
+"""
+upgrade-template.py — Sync template improvements to an existing project.
+
+Copies new template files and shows diffs for changed ones.
+Never touches project-owned files (CLAUDE.md, session-context, project/ etc.).
+
+Usage:
+    python upgrade-template.py --source <template-repo> --target <project-repo>
+    python upgrade-template.py --source <template-repo> --target <project-repo> --dry-run
+    python upgrade-template.py --source <template-repo> --target <project-repo> --non-interactive
+    python upgrade-template.py --source <template-repo> --target <project-repo> --skills-only
+"""
+
+import argparse
+import difflib
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+# ─── Ownership tables ────────────────────────────────────────────────────────
+
+# Template owns these — new files are copied, changed files are diffed.
+# Entries can be files or directories (directories are walked recursively).
+TEMPLATE_OWNED = [
+    ".ai/skills",
+    ".ai/patterns",
+    ".ai/reference/templates",
+    ".ai/reference/critical-rules.md",
+    ".ai/reference/forbidden-tech.md",
+    ".ai/reference/tokens.md",
+    ".ai/reference/glossary.md",
+    ".ai/reference/naming-conventions.md",
+    ".ai/checklists",
+    ".ai/tests",
+    ".ai/scripts",
+]
+
+# Project owns these — never read, never write.
+PROJECT_OWNED = [
+    "CLAUDE.md",
+    ".ai/session-context.md",
+    ".ai/project",
+    ".ai/progress",
+    ".ai/completed",
+    ".ai/plans",
+    ".ai/analysis",
+    ".github/copilot-instructions.md",
+    ".claude/settings.local.json",
+]
+
+# ─── ANSI colours ────────────────────────────────────────────────────────────
+
+GREEN  = "\033[32m"
+YELLOW = "\033[33m"
+CYAN   = "\033[36m"
+RED    = "\033[31m"
+RESET  = "\033[0m"
+BOLD   = "\033[1m"
+
+def c(colour: str, text: str) -> str:
+    return f"{colour}{text}{RESET}" if sys.stdout.isatty() else text
+
+# ─── Helpers ─────────────────────────────────────────────────────────────────
+
+def is_project_owned(rel: Path) -> bool:
+    rel_str = rel.as_posix()
+    for po in PROJECT_OWNED:
+        if rel_str == po or rel_str.startswith(po + "/"):
+            return True
+    return False
+
+
+def read_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return ""
+
+
+def show_diff(src_text: str, tgt_text: str, rel: Path) -> None:
+    diff = list(difflib.unified_diff(
+        tgt_text.splitlines(keepends=True),
+        src_text.splitlines(keepends=True),
+        fromfile=f"project/{rel}",
+        tofile=f"template/{rel}",
+        n=3,
+    ))
+    if not diff:
+        return
+    # Print first 60 lines of diff to keep it readable
+    for i, line in enumerate(diff):
+        if i >= 60:
+            remaining = len(diff) - 60
+            print(f"  ... {remaining} more lines ...")
+            break
+        if line.startswith("+"):
+            print(c(GREEN, line), end="")
+        elif line.startswith("-"):
+            print(c(RED, line), end="")
+        elif line.startswith("@@"):
+            print(c(CYAN, line), end="")
+        else:
+            print(line, end="")
+
+
+def prompt_action(rel: Path, non_interactive: bool) -> str:
+    """Returns 'accept', 'skip', or 'quit'."""
+    if non_interactive:
+        return "skip"
+    while True:
+        choice = input(f"\n  [{c(GREEN,'a')}]ccept  [{c(YELLOW,'s')}]kip  [{c(RED,'q')}]uit > ").strip().lower()
+        if choice in ("a", "accept"):
+            return "accept"
+        if choice in ("s", "skip", ""):
+            return "skip"
+        if choice in ("q", "quit"):
+            return "quit"
+
+
+def collect_template_files(source: Path) -> list[Path]:
+    """Return all relative paths that the template owns."""
+    result: list[Path] = []
+    for entry in TEMPLATE_OWNED:
+        src_path = source / entry
+        if not src_path.exists():
+            continue
+        if src_path.is_file():
+            result.append(Path(entry))
+        elif src_path.is_dir():
+            for f in sorted(src_path.rglob("*")):
+                if f.is_file():
+                    result.append(f.relative_to(source))
+    return result
+
+
+# ─── Main ─────────────────────────────────────────────────────────────────────
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Upgrade a project from the CLAUDE.MD template.")
+    parser.add_argument("--source", required=True, help="Path to the template repository")
+    parser.add_argument("--target", required=True, help="Path to the project to upgrade")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would happen without making changes")
+    parser.add_argument("--non-interactive", action="store_true", help="Never prompt — copy new, skip changed")
+    parser.add_argument("--skills-only", action="store_true", help="Only sync .ai/skills/")
+    args = parser.parse_args()
+
+    source = Path(args.source).resolve()
+    target = Path(args.target).resolve()
+
+    if not source.exists():
+        print(c(RED, f"ERROR: source not found: {source}"))
+        sys.exit(1)
+    if not target.exists():
+        print(c(RED, f"ERROR: target not found: {target}"))
+        sys.exit(1)
+
+    print(f"\n{c(BOLD, 'Template Upgrade')}")
+    print(f"  Source : {source}")
+    print(f"  Target : {target}")
+    if args.dry_run:
+        print(f"  Mode   : {c(YELLOW, 'DRY RUN — no files will be written')}")
+    elif args.non_interactive:
+        print(f"  Mode   : non-interactive (new files copied, changed files skipped)")
+    print()
+
+    files = collect_template_files(source)
+    if args.skills_only:
+        files = [f for f in files if f.parts[0:2] == (".ai", "skills") or
+                                      (len(f.parts) > 1 and f.parts[0] == ".ai" and f.parts[1] == "skills")]
+
+    counts = {"added": 0, "updated": 0, "skipped_unchanged": 0,
+              "skipped_project": 0, "skipped_diff": 0, "quit": False}
+    skills_added: list[str] = []
+
+    for rel in files:
+        # Never touch project-owned paths
+        if is_project_owned(rel):
+            counts["skipped_project"] += 1
+            continue
+
+        src_file = source / rel
+        tgt_file = target / rel
+        src_text = read_text(src_file)
+
+        if not tgt_file.exists():
+            # New file — copy it
+            print(f"  {c(GREEN, 'ADDED')}    {rel}")
+            if not args.dry_run:
+                tgt_file.parent.mkdir(parents=True, exist_ok=True)
+                tgt_file.write_text(src_text, encoding="utf-8")
+            counts["added"] += 1
+            # Track new skills for post-sync
+            parts = rel.parts
+            if len(parts) >= 3 and parts[0] == ".ai" and parts[1] == "skills":
+                skill_name = parts[2]
+                if skill_name not in skills_added:
+                    skills_added.append(skill_name)
+        else:
+            tgt_text = read_text(tgt_file)
+            if src_text == tgt_text:
+                counts["skipped_unchanged"] += 1
+                continue
+
+            # Changed file — show diff and prompt
+            print(f"\n  {c(YELLOW, 'CHANGED')}  {rel}")
+            show_diff(src_text, tgt_text, rel)
+
+            action = prompt_action(rel, args.non_interactive)
+            if action == "accept":
+                print(f"  {c(GREEN, '→ accepted')}")
+                if not args.dry_run:
+                    tgt_file.write_text(src_text, encoding="utf-8")
+                counts["updated"] += 1
+            elif action == "quit":
+                print(c(YELLOW, "\nAborted by user."))
+                counts["quit"] = True
+                break
+            else:
+                print(f"  {c(CYAN, '→ skipped')}")
+                counts["skipped_diff"] += 1
+
+    # ─── Post-sync: run sync-skills.py in target if skills were added ─────────
+    if skills_added and not args.dry_run and not counts["quit"]:
+        sync_script = target / ".ai" / "scripts" / "sync-skills.py"
+        if sync_script.exists():
+            print(f"\n{c(CYAN, 'Syncing skills → .claude/skills/ and .github/skills/ ...')}")
+            result = subprocess.run(
+                [sys.executable, str(sync_script)],
+                cwd=str(target),
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode == 0:
+                print(c(GREEN, "  ✓ Skills synced"))
+            else:
+                print(c(YELLOW, f"  ⚠ sync-skills.py exited {result.returncode}"))
+                if result.stderr:
+                    print(f"    {result.stderr.strip()}")
+        else:
+            print(f"\n{c(YELLOW, 'Note:')} run /update-skills in the target project to sync .claude/skills/ and .github/skills/")
+
+    # ─── Summary ──────────────────────────────────────────────────────────────
+    print(f"\n{c(BOLD, 'Summary')}")
+    print(f"  {c(GREEN,  str(counts['added'])    ):>6}  added")
+    print(f"  {c(GREEN,  str(counts['updated'])  ):>6}  updated")
+    print(f"  {c(CYAN,   str(counts['skipped_unchanged'])):>6}  unchanged (skipped)")
+    print(f"  {c(YELLOW, str(counts['skipped_diff'])):>6}  changed but kept project version")
+    print(f"  {c(YELLOW, str(counts['skipped_project'])):>6}  project-owned (never touched)")
+
+    if args.dry_run:
+        print(f"\n{c(YELLOW, 'Dry run — no files were written.')}")
+    elif not counts["quit"]:
+        print(f"\n{c(GREEN, '✓ Upgrade complete.')}")
+
+
+if __name__ == "__main__":
+    main()
