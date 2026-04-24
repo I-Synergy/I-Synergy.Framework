@@ -1,0 +1,81 @@
+name: Validate Claude Template
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  validate:
+    name: Validate Template Structure and Content
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Make test scripts executable
+        run: |
+          chmod +x .claude/tests/*.sh
+          chmod +x .claude/tests/*.py
+
+      - name: Run structure validation
+        run: bash .claude/tests/validate-structure.sh
+
+      - name: Run YAML frontmatter validation
+        run: python3 .claude/tests/validate-skills.py
+
+      - name: Run reference validation
+        run: bash .claude/tests/validate-references.sh
+
+      - name: Run content quality validation
+        run: python3 .claude/tests/validate-content.py
+
+      - name: Run token consistency validation
+        run: bash .claude/tests/validate-tokens.sh
+
+      - name: Run integration smoke tests
+        run: python3 .claude/tests/smoke-test.py
+
+      - name: Run all tests together
+        run: bash .claude/tests/run-all-tests.sh
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: |
+            .claude/tests/*.log
+          retention-days: 30
+          if-no-files-found: ignore
+
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: validate
+    if: always()
+
+    steps:
+      - name: Check validation results
+        run: |
+          if [ "${{ needs.validate.result }}" == "success" ]; then
+            echo "✅ All template validation tests passed!"
+            exit 0
+          else
+            echo "❌ Template validation tests failed!"
+            exit 1
+          fi

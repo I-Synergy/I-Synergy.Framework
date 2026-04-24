@@ -1,0 +1,97 @@
+// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/Create{Entity}HandlerTests.cs
+
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
+namespace {ApplicationName}.{Domain}.Tests.Handlers;
+
+[TestClass]
+public class Create{Entity}HandlerTests
+{
+    private Mock<DataContext> _dataContextMock;
+    private Mock<ILogger<Create{Entity}Handler>> _loggerMock;
+    private Create{Entity}Handler _handler;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _dataContextMock = new Mock<DataContext>();
+        _loggerMock = new Mock<ILogger<Create{Entity}Handler>>();
+        _handler = new Create{Entity}Handler(
+            _dataContextMock.Object,
+            _loggerMock.Object);
+    }
+
+    [TestMethod]
+    public async Task HandleAsync_ValidCommand_Creates{Entity}Successfully()
+    {
+        // Arrange
+        var command = new Create{Entity}Command(
+            Property1: "Test Value",
+            Property2: 100.50m,
+            Property3: DateTimeOffset.UtcNow);
+
+        // Act
+        var result = await _handler.HandleAsync(command);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreNotEqual(Guid.Empty, result.{Entity}Id);
+
+        _dataContextMock.Verify(
+            x => x.AddItemAsync<{Entity}, {Entity}Model>(
+                It.IsAny<{Entity}Model>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public async Task HandleAsync_NullCommand_ThrowsArgumentNullException()
+    {
+        // Act
+        await _handler.HandleAsync(null!);
+
+        // Assert - Exception expected
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public async Task HandleAsync_NegativeProperty2_ThrowsArgumentException()
+    {
+        // Arrange
+        var command = new Create{Entity}Command(
+            Property1: "Test Value",
+            Property2: -100m,
+            Property3: DateTimeOffset.UtcNow);
+
+        // Act
+        await _handler.HandleAsync(command);
+
+        // Assert - Exception expected
+    }
+
+    [TestMethod]
+    public async Task HandleAsync_ValidCommand_LogsInformation()
+    {
+        // Arrange
+        var command = new Create{Entity}Command(
+            Property1: "Test Value",
+            Property2: 100.50m,
+            Property3: DateTimeOffset.UtcNow);
+
+        // Act
+        await _handler.HandleAsync(command);
+
+        // Assert
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => true),
+                It.IsAny<Exception>(),
+                It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)),
+            Times.AtLeastOnce);
+    }
+}
