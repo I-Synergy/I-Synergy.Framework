@@ -1,5 +1,6 @@
 // File: tests/{ApplicationName}.{Domain}.Tests/Handlers/Create{Entity}HandlerTests.cs
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -10,6 +11,7 @@ namespace {ApplicationName}.{Domain}.Tests.Handlers;
 public class Create{Entity}HandlerTests
 {
     private Mock<DataContext> _dataContextMock;
+    private Mock<DbSet<{Entity}>> _entitiesSetMock;
     private Mock<ILogger<Create{Entity}Handler>> _loggerMock;
     private Create{Entity}Handler _handler;
 
@@ -17,7 +19,13 @@ public class Create{Entity}HandlerTests
     public void Setup()
     {
         _dataContextMock = new Mock<DataContext>();
+        _entitiesSetMock = new Mock<DbSet<{Entity}>>();
         _loggerMock = new Mock<ILogger<Create{Entity}Handler>>();
+
+        _dataContextMock.Setup(x => x.{Entities}).Returns(_entitiesSetMock.Object);
+        _dataContextMock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1);
+
         _handler = new Create{Entity}Handler(
             _dataContextMock.Object,
             _loggerMock.Object);
@@ -39,8 +47,8 @@ public class Create{Entity}HandlerTests
         Assert.IsNotNull(result);
         Assert.AreNotEqual(Guid.Empty, result.{Entity}Id);
 
-        _dataContextMock.Verify(
-            x => x.{Entities}.Add(It.IsAny<{Entity}>()),
+        _entitiesSetMock.Verify(
+            x => x.Add(It.IsAny<{Entity}>()),
             Times.Once);
         _dataContextMock.Verify(
             x => x.SaveChangesAsync(It.IsAny<CancellationToken>()),
