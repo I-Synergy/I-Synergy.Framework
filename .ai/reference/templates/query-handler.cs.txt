@@ -56,12 +56,14 @@ public sealed class Get{Entity}ByIdQueryHandler(
         logger.LogDebug("Retrieving {entity} {Id}", query.{Entity}Id);
 
         var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == query.{Entity}Id, cancellationToken);
-        var model = /* map entity to {Entity} model */;
 
-        if (model is null)
+        if (entity is null)
         {
             logger.LogDebug("{Entity} {Id} not found", query.{Entity}Id);
+            return new Get{Entity}ByIdResponse(null);
         }
+
+        var model = /* map entity to {Entity} model */;
 
         return new Get{Entity}ByIdResponse(model);
     }

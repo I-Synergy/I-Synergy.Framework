@@ -81,7 +81,7 @@ check_hardcoded_names() {
 
 echo "1. Checking template files for token usage..."
 if [ -d "$TEMPLATE_ROOT/.ai/reference/templates" ]; then
-    for template in "$TEMPLATE_ROOT/.ai/reference/templates"/*.md; do
+    for template in "$TEMPLATE_ROOT/.ai/reference/templates"/*; do
         check_token_usage "$template"
     done
 else
@@ -110,7 +110,7 @@ echo ""
 echo "3. Checking for hardcoded project names..."
 # Check templates
 if [ -d "$TEMPLATE_ROOT/.ai/reference/templates" ]; then
-    for template in "$TEMPLATE_ROOT/.ai/reference/templates"/*.md; do
+    for template in "$TEMPLATE_ROOT/.ai/reference/templates"/*; do
         check_hardcoded_names "$template"
     done
 fi

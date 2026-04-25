@@ -10,6 +10,7 @@ import subprocess
 import sys
 import shutil
 from pathlib import Path
+from typing import Optional
 
 import pytest
 
@@ -29,7 +30,7 @@ def _run_python(script: str) -> tuple[int, str]:
     return result.returncode, result.stdout + result.stderr
 
 
-def _find_bash() -> str | None:
+def _find_bash() -> Optional[str]:
     """Prefer Git Bash on Windows; WSL bash resolves drives at /mnt/d/ which
     breaks the SCRIPT_DIR-relative path logic inside the shell scripts."""
     if sys.platform == "win32":
