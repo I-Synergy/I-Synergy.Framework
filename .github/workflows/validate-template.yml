@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Install Python dependencies
         run: |
@@ -29,29 +28,29 @@ jobs:
 
       - name: Make test scripts executable
         run: |
-          chmod +x .claude/tests/*.sh
-          chmod +x .claude/tests/*.py
+          chmod +x .ai/tests/*.sh
+          chmod +x .ai/tests/*.py
 
       - name: Run structure validation
-        run: bash .claude/tests/validate-structure.sh
+        run: bash .ai/tests/validate-structure.sh
 
       - name: Run YAML frontmatter validation
-        run: python3 .claude/tests/validate-skills.py
+        run: python3 .ai/tests/validate-skills.py
 
       - name: Run reference validation
-        run: bash .claude/tests/validate-references.sh
+        run: bash .ai/tests/validate-references.sh
 
       - name: Run content quality validation
-        run: python3 .claude/tests/validate-content.py
+        run: python3 .ai/tests/validate-content.py
 
       - name: Run token consistency validation
-        run: bash .claude/tests/validate-tokens.sh
+        run: bash .ai/tests/validate-tokens.sh
 
       - name: Run integration smoke tests
-        run: python3 .claude/tests/smoke-test.py
+        run: python3 .ai/tests/smoke-test.py
 
       - name: Run all tests together
-        run: bash .claude/tests/run-all-tests.sh
+        run: bash .ai/tests/run-all-tests.sh
 
       - name: Upload test results
         if: always()
@@ -59,7 +58,7 @@ jobs:
         with:
           name: test-results
           path: |
-            .claude/tests/*.log
+            .ai/tests/*.log
           retention-days: 30
           if-no-files-found: ignore
 

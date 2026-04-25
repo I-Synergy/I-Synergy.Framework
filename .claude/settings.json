@@ -16,7 +16,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "dotnet build --nologo --verbosity quiet"
+            "command": "dotnet build --nologo --verbosity minimal",
+            "statusMessage": "Building solution..."
           }
         ]
       },
