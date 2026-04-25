@@ -53,13 +53,13 @@ public sealed class Get{Entity}ByIdQueryHandler(
         Get{Entity}ByIdQuery query,
         CancellationToken cancellationToken = default)
     {
-        logger.LogDebug("Retrieving {entity} {Id}", query.{Entity}Id);
+        logger.LogDebug("Retrieving {entityType} with id {entityId}", nameof({Entity}), query.{Entity}Id);
 
         var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == query.{Entity}Id, cancellationToken);
 
         if (entity is null)
         {
-            logger.LogDebug("{Entity} {Id} not found", query.{Entity}Id);
+            logger.LogDebug("{entityType} with id {entityId} not found", nameof({Entity}), query.{Entity}Id);
             return new Get{Entity}ByIdResponse(null);
         }
 
