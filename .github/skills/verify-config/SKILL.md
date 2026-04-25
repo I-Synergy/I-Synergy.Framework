@@ -16,7 +16,7 @@ Audits project documentation against actual codebase conventions to detect and f
    - Extract all documented conventions (data access patterns, naming, file structure, mapping, etc.)
 
 2. **Sample the codebase for actual patterns**
-   - Pick `ISynergy.Domain.Budgets` as the reference implementation
+   - Pick a representative domain from `{ApplicationName}.Domain.*` as the reference implementation
    - Read 2-3 command handlers (Create, Update, Delete)
    - Read 2-3 query handlers (GetById, GetList)
    - Read the `Mappers/Configuration.cs`
