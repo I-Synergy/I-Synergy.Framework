@@ -44,7 +44,7 @@ Use this template when ending a session and handing off to a new session.
 3. [Next action with specific details]
 
 ## Files to Load Next Session
-- `.ai/skills/[skill-name].md` - [Why needed]
+- `.ai/skills/[skill-name]/SKILL.md` - [Why needed]
 - `.ai/patterns/[pattern-name].md` - [Why needed]
 - `.ai/reference/[reference].md` - [Why needed]
 

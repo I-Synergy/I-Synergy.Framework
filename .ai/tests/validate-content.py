@@ -206,7 +206,10 @@ def main():
     print("3. Validating template tokens...")
     templates_dir = TEMPLATE_ROOT / ".ai/reference/templates"
     if templates_dir.exists():
-        template_files = sorted([f for f in templates_dir.glob("*.md")])
+        template_files = sorted([
+            f for f in templates_dir.iterdir()
+            if f.is_file() and f.suffix in {".md", ".txt"}
+        ])
         for template_file in template_files:
             valid, warnings = validate_template_tokens(template_file)
 

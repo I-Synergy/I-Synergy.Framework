@@ -7,7 +7,7 @@
 | **Namespace** | `{ApplicationName}.{Layer}.{Domain}` | `BudgetTracker.Domain.Budgets` |
 | **Command** | `{Action}{Entity}Command` | `CreateBudgetCommand` |
 | **Query** | `Get{Entity}{Criteria}Query` | `GetBudgetByIdQuery` |
-| **Handler** | `{CommandOrQuery}Handler` | `CreateBudgetHandler` |
+| **Handler** | `{Action}{Entity}CommandHandler` / `Get{Entity}{Criteria}QueryHandler` | `CreateBudgetCommandHandler` |
 | **Response** | `{Action}{Entity}Response` | `CreateBudgetResponse` |
 | **DTO** | `{Entity}Model` or `{Entity}Dto` | `BudgetModel` |
 | **Interface** | `I{Type}` | `ICommandHandler<T>` |
