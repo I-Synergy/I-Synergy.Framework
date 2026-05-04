@@ -11,7 +11,7 @@
     <PackageVersion Include="AWSSDK.S3" Version="4.0.22.1" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
-    <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.7.0" />
+    <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.8.0" />
     <PackageVersion Include="Azure.Security.KeyVault.Secrets" Version="4.10.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.27.0" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
@@ -63,17 +63,17 @@
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.14.1" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.14.1" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.14.1" />
-    <PackageVersion Include="Microsoft.Graph" Version="5.104.0" />
+    <PackageVersion Include="Microsoft.Graph" Version="5.105.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.83.3" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.51" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.51" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260416003" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.60" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.60" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.0.1" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="4.2.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.2.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.2.2" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.2.2" />
     <PackageVersion Include="NodaTime" Version="3.3.2" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
@@ -96,17 +96,17 @@
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.4.1" />
     <PackageVersion Include="SkiaSharp" Version="3.119.2" />
     <PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.1.11" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="33.2.3" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="33.2.3" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="33.2.4" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="33.2.4" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
   </ItemGroup>
 </Project>
