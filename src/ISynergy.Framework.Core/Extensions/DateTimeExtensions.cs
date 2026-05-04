@@ -293,17 +293,17 @@ public static class DateTimeExtensions
     /// <param name="current">The current.</param>
     /// <param name="week">The week.</param>
     /// <returns>DateTime.</returns>
-    public static DateTime ToWeek(this DateTime current, Week week)
+    public static DateTime ToWeek(this DateTime current, Weeks week)
     {
         switch (week)
         {
-            case Week.Second:
+            case Weeks.Second:
                 return current.First().AddDays(7);
-            case Week.Third:
+            case Weeks.Third:
                 return current.First().AddDays(14);
-            case Week.Fourth:
+            case Weeks.Fourth:
                 return current.First().AddDays(21);
-            case Week.Last:
+            case Weeks.Last:
                 return current.Last().AddDays(-7);
         }
         return current.First();

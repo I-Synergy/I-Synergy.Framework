@@ -1,9 +1,9 @@
 namespace ISynergy.Framework.Core.Enumerations;
 
 /// <summary>
-/// Enum Week
+/// Enum Weeks
 /// </summary>
-public enum Week
+public enum Weeks
 {
     /// <summary>
     /// The first

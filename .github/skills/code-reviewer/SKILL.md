@@ -51,7 +51,7 @@ Specialized agent for code quality assurance and review.
 - [ ] All async methods include CancellationToken
 
 ### Data Access
-- [ ] Delete operations use `RemoveItemAsync<TEntity, TKey>()`
+- [ ] Delete operations use `FirstOrDefaultAsync` + `Remove` + `SaveChangesAsync`
 - [ ] No N+1 query problems (proper Include usage)
 - [ ] LINQ queries are efficient
 - [ ] No blocking on async (.Wait() or .Result)

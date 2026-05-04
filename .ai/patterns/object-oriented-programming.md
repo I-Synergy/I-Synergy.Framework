@@ -25,7 +25,7 @@ public sealed class BudgetRepository
 
     public async Task<Budget> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        return await _dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(id, ct);
+        return await _dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, ct);
     }
 }
 
@@ -215,7 +215,7 @@ public sealed class ReadOnlyBudgetRepository : IReadable<Budget>
 
     public async Task<Budget> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        return await _dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(id, ct);
+        return await _dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, ct);
     }
 
     public async Task<List<Budget>> GetAllAsync(CancellationToken ct)
@@ -236,7 +236,7 @@ public sealed class BudgetRepository : IReadable<Budget>, IWritable<Budget>, IDe
 
     public async Task<Budget> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        return await _dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(id, ct);
+        return await _dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, ct);
     }
 
     public async Task<List<Budget>> GetAllAsync(CancellationToken ct)
@@ -262,7 +262,12 @@ public sealed class BudgetRepository : IReadable<Budget>, IWritable<Budget>, IDe
 
     public async Task DeleteAsync(Guid id, CancellationToken ct)
     {
-        await _dataContext.RemoveItemAsync<Budget, Guid>(id, ct);
+        var entity = await _dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, ct);
+        if (entity is not null)
+        {
+            _dataContext.Budgets.Remove(entity);
+            await _dataContext.SaveChangesAsync(ct);
+        }
     }
 }
 
@@ -1114,7 +1119,7 @@ public sealed class BudgetService : IBudgetService
 
     public async Task<Budget> GetBudgetAsync(Guid budgetId, CancellationToken ct)
     {
-        return await _dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(budgetId, ct);
+        return await _dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == budgetId, ct);
     }
 }
 

@@ -1,5 +1,7 @@
 # Project Architecture (CUSTOMIZE THIS)
 
+> **Note:** This repository is a reusable framework library (`ISynergy.Framework.*`), not an application with domain projects. The documented `{ApplicationName}.Domain.{Domain}` project structure with CQRS Features/Commands/Queries/Models applies to consuming applications built on top of this framework, not to this repo itself. The src/ directory contains framework projects providing CQRS abstractions, EntityFramework helpers, UI components, and cross-cutting utilities.
+
 **Instructions:** Document your project's architecture decisions and patterns.
 
 **Purpose:** This file defines HOW your system is structured - layers, patterns, data flow, and architectural decisions.
@@ -79,7 +81,7 @@ public sealed record Get{Entity}ByIdQuery(Guid {Entity}Id)
     : IQuery<{Entity}Response>;
 
 // Handlers inject DataContext directly
-public sealed class Create{Entity}Handler(DataContext dataContext)
+public sealed class Create{Entity}CommandHandler(DataContext dataContext)
     : ICommandHandler<Create{Entity}Command, Create{Entity}Response>
 {
     public async Task<Create{Entity}Response> HandleAsync(
@@ -93,14 +95,32 @@ public sealed class Create{Entity}Handler(DataContext dataContext)
 
 ## Data Access Pattern
 
-**NO explicit Repository interfaces** - Use EF Core extension methods:
+**NO explicit Repository interfaces** - Use EF Core primitives directly on DataContext named DbSet properties:
 
 ```csharp
-// From I-Synergy.Framework.EntityFramework (or your ORM extensions)
-await dataContext.AddItemAsync<TEntity, TModel>(model, cancellationToken);
-await dataContext.GetItemByIdAsync<TEntity, TModel, TKey>(id, cancellationToken);
-await dataContext.UpdateItemAsync<TEntity, TModel>(model, cancellationToken);
-await dataContext.RemoveItemAsync<TEntity, TKey>(id, cancellationToken);
+// Use named DbSet properties for all CRUD operations
+// Create
+dataContext.Budgets.Add(entity);
+await dataContext.SaveChangesAsync(cancellationToken);
+
+// Read single
+var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, cancellationToken);
+
+// Read list
+var models = await dataContext.Budgets
+    .OrderBy(b => b.Description)
+    .Select(b => new BudgetModel(b.BudgetId, b.Description, b.Amount))
+    .ToListAsync(cancellationToken);
+
+// Update — no .Update() call needed; change tracker handles property mutations
+var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
+entity.Description = command.Description;
+await dataContext.SaveChangesAsync(cancellationToken);
+
+// Delete
+var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
+dataContext.Budgets.Remove(entity);
+await dataContext.SaveChangesAsync(cancellationToken);
 ```
 
 ## Vertical Slice Organization
@@ -109,16 +129,16 @@ await dataContext.RemoveItemAsync<TEntity, TKey>(id, cancellationToken);
 Domain/Features/{Entity}/
   Commands/
     Create{Entity}Command.cs
-    Create{Entity}Handler.cs
+    Create{Entity}CommandHandler.cs
     Update{Entity}Command.cs
-    Update{Entity}Handler.cs
+    Update{Entity}CommandHandler.cs
     Delete{Entity}Command.cs
-    Delete{Entity}Handler.cs
+    Delete{Entity}CommandHandler.cs
   Queries/
     Get{Entity}ByIdQuery.cs
-    Get{Entity}ByIdHandler.cs
+    Get{Entity}ByIdQueryHandler.cs
     Get{Entity}ListQuery.cs
-    Get{Entity}ListHandler.cs
+    Get{Entity}ListQueryHandler.cs
   Events/
     {Entity}CreatedEvent.cs
     {Entity}UpdatedEvent.cs

@@ -47,11 +47,11 @@ Specialized agent for .NET, C#, Blazor, and MAUI development.
 ## Key Rules to Enforce
 
 - Commands use individual parameters (NOT model objects)
-- Delete operations use `RemoveItemAsync<TEntity, TKey>()`
+- Delete operations use `FirstOrDefaultAsync` + `Remove` + `SaveChangesAsync`
 - Queries use named parameters for optional filters
 - Never expose domain entities directly (always DTOs)
 - Always include `CancellationToken` in async methods
-- No repository interfaces (use DataContext extensions)
+- No repository interfaces (use DataContext named DbSet properties with EF Core primitives)
 
 ## Templates to Use
 
