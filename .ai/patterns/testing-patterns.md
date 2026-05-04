@@ -47,8 +47,7 @@ public class Create{Entity}HandlerTests
         Assert.AreNotEqual(Guid.Empty, result.{Entity}Id);
 
         _dataContextMock.Verify(
-            x => x.AddItemAsync<{Entity}, {Entity}Model>(
-                It.IsAny<{Entity}Model>(),
+            x => x.SaveChangesAsync(
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }
@@ -203,33 +202,31 @@ public async Task HandleAsync_NegativeAmount_ThrowsArgumentException()
 ## Moq Patterns
 
 ```csharp
-// Setup method return
-_dataContextMock
-    .Setup(x => x.GetItemByIdAsync<Budget, BudgetModel, Guid>(
-        It.IsAny<Guid>(),
-        It.IsAny<CancellationToken>()))
-    .ReturnsAsync(new BudgetModel { BudgetId = Guid.NewGuid() });
+// Setup DbSet for query operations
+var budgets = new List<Budget> { new Budget { BudgetId = Guid.NewGuid(), Description = "Test" } }.AsQueryable();
+var mockDbSet = budgets.BuildMockDbSet();
+_dataContextMock.Setup(x => x.Budgets).Returns(mockDbSet.Object);
 
-// Verify method called
+// Verify SaveChangesAsync called
 _dataContextMock.Verify(
-    x => x.AddItemAsync<Budget, BudgetModel>(
-        It.IsAny<BudgetModel>(),
+    x => x.SaveChangesAsync(
         It.IsAny<CancellationToken>()),
     Times.Once);
 
-// Verify method never called
+// Verify SaveChangesAsync never called
 _dataContextMock.Verify(
-    x => x.RemoveItemAsync<Budget, Guid>(
-        It.IsAny<Guid>(),
+    x => x.SaveChangesAsync(
         It.IsAny<CancellationToken>()),
     Times.Never);
 
-// Setup method to throw
-_dataContextMock
-    .Setup(x => x.GetItemByIdAsync<Budget, BudgetModel, Guid>(
-        It.IsAny<Guid>(),
-        It.IsAny<CancellationToken>()))
-    .ThrowsAsync(new KeyNotFoundException());
+// Verify entity was added
+_dataContextMock.Verify(
+    x => x.Budgets.Add(
+        It.IsAny<Budget>()),
+    Times.Once);
+
+// Setup FirstOrDefaultAsync to return specific entity
+// (Use MockDbSet or an in-memory database for query testing)
 ```
 
 ## Test Organization

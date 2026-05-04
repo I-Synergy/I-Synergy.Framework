@@ -11,7 +11,7 @@ A comprehensive Entity Framework Core integration library for .NET 10.0 applicat
 - **Base entity classes** with automatic audit fields (CreatedDate, CreatedBy, ChangedDate, ChangedBy)
 - **Multi-tenancy support** with automatic tenant filtering using query filters
 - **Soft delete functionality** with query filter integration
-- **DbContext extensions** for common CRUD operations with Mapster integration
+- **DbContext extensions** for common CRUD operations such as existence checks, retrieval, and deletion
 - **ModelBuilder extensions** for configuring versioning, decimal precision, and filters
 - **Queryable extensions** for pagination support
 - **Entity events** for tracking inserts, updates, and deletes
@@ -449,28 +449,6 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 }
 ```
 
-### Working with Mapster
-
-The library uses Mapster for object mapping:
-
-```csharp
-// Define DTOs
-public class ProductDto : BaseModel
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public decimal Price { get; set; }
-}
-
-// Configure Mapster mapping (if needed)
-TypeAdapterConfig<Product, ProductDto>.NewConfig()
-    .Map(dest => dest.Name, src => src.Name.ToUpper());
-
-// Use with DbContext extensions
-var dto = new ProductDto { Name = "Widget", Price = 9.99m };
-await _context.AddItemAsync<Product, ProductDto>(dto, cancellationToken);
-```
-
 ## Best Practices
 
 > [!TIP]
@@ -572,7 +550,6 @@ public class ProductServiceTests
 
 - **ISynergy.Framework.Core** - Core abstractions and base classes
 - **Microsoft.AspNetCore.Identity.EntityFrameworkCore** - Identity integration
-- **Mapster** - Object-to-object mapping
 - **Microsoft.EntityFrameworkCore** - Entity Framework Core runtime
 
 ## Migration Scenarios

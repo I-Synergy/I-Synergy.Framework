@@ -75,12 +75,12 @@ GetBudgetsByUserIdQuery.cs
 ### Handlers
 
 ```
-{CommandName}Handler.cs
-{QueryName}Handler.cs
+{CommandName}CommandHandler.cs
+{QueryName}QueryHandler.cs
 
 Examples:
-CreateBudgetHandler.cs
-GetBudgetByIdHandler.cs
+CreateBudgetCommandHandler.cs
+GetBudgetByIdQueryHandler.cs
 ```
 
 ### Responses
@@ -216,15 +216,29 @@ public async Task<CreateBudgetResponse> HandleAsync(
 ### Data Access
 
 ```csharp
-// Extension methods on DataContext
-AddItemAsync<TEntity, TModel>()
-GetItemByIdAsync<TEntity, TModel, TKey>()
-UpdateItemAsync<TEntity, TModel>()
-RemoveItemAsync<TEntity, TKey>()
+// Use named DbSet properties on DataContext for all CRUD operations
+// Create
+dataContext.Budgets.Add(entity);
+await dataContext.SaveChangesAsync(cancellationToken);
 
-// Examples
-await dataContext.AddItemAsync<Budget, BudgetModel>(model, ct);
-await dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(id, ct);
+// Read single
+var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, cancellationToken);
+
+// Read list
+var models = await dataContext.Budgets
+    .OrderBy(b => b.Description)
+    .Select(b => new BudgetModel(b.BudgetId, b.Description, b.Amount))
+    .ToListAsync(cancellationToken);
+
+// Update — no .Update() call needed; change tracker handles property mutations
+var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
+entity.Description = command.Description;
+await dataContext.SaveChangesAsync(cancellationToken);
+
+// Delete
+var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
+dataContext.Budgets.Remove(entity);
+await dataContext.SaveChangesAsync(cancellationToken);
 ```
 
 ### Repository Methods (if used)
