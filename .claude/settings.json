@@ -8,7 +8,7 @@
     "ralph-loop@claude-plugins-official": true,
     "maui-skills@maui-skills": true
   },
-  "plansDirectory": "./.claude/plans",
+  "plansDirectory": "./.ai/plans",
   "hooks": {
     "PostToolUse": [
       {
@@ -16,7 +16,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "dotnet build --nologo --verbosity quiet 2>&1 | tail -5"
+            "command": "dotnet build --nologo --verbosity minimal",
+            "statusMessage": "Building solution..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .ai/scripts/sync-skills.py --from-hook"
           }
         ]
       },
@@ -49,15 +59,16 @@
     ],
     "additionalDirectories": [
       "./.claude",
-      "./.claude/analysis",
-      "./.claude/checklists",
-      "./.claude/completed",
-      "./.claude/patterns",
-      "./.claude/plans",
-      "./.claude/progress",
-      "./.claude/project",
-      "./.claude/reference",
-      "./.claude/skills"
+      "./.ai",
+      "./.ai/analysis",
+      "./.ai/checklists",
+      "./.ai/completed",
+      "./.ai/patterns",
+      "./.ai/plans",
+      "./.ai/progress",
+      "./.ai/project",
+      "./.ai/reference",
+      "./.ai/skills"
     ]
   }
 }
