@@ -42,7 +42,7 @@ public sealed class LanguageService : ILanguageService
     {
         foreach (var manager in _managers.EnsureNotNull())
         {
-            string? result = manager.GetString(key, CultureInfo.CurrentCulture);
+            string? result = manager.GetString(key, CultureInfo.CurrentUICulture);
 
             if (!string.IsNullOrEmpty(result))
                 return result;
