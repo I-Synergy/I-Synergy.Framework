@@ -19,7 +19,6 @@ Applies template improvements to an existing project without overwriting project
 
 ## Project-Owned Files (Never Touched)
 
-- `CLAUDE.md` — project-specific instructions
 - `.ai/session-context.md` — active session state
 - `.ai/project/` — architecture, tech stack, domains
 - `.ai/progress/`, `.ai/completed/`, `.ai/plans/` — task tracking
@@ -80,12 +79,13 @@ python .ai/scripts/upgrade-template.py \
 
 | Path | Behaviour |
 |------|-----------|
+| `CLAUDE.md` | Diffed if changed |
 | `.ai/skills/` | New skill dirs copied; changed skills diffed |
 | `.ai/patterns/` | New pattern files copied; changed diffed |
 | `.ai/reference/templates/` | New templates copied; changed diffed |
 | `.ai/reference/critical-rules.md` | Diffed if changed |
 | `.ai/reference/forbidden-tech.md` | Diffed if changed |
-| `.ai/reference/tokens.md`, `glossary.md`, `naming-conventions.md` | Diffed if changed |
+| `.ai/reference/tokens.md`, `glossary.md`, `naming-conventions.md`, `copilot-integration.md`, `session-management.md` | Diffed if changed |
 | `.ai/checklists/` | New checklists copied; changed diffed |
 | `.ai/tests/` | New test scripts copied; changed diffed |
 | `.ai/scripts/` | New scripts copied (including this one); changed diffed |

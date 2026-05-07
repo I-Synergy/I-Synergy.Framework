@@ -134,7 +134,7 @@ public async Task<GetBudgetByIdResponse> HandleAsync(GetBudgetByIdQuery query)
 }
 ```
 
-## 7. Entity Exposure: NEVER Expose Domain Entities
+## 6. Entity Exposure: NEVER Expose Domain Entities
 
 Always convert to Models before returning from handlers. Responses wrap Models.
 
@@ -154,7 +154,7 @@ public async Task<Entities.Budgets.Budget> HandleAsync(...)
 }
 ```
 
-## 8. Progress Files: Current Solution Only
+## 7. Progress Files: Current Solution Only
 
 Progress files MUST be in the current solution's `.ai/` folder.
 
@@ -164,14 +164,14 @@ WRONG:     ~/.ai/progress/task-progress.md
 WRONG:     /other/solution/.ai/progress/task-progress.md
 ```
 
-## 9. Session Context: Read First, Update Last
+## 8. Session Context: Read First, Update Last
 
 Every session MUST:
 1. Read `.ai/session-context.md` FIRST
 2. Build on established patterns
 3. Update session-context.md with learnings before ending
 
-## 10. Handler Naming: Always Include Command/Query Suffix
+## 9. Handler Naming: Always Include Command/Query Suffix
 
 ```csharp
 // CORRECT
@@ -183,7 +183,7 @@ public sealed class CreateBudgetHandler : ICommandHandler<...>
 public sealed class GetBudgetByIdHandler : IQueryHandler<...>
 ```
 
-## 11. File Organization: One Type Per File, Subfolder Per Operation
+## 10. File Organization: One Type Per File, Subfolder Per Operation
 
 ```
 // CORRECT - Each operation gets its own subfolder with separate files
@@ -207,7 +207,7 @@ Features/Budgets/Commands/
   CreateBudgetHandler.cs
 ```
 
-## 12. Enum Naming: Always Plural (except *Status)
+## 11. Enum Naming: Always Plural (except *Status)
 
 All enum type names must be plural. Only enums with a `Status` suffix are exempt.
 
@@ -231,7 +231,7 @@ public enum AlertSeverity { Low, Medium, High }
 public enum OrderType { Buy, Sell }
 ```
 
-## 13. Entity Properties: Use Enum Type, Not int
+## 12. Entity Properties: Use Enum Type, Not int
 
 EF Core automatically converts enum types to/from int in the database. Always use the enum type on entity properties — never raw `int`.
 
@@ -249,7 +249,7 @@ public int SubscriptionStatus { get; set; }
 public int StatusId { get; set; }
 ```
 
-## 14. Plan Files: Always in `.ai/plans/`
+## 13. Plan Files: Always in `.ai/plans/`
 
 Plans and design docs MUST be saved in the project-local `.ai/plans/` folder. The `writing-plans` and `brainstorming` skills default to `docs/plans/` — always override that to `.ai/plans/`.
 
@@ -260,6 +260,33 @@ WRONG:     ~/.ai/plans/2026-02-28-feature-name.md
 ```
 
 This is configured via `plansDirectory` in `.claude/settings.json` and must not be bypassed by skill defaults.
+
+## 14. New Types: Search Entire Solution First
+
+**Before creating any entity, model, class, or property — search the entire solution first.** If it already exists, reuse or extend it. Never create overlapping or redundant types.
+
+```
+// CORRECT — search first, reuse what exists
+// "Customer" already has Person, Address, PhoneNumber → reference those
+
+// WRONG — duplicating existing domain types
+public class Client { string Name; string Phone; string Street; }
+```
+
+This check is mandatory at **planning time**. Every plan must explicitly state which existing entities are reused before proposing new ones.
+
+## 15. Code Writing: Always Delegate to Programmer Subagent
+
+All code writing, editing, and modification MUST be delegated to the `programmer` subagent. The main conversation handles reasoning, analysis, planning, and user interaction only.
+
+| Task | Runs on |
+|------|---------|
+| Planning, architecture, design decisions | Main conversation (Pro model) |
+| Code implementation (Write, Edit, code changes) | `programmer` subagent (Flash model) |
+| Code exploration and search | `Explore` subagent (Flash model) |
+| Build, test, and verification | `programmer` subagent (Flash model) |
+
+The `programmer` subagent is defined in `.ai/agents/programmer.md` and hard-linked to `.claude/agents/programmer.md` for discovery.
 
 ## Quick Violation Checklist
 
@@ -279,3 +306,4 @@ Before submitting code, verify you haven't violated these:
 - [ ] Session context read first and updated last
 - [ ] Enum names are plural (except *Status suffix enums)
 - [ ] EF Core entity properties use enum types, not raw int
+- [ ] Code writing delegated to `programmer` subagent (not done in main conversation)

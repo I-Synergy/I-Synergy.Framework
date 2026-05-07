@@ -5,17 +5,17 @@ description: Syncs .claude/skills/ and .github/skills/ from .ai/skills/ (the sou
 
 # Update Skills Skill
 
-Runs `sync-skills.py` to keep `.claude/skills/` and `.github/skills/` in sync with `.ai/skills/`.
+Runs `.ai/scripts/sync-skills.py` to keep `.claude/skills/` and `.github/skills/` in sync with `.ai/skills/`.
 
 ## Steps
 
 1. **Dry run first**
-   - Run `python sync-skills.py --dry-run`
+   - Run `python .ai/scripts/sync-skills.py --dry-run`
    - Report what would change (CREATE / UPDATE / REMOVE per target)
    - If nothing would change, report "All skills are already in sync" and stop
 
 2. **Apply sync**
-   - Run `python sync-skills.py`
+   - Run `python .ai/scripts/sync-skills.py`
    - Report the results
 
 3. **Verify**
