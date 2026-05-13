@@ -12,6 +12,7 @@
 		<PackageReference Include="Microsoft.Graph" />
 		<PackageReference Include="Microsoft.Identity.Client" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
+		<PackageReference Include="Microsoft.Kiota.Abstractions" />
 	</ItemGroup>
 	
 	<ItemGroup>
