@@ -9,7 +9,7 @@
 | **Query** | `Get{Entity}{Criteria}Query` | `GetBudgetByIdQuery` |
 | **Handler** | `{Action}{Entity}CommandHandler` / `Get{Entity}{Criteria}QueryHandler` | `CreateBudgetCommandHandler` |
 | **Response** | `{Action}{Entity}Response` | `CreateBudgetResponse` |
-| **DTO** | `{Entity}Model` or `{Entity}Dto` | `BudgetModel` |
+| **DTO / Model** | `{Entity}` (no suffix) | `Budget` |
 | **Interface** | `I{Type}` | `ICommandHandler<T>` |
 | **Classes** | PascalCase | `BudgetEndpoints` |
 | **Methods** | PascalCase + `Async` suffix | `GetBudgetByIdAsync` |
@@ -75,8 +75,8 @@ GetBudgetsByUserIdQuery.cs
 ### Handlers
 
 ```
-{CommandName}CommandHandler.cs
-{QueryName}QueryHandler.cs
+{Action}{Entity}CommandHandler.cs
+Get{Entity}{Criteria}QueryHandler.cs
 
 Examples:
 CreateBudgetCommandHandler.cs
@@ -213,10 +213,10 @@ public async Task<CreateBudgetResponse> HandleAsync(
     CancellationToken cancellationToken = default)
 ```
 
-### Data Access
+### Data Access (EF Core Primitives)
 
 ```csharp
-// Use named DbSet properties on DataContext for all CRUD operations
+// Use named DbSet properties on DataContext directly — no repositories, no extension methods
 // Create
 dataContext.Budgets.Add(entity);
 await dataContext.SaveChangesAsync(cancellationToken);
@@ -225,37 +225,18 @@ await dataContext.SaveChangesAsync(cancellationToken);
 var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, cancellationToken);
 
 // Read list
-var models = await dataContext.Budgets
-    .OrderBy(b => b.Description)
-    .Select(b => new BudgetModel(b.BudgetId, b.Description, b.Amount))
-    .ToListAsync(cancellationToken);
+var entities = await dataContext.Budgets.OrderBy(e => e.Description).ToListAsync(cancellationToken);
 
-// Update — no .Update() call needed; change tracker handles property mutations
-var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
+// Update — property mutation on tracked entity, no .Update() call needed
 entity.Description = command.Description;
 await dataContext.SaveChangesAsync(cancellationToken);
 
-// Delete
-var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
-dataContext.Budgets.Remove(entity);
-await dataContext.SaveChangesAsync(cancellationToken);
-```
-
-### Repository Methods (if used)
-
-```csharp
-// Async suffix + descriptive name
-GetByIdAsync()
-GetAllAsync()
-FindByAsync()
-CreateAsync()
-UpdateAsync()
-DeleteAsync()
-
-// Examples
-Task<Budget> GetByIdAsync(Guid id, CancellationToken ct);
-Task<List<Budget>> GetAllAsync(CancellationToken ct);
-Task<List<Budget>> FindByUserIdAsync(Guid userId, CancellationToken ct);
+// Delete — lookup first, null-check, then remove; validate rowsAffected
+var entityToDelete = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, cancellationToken);
+if (entityToDelete is null) return NotFoundResponse();
+dataContext.Budgets.Remove(entityToDelete);
+var rowsAffected = await dataContext.SaveChangesAsync(cancellationToken);
+if (rowsAffected == 0) return FailureResponse();
 ```
 
 ## Variable Naming
