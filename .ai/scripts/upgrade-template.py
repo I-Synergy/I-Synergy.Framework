@@ -17,10 +17,12 @@ temporary directory and cleaned up automatically after the upgrade completes.
 """
 
 import argparse
+import ast
 import copy
 import difflib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -32,6 +34,7 @@ from pathlib import Path
 # Template owns these — new files are copied, changed files are diffed.
 # Entries can be files or directories (directories are walked recursively).
 TEMPLATE_OWNED = [
+    ".ai/agents",
     ".ai/skills",
     ".ai/patterns",
     ".ai/reference/templates",
@@ -40,6 +43,13 @@ TEMPLATE_OWNED = [
     ".ai/reference/tokens.md",
     ".ai/reference/glossary.md",
     ".ai/reference/naming-conventions.md",
+    ".ai/reference/copilot-integration.md",
+    ".ai/reference/session-management.md",
+    ".ai/reference/task-execution.md",
+    ".ai/reference/work-type-mapping.md",
+    ".ai/reference/operational-rules.md",
+    ".ai/reference/readme-maintenance.md",
+    "CLAUDE.md",
     ".ai/checklists",
     ".ai/tests",
     ".ai/scripts",
@@ -47,7 +57,6 @@ TEMPLATE_OWNED = [
 
 # Project owns these — never read, never write.
 PROJECT_OWNED = [
-    "CLAUDE.md",
     ".ai/session-context.md",
     ".ai/project",
     ".ai/progress",
@@ -71,6 +80,57 @@ def c(colour: str, text: str) -> str:
     return f"{colour}{text}{RESET}" if sys.stdout.isatty() else text
 
 # ─── Helpers ─────────────────────────────────────────────────────────────────
+
+def _extract_list_from_file(filepath: Path, varname: str) -> list[str]:
+    """Parse a top-level list literal like ``VAR = [ ... ]`` from a Python file."""
+    text = filepath.read_text(encoding="utf-8", errors="replace")
+    # Match the assignment, allowing leading whitespace
+    m = re.search(rf"^{varname}\s*=\s*\[", text, re.MULTILINE)
+    if not m:
+        return []
+    # Find the closing bracket by tracking nesting
+    start = m.start()
+    i = m.end() - 1  # position of opening '['
+    depth = 1
+    while i < len(text) and depth > 0:
+        i += 1
+        if text[i] == "[":
+            depth += 1
+        elif text[i] == "]":
+            depth -= 1
+    try:
+        return ast.literal_eval(text[m.start():i+1])
+    except (ValueError, SyntaxError):
+        return []
+
+
+def reload_ownership(script_path: Path) -> tuple[list[str], list[str]]:
+    """Re-read TEMPLATE_OWNED and PROJECT_OWNED from an updated script on disk."""
+    new_template = _extract_list_from_file(script_path, "TEMPLATE_OWNED")
+    new_project  = _extract_list_from_file(script_path, "PROJECT_OWNED")
+    return new_template, new_project
+
+
+def self_update(source: Path, target: Path, dry_run: bool) -> bool:
+    """If upgrade-template.py changed, apply it first and return True."""
+    rel = Path(".ai/scripts/upgrade-template.py")
+    src_file = source / rel
+    tgt_file = target / rel
+
+    if not src_file.exists() or not tgt_file.exists():
+        return False
+
+    src_text = read_text(src_file)
+    tgt_text = read_text(tgt_file)
+    if src_text == tgt_text:
+        return False
+
+    print(f"\n  {c(YELLOW, 'SELF-UPDATE')} {rel} (applied first)")
+    show_diff(src_text, tgt_text, rel)
+    if not dry_run:
+        tgt_file.write_text(src_text, encoding="utf-8")
+    return True
+
 
 def is_project_owned(rel: Path) -> bool:
     rel_str = rel.as_posix()
@@ -138,7 +198,7 @@ def collect_template_files(source: Path) -> list[Path]:
             result.append(Path(entry))
         elif src_path.is_dir():
             for f in sorted(src_path.rglob("*")):
-                if f.is_file():
+                if f.is_file() and "__pycache__" not in f.parts:
                     result.append(f.relative_to(source))
     return result
 
@@ -256,6 +316,8 @@ def main() -> None:
 
 
 def _run_upgrade(args, source: Path, target: Path, raw_source: str, tmpdir) -> None:
+    global TEMPLATE_OWNED, PROJECT_OWNED
+
     print(f"\n{c(BOLD, 'Template Upgrade')}")
     print(f"  Source : {raw_source}")
     print(f"  Target : {target}")
@@ -265,13 +327,32 @@ def _run_upgrade(args, source: Path, target: Path, raw_source: str, tmpdir) -> N
         print(f"  Mode   : non-interactive (new files copied, changed files skipped)")
     print()
 
+    # ── Self-update: apply upgrade-template.py first if changed ──────────────
+    updated = self_update(source, target, args.dry_run)
+    if updated:
+        # Reload ownership tables from the freshly-written script
+        script_path = target / ".ai/scripts/upgrade-template.py"
+        new_template, new_project = reload_ownership(script_path)
+        if new_template:
+            TEMPLATE_OWNED = new_template
+        if new_project:
+            PROJECT_OWNED = new_project
+
+    # Regenerate file list AFTER any self-update so new ownership rules apply
     files = collect_template_files(source)
     if args.skills_only:
         files = [f for f in files if f.parts[0:2] == (".ai", "skills") or
                                       (len(f.parts) > 1 and f.parts[0] == ".ai" and f.parts[1] == "skills")]
 
+    # Remove self from remaining files since it's already been processed
+    self_rel = Path(".ai/scripts/upgrade-template.py")
+    if self_rel in files:
+        files.remove(self_rel)
+
     counts = {"added": 0, "updated": 0, "skipped_unchanged": 0,
               "skipped_project": 0, "skipped_diff": 0, "quit": False}
+    if updated:
+        counts["updated"] = 1  # already counted the self-update
 
     for rel in files:
         # Never touch project-owned paths
@@ -338,6 +419,24 @@ def _run_upgrade(args, source: Path, target: Path, raw_source: str, tmpdir) -> N
                     print(f"    {result.stderr.strip()}")
         else:
             print(f"\n{c(YELLOW, 'Note:')} run /update-skills in the target project to sync skills to Claude Code and GitHub Copilot")
+
+        sync_agents = target / ".ai" / "scripts" / "sync-agents.py"
+        if sync_agents.exists():
+            print(f"\n{c(CYAN, 'Syncing agents to Claude Code and GitHub Copilot targets ...')}")
+            result = subprocess.run(
+                [sys.executable, str(sync_agents)],
+                cwd=str(target),
+                capture_output=True,
+                text=True,
+                errors="replace",
+            )
+            if result.returncode == 0:
+                print(c(GREEN, "  ✓ Agents synced"))
+            else:
+                print(c(YELLOW, f"  ⚠ sync-agents.py exited {result.returncode}"))
+                if result.stderr:
+                    print(f"    {result.stderr.strip()}")
+        # no else: agents dir is new; older targets may not have sync-agents.py yet
 
     # ─── Summary ──────────────────────────────────────────────────────────────
     print(f"\n{c(BOLD, 'Summary')}")

@@ -166,7 +166,7 @@ def test_claude_dir_is_config_only() -> bool:
         print("  SKIP: .claude/ not found")
         return True
 
-    allowed = {"settings.json", "settings.local.json", "skills"}
+    allowed = {"settings.json", "settings.local.json", "skills", "agents"}
     unexpected = [p.name for p in claude_dir.iterdir() if p.name not in allowed]
 
     if unexpected:
