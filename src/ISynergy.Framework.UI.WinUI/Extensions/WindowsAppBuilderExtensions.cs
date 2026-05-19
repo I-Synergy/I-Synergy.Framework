@@ -1,19 +1,24 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
+using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Xaml;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -22,93 +27,168 @@ namespace ISynergy.Framework.UI.Extensions;
 public static class WindowsAppBuilderExtensions
 {
     /// <summary>
-    /// Returns an instance of the <see cref="IServiceCollection"/> and configures all windowsAppBuilder.
+    /// Adds logging with OpenTelemetry support to an <see cref="IHostApplicationBuilder"/>.
     /// </summary>
+    /// <param name="appBuilder"></param>
+    /// <param name="infoService"></param>
+    /// <param name="tracerProviderBuilderAction"></param>
+    /// <param name="meterProviderBuilderAction"></param>
+    /// <param name="loggerProviderBuilderAction"></param>
+    /// <returns></returns>
+    public static IHostApplicationBuilder ConfigureLogging(
+        this IHostApplicationBuilder appBuilder,
+        IInfoService infoService,
+        Action<TracerProviderBuilder>? tracerProviderBuilderAction = null,
+        Action<MeterProviderBuilder>? meterProviderBuilderAction = null,
+        Action<LoggerProviderBuilder>? loggerProviderBuilderAction = null)
+    {
+        appBuilder.Logging.SetMinimumLevel(LogLevel.Trace);
+
+#if DEBUG
+        appBuilder.Logging.AddDebug();
+#endif
+
+        appBuilder.Services.AddOpenTelemetry()
+            .WithLogging(loggerProviderBuilder =>
+            {
+                loggerProviderBuilder.SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(
+                            serviceName: infoService.ProductName,
+                            serviceVersion: infoService.ProductVersion.ToString())
+                        .AddTelemetrySdk()
+                        .AddEnvironmentVariableDetector());
+
+#if DEBUG
+                loggerProviderBuilder.AddConsoleExporter();
+#endif
+
+                loggerProviderBuilderAction?.Invoke(loggerProviderBuilder);
+            })
+            .WithTracing(tracerProviderBuilder =>
+            {
+                tracerProviderBuilder
+                    .SetResourceBuilder(
+                        ResourceBuilder.CreateDefault()
+                            .AddService(
+                                serviceName: infoService.ProductName,
+                                serviceVersion: infoService.ProductVersion.ToString())
+                            .AddTelemetrySdk()
+                            .AddEnvironmentVariableDetector());
+
+                tracerProviderBuilder.AddHttpClientInstrumentation();
+
+#if DEBUG
+                tracerProviderBuilder.AddConsoleExporter();
+#endif
+
+                tracerProviderBuilderAction?.Invoke(tracerProviderBuilder);
+            })
+            .WithMetrics(meterProviderBuilder =>
+            {
+                meterProviderBuilder
+                    .SetResourceBuilder(
+                        ResourceBuilder.CreateDefault()
+                            .AddService(
+                                serviceName: infoService.ProductName,
+                                serviceVersion: infoService.ProductVersion.ToString())
+                            .AddTelemetrySdk()
+                            .AddEnvironmentVariableDetector());
+
+                meterProviderBuilder.AddHttpClientInstrumentation();
+                meterProviderBuilder.AddRuntimeInstrumentation();
+
+#if DEBUG
+                meterProviderBuilder.AddConsoleExporter();
+#endif
+
+                meterProviderBuilderAction?.Invoke(meterProviderBuilder);
+            });
+
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Returns an instance of the <see cref="IServiceCollection"/> and configures all appBuilder.
+    /// </summary>
+    /// <typeparam name="TApplication"></typeparam>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TCommonServices"></typeparam>
     /// <typeparam name="TExceptionHandlerService"></typeparam>
     /// <typeparam name="TSettingsService"></typeparam>
     /// <typeparam name="TResource"></typeparam>
-    /// <param name="windowsAppBuilder"></param>
-    /// <param name="infoService"></param>
+    /// <param name="appBuilder"></param>
     /// <param name="action"></param>
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "BindWithReload and RegisterAssemblies use reflection. These are intentional design choices for configuration binding and assembly scanning at startup; types are preserved through explicit registration.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2091",
-        Justification = "Generic type parameters TContext, TCommonServices, TExceptionHandlerService, TSettingsService are registered via DI and their public constructors are available at runtime.")]
-    public static IHostBuilder ConfigureServices<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>( // NOSONAR
-        this IHostBuilder windowsAppBuilder,
-        IInfoService infoService,
-        Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
+    [RequiresUnreferencedCode(
+        "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
+        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
+    public static IHostApplicationBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+        this IHostApplicationBuilder appBuilder,
+        Action<IServiceCollection> action,
         Assembly assembly,
         Func<AssemblyName, bool> assemblyFilter)
+        where TApplication : Application
         where TContext : class, IContext
         where TCommonServices : class, ICommonServices
         where TExceptionHandlerService : class, IExceptionHandlerService
         where TSettingsService : class, ISettingsService
         where TResource : class
     {
-        windowsAppBuilder.ConfigureServices((context, services) =>
-        {
-            services.AddOptions();
+        appBuilder.Services.AddOptions();
 
-            services.Configure<ApplicationFeatures>(context.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
-            services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
+        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+
+        var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
+        if (mainAssembly is not null)
+        {
+            var infoService = InfoService.Default;
+            infoService.LoadAssembly(mainAssembly);
+        }
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-            var languageService = new LanguageService();
-            languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-            languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
-            languageService.AddResourceManager(typeof(TResource));
+        var languageService = new LanguageService();
+        languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
+        languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+        languageService.AddResourceManager(typeof(TResource));
 #pragma warning restore IL2026
 
-            services.TryAddSingleton<IInfoService>(s => infoService);
-            services.TryAddSingleton<ILanguageService>(s => languageService);
-            services.TryAddSingleton<IMessengerService, MessengerService>();
+        appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
+        appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
+        appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
 
-            services.TryAddScoped<TContext>();
-            services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
+        appBuilder.Services.TryAddSingleton<TContext>();
+        appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
 
-            services.TryAddSingleton<TCommonServices>();
-            services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
+        appBuilder.Services.TryAddSingleton<TCommonServices>();
+        appBuilder.Services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
 
-            services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
+        appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
-            services.TryAddScoped<ISettingsService, TSettingsService>();
-            services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+        appBuilder.Services.TryAddScoped<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+        appBuilder.Services.TryAddScoped<IMigrationService, MigrationService>();
+        appBuilder.Services.TryAddScoped<IThemeService, ThemeService>();
 
-            services.TryAddSingleton<IScopedContextService, ScopedContextService>();
-            services.TryAddSingleton<INavigationService, NavigationService>();
-            services.TryAddSingleton<IBusyService, BusyService>();
-            services.TryAddSingleton<IDialogService, DialogService>();
-            services.TryAddSingleton<IClipboardService, ClipboardService>();
-            services.TryAddSingleton<IFileService<FileResult>, FileService>();
-            services.TryAddSingleton<IUpdateService, UpdateService>();
+        appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
+        appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
+        appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
+        appBuilder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
+        appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
+        appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
+        appBuilder.Services.TryAddSingleton<IDialogService, DialogService>();
+        appBuilder.Services.TryAddSingleton<IClipboardService, ClipboardService>();
+        appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
-            services.RegisterAssemblies(assembly, assemblyFilter);
+        appBuilder.Services.RegisterAssemblies(assembly, assemblyFilter);
 
-            action.Invoke(context.Configuration, context.HostingEnvironment, services);
-        });
+        action.Invoke(appBuilder.Services);
 
-        return windowsAppBuilder;
-    }
+        ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
 
-    public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IScopedContextService scopedContextService, string? key = null, Func<T>? implementation = null)
-    {
-        if (string.IsNullOrEmpty(key))
-            key = typeof(T).Name;
-
-        if (resources.ContainsKey(key))
-            resources.Remove(key);
-
-        if (implementation is not null)
-            resources.Add(key, implementation.Invoke());
-        else
-            resources.Add(key, scopedContextService.GetService<T>());
-
-        return resources;
+        return appBuilder;
     }
 }

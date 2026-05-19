@@ -1,23 +1,26 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Styles;
-using Microsoft.UI.Xaml;
+using Windows.UI;
 
 namespace ISynergy.Framework.UI.Extensions;
+
 public static class ApplicationExtensions
 {
-    public static Microsoft.UI.Xaml.Application SetApplicationColor(this Microsoft.UI.Xaml.Application application, string color) // NOSONAR
+    public static Microsoft.UI.Xaml.Application SetApplicationColor(this Microsoft.UI.Xaml.Application application, Color color) // NOSONAR
     {
+        var hexColor = $"#{color.R:X2}{color.G:X2}{color.B:X2}".ToLower();
+
         foreach (var item in application.Resources.MergedDictionaries.EnsureNotNull())
         {
             if (!item.Source.AbsoluteUri.EndsWith("themeresources.xaml") &&
                 !item.Source.AbsoluteUri.EndsWith("themeresources_v2.xaml") &&
                 !item.Source.AbsoluteUri.EndsWith("Images.xaml") &&
                 !item.Source.AbsoluteUri.EndsWith("Style.xaml") &&
-                !item.Source.AbsoluteUri.EndsWith($"Theme{color.Substring(1, 6)}"))
+                !item.Source.AbsoluteUri.EndsWith($"Theme{hexColor.Substring(1, 6)}"))
                 application.Resources.MergedDictionaries.Remove(item);
         }
 
-        switch (color) // NOSONAR
+        switch (hexColor) // NOSONAR
         {
             case "#ff8c00":
                 var style_ff8c00 = new Themeff8c00();

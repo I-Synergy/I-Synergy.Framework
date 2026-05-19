@@ -16,6 +16,8 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public abstract partial class View : Page, IView
 {
+    private IViewModel? _viewModel;
+
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
@@ -24,6 +26,9 @@ public abstract partial class View : Page, IView
     {
         get
         {
+            if (_viewModel is not null)
+                return _viewModel;
+
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
@@ -31,6 +36,7 @@ public abstract partial class View : Page, IView
         }
         set
         {
+            _viewModel = value;
             DataContext = value;
         }
     }
@@ -69,11 +75,9 @@ public abstract partial class View : Page, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            _viewModel?.Dispose();
+            _viewModel = null;
         }
-
-        // free native resources if there are any.
 
         base.Dispose(disposing);
     }
@@ -86,11 +90,9 @@ public abstract partial class View : Page, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            _viewModel?.Dispose();
+            _viewModel = null;
         }
-
-        // free native resources if there are any.
     }
 #endif
     #endregion
