@@ -149,6 +149,15 @@ public class AuthenticationViewModel : ViewModel
     }
 
     /// <summary>
+    /// Gets or sets whether the user wants to be remembered on next launch.
+    /// </summary>
+    public bool AutoLogin
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
     /// Gets or sets the ShowLogin property value.
     /// </summary>
     /// <value><c>true</c> if [login visible]; otherwise, <c>false</c>.</value>
