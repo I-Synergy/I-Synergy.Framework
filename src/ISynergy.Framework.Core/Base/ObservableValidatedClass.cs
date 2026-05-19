@@ -369,8 +369,6 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
             // free managed resources
             Validator = null;
 
-            Errors?.Clear();
-
             if (_errorsChanged is not null)
             {
                 foreach (var @delegate in _errorsChanged.GetInvocationList())
