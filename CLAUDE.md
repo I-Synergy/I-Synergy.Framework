@@ -31,11 +31,30 @@ When searching for code references, frameworks, or dependencies, search the ENTI
 
 See `.ai/reference/task-execution.md` for the full protocol: plan mode, progress files, ReAct loop, subagent delegation, and the task definition template.
 
+### Subagent Delegation
+
+All code writing must be delegated to specialized subagents, never done in the main conversation:
+
+| Agent | Use For |
+|-------|---------|
+| `architect` | Feature design, pattern selection, component boundaries, implementation blueprints |
+| `developer` | .NET/C# code — CQRS handlers, API endpoints, Blazor components, EF Core, refactoring, builds |
+| `tester` | MSTest unit/integration tests, Moq mocks, Reqnroll BDD scenarios |
+| `ui-tester` | Playwright E2E tests, accessibility checks, visual regression |
+| `designer` | Visual design — color palettes, typography, spacing, branding, design tokens |
+| `ui-developer` | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
+| `reviewer` | Code quality, SOLID, CQRS compliance, security issues, architecture |
+| `writer` | XML documentation, API docs, READMEs, ADRs, technical prose |
+
+Agents are defined in `.ai/agents/` and `.claude/agents/`.
+
 ## Coding Rules
 
-See `.ai/reference/critical-rules.md` for non-negotiable patterns (data access, naming, async, file organization, enum conventions). See `.ai/reference/forbidden-tech.md` for banned libraries and their replacements.
+See `.ai/reference/critical-rules.md` for non-negotiable patterns (data access, naming, async, file organization, enum conventions, API endpoint produces metadata, OpenAPI transformers, Kiota clients, validation, rate limiting). See `.ai/reference/forbidden-tech.md` for banned libraries and their replacements.
 
 See `.ai/patterns/cqrs-patterns.md` for complete CQRS patterns including commands, queries, handlers, models, responses, and service registration.
+
+See `.ai/patterns/api-patterns.md` for API endpoint patterns (Minimal APIs, TypedResults, OpenAPI, Kiota client generation, validation, security middleware).
 
 ## Reference Architecture
 
@@ -76,6 +95,11 @@ See `.ai/reference/readme-maintenance.md` — README.md must be updated in the s
 - `.ai/patterns/cqrs-patterns.md`
 - `.ai/patterns/api-patterns.md`
 - `.ai/patterns/testing-patterns.md`
+- `.ai/patterns/microservices.md`
+- `.ai/patterns/mvvm.md`
+- `.ai/patterns/object-oriented-programming.md`
+- `.ai/patterns/service-oriented-architecture.md`
+- `.ai/patterns/test-driven-development.md`
 
 **Templates:**
 - `.ai/reference/templates/` — code generation templates
@@ -83,5 +107,38 @@ See `.ai/reference/readme-maintenance.md` — README.md must be updated in the s
 
 **Checklists:**
 - `.ai/checklists/pre-submission.md` — run before marking any task complete
+
+**Skills:**
+- `.ai/reference/work-type-mapping.md` — which skills to load per task type
+- `.ai/skills/api-endpoints/SKILL.md` — API endpoints, OpenAPI, Kiota clients
+- `.ai/skills/api-security/SKILL.md` — API security hardening
+- `.ai/skills/architect/SKILL.md` — system architecture design
+- `.ai/skills/blazor-specialist/SKILL.md` — Blazor UI components
+- `.ai/skills/book-to-skill/SKILL.md` — convert books to skills
+- `.ai/skills/code-reviewer/SKILL.md` — code quality review
+- `.ai/skills/database-migration/SKILL.md` — EF Core, database migrations
+- `.ai/skills/design-interrogation/SKILL.md` — architecture interrogation
+- `.ai/skills/devops-engineer/SKILL.md` — CI/CD, containers, IaC
+- `.ai/skills/dotnet-engineer/SKILL.md` — .NET/C# development
+- `.ai/skills/gap-review/SKILL.md` — design vs implementation validation
+- `.ai/skills/integration-specialist/SKILL.md` — external API integration
+- `.ai/skills/keycloak-theme-colors/SKILL.md` — Keycloak theme accent colors
+- `.ai/skills/maui-specialist/SKILL.md` — MAUI mobile development
+- `.ai/skills/performance-engineer/SKILL.md` — performance optimization
+- `.ai/skills/playwright-tester/SKILL.md` — E2E and UI testing
+- `.ai/skills/refactor/SKILL.md` — bulk find-and-replace refactoring
+- `.ai/skills/security/SKILL.md` — security strategy, compliance
+- `.ai/skills/skill-creator/SKILL.md` — create and modify skills
+- `.ai/skills/software-security/SKILL.md` — application security
+- `.ai/skills/solution-generator/SKILL.md` — solution scaffold generation
+- `.ai/skills/technical-writer/SKILL.md` — documentation, API docs
+- `.ai/skills/ubiquitous-language/SKILL.md` — domain vocabulary
+- `.ai/skills/unit-tester/SKILL.md` — MSTest unit/integration tests
+- `.ai/skills/update-skills/SKILL.md` — sync skills across directories
+- `.ai/skills/upgrade-template/SKILL.md` — template upgrade tool
+- `.ai/skills/usecase-specification/SKILL.md` — use case specifications
+- `.ai/skills/user-story/SKILL.md` — user stories with Gherkin
+- `.ai/skills/verify-config/SKILL.md` — config drift detection
+- `.ai/skills/vertical-slices/SKILL.md` — vertical slice blueprints
 
 

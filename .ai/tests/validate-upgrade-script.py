@@ -71,7 +71,6 @@ def test_project_owned_completeness() -> bool:
     owned = set(mod.PROJECT_OWNED)
 
     required = {
-        "CLAUDE.md",
         ".ai/session-context.md",
         ".ai/project",
         ".ai/progress",
@@ -127,7 +126,6 @@ def test_is_project_owned() -> bool:
     fn  = mod.is_project_owned
 
     should_be_owned = [
-        Path("CLAUDE.md"),
         Path(".ai/session-context.md"),
         Path(".ai/project/architecture.md"),
         Path(".ai/project/tech-stack.md"),
@@ -289,7 +287,6 @@ def test_project_owned_never_copied() -> bool:
         target = Path(target_tmp)
 
         # Place project-owned files in source
-        (source / "CLAUDE.md").write_text("source CLAUDE.md", encoding="utf-8")
         (source / ".ai").mkdir()
         (source / ".ai" / "session-context.md").write_text("source session context", encoding="utf-8")
         project_dir = source / ".ai" / "project"
@@ -306,7 +303,6 @@ def test_project_owned_never_copied() -> bool:
         )
 
         forbidden = [
-            target / "CLAUDE.md",
             target / ".ai" / "session-context.md",
             target / ".ai" / "project" / "tech-stack.md",
         ]

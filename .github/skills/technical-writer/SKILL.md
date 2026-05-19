@@ -158,7 +158,7 @@ sequenceDiagram
 
     Client->>Endpoint: HTTP POST /budgets
     Endpoint->>Handler: CreateBudgetCommand
-    Handler->>DataContext: SaveChangesAsync()
+    Handler->>DataContext: AddItemAsync()
     DataContext->>Database: INSERT
     Database-->>DataContext: Success
     DataContext-->>Handler: Budget Model

@@ -26,6 +26,8 @@ TEMPLATE_ROOT = SCRIPT_DIR.parent.parent
 ALLOWED_CLAUDE_REFS = {
     ".claude/settings.json",
     ".claude/settings.local.json",
+    ".claude/agents/",
+    ".claude/skills/",
 }
 
 # Files to check for stale .claude/ content references

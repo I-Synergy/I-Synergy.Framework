@@ -263,11 +263,9 @@ public sealed class BudgetRepository : IReadable<Budget>, IWritable<Budget>, IDe
     public async Task DeleteAsync(Guid id, CancellationToken ct)
     {
         var entity = await _dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, ct);
-        if (entity is not null)
-        {
-            _dataContext.Budgets.Remove(entity);
-            await _dataContext.SaveChangesAsync(ct);
-        }
+        if (entity is null) throw new InvalidOperationException($"Budget {id} not found");
+        _dataContext.Budgets.Remove(entity);
+        await _dataContext.SaveChangesAsync(ct);
     }
 }
 
@@ -1416,7 +1414,7 @@ public sealed class PdfReportGenerator : ReportGenerator
 
     protected override async Task<BudgetData> FetchDataAsync(Guid budgetId, CancellationToken ct)
     {
-        var budget = await _dataContext.GetItemByIdAsync<Budget, BudgetModel, Guid>(budgetId, ct);
+        var budget = await _dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == budgetId, ct);
         return new BudgetData(budget.Name, budget.Amount);
     }
 

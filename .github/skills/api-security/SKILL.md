@@ -230,7 +230,8 @@ public sealed class TransferFundsHandler(
         CancellationToken cancellationToken = default)
     {
         // Business rules
-        var sourceAccount = await dataContext.Accounts.FirstOrDefaultAsync(e => e.AccountId == command.SourceAccountId, cancellationToken);
+        var sourceAccount = await dataContext.GetItemByIdAsync<Account, AccountModel, Guid>(
+            command.SourceAccountId, cancellationToken);
 
         if (sourceAccount.Balance < command.Amount)
             throw new InsufficientFundsException("Insufficient funds for transfer");

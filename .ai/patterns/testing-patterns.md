@@ -47,8 +47,10 @@ public class Create{Entity}HandlerTests
         Assert.AreNotEqual(Guid.Empty, result.{Entity}Id);
 
         _dataContextMock.Verify(
-            x => x.SaveChangesAsync(
-                It.IsAny<CancellationToken>()),
+            x => x.{Entities}.Add(It.IsAny<{Entity}Model>()),
+            Times.Once);
+        _dataContextMock.Verify(
+            x => x.SaveChangesAsync(It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
@@ -202,31 +204,86 @@ public async Task HandleAsync_NegativeAmount_ThrowsArgumentException()
 ## Moq Patterns
 
 ```csharp
-// Setup DbSet for query operations
-var budgets = new List<Budget> { new Budget { BudgetId = Guid.NewGuid(), Description = "Test" } }.AsQueryable();
-var mockDbSet = budgets.BuildMockDbSet();
-_dataContextMock.Setup(x => x.Budgets).Returns(mockDbSet.Object);
+// ─── EF Core DbSet Mock Helpers ─────────────────────────────────────
+// Place these in a test infrastructure project or base test class.
+// They enable FirstOrDefaultAsync/ToListAsync on mocked DbSet properties.
 
-// Verify SaveChangesAsync called
+internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
+{
+    private readonly IEnumerator<T> _inner;
+    public TestAsyncEnumerator(IEnumerator<T> inner) => _inner = inner;
+    public ValueTask DisposeAsync() { _inner.Dispose(); return ValueTask.CompletedTask; }
+    public ValueTask<bool> MoveNextAsync() => ValueTask.FromResult(_inner.MoveNext());
+    public T Current => _inner.Current;
+}
+
+internal class TestAsyncQueryProvider<T> : IQueryProvider
+{
+    private readonly IQueryProvider _inner;
+    public TestAsyncQueryProvider(IQueryProvider inner) => _inner = inner;
+    public IQueryable CreateQuery(Expression expression) =>
+        new TestAsyncEnumerable<T>(expression);
+    public IQueryable<TElement> CreateQuery<TElement>(Expression expression) =>
+        new TestAsyncEnumerable<TElement>(expression);
+    public object? Execute(Expression expression) => _inner.Execute(expression);
+    public TResult Execute<TResult>(Expression expression) =>
+        _inner.Execute<TResult>(expression);
+}
+
+internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
+{
+    public TestAsyncEnumerable(IEnumerable<T> enumerable) : base(enumerable) { }
+    public TestAsyncEnumerable(Expression expression) : base(expression) { }
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default) =>
+        new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
+    IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
+}
+
+internal static class DbSetMockHelper
+{
+    public static Mock<DbSet<T>> CreateMock<T>(List<T> source) where T : class
+    {
+        var queryable = source.AsQueryable();
+        var mock = new Mock<DbSet<T>>();
+        mock.As<IAsyncEnumerable<T>>()
+            .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+            .Returns(new TestAsyncEnumerator<T>(queryable.GetEnumerator()));
+        mock.As<IQueryable<T>>()
+            .Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<T>(queryable.Provider));
+        mock.As<IQueryable<T>>()
+            .Setup(m => m.Expression).Returns(queryable.Expression);
+        mock.As<IQueryable<T>>()
+            .Setup(m => m.ElementType).Returns(queryable.ElementType);
+        mock.As<IQueryable<T>>()
+            .Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
+        return mock;
+    }
+}
+
+// ─── Setup DbSet to return data from FirstOrDefaultAsync ───
+var expectedBudget = new BudgetModel { BudgetId = Guid.NewGuid(), Description = "Test" };
+var budgetsMock = DbSetMockHelper.CreateMock(new List<BudgetModel> { expectedBudget });
+_dataContextMock.Setup(x => x.Budgets).Returns(budgetsMock.Object);
+
+// ─── Verify Add + SaveChanges (Create) ───
 _dataContextMock.Verify(
-    x => x.SaveChangesAsync(
-        It.IsAny<CancellationToken>()),
+    x => x.Budgets.Add(It.Is<BudgetModel>(m => m.Description == "Test")),
+    Times.Once);
+_dataContextMock.Verify(
+    x => x.SaveChangesAsync(It.IsAny<CancellationToken>()),
     Times.Once);
 
-// Verify SaveChangesAsync never called
+// ─── Verify Remove + SaveChanges (Delete) ───
 _dataContextMock.Verify(
-    x => x.SaveChangesAsync(
-        It.IsAny<CancellationToken>()),
-    Times.Never);
-
-// Verify entity was added
+    x => x.Budgets.Remove(It.IsAny<BudgetModel>()),
+    Times.Once);
 _dataContextMock.Verify(
-    x => x.Budgets.Add(
-        It.IsAny<Budget>()),
+    x => x.SaveChangesAsync(It.IsAny<CancellationToken>()),
     Times.Once);
 
-// Setup FirstOrDefaultAsync to return specific entity
-// (Use MockDbSet or an in-memory database for query testing)
+// ─── Setup empty DbSet (not found => FirstOrDefaultAsync returns null) ───
+var emptyBudgetsMock = DbSetMockHelper.CreateMock(new List<BudgetModel>());
+_dataContextMock.Setup(x => x.Budgets).Returns(emptyBudgetsMock.Object);
 ```
 
 ## Test Organization
