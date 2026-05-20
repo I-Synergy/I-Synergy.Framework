@@ -9,10 +9,11 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics.CodeAnalysis;
+using Windows.Foundation;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class DialogService : IDialogService, IDisposable
+public class DialogService : BaseDialogService, IDialogService, IDisposable
 {
     private const string DefaultDialogButtonStyleKey = "DefaultDialogButtonStyle";
 
@@ -114,28 +115,8 @@ public class DialogService : IDialogService, IDisposable
     {
         Argument.IsNotNullOrEmpty(name);
 
-        if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
-            return ShowMessageAsync(
-                string.Format(_languageService.GetString("Greeting_Night"), name),
-                _languageService.GetString("TitleWelcome"),
-                MessageBoxButtons.OK);
-
-        if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
-            return ShowMessageAsync(
-                string.Format(_languageService.GetString("Greeting_Morning"), name),
-                _languageService.GetString("TitleWelcome"),
-                MessageBoxButtons.OK);
-
-        if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
-            return ShowMessageAsync(
-                string.Format(_languageService.GetString("Greeting_Afternoon"), name),
-                _languageService.GetString("TitleWelcome"),
-                MessageBoxButtons.OK);
-
-        return ShowMessageAsync(
-            string.Format(_languageService.GetString("Greeting_Evening"), name),
-            _languageService.GetString("TitleWelcome"),
-            MessageBoxButtons.OK);
+        var (message, title) = ResolveGreeting(name, _languageService);
+        return ShowMessageAsync(message, title, MessageBoxButtons.OK);
     }
 
     /// <summary>
@@ -500,8 +481,14 @@ public class DialogService : IDialogService, IDisposable
                 {
                     var tcs = new TaskCompletionSource<bool>();
 
-                    // Add event handler to know when dialog is closed
-                    _activeDialog.Closed += (s, e) => tcs.TrySetResult(true);
+                    // Add self-removing event handler to know when dialog is closed
+                    TypedEventHandler<ContentDialog, ContentDialogClosedEventArgs>? handler = null;
+                    handler = (s, e) =>
+                    {
+                        _activeDialog.Closed -= handler;
+                        tcs.TrySetResult(true);
+                    };
+                    _activeDialog.Closed += handler;
 
                     // Close the active dialog
                     await _activeDialog.CloseAsync();

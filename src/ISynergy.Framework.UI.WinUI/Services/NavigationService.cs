@@ -1,9 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
@@ -11,231 +7,149 @@ using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Reflection;
 using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
-/// Class NavigationService.
-/// Implements the <see cref="INavigationService" />
+/// WinUI implementation of the navigation service.
+/// Handles WinUI-specific window/frame access, view creation, and UI thread dispatching.
 /// </summary>
-/// <seealso cref="INavigationService" />
-public class NavigationService : INavigationService
+/// <seealso cref="BaseNavigationService" />
+public class NavigationService : BaseNavigationService
 {
-    private readonly IScopedContextService _scopedContextService;
-    private readonly IExceptionHandlerService _exceptionHandlerService;
-    private readonly ILogger _logger;
-
-    private EventHandler? _backStackChanged;
-
-    /// <summary>
-    /// Safely calls OnNavigatedTo with exception handling.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "IViewModel.OnNavigatedTo() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
-    private void SafeOnNavigatedTo(IViewModel viewModel)
-    {
-        try
-        {
-            viewModel.OnNavigatedTo();
-        }
-        catch (Exception ex)
-        {
-            _exceptionHandlerService.HandleException(ex);
-        }
-    }
-
-    /// <summary>
-    /// Safely calls OnNavigatedFrom with exception handling.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "IViewModel.OnNavigatedFrom() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
-    private void SafeOnNavigatedFrom(IViewModel viewModel)
-    {
-        try
-        {
-            viewModel.OnNavigatedFrom();
-        }
-        catch (Exception ex)
-        {
-            _exceptionHandlerService.HandleException(ex);
-        }
-    }
-
-    public event EventHandler? BackStackChanged
-    {
-        add
-        {
-            // Only add if not already subscribed
-            if (_backStackChanged is null || !_backStackChanged.GetInvocationList().Contains(value))
-                _backStackChanged += value;
-        }
-        remove
-        {
-            _backStackChanged -= value;
-        }
-    }
-
-    /// <summary>
-    /// Handles the <see cref="E:BackStackChanged" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnBackStackChanged(EventArgs e)
-    {
-        // Create a copy to avoid modification during iteration
-        var handlers = _backStackChanged?.GetInvocationList();
-        if (handlers is not null)
-        {
-            foreach (EventHandler handler in handlers)
-            {
-                try
-                {
-                    handler(this, e);
-                }
-                catch (ObjectDisposedException)
-                {
-                    // Remove disposed subscribers
-                    _backStackChanged -= handler;
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Navigation backstack.
-    /// </summary>
-    private Stack<IViewModel> _backStack = new Stack<IViewModel>();
-
-    /// <summary>
-    /// Maximum size for the backstack before cleaning up old ViewModels
-    /// </summary>
-    private const int MaxBackstackSize = 10;
-
-    /// <summary>
-    /// Gets a value indicating whether this instance can go back.
-    /// </summary>
-    /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-    public bool CanGoBack => _backStack.Count > 0;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
-    /// <param name="scopedContextService"></param>
-    /// <param name="exceptionHandlerService"></param>
-    /// <param name="logger"></param>
     public NavigationService(
         IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
+        ICommonServices commonServices,
         ILogger<NavigationService> logger)
+        : base(scopedContextService, exceptionHandlerService, commonServices, logger)
     {
-        _logger = logger;
-        _logger.LogTrace("NavigationService instance created with ID: {InstanceId}", Guid.NewGuid());
-
-        _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
-        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
     }
 
     /// <summary>
-    /// Goes the back.
+    /// Gets the navigation Frame from the WinUI MainWindow's visual tree.
     /// </summary>
-    public Task GoBackAsync()
+    protected override object? GetNavigationFrame()
     {
-        // Keep track of whether we had items before popping
-        bool hadItems = CanGoBack;
-
-        if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
-        {
-            // Set IsInitialized to false to force reinitialization
-            viewModel.IsInitialized = false;
-
-            // If this was the last item, explicitly raise the event
-            if (hadItems && !CanGoBack)
-            {
-                OnBackStackChanged(EventArgs.Empty);
-            }
-
-            // Navigate back with the preserved ViewModel
-            return NavigateAsync(viewModel, backNavigation: true);
-        }
-
-        return Task.CompletedTask;
+        if (Application.MainWindow?.Content is DependencyObject dependencyObject)
+            return dependencyObject.FindDescendant<Frame>();
+        return null;
     }
 
     /// <summary>
-    /// Cleans up ViewModels in the backstack beyond a certain threshold.
+    /// Gets the current content of the specified Frame.
     /// </summary>
-    public Task CleanBackStackAsync(bool suppressEvent = false)
+    protected override object? GetFrameContent(object frame)
     {
-        _backStack.Clear();
-
-        if (!suppressEvent)
-        {
-            try
-            {
-                OnBackStackChanged(EventArgs.Empty);
-            }
-            catch (ObjectDisposedException)
-            {
-                // Clear all handlers if we get a disposal exception
-                _backStackChanged = null;
-            }
-        }
-
-        return Task.CompletedTask;
+        return ((Frame)frame).Content;
     }
 
     /// <summary>
-    /// Checks if a ViewModel has any running commands.
+    /// Sets the content of the specified Frame.
     /// </summary>
-    /// <remarks>
-    /// Uses <see cref="ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider"/> when available (AOT-safe).
-    /// Falls back to property reflection when the ViewModel does not implement <see cref="ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider"/>.
-    /// The reflection fallback is decorated with <see cref="System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute"/>
-    /// to surface a warning at call sites when publishing with trimming enabled.
-    /// </remarks>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "HasRunningCommandsViaReflection is the reflection fallback path. The AOT-safe path via ICommandProvider is tried first. Reflection fallback is preserved for backwards compatibility.")]
-    private bool HasRunningCommands(IViewModel viewModel)
+    protected override void SetFrameContent(object frame, IView page)
+    {
+        ((Frame)frame).Content = page;
+    }
+
+    /// <summary>
+    /// Gets the MainWindow's current content directly.
+    /// </summary>
+    protected override object? GetWindowContent()
+    {
+        return Application.MainWindow?.Content;
+    }
+
+    /// <summary>
+    /// Sets the MainWindow content directly (used for modal navigation).
+    /// </summary>
+    protected override void SetWindowContent(IView page)
+    {
+        Application.MainWindow.Content = (Microsoft.UI.Xaml.UIElement)page;
+    }
+
+    /// <summary>
+    /// Creates an <see cref="IView"/> from a ViewModel type using WinUI-specific view resolution.
+    /// </summary>
+    [RequiresUnreferencedCode(
+        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
+        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
+    protected override IView CreateView(Type viewModelType, IViewModel? viewModel, object? parameter)
     {
         if (viewModel is null)
-            return false;
+            viewModel = (IViewModel)_scopedContextService.GetRequiredService(viewModelType);
 
-        // AOT-safe path: ViewModel explicitly exposes its commands via ICommandProvider.
-        if (viewModel is ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider provider)
-            return provider.GetCommands().OfType<IAsyncRelayCommand>().Any(c => c.IsRunning);
+        var viewName = viewModelType.GetRelatedView();
+        var viewType = viewName.GetRelatedViewType();
 
-        // Reflection fallback — not AOT-safe, but preserved for backwards compatibility.
-        return HasRunningCommandsViaReflection(viewModel);
-    }
-
-    /// <summary>
-    /// Reflection-based fallback for <see cref="HasRunningCommands"/> used when the ViewModel
-    /// does not implement <see cref="ISynergy.Framework.Mvvm.Abstractions.Commands.ICommandProvider"/>.
-    /// Not compatible with NativeAOT or aggressive trimming.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
-        "Reflection over ViewModel properties is not trim-safe. Implement ICommandProvider on the ViewModel instead.")]
-    private static bool HasRunningCommandsViaReflection(IViewModel viewModel)
-    {
-        var commandProperties = viewModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(p => typeof(IAsyncRelayCommand).IsAssignableFrom(p.PropertyType));
-
-        foreach (var property in commandProperties)
+        if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View resolvedPage)
         {
-            if (property.GetValue(viewModel) is IAsyncRelayCommand command && command.IsRunning)
-                return true;
+            if (viewModel is not null)
+                resolvedPage.ViewModel = viewModel;
+
+            if (resolvedPage.ViewModel is null)
+                resolvedPage.ViewModel = (IViewModel)_scopedContextService.GetRequiredService(viewModelType);
+
+            if (parameter is not null && resolvedPage.ViewModel is not null)
+                resolvedPage.ViewModel.Parameter = parameter;
+
+            return resolvedPage;
         }
 
-        return false;
+        throw new FileNotFoundException($"Cannot create or navigate to page: {viewName}.");
     }
 
     /// <summary>
-    /// get navigation blade as an asynchronous operation.
+    /// Monitors a blade view for loading by subscribing to the WinUI Loaded event.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
+    protected override async Task MonitorViewLoadAsync(IView view, int timeoutMs = 500)
+    {
+        if (view is View platformView && !platformView.IsLoaded)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            void OnViewLoaded(object sender, RoutedEventArgs e)
+            {
+                platformView.Loaded -= OnViewLoaded;
+                tcs.TrySetResult(true);
+            }
+
+            platformView.Loaded += OnViewLoaded;
+
+            var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+
+            if (completedTask != tcs.Task)
+                platformView.Loaded -= OnViewLoaded;
+        }
+    }
+
+    /// <summary>
+    /// Dispatches an action on the WinUI DispatcherQueue.
+    /// </summary>
+    protected override void DispatchOnUIThread(Action action)
+    {
+        if (Application.MainWindow?.DispatcherQueue is not null)
+        {
+            Application.MainWindow.DispatcherQueue.TryEnqueue(
+                Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
+                new Microsoft.UI.Dispatching.DispatcherQueueHandler(action));
+        }
+    }
+
+    /// <summary>
+    /// Gets a navigation blade for the specified ViewModel.
+    /// WinUI-specific: checks for <see cref="ISelectionViewModel"/> and resolves a <see cref="SelectionView"/> when applicable.
+    /// </summary>
+    [UnconditionalSuppressMessage("Trimming", "IL2026",
         Justification = "GetRelatedViewType() and GetRequiredService(Type) use reflection/runtime-type lookup. All view and ViewModel types are preserved through DI registration.")]
-    private async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
+    protected override async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
         var viewType = default(Type);
         var view = viewModel.GetRelatedView();
@@ -245,36 +159,19 @@ public class NavigationService : INavigationService
         else
             viewType = view.GetRelatedViewType();
 
-        if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View resolvedPage)
+        if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is IView resolvedPage)
         {
             resolvedPage.ViewModel = viewModel;
 
-            // Create a task to track when the view is loaded
-            var viewLoadedTcs = new TaskCompletionSource<bool>();
-
-            void OnViewLoaded(object sender, RoutedEventArgs e)
-            {
-                ((View)sender).Loaded -= OnViewLoaded;
-                viewLoadedTcs.TrySetResult(true);
-            }
-
-            if (!resolvedPage.IsLoaded)
-                resolvedPage.Loaded += OnViewLoaded;
+            // Subscribe to Loaded event BEFORE initialization (preserves original order)
+            var loadTask = MonitorViewLoadAsync(resolvedPage);
 
             // Initialize the ViewModel first
             if (!viewModel.IsInitialized)
                 await viewModel.InitializeAsync();
 
-            // If the view is not yet loaded, wait for it (with a reasonable timeout)
-            if (!resolvedPage.IsLoaded)
-            {
-                var timeoutTask = Task.Delay(500);
-                var completedTask = await Task.WhenAny(viewLoadedTcs.Task, timeoutTask);
-
-                // Cleanup the event handler if we timed out
-                if (completedTask == timeoutTask)
-                    resolvedPage.Loaded -= OnViewLoaded;
-            }
+            // Wait for the view to finish loading (with timeout)
+            await loadTask;
 
             // Call OnNavigatedTo for the blade ViewModel
             SafeOnNavigatedTo(viewModel);
@@ -284,469 +181,4 @@ public class NavigationService : INavigationService
 
         throw new InvalidOperationException($"Instance create or navigate to page: {view}.");
     }
-
-    /// <summary>
-    /// Common blade setup logic
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CancelAllCommands uses reflection to discover commands on ViewModel. All ViewModel types are preserved through DI registration.")]
-    private async Task<IView?> SetupBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, Func<Task<IView?>> getViewFunc)
-    {
-        // Check if owner ViewModel can navigate away (if it has running commands)
-        if (owner is IViewModel ownerVm && HasRunningCommands(ownerVm))
-        {
-            ownerVm.CancelAllCommands();
-            SafeOnNavigatedFrom(ownerVm);
-        }
-
-        bladeVm.Owner = owner;
-
-        void Viewmodel_Closed(object? sender, EventArgs e)
-        {
-            if (sender is IViewModelBlade viewModel)
-            {
-                viewModel.Closed -= Viewmodel_Closed;
-                RemoveBlade(viewModel.Owner, viewModel);
-            }
-        }
-
-        bladeVm.Closed += Viewmodel_Closed;
-
-        try
-        {
-            // Get the view
-            var view = await getViewFunc();
-
-            // If view creation failed (returned null), cleanup the handler
-            if (view == null)
-            {
-                bladeVm.Closed -= Viewmodel_Closed;
-            }
-
-            return view;
-        }
-        catch
-        {
-            // If view creation threw an exception, cleanup the handler
-            bladeVm.Closed -= Viewmodel_Closed;
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Common logic for adding a blade to the owner
-    /// </summary>
-    private void AddBladeToOwner(IViewModelBladeView owner, IView view)
-    {
-        if (!owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
-        {
-            foreach (var blade in owner.Blades.EnsureNotNull())
-            {
-                // Notify existing blades they're being backgrounded
-                if (blade.ViewModel is IViewModel existingVm)
-                    SafeOnNavigatedFrom(existingVm);
-
-                blade.IsEnabled = false;
-            }
-
-            owner.Blades.Add(view);
-        }
-
-        owner.IsPaneVisible = true;
-    }
-
-    /// <summary>
-    /// open blade as an asynchronous operation.
-    /// </summary>
-    public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            var view = await SetupBladeAsync(owner, bladeVm, async () => await GetNavigationBladeAsync(bladeVm));
-
-            if (view != null)
-                AddBladeToOwner(owner, view);
-        }
-    }
-
-    /// <summary>
-    /// Opens blade with a custom defined view.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(typeof(TView)) is called with a compile-time generic type argument. The type is preserved through DI registration.")]
-    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
-        where TView : IView
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            var view = await SetupBladeAsync(owner, bladeVm, async () =>
-            {
-                if (_scopedContextService.GetRequiredService(typeof(TView)) is View view)
-                {
-                    view.ViewModel = viewmodel;
-
-                    // Create a task to track when the view is loaded
-                    var viewLoadedTcs = new TaskCompletionSource<bool>();
-
-                    void OnViewLoaded(object sender, RoutedEventArgs e)
-                    {
-                        ((View)sender).Loaded -= OnViewLoaded;
-                        viewLoadedTcs.TrySetResult(true);
-                    }
-
-                    if (!view.IsLoaded)
-                        view.Loaded += OnViewLoaded;
-
-                    // Initialize the ViewModel
-                    if (!viewmodel.IsInitialized)
-                        await viewmodel.InitializeAsync();
-
-                    // If the view is not yet loaded, wait for it (with a reasonable timeout)
-                    if (!view.IsLoaded)
-                    {
-                        var timeoutTask = Task.Delay(500);
-                        var completedTask = await Task.WhenAny(viewLoadedTcs.Task, timeoutTask);
-
-                        // Cleanup the event handler if we timed out
-                        if (completedTask == timeoutTask)
-                            view.Loaded -= OnViewLoaded;
-                    }
-
-                    // Call OnNavigatedTo for the blade ViewModel
-                    SafeOnNavigatedTo(viewmodel);
-
-                    return view;
-                }
-
-                throw new KeyNotFoundException($"Page not found: {typeof(TView)}.");
-            });
-
-            if (view != null)
-                AddBladeToOwner(owner, view);
-        }
-    }
-
-    /// <summary>
-    /// Removes the blade asynchronous.
-    /// </summary>
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            // Notify the blade ViewModel it's being navigated from
-            SafeOnNavigatedFrom(viewmodel);
-
-            if (owner.Blades is not null)
-            {
-                var bladeToRemove = owner.Blades
-                    .FirstOrDefault(q =>
-                        q.ViewModel == bladeVm &&
-                        ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
-
-                if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
-                {
-                    if (owner.Blades.Count < 1)
-                        owner.IsPaneVisible = false;
-                    else if (owner.Blades[owner.Blades.Count - 1] is { } blade)
-                    {
-                        blade.IsEnabled = true;
-
-                        // Notify the now-active blade it's being navigated to
-                        if (blade.ViewModel is IViewModel activeVm)
-                            SafeOnNavigatedTo(activeVm);
-                    }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Common navigation logic for handling current ViewModel
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CancelAllCommands uses reflection to discover commands on ViewModel. All ViewModel types are preserved through DI registration.")]
-    private bool HandleCurrentViewModel(IViewModel currentViewModel, bool backNavigation)
-    {
-        if (currentViewModel == null)
-            return true;
-
-        currentViewModel.CancelAllCommands();
-        SafeOnNavigatedFrom(currentViewModel);
-
-        // Perform partial cleanup
-        currentViewModel.Cleanup(isClosing: false);
-
-        // Add to backstack if not a back navigation
-        if (!backNavigation)
-        {
-            // Store the entire ViewModel instance
-            _backStack.Push(currentViewModel);
-
-            OnBackStackChanged(EventArgs.Empty);
-
-            // If backstack exceeds maximum size, remove oldest entries
-            while (_backStack.Count > MaxBackstackSize)
-            {
-                var oldestEntry = _backStack.ToArray().Last();
-                _backStack = new Stack<IViewModel>(_backStack.Where(e => e != oldestEntry));
-
-                // Dispose the oldest ViewModel if needed
-                if (oldestEntry is IDisposable disposable)
-                {
-                    try
-                    {
-                        disposable.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Error disposing ViewModel during backstack cleanup");
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Common logic for initializing a view and its ViewModel
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "IViewModel.OnNavigatedTo() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
-    private async Task InitializeViewAndViewModel(View page, bool backNavigation)
-    {
-        // Initialize if needed and notify ViewModel it's being navigated to
-        if (page.ViewModel is not null && !page.ViewModel.IsInitialized)
-        {
-            try
-            {
-                // Dispatch initialization to another thread to allow the UI to continue rendering
-                await Task.Delay(50); // Small delay to let the UI render
-
-                await page.ViewModel.InitializeAsync();
-
-                // Post another small delay to ensure data binding has a chance to update
-                await Task.Delay(50);
-
-                page.ViewModel.OnNavigatedTo();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error initializing ViewModel for {ViewModelType}", page.ViewModel.GetType().Name);
-
-                var exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-                exceptionHandlerService.HandleException(ex);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Navigates to a specified viewmodel asynchronous.
-    /// </summary>
-    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel =>
-        NavigateAsync(default(TViewModel)!, parameter, backNavigation);
-
-    /// <summary>
-    /// navigate as an asynchronous operation.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CreatePage<TViewModel> uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
-        where TViewModel : class, IViewModel
-    {
-        if (Application.MainWindow is not null &&
-            Application.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindDescendant<Frame>() is { } frame)
-        {
-            // Try to reuse the current ViewModel if it matches the requested type
-            IViewModel? currentViewModel = null;
-
-            if (frame.Content is View originalView)
-            {
-                currentViewModel = originalView.ViewModel;
-
-                // If we're navigating to the same view type that's already shown, just update parameters
-                if (currentViewModel is TViewModel existingVm && viewModel is null)
-                {
-                    viewModel = existingVm;
-
-                    if (parameter is not null)
-                        viewModel.Parameter = parameter;
-
-                    // No need to navigate - we're already showing this view with this viewmodel
-                    SafeOnNavigatedTo(viewModel);
-                    return;
-                }
-            }
-
-            if (viewModel is null)
-            {
-                if (currentViewModel is TViewModel existingVm)
-                    viewModel = existingVm;
-                else
-                    viewModel = _scopedContextService.GetRequiredService<TViewModel>();
-            }
-
-            if (viewModel is not null && parameter is not null)
-                viewModel.Parameter = parameter;
-
-            // Handle current ViewModel
-            if (!HandleCurrentViewModel(currentViewModel!, backNavigation))
-                return;
-
-            if (viewModel is not null)
-            {
-                // Use the extension method to create the page
-                var page = NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, viewModel, parameter);
-
-                // Set frame content
-                frame.Content = page;
-
-                // Initialize the ViewModel if needed
-                if (!viewModel.IsInitialized)
-                    await viewModel.InitializeAsync();
-
-                SafeOnNavigatedTo(viewModel);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Could not resolve ViewModel {typeof(TViewModel).Name}");
-            }
-        }
-    }
-
-    /// <summary>
-    /// Navigates viewmodel to a specified view (short form, resolves ViewModel from DI).
-    /// </summary>
-    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView =>
-        NavigateAsync<TViewModel, TView>(default!, parameter, backNavigation);
-
-    /// <summary>
-    /// Navigates viewmodel to a specified view.
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(typeof(TView)) and GetRequiredService(typeof(TViewModel)) are called with compile-time generic type arguments. Types are preserved through DI registration.")]
-    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
-        where TViewModel : class, IViewModel
-        where TView : IView
-    {
-        if (Application.MainWindow is not null &&
-            Application.MainWindow.Content is DependencyObject dependencyObject &&
-            dependencyObject.FindDescendant<Frame>() is { } frame &&
-            _scopedContextService.GetRequiredService(typeof(TView)) is View page)
-        {
-            // Try to reuse the current ViewModel if it matches the requested type
-            IViewModel? currentViewModel = null;
-            if (frame.Content is View originalView)
-                currentViewModel = originalView.ViewModel;
-
-            if (viewModel is null)
-            {
-                if (currentViewModel is TViewModel existingVm)
-                    viewModel = existingVm;
-                else if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
-                    viewModel = resolvedViewModel;
-            }
-
-            if (viewModel is not null && parameter is not null)
-                viewModel.Parameter = parameter;
-
-            // Handle current ViewModel
-            if (!HandleCurrentViewModel(currentViewModel!, backNavigation))
-                return;
-
-            // Set ViewModel before setting frame content
-            if (viewModel is not null)
-            {
-                page.ViewModel = viewModel;
-                frame.Content = page;
-
-                // Initialize the ViewModel if needed
-                if (!viewModel.IsInitialized)
-                    await viewModel.InitializeAsync();
-
-                SafeOnNavigatedTo(viewModel);
-            }
-        }
-    }
-
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CreatePage<TViewModel> uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
-    public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
-        where TViewModel : class, IViewModel
-    {
-        // Unsubscribe old handlers before modal navigation
-        _backStackChanged = null;
-
-        if (Application.MainWindow is not null)
-        {
-            // Try to see if we already have an instance of this ViewModel
-            IViewModel? existingViewModel = null;
-            TViewModel viewModel;
-
-            if (Application.MainWindow.Content is View originalView)
-                existingViewModel = originalView.ViewModel;
-
-            // Reuse existing ViewModel if it matches the requested type
-            if (existingViewModel is TViewModel existingVm)
-                viewModel = existingVm;
-            else
-                viewModel = _scopedContextService.GetRequiredService<TViewModel>();
-
-            if (parameter is not null)
-                viewModel.Parameter = parameter;
-
-            if (NavigationExtensions.CreatePage<TViewModel>(_scopedContextService, parameter) is { } page)
-            {
-                page.ViewModel = viewModel;
-                Application.MainWindow.Content = page;
-
-                if (!viewModel.IsInitialized)
-                    await viewModel.InitializeAsync();
-
-                SafeOnNavigatedTo(viewModel);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Could not resolve view for ViewModel type {typeof(TViewModel).Name}");
-            }
-        }
-    }
-
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public void Dispose()
-    {
-        // Dispose all ViewModels in the backstack
-        foreach (var viewModel in _backStack)
-        {
-            if (viewModel is IDisposable disposable)
-            {
-                try
-                {
-                    disposable.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error disposing ViewModel during NavigationService disposal");
-                }
-            }
-        }
-
-        _backStack.Clear();
-        _backStackChanged = null;
-
-        GC.SuppressFinalize(this);
-    }
 }
-

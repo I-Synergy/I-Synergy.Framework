@@ -17,10 +17,8 @@ namespace ISynergy.Framework.UI.Services;
 /// Class abstracting the interaction between view models and views when it comes to
 /// opening dialogs using the MVVM pattern in UWP applications.
 /// </summary>
-public class DialogService : IDialogService
+public class DialogService : BaseDialogService, IDialogService
 {
-    private const string TitleWelcomeKey = "TitleWelcome";
-
     private readonly IScopedContextService _scopedContextService;
     private readonly ILanguageService _languageService;
     private readonly ILogger _logger;
@@ -84,24 +82,8 @@ public class DialogService : IDialogService
     /// <returns>Task.</returns>
     public Task ShowGreetingAsync(string name)
     {
-        if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
-        {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
-                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
-        }
-
-        if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
-        {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
-                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
-        }
-        if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
-        {
-            return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
-                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
-        }
-        return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
-            _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
+        var (message, title) = ResolveGreeting(name, _languageService);
+        return ShowMessageAsync(message, title, MessageBoxButtons.OK);
     }
 
     /// <summary>
