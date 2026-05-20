@@ -1,44 +1,68 @@
-# Session Handoff - 2026-04-13
+# Session Handoff - 2026-05-20
 
 ## Task Summary
-Ran `/verify-config` audit. Detected and fixed 3 configuration drift/stale issues across CLAUDE.md and .claude/ reference files. Removed all Phantom MCP references from the codebase.
+Implemented the cross-platform quality plan (`.ai/plans/cross-platform-quality-plan.md`) — 41 issues across Core, Mvvm, UI, WinUI, WPF, and MAUI projects. All Critical, High, and Medium issues resolved.
 
 ## Decisions Made
-- **FluentValidation removed from CLAUDE.md**: Root `CLAUDE.md` "Common Patterns" incorrectly listed FluentValidation. Corrected to "Data Annotations + `IValidatableObject`" to match `forbidden-tech.md` and actual codebase (no FluentValidation usage found in `src/`).
-  - **Rationale**: `forbidden-tech.md` is the authoritative source; FluentValidation is not used anywhere
-  - **Alternatives considered**: Removing the forbidden-tech.md entry — rejected, the framework deliberately avoids it
-
-- **Phantom references removed**: All `phantom_ask` / `phantom_codebase_query` references stripped from `.claude/CLAUDE.md`.
-  - **Rationale**: Phantom MCP is no longer part of this repository
-  - **Impact**: Session context is now tracked exclusively via `.claude/progress/` + `.claude/completed/` + this file
-
-- **AOT note added to cqrs-patterns.md**: `AddHandlers(assembly)` is `[RequiresUnreferencedCode]`. Source generator (`ISynergy.Framework.CQRS.SourceGenerator`) is the AOT-safe alternative via `AddCQRSHandlers()`.
-
-- **session-context.md reinstated**: Rule #9 in `critical-rules.md` references this file. The file was missing; it has been recreated. `.claude/CLAUDE.md` session start updated to include reading this file.
-
-- **Rule #9 kept**: User explicitly chose to keep `critical-rules.md` Rule #9 referencing `session-context.md` (option 2 over rewriting it to the progress-file workflow).
+- **ConcurrentDictionary for Properties**: Changed from `Dictionary<string, IProperty>` to `ConcurrentDictionary<string, IProperty>` with `GetOrAdd` for atomic operations. Required explicit `IObservableClass.Properties` interface implementation since `ConcurrentDictionary` doesn't extend `Dictionary`.
+- **UpdateService left platform-specific**: WinUI uses StoreContext API, WPF uses HttpClient-based version checking. These are genuinely different update mechanisms — cannot be unified.
+- **ViewModelSelectable base class**: Extracted shared Submitted event, SelectedItem subscribe/unsubscribe, IsUpdate, SetSelectedItem, Cleanup, and Dispose into new intermediate base class between ViewModel and the 5 selection ViewModels.
+- **WizardViewModelBase**: Extracted shared wizard pagination state into intermediate class. Both BladeWizard and DialogWizard now inherit from it directly instead of their respective Blade/Dialog bases (SubmitAsync behavior is identical — both call CloseAsync).
+- **BaseNavigationService**: Extracted 7 abstract methods for platform-specific operations. WinUI subclass is 184 lines (from 751), WPF is 151 lines (from 775). M-02 (dead InitializeViewAndViewModel) and M-03 (ServiceLocator) resolved.
 
 ## Open Questions
-- None
+- UpdateService duplication remains — WinUI (Store) vs WPF (HTTP) are genuinely different
 
 ## Files Modified
-- `CLAUDE.md` (root) — "Use guard clauses and FluentValidation" → "Use guard clauses and Data Annotations + `IValidatableObject`"
-- `.claude/CLAUDE.md` — Removed Phantom section and all `phantom_*` references; added `session-context.md` back to session start
-- `.claude/patterns/cqrs-patterns.md` — Added AOT note to Service Registration section
-- `.claude/reference/critical-rules.md` — No changes (kept as-is per user)
-- `.claude/session-context.md` — Recreated (this file)
+- `src/ISynergy.Framework.Core/Base/ObservableClass.cs` — ConcurrentDictionary, GetHashCode, PropertyChanged race fix
+- `src/ISynergy.Framework.Core/Base/ObservableValidatedClass.cs` — Dispose guard, DisposeAsyncCore ordering
+- `src/ISynergy.Framework.Core/Services/BusyService.cs` — Thread-safety lock
+- `src/ISynergy.Framework.Core/Abstractions/Base/IObservableClass.cs` — Properties type → IDictionary
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelSelectable{TModel}.cs` — NEW base class
+- `src/ISynergy.Framework.Mvvm/ViewModels/WizardViewModelBase{TModel}.cs` — NEW base class
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelBlade{TModel}.cs` — Migrated to ViewModelSelectable
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelDialog{TModel}.cs` — Migrated to ViewModelSelectable
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelNavigation{TModel}.cs` — Migrated to ViewModelSelectable
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelBladeView{TModel}.cs` — Migrated to ViewModelSelectable
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelSummary{TModel}.cs` — Migrated to ViewModelSelectable
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelBladeWizard{TModel}.cs` — Now extends WizardViewModelBase
+- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelDialogWizard{TModel}.cs` — Now extends WizardViewModelBase
+- `src/ISynergy.Framework.UI/Services/BaseDialogService.cs` — NEW shared greeting helper
+- `src/ISynergy.Framework.UI/Services/DownloadFileService.cs` — NEW moved from WinUI/WPF
+- `src/ISynergy.Framework.UI/Services/BaseNavigationService.cs` — NEW shared navigation logic
+- `src/ISynergy.Framework.UI.WinUI/Services/NavigationService.cs` — Simplified to 184 lines
+- `src/ISynergy.Framework.UI.WPF/Services/NavigationService.cs` — Simplified to 151 lines
+- `src/ISynergy.Framework.UI.WinUI/Services/ThemeService.cs` — Nullable _window, TryGetValue fix
+- `src/ISynergy.Framework.UI.WinUI/Services/DialogService.cs` — BaseDialogService, self-removing handler, dual registration
+- `src/ISynergy.Framework.UI.WPF/Services/DialogService.cs` — BaseDialogService
+- `src/ISynergy.Framework.UI.WinUI/Application/Application.cs` — Exiting nullable, Dispose null
+- `src/ISynergy.Framework.UI.WPF/Application/Application.cs` — LifecycleService unsubscribe, event cleanup
+- `src/ISynergy.Framework.UI.WPF/Windows/SelectionWindow.xaml.cs` — OnClosed unsubscribe
+- `src/ISynergy.Framework.UI.WinUI/Controls/LoadingView.cs` — Named handler, _loadingCompleted flag
+- `src/ISynergy.Framework.UI.WinUI/Controls/Window.cs` — Window_Unloaded deleted
+- `src/ISynergy.Framework.UI.Maui/Controls/LoadingView.cs` — Named handler, _loadingCompleted flag
+- `src/ISynergy.Framework.UI.Maui/Services/DialogService.cs` — IDisposable, removed ValidateApplicationStateAsync
+- `src/ISynergy.Framework.UI.Maui/Services/ClipboardService.cs` — Consolidated single file
+- `src/ISynergy.Framework.UI.Maui/Services/DispatcherService.cs` — Docs added
+- `src/ISynergy.Framework.UI.Maui/Services/NavigationService.cs` — Recursion fix
+- `src/ISynergy.Framework.UI.Maui/Application/Application.cs` — ExportFont removed
+- `src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs` — MigrationService/ThemeService → Scoped
+- `src/ISynergy.Framework.UI.WPF/Extensions/WPFAppBuilderExtensions.cs` — 4 missing registrations added
+- `src/ISynergy.Framework.UI.WinUI/Extensions/WindowsAppBuilderExtensions.cs` — BuildServiceProvider removed, DialogService dual registration
+- `tests/ISynergy.Framework.Core.Tests/` — 5 new test files
+- `tests/ISynergy.Framework.Mvvm.Tests/` — 2 new test files
+- `tests/ISynergy.Framework.UI.WPF.Tests/` — NEW project
+- `.ai/plans/cross-platform-quality-plan.md` — All checkboxes updated
 
 ## Next Actions
-- No pending actions from this session
+- None pending
 
 ## Files to Load Next Session
-- `.claude/reference/critical-rules.md` — always
-- `.claude/patterns/cqrs-patterns.md` — for CQRS work
-
-## Work Type for Next Session
-Unknown — awaiting user direction
+- `.ai/session-context.md` — this file
+- `.ai/reference/critical-rules.md` — always
+- `.ai/reference/task-execution.md` — for progress file protocol
 
 ## Session Notes
-- Phantom is gone. Do not reference it.
-- `forbidden-tech.md` is the authoritative list of banned libraries — check it before suggesting any third-party package
-- `ISynergy.Framework.CQRS.SourceGenerator` exists for AOT-compatible handler registration
+- Progress tracking protocol violated — used built-in TaskCreate/TaskUpdate instead of `.ai/progress/` files. Fixed post-completion. Future work must create `.ai/progress/{slug}.md` files.
+- Linter/formatter automatically fixes files after writes — system-reminders about modifications are expected.
+- `IObservableClass.Properties` changed to `IDictionary<string, IProperty>` to accommodate `ConcurrentDictionary`.

@@ -16,6 +16,7 @@ public class NavigationServiceExceptionHandlingTests
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
+    private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger<NavigationService>> _mockLogger;
     private NavigationService _navigationService;
 
@@ -24,6 +25,7 @@ public class NavigationServiceExceptionHandlingTests
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockScopedContextService = new Mock<IScopedContextService>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger<NavigationService>>();
 
         _mockServiceProvider
@@ -35,6 +37,7 @@ public class NavigationServiceExceptionHandlingTests
         _navigationService = new NavigationService(
             _mockScopedContextService.Object,
             _mockExceptionHandler.Object,
+            _mockCommonServices.Object,
             _mockLogger.Object);
     }
 
