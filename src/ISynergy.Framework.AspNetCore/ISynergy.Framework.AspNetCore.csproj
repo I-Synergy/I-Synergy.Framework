@@ -6,7 +6,6 @@
 		<PackageTags>I-Synergy, Framework, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<IncludeSymbols>true</IncludeSymbols>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
 	<ItemGroup>

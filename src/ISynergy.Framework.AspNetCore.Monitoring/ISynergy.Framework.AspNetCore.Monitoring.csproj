@@ -5,7 +5,6 @@
         <Description>I-Synergy Framework AspNetCore SignalR Monitoring</Description>
         <PackageTags>I-Synergy, Framework, Monitoring, SignalR, AspNetCore</PackageTags>
         <GenerateLibraryLayout>true</GenerateLibraryLayout>
-      <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
     <ItemGroup>

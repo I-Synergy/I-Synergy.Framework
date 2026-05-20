@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Globalization</Description>
 		<PackageTags>I-Synergy, Framework, Globalization</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
 	<ItemGroup>

@@ -6,7 +6,6 @@
 		<PackageTags>I-Synergy, Framework, OpenTelemetry, Sentry.io, Windows, Uno</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Sentry.OpenTelemetry" />

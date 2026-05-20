@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Authentication</Description>
 		<PackageTags>I-Synergy, Framework, AspNetCore, Authentication, OAuth</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 	
 	<ItemGroup>

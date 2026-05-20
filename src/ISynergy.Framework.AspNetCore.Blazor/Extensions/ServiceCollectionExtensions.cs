@@ -38,13 +38,6 @@ public static class ServiceCollectionExtensions
     /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
     /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
     /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
-    /// <remarks>
-    /// This overload calls the reflection-based <c>RegisterAssemblies</c> method, which is not
-    /// AOT-compatible. Replace the <c>RegisterAssemblies</c> call with <c>AddBlazorRegistrations()</c>
-    /// (emitted by the bundled source generator) for NativeAOT and trimmed publish scenarios.
-    /// </remarks>
-    [RequiresUnreferencedCode("RegisterAssemblies uses runtime assembly scanning. Use AddBlazorRegistrations() for AOT scenarios.")]
-    [RequiresDynamicCode("BindWithReload and RegisterAssemblies use dynamic code generation which is not AOT-compatible. Use AddBlazorRegistrations() for AOT scenarios.")]
     public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this IServiceCollection services,
         IConfiguration configuration,
@@ -110,13 +103,6 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
     /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
-    /// <remarks>
-    /// This overload uses runtime assembly scanning and is not AOT-compatible.
-    /// Replace with the source-generator-emitted <c>AddBlazorRegistrations()</c> extension method
-    /// for NativeAOT and trimmed publish scenarios.
-    /// </remarks>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
-    [RequiresDynamicCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
     public static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
         var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
@@ -140,13 +126,6 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="assemblies">The assemblies to scan.</param>
-    /// <remarks>
-    /// This overload uses runtime assembly scanning and is not AOT-compatible.
-    /// Replace with the source-generator-emitted <c>AddBlazorRegistrations()</c> extension method
-    /// for NativeAOT and trimmed publish scenarios.
-    /// </remarks>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
-    [RequiresDynamicCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
     public static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
         var viewTypes = assemblies.ToViewTypes();

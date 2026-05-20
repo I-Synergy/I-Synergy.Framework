@@ -122,9 +122,6 @@ public static class WindowsAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    [RequiresUnreferencedCode(
-        "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
-        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
     public static IHostApplicationBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IHostApplicationBuilder appBuilder,
         Action<IServiceCollection> action,

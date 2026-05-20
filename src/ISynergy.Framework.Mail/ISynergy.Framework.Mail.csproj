@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework Mail</Description>
 		<PackageTags>I-Synergy, Framework, Mail</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
 	<ItemGroup>

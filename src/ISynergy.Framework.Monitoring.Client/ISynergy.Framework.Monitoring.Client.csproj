@@ -5,7 +5,6 @@
 		<Description>I-Synergy Framework SignalR Monitoring Client for .Net 7.0</Description>
 		<PackageTags>I-Synergy, Framework, Monitoring, Client, SignalR</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-      <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
 	<ItemGroup>

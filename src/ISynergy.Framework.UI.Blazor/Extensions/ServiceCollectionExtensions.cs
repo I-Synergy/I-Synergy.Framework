@@ -35,17 +35,6 @@ public static class ServiceCollectionExtensions
     /// <param name="assembly">The assembly to scan for ViewModels and Views.</param>
     /// <param name="assemblyFilter">A filter function for assembly names.</param>
     /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
-    /// <remarks>
-    /// This overload calls <c>RegisterAssemblies</c> which performs runtime assembly scanning.
-    /// This is not compatible with Blazor WASM AOT or IL trimming.
-    /// Use <c>services.AddUITypes()</c> from <c>ISynergy.Framework.UI.SourceGenerator</c> for AOT-compatible registration.
-    /// </remarks>
-    [RequiresUnreferencedCode(
-        "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
-        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
-    [RequiresDynamicCode(
-        "BindWithReload uses dynamic code generation which is not AOT-compatible. " +
-        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
     public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this IServiceCollection services,
         IConfiguration configuration,

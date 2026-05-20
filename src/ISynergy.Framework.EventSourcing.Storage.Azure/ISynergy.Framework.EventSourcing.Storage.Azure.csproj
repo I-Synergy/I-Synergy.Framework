@@ -6,7 +6,6 @@
     <PackageTags>I-Synergy, Framework, EventSourcing, Azure, BlobStorage, Archive, CQRS</PackageTags>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <IsAotCompatible>false</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" />

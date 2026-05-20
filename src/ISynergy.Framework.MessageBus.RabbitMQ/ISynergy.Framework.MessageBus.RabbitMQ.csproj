@@ -5,7 +5,6 @@
     <PackageId>I-Synergy.Framework.MessageBus.RabbitMQ</PackageId>
     <Description>I-Synergy Framework RabbitMQ MessageBus</Description>
     <PackageTags>I-Synergy, Framework, MessageBus, RabbitMQ</PackageTags>
-    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>

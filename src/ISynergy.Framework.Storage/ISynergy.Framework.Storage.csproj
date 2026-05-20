@@ -4,7 +4,6 @@
 		<PackageId>I-Synergy.Framework.Storage</PackageId>
 		<Description>I-Synergy Framework Storage</Description>
 		<PackageTags>I-Synergy, Framework, Storage</PackageTags>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
 	<ItemGroup>

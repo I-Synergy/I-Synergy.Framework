@@ -33,8 +33,6 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection</param>
     /// <param name="assemblies">Assemblies to scan</param>
     /// <returns>Service collection for chaining</returns>
-    [RequiresUnreferencedCode("Assembly scanning for CQRS handlers uses reflection and is not AOT-compatible. Use the source-generated AddCQRSHandlers() extension method instead.")]
-    [RequiresDynamicCode("Assembly scanning for CQRS handlers uses reflection and is not AOT-compatible. Use the source-generated AddCQRSHandlers() extension method instead.")]
     public static IServiceCollection AddHandlers(this IServiceCollection services, params Assembly[] assemblies)
     {
         RegisterCommandHandlers(services, assemblies);

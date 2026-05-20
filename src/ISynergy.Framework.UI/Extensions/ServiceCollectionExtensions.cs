@@ -17,12 +17,6 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
     /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
-    /// <remarks>
-    /// This overload uses runtime assembly scanning and is not AOT-compatible.
-    /// Replace with the source-generator-emitted <c>AddUITypes()</c> extension method for
-    /// NativeAOT and trimmed publish scenarios.
-    /// </remarks>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
         var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
@@ -46,12 +40,6 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="assemblies">The assemblies to scan.</param>
-    /// <remarks>
-    /// This overload uses runtime assembly scanning and is not AOT-compatible.
-    /// Replace with the source-generator-emitted <c>AddUITypes()</c> extension method for
-    /// NativeAOT and trimmed publish scenarios.
-    /// </remarks>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddUITypes() instead.")]
     public static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
         var viewTypes = assemblies.ToViewTypes();

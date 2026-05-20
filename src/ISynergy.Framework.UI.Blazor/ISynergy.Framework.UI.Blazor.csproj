@@ -10,7 +10,6 @@
 		<IncludeSymbols>true</IncludeSymbols>
 		<StaticWebAssetSupport>true</StaticWebAssetSupport>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
 
 	<ItemGroup>

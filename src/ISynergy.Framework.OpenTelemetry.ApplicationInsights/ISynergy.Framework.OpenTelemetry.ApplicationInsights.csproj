@@ -6,7 +6,6 @@
 		<PackageTags>I-Synergy, Framework, OpenTelemetry, Application Insights</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />

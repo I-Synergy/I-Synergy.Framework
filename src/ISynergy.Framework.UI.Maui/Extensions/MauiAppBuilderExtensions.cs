@@ -155,14 +155,6 @@ public static class MauiAppBuilderExtensions
     /// <param name="assembly">The assembly to scan for ViewModels and Views.</param>
     /// <param name="assemblyFilter">A filter function for assembly names.</param>
     /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
-    /// <remarks>
-    /// This overload calls <see cref="ISynergy.Framework.UI.Extensions.ServiceCollectionExtensions.RegisterAssemblies(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Reflection.Assembly, System.Func{System.Reflection.AssemblyName, System.Boolean})"/>
-    /// which performs runtime assembly scanning. This is not compatible with MAUI iOS/Android linker trimming.
-    /// Prefer using a source-generated registration (<c>services.AddUITypes()</c>) when targeting trimmed builds.
-    /// </remarks>
-    [RequiresUnreferencedCode(
-        "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
-        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
     public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this MauiAppBuilder appBuilder,
         Action<MauiAppBuilder> action,
