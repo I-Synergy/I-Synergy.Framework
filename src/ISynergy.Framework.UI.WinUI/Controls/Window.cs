@@ -18,6 +18,8 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public partial class Window : ContentDialog, IWindow
 {
+    private IViewModel? _viewModel;
+
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
@@ -26,6 +28,9 @@ public partial class Window : ContentDialog, IWindow
     {
         get
         {
+            if (_viewModel is not null)
+                return _viewModel;
+
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
@@ -33,6 +38,7 @@ public partial class Window : ContentDialog, IWindow
         }
         set
         {
+            _viewModel = value;
             DataContext = value;
         }
     }
@@ -154,10 +160,10 @@ public partial class Window : ContentDialog, IWindow
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
+        if (disposing && _viewModel is not null)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            _viewModel.Dispose();
+            _viewModel = null;
         }
 
         // free native resources if there are any.

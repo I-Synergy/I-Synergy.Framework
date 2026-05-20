@@ -50,9 +50,9 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
     /// Gets or sets the Item property value.
     /// </summary>
     /// <value>The items.</value>
-    public ObservableCollection<TModel> Items
+    public ObservableCollection<TModel>? Items
     {
-        get { return GetValue<ObservableCollection<TModel>>(); }
+        get { return GetValue<ObservableCollection<TModel>?>(); }
         set { SetValue(value); }
     }
 
@@ -71,9 +71,9 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
     /// <summary>
     /// Gets or sets the SelectedItems property value.
     /// </summary>
-    public List<object> SelectedItems
+    public List<object>? SelectedItems
     {
-        get => GetValue<List<object>>();
+        get => GetValue<List<object>?>();
         set => SetValue(value);
     }
 
@@ -163,7 +163,7 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
         {
             var result = new List<TModel>();
 
-            foreach (TModel item in SelectedItems)
+            foreach (TModel item in SelectedItems.EnsureNotNull())
             {
                 result.Add(item);
             }
@@ -181,8 +181,8 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
             IsInCleanup = true;
 
             // Clear collections
-            Items?.Clear();
-            SelectedItems?.Clear();
+            Items = null;
+            SelectedItems = null;
 
             // Reset selection state
             SelectionMode = SelectionModes.Single;

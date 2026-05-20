@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace ISynergy.Framework.Core.Base;
 
 [TestClass]
@@ -36,6 +34,6 @@ public class ObservableValidatedClassDisposeTests
 
         Assert.IsFalse(errorsChangedFired);
         Assert.AreEqual(0, obj.Properties.Count);
-        Assert.AreEqual(0, obj.Errors.Count);
+        Assert.AreEqual(0, obj.Errors?.Count);
     }
 }

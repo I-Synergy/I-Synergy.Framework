@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -91,7 +90,7 @@ public class ViewModelSelectionTests
         await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
-        Assert.IsTrue(viewModel.Items.All(i => i.Name.Contains("Test")));
+        Assert.AreEqual(2, viewModel.Items?.Count);
+        Assert.IsTrue(viewModel.Items?.All(i => i.Name.Contains("Test")));
     }
 }

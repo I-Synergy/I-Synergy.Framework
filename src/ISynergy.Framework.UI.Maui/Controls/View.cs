@@ -10,7 +10,6 @@ namespace ISynergy.Framework.UI.Controls;
 public abstract class View : ContentPage, IView
 {
     private const string WrapperMarkerValue = "__ISynergy_View_Wrapper__";
-    
     private Label? _titleLabel;
     private Microsoft.Maui.Controls.View? _originalContent;
     private bool _isWrapping = false;

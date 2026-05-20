@@ -18,7 +18,7 @@ public interface IObservableValidatedClass : IObservableClass, IDataErrorInfo, I
     /// Gets the errors.
     /// </summary>
     /// <value>The errors.</value>
-    ObservableCollection<KeyValuePair<string, string>> Errors { get; }
+    ObservableCollection<KeyValuePair<string, string>>? Errors { get; }
     /// <summary>
     /// Gets or sets the validator.
     /// </summary>

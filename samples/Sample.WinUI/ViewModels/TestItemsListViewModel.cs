@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -161,7 +160,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>()
+        Items?.AddNewRange(new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},
@@ -194,7 +193,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     protected void ClearItems()
     {
-        Items.Clear();
+        Items?.Clear();
     }
 
     /// <summary>
@@ -204,7 +203,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     public override Task AddAsync()
     {
         var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
-        selectionVM.SetItems(Items);
+        selectionVM.SetItems(Items!);
         selectionVM.SetSelectedItems(SelectedItems);
         selectionVM.SetSelectionMode(SelectionModes.Single);
         selectionVM.Submitted += SelectionVM_Submitted;

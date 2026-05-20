@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -93,27 +92,27 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
         {
-            PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, DisplayCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ConverterCommand));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectionTestCommand));
-            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ListViewTestCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, TreeNodeTestCommand));
-            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ChartCommand));
+            PrimaryItems?.Clear();
+            PrimaryItems?.Add(new NavigationItem("Info", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
+            PrimaryItems?.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, DisplayCommand));
+            PrimaryItems?.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, BrowseCommand));
+            PrimaryItems?.Add(new NavigationItem("Converters", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ConverterCommand));
+            PrimaryItems?.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectionTestCommand));
+            PrimaryItems?.Add(new NavigationItem("ListView", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ListViewTestCommand));
+            PrimaryItems?.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems?.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, TreeNodeTestCommand));
+            PrimaryItems?.Add(new NavigationItem("Charts", Application.Current.Resources["chart"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ChartCommand));
 
-            SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, HelpCommand));
-            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
-            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
+            SecondaryItems?.Clear();
+            SecondaryItems?.Add(new NavigationItem("Help", Application.Current.Resources["help"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, HelpCommand));
+            SecondaryItems?.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
+            SecondaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
 
             if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile is Profile)
-                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
+                SecondaryItems?.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
         }
 
-        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
+        SecondaryItems?.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
     protected override Task SignOutAsync() =>

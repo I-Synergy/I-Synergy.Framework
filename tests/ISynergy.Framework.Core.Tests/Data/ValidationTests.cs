@@ -157,8 +157,8 @@ public class ValidationTests
         TestViewModel fixture = new TestViewModel();
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(1, fixture.Errors.Count);
-        Assert.AreEqual(_selectedItemNull, fixture.Errors.Single().Value);
+        Assert.AreEqual(1, fixture.Errors?.Count);
+        Assert.AreEqual(_selectedItemNull, fixture.Errors?.Single().Value);
         Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem)));
     }
 
@@ -171,14 +171,14 @@ public class ValidationTests
         };
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(2, fixture.Errors.Count);
+        Assert.AreEqual(2, fixture.Errors?.Count);
 
         Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
         Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
         Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem.Quantity)));
 
         Assert.IsTrue(fixture.Validate(false));
-        Assert.AreEqual(0, fixture.Errors.Count);
+        Assert.AreEqual(0, fixture.Errors?.Count);
 
         Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
         Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
@@ -194,14 +194,14 @@ public class ValidationTests
         };
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(1, fixture.Errors.Count);
+        Assert.AreEqual(1, fixture.Errors?.Count);
 
         Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
         Assert.IsTrue(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
         Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.Quantity)));
 
         Assert.IsTrue(fixture.Validate(false));
-        Assert.AreEqual(0, fixture.Errors.Count);
+        Assert.AreEqual(0, fixture.Errors?.Count);
 
         Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem)));
         Assert.IsFalse(fixture.HasError(nameof(fixture.SelectedItem.ProductGroups)));
@@ -214,7 +214,7 @@ public class ValidationTests
         TestViewModel fixture = new TestViewModel();
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(1, fixture.Errors.Count);
+        Assert.AreEqual(1, fixture.Errors?.Count);
 
         fixture.SelectedItem = new Product()
         {
@@ -222,10 +222,10 @@ public class ValidationTests
         };
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(2, fixture.Errors.Count);
+        Assert.AreEqual(2, fixture.Errors?.Count);
 
         Assert.IsTrue(fixture.Validate(false));
-        Assert.AreEqual(0, fixture.Errors.Count);
+        Assert.AreEqual(0, fixture.Errors?.Count);
     }
 
     [TestMethod]
@@ -234,7 +234,7 @@ public class ValidationTests
         TestViewModel fixture = new TestViewModel();
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(1, fixture.Errors.Count);
+        Assert.AreEqual(1, fixture.Errors?.Count);
 
         fixture.SelectedItem = new Product()
         {
@@ -242,11 +242,11 @@ public class ValidationTests
         };
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(2, fixture.Errors.Count);
+        Assert.AreEqual(2, fixture.Errors?.Count);
 
         fixture.SelectedItem.Quantity = 1;
 
         Assert.IsFalse(fixture.Validate());
-        Assert.AreEqual(1, fixture.Errors.Count);
+        Assert.AreEqual(1, fixture.Errors?.Count);
     }
 }

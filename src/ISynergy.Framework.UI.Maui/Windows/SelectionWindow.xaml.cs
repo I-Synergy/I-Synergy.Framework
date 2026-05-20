@@ -40,18 +40,18 @@ public partial class SelectionWindow : ISelectionWindow
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
-            viewModel.SelectedItems.Clear();
+            viewModel.SelectedItems?.Clear();
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
                 if (DataSummary.SelectedItem is not null)
-                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+                    viewModel.SelectedItems?.Add(DataSummary.SelectedItem);
             }
             else
             {
                 foreach (var item in DataSummary.SelectedItems.EnsureNotNull().Where(item => item is not null)) // NOSONAR
                 {
-                    viewModel.SelectedItems.Add(item);
+                    viewModel.SelectedItems?.Add(item);
                 }
             }
 

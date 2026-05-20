@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 
 #pragma warning disable S2583 // FluentUI icon constants may be null at runtime; null-coalescing guard is intentional
@@ -91,21 +90,21 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated) // NOSONAR
         {
-            PrimaryItems.Clear();
+            PrimaryItems?.Clear();
 
-            PrimaryItems.Add(new NavigationItem("Info", FluentUI.info_20_regular ?? string.Empty, primaryColor, InfoCommand)); // NOSONAR
-            PrimaryItems.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, ControlsCommand)); // NOSONAR
-            PrimaryItems.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular ?? string.Empty, primaryColor, SlideshowCommand)); // NOSONAR
-            PrimaryItems.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular ?? string.Empty, primaryColor, SyncCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("Info", FluentUI.info_20_regular ?? string.Empty, primaryColor, InfoCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, ControlsCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular ?? string.Empty, primaryColor, SlideshowCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular ?? string.Empty, primaryColor, SyncCommand)); // NOSONAR
 
-            SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", FluentUI.chat_help_20_regular ?? string.Empty, primaryColor, HelpCommand)); // NOSONAR
-            SecondaryItems.Add(new NavigationItem("Language", FluentUI.local_language_20_regular ?? string.Empty, primaryColor, LanguageCommand)); // NOSONAR
-            SecondaryItems.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular ?? string.Empty, primaryColor, ColorCommand)); // NOSONAR
-            SecondaryItems.Add(new NavigationItem("Settings", FluentUI.settings_20_regular ?? string.Empty, primaryColor, SettingsCommand)); // NOSONAR
+            SecondaryItems?.Clear();
+            SecondaryItems?.Add(new NavigationItem("Help", FluentUI.chat_help_20_regular ?? string.Empty, primaryColor, HelpCommand)); // NOSONAR
+            SecondaryItems?.Add(new NavigationItem("Language", FluentUI.local_language_20_regular ?? string.Empty, primaryColor, LanguageCommand)); // NOSONAR
+            SecondaryItems?.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular ?? string.Empty, primaryColor, ColorCommand)); // NOSONAR
+            SecondaryItems?.Add(new NavigationItem("Settings", FluentUI.settings_20_regular ?? string.Empty, primaryColor, SettingsCommand)); // NOSONAR
         }
 
-        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("user2") ?? string.Empty, primaryColor, SignInCommand));
+        SecondaryItems?.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("user2") ?? string.Empty, primaryColor, SignInCommand));
     }
 
     protected override Task SignOutAsync() =>

@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -119,7 +118,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     {
         ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Multiple);
-        selectionVm.SetItems(Items);
+        selectionVm.SetItems(Items!);
         selectionVm.SetSelectedItems(SelectedTestItems);
 
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
@@ -134,7 +133,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     {
         ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Single);
-        selectionVm.SetItems(Items);
+        selectionVm.SetItems(Items!);
         selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
         return _navigationService.OpenBladeAsync(this, selectionVm);
@@ -208,7 +207,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task&lt;List&lt;TestItem&gt;&gt;.</returns>
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>()
+        Items?.AddNewRange(new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},

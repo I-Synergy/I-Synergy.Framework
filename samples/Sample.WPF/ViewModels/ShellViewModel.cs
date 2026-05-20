@@ -105,21 +105,21 @@ public class ShellViewModel : BaseShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        PrimaryItems.Clear();
+        PrimaryItems?.Clear();
 
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
         {
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Editable Combobox", Application.Current.Resources["combobox"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, EditableComboCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["validation"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("Unit Conversion", Application.Current.Resources["weight"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, UnitConversionCommand));
-            PrimaryItems.Add(new NavigationItem("Select single item", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectSingleCommand));
-            PrimaryItems.Add(new NavigationItem("Select multiple items", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectMultipleCommand));
-            PrimaryItems.Add(new NavigationItem("Nuget Unlister", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, NugetUnlisterCommand));
+            PrimaryItems?.Add(new NavigationItem("Info", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
+            PrimaryItems?.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, BrowseCommand));
+            PrimaryItems?.Add(new NavigationItem("Editable Combobox", Application.Current.Resources["combobox"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, EditableComboCommand));
+            PrimaryItems?.Add(new NavigationItem("Validation", Application.Current.Resources["validation"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems?.Add(new NavigationItem("Unit Conversion", Application.Current.Resources["weight"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, UnitConversionCommand));
+            PrimaryItems?.Add(new NavigationItem("Select single item", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectSingleCommand));
+            PrimaryItems?.Add(new NavigationItem("Select multiple items", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectMultipleCommand));
+            PrimaryItems?.Add(new NavigationItem("Nuget Unlister", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, NugetUnlisterCommand));
         }
 
-        PrimaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
+        PrimaryItems?.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
     private Task SelectSingleAsync()

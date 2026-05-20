@@ -49,9 +49,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Gets or sets the PrimaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> PrimaryItems
+    public ObservableCollection<NavigationItem>? PrimaryItems
     {
-        get => GetValue<ObservableCollection<NavigationItem>>();
+        get => GetValue<ObservableCollection<NavigationItem>?>();
         private set => SetValue(value);
     }
 
@@ -59,9 +59,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Gets or sets the SecondaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> SecondaryItems
+    public ObservableCollection<NavigationItem>? SecondaryItems
     {
-        get => GetValue<ObservableCollection<NavigationItem>>();
+        get => GetValue<ObservableCollection<NavigationItem>?>();
         private set => SetValue(value);
     }
 
@@ -347,8 +347,8 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
 
             Validator = null;
 
-            PrimaryItems?.Clear();
-            SecondaryItems?.Clear();
+            PrimaryItems = null;
+            SecondaryItems = null;
 
             RestartUpdateCommand?.Dispose();
             SignInCommand?.Dispose();

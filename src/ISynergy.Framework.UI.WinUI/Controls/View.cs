@@ -88,9 +88,9 @@ public abstract partial class View : Page, IView
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
+        if (disposing && _viewModel is not null)
         {
-            _viewModel?.Dispose();
+            _viewModel.Dispose();
             _viewModel = null;
         }
     }

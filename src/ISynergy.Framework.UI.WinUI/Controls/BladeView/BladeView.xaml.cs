@@ -233,7 +233,7 @@ public partial class BladeView : UserControl, IDisposable
 
             if (this.DataContext is IViewModelBladeView bladeView)
             {
-                bladeView.Blades.Remove(view);
+                bladeView.Blades?.Remove(view);
             }
 
             if (view is IDisposable disposableView)
@@ -265,9 +265,9 @@ public partial class BladeView : UserControl, IDisposable
         if (this.DataContext is not IViewModelBladeView bladeView)
             return;
 
-        this.Visibility = bladeView.Blades.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        this.Visibility = bladeView.Blades?.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-        if (bladeView.Blades.Count > 0)
+        if (bladeView.Blades?.Count > 0)
         {
             for (int i = 0; i < bladeView.Blades.Count; i++)
             {
@@ -294,7 +294,7 @@ public partial class BladeView : UserControl, IDisposable
     {
         if (this.DataContext is IViewModelBladeView bladeView)
         {
-            foreach (var view in bladeView.Blades.OfType<IView>().ToList())
+            foreach (var view in bladeView.Blades?.OfType<IView>().ToList() ?? new List<IView>())
             {
                 RemoveBlade(view);
             }

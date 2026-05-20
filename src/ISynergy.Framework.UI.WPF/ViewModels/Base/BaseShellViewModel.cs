@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -89,9 +88,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the PrimaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> PrimaryItems
+    public ObservableCollection<NavigationItem>? PrimaryItems
     {
-        get => GetValue<ObservableCollection<NavigationItem>>();
+        get => GetValue<ObservableCollection<NavigationItem>?>();
         set => SetValue(value);
     }
 
@@ -99,9 +98,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the SecondaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> SecondaryItems
+    public ObservableCollection<NavigationItem>? SecondaryItems
     {
-        get => GetValue<ObservableCollection<NavigationItem>>();
+        get => GetValue<ObservableCollection<NavigationItem>?>();
         set => SetValue(value);
     }
 
@@ -346,8 +345,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
             Validator = null;
 
-            PrimaryItems?.Clear();
-            SecondaryItems?.Clear();
+            PrimaryItems = null;
+            SecondaryItems = null;
 
             RestartUpdateCommand?.Dispose();
             SignInCommand?.Dispose();

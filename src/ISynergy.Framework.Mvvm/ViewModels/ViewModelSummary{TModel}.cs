@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
@@ -17,9 +16,9 @@ public abstract class ViewModelSummary<TModel> : ViewModelSelectable<TModel>, IV
     /// Gets or sets the Items property value.
     /// </summary>
     /// <value>The items.</value>
-    public ObservableCollection<TModel> Items
+    public ObservableCollection<TModel>? Items
     {
-        get => GetValue<ObservableCollection<TModel>>();
+        get => GetValue<ObservableCollection<TModel>?>();
         set => SetValue(value);
     }
 
@@ -130,7 +129,7 @@ public abstract class ViewModelSummary<TModel> : ViewModelSelectable<TModel>, IV
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
     public virtual Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(Enumerable.Empty<TModel>());
+        Items?.AddNewRange(Enumerable.Empty<TModel>());
         return Task.CompletedTask;
     }
 
@@ -159,7 +158,7 @@ public abstract class ViewModelSummary<TModel> : ViewModelSelectable<TModel>, IV
         try
         {
             IsInCleanup = true;
-            Items?.Clear();
+            Items = null;
             base.Cleanup(isClosing);
         }
         finally

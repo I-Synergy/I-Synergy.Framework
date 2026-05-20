@@ -44,7 +44,7 @@ public class ObservableValidatedClassTests
         observable.Dispose();
 
         // Assert
-        Assert.AreEqual(0, observable.Errors.Count);
+        Assert.IsNull(observable.Errors);
     }
 
     [TestMethod]

@@ -195,7 +195,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// <returns><c>true</c> if the instance is valid after clearing errors; otherwise, <c>false</c>.</returns>
     public bool ClearErrors()
     {
-        Errors.Clear();
+        Errors?.Clear();
 
         RaisePropertyChanged(nameof(IsValid));
         OnErrorsChanged(nameof(Errors));
@@ -218,7 +218,9 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
             foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableValidatedClass)) && !q.IsDefined(typeof(IgnoreValidationAttribute))).EnsureNotNull())
             {
                 if (property.GetValue(this, null) is ObservableValidatedClass observable &&
-                    !observable.Validate(validateUnderlayingProperties))
+                    !observable.Validate(validateUnderlayingProperties) &&
+                    observable.Errors is not null &&
+                    Errors is not null)
                 {
                     Errors.AddRange(observable.Errors);
                     observable.Errors.Clear();
@@ -259,7 +261,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     #region IDataErrorInfo
     public void AddValidationError(string propertyName, string errorMessage)
     {
-        Errors.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
+        Errors?.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
 
         OnErrorsChanged(nameof(Errors));
         RaisePropertyChanged(nameof(IsValid));
@@ -270,7 +272,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     [DataTableIgnore]
     [XmlIgnore]
     [Display(AutoGenerateField = false)]
-    public ObservableCollection<KeyValuePair<string, string>> Errors { get; } = [];
+    public ObservableCollection<KeyValuePair<string, string>>? Errors { get; private set; } = [];
 
     [JsonIgnore]
     [DataTableIgnore]
@@ -292,7 +294,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     {
         get
         {
-            if (!string.IsNullOrEmpty(propertyName) && Errors.Any(a => a.Key.Equals(propertyName)))
+            if (!string.IsNullOrEmpty(propertyName) && Errors is not null && Errors.Any(a => a.Key.Equals(propertyName)))
                 return Errors
                     .FirstOrDefault(q => q.Key.Equals(propertyName))
                     .Value ?? propertyName;
@@ -326,7 +328,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     {
         if (!string.IsNullOrEmpty(propertyName))
         {
-            if (Errors.Any(a => a.Key.Equals(propertyName)))
+            if (Errors is not null && Errors.Any(a => a.Key.Equals(propertyName)))
             {
                 return Errors
                     .Where(q => q.Key.Equals(propertyName))
@@ -337,7 +339,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
             return Enumerable.Empty<string>();
         }
 
-        return Errors.SelectMany(m => m.Value.ToList()).ToList();
+        return Errors is not null ? Errors.SelectMany(m => m.Value.ToList()).ToList() : Enumerable.Empty<string>();
     }
 
     [JsonIgnore]
@@ -346,10 +348,10 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     [Display(AutoGenerateField = false)]
     public bool HasErrors
     {
-        get => Errors.Any(a => a.Value.Any());
+        get => Errors is not null && Errors.Any(a => a.Value.Any());
     }
 
-    public bool HasError(string property) => Errors.Any(a => a.Key.Equals(property));
+    public bool HasError(string property) => Errors is not null && Errors.Any(a => a.Key.Equals(property));
     #endregion
 
     #region IDisposable & IAsyncDisposable
@@ -369,7 +371,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
             // free managed resources
             Validator = null;
 
-            Errors?.Clear();
+            Errors = null;
 
             if (_errorsChanged is not null)
             {

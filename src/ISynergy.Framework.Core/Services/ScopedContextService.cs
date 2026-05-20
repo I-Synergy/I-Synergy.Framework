@@ -13,6 +13,8 @@ public sealed class ScopedContextService : IScopedContextService
     private bool _disposed;
     private bool _scopeInitialized;
 
+
+
     public event EventHandler<ReturnEventArgs<bool>>? ScopedChanged;
 
     private void RaiseScopedChanged() => ScopedChanged?.Invoke(this, new ReturnEventArgs<bool>(true));
@@ -185,9 +187,9 @@ public sealed class ScopedContextService : IScopedContextService
         if (_disposed)
             return;
 
-        _disposed = true;
-
         _serviceScope?.Dispose();
         _serviceScope = null;
+
+        _disposed = true;
     }
 }

@@ -60,9 +60,9 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
     /// Gets or sets the Item property value.
     /// </summary>
     /// <value>The items.</value>
-    public ObservableCollection<TModel> Items
+    public ObservableCollection<TModel>? Items
     {
-        get { return GetValue<ObservableCollection<TModel>>(); }
+        get { return GetValue<ObservableCollection<TModel>?>(); }
         set { SetValue(value); }
     }
 
@@ -85,9 +85,9 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
     /// <summary>
     /// Gets or sets the SelectedItems property value.
     /// </summary>
-    public List<object> SelectedItems
+    public List<object>? SelectedItems
     {
-        get => GetValue<List<object>>();
+        get => GetValue<List<object>?>();
         set => SetValue(value);
     }
 
@@ -187,7 +187,7 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
         {
             var result = new List<TModel>();
 
-            foreach (TModel item in SelectedItems)
+            foreach (TModel item in SelectedItems.EnsureNotNull())
             {
                 result.Add(item);
             }
@@ -205,8 +205,8 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
             IsInCleanup = true;
 
             // Clear collections
-            Items?.Clear();
-            SelectedItems?.Clear();
+            Items = null;
+            SelectedItems = null;
 
             // Reset selection state
             SelectionMode = SelectionModes.Single;

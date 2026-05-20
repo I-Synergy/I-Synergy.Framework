@@ -49,13 +49,13 @@ public partial class SelectionWindow : ISelectionWindow
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
                 if (DataSummary.SelectedItem is not null)
-                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+                    viewModel.SelectedItems?.Add(DataSummary.SelectedItem);
             }
             else
             {
                 foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
                 {
-                    viewModel.SelectedItems.Add(item);
+                    viewModel.SelectedItems?.Add(item);
                 }
             }
 

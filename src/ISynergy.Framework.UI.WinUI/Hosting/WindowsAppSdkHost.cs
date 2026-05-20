@@ -22,16 +22,17 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     private readonly HostOptions _options;
     private readonly IHostEnvironment _hostEnvironment;
     private readonly PhysicalFileProvider _defaultProvider;
-    private IEnumerable<IHostedService> _hostedServices;
+    private IEnumerable<IHostedService>? _hostedServices;
     private volatile bool _stopCalled;
 
-    public WindowsAppSdkHost(IServiceProvider services,
-                IHostEnvironment hostEnvironment,
-                PhysicalFileProvider defaultProvider,
-                IHostApplicationLifetime applicationLifetime,
-                ILogger<WindowsAppSdkHost<TApp>> logger,
-                IHostLifetime hostLifetime,
-                IOptions<HostOptions> options)
+    public WindowsAppSdkHost(
+        IServiceProvider services,
+        IHostEnvironment hostEnvironment,
+        PhysicalFileProvider defaultProvider,
+        IHostApplicationLifetime applicationLifetime,
+        ILogger<WindowsAppSdkHost<TApp>> logger,
+        IHostLifetime hostLifetime,
+        IOptions<HostOptions> options)
     {
         Services = services ?? throw new ArgumentNullException(nameof(services));
 

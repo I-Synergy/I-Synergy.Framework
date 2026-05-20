@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
@@ -8,7 +7,6 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
@@ -28,9 +26,9 @@ public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, 
     /// </summary>
     /// <value>The blades.</value>
     [IgnoreValidation]
-    public ObservableCollection<IView> Blades
+    public ObservableCollection<IView>? Blades
     {
-        get => GetValue<ObservableCollection<IView>>();
+        get => GetValue<ObservableCollection<IView>?>();
         set => SetValue(value);
     }
 
@@ -38,9 +36,9 @@ public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, 
     /// Gets or sets the Items property value.
     /// </summary>
     /// <value>The items.</value>
-    public ObservableCollection<TModel> Items
+    public ObservableCollection<TModel>? Items
     {
-        get => GetValue<ObservableCollection<TModel>>();
+        get => GetValue<ObservableCollection<TModel>?>();
         set => SetValue(value);
     }
 
@@ -167,7 +165,7 @@ public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, 
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
     public virtual Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(Enumerable.Empty<TModel>());
+        Items?.AddNewRange(Enumerable.Empty<TModel>());
         return Task.CompletedTask;
     }
 
@@ -190,8 +188,8 @@ public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, 
         try
         {
             IsInCleanup = true;
-            Items?.Clear();
-            Blades?.Clear();
+            Items = null;
+            Blades = null;
             base.Cleanup(isClosing);
         }
         finally

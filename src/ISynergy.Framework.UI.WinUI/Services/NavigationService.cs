@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
@@ -8,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Reflection;
 using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Services;
@@ -72,7 +69,7 @@ public class NavigationService : BaseNavigationService
     /// </summary>
     protected override void SetWindowContent(IView page)
     {
-        Application.MainWindow.Content = (Microsoft.UI.Xaml.UIElement)page;
+        Application.MainWindow?.Content = (Microsoft.UI.Xaml.UIElement)page;
     }
 
     /// <summary>

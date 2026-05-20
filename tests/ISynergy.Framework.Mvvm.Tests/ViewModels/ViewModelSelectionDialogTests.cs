@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -91,7 +90,7 @@ public class ViewModelSelectionDialogTests
         await viewModel.RefreshCommand.ExecuteAsync("");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.AreEqual(2, viewModel.Items?.Count);
     }
 
     [TestMethod]
@@ -113,8 +112,8 @@ public class ViewModelSelectionDialogTests
         await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
-        Assert.AreEqual(1, viewModel.Items.Count);
-        Assert.AreEqual("Test1", viewModel.Items[0].Name);
+        Assert.AreEqual(1, viewModel.Items?.Count);
+        Assert.AreEqual("Test1", viewModel.Items?.FirstOrDefault()?.Name);
     }
 
     [TestMethod]

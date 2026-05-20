@@ -38,7 +38,7 @@ public class DetailsViewModel : ViewModelSummary<TestItem>
 
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>
+        Items?.AddNewRange(new List<TestItem>
             {
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},

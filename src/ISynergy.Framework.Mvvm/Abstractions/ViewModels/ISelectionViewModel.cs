@@ -7,7 +7,7 @@ public interface ISelectionViewModel
 {
     SelectionModes SelectionMode { get; }
     void SetSelectionMode(SelectionModes selectionMode);
-    List<object> SelectedItems { get; }
+    List<object>? SelectedItems { get; }
     void SetItems(IEnumerable<object> e);
     void SetSelectedItems(IEnumerable<object> e);
     AsyncRelayCommand<List<object>> SelectCommand { get; }

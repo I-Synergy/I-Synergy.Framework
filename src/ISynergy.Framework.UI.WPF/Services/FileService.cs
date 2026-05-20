@@ -104,7 +104,7 @@ public class FileService : IFileService<FileResult>
     /// <param name="filename"></param>
     /// <param name="file"></param>
     /// <returns></returns>
-    public Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] _)
+    public Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file)
     {
         var extension = Path.GetExtension(filename);
         var fileDialog = new SaveFileDialog();

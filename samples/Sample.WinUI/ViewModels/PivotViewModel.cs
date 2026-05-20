@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
+
 public class PivotViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
@@ -40,7 +41,7 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
 
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>
+        Items?.AddNewRange(new List<TestItem>
             {
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},

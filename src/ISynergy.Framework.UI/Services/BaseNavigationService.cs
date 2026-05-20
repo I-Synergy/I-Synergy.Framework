@@ -481,7 +481,7 @@ public abstract class BaseNavigationService : INavigationService
     /// </summary>
     private void AddBladeToOwner(IViewModelBladeView owner, IView view)
     {
-        if (!owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
+        if (owner.Blades is not null && !owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
         {
             foreach (var blade in owner.Blades.EnsureNotNull())
             {

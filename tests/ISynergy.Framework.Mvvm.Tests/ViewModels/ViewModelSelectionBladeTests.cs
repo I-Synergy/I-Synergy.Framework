@@ -128,8 +128,8 @@ public class ViewModelSelectionBladeTests
 
         // Assert
         Assert.IsNotNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
-        Assert.AreEqual(0, viewModel.SelectedItems.Count, "SelectedItems should be empty after cleanup");
-        Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
+        Assert.AreEqual(0, viewModel.SelectedItems?.Count, "SelectedItems should be empty after cleanup");
+        Assert.AreEqual(0, viewModel.Items?.Count, "Items should be empty after cleanup");
 
         viewModel.Dispose();
         Assert.IsTrue(viewModel.IsDisposed);
@@ -154,8 +154,8 @@ public class ViewModelSelectionBladeTests
         await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
-        Assert.AreEqual(1, viewModel.Items.Count);
-        Assert.AreEqual("Test1", viewModel.Items[0].Name);
+        Assert.AreEqual(1, viewModel.Items?.Count);
+        Assert.AreEqual("Test1", viewModel.Items?.FirstOrDefault()?.Name);
     }
 
     [TestMethod]
@@ -265,7 +265,7 @@ public class ViewModelSelectionBladeTests
         await viewModel.RefreshCommand.ExecuteAsync("");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.AreEqual(2, viewModel.Items?.Count);
     }
 
     [TestMethod]
@@ -287,7 +287,7 @@ public class ViewModelSelectionBladeTests
         await viewModel.RefreshCommand.ExecuteAsync("*");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.AreEqual(2, viewModel.Items?.Count);
     }
 
     [TestMethod]
@@ -309,8 +309,8 @@ public class ViewModelSelectionBladeTests
         viewModel.SetSelectedItems(selectedItems);
 
         // Assert
-        Assert.AreEqual(2, viewModel.SelectedItems.Count);
-        Assert.IsTrue(viewModel.SelectedItems.Contains(items[0]));
-        Assert.IsTrue(viewModel.SelectedItems.Contains(items[1]));
+        Assert.AreEqual(2, viewModel.SelectedItems?.Count);
+        Assert.IsTrue(viewModel.SelectedItems?.Contains(items[0]));
+        Assert.IsTrue(viewModel.SelectedItems?.Contains(items[1]));
     }
 }
