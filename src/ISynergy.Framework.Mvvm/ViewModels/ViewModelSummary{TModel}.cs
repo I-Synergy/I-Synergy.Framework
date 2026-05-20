@@ -11,45 +11,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
-public abstract class ViewModelSummary<TModel> : ViewModel, IViewModelSummary<TModel>
+public abstract class ViewModelSummary<TModel> : ViewModelSelectable<TModel>, IViewModelSummary<TModel>
 {
-    /// <summary>
-    /// Occurs when [submitted].
-    /// </summary>
-    public event EventHandler<SubmitEventArgs<TModel>>? Submitted;
-    /// <summary>
-    /// Called when [submitted].
-    /// </summary>
-    /// <param name="e">The e.</param>
-    protected virtual void OnSubmitted(SubmitEventArgs<TModel> e)
-    {
-        if (Submitted != null)
-        {
-            // Invoke each handler individually to prevent one exception from stopping others
-            var handlers = Submitted.GetInvocationList();
-            foreach (EventHandler<SubmitEventArgs<TModel>> handler in handlers)
-            {
-                try
-                {
-                    handler.Invoke(this, e);
-                }
-                catch (Exception ex)
-                {
-                    // Try to use exception handler service if available
-                    try
-                    {
-                        _commonServices.ExceptionHandlerService?.HandleException(ex);
-                    }
-                    catch
-                    {
-                        // If exception handler service is not available, log to debug
-                        System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler: {ex.Message}");
-                    }
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// Gets or sets the Items property value.
     /// </summary>
@@ -59,32 +22,6 @@ public abstract class ViewModelSummary<TModel> : ViewModel, IViewModelSummary<TM
         get => GetValue<ObservableCollection<TModel>>();
         set => SetValue(value);
     }
-
-    /// <summary>
-    /// Gets or sets the SelectedItem property value.
-    /// </summary>
-    /// <value>The selected item.</value>
-    public TModel? SelectedItem
-    {
-        get => GetValue<TModel>();
-        set => SetValue(value);
-    }
-
-    /// <summary>
-    /// Gets or sets the IsUpdate property value.
-    /// </summary>
-    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
-    public bool IsUpdate
-    {
-        get { return GetValue<bool>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the submit command.
-    /// </summary>
-    /// <value>The submit command.</value>
-    public AsyncRelayCommand<TModel> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].
@@ -156,21 +93,6 @@ public abstract class ViewModelSummary<TModel> : ViewModel, IViewModelSummary<TM
     }
 
     /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="e">The e.</param>
-    /// <param name="isUpdate"></param>
-    public virtual void SetSelectedItem(TModel e, bool isUpdate = true)
-    {
-        SelectedItem = e;
-
-        if (SelectedItem is IObservableValidatedClass observableClass)
-            observableClass.MarkAsClean();
-
-        IsUpdate = isUpdate;
-    }
-
-    /// <summary>
     /// Adds the asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
@@ -236,13 +158,8 @@ public abstract class ViewModelSummary<TModel> : ViewModel, IViewModelSummary<TM
     {
         try
         {
-            // Set flag to prevent property change notifications during cleanup
             IsInCleanup = true;
-
-            // Clear selected item first
-            SelectedItem = default;
             Items?.Clear();
-
             base.Cleanup(isClosing);
         }
         finally
@@ -255,20 +172,11 @@ public abstract class ViewModelSummary<TModel> : ViewModel, IViewModelSummary<TM
     {
         if (disposing)
         {
-            // Make sure cleanup is done before disposal
-            if (!IsInCleanup)
-            {
-                Cleanup();
-            }
-
-            // Dispose and clear commands
             AddCommand?.Dispose();
             EditCommand?.Dispose();
             DeleteCommand?.Dispose();
             RefreshCommand?.Dispose();
             SearchCommand?.Dispose();
-            SubmitCommand?.Dispose();
-
             base.Dispose(disposing);
         }
     }

@@ -21,45 +21,8 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TModel">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelBladeView" />
-public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeView<TModel>
+public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, IViewModelBladeView<TModel>
 {
-    /// <summary>
-    /// Occurs when [submitted].
-    /// </summary>
-    public event EventHandler<SubmitEventArgs<TModel>>? Submitted;
-    /// <summary>
-    /// Called when [submitted].
-    /// </summary>
-    /// <param name="e">The e.</param>
-    protected virtual void OnSubmitted(SubmitEventArgs<TModel> e)
-    {
-        if (Submitted != null)
-        {
-            // Invoke each handler individually to prevent one exception from stopping others
-            var handlers = Submitted.GetInvocationList();
-            foreach (EventHandler<SubmitEventArgs<TModel>> handler in handlers)
-            {
-                try
-                {
-                    handler.Invoke(this, e);
-                }
-                catch (Exception ex)
-                {
-                    // Try to use exception handler service if available
-                    try
-                    {
-                        _commonServices.ExceptionHandlerService?.HandleException(ex);
-                    }
-                    catch
-                    {
-                        // If exception handler service is not available, log to debug
-                        System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler: {ex.Message}");
-                    }
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// Gets or sets the Blades property value.
     /// </summary>
@@ -90,80 +53,6 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
         get => GetValue<bool>();
         set => SetValue(value);
     }
-
-    /// <summary>
-    /// Gets or sets the SelectedItem property value.
-    /// </summary>
-    /// <value>The selected item.</value>
-    public TModel? SelectedItem
-    {
-        get => GetValue<TModel>();
-        set
-        {
-            var oldValue = GetValue<TModel>();
-
-            // Unsubscribe from old item
-            if (oldValue is INotifyPropertyChanged oldItem)
-            {
-                oldItem.PropertyChanged -= SelectedItem_PropertyChanged;
-            }
-
-            SetValue(value);
-
-            // Subscribe to new item if it implements INotifyPropertyChanged
-            if (value is INotifyPropertyChanged newItem)
-            {
-                newItem.PropertyChanged += SelectedItem_PropertyChanged;
-            }
-
-            // Notify command that SelectedItem changed
-            SubmitCommand?.NotifyCanExecuteChanged();
-        }
-    }
-
-    /// <summary>
-    /// Handles property changes within SelectedItem and propagates them.
-    /// </summary>
-    private void SelectedItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        _logger.LogTrace("SelectedItem property '{PropertyName}' changed in {ViewModelName}", e.PropertyName, GetType().Name);
-
-        // When any property in SelectedItem changes, notify that SelectedItem itself changed
-        // This ensures the UI and commands re-evaluate
-        RaisePropertyChanged(nameof(SelectedItem));
-        SubmitCommand?.NotifyCanExecuteChanged();
-    }
-
-    /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="e">The e.</param>
-    /// <param name="isUpdate"></param>
-    public virtual void SetSelectedItem(TModel e, bool isUpdate = true)
-    {
-        SelectedItem = e;
-
-        if (SelectedItem is IObservableValidatedClass observableClass)
-            observableClass.MarkAsClean();
-
-        IsUpdate = isUpdate;
-    }
-
-    /// <summary>
-    /// Gets or sets the IsUpdate property value.
-    /// </summary>
-    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
-    public bool IsUpdate
-    {
-        get { return GetValue<bool>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the submit command.
-    /// </summary>
-    /// <value>The submit command.</value>
-    public AsyncRelayCommand<TModel> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].
@@ -300,22 +189,9 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     {
         try
         {
-            // Set flag to prevent property change notifications during cleanup
             IsInCleanup = true;
-
-            // Unsubscribe from SelectedItem before clearing
-            var currentItem = GetValue<TModel>();
-            if (currentItem is INotifyPropertyChanged item)
-            {
-                item.PropertyChanged -= SelectedItem_PropertyChanged;
-            }
-
-            // Clear selected item first
-            SelectedItem = default;
-
             Items?.Clear();
             Blades?.Clear();
-
             base.Cleanup(isClosing);
         }
         finally
@@ -328,27 +204,11 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     {
         if (disposing)
         {
-            // Unsubscribe before disposal
-            var currentItem = GetValue<TModel>();
-            if (currentItem is INotifyPropertyChanged item)
-            {
-                item.PropertyChanged -= SelectedItem_PropertyChanged;
-            }
-
-            // Make sure cleanup is done before disposal
-            if (!IsInCleanup)
-            {
-                Cleanup();
-            }
-
-            // Dispose and clear all commands
             AddCommand?.Dispose();
             EditCommand?.Dispose();
             DeleteCommand?.Dispose();
             RefreshCommand?.Dispose();
             SearchCommand?.Dispose();
-            SubmitCommand?.Dispose();
-
             base.Dispose(disposing);
         }
     }
