@@ -42,10 +42,8 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected bool _isShuttingDown = false;
 
     public event EventHandler<ReturnEventArgs<bool>>? ApplicationInitialized;
-    public event EventHandler<ReturnEventArgs<bool>>? ApplicationLoaded;
 
     public virtual void RaiseApplicationInitialized() => ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
-    public virtual void RaiseApplicationLoaded() => ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
 
     /// <summary>
     /// Default constructor.
@@ -191,8 +189,6 @@ public abstract class Application : System.Windows.Application, IDisposable
         }
     }
 
-
-    protected abstract void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e);
 
     /// <summary>
     /// Handles the dispatcher unhandled exception.
@@ -360,7 +356,7 @@ public abstract class Application : System.Windows.Application, IDisposable
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
             DispatcherUnhandledException -= BaseApplication_DispatcherUnhandledException;
 
-            ApplicationLoaded -= OnApplicationLoaded;
+            _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
         }
 
         // free native resources if there are any.

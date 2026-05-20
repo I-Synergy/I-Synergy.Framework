@@ -82,10 +82,9 @@ public partial class App : Application
         authenticationService.AuthenticationSucceeded += async (s, args) => await OnAuthenticationSucceededAsync(args);
         authenticationService.AuthenticationFailed += async (s, args) => await OnAuthenticationFailedAsync();
 
-        RaiseApplicationLoaded();
     }
 
-    protected override async void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e)
+    protected override async void OnApplicationLoaded(object? sender, EventArgs e)
     {
         try
         {

@@ -16,6 +16,12 @@ public partial class SelectionWindow : ISelectionWindow
         DataContextChanged += this.SelectionWindow_DataContextChanged;
     }
 
+    protected override void OnClosed(EventArgs e)
+    {
+        DataContextChanged -= SelectionWindow_DataContextChanged;
+        base.OnClosed(e);
+    }
+
     private void SelectionWindow_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
     {
         if (ViewModel is ISelectionViewModel viewModel)
