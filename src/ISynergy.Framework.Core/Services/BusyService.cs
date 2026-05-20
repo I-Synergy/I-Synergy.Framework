@@ -12,6 +12,7 @@ namespace ISynergy.Framework.Core.Services;
 public sealed class BusyService : ObservableClass, IBusyService
 {
     private readonly ILanguageService _languageService;
+    private readonly object _syncRoot = new();
     private static readonly object _creationLock = new object();
     private static IBusyService? _defaultInstance;
 
@@ -88,23 +89,38 @@ public sealed class BusyService : ObservableClass, IBusyService
     /// <returns>Task.</returns>
     public void StartBusy(string? message = null)
     {
-        if (!string.IsNullOrEmpty(message))
-            BusyMessage = message;
-        else
-            BusyMessage = _languageService.GetString("PleaseWait");
+        lock (_syncRoot)
+        {
+            if (!string.IsNullOrEmpty(message))
+                BusyMessage = message;
+            else
+                BusyMessage = _languageService.GetString("PleaseWait");
 
-        IsBusy = true;
+            IsBusy = true;
+        }
     }
 
     /// <summary>
     /// Updates the busy message.
     /// </summary>
     /// <param name="message"></param>
-    public void UpdateMessage(string message) => BusyMessage = message;
+    public void UpdateMessage(string message)
+    {
+        lock (_syncRoot)
+        {
+            BusyMessage = message;
+        }
+    }
 
     /// <summary>
     /// Ends the busy asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public void StopBusy() => IsBusy = false;
+    public void StopBusy()
+    {
+        lock (_syncRoot)
+        {
+            IsBusy = false;
+        }
+    }
 }

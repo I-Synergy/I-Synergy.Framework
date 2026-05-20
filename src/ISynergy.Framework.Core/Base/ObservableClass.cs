@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 
 #pragma warning disable S3776 // cognitive complexity is inherent in reflection-based property equality comparison
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -40,7 +41,9 @@ public abstract class ObservableClass : IObservableClass
     [DataTableIgnore]
     [XmlIgnore]
     [Display(AutoGenerateField = false)]
-    public Dictionary<string, IProperty> Properties { get; } = new Dictionary<string, IProperty>();
+    public ConcurrentDictionary<string, IProperty> Properties { get; } = new ConcurrentDictionary<string, IProperty>();
+
+    System.Collections.Generic.IDictionary<string, IProperty> IObservableClass.Properties => Properties;
 
     /// <summary>
     /// Gets a value indicating whether this instance is dirty.
@@ -110,7 +113,7 @@ public abstract class ObservableClass : IObservableClass
     /// </summary>
     /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode() =>
-        new HashCode().ToHashCode();
+        System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
 
     /// <summary>
     /// Gets the value.
@@ -120,10 +123,7 @@ public abstract class ObservableClass : IObservableClass
     /// <returns>T.</returns>
     protected T GetValue<T>([CallerMemberName] string? propertyName = "")
     {
-        if (propertyName is not null && !Properties.ContainsKey(propertyName))
-            Properties.Add(propertyName, new Property<T>(propertyName));
-
-        if (propertyName is not null && Properties[propertyName] is IProperty<T> property)
+        if (propertyName is not null && Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is IProperty<T> property)
             return property.Value!;
 
         return default!;
@@ -164,10 +164,7 @@ public abstract class ObservableClass : IObservableClass
         if (propertyName is null)
             return;
 
-        if (!Properties.ContainsKey(propertyName))
-            Properties.Add(propertyName, new Property<T>(propertyName));
-
-        if (Properties[propertyName] is not IProperty<T> property) return;
+        if (Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is not IProperty<T> property) return;
 
         // During cleanup or when events are suppressed, just set the value
         if (!shouldRaiseEvents || IsInCleanup)
@@ -233,16 +230,17 @@ public abstract class ObservableClass : IObservableClass
     public virtual void RaisePropertyChanged([CallerMemberName] string? propertyName = "")
     {
         ThrowIfDisposed();
-        
-        if (_propertyChanged != null)
+
+        var handler = _propertyChanged;
+        if (handler != null)
         {
             // Invoke each handler individually to prevent one exception from stopping others
-            var handlers = _propertyChanged.GetInvocationList().OfType<PropertyChangedEventHandler>();
-            foreach (var handler in handlers)
+            var handlers = handler.GetInvocationList().OfType<PropertyChangedEventHandler>();
+            foreach (var h in handlers)
             {
                 try
                 {
-                    handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                    h.Invoke(this, new PropertyChangedEventArgs(propertyName));
                 }
                 catch (Exception ex)
                 {

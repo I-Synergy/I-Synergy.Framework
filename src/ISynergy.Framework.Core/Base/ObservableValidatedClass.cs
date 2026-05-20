@@ -163,10 +163,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         if (propertyName is null)
             return;
 
-        if (!Properties.ContainsKey(propertyName))
-            Properties.Add(propertyName, new Property<T>(propertyName));
-
-        if (Properties[propertyName] is not IProperty<T> property) return;
+        if (Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is not IProperty<T> property) return;
 
         // During cleanup or when events are suppressed, just set the value
         if (!shouldRaiseEvents || IsInCleanup)
@@ -362,12 +359,17 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected override void Dispose(bool disposing)
     {
+        if (_disposed)
+            return;
+
         base.Dispose(disposing);
 
         if (disposing)
         {
             // free managed resources
             Validator = null;
+
+            Errors?.Clear();
 
             if (_errorsChanged is not null)
             {
@@ -378,30 +380,21 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
                 }
             }
         }
-
-        // free native resources if there are any.
-        _disposed = true;
     }
 
     protected override async ValueTask DisposeAsyncCore()
     {
+        if (_disposed)
+            return;
+
+        _errorsChanged = null;
+
         await base.DisposeAsyncCore().ConfigureAwait(false);
 
         //Async dispose of managed resources
         Validator = null;
 
         Errors?.Clear();
-
-        if (_errorsChanged is not null)
-        {
-            foreach (var @delegate in _errorsChanged.GetInvocationList())
-            {
-                if (@delegate is not null)
-                    _errorsChanged -= (EventHandler<DataErrorsChangedEventArgs>)@delegate;
-            }
-        }
-
-        _disposed = true;
     }
     #endregion
 }
