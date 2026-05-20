@@ -23,16 +23,6 @@ using ISynergy.Framework.UI.Helpers;
 
 #pragma warning disable IDE0130, S1200
 
-[assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
-[assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]
-[assembly: ExportFont("segoemdl2.ttf", Alias = "SegoeMdl2")]
-[assembly: ExportFont("segoesb.ttf", Alias = "SegoeSemiBold")]
-[assembly: ExportFont("segoeui.ttf", Alias = "SegoeUI")]
-[assembly: ExportFont("segoeuib.ttf", Alias = "SegoeUIBold")]
-[assembly: ExportFont("segoeuil.ttf", Alias = "SegoeUILight")]
-[assembly: ExportFont("segoeuisl.ttf", Alias = "SegoeUISemiLight")]
-[assembly: ExportFont("segoeuisb.ttf", Alias = "SegoeUISemiBold")]
-
 namespace ISynergy.Framework.UI;
 
 public abstract class Application : Microsoft.Maui.Controls.Application, IDisposable

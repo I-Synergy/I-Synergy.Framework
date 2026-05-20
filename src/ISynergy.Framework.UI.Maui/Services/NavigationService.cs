@@ -136,7 +136,7 @@ public class NavigationService : INavigationService
     {
         if (Application.Current is not null)
         {
-            if (!Application.Current.Dispatcher.IsDispatchRequired)
+            await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 if (NavigationExtensions.CreatePage<TViewModel>(parameter) is { } view && view is Page page)
                 {
@@ -172,11 +172,7 @@ public class NavigationService : INavigationService
                         }
                     }
                 }
-            }
-            else
-            {
-                await Application.Current.Dispatcher.DispatchAsync(async () => await NavigateModalAsync<TViewModel>(parameter));
-            }
+            });
         }
     }
 

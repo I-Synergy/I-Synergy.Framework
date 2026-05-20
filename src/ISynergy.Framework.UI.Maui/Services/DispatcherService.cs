@@ -10,6 +10,7 @@ namespace ISynergy.Framework.UI.Services;
 /// You MUST get hold of a UI object on the window being touched.
 /// If you are writing code in a UI element, use this.Dispatcher. [this. is optional; shown for clarity.] OR pass in to your method a reference to any UI element of that window (someUIElement.Dispatcher).
 /// </summary>
+/// <remarks>Single-window applications only.</remarks>
 public class DispatcherService : IDispatcherService
 {
     public bool Invoke(Action action)

@@ -22,6 +22,7 @@ public class LoadingView : ContentPage
     private MediaElement? _backgroundMediaElement;
     private Image? _backgroundImage;
     private Button? _signInButton;
+    private bool _loadingCompleted;
     /// <summary>
     /// Initializes a new instance of the LoadingView class.
     /// </summary>
@@ -42,17 +43,7 @@ public class LoadingView : ContentPage
         // Signal that the UI framework is ready for interaction.
         // At this point, the window is fully created and first page is loaded.
         // This is the earliest safe point for dialogs and modal navigation.
-        Loaded += (s, e) =>
-        {
-            try
-            {
-                _applicationLifecycleService.SignalApplicationUIReady();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error signaling UI ready: {ex}");
-            }
-        };
+        Loaded += OnSignalUIReady;
 
         // Configure background based on splash screen type
         if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
@@ -134,6 +125,7 @@ public class LoadingView : ContentPage
         if (_backgroundMediaElement is not null && _backgroundMediaElement.CurrentState != MediaElementState.Stopped)
             _backgroundMediaElement.Pause();
 
+        _loadingCompleted = true;
         _applicationLifecycleService.SignalApplicationLoaded();
         LoadingCompleted?.Invoke(this, EventArgs.Empty);
     }
@@ -245,6 +237,21 @@ public class LoadingView : ContentPage
     }
 
     /// <summary>
+    /// Handles the view loaded event to signal the UI is ready.
+    /// </summary>
+    private void OnSignalUIReady(object? sender, EventArgs e)
+    {
+        try
+        {
+            _applicationLifecycleService.SignalApplicationUIReady();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error signaling UI ready: {ex}");
+        }
+    }
+
+    /// <summary>
     /// Handles the view unloaded event.
     /// </summary>
     private void OnViewUnloaded(object? sender, EventArgs e)
@@ -276,6 +283,7 @@ public class LoadingView : ContentPage
         if (_signInButton is not null)
             _signInButton.Clicked -= OnSignInClicked;
 
+        Loaded -= OnSignalUIReady;
         Loaded -= OnViewLoaded;
         Unloaded -= OnViewUnloaded;
 
@@ -291,6 +299,9 @@ public class LoadingView : ContentPage
     /// </summary>
     public Task WaitForLoadingCompleteAsync()
     {
+        if (_loadingCompleted)
+            return Task.CompletedTask;
+
         var tcs = new TaskCompletionSource<bool>();
 
         EventHandler? handler = null;
@@ -301,12 +312,6 @@ public class LoadingView : ContentPage
         };
 
         LoadingCompleted += handler;
-
-        // If already completed, set result immediately
-        if (tcs.Task.IsCompleted)
-        {
-            return tcs.Task;
-        }
 
         return tcs.Task;
     }

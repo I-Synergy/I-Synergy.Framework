@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class DialogService : IDialogService
+public class DialogService : IDialogService, IDisposable
 {
     private const string ExceptionHandlerNotAvailable = "Exception handler service not available for dialog error";
     private const string ExceptionHandlerFailed = "Exception handler failed while processing dialog error";
@@ -168,13 +168,6 @@ public class DialogService : IDialogService
 
         try
         {
-            // Pre-flight checks
-            if (!await ValidateApplicationStateAsync())
-            {
-                await TryFallbackNotificationAsync(message, title);
-                return MessageBoxResult.None;
-            }
-
             // Ensure we're on the main thread
             if (!MainThread.IsMainThread)
             {
@@ -204,44 +197,6 @@ public class DialogService : IDialogService
         {
             await HandleDialogFailureAsync(ex, message, title);
             return MessageBoxResult.None;
-        }
-    }
-
-    private async Task<bool> ValidateApplicationStateAsync()
-    {
-        try
-        {
-            // Additional safety check right before showing dialog
-            if (Application.Current == null ||
-                Application.Current?.Windows.Count == 0 ||
-                Application.Current?.Windows[0] == null ||
-                Application.Current?.Windows[0].Page == null)
-                throw new InvalidOperationException("Main page not available for dialog display");
-
-            // Check MainPage with timeout
-            var timeoutTask = Task.Delay(5000);
-            var checkTask = Task.Run(() => Application.Current?.Windows[0]?.Page != null);
-
-            var completedTask = await Task.WhenAny(checkTask, timeoutTask);
-            if (completedTask == timeoutTask)
-            {
-                _logger?.LogError("MainPage validation timed out");
-                return false;
-            }
-
-            var hasMainPage = await checkTask;
-            if (!hasMainPage)
-            {
-                _logger?.LogError("Application.Current.MainPage is null");
-                return false;
-            }
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error validating application state");
-            return false;
         }
     }
 
@@ -860,4 +815,20 @@ public class DialogService : IDialogService
             }
         }
     }
+
+    #region IDisposable
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _dialogSemaphore.Dispose();
+        }
+    }
+    #endregion
 }
