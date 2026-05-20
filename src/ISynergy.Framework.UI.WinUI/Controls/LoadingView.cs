@@ -20,6 +20,7 @@ public class LoadingView : Page
     private Image? _backgroundImage;
     private Button? _signInButton;
     private TextBlock? _statusLabel;
+    private bool _loadingCompleted;
     /// <summary>
     /// Initializes a new instance of the LoadingView class.
     /// </summary>
@@ -41,17 +42,7 @@ public class LoadingView : Page
         // Signal that the UI framework is ready for interaction.
         // At this point, the window is fully created and first page is loaded.
         // This is the earliest safe point for dialogs and modal navigation.
-        Loaded += (s, e) =>
-        {
-            try
-            {
-                _applicationLifecycleService.SignalApplicationUIReady();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error signaling UI ready: {ex}");
-            }
-        };
+        Loaded += OnSignalUIReady;
 
         // Configure background based on splash screen type
         if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
@@ -136,6 +127,7 @@ public class LoadingView : Page
         if (_backgroundMediaElement?.MediaPlayer is { } player && player.CurrentState != MediaPlayerState.Stopped)
             player.Pause();
 
+        _loadingCompleted = true;
         _applicationLifecycleService.SignalApplicationLoaded();
         LoadingCompleted?.Invoke(this, EventArgs.Empty);
     }
@@ -284,6 +276,21 @@ public class LoadingView : Page
     }
 
     /// <summary>
+    /// Handles the view loaded event to signal the UI is ready.
+    /// </summary>
+    private void OnSignalUIReady(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _applicationLifecycleService.SignalApplicationUIReady();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error signaling UI ready: {ex}");
+        }
+    }
+
+    /// <summary>
     /// Handles the view unloaded event.
     /// </summary>
     private void OnViewUnloaded(object? sender, RoutedEventArgs e)
@@ -312,6 +319,7 @@ public class LoadingView : Page
         if (_signInButton is not null)
             _signInButton.Click -= OnSignInClicked;
 
+        Loaded -= OnSignalUIReady;
         Loaded -= OnViewLoaded;
         Unloaded -= OnViewUnloaded;
 
@@ -329,6 +337,9 @@ public class LoadingView : Page
     /// </summary>
     public Task WaitForLoadingCompleteAsync()
     {
+        if (_loadingCompleted)
+            return Task.CompletedTask;
+
         var tcs = new TaskCompletionSource<bool>();
 
         EventHandler? handler = null;
@@ -339,12 +350,6 @@ public class LoadingView : Page
         };
 
         LoadingCompleted += handler;
-
-        // If already completed, set result immediately
-        if (tcs.Task.IsCompleted)
-        {
-            return tcs.Task;
-        }
 
         return tcs.Task;
     }

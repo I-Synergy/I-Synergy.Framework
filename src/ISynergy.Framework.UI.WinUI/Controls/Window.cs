@@ -54,11 +54,6 @@ public partial class Window : ContentDialog, IWindow
         return Task.CompletedTask;
     }
 
-    private static void Window_Unloaded(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
     /// <summary>
     /// Gets the name of the descendant from.
     /// </summary>

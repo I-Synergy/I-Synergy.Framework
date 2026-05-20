@@ -179,15 +179,14 @@ public static class WindowsAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
-        appBuilder.Services.TryAddSingleton<IDialogService, DialogService>();
+        appBuilder.Services.TryAddSingleton<DialogService>();
+        appBuilder.Services.TryAddSingleton<IDialogService>(sp => sp.GetRequiredService<DialogService>());
         appBuilder.Services.TryAddSingleton<IClipboardService, ClipboardService>();
         appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
 
         appBuilder.Services.RegisterAssemblies(assembly, assemblyFilter);
 
         action.Invoke(appBuilder.Services);
-
-        ServiceLocator.SetLocatorProvider(appBuilder.Services.BuildServiceProvider());
 
         return appBuilder;
     }

@@ -36,7 +36,7 @@ public class ThemeService : IThemeService
     /// <summary>
     /// The window
     /// </summary>
-    private Microsoft.UI.Xaml.Window _window;
+    private Microsoft.UI.Xaml.Window? _window;
 
     /// <summary>
     /// Gets a value indicating whether this instance is light theme enabled.
@@ -100,7 +100,7 @@ public class ThemeService : IThemeService
             application.SetApplicationColor(ColorHelper.GetColorFromHexString(_color));
 
             // Set the accent color from the loaded theme
-            if ((Color)Application.Current.Resources[Primary] is Color primaryColor)
+            if (Application.Current.Resources.TryGetValue(Primary, out var resource) && resource is Color primaryColor)
             {
                 Application.AccentColor = primaryColor;
                 _logger.LogTrace("AccentColor set to {Color}", primaryColor);
@@ -125,6 +125,9 @@ public class ThemeService : IThemeService
 
     private void UpdatePlatformColors(Application application)
     {
+        if (_window is null)
+            return;
+
         if (_window.Content is FrameworkElement frameworkElement)
         {
             switch (_theme)

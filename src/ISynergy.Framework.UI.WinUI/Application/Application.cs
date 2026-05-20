@@ -534,7 +534,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     }
 
 
-    public event Action Exiting;
+    public event Action? Exiting;
 
     #region IDisposable
     // Dispose() calls Dispose(true)
@@ -599,6 +599,8 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
                 _lifecycleService.Dispose();
             }
+
+            Exiting = null;
         }
 
         // free native resources if there are any.
