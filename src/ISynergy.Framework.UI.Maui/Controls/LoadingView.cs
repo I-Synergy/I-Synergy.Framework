@@ -214,7 +214,10 @@ public class LoadingView : ContentPage
     /// </summary>
     private void OnApplicationInitialized(object? sender, EventArgs e)
     {
-        IsSignInButtonEnabled = true;
+        if (MainThread.IsMainThread)
+            IsSignInButtonEnabled = true;
+        else
+            MainThread.BeginInvokeOnMainThread(() => IsSignInButtonEnabled = true);
     }
 
     /// <summary>

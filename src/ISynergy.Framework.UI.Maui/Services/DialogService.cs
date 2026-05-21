@@ -703,11 +703,20 @@ public class DialogService : IDialogService, IDisposable
         // Define the handler in the method scope so it is accessible for both += and -=
         async void ViewModelClosedHandler(object? sender, EventArgs e)
         {
+            // Unsubscribe first to prevent re-entrant calls
             try
             {
                 if (viewModelRef != null)
                     viewModelRef.Closed -= ViewModelClosedHandler;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error unsubscribing from Closed handler");
+            }
 
+            // Attempt to pop the modal — may fail due to MAUI framework rendering issues
+            try
+            {
                 if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
                 {
                     await navigation.PopModalAsync();
@@ -716,17 +725,32 @@ public class DialogService : IDialogService, IDisposable
                 {
                     _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
                 }
-
-                viewModelRef?.Dispose();
-                viewModelRef = null;
-
-                windowRef?.Dispose();
-                windowRef = null;
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Error in ViewModelClosedHandler");
+                _logger?.LogError(ex, "Error popping modal dialog; cleaning up resources anyway");
             }
+
+            // Always clean up resources, even if PopModalAsync failed
+            try
+            {
+                viewModelRef?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error disposing viewmodel during dialog close");
+            }
+            viewModelRef = null;
+
+            try
+            {
+                windowRef?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error disposing window during dialog close");
+            }
+            windowRef = null;
         }
 
         try
