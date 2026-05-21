@@ -14,11 +14,4 @@ public interface IScopedContextService : IDisposable
 
     [return: NotNull] TService GetRequiredService<TService>() where TService : notnull;
     IServiceProvider ServiceProvider { get; }
-
-    /// <summary>
-    /// The application root service provider (not scoped).
-    /// Use this to create child scopes whose lifetimes are independent of
-    /// the ScopedContextService's internal scope.
-    /// </summary>
-    IServiceProvider RootServiceProvider { get; }
 }

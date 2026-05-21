@@ -29,8 +29,9 @@ public class NavigationService : BaseNavigationService
         IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
+        IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
-        : base(scopedContextService, exceptionHandlerService, commonServices, logger)
+        : base(scopedContextService, exceptionHandlerService, commonServices, serviceScopeFactory, logger)
     {
     }
 

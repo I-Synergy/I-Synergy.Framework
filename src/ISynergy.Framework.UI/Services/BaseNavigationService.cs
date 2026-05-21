@@ -42,6 +42,11 @@ public abstract class BaseNavigationService : INavigationService
     protected readonly ILogger _logger;
 
     /// <summary>
+    /// The service scope factory for creating independent child scopes.
+    /// </summary>
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    /// <summary>
     /// Backs the stack changed event field.
     /// Made protected to allow WPF subclass to clear on modal navigation (preserving existing behavior).
     /// </summary>
@@ -76,14 +81,6 @@ public abstract class BaseNavigationService : INavigationService
     /// Maximum size for the backstack before disposing oldest entries.
     /// </summary>
     private const int MaxBackstackSize = 10;
-
-    /// <summary>
-    /// The root provider used to create child scopes.
-    /// Using RootServiceProvider (not the scoped ServiceProvider) ensures NavigationFrame
-    /// scopes are independent of ScopedContextService's internal scope, so ViewModel disposal
-    /// during DI shutdown does not race against ScopedContextService being torn down.
-    /// </summary>
-    private IServiceProvider RootProvider => _scopedContextService.RootServiceProvider;
 
     private bool _isDisposed;
 
@@ -164,12 +161,14 @@ public abstract class BaseNavigationService : INavigationService
     /// <param name="scopedContextService">The scoped context service.</param>
     /// <param name="exceptionHandlerService">The exception handler service.</param>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="serviceScopeFactory">The service scope factory for creating child scopes.</param>
     /// <param name="logger">The logger.</param>
     /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
     protected BaseNavigationService(
         IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
+        IServiceScopeFactory serviceScopeFactory,
         ILogger logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -178,6 +177,7 @@ public abstract class BaseNavigationService : INavigationService
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
         _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
         _commonServices = commonServices ?? throw new ArgumentNullException(nameof(commonServices));
+        _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
     }
 
     #endregion
@@ -725,7 +725,7 @@ public abstract class BaseNavigationService : INavigationService
         if (viewModel is not null)
         {
             // Caller provided a specific ViewModel instance — wrap it in a new scope
-            var scope = RootProvider.CreateScope();
+            var scope = _serviceScopeFactory.CreateScope();
             // The provided ViewModel is already resolved; register it in the new scope would be complex.
             // Instead, create a new scope and resolve a fresh instance.
             scope.ServiceProvider.GetRequiredService<TViewModel>();
@@ -740,7 +740,7 @@ public abstract class BaseNavigationService : INavigationService
         else
         {
             // Create a fresh child scope and resolve the ViewModel from it
-            var scope = RootProvider.CreateScope();
+            var scope = _serviceScopeFactory.CreateScope();
             scope.ServiceProvider.GetRequiredService<TViewModel>();
             newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
         }
@@ -788,7 +788,7 @@ public abstract class BaseNavigationService : INavigationService
 
         if (viewModel is not null)
         {
-            var scope = RootProvider.CreateScope();
+            var scope = _serviceScopeFactory.CreateScope();
             scope.ServiceProvider.GetRequiredService<TViewModel>();
             newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
         }
@@ -799,7 +799,7 @@ public abstract class BaseNavigationService : INavigationService
         }
         else
         {
-            var scope = RootProvider.CreateScope();
+            var scope = _serviceScopeFactory.CreateScope();
             scope.ServiceProvider.GetRequiredService<TViewModel>();
             newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
         }
