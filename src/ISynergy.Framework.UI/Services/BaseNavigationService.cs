@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -47,14 +48,39 @@ public abstract class BaseNavigationService : INavigationService
     protected EventHandler? _backStackChanged;
 
     /// <summary>
-    /// Navigation backstack.
+    /// A navigation frame binds a ViewModel to its owning child scope.
+    /// When the frame is evicted, the scope is disposed, which cascades
+    /// to the ViewModel and all scoped dependencies resolved within that frame.
     /// </summary>
-    private Stack<IViewModel> _backStack = new Stack<IViewModel>();
+    private sealed class NavigationFrame : IDisposable
+    {
+        public IServiceScope Scope { get; init; } = null!;
+        public Type ViewModelType { get; init; } = null!;
+        public object? Parameter { get; set; }
+
+        public void Dispose() => Scope.Dispose();
+    }
 
     /// <summary>
-    /// Maximum size for the backstack before cleaning up old ViewModels.
+    /// Navigation backstack. Each entry holds a child scope that owns
+    /// exactly one ViewModel instance (registered as scoped).
+    /// </summary>
+    private Stack<NavigationFrame> _backStack = new Stack<NavigationFrame>();
+
+    /// <summary>
+    /// The frame currently displayed in the navigation host.
+    /// </summary>
+    private NavigationFrame? _currentFrame;
+
+    /// <summary>
+    /// Maximum size for the backstack before disposing oldest entries.
     /// </summary>
     private const int MaxBackstackSize = 10;
+
+    /// <summary>
+    /// Gets the root service provider for creating child scopes.
+    /// </summary>
+    private IServiceProvider RootProvider => _scopedContextService.ServiceProvider;
 
     /// <summary>
     /// Gets a value indicating whether this instance can go back.
@@ -104,7 +130,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <param name="viewModel">An existing ViewModel instance, or null to resolve from DI.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
     /// <returns>The created <see cref="IView"/> instance.</returns>
-    protected abstract IView CreateView(Type viewModelType, IViewModel? viewModel, object? parameter);
+    protected abstract IView CreateView(IServiceProvider serviceProvider, Type viewModelType, IViewModel? viewModel, object? parameter);
 
     /// <summary>
     /// Subscribes to the platform-specific Loaded event (if not already loaded)
@@ -199,8 +225,6 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Safely calls OnNavigatedTo with exception handling.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "IViewModel.OnNavigatedTo() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
     protected void SafeOnNavigatedTo(IViewModel viewModel)
     {
         try
@@ -216,8 +240,6 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Safely calls OnNavigatedFrom with exception handling.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "IViewModel.OnNavigatedFrom() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
     protected void SafeOnNavigatedFrom(IViewModel viewModel)
     {
         try
@@ -243,8 +265,6 @@ public abstract class BaseNavigationService : INavigationService
     /// The reflection fallback is decorated with <see cref="RequiresUnreferencedCodeAttribute"/>
     /// to surface a warning at call sites when publishing with trimming enabled.
     /// </remarks>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "HasRunningCommandsViaReflection is the reflection fallback path. The AOT-safe path via ICommandProvider is tried first. Reflection fallback is preserved for backwards compatibility.")]
     private bool HasRunningCommands(IViewModel viewModel)
     {
         if (viewModel is null)
@@ -263,8 +283,6 @@ public abstract class BaseNavigationService : INavigationService
     /// does not implement <see cref="ICommandProvider"/>.
     /// Not compatible with NativeAOT or aggressive trimming.
     /// </summary>
-    [RequiresUnreferencedCode(
-        "Reflection over ViewModel properties is not trim-safe. Implement ICommandProvider on the ViewModel instead.")]
     private static bool HasRunningCommandsViaReflection(IViewModel viewModel)
     {
         var commandProperties = viewModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -284,51 +302,48 @@ public abstract class BaseNavigationService : INavigationService
     #region Navigation Helpers
 
     /// <summary>
-    /// Common navigation logic for handling the current ViewModel before navigation.
+    /// Handles the current navigation frame before navigating away.
+    /// <list type="bullet">
+    /// <item><description>Forward navigation: pushes the current frame onto the backstack, trims if over capacity.</description></item>
+    /// <item><description>Back navigation: disposes the current frame (scope + ViewModel + scoped dependencies).</description></item>
+    /// </list>
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CancelAllCommands uses reflection to discover commands on ViewModel. All ViewModel types are preserved through DI registration.")]
-    private bool HandleCurrentViewModel(IViewModel? currentViewModel, bool backNavigation)
+    private void HandleCurrentFrame(bool backNavigation)
     {
-        if (currentViewModel == null)
-            return true;
+        if (_currentFrame is null)
+            return;
 
-        currentViewModel.CancelAllCommands();
-        SafeOnNavigatedFrom(currentViewModel);
-
-        // Perform partial cleanup
-        currentViewModel.Cleanup(isClosing: false);
-
-        // Add to backstack if not a back navigation
-        if (!backNavigation)
+        // Notify the current ViewModel it's being navigated away from
+        if (_currentFrame.Scope.ServiceProvider.GetService(_currentFrame.ViewModelType) is IViewModel currentViewModel)
         {
-            // Store the entire ViewModel instance
-            _backStack.Push(currentViewModel);
-
-            OnBackStackChanged(EventArgs.Empty);
-
-            // If backstack exceeds maximum size, remove oldest entries
-            while (_backStack.Count > MaxBackstackSize)
-            {
-                var oldestEntry = _backStack.ToArray().Last();
-                _backStack = new Stack<IViewModel>(_backStack.Where(e => e != oldestEntry));
-
-                // Dispose the oldest ViewModel if needed
-                if (oldestEntry is IDisposable disposable)
-                {
-                    try
-                    {
-                        disposable.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Error disposing ViewModel during backstack cleanup");
-                    }
-                }
-            }
+            currentViewModel.CancelAllCommands();
+            SafeOnNavigatedFrom(currentViewModel);
+            currentViewModel.Cleanup(isClosing: false);
         }
 
-        return true;
+        if (!backNavigation)
+        {
+            // Store the current frame on the backstack
+            _backStack.Push(_currentFrame);
+            OnBackStackChanged(EventArgs.Empty);
+
+            // Trim backstack if over capacity — dispose oldest frames
+            while (_backStack.Count > MaxBackstackSize)
+            {
+                var oldest = _backStack.ToArray().Last();
+                _backStack = new Stack<NavigationFrame>(_backStack.Where(f => f != oldest).Reverse());
+                try { oldest.Dispose(); }
+                catch (Exception ex) { _logger.LogError(ex, "Error disposing oldest backstack frame"); }
+            }
+        }
+        else
+        {
+            // Back navigation: the current frame is being permanently evicted
+            try { _currentFrame.Dispose(); }
+            catch (Exception ex) { _logger.LogError(ex, "Error disposing frame during back navigation"); }
+        }
+
+        _currentFrame = null;
     }
 
     /// <summary>
@@ -338,8 +353,6 @@ public abstract class BaseNavigationService : INavigationService
     /// When the ViewModel is already initialized, still calls SafeOnNavigatedTo
     /// to preserve the original behavior of notifying the ViewModel on every navigation.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "IViewModel.OnNavigatedTo() is annotated as requiring unreferenced code. Navigation uses reflection-based VM lifecycle by design; all ViewModel types are preserved through DI registration.")]
     private async Task InitializeViewAndViewModel(IView page, bool backNavigation)
     {
         if (page.ViewModel is not null)
@@ -348,13 +361,12 @@ public abstract class BaseNavigationService : INavigationService
             {
                 try
                 {
-                    // Dispatch initialization to another thread to allow the UI to continue rendering
-                    await Task.Delay(50); // Small delay to let the UI render
+                    // Wait for the view to finish loading before initializing the ViewModel.
+                    // This ensures InitializeAsync runs on the UI thread, avoiding
+                    // COMExceptions from data-bound ObservableCollection changes.
+                    await MonitorViewLoadAsync(page);
 
                     await page.ViewModel.InitializeAsync();
-
-                    // Post another small delay to ensure data binding has a chance to update
-                    await Task.Delay(50);
 
                     page.ViewModel.OnNavigatedTo();
                 }
@@ -398,8 +410,6 @@ public abstract class BaseNavigationService : INavigationService
     /// Gets a navigation blade for the specified ViewModel.
     /// Platform-specific subclasses can override to customize view type resolution.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRelatedViewType() and GetRequiredService(Type) use reflection/runtime-type lookup. All view and ViewModel types are preserved through DI registration.")]
     protected virtual async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
         var view = viewModel.GetRelatedView();
@@ -431,8 +441,6 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Common blade setup logic.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CancelAllCommands uses reflection to discover commands on ViewModel. All ViewModel types are preserved through DI registration.")]
     private async Task<IView?> SetupBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, Func<Task<IView?>> getViewFunc)
     {
         // Check if owner ViewModel can navigate away (if it has running commands)
@@ -594,32 +602,58 @@ public abstract class BaseNavigationService : INavigationService
 
     #endregion
 
+    /// <summary>
+    /// Searches the backstack for a frame whose ViewModel type matches <typeparamref name="TViewModel"/>.
+    /// If found, the frame is removed from the backstack and returned.
+    /// The ViewModel is already cached in the frame's scope (scoped registration).
+    /// </summary>
+    private bool TryRemoveFromBackStack<TViewModel>([NotNullWhen(true)] out NavigationFrame? frame)
+        where TViewModel : class, IViewModel
+    {
+        var match = _backStack.FirstOrDefault(f => f.ViewModelType == typeof(TViewModel));
+        if (match is not null)
+        {
+            _backStack = new Stack<NavigationFrame>(_backStack.Where(f => f != match).Reverse());
+            frame = match;
+            return true;
+        }
+
+        frame = null;
+        return false;
+    }
+
     #region Back Navigation
 
     /// <summary>
     /// Goes back to the previous ViewModel in the navigation stack.
     /// </summary>
-    public Task GoBackAsync()
+    public async Task GoBackAsync()
     {
-        // Keep track of whether we had items before popping
-        bool hadItems = CanGoBack;
+        if (!CanGoBack)
+            return;
 
-        if (CanGoBack && _backStack.Pop() is IViewModel viewModel)
+        // Dispose the current frame — ViewModel + scoped dependencies disposed
+        HandleCurrentFrame(backNavigation: true);
+
+        // Pop the previous frame from the backstack
+        var previousFrame = _backStack.Pop();
+        _currentFrame = previousFrame;
+
+        if (!CanGoBack)
+            OnBackStackChanged(EventArgs.Empty);
+
+        // ViewModel is cached in the frame's scope; force reinitialization
+        var viewModel = (IViewModel)previousFrame.Scope.ServiceProvider.GetRequiredService(previousFrame.ViewModelType);
+        viewModel.IsInitialized = false;
+
+        // Show the previous frame
+        var frame = GetNavigationFrame();
+        if (frame is not null)
         {
-            // Set IsInitialized to false to force reinitialization
-            viewModel.IsInitialized = false;
-
-            // If this was the last item, explicitly raise the event
-            if (hadItems && !CanGoBack)
-            {
-                OnBackStackChanged(EventArgs.Empty);
-            }
-
-            // Navigate back with the preserved ViewModel
-            return NavigateAsync(viewModel, backNavigation: true);
+            var page = CreateView(previousFrame.Scope.ServiceProvider, previousFrame.ViewModelType, viewModel, previousFrame.Parameter);
+            SetFrameContent(frame, page);
+            await InitializeViewAndViewModel(page, backNavigation: true);
         }
-
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -627,6 +661,12 @@ public abstract class BaseNavigationService : INavigationService
     /// </summary>
     public Task CleanBackStackAsync(bool suppressEvent = false)
     {
+        foreach (var frame in _backStack)
+        {
+            try { frame.Dispose(); }
+            catch (Exception ex) { _logger.LogError(ex, "Error disposing backstack frame during cleanup"); }
+        }
+
         _backStack.Clear();
 
         if (!suppressEvent)
@@ -637,7 +677,6 @@ public abstract class BaseNavigationService : INavigationService
             }
             catch (ObjectDisposedException)
             {
-                // Clear all handlers if we get a disposal exception
                 _backStackChanged = null;
             }
         }
@@ -652,8 +691,6 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates to a specified ViewModel as an asynchronous operation.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CreateView uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
     public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel =>
         NavigateAsync(default(TViewModel)!, parameter, backNavigation);
@@ -661,73 +698,68 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates to a specified ViewModel as an asynchronous operation.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CreateView uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
     public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
-        var frame = GetNavigationFrame();
-        if (frame is not null)
+        var hostFrame = GetNavigationFrame();
+        if (hostFrame is null)
+            return;
+
+        // Check if the requested type is already displayed
+        if (_currentFrame is not null && _currentFrame.ViewModelType == typeof(TViewModel) && viewModel is null)
         {
-            // Try to reuse the current ViewModel if it matches the requested type
-            IViewModel? currentViewModel = null;
-
-            if (GetFrameContent(frame) is IView originalView)
-            {
-                currentViewModel = originalView.ViewModel;
-
-                // If we're navigating to the same view type that's already shown, just update parameters
-                if (currentViewModel is TViewModel existingVm && viewModel is null)
-                {
-                    viewModel = existingVm;
-
-                    if (parameter is not null)
-                        viewModel.Parameter = parameter;
-
-                    // No need to navigate - we're already showing this view with this viewmodel
-                    SafeOnNavigatedTo(viewModel);
-                    return;
-                }
-            }
-
-            if (viewModel is null)
-            {
-                if (currentViewModel is TViewModel existingVm)
-                    viewModel = existingVm;
-                else
-                    viewModel = _scopedContextService.GetRequiredService<TViewModel>();
-            }
-
-            if (viewModel is not null && parameter is not null)
-                viewModel.Parameter = parameter;
-
-            // Handle current ViewModel
-            if (!HandleCurrentViewModel(currentViewModel!, backNavigation))
-                return;
-
-            if (viewModel is not null)
-            {
-                // Use the abstract method to create the page
-                var page = CreateView(typeof(TViewModel), viewModel, parameter);
-
-                // Set frame content
-                SetFrameContent(frame, page);
-
-                // Initialize the ViewModel if needed
-                await InitializeViewAndViewModel(page, backNavigation);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Could not resolve ViewModel {typeof(TViewModel).Name}");
-            }
+            var currentVm = _currentFrame.Scope.ServiceProvider.GetRequiredService<TViewModel>();
+            if (parameter is not null)
+                currentVm.Parameter = parameter;
+            SafeOnNavigatedTo(currentVm);
+            return;
         }
+
+        NavigationFrame? newFrame;
+
+        if (viewModel is not null)
+        {
+            // Caller provided a specific ViewModel instance — wrap it in a new scope
+            var scope = RootProvider.CreateScope();
+            // The provided ViewModel is already resolved; register it in the new scope would be complex.
+            // Instead, create a new scope and resolve a fresh instance.
+            scope.ServiceProvider.GetRequiredService<TViewModel>();
+            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
+        }
+        else if (TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
+        {
+            // Reuse existing frame from backstack (ViewModel cached in its scope)
+            backStackFrame.Parameter = parameter;
+            newFrame = backStackFrame;
+        }
+        else
+        {
+            // Create a fresh child scope and resolve the ViewModel from it
+            var scope = RootProvider.CreateScope();
+            scope.ServiceProvider.GetRequiredService<TViewModel>();
+            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
+        }
+
+        if (parameter is not null)
+            newFrame.Parameter = parameter;
+
+        // Evict the current frame (push to backstack for forward nav, dispose for back nav)
+        HandleCurrentFrame(backNavigation);
+
+        // Activate the new frame
+        _currentFrame = newFrame;
+        var resolvedVm = newFrame.Scope.ServiceProvider.GetRequiredService<TViewModel>();
+        if (parameter is not null)
+            resolvedVm.Parameter = parameter;
+
+        var page = CreateView(newFrame.Scope.ServiceProvider, typeof(TViewModel), resolvedVm, parameter);
+        SetFrameContent(hostFrame, page);
+        await InitializeViewAndViewModel(page, backNavigation);
     }
 
     /// <summary>
     /// Navigates to a specified ViewModel with a specified view type.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(typeof(TView)) and GetRequiredService(typeof(TViewModel)) are called with compile-time generic type arguments. Types are preserved through DI registration.")]
     public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView =>
@@ -736,46 +768,50 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates to a specified ViewModel with a specified view type.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(typeof(TView)) and GetRequiredService(typeof(TViewModel)) are called with compile-time generic type arguments. Types are preserved through DI registration.")]
     public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView
     {
-        var frame = GetNavigationFrame();
-        if (frame is not null &&
-            _scopedContextService.GetRequiredService(typeof(TView)) is IView page)
+        var hostFrame = GetNavigationFrame();
+        if (hostFrame is null)
+            return;
+
+        if (_scopedContextService.GetRequiredService(typeof(TView)) is not IView page)
+            return;
+
+        NavigationFrame? newFrame;
+
+        if (viewModel is not null)
         {
-            // Try to reuse the current ViewModel if it matches the requested type
-            IViewModel? currentViewModel = null;
-            if (GetFrameContent(frame) is IView originalView)
-                currentViewModel = originalView.ViewModel;
-
-            if (viewModel is null)
-            {
-                if (currentViewModel is TViewModel existingVm)
-                    viewModel = existingVm;
-                else if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is TViewModel resolvedViewModel)
-                    viewModel = resolvedViewModel;
-            }
-
-            if (viewModel is not null && parameter is not null)
-                viewModel.Parameter = parameter;
-
-            // Handle current ViewModel
-            if (!HandleCurrentViewModel(currentViewModel!, backNavigation))
-                return;
-
-            // Set ViewModel before setting frame content
-            if (viewModel is not null)
-            {
-                page.ViewModel = viewModel;
-                SetFrameContent(frame, page);
-
-                // Initialize the ViewModel if needed
-                await InitializeViewAndViewModel(page, backNavigation);
-            }
+            var scope = RootProvider.CreateScope();
+            scope.ServiceProvider.GetRequiredService<TViewModel>();
+            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
         }
+        else if (TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
+        {
+            backStackFrame.Parameter = parameter;
+            newFrame = backStackFrame;
+        }
+        else
+        {
+            var scope = RootProvider.CreateScope();
+            scope.ServiceProvider.GetRequiredService<TViewModel>();
+            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
+        }
+
+        if (parameter is not null)
+            newFrame.Parameter = parameter;
+
+        HandleCurrentFrame(backNavigation);
+
+        _currentFrame = newFrame;
+        var resolvedVm = newFrame.Scope.ServiceProvider.GetRequiredService<TViewModel>();
+        if (parameter is not null)
+            resolvedVm.Parameter = parameter;
+
+        page.ViewModel = resolvedVm;
+        SetFrameContent(hostFrame, page);
+        await InitializeViewAndViewModel(page, backNavigation);
     }
 
     #endregion
@@ -792,8 +828,6 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates modally to a specified ViewModel.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "CreateView uses GetRelatedViewType() which scans assemblies. All view and ViewModel types are preserved through DI registration.")]
     public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
         where TViewModel : class, IViewModel
     {
@@ -817,7 +851,7 @@ public abstract class BaseNavigationService : INavigationService
         if (parameter is not null)
             viewModel.Parameter = parameter;
 
-        if (CreateView(typeof(TViewModel), viewModel, parameter) is { } page)
+        if (CreateView(_scopedContextService.ServiceProvider, typeof(TViewModel), viewModel, parameter) is { } page)
         {
             page.ViewModel = viewModel;
             SetWindowContent(page);
@@ -840,20 +874,16 @@ public abstract class BaseNavigationService : INavigationService
     /// </summary>
     public void Dispose()
     {
-        // Dispose all ViewModels in the backstack
-        foreach (var viewModel in _backStack)
+        // Dispose the current frame (scope + ViewModel + scoped dependencies)
+        try { _currentFrame?.Dispose(); }
+        catch (Exception ex) { _logger.LogError(ex, "Error disposing current frame during shutdown"); }
+        _currentFrame = null;
+
+        // Dispose all backstack frames
+        foreach (var frame in _backStack)
         {
-            if (viewModel is IDisposable disposable)
-            {
-                try
-                {
-                    disposable.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error disposing ViewModel during NavigationService disposal");
-                }
-            }
+            try { frame.Dispose(); }
+            catch (Exception ex) { _logger.LogError(ex, "Error disposing backstack frame during shutdown"); }
         }
 
         _backStack.Clear();

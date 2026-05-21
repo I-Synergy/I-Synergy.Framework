@@ -3,6 +3,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -78,21 +79,21 @@ public class NavigationService : BaseNavigationService
     [RequiresUnreferencedCode(
         "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
         "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
-    protected override IView CreateView(Type viewModelType, IViewModel? viewModel, object? parameter)
+    protected override IView CreateView(IServiceProvider serviceProvider, Type viewModelType, IViewModel? viewModel, object? parameter)
     {
         if (viewModel is null)
-            viewModel = (IViewModel)_scopedContextService.GetRequiredService(viewModelType);
+            viewModel = (IViewModel)serviceProvider.GetRequiredService(viewModelType);
 
         var viewName = viewModelType.GetRelatedView();
         var viewType = viewName.GetRelatedViewType();
 
-        if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is View resolvedPage)
+        if (viewType is not null && serviceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
             if (viewModel is not null)
                 resolvedPage.ViewModel = viewModel;
 
             if (resolvedPage.ViewModel is null)
-                resolvedPage.ViewModel = (IViewModel)_scopedContextService.GetRequiredService(viewModelType);
+                resolvedPage.ViewModel = (IViewModel)serviceProvider.GetRequiredService(viewModelType);
 
             if (parameter is not null && resolvedPage.ViewModel is not null)
                 resolvedPage.ViewModel.Parameter = parameter;

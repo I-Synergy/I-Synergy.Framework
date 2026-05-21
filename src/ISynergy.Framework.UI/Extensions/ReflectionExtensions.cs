@@ -183,7 +183,10 @@ public static class ReflectionExtensions
             viewmodel.GetInterfaces(),
             q => q.GetInterfaces().Contains(typeof(IViewModel)) && !q.Name.StartsWith(nameof(IViewModel)));
 
-        services.Register(viewmodel, abstraction);
+        if (abstraction is not null)
+            services.TryAddScoped(abstraction, viewmodel);
+
+        services.TryAddScoped(viewmodel);
     }
 
     private static void Register(
@@ -191,9 +194,23 @@ public static class ReflectionExtensions
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type? abstraction)
     {
-        if (abstraction is not null)
-            services.TryAddTransient(abstraction, type);
-
-        services.TryAddTransient(type);
+        if (type.IsSingleton())
+        {
+            if (abstraction is not null)
+                services.TryAddSingleton(abstraction, type);
+            services.TryAddSingleton(type);
+        }
+        else if (type.IsScoped())
+        {
+            if (abstraction is not null)
+                services.TryAddScoped(abstraction, type);
+            services.TryAddScoped(type);
+        }
+        else
+        {
+            if (abstraction is not null)
+                services.TryAddTransient(abstraction, type);
+            services.TryAddTransient(type);
+        }
     }
 }
