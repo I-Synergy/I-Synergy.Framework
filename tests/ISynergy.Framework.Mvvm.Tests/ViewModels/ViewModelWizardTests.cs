@@ -7,14 +7,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelWizardTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
 
     public ViewModelWizardTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
     }
 
     public class TestModel
@@ -80,3 +77,4 @@ public class ViewModelWizardTests
         Assert.IsFalse(viewModel.Submit_IsEnabled);
     }
 }
+

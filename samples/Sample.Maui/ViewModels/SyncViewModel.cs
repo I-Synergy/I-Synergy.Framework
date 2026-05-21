@@ -1,6 +1,7 @@
 using Dotmim.Sync;
 using Dotmim.Sync.Enumerations;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -66,11 +67,11 @@ public class SyncViewModel : ViewModelNavigation<object>
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;
 
-        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => _commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive);
-        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => _commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive);
-        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync, () => _commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive);
-        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => _commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive);
-        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => _commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive);
+        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => ServiceLocator.Default.GetService<ISynchronizationService>().IsActive);
+        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => ServiceLocator.Default.GetService<ISynchronizationService>().IsActive);
+        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync, () => ServiceLocator.Default.GetService<ISynchronizationService>().IsActive);
+        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => ServiceLocator.Default.GetService<ISynchronizationService>().IsActive);
+        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => ServiceLocator.Default.GetService<ISynchronizationService>().IsActive);
 
         _commonServices.MessengerService.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
         _commonServices.MessengerService.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
@@ -102,8 +103,8 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         try
         {
-            if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive)
-                await _commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizeAsync(syncType);
+            if (ServiceLocator.Default.GetService<ISynchronizationService>().IsActive)
+                await ServiceLocator.Default.GetService<ISynchronizationService>().SynchronizeAsync(syncType);
         }
         catch (Exception ex)
         {
@@ -117,10 +118,10 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private void CustomActionInsertProductRow()
     {
-        if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive)
+        if (ServiceLocator.Default.GetService<ISynchronizationService>().IsActive)
         {
             var connectionstringbuilder = new SqliteConnectionStringBuilder();
-            connectionstringbuilder.DataSource = _commonServices.ScopedContextService.GetService<ISynchronizationService>().OfflineDatabase;
+            connectionstringbuilder.DataSource = ServiceLocator.Default.GetService<ISynchronizationService>().OfflineDatabase;
 
             using var sqliteConnection = new SqliteConnection(connectionstringbuilder.ConnectionString);
             var c = new SqliteCommand($"Insert into ProductCategory(ProductcategoryId, Name, rowguid, ModifiedDate, IsActive) Values (@productcategoryId, @name, @rowguid, @modifiedDate, @isactive)")
@@ -193,8 +194,8 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task ProvisionClientAsync()
     {
-        if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive &&
-            _commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
+        if (ServiceLocator.Default.GetService<ISynchronizationService>().IsActive &&
+            ServiceLocator.Default.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
         {
             var scopeInfo = await agent.RemoteOrchestrator.GetScopeInfoAsync();
             await agent.LocalOrchestrator.ProvisionAsync(scopeInfo);
@@ -203,8 +204,8 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task DeprovisionClientAsync()
     {
-        if (_commonServices.ScopedContextService.GetService<ISynchronizationService>().IsActive &&
-            _commonServices.ScopedContextService.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
+        if (ServiceLocator.Default.GetService<ISynchronizationService>().IsActive &&
+            ServiceLocator.Default.GetService<ISynchronizationService>().SynchronizationAgent is SyncAgent agent)
             await agent.LocalOrchestrator.DeprovisionAsync();
     }
 
@@ -226,3 +227,4 @@ public class SyncViewModel : ViewModelNavigation<object>
         base.Dispose(disposing);
     }
 }
+

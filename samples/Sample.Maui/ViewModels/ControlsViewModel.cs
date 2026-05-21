@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
@@ -107,7 +108,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
 
     private async Task ShowErrorWindowAsync()
     {
-        var testVm = _commonServices.ScopedContextService.GetRequiredService<TestExceptionViewModel>();
+        var testVm = ServiceLocator.Default.GetRequiredService<TestExceptionViewModel>();
         testVm.Submitted += TestVm_Submitted;
         await _dialogService.ShowDialogAsync(typeof(ITestExceptionWindow), testVm);
     }
@@ -120,7 +121,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
 
     private async Task NavigateToDetailAsync()
     {
-        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailsViewModel>();
+        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailsViewModel>();
         await _navigationService.NavigateAsync(detailsVm);
     }
 
@@ -130,7 +131,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// <returns>Task.</returns>
     private async Task SelectMultipleAsync()
     {
-        var selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
+        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Multiple);
         selectionVm.SetItems(Items);
         selectionVm.SetSelectedItems(SelectedTestItems);
@@ -144,7 +145,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// <returns>Task.</returns>
     private async Task SelectSingleAsync()
     {
-        var selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
+        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Single);
         selectionVm.SetItems(Items);
         selectionVm.SetSelectedItems(SelectedTestItems);
@@ -183,7 +184,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
 
     private async Task ShowMemoAsync()
     {
-        var noteVM = _commonServices.ScopedContextService.GetRequiredService<NoteViewModel>();
+        var noteVM = ServiceLocator.Default.GetRequiredService<NoteViewModel>();
         noteVM.Submitted += NoteVM_Submitted;
         await _dialogService.ShowDialogAsync(typeof(INoteWindow), noteVM);
     }
@@ -223,3 +224,4 @@ public class ControlsViewModel : ViewModelNavigation<object>
         }
     }
 }
+

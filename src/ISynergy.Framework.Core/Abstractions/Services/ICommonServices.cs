@@ -27,10 +27,6 @@ public interface ICommonServices
     /// </summary>
     IExceptionHandlerService ExceptionHandlerService { get; }
     /// <summary>
-    /// Gets the scoped context service.
-    /// </summary>
-    IScopedContextService ScopedContextService { get; }
-    /// <summary>
     /// Restarts application.
     /// </summary>
     void RestartApplication();

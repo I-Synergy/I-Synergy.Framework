@@ -8,30 +8,14 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionTests
 {
-    private ICommonServices _commonServices;
+    private Mock<ICommonServices> _mockCommonServices;
+    private Mock<ILogger<ViewModelSelectionDialog<TestEntity>>> _mockLogger;
 
     public ViewModelSelectionTests()
     {
-        var mockLogger = new Mock<ILogger<ViewModelSelectionDialog<TestEntity>>>();
+        _mockLogger = new Mock<ILogger<ViewModelSelectionDialog<TestEntity>>>();
 
-        var mockScopedContextService = new Mock<IScopedContextService>();
-
-        var mockCommonServices = new Mock<ICommonServices>();
-        mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
-
-        // Configure the mock to return a new instance when GetRequiredService is called
-        mockScopedContextService
-            .Setup(s => s.GetRequiredService<ViewModelSelectionDialog<TestEntity>>())
-            .Returns(() =>
-            {
-                // Create a new instance of ViewModelSelectionBlade with required dependencies
-                var viewModel = new ViewModelSelectionDialog<TestEntity>(
-                    mockCommonServices.Object,
-                    mockLogger.Object);
-                return viewModel;
-            });
-
-        _commonServices = mockCommonServices.Object;
+        _mockCommonServices = new Mock<ICommonServices>();
     }
 
     public class TestEntity
@@ -57,7 +41,7 @@ public class ViewModelSelectionTests
         var selectedItems = new List<TestEntity> { items[0] };
 
         // Act
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestEntity>>();
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(selectedItems);
@@ -81,7 +65,7 @@ public class ViewModelSelectionTests
                 new TestEntity { Id = 3, Name = "Other" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestEntity>>();
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(new List<TestEntity>());
@@ -94,3 +78,4 @@ public class ViewModelSelectionTests
         Assert.IsTrue(viewModel.Items?.All(i => i.Name.Contains("Test")));
     }
 }
+

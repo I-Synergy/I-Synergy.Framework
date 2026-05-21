@@ -18,19 +18,19 @@ namespace Sample.Services;
 /// </summary>
 public class AuthenticationService : Sample.Abstractions.Services.IAuthenticationService
 {
-    private readonly IScopedContextService _scopedContextService;
+    private readonly IContext _context;
     private readonly IMessengerService _messengerService;
     private readonly ILogger _logger;
 
-    public bool IsAuthenticated => _scopedContextService.GetRequiredService<IContext>().IsAuthenticated;
-    public IProfile? CurrentProfile => _scopedContextService.GetRequiredService<IContext>().Profile;
+    public bool IsAuthenticated => _context.IsAuthenticated;
+    public IProfile? CurrentProfile => _context.Profile;
 
     public AuthenticationService(
-        IScopedContextService scopedContextService,
+        IContext context,
         IMessengerService messengerService,
         ILogger<AuthenticationService> logger)
     {
-        _scopedContextService = scopedContextService;
+        _context = context;
         _messengerService = messengerService;
         _logger = logger;
     }
@@ -65,7 +65,7 @@ public class AuthenticationService : Sample.Abstractions.Services.IAuthenticatio
             Expiration = DateTimeOffset.Now.AddHours(24)
         };
 
-        _scopedContextService.GetRequiredService<IContext>().Profile = profile;
+        _context.Profile = profile;
         _messengerService.Send(new UserSignedInMessage(profile));
 
         return Task.CompletedTask;
@@ -80,7 +80,7 @@ public class AuthenticationService : Sample.Abstractions.Services.IAuthenticatio
     public Task SignOutAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogTrace("Demo sign out");
-        _scopedContextService.GetRequiredService<IContext>().Profile = null;
+        _context.Profile = null;
         _messengerService.Send(new UserSignedOutMessage());
         return Task.CompletedTask;
     }

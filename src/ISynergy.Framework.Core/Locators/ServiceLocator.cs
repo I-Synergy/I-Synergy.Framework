@@ -1,6 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
-using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
@@ -17,21 +14,11 @@ public class ServiceLocator : IDisposable
 {
     private static IServiceProvider? _serviceProvider;
     private static ServiceLocator? _default;
-    private readonly IScopedContextService _scopedContextService;
     private bool _disposed = false;
-
-    public event EventHandler<ReturnEventArgs<bool>>? ScopedChanged;
 
     public ServiceLocator(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider; // NOSONAR - intentional singleton pattern; static field updated by design
-
-        // Try to get IScopedContextService from DI container first (DIP compliance)
-        // If not registered, create a new instance as fallback
-        _scopedContextService = serviceProvider.GetService<IScopedContextService>()
-            ?? new ScopedContextService(serviceProvider);
-        _scopedContextService.ScopedChanged += (s, e) => ScopedChanged?.Invoke(s, e);
-
         _default = this; // NOSONAR - intentional singleton pattern; static field updated by design
     }
 
@@ -57,7 +44,7 @@ public class ServiceLocator : IDisposable
         where TService : class
     {
         ThrowIfDisposed();
-        return _scopedContextService.ServiceProvider.GetService<TService>();
+        return _serviceProvider!.GetService<TService>();
     }
 
     [RequiresUnreferencedCode("Non-generic service resolution by runtime Type is not AOT-safe. Use GetService<TService>() instead.")]
@@ -65,7 +52,7 @@ public class ServiceLocator : IDisposable
     public object? GetService(Type serviceType)
     {
         ThrowIfDisposed();
-        return _scopedContextService.ServiceProvider.GetService(serviceType);
+        return _serviceProvider!.GetService(serviceType);
     }
 
 #pragma warning disable CS8603
@@ -74,7 +61,7 @@ public class ServiceLocator : IDisposable
         where TService : notnull
     {
         ThrowIfDisposed();
-        return _scopedContextService.GetRequiredService<TService>()
+        return _serviceProvider!.GetRequiredService<TService>()
             ?? throw new InvalidOperationException($"Service of type {typeof(TService).Name} could not be resolved.");
     }
 #pragma warning restore CS8603
@@ -86,23 +73,17 @@ public class ServiceLocator : IDisposable
     public object GetRequiredService(Type serviceType)
     {
         ThrowIfDisposed();
-        return _scopedContextService.GetRequiredService(serviceType)
+        return _serviceProvider!.GetRequiredService(serviceType)
             ?? throw new InvalidOperationException($"Service of type {serviceType.Name} could not be resolved.");
     }
 #pragma warning restore CS8603
-
-    public void CreateNewScope()
-    {
-        ThrowIfDisposed();
-        _scopedContextService.CreateNewScope();
-    }
 
     public IServiceProvider ServiceProvider
     {
         get
         {
             ThrowIfDisposed();
-            return _scopedContextService.ServiceProvider;
+            return _serviceProvider!;
         }
     }
 
@@ -112,7 +93,6 @@ public class ServiceLocator : IDisposable
             return;
 
         _disposed = true;
-        _scopedContextService.Dispose();
         GC.SuppressFinalize(this);
     }
 }

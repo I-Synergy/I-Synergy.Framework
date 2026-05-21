@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
@@ -34,7 +35,7 @@ public class LoadingView : ContentPage
         ArgumentNullException.ThrowIfNull(commonServices);
         ArgumentNullException.ThrowIfNull(splashScreenOptions);
 
-        _applicationLifecycleService = commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+        _applicationLifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
 
         InitializeContent(commonServices, splashScreenOptions);
 

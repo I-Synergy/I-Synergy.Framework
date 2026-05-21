@@ -134,7 +134,7 @@ public class ContextServiceExtensionTests
             context =>
             {
                 // Try to resolve unregistered service
-                var unregistered = context.GetService<IUnregisteredService>();
+                var unregistered = context.GetRequiredService<IUnregisteredService>();
             }));
     }
 

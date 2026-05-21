@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -32,7 +33,7 @@ public class DetailAViewModel : ViewModelBlade<TestItem>
         if (SelectedItem is null)
             return;
 
-        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailBViewModel>();
+        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailBViewModel>();
         detailsVm.SetSelectedItem(SelectedItem);
         await _navigationService.OpenBladeAsync(Owner, detailsVm);
     }
@@ -47,3 +48,4 @@ public class DetailAViewModel : ViewModelBlade<TestItem>
         }
     }
 }
+

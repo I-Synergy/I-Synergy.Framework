@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -39,7 +40,7 @@ public class CommandDemoViewModel : ViewModel
 
     private async Task OpenSampleDialogAsync()
     {
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<SampleDialogViewModel>();
+        var viewModel = ServiceLocator.Default.GetRequiredService<SampleDialogViewModel>();
         viewModel.SetSelectedItem(new Budget(), false);
         viewModel.Submitted += HandleDialog;
 
@@ -64,3 +65,4 @@ public class CommandDemoViewModel : ViewModel
             vm.Submitted -= HandleDialog;
     }
 }
+

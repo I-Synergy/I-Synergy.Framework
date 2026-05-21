@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -77,7 +78,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 
     private async Task ShowUnitsAsync()
     {
-        TestViewModel vm = _commonServices.ScopedContextService.GetRequiredService<TestViewModel>();
+        TestViewModel vm = ServiceLocator.Default.GetRequiredService<TestViewModel>();
         vm.Submitted += Vm_Submitted;
         await _dialogService.ShowDialogAsync(typeof(TestWindow), vm);
     }
@@ -116,7 +117,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectMultipleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        ViewModelSelectionBlade<TestItem> selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Multiple);
         selectionVm.SetItems(Items!);
         selectionVm.SetSelectedItems(SelectedTestItems);
@@ -131,7 +132,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectSingleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        ViewModelSelectionBlade<TestItem> selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Single);
         selectionVm.SetItems(Items!);
         selectionVm.SetSelectedItems(SelectedTestItems);
@@ -252,3 +253,4 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         }
     }
 }
+

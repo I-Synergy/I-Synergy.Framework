@@ -8,14 +8,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectableTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
 
     public ViewModelSelectableTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
     }
 
     public class TestModel
@@ -123,3 +120,4 @@ public class ViewModelSelectableTests
         Assert.IsNull(viewModel.SelectedItem);
     }
 }
+

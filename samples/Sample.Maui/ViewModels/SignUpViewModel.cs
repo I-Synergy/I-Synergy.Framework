@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
@@ -205,7 +206,7 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<Module>>();
+        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<Module>>();
         selectionVM.SetSelectionMode(SelectionModes.Multiple);
         selectionVM.SetItems(Modules);
         selectionVM.SetSelectedItems(SelectedModules);
@@ -320,3 +321,4 @@ public class SignUpViewModel : ViewModel
         }
     }
 }
+

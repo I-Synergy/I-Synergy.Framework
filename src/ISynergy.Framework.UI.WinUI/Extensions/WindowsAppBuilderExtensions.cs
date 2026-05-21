@@ -173,7 +173,6 @@ public static class WindowsAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
-        appBuilder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
         appBuilder.Services.TryAddSingleton<DialogService>();

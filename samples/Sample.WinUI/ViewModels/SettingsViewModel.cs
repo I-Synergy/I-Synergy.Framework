@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -79,14 +80,14 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
             if (!IsInitialized)
             {
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadLocalSettings();
+                ServiceLocator.Default.GetRequiredService<ISettingsService>().LoadLocalSettings();
 
-                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings localSetting)
+                if (ServiceLocator.Default.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings localSetting)
                     LocalSettings = localSetting;
 
-                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadGlobalSettingsAsync();
+                await ServiceLocator.Default.GetRequiredService<ISettingsService>().LoadGlobalSettingsAsync();
 
-                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
+                if (ServiceLocator.Default.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
                     GlobalSettings = globalSetting;
 
                 IsInitialized = true;
@@ -110,11 +111,11 @@ public class SettingsViewModel : ViewModelNavigation<object>
         {
             _commonServices.BusyService.StartBusy();
 
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings)
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+            if (ServiceLocator.Default.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings)
+                ServiceLocator.Default.GetRequiredService<ISettingsService>().SaveLocalSettings();
 
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
-                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
+            if (ServiceLocator.Default.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
+                await ServiceLocator.Default.GetRequiredService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
         }
         finally
         {
@@ -124,3 +125,4 @@ public class SettingsViewModel : ViewModelNavigation<object>
         await base.SubmitAsync(e, validateUnderlayingProperties);
     }
 }
+

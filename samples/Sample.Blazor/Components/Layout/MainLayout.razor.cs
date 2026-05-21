@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.AspNetCore.Components;
@@ -41,8 +42,8 @@ public partial class MainLayout : IDisposable
     {
         _commonServices = commonServices;
 
-        _context = _commonServices.ScopedContextService.GetRequiredService<IContext>();
-        _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+        _context = ServiceLocator.Default.GetRequiredService<IContext>();
+        _settingsService = ServiceLocator.Default.GetRequiredService<ISettingsService>();
 
         _dialogService = dialogService;
         _navigationManager = navigationManager;

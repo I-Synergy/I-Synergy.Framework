@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -82,7 +83,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         await Task.Delay(100);
 
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
+        if (ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
         {
             if (PrimaryItems[0].Command!.CanExecute(PrimaryItems[0].CommandParameter))
                 PrimaryItems[0].Command!.Execute(PrimaryItems[0].CommandParameter);
@@ -95,7 +96,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
+        if (ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated)
         {
             PrimaryItems?.Clear();
             PrimaryItems?.Add(new NavigationItem("Info", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, InfoCommand));
@@ -113,15 +114,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             SecondaryItems?.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _settingsService.LocalSettings.Color, LanguageCommand));
             SecondaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _settingsService.LocalSettings.Color, ColorCommand));
 
-            if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile is Profile)
+            if (ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated && ServiceLocator.Default.GetRequiredService<IContext>().Profile is Profile)
                 SecondaryItems?.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _settingsService.LocalSettings.Color, SettingsCommand));
         }
 
-        SecondaryItems?.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
+        SecondaryItems?.Add(new NavigationItem(ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
     }
 
     protected override Task SignOutAsync() =>
-        _commonServices.ScopedContextService.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
+        ServiceLocator.Default.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {
@@ -163,7 +164,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void SetClock()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is not null)
+        if (ServiceLocator.Default.GetRequiredService<IContext>() is not null)
             base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
     }
 
@@ -262,3 +263,4 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 }
+

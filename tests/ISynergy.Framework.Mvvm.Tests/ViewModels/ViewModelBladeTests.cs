@@ -11,15 +11,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelBladeTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
 
     public ViewModelBladeTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
-
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
     }
 
     public class TestBladeViewModel : ViewModelBlade<TestEntity>
@@ -356,3 +352,4 @@ Assert.IsTrue(closedInvoked);
 
     #endregion
 }
+

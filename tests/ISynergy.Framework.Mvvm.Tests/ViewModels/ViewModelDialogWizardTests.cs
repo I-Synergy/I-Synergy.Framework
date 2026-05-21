@@ -8,16 +8,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelDialogWizardTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
 
     public ViewModelDialogWizardTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
-
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
 
         _mockLogger = new Mock<ILogger>();
     }
@@ -211,3 +207,4 @@ public class ViewModelDialogWizardTests
         Assert.IsTrue(viewModel.IsDisposed);
     }
 }
+

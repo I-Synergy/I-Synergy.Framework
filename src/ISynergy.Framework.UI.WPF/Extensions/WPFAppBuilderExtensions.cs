@@ -77,7 +77,6 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<ISettingsService, TSettingsService>();
             services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
-            services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<IBusyService, BusyService>();
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<INavigationService, NavigationService>();

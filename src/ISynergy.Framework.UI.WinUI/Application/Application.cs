@@ -115,9 +115,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 _dialogService = Services.GetRequiredService<IDialogService>();
                 _navigationService = Services.GetRequiredService<INavigationService>();
                 _exceptionHandlerService = Services.GetRequiredService<IExceptionHandlerService>();
-                _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
-                _themeService = _commonServices.ScopedContextService.GetRequiredService<IThemeService>();
-                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                _settingsService = Services.GetRequiredService<ISettingsService>();
+                _themeService = Services.GetRequiredService<IThemeService>();
+                _lifecycleService = Services.GetRequiredService<IApplicationLifecycleService>();
                 _messengerService = Services.GetRequiredService<IMessengerService>();
 
                 _features = Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
@@ -207,14 +207,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Initializing the application.
     /// </summary>
-    /// <example>
-    /// <code>
-    ///     await base.InitializeApplicationAsync();
-    ///     // wait 5 seconds before showing the main window...
-    ///     await Task.Delay(5000);
-    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
-    /// </code>
-    /// </example>
     /// <returns></returns>
     protected abstract Task InitializeApplicationAsync();
 

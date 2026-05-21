@@ -79,9 +79,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
                 _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
                 _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-                _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
+                _settingsService = ServiceLocator.Default.GetRequiredService<ISettingsService>();
                 _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
-                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                _lifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
                 _messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
 
                 _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
@@ -171,14 +171,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <summary>
     /// Initializing the application.
     /// </summary>
-    /// <example>
-    /// <code>
-    ///     await base.InitializeApplicationAsync();
-    ///     // wait 5 seconds before showing the main window...
-    ///     await Task.Delay(5000);
-    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
-    /// </code>
-    /// </example>
     /// <returns></returns>
     protected abstract Task InitializeApplicationAsync();
 

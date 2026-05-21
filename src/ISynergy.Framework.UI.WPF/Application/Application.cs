@@ -64,8 +64,8 @@ public abstract class Application : System.Windows.Application, IDisposable
         _dialogService = serviceProvider.GetRequiredService<IDialogService>();
         _navigationService = serviceProvider.GetRequiredService<INavigationService>();
         _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
-        _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
-        _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+        _settingsService = serviceProvider.GetRequiredService<ISettingsService>();
+        _lifecycleService = serviceProvider.GetRequiredService<IApplicationLifecycleService>();
         var messengerService = serviceProvider.GetRequiredService<IMessengerService>();
 
         _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
@@ -263,14 +263,6 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// LoadAssembly the application.
     /// </summary>
-    /// <example>
-    /// <code>
-    ///     await base.InitializeApplicationAsync();
-    ///     // wait 5 seconds before showing the main window...
-    ///     await Task.Delay(5000);
-    ///     await _commonServices.ScopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
-    /// </code>
-    /// </example>
     /// <returns></returns>
     public abstract Task InitializeApplicationAsync();
 

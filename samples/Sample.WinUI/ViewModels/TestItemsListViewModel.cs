@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -202,7 +203,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
         selectionVM.SetItems(Items!);
         selectionVM.SetSelectedItems(SelectedItems);
         selectionVM.SetSelectionMode(SelectionModes.Single);
@@ -223,3 +224,4 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
         SelectedItems = e.Result;
     }
 }
+

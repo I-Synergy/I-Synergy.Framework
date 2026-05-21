@@ -8,37 +8,23 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionBladeTests
 {
-    private ICommonServices _commonServices;
+    private Mock<ICommonServices> _mockCommonServices;
+    private Mock<ILanguageService> _mockLanguageService;
+    private Mock<ILogger<ViewModelSelectionBlade<TestEntity>>> _mockLogger;
 
     public ViewModelSelectionBladeTests()
     {
-        var mockLogger = new Mock<ILogger<ViewModelSelectionBlade<TestEntity>>>();
+        _mockLogger = new Mock<ILogger<ViewModelSelectionBlade<TestEntity>>>();
 
-        var mockScopedContextService = new Mock<IScopedContextService>();
-        var mockLanguageService = new Mock<ILanguageService>();
+        _mockLanguageService = new Mock<ILanguageService>();
 
         // Setup the language service to return the key wrapped in brackets
-        mockLanguageService
+        _mockLanguageService
             .Setup(x => x.GetString(It.IsAny<string>()))
             .Returns<string>(key => $"[{key}]");
 
-        var mockCommonServices = new Mock<ICommonServices>();
-        mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
-        mockCommonServices.SetupGet(s => s.LanguageService).Returns(mockLanguageService.Object);
-
-        // Configure the mock to return a new instance when GetRequiredService is called
-        mockScopedContextService
-            .Setup(s => s.GetRequiredService<ViewModelSelectionBlade<TestEntity>>())
-            .Returns(() =>
-            {
-                // Create a new instance of ViewModelSelectionBlade with required dependencies
-                var viewModel = new ViewModelSelectionBlade<TestEntity>(
-                    mockCommonServices.Object,
-                    mockLogger.Object);
-                return viewModel;
-            });
-
-        _commonServices = mockCommonServices.Object;
+        _mockCommonServices = new Mock<ICommonServices>();
+        _mockCommonServices.SetupGet(s => s.LanguageService).Returns(_mockLanguageService.Object);
     }
 
     public class TestEntity
@@ -58,7 +44,7 @@ public class ViewModelSelectionBladeTests
             };
         var selectedItems = new List<TestEntity> { items[0] };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(selectedItems);
@@ -93,7 +79,7 @@ public class ViewModelSelectionBladeTests
         var selectedItems = new List<TestEntity> { items[0] };
 
         // Act
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(selectedItems);
@@ -117,7 +103,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(items);
@@ -145,7 +131,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Different" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(new List<TestEntity>());
@@ -162,7 +148,7 @@ public class ViewModelSelectionBladeTests
     public void Constructor_WithNullItems_InitializesEmptyCollections()
     {
         // Arrange & Act
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(null!);
         viewModel.SetSelectedItems(null!);
@@ -183,7 +169,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(items);
@@ -210,7 +196,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(new List<TestEntity>());
@@ -233,7 +219,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(new List<TestEntity>());
@@ -256,7 +242,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(new List<TestEntity>());
@@ -278,7 +264,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Single);
         viewModel.SetItems(items);
         viewModel.SetSelectedItems(new List<TestEntity>());
@@ -300,7 +286,7 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 2, Name = "Test2" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestEntity>>();
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetSelectionMode(SelectionModes.Multiple);
         viewModel.SetItems(items);
 
@@ -314,3 +300,4 @@ public class ViewModelSelectionBladeTests
         Assert.IsTrue(viewModel.SelectedItems?.Contains(items[1]));
     }
 }
+

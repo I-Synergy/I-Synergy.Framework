@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -58,8 +59,9 @@ public class DetailsViewModel : ViewModelSummary<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailViewModel>();
+        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailViewModel>();
         detailsVm.SetSelectedItem(e);
         await _navigationService.NavigateAsync(detailsVm);
     }
 }
+

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
@@ -112,7 +113,7 @@ public class ShellViewModel : BaseShellViewModel
     {
         PrimaryItems?.Clear();
 
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
+        if (ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated)
         {
             PrimaryItems?.Add(new NavigationItem("Info", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, InfoCommand));
             PrimaryItems?.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _settingsService.LocalSettings.Color, BrowseCommand));
@@ -124,7 +125,7 @@ public class ShellViewModel : BaseShellViewModel
             PrimaryItems?.Add(new NavigationItem("Nuget Unlister", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, NugetUnlisterCommand));
         }
 
-        PrimaryItems?.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
+        PrimaryItems?.Add(new NavigationItem(ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
     }
 
     private Task SelectSingleAsync()
@@ -224,3 +225,4 @@ public class ShellViewModel : BaseShellViewModel
 
     protected override Task SignOutAsync() => Task.CompletedTask;
 }
+

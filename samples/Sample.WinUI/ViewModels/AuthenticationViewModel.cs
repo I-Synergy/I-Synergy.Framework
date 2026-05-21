@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
@@ -287,7 +288,7 @@ public class AuthenticationViewModel : ViewModel
     /// <returns>Task.</returns>
     public Task ForgotPasswordAsync()
     {
-        ForgotPasswordViewModel forgotPasswordVM = _commonServices.ScopedContextService.GetRequiredService<ForgotPasswordViewModel>();
+        ForgotPasswordViewModel forgotPasswordVM = ServiceLocator.Default.GetRequiredService<ForgotPasswordViewModel>();
         forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
         return _dialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
     }
@@ -366,3 +367,4 @@ public class AuthenticationViewModel : ViewModel
         }
     }
 }
+

@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Services;
 
 namespace ISynergy.Framework.UI.Controls;
@@ -19,7 +20,7 @@ public class EmptyView : ContentPage
         {
             try
             {
-                var lifecycleService = commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                var lifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
                 lifecycleService.SignalApplicationUIReady();
             }
             catch (Exception ex)

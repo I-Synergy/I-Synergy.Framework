@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -90,13 +91,14 @@ public class ConvertersViewModel : ViewModelNavigation<object>
 
     private async Task NavigateToDetailAsync(TestItem item)
     {
-        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailsViewModel>();
+        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailsViewModel>();
         await _navigationService.NavigateAsync(detailsVm);
     }
 
     private async Task NavigateToPivotAsync(TestItem item)
     {
-        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<PivotViewModel>();
+        var detailsVm = ServiceLocator.Default.GetRequiredService<PivotViewModel>();
         await _navigationService.NavigateAsync(detailsVm);
     }
 }
+

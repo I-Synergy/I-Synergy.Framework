@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -14,7 +15,7 @@ public class TestViewModel(
 {
     public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
-        var testVm = _commonServices.ScopedContextService.GetRequiredService<Test2ViewModel>();
+        var testVm = ServiceLocator.Default.GetRequiredService<Test2ViewModel>();
         testVm.Submitted += TestVm_Submitted;
         await dialogService.ShowDialogAsync(typeof(Test2Window), testVm);
     }
@@ -32,3 +33,4 @@ public class TestViewModel(
         base.Dispose(disposing);
     }
 }
+

@@ -11,13 +11,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelBaseTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILanguageService> _mockLanguageService;
 
     public ViewModelBaseTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockLanguageService = new Mock<ILanguageService>();
 
         // Setup the language service to return the key wrapped in brackets
@@ -26,7 +24,6 @@ public class ViewModelBaseTests
             .Returns<string>(key => $"[{key}]");
 
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
         _mockCommonServices.SetupGet(s => s.LanguageService).Returns(_mockLanguageService.Object);
     }
 

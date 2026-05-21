@@ -11,16 +11,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelDialogTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger> _mockLogger;
 
     public ViewModelDialogTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
-
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
 
         _mockLogger = new Mock<ILogger>();
     }
@@ -454,3 +450,4 @@ public class ViewModelDialogTests
 
     #endregion
 }
+

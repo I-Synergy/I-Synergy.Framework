@@ -15,7 +15,6 @@ public class ViewModelExceptionHandlingTests
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ILogger<TestViewModelDialog>> _mockLogger;
 
     public ViewModelExceptionHandlingTests()
@@ -23,10 +22,7 @@ public class ViewModelExceptionHandlingTests
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockLogger = new Mock<ILogger<TestViewModelDialog>>();
-
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
 
         _mockServiceProvider
             .Setup(x => x.GetService(typeof(IExceptionHandlerService)))

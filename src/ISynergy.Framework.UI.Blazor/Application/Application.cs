@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -72,7 +71,7 @@ public abstract class Application : ComponentBase
             _dialogService = dialogService ?? ServiceLocator.Default.GetRequiredService<IDialogService>();
             _navigationService = navigationService ?? ServiceLocator.Default.GetRequiredService<INavigationService>();
             _exceptionHandlerService = exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-            _lifecycleService = lifecycleService ?? _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+            _lifecycleService = lifecycleService ?? ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
             _messengerService = messengerService ?? ServiceLocator.Default.GetRequiredService<IMessengerService>();
 
             _features = features?.Value ?? ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
@@ -317,14 +316,6 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Initializing the application.
     /// </summary>
-    /// <example>
-    /// <code>
-    ///     await base.InitializeApplicationAsync();
-    ///     // wait 5 seconds before showing the main window...
-    ///     await Task.Delay(5000);
-    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
-    /// </code>
-    /// </example>
     /// <returns></returns>
     protected abstract Task InitializeApplicationAsync();
 

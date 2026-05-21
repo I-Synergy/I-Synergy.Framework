@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Helpers;
@@ -32,7 +33,7 @@ public class LoadingView : Page
         ArgumentNullException.ThrowIfNull(commonServices);
         ArgumentNullException.ThrowIfNull(splashScreenOptions);
 
-        _applicationLifecycleService = commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+        _applicationLifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
         _busyService = commonServices.BusyService;
 
         InitializeContent(commonServices, splashScreenOptions);
