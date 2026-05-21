@@ -173,7 +173,7 @@ public class LoadingView : Page
             IsEnabled = false
         };
 
-        if (Application.Current.Resources.TryGetValue("Primary", out var primaryResource) && primaryResource is Brush primaryBrush)
+        if (Microsoft.UI.Xaml.Application.Current?.Resources.TryGetValue("Primary", out var primaryResource) == true && primaryResource is Brush primaryBrush)
             _signInButton.Background = primaryBrush;
 
         // Create main grid
@@ -240,7 +240,7 @@ public class LoadingView : Page
     /// </summary>
     private void OnApplicationInitialized(object? sender, EventArgs e)
     {
-        IsSignInButtonEnabled = true;
+        DispatcherQueue.TryEnqueue(() => IsSignInButtonEnabled = true);
     }
 
     private void OnBusyServicePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -59,7 +59,7 @@ public partial class BladeView : UserControl, IDisposable
         set { SetValue(DisabledBackgroundProperty, value); }
     }
 
-    public static readonly DependencyProperty DisabledBackgroundProperty = DependencyProperty.Register(nameof(DisabledBackground), typeof(Brush), typeof(BladeView), new PropertyMetadata(Microsoft.UI.Xaml.Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush));
+    public static readonly DependencyProperty DisabledBackgroundProperty = DependencyProperty.Register(nameof(DisabledBackground), typeof(Brush), typeof(BladeView), new PropertyMetadata(null));
 
     public Orientation Orientation
     {
@@ -139,7 +139,8 @@ public partial class BladeView : UserControl, IDisposable
         this.HorizontalAlignment = HorizontalAlignment.Stretch;
         this.Orientation = Orientation.Horizontal;
         this.BladeSpacing = 10;
-        this.DisabledBackground = (Brush)Microsoft.UI.Xaml.Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"];
+        if (Microsoft.UI.Xaml.Application.Current?.Resources.TryGetValue("ApplicationPageBackgroundThemeBrush", out var brush) == true && brush is Brush themeBrush)
+            this.DisabledBackground = themeBrush;
         this.DisabledOpacity = 0.75;
     }
 

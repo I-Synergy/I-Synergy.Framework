@@ -487,16 +487,17 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     var tcs = new TaskCompletionSource<bool>();
 
                     // Add self-removing event handler to know when dialog is closed
+                    var capturedDialog = _activeDialog;
                     TypedEventHandler<ContentDialog, ContentDialogClosedEventArgs>? handler = null;
                     handler = (s, e) =>
                     {
-                        _activeDialog.Closed -= handler;
+                        capturedDialog.Closed -= handler;
                         tcs.TrySetResult(true);
                     };
-                    _activeDialog.Closed += handler;
+                    capturedDialog.Closed += handler;
 
                     // Close the active dialog
-                    await _activeDialog.CloseAsync();
+                    await capturedDialog.CloseAsync();
 
                     // Wait for dialog to close with timeout
                     using (var cts = new CancellationTokenSource())

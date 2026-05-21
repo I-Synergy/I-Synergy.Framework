@@ -160,7 +160,9 @@ public class FileService : IFileService<FileResult>
         };
 
 #if WINDOWS
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.MainWindow);
+        var mainWindow = Application.MainWindow
+            ?? throw new InvalidOperationException("Cannot open file picker: main window is not available.");
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
         WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif
 

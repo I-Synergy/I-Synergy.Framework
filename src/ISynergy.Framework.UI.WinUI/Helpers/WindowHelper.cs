@@ -61,7 +61,7 @@ public static class WindowHelper
         {
             foreach (var window in _activeWindows.EnsureNotNull())
             {
-                if (element.XamlRoot == window.Content.XamlRoot)
+                if (window.Content is { } content && element.XamlRoot == content.XamlRoot)
                 {
                     return window;
                 }

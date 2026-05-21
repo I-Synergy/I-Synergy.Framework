@@ -134,12 +134,11 @@ public class NavigationService : BaseNavigationService
     /// </summary>
     protected override void DispatchOnUIThread(Action action)
     {
-        if (Application.MainWindow?.DispatcherQueue is not null)
-        {
-            Application.MainWindow.DispatcherQueue.TryEnqueue(
-                Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
-                new Microsoft.UI.Dispatching.DispatcherQueueHandler(action));
-        }
+        var queue = Application.MainWindow?.DispatcherQueue
+            ?? Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+        queue?.TryEnqueue(
+            Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
+            new Microsoft.UI.Dispatching.DispatcherQueueHandler(action));
     }
 
     /// <summary>
