@@ -66,16 +66,16 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<ILanguageService>(s => languageService);
             services.TryAddSingleton<IMessengerService, MessengerService>();
 
-            services.TryAddScoped<TContext>();
-            services.TryAddScoped<IContext>(s => s.GetRequiredService<TContext>());
+            services.TryAddSingleton<TContext>();
+            services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
 
             services.TryAddSingleton<TCommonServices>();
             services.TryAddSingleton<ICommonServices>(s => s.GetRequiredService<TCommonServices>());
 
             services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
-            services.TryAddScoped<ISettingsService, TSettingsService>();
-            services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+            services.TryAddSingleton<ISettingsService, TSettingsService>();
+            services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
             services.TryAddSingleton<IScopedContextService, ScopedContextService>();
             services.TryAddSingleton<IBusyService, BusyService>();
@@ -86,7 +86,7 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<IDispatcherService, DispatcherService>();
             services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
             services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
-            services.TryAddScoped<IMigrationService, MigrationService>();
+            services.TryAddSingleton<IMigrationService, MigrationService>();
 
             services.RegisterAssemblies(assembly, assemblyFilter);
 
@@ -110,7 +110,7 @@ public static class WpfAppBuilderExtensions
         return services;
     }
 
-    public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IScopedContextService scopedContextService, string? key = null, Func<T>? implementation = null)
+    public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IServiceProvider serviceProvider, string? key = null, Func<T>? implementation = null)
     {
         if (string.IsNullOrEmpty(key))
             key = typeof(T).Name;
@@ -121,7 +121,7 @@ public static class WpfAppBuilderExtensions
         if (implementation is not null)
             resources.Add(key, implementation.Invoke());
         else
-            resources.Add(key, scopedContextService.GetService<T>());
+            resources.Add(key, serviceProvider.GetService(typeof(T)));
 
         return resources;
     }

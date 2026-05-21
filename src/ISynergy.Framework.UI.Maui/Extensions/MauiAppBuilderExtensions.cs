@@ -191,7 +191,7 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
         appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
-        appBuilder.Services.TryAddScoped<IMigrationService, MigrationService>();
+        appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
 
         appBuilder.Services.TryAddSingleton<TContext>();
         appBuilder.Services.TryAddSingleton<IContext>(s => s.GetRequiredService<TContext>());
@@ -201,8 +201,8 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
-        appBuilder.Services.TryAddScoped<ISettingsService, TSettingsService>();
-        appBuilder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+        appBuilder.Services.TryAddSingleton<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
@@ -211,7 +211,7 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
         appBuilder.Services.TryAddSingleton<IDialogService, DialogService>();
-        appBuilder.Services.TryAddScoped<IThemeService, ThemeService>();
+        appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
         appBuilder.Services.TryAddSingleton<IClipboardService, ClipboardService>();
         appBuilder.Services.TryAddSingleton<IFileService<FileResult>, FileService>();
 

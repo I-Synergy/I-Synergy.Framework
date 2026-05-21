@@ -165,10 +165,10 @@ public static class WindowsAppBuilderExtensions
 
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
-        appBuilder.Services.TryAddScoped<ISettingsService, TSettingsService>();
-        appBuilder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
-        appBuilder.Services.TryAddScoped<IMigrationService, MigrationService>();
-        appBuilder.Services.TryAddScoped<IThemeService, ThemeService>();
+        appBuilder.Services.TryAddSingleton<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
+        appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
+        appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
 
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
