@@ -1,8 +1,10 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 
@@ -17,7 +19,7 @@ public class DialogService : IDialogService, IDisposable
     private const string DialogCreationExceptionHandlerFailed = "Exception handler failed while processing dialog creation error";
     private const string DialogCreationExceptionHandlerNotAvailable = "Exception handler service not available for dialog creation error";
 
-    private readonly IScopedContextService _scopedContextService;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILanguageService _languageService;
     private readonly ILogger<DialogService>? _logger;
@@ -33,17 +35,17 @@ public class DialogService : IDialogService, IDisposable
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
-    /// <param name="scopedContextService"></param>
+    /// <param name="scopeFactory"></param>
     /// <param name="exceptionHandlerService"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="logger">Optional logger for enhanced error handling.</param>
     public DialogService(
-        IScopedContextService scopedContextService,
+        IServiceScopeFactory scopeFactory,
         IExceptionHandlerService exceptionHandlerService,
         ILanguageService languageService,
         ILogger<DialogService>? logger = null)
     {
-        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
         _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
         _logger = logger;
@@ -436,8 +438,9 @@ public class DialogService : IDialogService, IDisposable
     {
         try
         {
-            if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                _scopedContextService.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            using var scope = _scopeFactory.CreateScope();
+            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
                 await CreateDialogAsync(dialog, viewmodel);
         }
         catch (Exception ex)
@@ -495,8 +498,9 @@ public class DialogService : IDialogService, IDisposable
     {
         try
         {
-            if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
+            using var scope = _scopeFactory.CreateScope();
+            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             {
                 viewmodel.SetSelectedItem(e);
                 await CreateDialogAsync(dialog, viewmodel);
@@ -560,7 +564,8 @@ public class DialogService : IDialogService, IDisposable
     {
         try
         {
-            if (_scopedContextService.GetRequiredService(window.GetType()) is Window dialog)
+            using var scope = _scopeFactory.CreateScope();
+            if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
                 await CreateDialogAsync(dialog, viewmodel);
         }
         catch (Exception ex)
@@ -613,7 +618,8 @@ public class DialogService : IDialogService, IDisposable
     {
         try
         {
-            if (_scopedContextService.GetRequiredService(type) is Window dialog)
+            using var scope = _scopeFactory.CreateScope();
+            if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
                 await CreateDialogAsync(dialog, viewmodel);
         }
         catch (Exception ex)

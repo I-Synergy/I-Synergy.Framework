@@ -14,7 +14,6 @@ namespace ISynergy.Framework.UI.Maui.Services;
 public class NavigationServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<ILogger<NavigationService>> _mockLogger;
     private NavigationService _navigationService;
@@ -22,7 +21,6 @@ public class NavigationServiceExceptionHandlingTests
     public NavigationServiceExceptionHandlingTests()
     {
         _mockServiceProvider = new Mock<IServiceProvider>();
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockLogger = new Mock<ILogger<NavigationService>>();
 
@@ -43,7 +41,6 @@ public class NavigationServiceExceptionHandlingTests
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
 
         _navigationService = new NavigationService(
-            _mockScopedContextService.Object,
             _mockExceptionHandler.Object,
             _mockLogger.Object);
     }

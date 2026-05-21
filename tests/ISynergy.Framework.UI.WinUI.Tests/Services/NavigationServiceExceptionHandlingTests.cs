@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -14,7 +15,6 @@ namespace ISynergy.Framework.UI.WinUI.Services;
 public class NavigationServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
@@ -24,7 +24,6 @@ public class NavigationServiceExceptionHandlingTests
     public NavigationServiceExceptionHandlingTests()
     {
         _mockServiceProvider = new Mock<IServiceProvider>();
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockCommonServices = new Mock<ICommonServices>();
         _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
@@ -37,7 +36,6 @@ public class NavigationServiceExceptionHandlingTests
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
 
         _navigationService = new NavigationService(
-            _mockScopedContextService.Object,
             _mockExceptionHandler.Object,
             _mockCommonServices.Object,
             _mockServiceScopeFactory.Object,

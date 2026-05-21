@@ -19,8 +19,7 @@ public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
         var attributes = new List<KeyValuePair<string, object?>>();
 
         // Add user context information to all log entries
-        var scopedContextService = ServiceLocator.Default.GetRequiredService<IScopedContextService>();
-        var context = scopedContextService.GetRequiredService<IContext>();
+        var context = ServiceLocator.Default.GetRequiredService<IContext>();
 
         if (context is not null && context.Profile is not null)
         {

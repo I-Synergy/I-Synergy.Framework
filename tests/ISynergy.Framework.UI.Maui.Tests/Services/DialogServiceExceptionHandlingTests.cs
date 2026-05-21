@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Maui.Services;
 public class DialogServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;
-    private Mock<IScopedContextService> _mockScopedContextService;
+    private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
     private Mock<ILanguageService> _mockLanguageService;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<ILogger<DialogService>> _mockLogger;
@@ -24,7 +24,6 @@ public class DialogServiceExceptionHandlingTests
     public DialogServiceExceptionHandlingTests()
     {
         _mockServiceProvider = new Mock<IServiceProvider>();
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockLanguageService = new Mock<ILanguageService>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockLogger = new Mock<ILogger<DialogService>>();
@@ -37,20 +36,19 @@ public class DialogServiceExceptionHandlingTests
             .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
             .Returns(_mockExceptionHandler.Object);
 
-        // Setup IServiceScopeFactory for ServiceLocator initialization
-        var mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
+        _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
         var mockServiceScope = new Mock<IServiceScope>();
         mockServiceScope.SetupGet(x => x.ServiceProvider).Returns(_mockServiceProvider.Object);
-        mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
+        _mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
 
         _mockServiceProvider
             .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
-            .Returns(mockServiceScopeFactory.Object);
+            .Returns(_mockServiceScopeFactory.Object);
 
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
 
         _dialogService = new DialogService(
-            _mockScopedContextService.Object,
+            _mockServiceScopeFactory.Object,
             _mockExceptionHandler.Object,
             _mockLanguageService.Object,
             _mockLogger.Object);
@@ -75,10 +73,6 @@ public class DialogServiceExceptionHandlingTests
 
         var mockWindow = new Mock<Mvvm.Abstractions.IWindow>();
 
-        _mockScopedContextService
-     .Setup(x => x.GetRequiredService(It.IsAny<Type>()))
-     .Returns(mockViewModel.Object);
-
         // Act
         try
         {
@@ -99,8 +93,8 @@ public class DialogServiceExceptionHandlingTests
         // Arrange
         var expectedException = new InvalidOperationException("Dialog creation failed");
 
-        _mockScopedContextService
-            .Setup(x => x.GetRequiredService(It.IsAny<Type>()))
+        _mockServiceProvider
+            .Setup(x => x.GetService(It.IsAny<Type>()))
             .Throws(expectedException);
 
         // Act

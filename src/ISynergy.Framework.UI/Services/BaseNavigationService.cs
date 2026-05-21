@@ -22,11 +22,6 @@ namespace ISynergy.Framework.UI.Services;
 public abstract class BaseNavigationService : INavigationService
 {
     /// <summary>
-    /// The scoped context service for resolving services.
-    /// </summary>
-    protected readonly IScopedContextService _scopedContextService;
-
-    /// <summary>
     /// The exception handler service for handling exceptions during navigation.
     /// </summary>
     protected readonly IExceptionHandlerService _exceptionHandlerService;
@@ -44,7 +39,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// The service scope factory for creating independent child scopes.
     /// </summary>
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+    protected readonly IServiceScopeFactory _serviceScopeFactory;
 
     /// <summary>
     /// Backs the stack changed event field.
@@ -83,6 +78,11 @@ public abstract class BaseNavigationService : INavigationService
     private const int MaxBackstackSize = 10;
 
     private bool _isDisposed;
+
+    /// <summary>
+    /// Scope that owns the current modal ViewModel. Replaced on each modal navigation, disposed on service disposal.
+    /// </summary>
+    private IServiceScope? _modalScope;
 
     /// <summary>
     /// Gets a value indicating whether this instance can go back.
@@ -158,14 +158,12 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseNavigationService"/> class.
     /// </summary>
-    /// <param name="scopedContextService">The scoped context service.</param>
     /// <param name="exceptionHandlerService">The exception handler service.</param>
     /// <param name="commonServices">The common services.</param>
     /// <param name="serviceScopeFactory">The service scope factory for creating child scopes.</param>
     /// <param name="logger">The logger.</param>
     /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
     protected BaseNavigationService(
-        IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
         IServiceScopeFactory serviceScopeFactory,
@@ -175,7 +173,6 @@ public abstract class BaseNavigationService : INavigationService
         _logger.LogTrace("BaseNavigationService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
-        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
         _commonServices = commonServices ?? throw new ArgumentNullException(nameof(commonServices));
         _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
     }
@@ -420,7 +417,8 @@ public abstract class BaseNavigationService : INavigationService
         var view = viewModel.GetRelatedView();
         var viewType = view.GetRelatedViewType();
 
-        if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is IView resolvedPage)
+        using var scope = _serviceScopeFactory.CreateScope();
+        if (viewType is not null && scope.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
         {
             resolvedPage.ViewModel = viewModel;
 
@@ -541,7 +539,8 @@ public abstract class BaseNavigationService : INavigationService
         {
             var view = await SetupBladeAsync(owner, bladeVm, async () =>
             {
-                if (_scopedContextService.GetRequiredService(typeof(TView)) is IView view)
+                using var scope = _serviceScopeFactory.CreateScope();
+                if (scope.ServiceProvider.GetRequiredService(typeof(TView)) is IView view)
                 {
                     view.ViewModel = viewmodel;
 
@@ -781,7 +780,8 @@ public abstract class BaseNavigationService : INavigationService
         if (hostFrame is null)
             return;
 
-        if (_scopedContextService.GetRequiredService(typeof(TView)) is not IView page)
+        using var viewScope = _serviceScopeFactory.CreateScope();
+        if (viewScope.ServiceProvider.GetRequiredService(typeof(TView)) is not IView page)
             return;
 
         NavigationFrame? newFrame;
@@ -849,14 +849,22 @@ public abstract class BaseNavigationService : INavigationService
 
         // Reuse existing ViewModel if it matches the requested type
         if (existingViewModel is TViewModel existingVm)
+        {
             viewModel = existingVm;
+        }
         else
-            viewModel = _scopedContextService.GetRequiredService<TViewModel>();
+        {
+            _modalScope?.Dispose();
+            _modalScope = _serviceScopeFactory.CreateScope();
+            viewModel = _modalScope.ServiceProvider.GetRequiredService<TViewModel>();
+        }
+
+        _modalScope ??= _serviceScopeFactory.CreateScope();
 
         if (parameter is not null)
             viewModel.Parameter = parameter;
 
-        if (CreateView(_scopedContextService.ServiceProvider, typeof(TViewModel), viewModel, parameter) is { } page)
+        if (CreateView(_modalScope.ServiceProvider, typeof(TViewModel), viewModel, parameter) is { } page)
         {
             page.ViewModel = viewModel;
             SetWindowContent(page);
@@ -898,6 +906,10 @@ public abstract class BaseNavigationService : INavigationService
 
         _backStack.Clear();
         _backStackChanged = null;
+
+        try { _modalScope?.Dispose(); }
+        catch (Exception ex) { _logger.LogError(ex, "Error disposing modal scope during shutdown"); }
+        _modalScope = null;
 
         GC.SuppressFinalize(this);
     }

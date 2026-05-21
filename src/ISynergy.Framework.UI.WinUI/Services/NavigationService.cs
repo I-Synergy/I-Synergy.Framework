@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
@@ -23,12 +24,11 @@ public class NavigationService : BaseNavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     public NavigationService(
-        IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
-        : base(scopedContextService, exceptionHandlerService, commonServices, serviceScopeFactory, logger)
+        : base(exceptionHandlerService, commonServices, serviceScopeFactory, logger)
     {
     }
 
@@ -158,7 +158,8 @@ public class NavigationService : BaseNavigationService
         else
             viewType = view.GetRelatedViewType();
 
-        if (viewType is not null && _scopedContextService.GetRequiredService(viewType) is IView resolvedPage)
+        using var scope = _serviceScopeFactory.CreateScope();
+        if (viewType is not null && scope.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
         {
             resolvedPage.ViewModel = viewModel;
 

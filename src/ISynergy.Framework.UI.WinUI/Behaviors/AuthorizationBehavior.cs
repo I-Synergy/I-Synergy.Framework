@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using Microsoft.UI.Xaml;
@@ -25,10 +24,8 @@ public class Authorization : Behavior<Control>
     {
         if (!DesignMode.DesignModeEnabled)
         {
-            var scopedContextService = ServiceLocator.Default.GetRequiredService<IScopedContextService>();
-
             if (_authenticationProvider is null)
-                _authenticationProvider = scopedContextService.GetRequiredService<IAuthenticationProvider>();
+                _authenticationProvider = ServiceLocator.Default.GetRequiredService<IAuthenticationProvider>();
 
             if (_authenticationProvider is null)
                 throw new NotSupportedException("No IAuthenticationProvider is registered, cannot use the Authentication behavior without an IAuthenticationProvider");

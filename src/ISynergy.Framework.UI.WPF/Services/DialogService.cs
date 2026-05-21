@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
@@ -19,23 +20,23 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class DialogService : BaseDialogService, IDialogService
 {
-    private readonly IScopedContextService _scopedContextService;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILanguageService _languageService;
     private readonly ILogger _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
-    /// <param name="scopedContextService"></param>
+    /// <param name="scopeFactory"></param>
     /// <param name="languageService"></param>
     /// <param name="logger"></param>
     public DialogService(
-        IScopedContextService scopedContextService,
+        IServiceScopeFactory scopeFactory,
         ILanguageService languageService,
         ILogger<DialogService> logger)
     {
         _logger = logger;
-        _scopedContextService = scopedContextService;
+        _scopeFactory = scopeFactory;
         _languageService = languageService;
     }
 
@@ -145,8 +146,9 @@ public class DialogService : BaseDialogService, IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
+        using var scope = _scopeFactory.CreateScope();
+        if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -164,8 +166,9 @@ public class DialogService : BaseDialogService, IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
+        using var scope = _scopeFactory.CreateScope();
+        if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+            scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
             viewmodel.SetSelectedItem(e);
             await CreateDialogAsync(dialog, viewmodel);
@@ -183,7 +186,8 @@ public class DialogService : BaseDialogService, IDialogService
     [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Non-generic service resolution by runtime Type is intentional; callers must ensure types are preserved.")]
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_scopedContextService.GetRequiredService(window.GetType()) is Window dialog)
+        using var scope = _scopeFactory.CreateScope();
+        if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -198,7 +202,8 @@ public class DialogService : BaseDialogService, IDialogService
     [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Non-generic service resolution by runtime Type is intentional; callers must ensure types are preserved.")]
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
-        if (_scopedContextService.GetRequiredService(type) is Window dialog)
+        using var scope = _scopeFactory.CreateScope();
+        if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 

@@ -10,7 +10,6 @@ public class NavigationService : INavigationService
 {
     private const string DefaultPageNotAvailable = "Main page is not available.";
 
-    private readonly IScopedContextService _scopedContextService;
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILogger _logger;
     private const bool Animated = true;
@@ -20,11 +19,9 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
-    /// <param name="scopedContextService"></param>
     /// <param name="exceptionHandlerService"></param>
     /// <param name="logger"></param>
     public NavigationService(
-        IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
         ILogger<NavigationService> logger)
     {
@@ -32,7 +29,6 @@ public class NavigationService : INavigationService
         _logger.LogTrace("NavigationService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
-        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
     }
 
     /// <summary>

@@ -26,12 +26,11 @@ public class NavigationService : BaseNavigationService
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
     public NavigationService(
-        IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
-        : base(scopedContextService, exceptionHandlerService, commonServices, serviceScopeFactory, logger)
+        : base(exceptionHandlerService, commonServices, serviceScopeFactory, logger)
     {
     }
 
