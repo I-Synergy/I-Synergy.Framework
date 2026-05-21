@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
@@ -28,9 +29,10 @@ public class ThemeService : IThemeService
     private const string Secondary = nameof(Secondary);
     private const string Tertiary = nameof(Tertiary);
 
-    private readonly Themes _theme;
-    private readonly string _color;
+    private Themes _theme;
+    private string _color;
 
+    private readonly ISettingsService _settingsService;
     private readonly ILogger<ThemeService> _logger;
 
     /// <summary>
@@ -51,12 +53,23 @@ public class ThemeService : IThemeService
     /// <param name="logger">A logger used for diagnostics and structured logging.</param>
     public ThemeService(
         ISettingsService settingsService,
+        IMessengerService messengerService,
         ILogger<ThemeService> logger)
     {
+        _settingsService = settingsService;
         _logger = logger;
 
         _theme = settingsService.LocalSettings.Theme;
         _color = settingsService.LocalSettings.Color;
+
+        messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+    }
+
+    private void OnUserSignedIn(UserSignedInMessage message)
+    {
+        _theme = _settingsService.LocalSettings.Theme;
+        _color = _settingsService.LocalSettings.Color;
+        ApplyTheme();
     }
 
     /// <summary>

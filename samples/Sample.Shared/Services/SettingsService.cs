@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
@@ -8,10 +9,11 @@ using System.Text.Json;
 
 namespace Sample.Services;
 
-public class SettingsService : ISettingsService
+public class SettingsService : ISettingsService, IReloadable
 {
     private const string _fileName = "settings.json";
     private readonly string _settingsFolder;
+    private readonly IMessengerService _messengerService;
     private readonly ILogger _logger;
 
     private LocalSettings? _localSettings;
@@ -21,8 +23,9 @@ public class SettingsService : ISettingsService
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsService"/> class.
     /// </summary>
-    public SettingsService(ILogger<SettingsService> logger)
+    public SettingsService(IMessengerService messengerService, ILogger<SettingsService> logger)
     {
+        _messengerService = messengerService;
         _logger = logger;
         _logger.LogTrace("SettingsService instance created with ID: {InstanceId}", Guid.NewGuid());
 
@@ -45,6 +48,16 @@ public class SettingsService : ISettingsService
         }
 
         LoadLocalSettings();
+
+        _messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+    }
+
+    private async void OnUserSignedIn(UserSignedInMessage message) => await ReloadAsync();
+
+    public async Task ReloadAsync(CancellationToken cancellationToken = default)
+    {
+        LoadLocalSettings();
+        await LoadGlobalSettingsAsync(cancellationToken);
     }
 
     public void LoadLocalSettings()
