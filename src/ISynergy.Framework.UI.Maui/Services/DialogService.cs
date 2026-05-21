@@ -714,21 +714,47 @@ public class DialogService : IDialogService, IDisposable
                 _logger?.LogError(ex, "Error unsubscribing from Closed handler");
             }
 
-            // Attempt to pop the modal — may fail due to MAUI framework rendering issues
-            try
+            // Pop the modal. Try without animation first to avoid MAUI rendering issues
+            // (e.g. ShadowExtensions.GetAlphaMaskAsync ArgumentException on Windows).
+            // Fall back to animated pop if the first attempt fails.
+            var popped = false;
+
+            if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
             {
-                if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
+                // First attempt: no animation (avoids layout-triggered shadow computation)
+                try
                 {
-                    await navigation.PopModalAsync();
+                    await navigation.PopModalAsync(false);
+                    popped = true;
                 }
-                else
+                catch (Exception ex)
                 {
-                    _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
+                    _logger?.LogDebug(ex, "PopModalAsync(false) failed, will try animated pop as fallback");
+                }
+
+                // Second attempt: with animation (works when the layout is in a different state)
+                if (!popped)
+                {
+                    try
+                    {
+                        await navigation.PopModalAsync(true);
+                        popped = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogError(ex, "PopModalAsync(true) also failed; modal may remain visible");
+                    }
                 }
             }
-            catch (Exception ex)
+            else
             {
-                _logger?.LogError(ex, "Error popping modal dialog; cleaning up resources anyway");
+                _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
+            }
+
+            if (!popped && Application.Current?.Windows[0]?.Page?.Navigation is not null)
+            {
+                // Last resort: try to go back via the navigation service pattern
+                _logger?.LogWarning("Modal pop failed; the page may still be visible on the navigation stack");
             }
 
             // Always clean up resources, even if PopModalAsync failed
