@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -105,7 +106,7 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
         ILogger<ViewModel> logger)
     {
         _commonServices = commonServices;
-        _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
+        _commonServices.MessengerService.Register<UserSignedInMessage>(this, OnUserSignedIn);
 
         _logger = logger;
 
@@ -118,21 +119,13 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
         _logger.LogTrace(GetType().Name);
     }
 
-    private async void ScopedContextService_ScopedChanged(object? sender, Core.Events.ReturnEventArgs<bool> e)
+    private async void OnUserSignedIn(UserSignedInMessage message)
     {
-        if (e.Value)
-        {
-            IsInitialized = false;
+        IsInitialized = false;
+        Cleanup();
 
-            // Clear existing data
-            Cleanup();
-
-            // Reinitialize with new scope if needed
-            if (!IsDisposed)
-            {
-                await InitializeAsync();
-            }
-        }
+        if (!IsDisposed)
+            await InitializeAsync();
     }
 
     /// <summary>
@@ -256,7 +249,7 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
     {
         if (disposing)
         {
-            _commonServices.ScopedContextService.ScopedChanged -= ScopedContextService_ScopedChanged;
+            _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
 
             PropertyChanged -= OnPropertyChanged;
 
