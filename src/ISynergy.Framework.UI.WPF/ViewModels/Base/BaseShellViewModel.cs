@@ -10,6 +10,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
@@ -26,6 +27,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 {
     protected readonly IDialogService _dialogService;
     protected readonly INavigationService _navigationService;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
@@ -110,12 +113,16 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="settingsService"></param>
+    /// <param name="scopeFactory"></param>
     /// <param name="logger"></param>
-    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<BaseShellViewModel> logger)
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IServiceScopeFactory scopeFactory, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _settingsService = settingsService;
+        _scopeFactory = scopeFactory;
 
         _navigationService.BackStackChanged += NavigationService_BackStackChanged;
 
@@ -224,7 +231,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
+        using var scope = _scopeFactory.CreateScope();
+        var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
         languageVM.Submitted += LanguageVM_Submitted;
         return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
@@ -241,8 +249,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             if (sender is LanguageViewModel vm)
                 vm.Submitted -= LanguageVM_Submitted;
 
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+            _settingsService.LocalSettings.Language = e.Result;
+            _settingsService.SaveLocalSettings();
 
             e.Result.SetLocalizationLanguage();
 
@@ -260,7 +268,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         {
             // Log exception to prevent it from being swallowed in async void method
             _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
-            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+            var exceptionHandlerService = _commonServices?.ExceptionHandlerService;
             exceptionHandlerService?.HandleException(ex);
             // Re-throw to crash the application if unhandled exception handler is configured
             throw;
@@ -273,7 +281,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        var themeVM = _commonServices.ScopedContextService.GetRequiredService<ThemeViewModel>();
+        using var scope = _scopeFactory.CreateScope();
+        var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
         themeVM.Submitted += ThemeVM_Submitted;
         return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
@@ -291,10 +300,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             {
                 vm.Submitted -= ThemeVM_Submitted;
 
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
+                _settingsService.LocalSettings.Theme = e.Result.Theme;
+                _settingsService.LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
 
-                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
+                if (_settingsService.SaveLocalSettings() &&
                     await _dialogService.ShowMessageAsync(
                         _commonServices.LanguageService.GetString("WarningColorChange") +
                         Environment.NewLine +
@@ -310,7 +319,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         {
             // Log exception to prevent it from being swallowed in async void method
             _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler");
-            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
+            var exceptionHandlerService = _commonServices?.ExceptionHandlerService;
             exceptionHandlerService?.HandleException(ex);
             // Re-throw to crash the application if unhandled exception handler is configured
             throw;

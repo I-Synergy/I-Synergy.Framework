@@ -12,6 +12,7 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Extensions;
@@ -44,13 +45,17 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="settingsService"></param>
+    /// <param name="scopeFactory"></param>
     /// <param name="logger">The logger factory.</param>
     public ShellViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
+        ISettingsService settingsService,
+        IServiceScopeFactory scopeFactory,
         ILogger<ShellViewModel> logger)
-        : base(commonServices, dialogService, navigationService, logger)
+        : base(commonServices, dialogService, navigationService, settingsService, scopeFactory, logger)
     {
         SetClock();
 
@@ -86,7 +91,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        var primaryColor = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color ?? string.Empty;
+        var primaryColor = _settingsService.LocalSettings.Color ?? string.Empty;
 
         if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated) // NOSONAR
         {
@@ -112,25 +117,27 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     public override async Task InitializeFirstRunAsync()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings!.IsFirstRun)
+        if (_settingsService.GlobalSettings!.IsFirstRun)
         {
             if (await _dialogService.ShowMessageAsync(
                 _commonServices.LanguageService.GetString("ChangeLanguage"),
                 _commonServices.LanguageService.GetString("Language"),
                 MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
-                var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
+                using var scope = _scopeFactory.CreateScope();
+                var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
                 languageVM.Submitted += (s, e) =>
                 {
-                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
+                    _settingsService.LocalSettings.Language = e.Result;
+                    _settingsService.SaveLocalSettings();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
                 };
                 await _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
             }
 
-            var wizardVM = _commonServices.ScopedContextService.GetRequiredService<SettingsViewModel>();
+            using var settingsScope = _scopeFactory.CreateScope();
+            var wizardVM = settingsScope.ServiceProvider.GetRequiredService<SettingsViewModel>();
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();

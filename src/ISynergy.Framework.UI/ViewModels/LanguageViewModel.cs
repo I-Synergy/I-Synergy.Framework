@@ -24,10 +24,11 @@ public class LanguageViewModel : ViewModelDialog<Languages>, ILanguageViewModel
     /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="settingsService">The settings service.</param>
     /// <param name="logger"></param>
-    public LanguageViewModel(ICommonServices commonServices, ILogger<LanguageViewModel> logger)
+    public LanguageViewModel(ICommonServices commonServices, ISettingsService settingsService, ILogger<LanguageViewModel> logger)
         : base(commonServices, logger)
     {
-        SetSelectedItem(_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language); // NOSONAR
+        SetSelectedItem(settingsService.LocalSettings.Language);
     }
 }
