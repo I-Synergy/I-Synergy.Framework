@@ -1,6 +1,6 @@
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
 using Sample.ViewModels;
 using System.Globalization;
 using Application = ISynergy.Framework.UI.Application;
@@ -17,12 +17,9 @@ public partial class App : Application
         {
             InitializeComponent();
 
-            // Get the authentication service for authentication state changes
-            var authenticationService = _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>();
-
-            // Subscribe to authentication events
-            authenticationService.AuthenticationSucceeded += async (s, e) => await OnAuthenticationSucceededAsync(e);
-            authenticationService.AuthenticationFailed += async (s, e) => await OnAuthenticationFailedAsync();
+            // Subscribe to authentication messages
+            _commonServices?.MessengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+            _commonServices?.MessengerService.Register<UserSignedOutMessage>(this, OnUserSignedOut, keepTargetAlive: true);
         }
         catch (Exception ex)
         {
@@ -131,10 +128,10 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Called when authentication succeeds (user has logged in).
+    /// Called when a user signs in.
     /// The profile has already been set in the context by the AuthenticationService.
     /// </summary>
-    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e) // NOSONAR - parameter required by event handler signature
+    private async void OnUserSignedIn(UserSignedInMessage message)
     {
         try
         {
@@ -162,7 +159,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error in OnAuthenticationSucceededAsync");
+            _logger?.LogError(ex, "Error in OnUserSignedIn");
 
             if (_dialogService != null)
             {
@@ -179,10 +176,10 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Called when authentication fails or user logs out.
+    /// Called when a user signs out.
     /// The context has already been cleared by the AuthenticationService.
     /// </summary>
-    private async Task OnAuthenticationFailedAsync()
+    private async void OnUserSignedOut(UserSignedOutMessage message)
     {
         try
         {
@@ -194,7 +191,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
+            _logger?.LogError(ex, "Error in OnUserSignedOut");
 
             if (_dialogService != null)
             {
@@ -220,6 +217,8 @@ public partial class App : Application
             _commonServices.MessengerService.Unregister<ShowInformationMessage>(this);
             _commonServices.MessengerService.Unregister<ShowWarningMessage>(this);
             _commonServices.MessengerService.Unregister<ShowErrorMessage>(this);
+            _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
+            _commonServices.MessengerService.Unregister<UserSignedOutMessage>(this);
         }
     }
 }

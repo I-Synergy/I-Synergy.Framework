@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -15,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.Extensions;
-using Sample.Abstractions.Services;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
@@ -61,7 +61,7 @@ public partial class App : Application
             })
             .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
-                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                services.TryAddSingleton<Sample.Abstractions.Services.IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IFileService<FileResult>, FileService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
 
@@ -77,11 +77,9 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // Subscribe to authentication events
-        var authenticationService = _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>();
-        authenticationService.AuthenticationSucceeded += async (s, args) => await OnAuthenticationSucceededAsync(args);
-        authenticationService.AuthenticationFailed += async (s, args) => await OnAuthenticationFailedAsync();
-
+        // Subscribe to authentication messages
+        _commonServices.MessengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+        _commonServices.MessengerService.Register<UserSignedOutMessage>(this, OnUserSignedOut, keepTargetAlive: true);
     }
 
     protected override async void OnApplicationLoaded(object? sender, EventArgs e)
@@ -100,9 +98,9 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Called when authentication succeeds (user has logged in).
+    /// Called when a user signs in.
     /// </summary>
-    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e)
+    private async void OnUserSignedIn(UserSignedInMessage message)
     {
         try
         {
@@ -112,14 +110,14 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error in OnAuthenticationSucceededAsync");
+            _logger?.LogError(ex, "Error in OnUserSignedIn");
         }
     }
 
     /// <summary>
-    /// Called when authentication fails or user logs out.
+    /// Called when a user signs out.
     /// </summary>
-    private async Task OnAuthenticationFailedAsync()
+    private async void OnUserSignedOut(UserSignedOutMessage message)
     {
         try
         {
@@ -129,7 +127,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
+            _logger?.LogError(ex, "Error in OnUserSignedOut");
         }
     }
 

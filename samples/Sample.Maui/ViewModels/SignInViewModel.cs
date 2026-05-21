@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -8,13 +9,14 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
+using Sample.Services;
 using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
 
 public class SignInViewModel : ViewModel
 {
-    private readonly IAuthenticationService _authenticationService;
+    private readonly Sample.Abstractions.Services.IAuthenticationService _authenticationService;
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
 
@@ -43,7 +45,7 @@ public class SignInViewModel : ViewModel
 
     public SignInViewModel(
         ICommonServices commonServices,
-        IAuthenticationService authenticationService,
+        Sample.Abstractions.Services.IAuthenticationService authenticationService,
         IDialogService dialogService,
         INavigationService navigationService,
         ILogger<SignInViewModel> logger)

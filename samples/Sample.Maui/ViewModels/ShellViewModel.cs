@@ -108,7 +108,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     }
 
     protected override Task SignOutAsync() =>
-        _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>().SignOutAsync();
+        _commonServices.ScopedContextService.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {

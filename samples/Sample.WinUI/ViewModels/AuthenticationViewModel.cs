@@ -13,6 +13,7 @@ using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
+using Sample.Services;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
@@ -23,7 +24,7 @@ public class AuthenticationViewModel : ViewModel
     private const string WarningPasswordSizeKey = "WarningPasswordSize";
     private const string WarningPasswordMatchKey = "WarningPasswordMatch";
 
-    private readonly IAuthenticationService _authenticationService;
+    private readonly Sample.Abstractions.Services.IAuthenticationService _authenticationService;
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
 
@@ -178,7 +179,7 @@ public class AuthenticationViewModel : ViewModel
 
     public AuthenticationViewModel( // NOSONAR - high complexity is inherent in authentication validation setup
         ICommonServices commonServices,
-        IAuthenticationService authenticationService,
+        Sample.Abstractions.Services.IAuthenticationService authenticationService,
         IDialogService dialogService,
         INavigationService navigationService,
         ILogger<AuthenticationViewModel> logger)
