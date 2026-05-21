@@ -182,6 +182,11 @@ public sealed class ScopedContextService : IScopedContextService
         }
     }
 
+    /// <summary>
+    /// The application root service provider, independent of any scope managed by this service.
+    /// </summary>
+    public IServiceProvider RootServiceProvider => _serviceProvider;
+
     public void Dispose()
     {
         if (_disposed)

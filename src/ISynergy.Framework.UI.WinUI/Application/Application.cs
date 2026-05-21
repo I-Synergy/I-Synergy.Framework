@@ -593,12 +593,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
 
-            // Unregister lifecycle event handlers
+            // Only unregister event handlers — the DI container owns the singleton's lifetime
             if (_lifecycleService is not null)
-            {
                 _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
-                _lifecycleService.Dispose();
-            }
 
             Exiting = null;
         }

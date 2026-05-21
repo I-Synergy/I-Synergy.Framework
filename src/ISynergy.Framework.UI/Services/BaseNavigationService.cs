@@ -78,9 +78,14 @@ public abstract class BaseNavigationService : INavigationService
     private const int MaxBackstackSize = 10;
 
     /// <summary>
-    /// Gets the root service provider for creating child scopes.
+    /// The root provider used to create child scopes.
+    /// Using RootServiceProvider (not the scoped ServiceProvider) ensures NavigationFrame
+    /// scopes are independent of ScopedContextService's internal scope, so ViewModel disposal
+    /// during DI shutdown does not race against ScopedContextService being torn down.
     /// </summary>
-    private IServiceProvider RootProvider => _scopedContextService.ServiceProvider;
+    private IServiceProvider RootProvider => _scopedContextService.RootServiceProvider;
+
+    private bool _isDisposed;
 
     /// <summary>
     /// Gets a value indicating whether this instance can go back.
@@ -874,6 +879,11 @@ public abstract class BaseNavigationService : INavigationService
     /// </summary>
     public void Dispose()
     {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+
         // Dispose the current frame (scope + ViewModel + scoped dependencies)
         try { _currentFrame?.Dispose(); }
         catch (Exception ex) { _logger.LogError(ex, "Error disposing current frame during shutdown"); }

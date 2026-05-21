@@ -366,12 +366,8 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             MauiExceptions.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
 
-            // Unregister lifecycle event handlers
             if (_lifecycleService is not null)
-            {
                 _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
-                _lifecycleService.Dispose();
-            }
         }
     }
     #endregion
