@@ -10,15 +10,17 @@ public static class ApplicationExtensions
     {
         var hexColor = $"#{color.R:X2}{color.G:X2}{color.B:X2}".ToLower();
 
-        foreach (var item in application.Resources.MergedDictionaries.EnsureNotNull())
-        {
-            if (!item.Source.AbsoluteUri.EndsWith("themeresources.xaml") &&
+        var toRemove = application.Resources.MergedDictionaries
+            .Where(item => item.Source is not null &&
+                !item.Source.AbsoluteUri.EndsWith("themeresources.xaml") &&
                 !item.Source.AbsoluteUri.EndsWith("themeresources_v2.xaml") &&
                 !item.Source.AbsoluteUri.EndsWith("Images.xaml") &&
                 !item.Source.AbsoluteUri.EndsWith("Style.xaml") &&
                 !item.Source.AbsoluteUri.EndsWith($"Theme{hexColor.Substring(1, 6)}"))
-                application.Resources.MergedDictionaries.Remove(item);
-        }
+            .ToList();
+
+        foreach (var item in toRemove)
+            application.Resources.MergedDictionaries.Remove(item);
 
         switch (hexColor) // NOSONAR
         {

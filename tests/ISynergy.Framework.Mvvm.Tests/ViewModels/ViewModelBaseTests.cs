@@ -25,6 +25,8 @@ public class ViewModelBaseTests
 
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.LanguageService).Returns(_mockLanguageService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     public class TestViewModel : ViewModel

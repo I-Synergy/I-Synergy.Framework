@@ -16,6 +16,8 @@ public class ViewModelDialogWizardTests
         _mockCommonServices = new Mock<ICommonServices>();
 
         _mockLogger = new Mock<ILogger>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     public class TestEntity

@@ -25,6 +25,8 @@ public class ViewModelSelectionBladeTests
 
         _mockCommonServices = new Mock<ICommonServices>();
         _mockCommonServices.SetupGet(s => s.LanguageService).Returns(_mockLanguageService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     public class TestEntity
@@ -59,9 +61,8 @@ public class ViewModelSelectionBladeTests
         viewModel.Cleanup();
 
         // Assert
-        Assert.IsNotNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
-        Assert.AreEqual(0, viewModel.SelectedItems.Count, "SelectedItems should be empty after cleanup");
-        Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
+        Assert.IsNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
+        Assert.IsNull(viewModel.Items, "Items should not be null after cleanup");
 
         viewModel.Dispose();
         Assert.IsTrue(viewModel.IsDisposed);
@@ -113,9 +114,8 @@ public class ViewModelSelectionBladeTests
         await viewModel.CloseAsync();
 
         // Assert
-        Assert.IsNotNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
-        Assert.AreEqual(0, viewModel.SelectedItems?.Count, "SelectedItems should be empty after cleanup");
-        Assert.AreEqual(0, viewModel.Items?.Count, "Items should be empty after cleanup");
+        Assert.IsNull(viewModel.SelectedItems, "SelectedItems should be null after cleanup");
+        Assert.IsNull(viewModel.Items, "Items should be null after cleanup");
 
         viewModel.Dispose();
         Assert.IsTrue(viewModel.IsDisposed);

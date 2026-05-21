@@ -13,6 +13,8 @@ public class ViewModelBladeWizardTests
     public ViewModelBladeWizardTests()
     {
         _mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     public class TestEntity

@@ -28,6 +28,9 @@ public class ViewModelExceptionHandlingTests
             .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
             .Returns(_mockExceptionHandler.Object);
 
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
+
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
     }
 

@@ -16,6 +16,8 @@ public class ViewModelBladeViewTests
         _mockCommonServices = new Mock<ICommonServices>();
 
         _mockLanguageService = new Mock<ILanguageService>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     public class TestBladeViewModel : ViewModelBladeView<TestEntity>
@@ -154,7 +156,7 @@ public class ViewModelBladeViewTests
 
         // Act
         viewModel.Cleanup();
-        Assert.AreEqual(0, viewModel.Items?.Count);
+        Assert.IsNull(viewModel.Items);
 
         viewModel.Dispose();
         Assert.IsTrue(viewModel.IsDisposed);

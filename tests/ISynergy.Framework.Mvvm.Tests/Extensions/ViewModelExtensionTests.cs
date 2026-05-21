@@ -15,6 +15,8 @@ public class ViewModelExtensionTests
     public ViewModelExtensionTests()
     {
         _mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     // Test classes
@@ -188,6 +190,8 @@ public class ViewModelExtensionTests
     {
         // Arrange
         var mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
 
         var view = new TestView
         {
@@ -206,6 +210,8 @@ public class ViewModelExtensionTests
     {
         // Arrange
         var mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
 
         var window = new TestWindow
         {

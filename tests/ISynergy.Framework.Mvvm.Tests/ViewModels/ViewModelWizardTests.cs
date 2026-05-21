@@ -12,6 +12,8 @@ public class ViewModelWizardTests
     public ViewModelWizardTests()
     {
         _mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     public class TestModel
