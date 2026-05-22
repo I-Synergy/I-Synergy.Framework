@@ -186,9 +186,13 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
         languageVM.Submitted += LanguageVM_Submitted;
+        languageVM.Closed += (_, _) =>
+        {
+            scope.Dispose();
+        };
         return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
 

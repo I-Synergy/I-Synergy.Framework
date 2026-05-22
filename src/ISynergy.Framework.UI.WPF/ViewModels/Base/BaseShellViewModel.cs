@@ -231,9 +231,13 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenLanguageAsync()
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
         languageVM.Submitted += LanguageVM_Submitted;
+        languageVM.Closed += (_, _) =>
+        {
+            scope.Dispose();
+        };
         return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
     }
 
@@ -281,9 +285,13 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
         themeVM.Submitted += ThemeVM_Submitted;
+        themeVM.Closed += (_, _) =>
+        {
+            scope.Dispose();
+        };
         return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
 
