@@ -247,6 +247,9 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
 
     protected override void Dispose(bool disposing)
     {
+        if (_disposed)
+            return;
+
         if (disposing)
         {
             _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
@@ -260,9 +263,9 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
             // Clear commands
             CloseCommand?.Dispose();
             CancelCommand?.Dispose();
-
-            base.Dispose(disposing);
         }
+
+        base.Dispose(disposing);
     }
 
     /// <summary>

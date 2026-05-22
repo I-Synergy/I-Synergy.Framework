@@ -236,7 +236,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <returns>Task.</returns>
     protected virtual Task OpenColorsAsync()
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
         var style = new ThemeStyle
         {
@@ -244,6 +244,16 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             Color = _settingsService.LocalSettings.Color
         };
         themeVM.Submitted += ThemeVM_Submitted;
+
+        // Dispose the scope when the dialog closes, not when this method returns.
+        // The ViewModel lives on the Closed event; disposing the scope prematurely
+        // would call ViewModel.Dispose(), which clears Closed and prevents the
+        // DialogService's close handler from firing.
+        themeVM.Closed += (_, _) =>
+        {
+            scope.Dispose();
+        };
+
         themeVM.SetSelectedItem(style);
         return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
     }
