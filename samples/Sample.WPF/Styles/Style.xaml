@@ -21,7 +21,7 @@
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{DynamicResource SystemAccentColor}" />
     <SolidColorBrush x:Key="SystemAccentBrushGreen" Color="{DynamicResource SystemAccentColorGreen}" />
     <SolidColorBrush x:Key="SystemAccentBrushRed" Color="{DynamicResource SystemAccentColorRed}" />
-    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF2688C5"/>
+
 
     <Style x:Key="FocusVisual">
         <Setter Property="Control.Template">
@@ -32,6 +32,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 
     <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFF0F0F0" Offset="0.0"/>

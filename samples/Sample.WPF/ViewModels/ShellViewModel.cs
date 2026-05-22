@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;

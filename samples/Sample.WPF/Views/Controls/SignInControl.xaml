@@ -25,7 +25,6 @@
                 InputScope="Password" 
                 PreviewKeyDown="TextBox_Password_PreviewKeyDown"/>    
 
-            <CheckBox Content="{m:GetString Remember}" IsChecked="{Binding AutoLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Label x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:GetString PasswordForgot}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
             <TextBlock x:Name="TextBox_CapsLockOn" Text="{m:GetString Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
 

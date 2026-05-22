@@ -131,7 +131,7 @@ public partial class App : Application
         }
     }
 
-    public override async Task InitializeApplicationAsync()
+    protected override async Task InitializeApplicationAsync()
     {
         try
         {
@@ -161,7 +161,7 @@ public partial class App : Application
                 await _dialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             }
 
-            RaiseApplicationInitialized();
+            _lifecycleService?.SignalApplicationInitialized();
         }
         finally
         {

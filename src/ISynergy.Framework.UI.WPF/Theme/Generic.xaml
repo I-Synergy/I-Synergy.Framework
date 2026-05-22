@@ -40,6 +40,7 @@
         <Setter Property="Foreground" Value="Red" />
     </Style>
 
+
     <Style TargetType="TextBox">
         <Setter Property="Margin" Value="2" />
     </Style>

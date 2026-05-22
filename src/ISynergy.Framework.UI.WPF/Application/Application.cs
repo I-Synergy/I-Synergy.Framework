@@ -7,6 +7,8 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Controls;
+using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Configuration;
@@ -38,19 +40,20 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected readonly ILogger<Application> _logger;
 
     protected readonly ApplicationFeatures? _features;
+    protected readonly SplashScreenOptions _splashScreenOptions;
+    protected LoadingView? _loadingView;
 
     protected bool _isShuttingDown = false;
 
-    public event EventHandler<ReturnEventArgs<bool>>? ApplicationInitialized;
-
-    public virtual void RaiseApplicationInitialized() => ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
+    private Task? Initialize { get; set; }
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected Application()
+    protected Application(SplashScreenOptions? splashScreenOptions = null)
         : base()
     {
+        _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
         var host = CreateHostBuilder() // NOSONAR
            .Build()
            .SetLocatorProvider();
@@ -261,10 +264,15 @@ public abstract class Application : System.Windows.Application, IDisposable
     }
 
     /// <summary>
-    /// LoadAssembly the application.
+    /// Initializes the application asynchronously.
+    /// </summary>
+    private void InitializeApplication() => Initialize = InitializeApplicationAsync();
+
+    /// <summary>
+    /// Initializing the application.
     /// </summary>
     /// <returns></returns>
-    public abstract Task InitializeApplicationAsync();
+    protected abstract Task InitializeApplicationAsync();
 
     /// <summary>
     /// Get a new list of additional resource dictionaries which can be merged.
@@ -272,6 +280,15 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <returns>IList&lt;ResourceDictionary&gt;.</returns>
     public virtual IList<ResourceDictionary> GetAdditionalResourceDictionaries() =>
         new List<ResourceDictionary>();
+
+    /// <summary>
+    /// Creates a loading view page and stores a reference for completion tracking.
+    /// </summary>
+    private LoadingView CreateLoadingView()
+    {
+        _loadingView = new LoadingView(_commonServices, _splashScreenOptions);
+        return _loadingView;
+    }
 
     /// <summary>
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
@@ -305,8 +322,15 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         rootFrame.NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden;
 
+        MainWindow.Title = _commonServices.InfoService.ProductName;
+
+        // Navigate to loading view — its Loaded event fires SignalApplicationUIReady()
+        rootFrame.Navigate(CreateLoadingView());
+
         MainWindow.Show();
         MainWindow.Activate();
+
+        InitializeApplication();
     }
 
     /// <summary>
