@@ -6,6 +6,7 @@ using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
@@ -202,6 +203,12 @@ public class LoadingView : Page
             Margin = new Microsoft.UI.Xaml.Thickness(0, 8, 0, 0)
         };
 
+        _statusLabel.SetBinding(TextBlock.TextProperty, new Binding
+        {
+            Source = _busyService,
+            Path = new PropertyPath(nameof(IBusyService.BusyMessage))
+        });
+
         if (primaryBrush is not null)
             _statusLabel.Foreground = primaryBrush;
 
@@ -239,8 +246,6 @@ public class LoadingView : Page
 
         // Subscribe to application lifecycle events
         _applicationLifecycleService.ApplicationInitialized += OnApplicationInitialized;
-
-        _busyService.PropertyChanged += OnBusyServicePropertyChanged;
     }
 
     /// <summary>
@@ -249,19 +254,6 @@ public class LoadingView : Page
     private void OnApplicationInitialized(object? sender, EventArgs e)
     {
         DispatcherQueue.TryEnqueue(() => IsSignInButtonEnabled = true);
-    }
-
-    private void OnBusyServicePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(IBusyService.BusyMessage))
-            return;
-
-        var message = _busyService.BusyMessage;
-        DispatcherQueue.TryEnqueue(() =>
-        {
-            if (_statusLabel is not null)
-                _statusLabel.Text = message;
-        });
     }
 
     /// <summary>
@@ -337,8 +329,6 @@ public class LoadingView : Page
 
         if (_applicationLifecycleService is not null)
             _applicationLifecycleService.ApplicationInitialized -= OnApplicationInitialized;
-
-        _busyService.PropertyChanged -= OnBusyServicePropertyChanged;
     }
 
     /// <summary>
