@@ -48,11 +48,13 @@ public class Window : ContentPage, IWindow
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // DO NOT dispose ViewModel here.
+            // The Window is resolved from a DI scope that is disposed after the dialog
+            // is shown but before it is closed. Disposing the ViewModel prematurely clears
+            // its Closed event, preventing the DialogService's close handler from firing.
+            // The ViewModel lifecycle is managed by the scope that created it (e.g. in
+            // OpenColorsAsync) and by the DialogService's close handler.
         }
-
-        // free native resources if there are any.
     }
 
     public Task CloseAsync() => throw new NotSupportedException("Close is not supported on the .Net Maui platform.");
