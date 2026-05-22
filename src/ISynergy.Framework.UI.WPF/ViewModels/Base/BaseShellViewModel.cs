@@ -287,7 +287,13 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     {
         var scope = _scopeFactory.CreateScope();
         var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
+        var style = new ThemeStyle
+        {
+            Theme = _settingsService.LocalSettings.Theme,
+            Color = _settingsService.LocalSettings.Color
+        };
         themeVM.Submitted += ThemeVM_Submitted;
+        themeVM.SetSelectedItem(style);
         themeVM.Closed += (_, _) =>
         {
             scope.Dispose();
