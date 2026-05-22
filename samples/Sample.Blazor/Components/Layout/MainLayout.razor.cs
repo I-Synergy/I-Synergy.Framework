@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.AspNetCore.Components;
@@ -38,12 +38,13 @@ public partial class MainLayout : IDisposable
         IDialogService dialogService,
         NavigationManager navigationManager,
         IJSRuntime jSRuntime,
-        RequestCancellationService requestCancellationService)
+        RequestCancellationService requestCancellationService,
+        IContext context,
+        ISettingsService settingsService)
     {
         _commonServices = commonServices;
-
-        _context = ServiceLocator.Default.GetRequiredService<IContext>();
-        _settingsService = ServiceLocator.Default.GetRequiredService<ISettingsService>();
+        _context = context;
+        _settingsService = settingsService;
 
         _dialogService = dialogService;
         _navigationManager = navigationManager;

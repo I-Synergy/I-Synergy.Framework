@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -12,6 +11,7 @@ namespace Sample.ViewModels;
 public class CommandDemoViewModel : ViewModel
 {
     private readonly IDialogService _dialogService;
+    private readonly IServiceProvider _serviceProvider;
 
     /// <summary>
     /// Gets or sets the Counter property value.
@@ -27,10 +27,15 @@ public class CommandDemoViewModel : ViewModel
     public RelayCommand ResetCommand { get; }
     public AsyncRelayCommand OpenSampleDialogCommand { get; }
 
-    public CommandDemoViewModel(ICommonServices commonServices, IDialogService dialogService, ILogger<CommandDemoViewModel> logger)
+    public CommandDemoViewModel(
+        ICommonServices commonServices,
+        IDialogService dialogService,
+        ILogger<CommandDemoViewModel> logger,
+        IServiceProvider serviceProvider)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
+        _serviceProvider = serviceProvider;
 
         IncrementCommand = new RelayCommand(() => Counter++);
         DecrementCommand = new RelayCommand(() => Counter--, () => Counter > 0);
@@ -40,7 +45,7 @@ public class CommandDemoViewModel : ViewModel
 
     private async Task OpenSampleDialogAsync()
     {
-        var viewModel = ServiceLocator.Default.GetRequiredService<SampleDialogViewModel>();
+        var viewModel = _serviceProvider.GetRequiredService<SampleDialogViewModel>();
         viewModel.SetSelectedItem(new Budget(), false);
         viewModel.Submitted += HandleDialog;
 

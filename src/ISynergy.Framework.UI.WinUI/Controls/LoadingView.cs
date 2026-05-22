@@ -11,18 +11,19 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Media.Playback;
+using Windows.UI;
 
 namespace ISynergy.Framework.UI.Controls;
 
 public class LoadingView : Page
 {
     private readonly IApplicationLifecycleService _applicationLifecycleService;
-    private readonly IBusyService _busyService;
+    private readonly ICommonServices _commonServices;
     private MediaPlayerElement? _backgroundMediaElement;
     private Image? _backgroundImage;
     private Button? _signInButton;
-    private TextBlock? _statusLabel;
     private bool _loadingCompleted;
+
     /// <summary>
     /// Initializes a new instance of the LoadingView class.
     /// </summary>
@@ -34,8 +35,8 @@ public class LoadingView : Page
         ArgumentNullException.ThrowIfNull(commonServices);
         ArgumentNullException.ThrowIfNull(splashScreenOptions);
 
+        _commonServices = commonServices;
         _applicationLifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
-        _busyService = commonServices.BusyService;
 
         InitializeContent(commonServices, splashScreenOptions);
 
@@ -167,19 +168,20 @@ public class LoadingView : Page
         // Create sign-in/skip button
         _signInButton = new Button
         {
-            Content = "Skip",
+            Content = _commonServices.LanguageService.GetString("Skip"),
             Margin = new Microsoft.UI.Xaml.Thickness(20),
             HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
             VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Bottom,
             IsEnabled = false
         };
 
-        Brush? primaryBrush = null;
-        if (Microsoft.UI.Xaml.Application.Current?.Resources.TryGetValue("Primary", out var primaryResource) == true)
-            primaryBrush = primaryResource as Brush;
+        Brush? accentColor = null;
 
-        if (primaryBrush is not null)
-            _signInButton.Background = primaryBrush;
+        if (Application.Current.Resources.TryGetValue("SystemAccentColor", out var resource) && resource is Color primaryColor)
+            accentColor = new SolidColorBrush(primaryColor);
+
+        if (accentColor is not null)
+            _signInButton.Background = accentColor;
 
         // Create main grid
         var mainGrid = new Grid();
@@ -194,7 +196,7 @@ public class LoadingView : Page
             mainGrid.Children.Add(_backgroundMediaElement);
         }
 
-        _statusLabel = new TextBlock
+        var statusLabel = new TextBlock
         {
             HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
             VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center,
@@ -203,14 +205,23 @@ public class LoadingView : Page
             Margin = new Microsoft.UI.Xaml.Thickness(0, 8, 0, 0)
         };
 
-        _statusLabel.SetBinding(TextBlock.TextProperty, new Binding
+        statusLabel.SetBinding(TextBlock.TextProperty, new Binding
         {
-            Source = _busyService,
+            Source = _commonServices.BusyService,
             Path = new PropertyPath(nameof(IBusyService.BusyMessage))
         });
 
-        if (primaryBrush is not null)
-            _statusLabel.Foreground = primaryBrush;
+        var spinner = new ProgressRing
+        {
+            HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
+            VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center
+        };
+
+        if (accentColor is not null)
+        {
+            statusLabel.Foreground = accentColor;
+            spinner.Foreground = accentColor;
+        }
 
         var loadingPanel = new StackPanel
         {
@@ -219,12 +230,8 @@ public class LoadingView : Page
             Spacing = 0
         };
 
-        loadingPanel.Children.Add(_statusLabel);
-
-        loadingPanel.Children.Add(new ProgressRing
-        {
-            HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center
-        });
+        loadingPanel.Children.Add(statusLabel);
+        loadingPanel.Children.Add(spinner);
 
         mainGrid.Children.Add(overlay);
         mainGrid.Children.Add(loadingPanel);

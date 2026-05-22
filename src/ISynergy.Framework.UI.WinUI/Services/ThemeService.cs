@@ -25,10 +25,6 @@ namespace ISynergy.Framework.UI.Services;
 /// <seealso cref="IThemeService" />
 public class ThemeService : IThemeService
 {
-    private const string Primary = nameof(Primary);
-    private const string Secondary = nameof(Secondary);
-    private const string Tertiary = nameof(Tertiary);
-
     private Themes _theme;
     private string _color;
 
@@ -113,7 +109,7 @@ public class ThemeService : IThemeService
             application.SetApplicationColor(ColorHelper.GetColorFromHexString(_color));
 
             // Set the accent color from the loaded theme
-            if (Application.Current.Resources.TryGetValue(Primary, out var resource) && resource is Color primaryColor)
+            if (Application.Current.Resources.TryGetValue("SystemAccentColor", out var resource) && resource is Color primaryColor)
             {
                 Application.AccentColor = primaryColor;
                 _logger.LogTrace("AccentColor set to {Color}", primaryColor);
