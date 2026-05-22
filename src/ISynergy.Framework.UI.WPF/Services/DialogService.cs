@@ -146,10 +146,17 @@ public class DialogService : BaseDialogService, IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
             scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+        {
+            viewmodel.Closed += (_, _) => scope.Dispose();
             await CreateDialogAsync(dialog, viewmodel);
+        }
+        else
+        {
+            scope.Dispose();
+        }
     }
 
     /// <summary>
@@ -166,12 +173,17 @@ public class DialogService : BaseDialogService, IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
             scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
         {
             viewmodel.SetSelectedItem(e);
+            viewmodel.Closed += (_, _) => scope.Dispose();
             await CreateDialogAsync(dialog, viewmodel);
+        }
+        else
+        {
+            scope.Dispose();
         }
     }
 

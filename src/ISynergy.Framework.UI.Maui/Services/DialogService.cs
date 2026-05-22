@@ -436,15 +436,23 @@ public class DialogService : IDialogService, IDisposable
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
+        var scope = _scopeFactory.CreateScope();
         try
         {
-            using var scope = _scopeFactory.CreateScope();
             if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
                 scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                viewmodel.Closed += (_, _) => scope.Dispose();
                 await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
+            }
         }
         catch (Exception ex)
         {
+            scope.Dispose();
             _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name);
 
             bool handled = false;
@@ -496,18 +504,24 @@ public class DialogService : IDialogService, IDisposable
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
+        var scope = _scopeFactory.CreateScope();
         try
         {
-            using var scope = _scopeFactory.CreateScope();
             if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
                 scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             {
                 viewmodel.SetSelectedItem(e);
+                viewmodel.Closed += (_, _) => scope.Dispose();
                 await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
             }
         }
         catch (Exception ex)
         {
+            scope.Dispose();
             _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
                 typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name);
 
