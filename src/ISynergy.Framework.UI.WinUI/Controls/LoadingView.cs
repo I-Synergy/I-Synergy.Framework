@@ -173,7 +173,11 @@ public class LoadingView : Page
             IsEnabled = false
         };
 
-        if (Microsoft.UI.Xaml.Application.Current?.Resources.TryGetValue("Primary", out var primaryResource) == true && primaryResource is Brush primaryBrush)
+        Brush? primaryBrush = null;
+        if (Microsoft.UI.Xaml.Application.Current?.Resources.TryGetValue("Primary", out var primaryResource) == true)
+            primaryBrush = primaryResource as Brush;
+
+        if (primaryBrush is not null)
             _signInButton.Background = primaryBrush;
 
         // Create main grid
@@ -194,7 +198,7 @@ public class LoadingView : Page
             HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
             VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center,
             TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center,
-            Foreground = new SolidColorBrush(Microsoft.UI.Colors.White),
+            Foreground = primaryBrush ?? new SolidColorBrush(Microsoft.UI.Colors.White),
             FontSize = 14,
             Margin = new Microsoft.UI.Xaml.Thickness(0, 8, 0, 0)
         };
@@ -205,11 +209,13 @@ public class LoadingView : Page
             VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center,
             Spacing = 0
         };
+
+        loadingPanel.Children.Add(_statusLabel);
+
         loadingPanel.Children.Add(new ProgressRing
         {
             HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center
         });
-        loadingPanel.Children.Add(_statusLabel);
 
         mainGrid.Children.Add(overlay);
         mainGrid.Children.Add(loadingPanel);
