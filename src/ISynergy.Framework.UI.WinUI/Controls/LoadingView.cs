@@ -177,6 +177,10 @@ public class LoadingView : Page
         if (Microsoft.UI.Xaml.Application.Current?.Resources.TryGetValue("Primary", out var primaryResource) == true)
             primaryBrush = primaryResource as Brush;
 
+        var defaultForeground = Microsoft.UI.Xaml.Application.Current?.RequestedTheme == ApplicationTheme.Dark
+            ? new SolidColorBrush(Microsoft.UI.Colors.White)
+            : new SolidColorBrush(Microsoft.UI.Colors.Black);
+
         if (primaryBrush is not null)
             _signInButton.Background = primaryBrush;
 
@@ -198,7 +202,7 @@ public class LoadingView : Page
             HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
             VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center,
             TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center,
-            Foreground = primaryBrush ?? new SolidColorBrush(Microsoft.UI.Colors.White),
+            Foreground = primaryBrush ?? defaultForeground,
             FontSize = 14,
             Margin = new Microsoft.UI.Xaml.Thickness(0, 8, 0, 0)
         };
