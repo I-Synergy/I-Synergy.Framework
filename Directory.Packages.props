@@ -8,7 +8,7 @@
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.3.5" />
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.3.5" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.3.5" />
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.23.3" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.23.4" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.8.1" />
@@ -95,7 +95,7 @@
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry" Version="6.5.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.5.0" />
-    <PackageVersion Include="SkiaSharp" Version="3.119.2" />
+    <PackageVersion Include="SkiaSharp" Version="3.119.4" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.2.7" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.2.7" />
     <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="33.2.7" />
