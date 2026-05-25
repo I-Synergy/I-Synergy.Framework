@@ -9,7 +9,7 @@
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:local="using:Sample.Views.Identity.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource TintedBackgroundBrush}">
 
     <Page.Resources>
         <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />

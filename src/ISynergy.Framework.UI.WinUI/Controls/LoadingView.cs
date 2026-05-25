@@ -185,6 +185,7 @@ public class LoadingView : Page
 
         // Create main grid
         var mainGrid = new Grid();
+        mainGrid.Background = (Brush)Application.Current.Resources["TintedBackgroundBrush"];
 
         // Add background element based on type
         if (_backgroundImage is not null) // NOSONAR

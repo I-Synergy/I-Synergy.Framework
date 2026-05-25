@@ -109,6 +109,13 @@
                     <Color x:Key="RegionColor">#FF000000</Color>
                     <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
                     <SolidColorBrush x:Key="SystemControlPageBackgroundMediumAltMediumBrush" Color="#99000000" />
+        <!-- Tinted Gray semantic background brushes (Dark theme) -->
+        <SolidColorBrush x:Key="TintedBackgroundBrush" Color="{StaticResource TintedGray950}" />
+        <SolidColorBrush x:Key="TintedSurfaceBrush" Color="{StaticResource TintedGray900}" />
+        <SolidColorBrush x:Key="TintedControlBrush" Color="{StaticResource TintedGray900}" />
+        <SolidColorBrush x:Key="TintedDisabledBrush" Color="{StaticResource TintedGray600}" />
+        <SolidColorBrush x:Key="TintedBorderBrush" Color="{StaticResource TintedGray600}" />
+        <SolidColorBrush x:Key="TintedSecondaryBrush" Color="{StaticResource TintedGray500}" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -215,6 +222,13 @@
                     <Color x:Key="RegionColor">#FFFFFFFF</Color>
                     <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
                     <SolidColorBrush x:Key="SystemControlPageBackgroundMediumAltMediumBrush" Color="#99FFFFFF" />
+        <!-- Tinted Gray semantic background brushes (Light theme) -->
+        <SolidColorBrush x:Key="TintedBackgroundBrush" Color="{StaticResource TintedGray000}" />
+        <SolidColorBrush x:Key="TintedSurfaceBrush" Color="{StaticResource TintedGray100}" />
+        <SolidColorBrush x:Key="TintedControlBrush" Color="{StaticResource TintedGray100}" />
+        <SolidColorBrush x:Key="TintedDisabledBrush" Color="{StaticResource TintedGray200}" />
+        <SolidColorBrush x:Key="TintedBorderBrush" Color="{StaticResource TintedGray200}" />
+        <SolidColorBrush x:Key="TintedSecondaryBrush" Color="{StaticResource TintedGray300}" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -223,4 +237,25 @@
             <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
+    <!-- Tinted Grays (15% blend with Primary #6B69D6) -->
+    <Color x:Key="TintedGray000">#FFE9E9F4</Color>
+    <Color x:Key="TintedGray100">#FFDCDCE9</Color>
+    <Color x:Key="TintedGray200">#FFC4C4D7</Color>
+    <Color x:Key="TintedGray300">#FFAAAABD</Color>
+    <Color x:Key="TintedGray400">#FF9191A4</Color>
+    <Color x:Key="TintedGray500">#FF6D6D82</Color>
+    <Color x:Key="TintedGray600">#FF434354</Color>
+    <Color x:Key="TintedGray900">#FF262631</Color>
+    <Color x:Key="TintedGray950">#FF191924</Color>
+
+    <SolidColorBrush x:Key="TintedGray000Brush" Color="{StaticResource TintedGray000}" />
+    <SolidColorBrush x:Key="TintedGray100Brush" Color="{StaticResource TintedGray100}" />
+    <SolidColorBrush x:Key="TintedGray200Brush" Color="{StaticResource TintedGray200}" />
+    <SolidColorBrush x:Key="TintedGray300Brush" Color="{StaticResource TintedGray300}" />
+    <SolidColorBrush x:Key="TintedGray400Brush" Color="{StaticResource TintedGray400}" />
+    <SolidColorBrush x:Key="TintedGray500Brush" Color="{StaticResource TintedGray500}" />
+    <SolidColorBrush x:Key="TintedGray600Brush" Color="{StaticResource TintedGray600}" />
+    <SolidColorBrush x:Key="TintedGray900Brush" Color="{StaticResource TintedGray900}" />
+    <SolidColorBrush x:Key="TintedGray950Brush" Color="{StaticResource TintedGray950}" />
+
 </ResourceDictionary>

@@ -75,6 +75,15 @@
         <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
     </Style>
 
+    <!-- Tinted Gray control styles matching MAUI patterns -->
+
+    <Style x:Key="DefaultTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
     <Style
         x:Key="DefaultNoteTextBoxStyle"
         BasedOn="{StaticResource DefaultTextBoxStyle}"
@@ -85,6 +94,12 @@
         <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style
+        x:Key="DefaultPasswordBoxStyle"
+        BasedOn="{StaticResource DefaultTextBoxStyle}"
+        TargetType="PasswordBox">
     </Style>
 
     <Style
@@ -99,5 +114,76 @@
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
         <Setter Property="MinHeight" Value="{ThemeResource ContentDialogButtonMinHeight}" />
         <Setter Property="MinWidth" Value="{ThemeResource ContentDialogButtonMinWidth}" />
+    </Style>
+
+    <Style x:Key="DefaultComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
+    <Style x:Key="DefaultDatePickerStyle" TargetType="DatePicker">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
+    <Style x:Key="DefaultTimePickerStyle" TargetType="TimePicker">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
+    <Style x:Key="DefaultAutoSuggestBoxStyle" TargetType="AutoSuggestBox">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <!-- Primary Button: Uses accent color for important actions -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlBackgroundChromeWhiteBrush}" />
+        <Setter Property="Background" Value="{ThemeResource SystemAccentBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemAccentBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="MinWidth" Value="120" />
+    </Style>
+
+    <!-- Secondary Button: Uses tinted gray, subtle appearance -->
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="Background" Value="{ThemeResource TintedSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="MinWidth" Value="120" />
+    </Style>
+
+    <!-- NavigationView: Tinted background matching MAUI Shell tab bar -->
+    <Style x:Key="DefaultNavigationViewStyle" TargetType="NavigationView">
+        <Setter Property="Background" Value="{ThemeResource TintedBackgroundBrush}" />
+    </Style>
+
+    <!-- Page/Content background -->
+    <Style x:Key="DefaultPageStyle" TargetType="Page">
+        <Setter Property="Background" Value="{ThemeResource TintedBackgroundBrush}" />
+    </Style>
+
+    <!-- ListView: Transparent background with tinted items -->
+    <Style x:Key="DefaultListViewStyle" TargetType="ListView">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style x:Key="DefaultListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="Background" Value="Transparent" />
     </Style>
 </ResourceDictionary>

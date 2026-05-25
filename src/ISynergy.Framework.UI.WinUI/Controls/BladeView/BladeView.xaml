@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="BladeViewControl"
+    Background="{ThemeResource TintedBackgroundBrush}"
     mc:Ignorable="d">
 
     <Grid Background="{Binding DisabledBackground, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Opacity="{Binding DisabledOpacity, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
@@ -26,7 +27,6 @@
                             <ControlTemplate TargetType="ListBoxItem">
                                 <Grid
                                     HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                    Background="{ThemeResource SolidBackgroundFillColorBase}"
                                     BorderBrush="{ThemeResource SurfaceStrokeColorDefault}"
                                     BorderThickness="{ThemeResource ContentDialogBorderWidth}"
                                     CornerRadius="{Binding CornerRadius, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
