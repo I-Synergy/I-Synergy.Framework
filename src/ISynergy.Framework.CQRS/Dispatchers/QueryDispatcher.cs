@@ -1,9 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
 using ISynergy.Framework.CQRS.Abstractions.Dispatchers;
 using ISynergy.Framework.CQRS.Dispatch;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.CQRS.Dispatchers;
 
@@ -38,8 +38,6 @@ public class QueryDispatcher : IQueryDispatcher
     }
 
     /// <inheritdoc/>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection fallback is only reached when QueryDispatchTable is absent. AOT builds must register a dispatch table via AddQueryDispatchTable().")]
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection fallback is only reached when QueryDispatchTable is absent. AOT builds must register a dispatch table via AddQueryDispatchTable().")]
     public async Task<TResult> DispatchAsync<TResult>(
         IQuery<TResult> query,
         CancellationToken cancellationToken = default)

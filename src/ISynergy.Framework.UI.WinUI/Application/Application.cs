@@ -16,7 +16,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Windows.UI;
 
@@ -220,8 +219,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "ConfigurationBinder.GetValue<string> is called with a primitive type (string) which is always trim-safe.")]
     protected virtual void InitializeEnvironmentVariables()
     {
         try

@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -261,8 +260,6 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns></returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(Type) is called with typeof() arguments known at compile time via generic type parameters. Types are preserved through DI registration.")]
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>()
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
@@ -296,8 +293,6 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <param name="e">The selected item.</param>
     /// <returns>Task{TEntity}.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(Type) is called with typeof() arguments known at compile time via generic type parameters. Types are preserved through DI registration.")]
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(TEntity e)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
@@ -362,8 +357,6 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// <param name="type">The type.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(Type) is called with a runtime Type argument. Callers must ensure the window type is preserved. This overload is preserved for backwards compatibility.")]
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
         Argument.IsNotNull(type);

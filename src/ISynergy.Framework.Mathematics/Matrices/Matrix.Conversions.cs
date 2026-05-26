@@ -1,8 +1,8 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Vectors;
-using System.Diagnostics.CodeAnalysis;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -754,7 +754,6 @@ public static partial class Matrix
     /// DataTable dataTable = data.ToTable();
     /// </code>
     /// </example>
-    [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "GetType() and GetHighestEnclosingType() return runtime types passed to DataColumnCollection.Add; this method is not AOT-safe by design.")]
     public static DataTable ToTable(this object[,] matrix, string[] columnNames)
     {
         var table = new DataTable();

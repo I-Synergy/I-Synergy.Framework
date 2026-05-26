@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
@@ -145,8 +144,6 @@ public class NavigationService : BaseNavigationService
     /// Gets a navigation blade for the specified ViewModel.
     /// WinUI-specific: checks for <see cref="ISelectionViewModel"/> and resolves a <see cref="SelectionView"/> when applicable.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRelatedViewType() and GetRequiredService(Type) use reflection/runtime-type lookup. All view and ViewModel types are preserved through DI registration.")]
     protected override async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
         var viewType = default(Type);

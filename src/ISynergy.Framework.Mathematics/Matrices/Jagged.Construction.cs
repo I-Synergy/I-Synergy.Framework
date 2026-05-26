@@ -531,8 +531,6 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "KHot<double> is safe for AOT as double is a known type.")]
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "KHot<double> is safe for AOT as double is a known type.")]
     public static double[][] KHot(bool[][] mask, int columns)
     {
         return KHot(mask, Jagged.Create<double>(mask.Length, columns));

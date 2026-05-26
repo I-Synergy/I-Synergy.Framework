@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Services;
 
@@ -19,8 +18,6 @@ public sealed class BusyService : ObservableClass, IBusyService
     /// <summary>
     /// Gets the LanguageService's default instance.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2112", Justification = "Default property getter creates a LanguageService which uses ResourceManager. Only called in non-AOT scenarios.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "LanguageService() uses ResourceManager. BusyService.Default is a convenience path not intended for AOT scenarios.")]
     public static IBusyService Default
     {
         get

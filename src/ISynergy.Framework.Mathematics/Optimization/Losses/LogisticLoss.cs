@@ -1,7 +1,6 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
-using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -47,8 +46,6 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     ///     Initializes a new instance of the <see cref="LogisticLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Jagged.OneHot<bool> is safe for AOT as bool is a known type.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Jagged.OneHot<bool> is safe for AOT as bool is a known type.")]
     public LogisticLoss(int[] expected)
     {
         if (Classes.IsMinusOnePlusOne(expected))

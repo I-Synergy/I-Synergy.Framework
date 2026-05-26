@@ -2,8 +2,6 @@ using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
-using ISynergy.Framework.Mathematics.Statistics;
-using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -95,8 +93,6 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
     /// <summary>
     ///     Gets standard error for each parameter in the solution.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Calls JaggedSingularValueDecomposition.Inverse() which operates on Double[][] - a well-known type safe for trimming.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Calls JaggedSingularValueDecomposition.Inverse() which operates on Double[][] - a well-known type safe for AOT.")]
     public double[] StandardErrors => decomposition.Inverse().Diagonal().Sqrt();
     /// <summary>
     ///     Attempts to find the best values for the parameter vector

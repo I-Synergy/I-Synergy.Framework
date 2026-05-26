@@ -349,7 +349,6 @@ public class MatNode : IEnumerable<MatNode>
     ///     Its type can be known by checking the <see cref="Type" />
     ///     property of this node.
     /// </summary>
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Callers must use MatReader constructors which are already annotated with [RequiresDynamicCode].")]
     public object Value
     {
         get

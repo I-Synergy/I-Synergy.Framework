@@ -528,8 +528,6 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Opens a blade with a custom defined view.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "GetRequiredService(typeof(TView)) is called with a compile-time generic type argument. The type is preserved through DI registration.")]
     public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
         where TView : IView
     {

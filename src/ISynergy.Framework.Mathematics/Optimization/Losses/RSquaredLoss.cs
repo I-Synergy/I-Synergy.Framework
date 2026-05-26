@@ -1,7 +1,6 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 using ISynergy.Framework.Mathematics.Vectors;
-using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -59,8 +58,6 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
     /// <param name="numberOfInputs">The number if variables being fit.</param>
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
     public RSquaredLoss(int numberOfInputs, double[] expected)
     {
         Expected = Jagged.ColumnVector(expected);
@@ -73,8 +70,6 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
     /// <param name="numberOfInputs">The number if variables being fit.</param>
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
     public RSquaredLoss(int numberOfInputs, double[][] expected)
     {
         Expected = expected;

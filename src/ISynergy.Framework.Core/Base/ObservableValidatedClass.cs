@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 #pragma warning disable S3172 // delegate subtraction is intentional for event handler cleanup
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -63,7 +62,6 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Equality comparison intentionally uses runtime reflection. Not safe for AOT, but this is a framework base class fallback.")]
     public override bool Equals(object? obj) // NOSONAR
     {
         if (ReferenceEquals(this, obj))
@@ -208,7 +206,6 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// </summary>
     /// <param name="validateUnderlayingProperties">if set to <c>true</c>, validates underlying properties that implement <see cref="IObservableValidatedClass"/>.</param>
     /// <returns><c>true</c> if validation passed; otherwise, <c>false</c>.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "GetProperties() is called on 'this' type and PropertyType.GetInterfaces(). These types are preserved by the application since they are registered ObservableValidatedClass implementations.")]
     public bool Validate(bool validateUnderlayingProperties = true)
     {
         ClearErrors();

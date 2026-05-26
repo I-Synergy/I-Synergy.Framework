@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using HostOptions = ISynergy.Framework.UI.Options.HostOptions;
 
@@ -126,8 +125,6 @@ public sealed class WindowsAppSdkHostBuilder<TApp> : IHostApplicationBuilder
         return host;
     }
 
-    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026:UnrecognizedReflectionPattern",
-        Justification = "The values being passed into Write are being consumed by the application already.")]
     private static void Write<T>(DiagnosticSource diagnosticSource, string name, T value)
         => diagnosticSource.Write(name, value);
 
