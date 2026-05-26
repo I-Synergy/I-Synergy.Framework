@@ -139,8 +139,6 @@ public partial class BladeView : UserControl, IDisposable
         this.HorizontalAlignment = HorizontalAlignment.Stretch;
         this.Orientation = Orientation.Horizontal;
         this.BladeSpacing = 10;
-        if (Microsoft.UI.Xaml.Application.Current?.Resources.TryGetValue("ApplicationPageBackgroundThemeBrush", out var brush) == true && brush is Brush themeBrush)
-            this.DisabledBackground = themeBrush;
         this.DisabledOpacity = 0.75;
     }
 

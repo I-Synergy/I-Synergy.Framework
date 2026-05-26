@@ -173,7 +173,11 @@
         <Setter Property="Background" Value="{ThemeResource TintedBackgroundBrush}" />
     </Style>
 
-    <!-- Page/Content background -->
+    <!-- Implicit Page style: transparent so BladeView tinted background shows through -->
+    <Style TargetType="Page">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
     <Style x:Key="DefaultPageStyle" TargetType="Page">
         <Setter Property="Background" Value="{ThemeResource TintedBackgroundBrush}" />
     </Style>

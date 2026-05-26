@@ -6,11 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="BladeViewControl"
-    Background="{ThemeResource TintedBackgroundBrush}"
     mc:Ignorable="d">
 
-    <Grid Background="{Binding DisabledBackground, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Opacity="{Binding DisabledOpacity, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-        <ListBox Padding="{Binding InnerPadding, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ItemsSource, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+    <Grid>
+        <Border
+            x:Name="BackdropBorder"
+            Background="#BF14232F" />
+        <ListBox
+            Background="Transparent"
+            Padding="{Binding InnerPadding, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+            ItemsSource="{Binding ItemsSource, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel
@@ -27,6 +32,7 @@
                             <ControlTemplate TargetType="ListBoxItem">
                                 <Grid
                                     HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Background="{ThemeResource TintedBackgroundBrush}"
                                     BorderBrush="{ThemeResource SurfaceStrokeColorDefault}"
                                     BorderThickness="{ThemeResource ContentDialogBorderWidth}"
                                     CornerRadius="{Binding CornerRadius, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
