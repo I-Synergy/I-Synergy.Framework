@@ -11,7 +11,8 @@
     <Grid>
         <Border
             x:Name="BackdropBorder"
-            Background="#BF14232F" />
+            Background="{ThemeResource TintedBackgroundBrush}"
+            Opacity="0.75" />
         <ListBox
             Background="Transparent"
             Padding="{Binding InnerPadding, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
