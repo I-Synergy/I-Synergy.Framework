@@ -434,7 +434,6 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                         if (sender is IViewModelDialog<TEntity> vm)
                             vm.Closed -= viewModelClosedHandler;
 
-                        window.ViewModel?.Dispose();
                         await window.CloseAsync();
                     }
                     catch (Exception ex)

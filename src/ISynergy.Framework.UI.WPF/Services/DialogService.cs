@@ -231,7 +231,6 @@ public class DialogService : BaseDialogService, IDialogService
                 if (sender is IViewModelDialog<TEntity> vm)
                     vm.Closed -= ViewModelClosedHandler;
 
-                window.ViewModel?.Dispose();
                 window.Close();
             }
 

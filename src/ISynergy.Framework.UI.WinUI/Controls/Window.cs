@@ -164,13 +164,11 @@ public partial class Window : ContentDialog, IWindow
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing && _viewModel is not null)
-        {
-            _viewModel.Dispose();
-            _viewModel = null;
-        }
-
-        // free native resources if there are any.
+        // DO NOT dispose ViewModel here.
+        // The Window may be disposed by the DI scope after the dialog is shown
+        // but before it is closed. Disposing the ViewModel prematurely clears its
+        // Closed event, preventing the DialogService's close handler from firing.
+        // The ViewModel lifecycle is managed by the DialogService close handler.
     }
 #endif
     #endregion
