@@ -1,8 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 
 #pragma warning disable S3776 // cognitive complexity is inherent in sign-up constructor

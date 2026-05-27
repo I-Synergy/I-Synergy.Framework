@@ -578,9 +578,16 @@ public class DialogService : IDialogService, IDisposable
     {
         try
         {
-            using var scope = _scopeFactory.CreateScope();
+            var scope = _scopeFactory.CreateScope();
             if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
+            {
+                viewmodel.Closed += (_, _) => scope.Dispose();
                 await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
+            }
         }
         catch (Exception ex)
         {
@@ -632,9 +639,16 @@ public class DialogService : IDialogService, IDisposable
     {
         try
         {
-            using var scope = _scopeFactory.CreateScope();
+            var scope = _scopeFactory.CreateScope();
             if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
+            {
+                viewmodel.Closed += (_, _) => scope.Dispose();
                 await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
+            }
         }
         catch (Exception ex)
         {
@@ -771,15 +785,9 @@ public class DialogService : IDialogService, IDisposable
                 _logger?.LogWarning("Modal pop failed; the page may still be visible on the navigation stack");
             }
 
-            // Always clean up resources, even if PopModalAsync failed
-            try
-            {
-                viewModelRef?.Dispose();
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Error disposing viewmodel during dialog close");
-            }
+            // Always clean up window resources, even if PopModalAsync failed.
+            // The ViewModel lifecycle is managed by the DI scope (strongly-typed overloads)
+            // or the caller (Type/IWindow overloads) — do NOT dispose it here.
             viewModelRef = null;
 
             try

@@ -1,8 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -129,28 +129,28 @@ public class ControlsViewModel : ViewModelNavigation<object>
     /// Selects the multiple asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    private async Task SelectMultipleAsync()
+    private Task SelectMultipleAsync()
     {
         var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Multiple);
         selectionVm.SetItems(Items);
         selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        await _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     /// <summary>
     /// Selects the single asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    private async Task SelectSingleAsync()
+    private Task SelectSingleAsync()
     {
         var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
         selectionVm.SetSelectionMode(SelectionModes.Single);
         selectionVm.SetItems(Items);
         selectionVm.SetSelectedItems(SelectedTestItems);
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        await _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
+        return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
     /// <summary>
@@ -161,7 +161,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
     private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
-            vm.Submitted -= SelectionVm_SingleSubmitted;
+            vm.Submitted -= SelectionVm_MultipleSubmitted;
 
         SelectedTestItems = new ObservableCollection<TestItem>();
         SelectedTestItems.AddRange(e.Result);
