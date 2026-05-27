@@ -11,6 +11,8 @@ public abstract class View : ContentPage, IView
 {
     private const string WrapperMarkerValue = "__ISynergy_View_Wrapper__";
     private Label? _titleLabel;
+    private ScrollView? _scrollView;
+    private Grid? _contentGrid;
     private Microsoft.Maui.Controls.View? _originalContent;
     private bool _isWrapping = false;
 
@@ -49,6 +51,57 @@ public abstract class View : ContentPage, IView
         if (bindable is View view && view._titleLabel is not null)
         {
             view._titleLabel.IsVisible = (bool)newValue;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets whether the content should be scrollable.
+    /// Default is true. When false, content is placed directly in the grid without a ScrollView.
+    /// </summary>
+    public bool Scrollable
+    {
+        get => (bool)GetValue(ScrollableProperty);
+        set => SetValue(ScrollableProperty, value);
+    }
+
+    /// <summary>
+    /// Bindable property for Scrollable.
+    /// </summary>
+    public static readonly BindableProperty ScrollableProperty =
+        BindableProperty.Create(
+            nameof(Scrollable),
+            typeof(bool),
+            typeof(View),
+            defaultValue: true,
+            propertyChanged: OnScrollableChanged);
+
+    private static void OnScrollableChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is View view && view._contentGrid is not null && view._originalContent is not null)
+        {
+            var scrollable = (bool)newValue;
+
+            if (scrollable && view._scrollView is null)
+            {
+                // Replace content in grid row 1 with a ScrollView
+                view._contentGrid.Children.RemoveAt(1);
+                view._scrollView = new ScrollView
+                {
+                    Content = view._originalContent,
+                    Orientation = ScrollOrientation.Vertical,
+                    VerticalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill
+                };
+                view._contentGrid.Add(view._scrollView, 0, 1);
+            }
+            else if (!scrollable && view._scrollView is not null)
+            {
+                // Replace ScrollView in grid row 1 with the content directly
+                view._contentGrid.Children.RemoveAt(1);
+                view._scrollView.Content = null;
+                view._scrollView = null;
+                view._contentGrid.Add(view._originalContent, 0, 1);
+            }
         }
     }
 
@@ -137,14 +190,37 @@ public abstract class View : ContentPage, IView
 
             _titleLabel.SetDynamicResource(Label.TextColorProperty, "Primary");
 
-            // Create vertical stack layout with title and content
-            VerticalStackLayout contentStackLayout = new VerticalStackLayout
+            // Create a grid with title row (auto) and content row (star).
+            // The star row constrains the content to the remaining space.
+            _contentGrid = new Grid
             {
-                Spacing = 0
+                RowDefinitions =
+                {
+                    new RowDefinition(GridLength.Auto),
+                    new RowDefinition(GridLength.Star)
+                }
             };
 
-            contentStackLayout.Children.Add(_titleLabel);
-            contentStackLayout.Children.Add(content);
+            _contentGrid.Add(_titleLabel, 0, 0);
+
+            if (Scrollable)
+            {
+                // Wrap the original content in a ScrollView so it scrolls when it
+                // exceeds available space instead of extending the page height.
+                // Only vertical scrolling is supported.
+                _scrollView = new ScrollView
+                {
+                    Content = content,
+                    Orientation = ScrollOrientation.Vertical,
+                    VerticalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill
+                };
+                _contentGrid.Add(_scrollView, 0, 1);
+            }
+            else
+            {
+                _contentGrid.Add(content, 0, 1);
+            }
 
             // Create the busy indicator with overlay
             BusyIndicator indicatorControl = new BusyIndicator()
@@ -156,11 +232,11 @@ public abstract class View : ContentPage, IView
 
             // Create main grid to hold content and overlay
             Grid mainGrid = new Grid();
-            
+
             // Mark this Grid as our wrapper using the attached property
             mainGrid.SetValue(WrapperMarkerProperty, WrapperMarkerValue);
-            
-            mainGrid.Children.Add(contentStackLayout);
+
+            mainGrid.Children.Add(_contentGrid);
             mainGrid.Children.Add(indicatorControl);
 
             // Set the wrapped content

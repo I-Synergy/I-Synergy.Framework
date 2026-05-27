@@ -8,7 +8,8 @@
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:SlideShowViewModel"
     NavigationPage.HasNavigationBar="False"
-    ShowTitle="False">
+    ShowTitle="False"
+    Scrollable="False">
 
     <c:View.Resources>
         <converters:UriToImageSourceConverter x:Key="UriToImageSourceConverter"/>
