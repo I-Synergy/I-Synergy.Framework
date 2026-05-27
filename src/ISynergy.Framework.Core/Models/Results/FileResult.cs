@@ -20,7 +20,13 @@ public sealed class FileResult : IDisposable
     /// <summary>
     /// Function to get a stream to the picked file.
     /// </summary>
-    private readonly Func<Stream> _streamGetter;
+    private readonly Func<Stream>? _streamGetter;
+
+    /// <summary>
+    /// Async function to get a stream to the picked file.
+    /// Takes precedence over <see cref="_streamGetter"/> when both are set.
+    /// </summary>
+    private readonly Func<Task<Stream>>? _asyncStreamGetter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FileResult"/> class.
@@ -34,6 +40,20 @@ public sealed class FileResult : IDisposable
         _fileName = Path.GetFileName(_filePath);
         _dispose = dispose;
         _streamGetter = streamGetter;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileResult"/> class with an async stream getter.
+    /// </summary>
+    /// <param name="filePath">The file path.</param>
+    /// <param name="asyncStreamGetter">The async stream getter.</param>
+    /// <param name="dispose">The dispose.</param>
+    public FileResult(string filePath, Func<Task<Stream>> asyncStreamGetter, Action<bool>? dispose = null)
+    {
+        _filePath = filePath;
+        _fileName = Path.GetFileName(_filePath);
+        _dispose = dispose;
+        _asyncStreamGetter = asyncStreamGetter;
     }
 
     /// <summary>
@@ -78,7 +98,26 @@ public sealed class FileResult : IDisposable
         if (_isDisposed)
             throw new ObjectDisposedException(null);
 
-        return _streamGetter();
+        if (_asyncStreamGetter is not null)
+            return Task.Run(async () => await _asyncStreamGetter()).GetAwaiter().GetResult();
+
+        return _streamGetter!();
+    }
+
+    /// <summary>
+    /// Gets a stream to access the picked file asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task{Stream}"/> representing the async stream operation.</returns>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    public async Task<Stream> GetStreamAsync()
+    {
+        if (_isDisposed)
+            throw new ObjectDisposedException(null);
+
+        if (_asyncStreamGetter is not null)
+            return await _asyncStreamGetter();
+
+        return _streamGetter!();
     }
 
     /// <summary>
