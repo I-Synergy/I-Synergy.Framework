@@ -132,8 +132,6 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
 
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing);
-
         if (disposing)
         {
             if (SlideshowTimer is not null)
@@ -150,5 +148,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
                 UpdateSourceTimer.Dispose();
             }
         }
+
+        base.Dispose(disposing);
     }
 }

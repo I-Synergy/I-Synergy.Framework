@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 
@@ -17,6 +18,14 @@ namespace ISynergy.Framework.UI.Controls;
 public abstract partial class View : Page, IView
 {
     private IViewModel? _viewModel;
+    private bool _isWrapped;
+    private FrameworkElement? _originalContent;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the view content should be scrollable.
+    /// Default is true.
+    /// </summary>
+    public bool Scrollable { get; set; } = true;
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
@@ -39,6 +48,47 @@ public abstract partial class View : Page, IView
             _viewModel = value;
             DataContext = value;
         }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the View class.
+    /// </summary>
+    protected View()
+    {
+        Loaded += OnViewLoaded;
+    }
+
+    private void OnViewLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnViewLoaded;
+
+        if (!_isWrapped && Content is not null && Scrollable)
+            WrapContent();
+    }
+
+    private void WrapContent()
+    {
+        if (_isWrapped || Content is not FrameworkElement content)
+            return;
+
+        _originalContent = content;
+
+        // Detach from Page before adding to ScrollViewer.
+        // A FrameworkElement can only have one parent in the visual tree.
+        Content = null;
+
+        _isWrapped = true;
+
+        var scrollViewer = new ScrollViewer
+        {
+            Content = _originalContent,
+            VerticalScrollMode = ScrollMode.Auto,
+            HorizontalScrollMode = ScrollMode.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+        };
+
+        Content = scrollViewer;
     }
 
     #region IDisposable
