@@ -1,8 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -113,7 +113,7 @@ public class ControlsViewModel : ViewModelNavigation<object>
         await _dialogService.ShowDialogAsync(typeof(ITestExceptionWindow), testVm);
     }
 
-    private void TestVm_Submitted(object? sender, SubmitEventArgs<object> e)
+    private void TestVm_Submitted(object? sender, SubmitEventArgs<TestItem> e)
     {
         // Intentionally empty: this handler is subscribed to clean up the event subscription,
         // but no action is required when the test exception dialog is submitted.
