@@ -1,75 +1,69 @@
-# Project Development Preferences (CUSTOMIZE THIS)
-
-**Instructions:** Copy this template and customize for your specific project preferences.
-
-**Purpose:** This file defines HOW you prefer to work - your personal workflow, communication style, and development approach.
+# Project Development Preferences — I-Synergy Framework
 
 ## Working Relationship
 
 ### Communication Style
-- **Formality level:** [Direct and concise / Detailed explanations / etc.]
-- **Sycophancy:** [No sycophancy / Be encouraging / etc.]
-- **Challenge my thinking:** [Yes / No / Only when critical]
-- **Timeline estimates:** [Never include / Always include / Include when asked]
-- **Git co-authorship:** [Don't add Claude / Add Claude / etc.]
+- **Formality level:** Direct and concise — technical first, explanations where architecture or design decisions need rationale
+- **Sycophancy:** None — challenge incorrect assumptions and flag risks directly
+- **Challenge my thinking:** Yes — always flag correctness issues, SOLID violations, or patterns that contradict critical-rules.md
+- **Timeline estimates:** Include when asked, otherwise focus on what needs to be done
 
 ### Problem-Solving Approach
-- **Shortcuts vs. Correct fixes:** [Always correct fix / Quick fixes acceptable for prototypes / etc.]
-- **Bug fixing:** [Fix immediately / Create ticket / Ask first]
-- **Technical debt:** [Never acceptable / Acceptable with documentation / etc.]
-- **Assumption handling:** [Always verify / Ask when uncertain / Proceed with reasonable assumptions]
-- **"Good enough" threshold:** [Production-ready only / Prototype-acceptable / etc.]
-- **Decision-making:** [User decides all tradeoffs / Agent autonomy for technical details / etc.]
+- **Shortcuts vs. Correct fixes:** Always correct fix — this is a reusable framework library published to NuGet; shortcuts become breaking changes for all consumers
+- **Bug fixing:** Fix immediately with a clear root-cause analysis; do not patch symptoms
+- **Technical debt:** Acceptable only with documentation and a plan — must be tracked in `.ai/plans/`
+- **Assumption handling:** Always verify against the actual codebase — search_content before claiming a pattern exists or doesn't
+- **"Good enough" threshold:** Production-ready only — this is a NuGet-published framework consumed by external projects
+- **Decision-making:** Agent autonomy for technical details within established patterns; user decides cross-cutting trade-offs (API breaks, dependency additions, target framework changes)
 
 ## Development Workflow
 
 ### Autonomy Level
-- **Agent access:** [Full repository access / Read-only / Specific directories only]
-- **Execution model:** [Execute without asking / Ask before major changes / Ask for everything]
-- **Progress tracking:** [Real-time automatic updates / Status on request / etc.]
+- **Agent access:** Full repository access
+- **Execution model:** Execute without asking for well-scoped fixes within established patterns; submit_plan for multi-file refactors, dependency additions, API surface changes, or any NuGet-published interface changes
+- **Progress tracking:** Real-time automatic updates via `.ai/progress/` files for any task with 3+ steps
 
 ### Documentation Preferences
-- **XML docs:** [All public APIs / Public interfaces only / Optional]
-- **Code comments:** [For complex logic only / Extensively / Minimal]
-- **Architecture docs:** [Mermaid diagrams required / Text only / Optional]
-- **README updates:** [With every feature / Major changes only / Manual]
+- **XML docs:** All public APIs — this is a NuGet library consumed by external developers; every public type, method, and parameter must have `<summary>` and parameter docs
+- **Code comments:** For complex logic only — document the *why*, not the *what*
+- **Architecture docs:** Text with code examples preferred; Mermaid for complex flow diagrams only
+- **README updates:** With every structural change — README has auto-reconciliation hooks in `.claude/settings.json`
 
 ## Code Style
 
 ### Language Features
-- **Immutability:** [Records preferred / Classes with init / Mixed]
-- **Null handling:** [Nullable reference types enabled / Optional / Disabled]
-- **Expression-bodied members:** [Use extensively / Use sparingly / Avoid]
-- **Pattern matching:** [Use modern C# features / Conservative approach]
+- **Immutability:** Records preferred for DTOs, commands, queries; classes with `init` for entities
+- **Null handling:** Nullable reference types enabled (globally in `Directory.Build.props`)
+- **Expression-bodied members:** Use extensively for single-expression members
+- **Pattern matching:** Use modern C# patterns (switch expressions, property patterns, list patterns)
 
 ### Organization
-- **File organization:** [One class per file / Multiple if related / No preference]
-- **Namespace structure:** [Match folder structure / Flat / Custom]
-- **Using statements:** [Implicit global usings / Explicit / Minimal]
+- **File organization:** One public type per file; internal/private helpers may be combined if closely related
+- **Namespace structure:** Match folder structure — `ISynergy.Framework.{Module}` namespace per project
+- **Using statements:** Implicit global usings enabled via `Directory.Build.props` (`ImplicitUsings=enable`)
 
 ## Review & Quality Gates
 
 ### Pre-Submission Requirements
-- **Code review:** [Automated checklist / Manual review / Both]
-- **Build status:** [0 errors, 0 warnings / 0 errors only / Build succeeds]
-- **Test results:** [All pass / Critical pass / Optional]
-- **Documentation:** [Complete / API docs only / Optional]
+- **Code review:** Automated checklist (`pre-submission.md`) followed by subagent review (`reviewer` agent)
+- **Build status:** 0 errors, 0 warnings — warnings suppressed only via `NoWarn` in `Directory.Build.props` after explicit decision
+- **Test results:** All tests pass across all test projects
+- **Documentation:** Complete — XML docs on all public APIs, README in sync
 
 ### Quality Metrics
-- **Code coverage:** [80%+ / 70%+ / 60%+]
-- **Cyclomatic complexity:** [< 10 / < 15 / No limit]
-- **Method length:** [< 50 lines / < 100 lines / No limit]
+- **Code coverage:** No hard threshold, but all handlers must have unit tests and edge-case tests
+- **Cyclomatic complexity:** Keep methods readable; prefer extraction over nested conditionals
+- **Method length:** < 50 lines for handlers and endpoints; utility methods flexible
 
 ## Session Context Integration
 
-**How this integrates with session-context.md:**
-
-When starting a new session, Claude should:
+**When starting a new session:**
 1. Read this preferences file
-2. Apply these preferences to all work
-3. Document preference-based decisions in session-context.md
-4. Never re-ask questions answered here
+2. Read `.ai/session-context.md` and `.ai/completed/` for context
+3. Apply these preferences to all work
+4. Document preference-based decisions in session-context.md
+5. Never re-ask questions answered here
 
 ---
 
-**Remember:** This file defines your personal working style. For technology choices, see [tech-stack.md](tech-stack.md). For system design, see [architecture.md](architecture.md).
+**Note:** This is a reusable framework library (`ISynergy.Framework.*`), not an application with business domains. The CQRS/entity patterns documented in critical-rules.md and templates are for consuming applications built on top of this framework. For technology choices, see [tech-stack.md](tech-stack.md). For architecture, see [architecture.md](architecture.md).

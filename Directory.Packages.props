@@ -76,7 +76,7 @@
     <PackageVersion Include="MSTest.TestAdapter" Version="4.2.3" />
     <PackageVersion Include="MSTest.TestFramework" Version="4.2.3" />
     <PackageVersion Include="NodaTime" Version="3.3.2" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
     <PackageVersion Include="NuGet.Commands" Version="7.6.0" />
     <PackageVersion Include="OpenTelemetry" Version="1.15.3" />
@@ -93,8 +93,8 @@
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.4" />
     <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.4" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry" Version="6.5.0" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.5.0" />
+    <PackageVersion Include="Sentry" Version="6.6.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.6.0" />
     <PackageVersion Include="SkiaSharp" Version="3.119.4" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.2.8" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.2.8" />

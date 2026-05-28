@@ -1,283 +1,167 @@
-# Business Domains (CUSTOMIZE THIS)
+# Library Modules Catalog
 
-**Instructions:** Document your project's business domains and entities.
+> **Note:** This repository is a reusable framework library (`ISynergy.Framework.*`), not an application with business domains. This file catalogs the framework's library modules (src/ projects) instead of business domains.
 
-**Purpose:** This file defines WHAT you're building - business contexts, entities, rules, and domain relationships.
+## Module Overview
 
-## Domain Overview
+**Total Modules:** 50+ NuGet-packageable libraries under `src/`
 
-**Total Domains:** [Number]
+**Organization Strategy:** Modular monorepo organized by capability — each `src/ISynergy.Framework.{Module}/` project is a self-contained NuGet package with minimal dependencies.
 
-**Organization Strategy:** [How domains are organized - by business capability / by team / by module]
+## Module List
 
-## Domain List
+### Core & Architecture
 
-| Domain | Purpose | Status | Team/Owner |
-|--------|---------|--------|------------|
-| [{Domain1}] | [Business purpose] | [Active / Planned / Deprecated] | [Team/Person] |
-| [{Domain2}] | [Business purpose] | [Active / Planned / Deprecated] | [Team/Person] |
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **Core** | `I-Synergy.Framework.Core` | Base classes, abstractions, utilities, messaging, extension methods | Active |
+| **CQRS** | `I-Synergy.Framework.CQRS` | Command Query Responsibility Segregation — ICommand, IQuery, dispatcher, handlers | Active |
+| **Mvvm** | `I-Synergy.Framework.Mvvm` | MVVM pattern — ViewModel base classes, messaging, selection, wizard patterns | Active |
+| **Automations** | `I-Synergy.Framework.Automations` | Rule-based automation engine — triggers, actions, conditions, schedules | Active |
+| **Synchronization** | `I-Synergy.Framework.Synchronization` | Data synchronization abstractions for offline/online scenarios | Active |
 
-**Example:**
-| Domain | Purpose | Status | Team/Owner |
-|--------|---------|--------|------------|
-| Budgets | Financial planning and tracking | Active | Finance Team |
-| Customers | Customer relationship management | Active | Sales Team |
-| Orders | Sales order processing | Planned | Operations Team |
+### Data & Persistence
 
----
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **EntityFramework** | `I-Synergy.Framework.EntityFramework` | EF Core DataContext base, audit fields, soft delete, query helpers | Active |
+| **EventSourcing** | `I-Synergy.Framework.EventSourcing` | Event store abstractions, aggregate roots, event replay | Active |
+| **EventSourcing.EntityFramework** | `I-Synergy.Framework.EventSourcing.EntityFramework` | EF Core-backed event store | Active |
+| **EventSourcing.Storage** | `I-Synergy.Framework.EventSourcing.Storage` | Storage-backed event store abstractions | Active |
+| **EventSourcing.Storage.Azure** | `I-Synergy.Framework.EventSourcing.Storage.Azure` | Azure Blob-backed event store | Active |
+| **EventSourcing.Storage.S3** | `I-Synergy.Framework.EventSourcing.Storage.S3` | AWS S3-backed event store | Active |
+| **Storage** | `I-Synergy.Framework.Storage` | Cloud storage abstractions (upload, download, CRUD) | Active |
+| **Storage.Azure** | `I-Synergy.Framework.Storage.Azure` | Azure Blob Storage implementation | Active |
+| **Storage.S3** | `I-Synergy.Framework.Storage.S3` | AWS S3 implementation | Active |
 
-## Domain Details
+### Communication & Messaging
 
-### {Domain1} Domain
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **MessageBus** | `I-Synergy.Framework.MessageBus` | Pub/sub message bus abstractions | Active |
+| **MessageBus.Azure** | `I-Synergy.Framework.MessageBus.Azure` | Azure Service Bus implementation | Active |
+| **MessageBus.RabbitMQ** | `I-Synergy.Framework.MessageBus.RabbitMQ` | RabbitMQ implementation | Active |
+| **Mail** | `I-Synergy.Framework.Mail` | Email sending abstractions | Active |
+| **Mail.Microsoft365** | `I-Synergy.Framework.Mail.Microsoft365` | Microsoft Graph / Microsoft 365 mail implementation | Active |
+| **Mail.SendGrid** | `I-Synergy.Framework.Mail.SendGrid` | SendGrid mail implementation | Active |
+| **Monitoring** | `I-Synergy.Framework.Monitoring` | Real-time monitoring via SignalR hubs | Active |
+| **Monitoring.Client** | `I-Synergy.Framework.Monitoring.Client` | SignalR client for monitoring consumers | Active |
 
-**Purpose:** [What this domain does in business terms]
+### Web & API Development
 
-**Bounded Context:** [What this domain is responsible for - its boundaries]
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **AspNetCore** | `I-Synergy.Framework.AspNetCore` | ASP.NET Core middleware, filters, extensions, health checks | Active |
+| **AspNetCore.Authentication** | `I-Synergy.Framework.AspNetCore.Authentication` | JWT/OAuth2 authentication middleware | Active |
+| **AspNetCore.Blazor** | `I-Synergy.Framework.AspNetCore.Blazor` | Blazor Server/WebAssembly integration components | Active |
+| **AspNetCore.Globalization** | `I-Synergy.Framework.AspNetCore.Globalization` | Multi-language localization middleware | Active |
+| **AspNetCore.Monitoring** | `I-Synergy.Framework.AspNetCore.Monitoring` | ASP.NET monitoring integration (metrics, health) | Active |
+| **AspNetCore.MultiTenancy** | `I-Synergy.Framework.AspNetCore.MultiTenancy` | Multi-tenant resolution and data isolation | Active |
 
-**Entities:**
+### UI & Client Frameworks
 
-| Entity | Description | Aggregate Root? | Key Properties |
-|--------|-------------|-----------------|----------------|
-| [{Entity1}] | [What it represents] | [Yes / No] | [Key properties] |
-| [{Entity2}] | [What it represents] | [Yes / No] | [Key properties] |
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **UI** | `I-Synergy.Framework.UI` | Shared UI base — dialogs, navigation, theming, converters | Active |
+| **UI.Maui** | `I-Synergy.Framework.UI.Maui` | MAUI controls, services, platform integration | Active |
+| **UI.WinUI** | `I-Synergy.Framework.UI.WinUI` | WinUI 3 controls, services, platform integration | Active |
+| **UI.WPF** | `I-Synergy.Framework.UI.WPF` | WPF controls, services, platform integration | Active |
+| **UI.Blazor** | `I-Synergy.Framework.UI.Blazor` | Blazor component library | Active |
 
-**Example:**
-| Entity | Description | Aggregate Root? | Key Properties |
-|--------|-------------|-----------------|----------------|
-| Budget | Financial budget period | Yes | Name, Amount, StartDate, EndDate |
-| Goal | Savings goal within budget | No | Name, TargetAmount, CurrentAmount |
-| Debt | Debt to pay off | No | Creditor, TotalAmount, OutstandingAmount |
+### Key Vault & Secrets
 
-**Domain Events:**
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **KeyVault** | `I-Synergy.Framework.KeyVault` | Secrets management abstractions | Active |
+| **KeyVault.Azure** | `I-Synergy.Framework.KeyVault.Azure` | Azure Key Vault implementation | Active |
+| **KeyVault.OpenBao** | `I-Synergy.Framework.KeyVault.OpenBao` | OpenBao (Vault) implementation | Active |
 
-- [{Entity}Created] - [When fired and why it matters]
-- [{Entity}Updated] - [When fired and why it matters]
-- [{Entity}Deleted] - [When fired and why it matters]
+### Monitoring & Observability
 
-**Example:**
-- [BudgetCreated] - When a new budget is successfully created; triggers notification to user
-- [GoalAchieved] - When a goal reaches its target amount; triggers celebration notification
-- [DebtPaidOff] - When debt outstanding amount reaches zero; triggers credit score update
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **OpenTelemetry** | `I-Synergy.Framework.OpenTelemetry` | OpenTelemetry configuration, tracing, metrics | Active |
+| **OpenTelemetry.ApplicationInsights** | `I-Synergy.Framework.OpenTelemetry.ApplicationInsights` | Azure Application Insights exporter | Active |
+| **OpenTelemetry.Sentry** | `I-Synergy.Framework.OpenTelemetry.Sentry` | Sentry error monitoring exporter | Active |
 
-**Business Rules:**
+### Specialized Libraries
 
-1. [Rule 1] - [Description and rationale]
-2. [Rule 2] - [Description and rationale]
-3. [Rule 3] - [Description and rationale]
+| Module | Package ID | Purpose | Status |
+|--------|-----------|---------|--------|
+| **Documents** | `I-Synergy.Framework.Documents` | Document processing abstractions | Active |
+| **Documents.Syncfusion** | `I-Synergy.Framework.Documents.Syncfusion` | Syncfusion document processing (PDF, Excel, Word) | Active |
+| **Financial** | `I-Synergy.Framework.Financial` | Financial calculations, currency, VAT | Active |
+| **Geography** | `I-Synergy.Framework.Geography` | Geography types, coordinates, distance calculations | Active |
+| **Mathematics** | `I-Synergy.Framework.Mathematics` | Mathematical utilities and extensions | Active |
+| **Physics** | `I-Synergy.Framework.Physics` | Physics types, units, conversions | Active |
+| **IO** | `I-Synergy.Framework.IO` | I/O utilities, watchers, file system helpers | Active |
+| **Printer.Label** | `I-Synergy.Framework.Printer.Label` | Label printing abstractions | Active |
+| **Printer.Label.Dymo** | `I-Synergy.Framework.Printer.Label.Dymo` | DYMO LabelWriter implementation | Active |
 
-**Example:**
-1. Budget amount must be positive - Cannot create negative budgets
-2. Goals total cannot exceed budget amount - Prevents over-allocation of funds
-3. Debt payment date cannot be in the past - Ensures valid payment scheduling
-4. Budget dates cannot overlap for same user - Prevents ambiguous period assignment
+## Module Dependencies
 
-**Validation Rules:**
-
-| Field | Validation | Error Message |
-|-------|-----------|---------------|
-| [Field] | [Rule] | [Message] |
-
-**Example:**
-| Field | Validation | Error Message |
-|-------|-----------|---------------|
-| Budget.Name | Required, Max 100 chars | "Budget name is required and must be less than 100 characters" |
-| Budget.Amount | > 0, < 1,000,000 | "Budget amount must be between 0 and 1,000,000" |
-| Goal.TargetAmount | > 0 | "Goal target amount must be positive" |
-
-**Domain-Specific Patterns:**
-
-- [Pattern 1] - [Why used in this domain]
-- [Pattern 2] - [Why used in this domain]
-
-**Example:**
-- **Soft Delete** - Budget entities use soft delete (IsDeleted flag) to maintain historical data for reporting
-- **Cascade Archiving** - Deleting a budget marks all child goals/debts as archived, not deleted
-- **Temporal Data** - Budget has StartDate/EndDate for period-based queries and overlapping validation
-
-**Project Structure:**
-
-```
-{ApplicationName}.Contracts.{Domain}/       # Service contracts, interfaces
-{ApplicationName}.Entities.{Domain}/        # EF Core entity classes
-{ApplicationName}.Models.{Domain}/          # DTOs, view models
-{ApplicationName}.Domain.{Domain}/          # CQRS handlers, domain logic
-{ApplicationName}.Services.{Domain}/        # API endpoints
-{ApplicationName}.ViewModels.{Domain}/      # MVVM ViewModels (if applicable)
-```
-
-**Dependencies:**
-
-- **Depends On:** [Other domains this one depends on]
-- **Depended On By:** [Other domains that depend on this one]
-
-**Example:**
-- **Depends On:** None (core domain)
-- **Depended On By:** Reports (reads budget data), Analytics (aggregates budget metrics)
-
----
-
-### {Domain2} Domain
-
-[Repeat the same structure for each domain]
-
----
-
-## Cross-Domain Relationships
-
-**Document how domains interact:**
+All modules depend on `ISynergy.Framework.Core` either directly or transitively:
 
 ```
-[Visual representation of domain dependencies]
-
-Example:
-Orders ----reads----→ Customers (get customer details)
-Orders ----creates---→ Invoices (create invoice from order)
-Payments ----updates---→ Invoices (mark invoice as paid)
-Reports ----reads----→ All Domains (aggregate reporting data)
+Core (zero NuGet deps — only Microsoft.Extensions.*)
+├── CQRS, Mvvm, Automations, Synchronization
+├── EntityFramework → Core
+├── EventSourcing → Core, EntityFramework
+├── MessageBus → Core
+├── Storage → Core
+├── Mail → Core
+├── KeyVault → Core
+├── OpenTelemetry → Core
+├── UI → Core, Mvvm
+└── AspNetCore → Core
+    └── AspNetCore.* → AspNetCore
 ```
 
-**Relationship Details:**
+Leaf modules (Financial, Geography, Mathematics, Physics, IO, Printer.Label) depend only on Core.
 
-| Source Domain | Relationship | Target Domain | Method | Notes |
-|--------------|--------------|---------------|--------|-------|
-| [Domain1] | [reads/writes/creates] | [Domain2] | [How communicated] | [Why needed] |
+## Cross-Module Concepts
 
-**Example:**
-| Source Domain | Relationship | Target Domain | Method | Notes |
-|--------------|--------------|---------------|--------|-------|
-| Orders | reads | Customers | Direct reference | Get customer details for order |
-| Orders | creates | Invoices | Domain event | Create invoice when order completed |
-| Payments | updates | Invoices | API call | Mark invoice as paid |
-| Reports | reads | All | Read-only queries | Aggregate data for reporting |
-
-## Shared Concepts
-
-**Concepts used across multiple domains:**
-
-| Concept | Domains | Approach | Location |
+| Concept | Modules | Approach | Location |
 |---------|---------|----------|----------|
-| [Concept] | [Domain1, Domain2] | [Shared / Duplicated / Referenced] | [Where defined] |
-
-**Example:**
-| Concept | Domains | Approach | Location |
-|---------|---------|----------|----------|
-| Address | Customers, Suppliers, Invoices | Shared value object | Common.ValueObjects |
-| Money | Orders, Invoices, Payments | Shared value object with currency | Common.ValueObjects |
-| Person | Customers, Users, Contacts | Duplicated (different contexts) | Each domain |
-| AuditFields | All domains | Base entity | Common.Entities.BaseEntity |
-
-## Domain Maturity
-
-**Implementation maturity per domain:**
-
-| Domain | Maturity | Coverage | Technical Debt | Notes |
-|--------|----------|----------|----------------|-------|
-| [{Domain}] | [Initial / Growing / Mature] | [% complete] | [Low / Medium / High] | [Notes] |
-
-**Maturity Levels:**
-- **Initial:** Basic CRUD, minimal testing, incomplete features
-- **Growing:** Most features implemented, good test coverage, some edge cases missing
-- **Mature:** Complete implementation, comprehensive testing, production-ready, well-documented
-
-**Example:**
-| Domain | Maturity | Coverage | Technical Debt | Notes |
-|--------|----------|----------|----------------|-------|
-| Budgets | Mature | 100% | Low | Complete CRUD, full testing, comprehensive documentation |
-| Customers | Growing | 60% | Medium | Missing bulk operations, needs performance optimization |
-| Orders | Initial | 20% | Low | Basic create/read only, needs update/delete and validation |
+| **DataContext** | EntityFramework, EventSourcing.EntityFramework | Shared base class | `ISynergy.Framework.EntityFramework` |
+| **CQRS ICommand/IQuery** | CQRS, Mvvm | ICommand/IQuery interfaces | `ISynergy.Framework.CQRS` |
+| **ViewModel** | Mvvm, UI.* | ViewModel base classes | `ISynergy.Framework.Mvvm` |
+| **Storage abstractions** | Storage, Storage.Azure, Storage.S3 | Strategy pattern | `ISynergy.Framework.Storage` |
+| **Message bus** | MessageBus, MessageBus.Azure, MessageBus.RabbitMQ | Pub/sub abstractions | `ISynergy.Framework.MessageBus` |
+| **Event store** | EventSourcing.* | Event sourcing with multiple backends | `ISynergy.Framework.EventSourcing` |
 
 ## Reference Implementation
 
-**Which domain serves as the template:**
+**Primary Reference:** `ISynergy.Framework.Core` — The foundational module that all others build on. Demonstrates:
+- Base class patterns (ObservableClass, ObservableValidatedClass)
+- Service abstraction patterns (IBusyService, IMessageBus)
+- Extension method patterns (IServiceCollection extensions)
+- AOT/trim compatibility annotations
+- Source generator integration
 
-**Primary Reference:** [{Domain}] - [Why it's the reference]
+## Module Maturity
 
-**What to copy from the reference:**
-- [Aspect 1] - [What to learn from it]
-- [Aspect 2] - [What to learn from it]
-- [Aspect 3] - [What to learn from it]
+| Module | Maturity | Test Coverage | Notes |
+|--------|----------|---------------|-------|
+| Core | Mature | High | Most mature module, 30+ test files |
+| CQRS | Mature | High | Well-tested with full test project |
+| Mvvm | Mature | High | Extensive ViewModel hierarchy tested |
+| EntityFramework | Mature | High | Core data access layer |
+| EventSourcing | Growing | Medium | Multiple backend implementations |
+| UI.* | Growing | Medium | Platform-specific split, ongoing refactoring |
+| AspNetCore.* | Growing | Medium | Authentication & multi-tenancy tested |
+| MessageBus | Mature | High | Azure Service Bus + RabbitMQ |
+| OpenTelemetry | Growing | Medium | Multiple exporters |
 
-**Example:**
-
-**Primary Reference:** [Budgets] - Complete implementation with all CRUD operations, comprehensive testing, full documentation
-
-**What to copy from the reference:**
-- CQRS handler structure and naming conventions
-- API endpoint organization
-- Unit test structure with BDD scenarios
-- XML documentation style
-
-## Domain Evolution History
-
-**Track how domains have evolved over time:**
-
-### {Domain} Evolution
-
-**Version 1.0 (Date):**
-- [Feature 1]
-- [Feature 2]
-
-**Version 2.0 (Date):**
-- [Feature added]
-- [Refactoring done]
-- [Breaking change]
-
-**Example:**
-
-### Budgets Evolution
-
-**Version 1.0 (2025-01-01):**
-- Basic budget CRUD operations
-- Simple goal tracking
-- Basic validation
-
-**Version 2.0 (2025-02-01):**
-- Added debt management
-- Implemented recurring transactions
-- Added budget templates
-- Enhanced validation with business rules
-
-**Version 2.1 (2025-02-15):**
-- Performance optimization for large budget lists
-- Added budget category filtering
-- Implemented soft delete for historical data
-
-## Future Domains
-
-**Planned domains not yet implemented:**
-
-| Future Domain | Purpose | Priority | Dependencies | Estimated Effort |
-|---------------|---------|----------|--------------|------------------|
-| [Domain] | [Purpose] | [High / Medium / Low] | [Required domains] | [Small / Medium / Large] |
-
-**Example:**
-| Future Domain | Purpose | Priority | Dependencies | Estimated Effort |
-|---------------|---------|----------|--------------|------------------|
-| Analytics | Reporting and insights | Medium | Budgets, Orders | Medium |
-| Notifications | User notifications | Low | All domains | Small |
-| Workflows | Automated business workflows | High | Orders, Invoices | Large |
-
-## Domain Ubiquitous Language
-
-**Key terms used in each domain:**
-
-### {Domain} Terms
+## Ubiquitous Language
 
 | Term | Definition | Usage |
 |------|------------|-------|
-| [Term] | [Business definition] | [How used in code] |
-
-**Example:**
-
-### Budgets Terms
-
-| Term | Definition | Usage |
-|------|------------|-------|
-| Budget | A financial plan for a specific time period | Budget entity, BudgetModel DTO |
-| Goal | A savings target within a budget | Goal entity, child of Budget |
-| Allocation | Assignment of budget amount to categories | Property on Budget entity |
-| Rollover | Carrying unused budget to next period | Feature flag on Budget |
+| Module | A NuGet-packageable project under `src/` | Each `src/ISynergy.Framework.{Module}/` directory |
+| Framework | The entire monorepo of modules | `I-Synergy Framework` on NuGet |
+| Consumer | An application that uses framework NuGet packages | Sample projects, external customers |
+| DataContext | EF Core DbContext subclass provided by EntityFramework module | Base class for consumer data access |
 
 ---
 
-**Remember:** Keep this file updated as domains evolve. Reference it in session-context.md when working on specific domains. For architectural patterns, see [architecture.md](architecture.md). For technology choices, see [tech-stack.md](tech-stack.md).
+**Remember:** This is a framework library catalog, not a business domain list. For consuming-application domain patterns, see `critical-rules.md` and `cqrs-patterns.md`. For module architecture details, see [architecture.md](architecture.md).
