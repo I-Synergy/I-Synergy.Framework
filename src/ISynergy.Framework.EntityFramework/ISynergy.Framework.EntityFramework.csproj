@@ -1,13 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.EntityFramework</PackageId>
 		<Description>I-Synergy Entity Framework</Description>
 		<PackageTags>I-Synergy, Entity, Framework</PackageTags>
-	</PropertyGroup>
+  </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mapster" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
 	</ItemGroup>
 	

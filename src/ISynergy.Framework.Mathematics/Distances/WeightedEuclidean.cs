@@ -1,5 +1,12 @@
-﻿using ISynergy.Framework.Mathematics.Distances.Base;
+using ISynergy.Framework.Mathematics.Distances.Base;
 using ISynergy.Framework.Mathematics.Vectors;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.Distances;
 
@@ -15,18 +22,13 @@ namespace ISynergy.Framework.Mathematics.Distances;
 public struct WeightedEuclidean :
     IMetric<double[]>, ISimilarity<double[]>, ICloneable
 {
-    private double[] weights;
     /// <summary>
     /// Gets or sets the weights for each dimension. Default is a vector of ones.
     /// </summary>
-    /// 
+    ///
     /// <value>The weights.</value>
-    /// 
-    public double[] Weights
-    {
-        get { return weights; }
-        set { weights = value; }
-    }
+    ///
+    public double[] Weights { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WeightedEuclidean"/> struct.
@@ -34,7 +36,7 @@ public struct WeightedEuclidean :
     /// <param name="dimensions">The number of dimensions (columns) in the dataset.</param>
     public WeightedEuclidean(int dimensions)
     {
-        this.weights = Vector.Ones(dimensions);
+        Weights = Vector.Ones(dimensions);
     }
 
     /// <summary>
@@ -43,7 +45,7 @@ public struct WeightedEuclidean :
     /// <param name="weights">The weights.</param>
     public WeightedEuclidean(double[] weights)
     {
-        this.weights = weights;
+        Weights = weights;
     }
 
     /// <summary>
@@ -66,7 +68,7 @@ public struct WeightedEuclidean :
         for (var i = 0; i < x.Length; i++)
         {
             double u = x[i] - y[i];
-            sum += u * u * weights[i];
+            sum += u * u * Weights[i];
         }
         return Math.Sqrt(sum);
     }
@@ -91,6 +93,6 @@ public struct WeightedEuclidean :
     /// <returns>A new object that is a copy of this instance.</returns>
     public object Clone()
     {
-        return new WeightedEuclidean((double[])weights.Clone());
+        return new WeightedEuclidean((double[])Weights.Clone());
     }
 }

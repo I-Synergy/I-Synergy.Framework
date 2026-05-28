@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace ISynergy.Framework.Core.Abstractions.Base;
 
@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Abstractions.Base;
 /// Implements the <see cref="INotifyPropertyChanged" />
 /// </summary>
 /// <seealso cref="INotifyPropertyChanged" />
-public interface IModel : IObservableClass
+public interface IModel : IObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the version.

@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Mathematics.Convergence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Convergence;
+namespace ISynergy.Framework.Mathematics.Convergence;
 [TestClass]
 public class AbsoluteConvergenceTest
 {
@@ -84,6 +83,6 @@ public class AbsoluteConvergenceTest
     [TestMethod]
     public void AbsoluteConvergenceConstructorTest5()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new AbsoluteConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new AbsoluteConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
     }
 }

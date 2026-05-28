@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -238,16 +238,6 @@ public class ProcessInterface : IDisposable
     {
         //  Get the event and fire it.
         OnProcessError?.Invoke(this, new ProcessEventArgs(content));
-    }
-
-    /// <summary>
-    /// Fires the process input event.
-    /// </summary>
-    /// <param name="content">The content.</param>
-    private void FireProcessInputEvent(string content)
-    {
-        //  Get the event and fire it.
-        OnProcessInput?.Invoke(this, new ProcessEventArgs(content));
     }
 
     /// <summary>

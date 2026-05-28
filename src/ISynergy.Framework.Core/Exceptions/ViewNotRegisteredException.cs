@@ -1,4 +1,6 @@
-﻿namespace ISynergy.Framework.Core.Exceptions;
+using System.Runtime.Serialization;
+
+namespace ISynergy.Framework.Core.Exceptions;
 
 /// <summary>
 /// Class ViewNotRegisteredException.
@@ -18,4 +20,16 @@ public class ViewNotRegisteredException : Exception
         : base(message, innerException)
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ViewNotRegisteredException"/> class with serialized data.
+    /// </summary>
+    /// <param name="info">The object that holds the serialized object data.</param>
+    /// <param name="context">The contextual information about the source or destination.</param>
+#pragma warning disable SYSLIB0051
+    protected ViewNotRegisteredException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
+#pragma warning restore SYSLIB0051
 }

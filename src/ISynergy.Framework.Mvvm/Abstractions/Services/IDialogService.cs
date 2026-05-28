@@ -1,5 +1,6 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
@@ -15,7 +16,7 @@ public interface IDialogService
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowErrorAsync(Exception error, string title = "");
+    Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "");
 
     /// <summary>
     /// Shows the error asynchronous.
@@ -23,7 +24,7 @@ public interface IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowErrorAsync(string message, string title = "");
+    Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "");
 
     /// <summary>
     /// Shows the information asynchronous.
@@ -31,7 +32,7 @@ public interface IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowInformationAsync(string message, string title = "");
+    Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "");
 
     /// <summary>
     /// Shows the warning asynchronous.
@@ -39,7 +40,7 @@ public interface IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowWarningAsync(string message, string title = "");
+    Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "");
 
     /// <summary>
     /// Shows the greeting asynchronous.
@@ -54,8 +55,9 @@ public interface IDialogService
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
+    /// <param name="notificationTypes"></param>
     /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButton buttons = MessageBoxButton.OK);
+    Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default);
 
     /// <summary>
     /// Shows the dialog asynchronous.
@@ -87,6 +89,8 @@ public interface IDialogService
     /// <param name="window">The window.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
+    [RequiresUnreferencedCode(
+        "GetType() on the window instance is not trim-safe. Use ShowDialogAsync<TWindow,TViewModel,TEntity>() for AOT-safe dialog display.")]
     Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel);
 
     /// <summary>

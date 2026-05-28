@@ -1,6 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.UI.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Windows.Services.Store;
 
@@ -13,23 +12,27 @@ internal class UpdateService : IUpdateService
 {
     private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
+    private readonly ILanguageService _languageService;
 
-    private StoreContext? _storeContext = null;
-    private IReadOnlyList<StorePackageUpdate>? updates = null;
+    private StoreContext? _storeContext;
+    private IReadOnlyList<StorePackageUpdate>? _updates;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="languageService">The language service.</param>
+    /// <param name="logger"></param>
     public UpdateService(
         IDialogService dialogService,
-        ILoggerFactory loggerFactory)
+        ILanguageService languageService,
+        ILogger<UpdateService> logger)
     {
         _dialogService = dialogService;
+        _languageService = languageService;
 
-        _logger = loggerFactory.CreateLogger<UpdateService>();
-        _logger.LogTrace($"UpdateService instance created with ID: {Guid.NewGuid()}");
+        _logger = logger;
+        _logger.LogTrace("UpdateService instance created with ID: {InstanceId}", Guid.NewGuid());
 
 
     }
@@ -47,15 +50,17 @@ internal class UpdateService : IUpdateService
             if (_storeContext is null)
             {
 #if WINDOWS
+                if (Application.MainWindow is null)
+                    return result;
                 var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.MainWindow);
 
                 _storeContext = StoreContext.GetDefault();
 
                 WinRT.Interop.InitializeWithWindow.Initialize(_storeContext, hwnd);
 
-                updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
+                _updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
 
-                if (updates.Count > 0)
+                if (_updates.Count > 0)
                 {
                     result = true;
                 }
@@ -75,16 +80,16 @@ internal class UpdateService : IUpdateService
     /// </summary>
     public async Task DownloadAndInstallUpdateAsync()
     {
-        if (updates is not null && updates is not null && updates.Count > 0)
+        if (_updates is not null && _updates.Count > 0) // NOSONAR
         {
             // Download the packages.
             if (_storeContext is not null && _storeContext.CanSilentlyDownloadStorePackageUpdates)
             {
-                await DownloadAndInstallPackageUpdatesSilentlyAsync(updates);
+                await DownloadAndInstallPackageUpdatesSilentlyAsync(_updates);
             }
             else
             {
-                await DownloadAndInstallPackageUpdatesAsync(updates);
+                await DownloadAndInstallPackageUpdatesAsync(_updates);
             }
         }
     }
@@ -168,6 +173,6 @@ internal class UpdateService : IUpdateService
     private Task HandleMandatoryPackageErrorAsync()
     {
         return _dialogService.ShowErrorAsync(
-            LanguageService.Default.GetString("WarningMandatoryUpdateFailed"));
+            _languageService.GetString("WarningMandatoryUpdateFailed"));
     }
 }

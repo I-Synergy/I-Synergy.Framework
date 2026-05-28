@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization;
 [TestClass]
 public class CobylaTest
 {
@@ -188,7 +187,7 @@ public class CobylaTest
 
         Func<double> func = () => 1.0;
 
-        Assert.ThrowsException<ArgumentException>(() => new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= func()));
+        Assert.Throws<ArgumentException>(() => new NonlinearConstraint(2, x => x[0] * x[0] + x[1] * x[1] <= func()));
     }
 
     private static NonlinearConstraint[] create_constraints(double a)
@@ -212,8 +211,12 @@ public class CobylaTest
 
         Cobyla cobyla = new(function, constraints);
 
-        for (int i = 0; i < cobyla.Solution.Length; i++)
-            cobyla.Solution[i] = 1;
+        // Start at a feasible point with the correct sign for x[2] (the minimum requires x[2] < 0).
+        // Starting at [1,1,1] violates the constraint and is in the wrong half-space, causing
+        // COBYLA's linear approximation to converge to a suboptimal feasible point.
+        cobyla.Solution[0] = 0.5;
+        cobyla.Solution[1] = 0.4;
+        cobyla.Solution[2] = -0.3;
 
         Assert.IsTrue(cobyla.Minimize());
         double minimum = cobyla.Value;

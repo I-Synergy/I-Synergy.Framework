@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -14,13 +15,13 @@ namespace Sample.ViewModels;
 /// </summary>
 public class SlideShowViewModel : ViewModelNavigation<MediaItem>
 {
-    private readonly DispatcherQueue _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+    private readonly DispatcherQueue? _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
     /// <summary>
     /// Gets the title.
     /// </summary>
     /// <value>The title.</value>
-    public override string Title { get { return LanguageService.Default.GetString("Display"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("Display"); } }
 
     /// <summary>
     /// Gets or sets the Items property value.
@@ -56,8 +57,9 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     /// Initializes a new instance of the <see cref="SlideShowViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    public SlideShowViewModel(ICommonServices commonServices)
-        : base(commonServices)
+    /// <param name="logger"></param>
+    public SlideShowViewModel(ICommonServices commonServices, ILogger<SlideShowViewModel> logger)
+        : base(commonServices, logger)
     {
         UpdateSourceTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
         UpdateSourceTimer.Elapsed += UpdateSourceTimer_Tick;
@@ -67,10 +69,10 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
         // Get initial images from source.
         Items = new ObservableCollection<MediaItem>()
         {
-            new MediaItem { Index = 0, ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
-            new MediaItem { Index = 1, ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
-            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
-            new MediaItem { Index = 3, ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
+            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
+            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
         };
 
         // Set timer if images count is at least 1.
@@ -93,15 +95,15 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
 
         Task.Run(() =>
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            _dispatcherQueue?.TryEnqueue(() =>
             {
                 if ((SelectedItem is null && Items is not null) || (SelectedItem is not null && Items is not null && SelectedItem.Index == Items.Count - 1))
                 {
-                    SelectedItem = Items[0];
+                    SetSelectedItem(Items[0]);
                 }
                 else if (SelectedItem is not null && Items is not null && SelectedItem.Index < (Items.Count - 1))
                 {
-                    SelectedItem = Items.Single(q => q.Index == SelectedItem.Index + 1);
+                    SetSelectedItem(Items.Single(q => q.Index == SelectedItem.Index + 1));
                 }
             });
         });
@@ -115,22 +117,21 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
     private void UpdateSourceTimer_Tick(object? sender, ElapsedEventArgs e)
     {
         UpdateSourceTimer.Enabled = false;
-
-        Items = new ObservableCollection<MediaItem>()
+        _dispatcherQueue?.TryEnqueue(() =>
         {
-            new MediaItem { Index = 0, ImageUri = "http://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" },
-            new MediaItem { Index = 1, ImageUri = "http://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" },
-            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" },
-            new MediaItem { Index = 3, ImageUri = "http://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" }
-        };
-
+            Items = new ObservableCollection<MediaItem>()
+            {
+                new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
+                new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
+                new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
+                new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
+            };
+        });
         UpdateSourceTimer.Enabled = true;
     }
 
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing);
-
         if (disposing)
         {
             if (SlideshowTimer is not null)
@@ -147,5 +148,7 @@ public class SlideShowViewModel : ViewModelNavigation<MediaItem>
                 UpdateSourceTimer.Dispose();
             }
         }
+
+        base.Dispose(disposing);
     }
 }

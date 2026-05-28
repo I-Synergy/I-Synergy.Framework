@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
+using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 using ISynergy.Framework.AspNetCore.Globalization.Options;
 using ISynergy.Framework.AspNetCore.Globalization.Providers;
 using Microsoft.AspNetCore.Builder;
@@ -63,6 +63,12 @@ public static class ApplicationBuilderExtensions
                     break;
 
                 case RequestCultureProviderTypes.Route:
+                    options.RequestCultureProviders.Add(app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
+                    options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());
+                    options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
+                    options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
+                    break;
+
                 default:
                     options.RequestCultureProviders.Add(app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
                     options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());

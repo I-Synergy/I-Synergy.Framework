@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-#nullable enable
+using System.Windows.Input;
 
 namespace ISynergy.Framework.Mvvm.Commands;
 
@@ -12,8 +10,8 @@ internal sealed class DisabledCommand : ICommand
     /// <inheritdoc/>
     public event EventHandler? CanExecuteChanged
     {
-        add { }
-        remove { }
+        add { /* Intentional no-op: this event is never raised by DisabledCommand. */ }
+        remove { /* Intentional no-op: this event is never raised by DisabledCommand. */ }
     }
 
     /// <summary>

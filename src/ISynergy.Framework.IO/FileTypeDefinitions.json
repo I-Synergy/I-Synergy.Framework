@@ -2080,7 +2080,34 @@
   },
   {
     "offset": 0,
+    "signature": "EFBBBF3C3F786D6C",
+    "additional": "",
+    "name": "XML File",
+    "extension": "xml",
+    "mimetype": "application/xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3C3F786D6C20",
+    "additional": "",
+    "name": "XML File",
+    "extension": "xml",
+    "mimetype": "application/xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
     "signature": "FFFE3C00",
+    "additional": "",
+    "name": "XML File",
+    "extension": "xml",
+    "mimetype": "application/xml",
+    "alias": ""
+  },
+  {
+    "offset": 0,
+    "signature": "3C",
     "additional": "",
     "name": "XML File",
     "extension": "xml",

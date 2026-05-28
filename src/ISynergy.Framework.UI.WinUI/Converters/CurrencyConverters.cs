@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
 using Windows.ApplicationModel;
 
@@ -21,11 +21,8 @@ public class CurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (!DesignMode.DesignModeEnabled)
-        {
-            if (decimal.TryParse(value.ToString(), out var amount))
-                return amount.ToCurrency();
-        }
+        if (!DesignMode.DesignModeEnabled && decimal.TryParse(value.ToString(), out var amount))
+            return amount.ToCurrency();
 
         return 0m.ToCurrency();
     }
@@ -62,11 +59,8 @@ public class NegativeCurrencyConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (!DesignMode.DesignModeEnabled)
-        {
-            if (decimal.TryParse(value.ToString(), out var amount))
-                return (amount * -1).ToCurrency();
-        }
+        if (!DesignMode.DesignModeEnabled && decimal.TryParse(value.ToString(), out var amount))
+            return (amount * -1).ToCurrency();
 
         return 0m.ToCurrency();
     }

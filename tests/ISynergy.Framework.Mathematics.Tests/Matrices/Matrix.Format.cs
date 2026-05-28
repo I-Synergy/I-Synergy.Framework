@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Mathematics.Formats;
-using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Formats;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Matrices;
+namespace ISynergy.Framework.Mathematics.Matrices;
 [TestClass]
 public class MatrixFormatTest
 {

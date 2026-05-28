@@ -1,8 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -10,24 +8,19 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
+    private Mock<ILogger<ViewModelSelectionDialog<TestEntity>>> _mockLogger;
 
     public ViewModelSelectionTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
-        _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
+        _mockLogger = new Mock<ILogger<ViewModelSelectionDialog<TestEntity>>>();
 
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+        _mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
-    private class TestEntity
+    public class TestEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -50,11 +43,10 @@ public class ViewModelSelectionTests
         var selectedItems = new List<TestEntity> { items[0] };
 
         // Act
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            selectedItems,
-            SelectionModes.Single);
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(selectedItems);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -74,17 +66,18 @@ public class ViewModelSelectionTests
                 new TestEntity { Id = 2, Name = "Test2" },
                 new TestEntity { Id = 3, Name = "Other" }
             };
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
-        Assert.IsTrue(viewModel.Items.All(i => i.Name.Contains("Test")));
+        Assert.AreEqual(2, viewModel.Items?.Count);
+        Assert.IsTrue(viewModel.Items?.All(i => i.Name.Contains("Test")));
     }
 }
+

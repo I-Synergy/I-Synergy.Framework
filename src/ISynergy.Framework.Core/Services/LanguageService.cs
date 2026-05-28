@@ -1,45 +1,22 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Resources;
 
 namespace ISynergy.Framework.Core.Services;
 
 /// <summary>
-/// Class LanguageService.Default.
+/// Class LanguageService.
 /// </summary>
 public sealed class LanguageService : ILanguageService
 {
     private readonly List<ResourceManager> _managers;
 
-    private static readonly object _creationLock = new object();
-    private static ILanguageService? _defaultInstance;
-
-    /// <summary>
-    /// Gets the LanguageService's default instance.
-    /// </summary>
-    public static ILanguageService Default
-    {
-        get
-        {
-            if (_defaultInstance is null)
-            {
-                lock (_creationLock)
-                {
-                    if (_defaultInstance is null)
-                    {
-                        _defaultInstance = new LanguageService();
-                    }
-                }
-            }
-
-            return _defaultInstance;
-        }
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageService"/> class.
     /// </summary>
+    [RequiresUnreferencedCode("ResourceManager requires the resource type and its satellite assemblies to be preserved by the linker.")]
     public LanguageService()
     {
         _managers = [new ResourceManager(typeof(ISynergy.Framework.Core.Properties.Resources))];
@@ -48,7 +25,11 @@ public sealed class LanguageService : ILanguageService
     /// <summary>
     /// Adds the resource manager.
     /// </summary>
-    /// <param name="resourceType">The resource manager.</param>
+    /// <param name="resourceType">
+    /// The resource type whose full name is used to locate the manifest resource stream.
+    /// The type and its satellite assemblies must be preserved by the linker in AOT-published applications.
+    /// </param>
+    [RequiresUnreferencedCode("ResourceManager requires the resource type and its satellite assemblies to be preserved by the linker.")]
     public void AddResourceManager(Type resourceType) =>
         _managers.Add(new ResourceManager(resourceType));
 
@@ -61,7 +42,7 @@ public sealed class LanguageService : ILanguageService
     {
         foreach (var manager in _managers.EnsureNotNull())
         {
-            string? result = manager.GetString(key, CultureInfo.CurrentCulture);
+            string? result = manager.GetString(key, CultureInfo.CurrentUICulture);
 
             if (!string.IsNullOrEmpty(result))
                 return result;

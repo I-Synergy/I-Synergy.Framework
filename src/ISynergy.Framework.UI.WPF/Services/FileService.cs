@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Models;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
@@ -58,7 +58,7 @@ public class FileService : IFileService<FileResult>
 
         if (dialogResult)
         {
-            result.AddRange(fileDialog.FileNames.Select(file => new FileResult(file, Path.GetFileName(file), () => File.OpenRead(file))));
+            result.AddRange(fileDialog.FileNames.Select(file => new FileResult(file, () => File.OpenRead(file))));
         }
 
         return Task.FromResult(result);
@@ -66,19 +66,33 @@ public class FileService : IFileService<FileResult>
 
     public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
     {
-        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
-            return result.First().File;
+        if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result && result.Count > 0)
+            return result[0].File;
 
         return null;
     }
 
     public async Task OpenFileAsync(string fileToOpen)
     {
+        // Normalize to an absolute path to prevent directory-traversal payloads such as "../../../evil".
+        var normalizedPath = Path.GetFullPath(fileToOpen);
+
+        if (!File.Exists(normalizedPath))
+            throw new FileNotFoundException("The file to open was not found.", normalizedPath);
+
         await Task.Run(() =>
         {
-            Process docProcess = new Process();
-            docProcess.StartInfo.FileName = fileToOpen;
-            docProcess.StartInfo.UseShellExecute = true;
+            // UseShellExecute = true is required on Windows to open a document with its default
+            // associated application (e.g. PDF with Acrobat, DOCX with Word). The path has been
+            // normalized and existence-checked above to mitigate path-traversal risks.
+            var docProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo(normalizedPath)
+                {
+                    UseShellExecute = true
+                }
+            };
+
             docProcess.Start();
         });
     }
@@ -109,7 +123,6 @@ public class FileService : IFileService<FileResult>
             return Task.FromResult<FileResult?>(
                 new FileResult(
                     fileDialog.FileName,
-                    Path.GetFileName(fileDialog.FileName),
                     () => File.OpenRead(fileDialog.FileName)));
         }
 

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Models;
 using ISynergy.Framework.Monitoring.Enumerations;
@@ -19,10 +19,10 @@ public class MonitorHub : Hub
     /// <summary>
     /// Constructor of MonitorHub.
     /// </summary>
-    /// <param name="loggerFactory">The logger.</param>
-    public MonitorHub(ILoggerFactory loggerFactory)
+    /// <param name="logger">The logger.</param>
+    public MonitorHub(ILogger<MonitorHub> logger)
     {
-        _logger = loggerFactory.CreateLogger<MonitorHub>();
+        _logger = logger;
     }
 
     /// <summary>
@@ -35,14 +35,14 @@ public class MonitorHub : Hub
     /// <returns>A <see cref="T:System.Threading.Tasks.Task" /> that represents the asynchronous connect.</returns>
     public override async Task OnConnectedAsync()
     {
-        _logger.LogInformation($"Client connected: {Context.ConnectionId}");
+        _logger.LogInformation("Client connected: {ConnectionId}", Context.ConnectionId);
 
         Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);
 
-        var accountId = Context.User.GetAccountId();
+        var accountId = Context.User.GetTenantId();
         var userId = Context.User.GetUserId();
-        var userName = Context.User.GetUserName();
+        var userName = Context.User.GetUsername();
 
         // add user to own Group
         await Groups.AddToGroupAsync(Context.ConnectionId, userId.ToString());
@@ -61,14 +61,14 @@ public class MonitorHub : Hub
     /// <returns>A Task representing the asynchronous operation.</returns>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        _logger.LogInformation($"Client disconnected: {Context.ConnectionId}");
+        _logger.LogInformation("Client disconnected: {ConnectionId}", Context.ConnectionId);
 
         Argument.IsNotNull(Context);
         Argument.IsNotNull(Context.User);
 
-        var accountId = Context.User.GetAccountId();
-        var userId = Context.User.GetAccountId();
-        var userName = Context.User.GetUserName();
+        var accountId = Context.User.GetTenantId();
+        var userId = Context.User.GetTenantId();
+        var userName = Context.User.GetUsername();
 
         // remove user own Group
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId.ToString());

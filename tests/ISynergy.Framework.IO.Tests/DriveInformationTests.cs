@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.IO.Models;
+using ISynergy.Framework.IO.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.IO.Tests;
+namespace ISynergy.Framework.IO;
 
 /// <summary>
 /// Class DriveInformationTests.
@@ -14,7 +14,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"C:\Temp", 0)]
     [DataRow(@"\\localhost\c$\temp", 1)]
     [DataRow(@"\\SERVER\Temp", 1)]
@@ -29,7 +29,7 @@ public class DriveInformationTests
         // otherwise its a boolean value.
         if (result == -1)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.IsNetworkDrive(path));
         }
         else
         {
@@ -42,7 +42,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\")]
     [DataRow(@"C:\Temp", @"C:\")]
     [DataRow(@"\\localhost\c$\temp", null)]
@@ -58,7 +58,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.GetDriveName(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.GetDriveName(path));
         }
         else
         {
@@ -71,7 +71,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\")]
     [DataRow(@"C:\Temp", @"C:\")]
     [DataRow(@"\\localhost\c$\temp", @"\\localhost\c$")]
@@ -87,7 +87,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.ResolveToRootUNC(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.ResolveToRootUNC(path));
         }
         else
         {
@@ -100,7 +100,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(@"Z:\Temp\Sub-Folder", @"Z:\Temp\Sub-Folder")]
     [DataRow(@"C:\Temp", @"C:\Temp")]
     [DataRow(@"\\localhost\c$\temp", @"\\localhost\c$\temp")]
@@ -116,7 +116,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.ResolveToUNC(path));
+            Assert.Throws<ArgumentException>(() => DriveInformation.ResolveToUNC(path));
         }
         else
         {
@@ -129,7 +129,7 @@ public class DriveInformationTests
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="result">The result.</param>
-    [DataTestMethod]
+    [TestMethod]
     //[DataRow(@"Z:\Temp\Sub-Folder", true)]
     [DataRow(@"C:\Temp", true)]
     [DataRow(@"\\localhost\c$\temp", true)]
@@ -147,7 +147,7 @@ public class DriveInformationTests
         // otherwise its a string value with the drive name.
         if (result is null)
         {
-            Assert.ThrowsException<ArgumentException>(() => DriveInformation.IsFreeSpaceAvailable(path, fileSize));
+            Assert.Throws<ArgumentException>(() => DriveInformation.IsFreeSpaceAvailable(path, fileSize));
         }
         else
         {

@@ -1,24 +1,26 @@
-﻿using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Validation;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
 /// <summary>
 /// Class ViewModel.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IViewModel" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IViewModel" />
 [Bindable(true)]
-public abstract class ViewModel : ObservableClass, IViewModel
+public abstract class ViewModel : ObservableValidatedClass, IViewModel
 {
     protected readonly ICommonServices _commonServices;
     protected readonly ILogger _logger;
@@ -98,16 +100,15 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Initializes a new instance of the <see cref="ViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="automaticValidation">The validation.</param>
+    /// <param name="logger"></param>
     protected ViewModel(
         ICommonServices commonServices,
-        bool automaticValidation = false)
-        : base(automaticValidation)
+        ILogger<ViewModel> logger)
     {
         _commonServices = commonServices;
-        _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
+        _commonServices.MessengerService.Register<UserSignedInMessage>(this, OnUserSignedIn);
 
-        _logger = _commonServices.LoggerFactory.CreateLogger(GetType());
+        _logger = logger;
 
         PropertyChanged += OnPropertyChanged;
         IsInitialized = false;
@@ -118,21 +119,13 @@ public abstract class ViewModel : ObservableClass, IViewModel
         _logger.LogTrace(GetType().Name);
     }
 
-    private async void ScopedContextService_ScopedChanged(object? sender, Core.Events.ReturnEventArgs<bool> e)
+    private async void OnUserSignedIn(UserSignedInMessage message)
     {
-        if (e.Value)
-        {
-            IsInitialized = false;
+        IsInitialized = false;
+        Cleanup();
 
-            // Clear existing data
-            Cleanup();
-
-            // Reinitialize with new scope if needed
-            if (!IsDisposed)
-            {
-                await InitializeAsync();
-            }
-        }
+        if (!IsDisposed)
+            await InitializeAsync();
     }
 
     /// <summary>
@@ -142,7 +135,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            _logger.LogTrace("{0} initialized.", GetType().Name);
+            _logger.LogTrace("{ViewModelName} initialized.", GetType().Name);
 
         return Task.CompletedTask;
     }
@@ -152,6 +145,12 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>System.String.</returns>
+    /// <remarks>
+    /// This method uses runtime reflection to read <see cref="DisplayAttribute"/> from enum fields.
+    /// It is not AOT-compatible. In AOT-published applications, suppress IL2026 with a justified pragma
+    /// or use a static lookup dictionary for enum descriptions.
+    /// </remarks>
+    [RequiresUnreferencedCode("Enum field custom attribute lookup uses runtime reflection.")]
     public string GetEnumDescription(Enum value)
     {
         Argument.IsNotNull(value);
@@ -166,7 +165,7 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
         if (attributes is not null && attributes.Length > 0 && attributes[0].Description is not null)
         {
-            description = LanguageService.Default.GetString(attributes[0].Description!);
+            description = _commonServices.LanguageService.GetString(attributes[0].Description!);
         }
 
         return description;
@@ -196,8 +195,31 @@ public abstract class ViewModel : ObservableClass, IViewModel
     /// Cleans up the instance, for example by saving its state,
     /// removing resources, etc...
     /// </summary>
-    public virtual void Cleanup()
+    public virtual void Cleanup(bool isClosing = true)
     {
+        if (isClosing)
+        {
+            // Full cleanup for closing
+            // Release all resources
+        }
+        else
+        {
+            // Partial cleanup for navigation
+            ReleaseBackgroundResources();
+        }
+    }
+
+    /// <summary>
+    /// Releases heavy resources that aren't needed when the ViewModel is in the background.
+    /// Called when the ViewModel is pushed to the backstack.
+    /// </summary>
+    protected virtual void ReleaseBackgroundResources()
+    {
+        // Base implementation is empty - derived classes should override
+        // Examples of resources to release:
+        // - Large collections that can be reloaded
+        // - Image caches
+        // - Background workers
     }
 
     /// <summary>
@@ -225,17 +247,50 @@ public abstract class ViewModel : ObservableClass, IViewModel
 
     protected override void Dispose(bool disposing)
     {
+        if (_disposed)
+            return;
+
         if (disposing)
         {
-            _commonServices.ScopedContextService.ScopedChanged -= ScopedContextService_ScopedChanged;
+            _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
 
             PropertyChanged -= OnPropertyChanged;
+
+            // Clear event handlers to prevent memory leaks
+            Cancelled = null;
+            Closed = null;
 
             // Clear commands
             CloseCommand?.Dispose();
             CancelCommand?.Dispose();
-
-            base.Dispose(disposing);
         }
+
+        base.Dispose(disposing);
     }
+
+    /// <summary>
+    /// Called when navigating away from this ViewModel.
+    /// Cancel any running commands if needed.
+    /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
+    public virtual void OnNavigatedFrom() => CancelRunningCommands();
+
+    /// <summary>
+    /// Called when navigating to this ViewModel.
+    /// Reset command states.
+    /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
+    public virtual void OnNavigatedTo() => ResetCommandStates();
+
+    /// <summary>
+    /// Cancels all running commands in this ViewModel.
+    /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
+    protected virtual void CancelRunningCommands() => this.CancelAllCommands();
+
+    /// <summary>
+    /// Resets the state of commands when returning to this ViewModel.
+    /// </summary>
+    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
+    protected virtual void ResetCommandStates() => this.ResetAllCommandStates();
 }

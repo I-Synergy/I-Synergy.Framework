@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
+using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 
 namespace ISynergy.Framework.MessageBus.Abstractions;
 
@@ -6,7 +6,7 @@ namespace ISynergy.Framework.MessageBus.Abstractions;
 /// Interface IPublisherServiceBus
 /// </summary>
 /// <typeparam name="TQueueMessage">The type of the t entity.</typeparam>
-public interface IPublisherServiceBus<TQueueMessage>
+public interface IPublisherServiceBus<in TQueueMessage>
     where TQueueMessage : class, IBaseMessage
 {
     /// <summary>

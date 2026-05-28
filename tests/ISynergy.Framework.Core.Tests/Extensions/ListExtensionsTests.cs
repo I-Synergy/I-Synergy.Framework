@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class ListExtensionsTests.
@@ -32,7 +32,7 @@ public class ListExtensionsTests
     [TestMethod]
     public void NullListFailableTest()
     {
-        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
+        Assert.ThrowsAsync<NullReferenceException>(() =>
         {
             List<object>? list = null;
 

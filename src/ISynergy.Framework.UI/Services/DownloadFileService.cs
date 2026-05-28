@@ -1,0 +1,42 @@
+using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using System.Diagnostics;
+using System.IO;
+
+namespace ISynergy.Framework.UI.Services;
+
+/// <summary>
+/// Class DownloadFileService.
+/// </summary>
+public class DownloadFileService : IDownloadFileService
+{
+    private readonly IFileService<FileResult> _fileService;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DownloadFileService"/> class.
+    /// </summary>
+    /// <param name="fileservice">The fileservice.</param>
+    public DownloadFileService(IFileService<FileResult> fileservice)
+    {
+        _fileService = fileservice;
+    }
+
+    /// <summary>
+    /// download file as an asynchronous operation.
+    /// </summary>
+    /// <param name="folder"></param>
+    /// <param name="file">The file.</param>
+    /// <param name="filename">The filename.</param>
+    public async Task DownloadFileAsync(string folder, string filename, byte[] file)
+    {
+        if (await _fileService.SaveFileAsync(folder, filename, file) is { } savedFile)
+        {
+            var normalizedPath = Path.GetFullPath(savedFile.FilePath);
+
+            if (File.Exists(normalizedPath))
+            {
+                Process.Start(new ProcessStartInfo(normalizedPath) { UseShellExecute = true });
+            }
+        }
+    }
+}

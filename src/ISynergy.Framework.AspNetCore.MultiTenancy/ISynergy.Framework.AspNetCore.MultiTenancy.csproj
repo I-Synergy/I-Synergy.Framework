@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<PackageId>I-Synergy.Framework.AspNetCore.MultiTenancy</PackageId>
 		<Description>I-Synergy Framework MultiTenancy</Description>
 		<PackageTags>I-Synergy, Framework, MultiTenancy, AspNetCore</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	</PropertyGroup>
+  </PropertyGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore.Authentication\ISynergy.Framework.AspNetCore.Authentication.csproj" />

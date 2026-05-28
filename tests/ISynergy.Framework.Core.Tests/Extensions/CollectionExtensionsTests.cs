@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 using System.Collections.ObjectModel;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class CollectionExtensionsTests.
@@ -27,7 +27,7 @@ public class CollectionExtensionsTests
     [TestMethod]
     public void NullObservableCollectionFailableTest()
     {
-        Assert.ThrowsException<NullReferenceException>(() =>
+        Assert.Throws<NullReferenceException>(() =>
         {
             ObservableCollection<object>? list = null;
             foreach (object item in list!)

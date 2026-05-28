@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using Microsoft.UI.Xaml.Data;
@@ -84,7 +83,7 @@ public class DateTimeOffsetToTimeSpanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        if (original is DateTimeOffset odt && value is TimeSpan ts)
+        if (original is DateTimeOffset odt && value is TimeSpan ts) // NOSONAR
         {
             var dt = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(odt, ts);
             return dt.GetValueOrDefault(DateTimeOffset.MinValue);
@@ -156,7 +155,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
 
                 foreach (var item in collection.EnsureNotNull())
                 {
-                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item), DateTimeKind.Local)));
+                    result.Add(new DateTimeOffset(DateTime.SpecifyKind(DateTime.Parse(item, CultureInfo.InvariantCulture), DateTimeKind.Local)));
                 }
             }
         }
@@ -242,11 +241,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
             if (!string.IsNullOrEmpty(language))
                 culture = new CultureInfo(language);
 
-            var offset = TimeZoneInfo.Local.BaseUtcOffset;
-
-            var scopedContextService = ServiceLocator.Default.GetService<IScopedContextService>();
-
-            offset = scopedContextService.GetRequiredService<IContext>().TimeZone!.BaseUtcOffset;
+            var offset = ServiceLocator.Default.GetRequiredService<IContext>().TimeZone!.BaseUtcOffset;
 
             if (parameter is not null)
                 return datetime.ToLocalDateString(parameter.ToString()!, offset, culture);
@@ -280,7 +275,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 public class IsoDateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
 {
     public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        DateTimeOffset.ParseExact(reader.GetString()!, "o", null);
+        DateTimeOffset.ParseExact(reader.GetString()!, "o", CultureInfo.InvariantCulture);
 
     public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
     {

@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Automations.Abstractions;
+namespace ISynergy.Framework.Automations.Abstractions;
 
 /// <summary>
 /// Repository manager for Scheduled and Delayed actions.

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ISynergy.Framework.UI.Controls.NavigationMenu"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:ISynergy.Framework.Mvvm.Abstractions.ViewModels;assembly=ISynergy.Framework.Mvvm"
+    Title="Menu"
+    BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
+    x:DataType="viewmodels:IShellViewModel">
+
+    <Grid
+        Margin="2,4"
+        RowDefinitions="*,Auto"
+        RowSpacing="10">
+        <CollectionView
+            Grid.Row="0"
+            ItemTemplate="{DynamicResource DefaultMenuItemStyle}"
+            ItemsSource="{Binding PrimaryItems}"
+            SelectionMode="Single" />
+
+        <CollectionView
+            Grid.Row="1"
+            ItemTemplate="{DynamicResource DefaultMenuItemStyle}"
+            ItemsSource="{Binding SecondaryItems}"
+            SelectionMode="Single" />
+    </Grid>
+</ContentPage>

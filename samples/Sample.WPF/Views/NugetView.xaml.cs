@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.UI.Controls;
+using ISynergy.Framework.UI.Controls;
 
 namespace Sample.Views;
 

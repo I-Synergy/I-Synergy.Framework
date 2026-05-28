@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.UI.Extensions;
 using System.Text;
@@ -129,7 +129,7 @@ public static class MaskValidator
         else if (sender is Control control)
         {
             _control = control;
-            textBox = (sender as DependencyObject)?.FindChild<TextBox>();
+            textBox = (sender as DependencyObject)?.FindDescendant<TextBox>();
         }
 
         if (textBox is null)
@@ -141,10 +141,10 @@ public static class MaskValidator
         textBox.GotFocus -= Textbox_GotFocus;
         textBox.Loaded += Textbox_Loaded;
 
-        Textbox_Loaded(textBox, new RoutedEventArgs());
+        Textbox_Loaded(textBox, new RoutedEventArgs()); // NOSONAR
     }
 
-    private static void Textbox_Loaded(object sender, RoutedEventArgs e)
+    private static void Textbox_Loaded(object sender, RoutedEventArgs e) // NOSONAR
     {
         var textBox = (TextBox)sender;
 
@@ -390,7 +390,7 @@ public static class MaskValidator
         }
     }
 
-    private static void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    private static void TextBox_PreviewKeyDown(object sender, KeyEventArgs e) // NOSONAR
     {
         var textBox = (TextBox)sender;
 
@@ -436,13 +436,10 @@ public static class MaskValidator
             && textBox.Text.Length <= oldText.Length - oldSelectionLength)
         {
             isDeleteOrBackspace = true;
-            if (oldSelectionLength == 0)
+            // backspace else delete
+            if (oldSelectionLength == 0 && oldSelectionStart != textBox.SelectionStart)
             {
-                // backspace else delete
-                if (oldSelectionStart != textBox.SelectionStart)
-                {
-                    deleteBackspaceIndex++;
-                }
+                deleteBackspaceIndex++;
             }
         }
 

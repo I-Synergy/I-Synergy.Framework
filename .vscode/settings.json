@@ -1,0 +1,13 @@
+{
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": "CLAUDE.md"
+    }
+  ],
+  "files.encoding": "utf8",
+  "files.autoGuessEncoding": false,
+  "sonarlint.connectedMode.project": {
+    "connectionId": "i-synergy-github",
+    "projectKey": "I-Synergy.Framework"
+  }
+}

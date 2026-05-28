@@ -1,4 +1,3 @@
-﻿using AutoMapper;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Payment.Mollie.Extensions;
 using ISynergy.Framework.Payment.Mollie.Options;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Mollie.Sample.Options;
 using Mollie.Sample.Services.Customer;
 using Mollie.Sample.Services.Mandate;
 using Mollie.Sample.Services.Payment;
@@ -63,6 +63,7 @@ namespace Mollie.Sample
             services.AddOptions();
 
             services.Configure<MollieApiOptions>(Configuration.GetSection(nameof(MollieApiOptions)));
+            services.Configure<PaymentOptions>(Configuration.GetSection(nameof(PaymentOptions)));
 
             services.AddPaymentGatewayMollie();
 
@@ -77,7 +78,6 @@ namespace Mollie.Sample
             services.AddScoped<IMandateStorageClient, MandateStorageClient>();
             services.AddScoped<IRefundPaymentClient, RefundPaymentClient>();
 
-            services.AddAutoMapper(typeof(Startup));
             services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
         }
 

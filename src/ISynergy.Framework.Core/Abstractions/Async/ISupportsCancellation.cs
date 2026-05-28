@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Async;
+namespace ISynergy.Framework.Core.Abstractions.Async;
 
 /// <summary>
 ///   Common interface for algorithms that can be canceled

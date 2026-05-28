@@ -1,6 +1,13 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Numerics;
 
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
 namespace ISynergy.Framework.Mathematics.Transforms;
 
 /// <summary>
@@ -285,7 +292,7 @@ public static class FourierTransform2
     /// </summary>
     private static void IDFT(double[] real, double[] imag)
     {
-        FFT(imag, real);
+        FFT(imag, real); // NOSONAR
     }
 
     /// <summary>
@@ -304,8 +311,8 @@ public static class FourierTransform2
             throw new ArgumentException("Length is not a power of 2");
 
         // Trigonometric tables.
-        var cosTable = CosTable(n / 2);
-        var sinTable = SinTable(n / 2);
+        var localCosTable = CosTable(n / 2);
+        var localSinTable = SinTable(n / 2);
 
         // Bit-reversed addressing permutation
         for (var i = 0; i < real.Length; i++)
@@ -337,8 +344,8 @@ public static class FourierTransform2
                     var re = real[h];
                     var im = imag[h];
 
-                    var tpre = +re * cosTable[k] + im * sinTable[k];
-                    var tpim = -re * sinTable[k] + im * cosTable[k];
+                    var tpre = +re * localCosTable[k] + im * localSinTable[k];
+                    var tpim = -re * localSinTable[k] + im * localCosTable[k];
 
                     real[h] = real[j] - tpre;
                     imag[h] = imag[j] - tpim;
@@ -369,8 +376,8 @@ public static class FourierTransform2
             throw new ArgumentException("Length is not a power of 2");
 
         // Trigonometric tables.
-        var cosTable = CosTable(n / 2);
-        var sinTable = SinTable(n / 2);
+        var localCosTable = CosTable(n / 2);
+        var localSinTable = SinTable(n / 2);
 
         // Bit-reversed addressing permutation
         for (var i = 0; i < complex.Length; i++)
@@ -397,8 +404,8 @@ public static class FourierTransform2
                     var re = complex[h].Real;
                     var im = complex[h].Imaginary;
 
-                    var tpre = +re * cosTable[k] + im * sinTable[k];
-                    var tpim = -re * sinTable[k] + im * cosTable[k];
+                    var tpre = +re * localCosTable[k] + im * localSinTable[k];
+                    var tpim = -re * localSinTable[k] + im * localCosTable[k];
 
                     var rej = complex[j].Real;
                     var imj = complex[j].Imaginary;

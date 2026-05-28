@@ -1,9 +1,15 @@
-﻿using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.UI.Enumerations;
 
 namespace ISynergy.Framework.UI.Options;
+
 public class SplashScreenOptions
 {
-    public Func<Task<Stream>>? AssetStreamProvider { get; set; }
-    public string? ContentType { get; set; }
-    public SplashScreenTypes SplashScreenType { get; set; }
+    public SplashScreenOptions(SplashScreenTypes splashScreenType, string? resource = null)
+    {
+        SplashScreenType = splashScreenType;
+        Resource = resource;
+    }
+
+    public string? Resource { get; }
+    public SplashScreenTypes SplashScreenType { get; }
 }

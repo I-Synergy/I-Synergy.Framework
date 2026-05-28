@@ -1,6 +1,7 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.IO.Abtractions.Analyzers;
 using ISynergy.Framework.IO.Models;
+using ISynergy.Framework.IO.Serialization;
 using System.Text;
 using System.Text.Json;
 
@@ -14,21 +15,29 @@ namespace ISynergy.Framework.IO.Analyzers.Base;
 public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
 {
     /// <summary>
+    /// Maximum allowed stream length in bytes to guard against out-of-memory conditions (50 MB).
+    /// </summary>
+    public const long MaxStreamSize = 50 * 1024 * 1024;
+
+    /// <summary>
     /// The lazy file types
     /// </summary>
     private readonly Lazy<IEnumerable<FileTypeInfo>> lazyFileTypes;
+    private const string TextPlainMimeType = "text/plain";
+    private const string TxtExtension = "txt";
+
     /// <summary>
     /// The ASCII file type
     /// </summary>
-    private readonly FileTypeInfo asciiFileType = new() { Name = "ASCII Text", Extension = "txt", MimeType = "text/plain", Signature = null };
+    private readonly FileTypeInfo asciiFileType = new() { Name = "ASCII Text", Extension = TxtExtension, MimeType = TextPlainMimeType, Signature = null };
     /// <summary>
     /// The UTF8 file type
     /// </summary>
-    private readonly FileTypeInfo utf8FileType = new() { Name = "UTF-8 Text", Extension = "txt", MimeType = "text/plain", Signature = null };
+    private readonly FileTypeInfo utf8FileType = new() { Name = "UTF-8 Text", Extension = TxtExtension, MimeType = TextPlainMimeType, Signature = null };
     /// <summary>
     /// The UTF8 file type with bom
     /// </summary>
-    private readonly FileTypeInfo utf8FileTypeWithBOM = new() { Name = "UTF-8 Text with BOM", Extension = "txt", MimeType = "text/plain", Signature = null };
+    private readonly FileTypeInfo utf8FileTypeWithBOM = new() { Name = "UTF-8 Text with BOM", Extension = TxtExtension, MimeType = TextPlainMimeType, Signature = null };
 
     /// <summary>
     /// Initializes a <see cref="BaseFileTypeAnalyzer" /> with the provided json definition.
@@ -52,16 +61,22 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <param name="extension">The extension.</param>
     /// <returns>FileTypeInfo.</returns>
     /// <exception cref="ArgumentNullException">inputStream</exception>
+    /// <exception cref="ArgumentException">Thrown when the stream length exceeds <see cref="MaxStreamSize"/>.</exception>
     public FileTypeInfo? DetectType(Stream? inputStream, string extension)
     {
         if (inputStream is null)
             throw new ArgumentNullException(nameof(inputStream));
 
+        if (inputStream.CanSeek && inputStream.Length > MaxStreamSize)
+            throw new ArgumentException(
+                $"Stream length {inputStream.Length:N0} bytes exceeds the maximum allowed size of {MaxStreamSize:N0} bytes.",
+                nameof(inputStream));
+
         if (inputStream.CanSeek)
             inputStream.Position = 0;
 
         byte[] byteBuffer = new byte[inputStream.Length];
-        inputStream.Read(byteBuffer, 0, byteBuffer.Length);
+        _ = inputStream.Read(byteBuffer, 0, byteBuffer.Length);
 
         if (inputStream.CanSeek)
             inputStream.Position = 0;
@@ -83,7 +98,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
             throw new ArgumentNullException(nameof(fileContent));
 
         if (fileContent.Length == 0)
-            throw new ArgumentException("input must not be empty");
+            throw new ArgumentException("input must not be empty", nameof(fileContent));
 
         // iterate over each type and determine if we have a match based on file signature.
         foreach (var fileTypeInfo in AvailableTypes
@@ -151,7 +166,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
 
         if (extensionAliasOrMimeType.Equals("txt", StringComparison.OrdinalIgnoreCase) ||
             extensionAliasOrMimeType.Equals("text/plain", StringComparison.OrdinalIgnoreCase))
-            return IsText(fileContent, out bool hasBOM);
+            return IsText(fileContent, out _);
 
         return false;
     }
@@ -228,16 +243,21 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     }
 
     /// <summary>
-    /// Loads the file types.
+    /// Loads the file types from a JSON string definition.
     /// </summary>
-    /// <param name="flatFileData">The flat file data.</param>
-    /// <returns>IEnumerable&lt;FileTypeInfo&gt;.</returns>
+    /// <param name="flatFileData">The flat file data containing the JSON array of file type definitions.</param>
+    /// <returns>
+    /// An <see cref="IEnumerable{T}"/> of <see cref="FileTypeInfo"/> instances parsed from
+    /// <paramref name="flatFileData"/>, or an empty list if the JSON cannot be deserialized.
+    /// </returns>
+    /// <remarks>
+    /// Uses <see cref="IoJsonContext"/> (a source-generated <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>)
+    /// to avoid reflection-based deserialization, making this method fully AOT-safe.
+    /// </remarks>
     private static IEnumerable<FileTypeInfo> LoadFileTypes(string flatFileData)
     {
-        if (JsonSerializer.Deserialize<IEnumerable<FileTypeInfo>>(flatFileData, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        }) is IEnumerable<FileTypeInfo> fileTypes)
+        if (JsonSerializer.Deserialize(flatFileData, IoJsonContext.Default.IEnumerableFileTypeInfo)
+            is IEnumerable<FileTypeInfo> fileTypes)
         {
             return fileTypes;
         }
@@ -251,7 +271,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <param name="input">The input.</param>
     /// <param name="hasBOM">if set to <c>true</c> [has bom].</param>
     /// <returns><c>true</c> if the specified input is text; otherwise, <c>false</c>.</returns>
-    private bool IsText(byte[] input, out bool hasBOM)
+    private static bool IsText(byte[] input, out bool hasBOM)
     {
         hasBOM = false;
 

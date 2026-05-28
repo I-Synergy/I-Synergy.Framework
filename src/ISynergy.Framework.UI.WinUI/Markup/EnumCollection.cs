@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
@@ -26,22 +25,17 @@ public class EnumCollection : MarkupExtension
     /// Provides the value.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    /// <returns>System.Object.</returns>
+    /// <returns>A list of enum values for <see cref="EnumType"/>.</returns>
+    /// <remarks>
+    /// Calls <c>EnumType.ToList()</c> which internally uses <see cref="Enum.GetValues(Type)"/>
+    /// with a runtime <see cref="Type"/> argument. This requires the enum type's members to be
+    /// preserved by the IL trimmer. For AOT-safe scenarios, populate enum collections using
+    /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code.
+    /// </remarks>
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsEnumType(EnumType);
         return EnumType!.ToList();
     }
 
-    /// <summary>
-    /// Gets the description.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>System.String.</returns>
-    /// <exception cref="ArgumentNullException">value</exception>
-    private static string GetDescription(Enum value)
-    {
-        Argument.IsNotNull(value);
-        return LanguageService.Default.GetString(value.ToString());
-    }
 }

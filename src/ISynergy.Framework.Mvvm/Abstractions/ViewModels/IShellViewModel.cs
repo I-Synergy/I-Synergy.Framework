@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Commands;
 using System.Collections.ObjectModel;
 
@@ -12,10 +12,10 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 public interface IShellViewModel : IViewModel
 {
     AsyncRelayCommand? SettingsCommand { get; }
-    RelayCommand? SignInCommand { get; }
+    AsyncRelayCommand? SignInCommand { get; }
 
-    ObservableCollection<NavigationItem> PrimaryItems { get; }
-    ObservableCollection<NavigationItem> SecondaryItems { get; }
+    ObservableCollection<NavigationItem>? PrimaryItems { get; }
+    ObservableCollection<NavigationItem>? SecondaryItems { get; }
 
     Task ShellLoadedAsync();
     Task InitializeFirstRunAsync();

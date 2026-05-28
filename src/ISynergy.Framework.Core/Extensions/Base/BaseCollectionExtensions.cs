@@ -1,7 +1,10 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using System.Collections;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+
+#pragma warning disable S3776 // cognitive complexity is inherent in DataTable projection with type inspection
 
 namespace ISynergy.Framework.Core.Extensions.Base;
 
@@ -17,7 +20,7 @@ internal static class BaseCollectionExtensions
     /// <param name="collection">The collection.</param>
     /// <param name="name">The name.</param>
     /// <returns>DataTable.</returns>
-    public static DataTable ToDataTableBase<T>(this IEnumerable<T> collection, string name) =>
+    public static DataTable ToDataTableBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IEnumerable<T> collection, string name) =>
         collection.ToDataTableBase(name, typeof(T));
 
     /// <summary>
@@ -27,7 +30,7 @@ internal static class BaseCollectionExtensions
     /// <param name="name">The name.</param>
     /// <param name="type">The type.</param>
     /// <returns>DataTable.</returns>
-    public static DataTable ToDataTableBase(this IEnumerable collection, string name, Type type)
+    public static DataTable ToDataTableBase(this IEnumerable collection, string name, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type) // NOSONAR
     {
         var dataTable = new DataTable()
         {

@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Synchronization.Abstractions.Settings;
 
 namespace Sample.Models;
 
-public class SynchronizationSettings : ObservableClass, ISynchronizationSettings
+public class SynchronizationSettings : ObservableValidatedClass, ISynchronizationSettings
 {
     /// <summary>
     /// Gets or sets the SynchronizationInterval property value in seconds.

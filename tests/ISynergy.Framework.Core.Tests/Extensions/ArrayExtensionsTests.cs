@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class ArrayExtensionsTests.
@@ -32,7 +32,7 @@ public class ArrayExtensionsTests
     [TestMethod]
     public void NullArrayFailableTest()
     {
-        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
+        Assert.ThrowsAsync<NullReferenceException>(() =>
         {
             object[]? list = null;
 

@@ -1,144 +1,91 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Models.Accounts;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Services;
 using Sample.Models;
 
 namespace Sample.Services;
 
 /// <summary>
-/// Class AuthenticationService.
-/// Implements the <see cref="IAuthenticationService" />
+/// Demo authentication service for sample applications.
+/// Accepts any username/password combination for testing purposes.
+/// On sign-in, sets the profile on the current context and sends <see cref="UserSignedInMessage"/>.
+/// On sign-out, clears the profile and sends <see cref="UserSignedOutMessage"/>.
+///
+/// Security Note: DEMO ONLY — never use in production.
 /// </summary>
-/// <seealso cref="IAuthenticationService" />
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService : Sample.Abstractions.Services.IAuthenticationService
 {
-    private readonly IScopedContextService _scopedContextService;
+    private readonly IContext _context;
+    private readonly IMessengerService _messengerService;
     private readonly ILogger _logger;
 
-    public event EventHandler<ReturnEventArgs<SoftwareEnvironments>>? SoftwareEnvironmentChanged;
-    public event EventHandler<ReturnEventArgs<bool>>? AuthenticationChanged;
+    public bool IsAuthenticated => _context.IsAuthenticated;
+    public IProfile? CurrentProfile => _context.Profile;
 
-    private void RaiseSoftwareEnvironmentChanged(SoftwareEnvironments softwareEnvironment) => SoftwareEnvironmentChanged?.Invoke(this, new ReturnEventArgs<SoftwareEnvironments>(softwareEnvironment));
-    private void RaiseAuthenticationChanged(bool e) => AuthenticationChanged?.Invoke(this, new ReturnEventArgs<bool>(e));
-
-    public AuthenticationService(IScopedContextService scopedContextService, ILogger<AuthenticationService> logger)
+    public AuthenticationService(
+        IContext context,
+        IMessengerService messengerService,
+        ILogger<AuthenticationService> logger)
     {
-        _scopedContextService = scopedContextService;
-
+        _context = context;
+        _messengerService = messengerService;
         _logger = logger;
-        _logger.LogTrace($"AuthenticationService instance created with ID: {Guid.NewGuid()}");
     }
 
-    public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
+    public Task AuthenticateWithUsernamePasswordAsync(
+        string username,
+        string password,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
+        _logger.LogTrace("Demo authentication attempt for user: {Username}", username);
 
-    public Task AuthenticateWithClientCredentialsAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
+        var profile = new Profile
+        {
+            Token = new Token
+            {
+                AccessToken = GenerateToken(),
+                IdToken = GenerateToken(),
+                RefreshToken = GenerateToken(),
+                ExpiresIn = 3600,
+                TokenType = "Bearer"
+            },
+            AccountId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+            Description = $"Demo Account - {username}",
+            TimeZoneId = "Europe/Amsterdam",
+            CountryCode = "NL",
+            CultureCode = "nl-NL",
+            UserId = Guid.NewGuid(),
+            Username = username,
+            Email = $"{username}@demo.com",
+            Roles = new List<string> { "Administrator", "User" },
+            Features = new List<string> { "Dashboard", "Settings", "Admin" },
+            Expiration = DateTimeOffset.Now.AddHours(24)
+        };
 
-    public Task AuthenticateWithRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
-    {
+        _context.Profile = profile;
+        _messengerService.Send(new UserSignedInMessage(profile));
+
         return Task.CompletedTask;
     }
 
-    public async Task AuthenticateWithUsernamePasswordAsync(string username, string password, bool remember, CancellationToken cancellationToken = default)
+    public Task<bool> TryRestoreSessionAsync(CancellationToken cancellationToken = default)
+        => Task.FromResult(false);
+
+    public Task SignInAsync(CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
+
+    public Task SignOutAsync(CancellationToken cancellationToken = default)
     {
-        _scopedContextService.GetRequiredService<IContext>().Environment = SoftwareEnvironments.Test;
-        _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
-            new Token(),
-            Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
-            "Test",
-            "Europe/Amsterdam",
-            "NL",
-            Guid.NewGuid(),
-            username,
-            "admin@demo.com",
-            ["Administrator"],
-            [],
-            DateTimeOffset.Now.AddDays(7),
-            1,
-            DateTime.Now.AddHours(24));
-
-        if (remember)
-        {
-            if (_scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser != username)
-            {
-                _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.IsAutoLogin = true;
-                _scopedContextService.GetRequiredService<ISettingsService>().LocalSettings.DefaultUser = username;
-                _scopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-            }
-
-            await _scopedContextService.GetService<ICredentialLockerService>().AddCredentialToCredentialLockerAsync(username, password);
-        }
-
-        ValidateToken(new Token());
+        _logger.LogTrace("Demo sign out");
+        _context.Profile = null;
+        _messengerService.Send(new UserSignedOutMessage());
+        return Task.CompletedTask;
     }
 
-    public Task<bool> CheckRegistrationEmailAsync(string email, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<Country>> GetCountriesAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<Module>> GetModulesAsync(CancellationToken cancellationToken = default)
-    {
-        return Task.FromResult(new List<Module>());
-    }
-
-    public Task<bool> RegisterNewAccountAsync(IRegistrationData registration, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> ResetPasswordAsync(string email, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SignOut()
-    {
-        _scopedContextService.CreateNewScope();
-        ValidateToken(null);
-    }
-
-    private void ValidateToken(Token? token)
-    {
-        if (token is not null)
-        {
-            _scopedContextService.GetRequiredService<IContext>().Profile = new Profile(
-                token,
-                Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
-                "Test",
-                "Europe/Amsterdam",
-                "NL",
-                Guid.NewGuid(),
-                "admin",
-                "admin@demo.com",
-                ["Administrator"],
-                [],
-                DateTimeOffset.Now.AddDays(7),
-                1,
-                DateTime.Now.AddHours(24));
-
-            RaiseAuthenticationChanged(_scopedContextService.GetRequiredService<IContext>().IsAuthenticated);
-            RaiseSoftwareEnvironmentChanged(_scopedContextService.GetRequiredService<IContext>().Environment);
-        }
-        else
-        {
-            RaiseAuthenticationChanged(false);
-        }
-
-    }
+    private static string GenerateToken() =>
+        Convert.ToBase64String(Guid.NewGuid().ToByteArray()) +
+        Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 }

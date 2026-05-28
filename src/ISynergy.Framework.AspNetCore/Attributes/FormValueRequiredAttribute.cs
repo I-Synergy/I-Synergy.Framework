@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
 
@@ -9,6 +9,7 @@ namespace ISynergy.Framework.AspNetCore.Attributes;
 /// Implements the <see cref="ActionMethodSelectorAttribute" />
 /// </summary>
 /// <seealso cref="ActionMethodSelectorAttribute" />
+[AttributeUsage(AttributeTargets.Method)]
 public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
 {
     /// <summary>

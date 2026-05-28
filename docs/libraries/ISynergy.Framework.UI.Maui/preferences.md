@@ -1,4 +1,4 @@
-﻿This code is extending the basic functions of the built in MAUI Essentials IPreferences by letting the developers to save any type of object.
+This code is extending the basic functions of the built in MAUI Essentials IPreferences by letting the developers to save any type of object.
 This is done by using JSON serialization, and saving the raw jsons as strings with the default IPreferences implementation.
 Please consider saving large objects with it.
 Since JSON arrays can be serialized back to any collection type, you can use different types when Setting the value and when Getting it back.

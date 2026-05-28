@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Common.Tests;
+namespace ISynergy.Framework.Geography.Common;
 
 /// <summary>
 /// Class AngleTests.
@@ -44,7 +44,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor4()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 60));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60));
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public class AngleTests
     public void TestConstructor5()
     {
         Angle a = new(45, 30, 30);
-        Assert.AreEqual(a.Degrees, 45.5 + (1.0 / 120.0));
+        Assert.AreEqual(45.5 + (1.0 / 120.0), a.Degrees);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor6()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 30, 60));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 30, 60));
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor7()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, 60, 30));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, 60, 30));
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public class AngleTests
     public void TestConstructor8()
     {
         Angle a = new(-45, 30, 30);
-        Assert.AreEqual(a.Degrees, -45.5 - (1.0 / 120.0));
+        Assert.AreEqual(-45.5 - (1.0 / 120.0), a.Degrees);
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class AngleTests
     [TestMethod]
     public void TestConstructor9()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Angle(45, -1, 30));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Angle(45, -1, 30));
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public class AngleTests
     public void TestRadiansGetter()
     {
         Angle a = new(180);
-        Assert.AreEqual(a.Radians, Math.PI);
+        Assert.AreEqual(Math.PI, a.Radians);
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public class AngleTests
     public void TestAbs()
     {
         Angle a = new(-180);
-        Assert.AreEqual(a.Degrees, -180);
+        Assert.AreEqual(-180, a.Degrees);
         Angle b = a.Abs();
         Assert.AreEqual(180, b.Degrees);
     }
@@ -151,7 +151,7 @@ public class AngleTests
         Angle a = new(x);
         Angle b = new(y);
         Assert.AreEqual(0, a.CompareTo(a));
-        Assert.AreEqual(a.CompareTo(b), -1);
+        Assert.AreEqual(-1, a.CompareTo(b));
         Assert.AreEqual(1, b.CompareTo(a));
     }
 
@@ -281,7 +281,7 @@ public class AngleTests
         Angle a = new(45);
         Angle b = new(60);
         Angle c = a - b;
-        Assert.AreEqual(c.Degrees, -15);
+        Assert.AreEqual(-15, c.Degrees);
     }
 
     /// <summary>
@@ -357,7 +357,7 @@ public class AngleTests
     {
         Angle a = new(180);
         Angle b = -a;
-        Assert.AreEqual(b.Degrees, -180);
+        Assert.AreEqual(-180, b.Degrees);
     }
 
     /// <summary>
@@ -377,7 +377,7 @@ public class AngleTests
     public void TestDeg2Rad()
     {
         double a = Angle.DegToRad(90);
-        Assert.AreEqual(a, Math.PI / 2.0);
+        Assert.AreEqual(Math.PI / 2.0, a);
     }
 
     /// <summary>

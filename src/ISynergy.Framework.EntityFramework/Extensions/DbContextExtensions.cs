@@ -1,17 +1,18 @@
-﻿using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.EntityFramework.Base;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace ISynergy.Framework.EntityFramework.Extensions;
 
+/// <summary>
+/// Extension methods for <see cref="DbContext"/> providing common CRUD operations.
+/// </summary>
 public static class DbContextExtensions
 {
     private const string ErrorEntity = "Entity does not have an identity value.";
-    private const string ErrorRecord = "Record does not have an identity value.";
 
     /// <summary>
     /// Check if item exists the asynchronous.
@@ -21,7 +22,7 @@ public static class DbContextExtensions
     /// <param name="predicate">The predicate.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public static Task<bool> ExistsAsync<TEntity>(this DbContext context, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    public static Task<bool> ExistsAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntity>(this DbContext context, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
     {
         return context.Set<TEntity>().AnyAsync(predicate, cancellationToken);
@@ -36,6 +37,16 @@ public static class DbContextExtensions
     /// <param name="id">The identifier.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>ValueTask&lt;TEntity&gt;.</returns>
+    /// <remarks>
+    /// This method builds a LINQ predicate and navigations chain using runtime reflection
+    /// (<see cref="System.Linq.Expressions.Expression.Parameter(Type)"/>,
+    /// <see cref="System.Linq.Expressions.Expression.Property(Expression, string)"/>, and
+    /// <see cref="System.Linq.Expressions.Expression.Lambda{TDelegate}(Expression, ParameterExpression[])"/>)
+    /// and is therefore not AOT-safe. AOT-publishing applications should use pre-compiled
+    /// <c>EF.CompileAsyncQuery</c> delegates in their repositories instead of calling this helper.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async ValueTask<TEntity?> GetItemByIdAsync<TEntity, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TId : struct
@@ -43,7 +54,7 @@ public static class DbContextExtensions
         var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
 
         if (entityPropertyName is null)
-            throw new ArgumentException(ErrorEntity);
+            throw new ArgumentException(ErrorEntity, typeof(TEntity).Name);
 
         var parameterExpression = Expression.Parameter(typeof(TEntity));
         var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(id));
@@ -72,193 +83,6 @@ public static class DbContextExtensions
     }
 
     /// <summary>
-    /// Get item by identifier as an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TModel">The type of the t model.</typeparam>
-    /// <typeparam name="TId">The type of the t identifier.</typeparam>
-    /// <param name="context"></param>
-    /// <param name="id">The identifier.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A Task&lt;TModel&gt; representing the asynchronous operation.</returns>
-    public static async Task<TModel?> GetItemByIdAsync<TEntity, TModel, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
-        where TEntity : BaseEntity, new()
-        where TModel : BaseModel, new()
-        where TId : struct
-    {
-        if (await context.GetItemByIdAsync<TEntity, TId>(id, cancellationToken).ConfigureAwait(false) is { } result)
-            return result.Adapt<TModel>();
-
-        return null;
-    }
-
-    /// <summary>
-    /// Adds the item asynchronous.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TModel">The type of the t source.</typeparam>
-    /// <param name="context"></param>
-    /// <param name="e">The e.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>Task&lt;System.Int32&gt;.</returns>
-    public static async Task<int> AddItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
-        where TEntity : BaseEntity, new()
-        where TModel : BaseModel, new()
-    {
-        Argument.IsNotNull(e);
-
-        var target = e.Adapt<TModel, TEntity>();
-
-        context.Add(target);
-
-        var result = await context
-            .SaveChangesAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-        return result;
-    }
-
-    /// <summary>
-    /// update item as an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TModel">The type of the t source.</typeparam>
-    /// <param name="context"></param>
-    /// <param name="e">The e.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>System.Int32.</returns>
-    public static async Task<int> UpdateItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
-        where TEntity : BaseEntity, new()
-        where TModel : BaseModel, new()
-    {
-        Argument.IsNotNull(e);
-
-        var result = 0;
-
-        var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
-
-        if (entityPropertyName is null)
-            throw new ArgumentException(ErrorEntity);
-
-        var recordPropertyValue = e.GetIdentityValue();
-
-        if (recordPropertyValue is null)
-            throw new ArgumentException(ErrorRecord);
-
-        var parameterExpression = Expression.Parameter(typeof(TEntity));
-        var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(recordPropertyValue));
-        var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
-
-        var query = context
-            .Set<TEntity>()
-            .AsQueryable();
-
-        var entityType = context.Model.FindEntityType(typeof(TEntity));
-
-        if (entityType is null)
-            return 0;
-
-        var navigations = entityType
-            .GetDerivedTypesInclusive()
-            .SelectMany(t => t.GetNavigations())
-            .Distinct();
-
-        query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
-
-        var target = await query
-            .SingleOrDefaultAsync(predicate, cancellationToken)
-            .ConfigureAwait(false);
-
-        target = e.Adapt(target);
-
-        if (target is null)
-            return 0;
-
-        var updates = context.Update(target);
-
-        result = await context
-            .SaveChangesAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-        return result;
-    }
-
-    /// <summary>
-    /// add update item as an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <typeparam name="TModel">The type of the t source.</typeparam>
-    /// <param name="context"></param>
-    /// <param name="e">The e.</param>
-    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>System.Int32.</returns>
-    public static async Task<int> AddUpdateItemAsync<TEntity, TModel>(this DbContext context, TModel e, CancellationToken cancellationToken)
-        where TEntity : BaseEntity, new()
-        where TModel : BaseModel, new()
-    {
-        Argument.IsNotNull(e);
-
-        var result = 0;
-
-        var entityPropertyName = ReflectionExtensions.GetIdentityPropertyName<TEntity>();
-
-        if (entityPropertyName is null)
-            throw new ArgumentException(ErrorEntity);
-
-        var recordPropertyValue = e.GetIdentityValue();
-
-        if (recordPropertyValue is null)
-            throw new ArgumentException(ErrorRecord);
-
-        var parameterExpression = Expression.Parameter(typeof(TEntity));
-        var expression = Expression.Equal(Expression.Property(parameterExpression, entityPropertyName), Expression.Constant(recordPropertyValue));
-        var predicate = Expression.Lambda<Func<TEntity, bool>>(expression, parameterExpression);
-
-        var query = context
-            .Set<TEntity>()
-            .AsQueryable();
-
-        var entityType = context.Model.FindEntityType(typeof(TEntity));
-
-        if (entityType is null)
-            return 0;
-
-        var navigations = entityType
-            .GetDerivedTypesInclusive()
-            .SelectMany(t => t.GetNavigations())
-            .Distinct();
-
-        query = navigations.Aggregate(query, (current, property) => current.Include(property.Name));
-
-        var target = await query
-            .SingleOrDefaultAsync(predicate, cancellationToken)
-            .ConfigureAwait(false);
-
-        if (target is null)
-        {
-            target = e.Adapt<TModel, TEntity>();
-
-            var adds = context.Add(target);
-
-            result = await context
-                .SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-        }
-        else
-        {
-            target = e.Adapt(target);
-
-            var updates = context.Update(target);
-
-            result = await context
-                .SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-        }
-
-        return result;
-    }
-
-    /// <summary>
     /// remove item as an asynchronous operation.
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
@@ -269,6 +93,12 @@ public static class DbContextExtensions
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>System.Int32.</returns>
     /// <exception cref="Microsoft.EntityFrameworkCore.DbUpdateException"></exception>
+    /// <remarks>
+    /// This method delegates to <see cref="GetItemByIdAsync{TEntity,TId}(DbContext,TId,CancellationToken)"/>
+    /// which uses runtime reflection and is not AOT-safe. See that method's remarks for migration guidance.
+    /// </remarks>
+    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
+    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async Task<int> RemoveItemAsync<TEntity, TIdType>(this DbContext context, TIdType id, CancellationToken cancellationToken, bool soft = false)
         where TEntity : BaseEntity, new()
         where TIdType : struct

@@ -1,8 +1,6 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -10,27 +8,24 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionDialogTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
     private Mock<ILanguageService> _mockLanguageService;
+    private Mock<ILogger<ViewModelSelectionDialog<TestEntity>>> _mockLogger;
 
     public ViewModelSelectionDialogTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
-        _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+        _mockLogger = new Mock<ILogger<ViewModelSelectionDialog<TestEntity>>>();
 
         _mockLanguageService = new Mock<ILanguageService>();
+        _mockLanguageService.Setup(x => x.GetString("WarningSelectItem")).Returns("Please select an item");
+
+        _mockCommonServices = new Mock<ICommonServices>();
+        _mockCommonServices.SetupGet(s => s.LanguageService).Returns(_mockLanguageService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
-    private class TestEntity
+    public class TestEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -49,11 +44,10 @@ public class ViewModelSelectionDialogTests
         var selectedItems = new List<TestEntity> { items[0] };
 
         // Act
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            selectedItems,
-            SelectionModes.Single);
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(selectedItems);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -73,17 +67,17 @@ public class ViewModelSelectionDialogTests
                 new TestEntity { Id = 1, Name = "Test1" },
                 new TestEntity { Id = 2, Name = "Test2" }
             };
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.AreEqual(2, viewModel.Items?.Count);
     }
 
     [TestMethod]
@@ -95,29 +89,28 @@ public class ViewModelSelectionDialogTests
                 new TestEntity { Id = 1, Name = "Test1" },
                 new TestEntity { Id = 2, Name = "Different" }
             };
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
-        Assert.AreEqual(1, viewModel.Items.Count);
-        Assert.AreEqual("Test1", viewModel.Items[0].Name);
+        Assert.AreEqual(1, viewModel.Items?.Count);
+        Assert.AreEqual("Test1", viewModel.Items?.FirstOrDefault()?.Name);
     }
 
     [TestMethod]
     public void Constructor_WithNullItems_InitializesEmptyCollections()
     {
         // Arrange & Act
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockCommonServices.Object,
-            null!,
-            null!,
-            SelectionModes.Single);
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(null!);
+        viewModel.SetSelectedItems(null!);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -130,13 +123,10 @@ public class ViewModelSelectionDialogTests
     public void Validator_EnforcesSelectionRules()
     {
         // Arrange
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(
-            _mockCommonServices.Object,
-            new List<TestEntity>(),
-            new List<TestEntity>(),
-            SelectionModes.Single);
-
-        _mockLanguageService.Setup(x => x.GetString("WarningSelectItem")).Returns("Please select an item");
+        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(new List<TestEntity>());
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         bool isValid = viewModel.Validate();
@@ -146,3 +136,4 @@ public class ViewModelSelectionDialogTests
         Assert.IsTrue(viewModel.HasErrors);
     }
 }
+

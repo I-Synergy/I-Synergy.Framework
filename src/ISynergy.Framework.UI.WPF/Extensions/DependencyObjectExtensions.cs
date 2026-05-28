@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Media;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -14,7 +14,7 @@ public static class DependencyObjectExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="self">The parent.</param>
     /// <returns>T.</returns>
-    public static T? FindChild<T>(this DependencyObject self) where T : DependencyObject
+    public static T? FindDescendant<T>(this DependencyObject self) where T : DependencyObject
     {
         // confirm parent is valid.
         if (self is null)
@@ -28,16 +28,16 @@ public static class DependencyObjectExtensions
         for (var i = 0; i < childrenCount; i++)
         {
             var child = VisualTreeHelper.GetChild(self, i);
-            var foundChild = child.FindChild<T>();
+            var foundChild = child.FindDescendant<T>();
 
             if (foundChild is not null)
-                return (T)foundChild;
+                return foundChild;
         }
 
         return null;
     }
 
-    public static T? FindChild<T>(this DependencyObject parent, string childName) where T : DependencyObject
+    public static T? FindDescendant<T>(this DependencyObject parent, string childName) where T : DependencyObject
     {
         // Confirm parent and childName are valid. 
         if (parent == null)
@@ -47,27 +47,26 @@ public static class DependencyObjectExtensions
         for (int i = 0; i < childrenCount; i++)
         {
             var child = VisualTreeHelper.GetChild(parent, i);
-            var tmpFoundChild = GetChild<T>(childName, child);
+            var tmpFoundChild = GetDescendant<T>(childName, child);
             if (tmpFoundChild is not null)
             {
-                var foundChild = tmpFoundChild;
-                return foundChild;
+                return tmpFoundChild;
             }
         }
 
         return null;
     }
 
-    private static T? GetChild<T>(string childName, DependencyObject child) where T : DependencyObject
+    private static T? GetDescendant<T>(string childName, DependencyObject child) where T : DependencyObject
     {
         // If the child is not of the request child type child
-        if ((child is T childType) == false)
+        if (child is not T)
         {
             // recursively drill down the tree
-            return FindChild<T>(child, childName);
+            return FindDescendant<T>(child, childName);
         }
 
-        if (string.IsNullOrEmpty(childName) == false)
+        if (!string.IsNullOrEmpty(childName))
         {
             // If the child's name is set for search
             if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName)

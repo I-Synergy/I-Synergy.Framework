@@ -1,23 +1,23 @@
+using ISynergy.Framework.Mail.Microsoft365.Options;
 using ISynergy.Framework.Mail.Models;
-using ISynergy.Framework.Mail.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OptionsX = Microsoft.Extensions.Options.Options;
 
-namespace ISynergy.Framework.Mail.Services.Tests;
+namespace ISynergy.Framework.Mail.Microsoft365.Services;
 
 public class MailServiceTests
 {
-    private readonly MailOptions _mailOptions;
+    private readonly Microsoft365MailOptions _mailOptions;
 
-    private Mock<ILoggerFactory> _mockLogger;
+    private Mock<ILogger<Microsoft365MailService>> _mockLogger;
 
     public MailServiceTests()
     {
-        _mockLogger = new Mock<ILoggerFactory>();
+        _mockLogger = new Mock<ILogger<Microsoft365MailService>>();
 
-        Mock<MailOptions> configMock = new();
+        Mock<Microsoft365MailOptions> configMock = new();
         _mailOptions = configMock.Object;
         _mailOptions.ClientId = "";
         _mailOptions.ClientSecret = "";
@@ -30,7 +30,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
@@ -44,7 +44,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithCopyAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
@@ -58,7 +58,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithFromAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             ["support@i-synergy.nl"],
             "Test subject",
@@ -72,7 +72,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithFromAndCopyAsyncTest()
     {
-        MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
         MailMessage message = new(
             ["support@i-synergy.nl"],
             "Test subject",

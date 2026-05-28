@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Mathematics.Convergence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Convergence;
+namespace ISynergy.Framework.Mathematics.Convergence;
 [TestClass]
 public class RelativeConvergenceTest
 {
@@ -124,6 +123,6 @@ public class RelativeConvergenceTest
     [TestMethod]
     public void RelativeConvergenceConstructorTest5()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new RelativeConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new RelativeConvergence(iterations: -10, tolerance: 1e-10, startValue: 1));
     }
 }

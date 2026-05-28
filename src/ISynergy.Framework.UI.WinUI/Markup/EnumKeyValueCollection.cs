@@ -1,4 +1,5 @@
-﻿using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
@@ -25,7 +26,13 @@ public class EnumKeyValueCollection : MarkupExtension
     /// Provides the value.
     /// </summary>
     /// <param name="serviceProvider">The service provider.</param>
-    /// <returns>System.Object.</returns>
+    /// <returns>A list of <see cref="KeyValuePair{TKey,TValue}"/> with enum integer values and their localized descriptions.</returns>
+    /// <remarks>
+    /// Uses <see cref="Enum.GetValues(Type)"/> with a runtime <see cref="Type"/> argument.
+    /// This requires the enum type's members to be preserved by the IL trimmer and is not compatible
+    /// with NativeAOT. For AOT-safe scenarios, compute enum key-value pairs using
+    /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code and bind to the resulting collection.
+    /// </remarks>
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsNotNull(EnumType);
@@ -49,6 +56,6 @@ public class EnumKeyValueCollection : MarkupExtension
     private static string GetDescription(Enum value)
     {
         Argument.IsNotNull(value);
-        return LanguageService.Default.GetString(value.ToString());
+        return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(value.ToString());
     }
 }

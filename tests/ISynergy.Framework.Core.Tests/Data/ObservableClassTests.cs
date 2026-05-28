@@ -1,7 +1,6 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Core.Data.TestClasses;
 
-namespace ISynergy.Framework.Core.Data.Tests;
+namespace ISynergy.Framework.Core.Data;
 
 /// <summary>
 /// Class ObservableClassTests.
@@ -111,7 +110,7 @@ public class ObservableClassTests
     {
         Product product = new();
         Assert.IsFalse(product.Validate());
-        Assert.IsTrue(product.Errors.Count > 0);
+        Assert.IsTrue(product.Errors?.Count > 0);
     }
 
     /// <summary>
@@ -131,7 +130,7 @@ public class ObservableClassTests
         };
 
         Assert.IsTrue(product.Validate());
-        Assert.IsTrue(product.Errors.Count == 0);
+        Assert.IsTrue(product.Errors?.Count == 0);
     }
 
     [TestMethod]

@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Core;
+namespace ISynergy.Framework.Mathematics.Core;
 
 [TestClass]
 public class Matrix4x4Test
@@ -112,13 +112,13 @@ public class Matrix4x4Test
         Assert.AreEqual(row3, matrix.GetRow(3));
 
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetRow(-1);
         }
         );
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetRow(4);
         }
@@ -146,20 +146,20 @@ public class Matrix4x4Test
         Assert.AreEqual(column2, matrix.GetColumn(2));
         Assert.AreEqual(column3, matrix.GetColumn(3));
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetColumn(-1);
         }
         );
 
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             matrix.GetColumn(4);
         }
         );
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0)]
     [DataRow(30)]
     [DataRow(45)]
@@ -187,7 +187,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, expectedArray);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0)]
     [DataRow(30)]
     [DataRow(45)]
@@ -215,7 +215,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, expectedArray);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0)]
     [DataRow(30)]
     [DataRow(45)]
@@ -243,7 +243,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, expectedArray);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0)]
     [DataRow(30, 45, 60)]
     [DataRow(45, 60, 30)]
@@ -269,7 +269,7 @@ public class Matrix4x4Test
         CompareMatrixWithArray(matrix, rotationMatrix.ToArray());
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(0, 0, 0)]
     [DataRow(30, 45, 60)]
     [DataRow(45, 60, 30)]
@@ -294,7 +294,7 @@ public class Matrix4x4Test
         Assert.AreEqual(radiansRoll, extractedRoll, Epsilon);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, 2, 3, 4)]
     [DataRow(-1, -2, -3, -4)]
     public void CreateDiagonalTest(float v00, float v11, float v22, float v33)
@@ -334,7 +334,7 @@ public class Matrix4x4Test
 
         Matrix4x4 result = a1 + a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
     [TestMethod]
@@ -364,7 +364,7 @@ public class Matrix4x4Test
 
         Matrix4x4 result = a1 - a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
     [TestMethod]
@@ -394,10 +394,10 @@ public class Matrix4x4Test
 
         Matrix4x4 result = a1 * a2;
 
-        Assert.AreEqual(true, ApproximateEquals(result, expectedResult));
+        Assert.IsTrue(ApproximateEquals(result, expectedResult));
     }
 
-    private void CompareMatrixWithArray(Matrix4x4 matrix, float[] array)
+    private static void CompareMatrixWithArray(Matrix4x4 matrix, float[] array)
     {
         float[] matrixArray = matrix.ToArray();
 
@@ -407,7 +407,7 @@ public class Matrix4x4Test
         }
     }
 
-    private bool ApproximateEquals(Matrix4x4 matrix1, Matrix4x4 matrix2)
+    private static bool ApproximateEquals(Matrix4x4 matrix1, Matrix4x4 matrix2)
     {
         // TODO: better algorithm should be put into the framework actually
         return

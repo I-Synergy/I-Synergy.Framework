@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
+using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization;
 [TestClass]
 public class BroydenFletcherGoldfarbShannoTest
 {
@@ -143,7 +143,7 @@ public class BroydenFletcherGoldfarbShannoTest
     {
         BroydenFletcherGoldfarbShanno target = new(2);
 
-        Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
+        Assert.Throws<InvalidOperationException>(() => target.Minimize(), "");
     }
 
     [TestMethod]
@@ -168,7 +168,7 @@ public class BroydenFletcherGoldfarbShannoTest
             Gradient = (x) => new double[1]
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
+        Assert.Throws<InvalidOperationException>(() => target.Minimize(), "");
     }
 
     [TestMethod]
@@ -180,7 +180,7 @@ public class BroydenFletcherGoldfarbShannoTest
             Gradient = (x) => x
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() => target.Minimize(), "");
+        Assert.Throws<InvalidOperationException>(() => target.Minimize(), "");
     }
 
     [TestMethod]

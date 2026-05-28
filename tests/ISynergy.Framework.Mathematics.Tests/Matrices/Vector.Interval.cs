@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests;
@@ -26,7 +26,7 @@ public partial class VectorTest
         CollectionAssert.AreEqual(new double[] { 1, 1.5, 2, 2.5, 3 }, Vector.Interval(1.0, 3.0, 5));
         CollectionAssert.AreEqual(new double[] { 3 }, Vector.Interval(3, 1, 1));
 
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Vector.Interval(1, 3, -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Vector.Interval(1, 3, -1));
     }
 
 }

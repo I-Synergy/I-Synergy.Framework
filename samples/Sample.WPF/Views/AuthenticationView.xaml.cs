@@ -1,10 +1,10 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 
 namespace Sample.Views;
 /// <summary>
 /// Interaction logic for AuthenticationView.xaml
 /// </summary>
-public partial class AuthenticationView : IView
+public partial class AuthenticationView
 {
     public AuthenticationView()
     {

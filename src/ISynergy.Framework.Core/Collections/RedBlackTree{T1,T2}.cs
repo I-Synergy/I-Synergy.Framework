@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Collections;
+namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
 ///   Red-black tree specialized for key-based value retrieval.

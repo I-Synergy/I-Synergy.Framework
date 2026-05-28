@@ -1,22 +1,22 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
 using System.ComponentModel.DataAnnotations;
 
-namespace ISynergy.Framework.Core.Data.Tests.TestClasses;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
 /// <summary>
 /// Class Product.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
-public class ProductWithoutIdentity : ObservableClass
+/// <seealso cref="ObservableValidatedClass" />
+public class ProductWithoutIdentity : ObservableValidatedClass
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Product"/> class.
     /// </summary>
     public ProductWithoutIdentity()
     {
-        Validator = new Action<IObservableClass>(_ =>
+        Validator = new Action<IObservableValidatedClass>(_ =>
         {
             if (ProductGroups is null)
             {

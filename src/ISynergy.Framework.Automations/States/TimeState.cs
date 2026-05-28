@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Automations.States;
@@ -6,7 +6,7 @@ namespace ISynergy.Framework.Automations.States;
 /// <summary>
 /// Time state.
 /// </summary>
-public class TimeState : ObservableClass
+public class TimeState : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the After property value.

@@ -1,10 +1,9 @@
-﻿using ISynergy.Framework.Mathematics.Differentiation;
+using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
-using ISynergy.Framework.Mathematics.Optimization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization;
 [TestClass]
 public class QuadraticObjectiveFunctionTest
 {
@@ -511,7 +510,7 @@ public class QuadraticObjectiveFunctionTest
                 }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", "x² + 1")]
     [DataRow("x² + 1", "2x²")]
     [DataRow("-x*y + y*z", "-x*y + y*z")]
@@ -587,7 +586,7 @@ public class QuadraticObjectiveFunctionTest
         Assert.AreEqual(result, check);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", "x² + 1", 3, 5)]
     [DataRow("x² + 1", "2x²", 1, 0)]
     [DataRow("-x*y + y*z", "-x*y + y*z", 2, 2)]
@@ -627,7 +626,7 @@ public class QuadraticObjectiveFunctionTest
                 }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", "x² + 1")]
     [DataRow("x² + 1", "2x²")]
     [DataRow("-x*y + y*z", "-x*y + y*z")]
@@ -696,7 +695,7 @@ public class QuadraticObjectiveFunctionTest
                 }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("x² + 1", 6)]
     [DataRow("-x*y + y*z", 7)]
     [DataRow("-2x² + xy - y² - 10xz + z²", 0)]
@@ -785,7 +784,7 @@ public class QuadraticObjectiveFunctionTest
                     Assert.IsFalse(double.IsNaN(e));
                 }
 
-        Assert.ThrowsException<DivideByZeroException>(() =>
+        Assert.Throws<DivideByZeroException>(() =>
         {
             QuadraticObjectiveFunction resultant = actual / 0;
             Assert.IsNull(resultant);
@@ -804,7 +803,7 @@ public class QuadraticObjectiveFunctionTest
 
         double[] linearTerms = [0, 2, 0];
 
-        Assert.ThrowsException<NonSymmetricMatrixException>(() =>
+        Assert.Throws<NonSymmetricMatrixException>(() =>
         {
             QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
             Assert.IsNotNull(target);

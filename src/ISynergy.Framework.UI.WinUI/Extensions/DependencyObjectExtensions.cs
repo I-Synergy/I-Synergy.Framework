@@ -1,4 +1,4 @@
-﻿
+
 using ISynergy.Framework.Core.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -44,9 +44,7 @@ public static class DependencyObjectExtensions
         if (parentObject is null) return default;
 
         if (parentObject is T parent)
-        {
             return parent;
-        }
 
         return FindParent<T>(parentObject);
     }
@@ -61,7 +59,6 @@ public static class DependencyObjectExtensions
     public static T? GetVisualChildByName<T>(this FrameworkElement root, string name)
         where T : FrameworkElement
     {
-        var chil = VisualTreeHelper.GetChild(root, 0);
         FrameworkElement? child = null;
 
         var count = VisualTreeHelper.GetChildrenCount(root);
@@ -94,23 +91,18 @@ public static class DependencyObjectExtensions
     public static FrameworkElement? FindDescendantByName(this DependencyObject element, string name)
     {
         if (element is null || string.IsNullOrWhiteSpace(name))
-        {
             return null;
-        }
 
         if (name.Equals((element as FrameworkElement)?.Name, StringComparison.OrdinalIgnoreCase))
-        {
             return element as FrameworkElement;
-        }
 
         var childCount = VisualTreeHelper.GetChildrenCount(element);
         for (var i = 0; i < childCount; i++)
         {
             var result = VisualTreeHelper.GetChild(element, i).FindDescendantByName(name);
+
             if (result is not null)
-            {
                 return result;
-            }
         }
 
         return null;
@@ -140,9 +132,7 @@ public static class DependencyObjectExtensions
             retValue = FindDescendant<T>(child);
 
             if (retValue is not null)
-            {
                 break;
-            }
         }
 
         return retValue;
@@ -171,9 +161,7 @@ public static class DependencyObjectExtensions
             retValue = FindDescendant(child, type);
 
             if (retValue is not null)
-            {
                 break;
-            }
         }
 
         return retValue;
@@ -194,9 +182,7 @@ public static class DependencyObjectExtensions
         {
             var child = VisualTreeHelper.GetChild(element, i);
             if (child is T type)
-            {
                 yield return type;
-            }
 
             foreach (var childofChild in child.FindDescendants<T>().EnsureNotNull())
             {
@@ -214,21 +200,15 @@ public static class DependencyObjectExtensions
     public static FrameworkElement? FindAscendantByName(this DependencyObject element, string name)
     {
         if (element is null || string.IsNullOrWhiteSpace(name))
-        {
             return null;
-        }
 
         var parent = VisualTreeHelper.GetParent(element);
 
         if (parent is null)
-        {
             return null;
-        }
 
         if (name.Equals((parent as FrameworkElement)?.Name, StringComparison.OrdinalIgnoreCase))
-        {
             return parent as FrameworkElement;
-        }
 
         return parent.FindAscendantByName(name);
     }
@@ -245,14 +225,10 @@ public static class DependencyObjectExtensions
         var parent = VisualTreeHelper.GetParent(element);
 
         if (parent is null)
-        {
             return default;
-        }
 
         if (parent is T result)
-        {
             return result;
-        }
 
         return parent.FindAscendant<T>();
     }
@@ -268,14 +244,10 @@ public static class DependencyObjectExtensions
         var parent = VisualTreeHelper.GetParent(element);
 
         if (parent is null)
-        {
             return null;
-        }
 
         if (parent.GetType() == type)
-        {
             return parent;
-        }
 
         return parent.FindAscendant(type);
     }

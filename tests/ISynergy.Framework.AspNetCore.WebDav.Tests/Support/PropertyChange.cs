@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.WebDav.Tests.Support
+namespace ISynergy.Framework.AspNetCore.WebDav.Tests.Support
 {
     public enum PropertyChange
     {

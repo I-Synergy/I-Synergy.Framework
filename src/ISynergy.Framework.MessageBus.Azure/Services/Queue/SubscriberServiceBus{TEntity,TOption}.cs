@@ -1,11 +1,13 @@
-﻿using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 
 namespace ISynergy.Framework.MessageBus.Azure.Services.Queue;
 
@@ -25,6 +27,10 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// The logger
     /// </summary>
     protected readonly ILogger _logger;
+    /// <summary>
+    /// The JSON type info used for AOT-safe deserialization.
+    /// </summary>
+    protected readonly JsonTypeInfo<TEntity>? _jsonTypeInfo;
 
     /// <summary>
     /// ServiceBus client.
@@ -37,20 +43,49 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     private ServiceBusProcessor? _serviceBusProcessor;
 
     /// <summary>
-    /// Constructor of service bus.
+    /// Constructor of service bus. Uses AOT-safe source-generated JSON deserialization.
     /// </summary>
     /// <param name="options">The options.</param>
-    /// <param name="loggerFactory">The logger.</param>
+    /// <param name="logger">The logger.</param>
+    /// <param name="jsonTypeInfo">
+    /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TEntity"/>, obtained from a
+    /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
+    /// </param>
     protected SubscriberServiceBus(
         IOptions<TOption> options,
-        ILoggerFactory loggerFactory)
+        ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
+        JsonTypeInfo<TEntity> jsonTypeInfo)
     {
         _option = options.Value;
 
         Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
 
-        _logger = loggerFactory.CreateLogger<SubscriberServiceBus<TEntity, TOption>>();
+        _logger = logger;
+        _jsonTypeInfo = jsonTypeInfo;
+    }
+
+    /// <summary>
+    /// Constructor of service bus. Uses reflection-based JSON deserialization.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <param name="logger">The logger.</param>
+    /// <remarks>
+    /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
+    /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.
+    /// </remarks>
+    [RequiresUnreferencedCode("Deserialization uses reflection. Pass a JsonTypeInfo<TEntity> for AOT compatibility.")]
+    [RequiresDynamicCode("Deserialization uses dynamic code generation. Pass a JsonTypeInfo<TEntity> for AOT compatibility.")]
+    protected SubscriberServiceBus(
+        IOptions<TOption> options,
+        ILogger<SubscriberServiceBus<TEntity, TOption>> logger)
+    {
+        _option = options.Value;
+
+        Argument.IsNotNullOrEmpty(_option.ConnectionString);
+        Argument.IsNotNullOrEmpty(_option.QueueName);
+
+        _logger = logger;
     }
 
     /// <summary>
@@ -116,10 +151,11 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     private async Task ErrorHandlerAsync(ProcessErrorEventArgs arg)
     {
         _logger.LogError(arg.Exception, "Message handler encountered an exception");
-        _logger.LogDebug($"- Error Source: {arg.ErrorSource}");
-        _logger.LogDebug($"- Fully Qualified Namespace: {arg.FullyQualifiedNamespace}");
-        _logger.LogDebug($"- Entity Path: {arg.EntityPath}");
-        _logger.LogDebug($"- Exception: {arg.Exception.ToString()}");
+        // Log structured fields individually to avoid embedding connection strings in the output.
+        _logger.LogDebug("- Error Source: {ErrorSource}", arg.ErrorSource);
+        _logger.LogDebug("- Entity Path: {EntityPath}", arg.EntityPath);
+        // FullyQualifiedNamespace may contain the SAS connection endpoint; log only the exception type and message.
+        _logger.LogDebug("- Exception: {ExceptionType}: {ExceptionMessage}", arg.Exception.GetType().Name, arg.Exception.Message);
 
         if (_serviceBusProcessor is not null)
             await _serviceBusProcessor.CloseAsync();
@@ -129,17 +165,20 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     {
         var message = arg.Message;
         var body = Encoding.UTF8.GetString(message.Body.ToArray());
-        var data = JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+
+        var data = _jsonTypeInfo is not null
+            ? JsonSerializer.Deserialize(body, _jsonTypeInfo)
+            : JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
         if (data is not null && ValidateMessage(data))
         {
             if (await ProcessDataAsync(data).ConfigureAwait(false))
             {
                 // Now that we're done with "processing" the message, we tell the broker about that being the
-                // case. The MessageReceiver.CompleteAsync operation will settle the message transfer with 
+                // case. The MessageReceiver.CompleteAsync operation will settle the message transfer with
                 // the broker and remove it from the broker.
                 await arg.CompleteMessageAsync(message)
                     .ConfigureAwait(false);
@@ -148,7 +187,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
             {
                 // If the message does not meet our processing criteria, we will dead letter it, meaning
                 // it is put into a special queue for handling defective messages. The broker will automatically
-                // dead letter the message, if delivery has been attempted too many times. 
+                // dead letter the message, if delivery has been attempted too many times.
                 await arg.DeadLetterMessageAsync(message)
                     .ConfigureAwait(false);
             }

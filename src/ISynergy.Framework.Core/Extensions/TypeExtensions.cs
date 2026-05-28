@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace ISynergy.Framework.Core.Extensions;
 
@@ -13,7 +14,7 @@ public static class TypeExtensions
     /// <param name="_self">The self.</param>
     /// <param name="includeInherited">if set to <c>true</c> [include inherited].</param>
     /// <returns>IEnumerable&lt;Type&gt;.</returns>
-    public static IEnumerable<Type> GetInterfaces(this Type _self, bool includeInherited)
+    public static IEnumerable<Type> GetInterfaces([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type _self, bool includeInherited)
     {
         if (includeInherited || _self.BaseType is null)
             return _self.GetInterfaces();
@@ -37,12 +38,12 @@ public static class TypeExtensions
     /// <summary>
     ///   Determines whether the given type has a public default (parameterless) constructor.
     /// </summary>
-    /// 
+    ///
     /// <param name="t">The type to check.</param>
-    /// 
+    ///
     /// <returns>True if the type has a public parameterless constructor; false otherwise.</returns>
-    /// 
-    public static bool HasDefaultConstructor(this Type t)
+    ///
+    public static bool HasDefaultConstructor([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] this Type t)
     {
         return t.IsValueType || t.GetConstructor(Type.EmptyTypes) is not null;
     }
@@ -51,9 +52,11 @@ public static class TypeExtensions
     ///   Gets the default value for a type. This method should serve as
     ///   a programmatic equivalent to <c>default(T)</c>.
     /// </summary>
-    /// 
+    ///
     /// <param name="type">The type whose default value should be retrieved.</param>
-    /// 
+    ///
+    [RequiresUnreferencedCode("Creating an instance of a value type by runtime Type is not AOT-safe.")]
+    [RequiresDynamicCode("Activator.CreateInstance on an unknown value type requires dynamic code.")]
     public static object? GetDefaultValue(this Type type)
     {
         if (type.GetTypeInfo().IsValueType)
@@ -69,6 +72,7 @@ public static class TypeExtensions
     /// <param name="jagged">Whether to return a type for a jagged array of the given rank, or a 
     /// multdimensional array. Default is false (default is to return multidimensional array types).</param>
     /// 
+    [RequiresDynamicCode("Creating an array type at runtime requires dynamic code generation.")]
     public static Type MakeArrayType(this Type elementType, int rank, bool jagged)
     {
         if (!jagged)

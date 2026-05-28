@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Decompositions;
+namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
 public class CholeskyDecompositionTest
 {
@@ -77,7 +76,6 @@ public class CholeskyDecompositionTest
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
-        //Assert.AreEqual(true, chol.Symmetric);
     }
 
     [TestMethod]

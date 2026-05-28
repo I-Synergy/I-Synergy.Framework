@@ -1,8 +1,6 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.Commands;
+using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using System.ComponentModel;
 using System.Windows.Input;
-
-#nullable enable
 
 namespace ISynergy.Framework.Mvvm.Commands;
 
@@ -63,8 +61,7 @@ internal sealed class CancelCommand : ICommand, IDisposable
         if (disposing)
         {
             // free managed resources
-            if (_command is not null)
-                _command.PropertyChanged -= OnPropertyChanged;
+            _command?.PropertyChanged -= OnPropertyChanged;
         }
 
         // free native resources if there are any.

@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using DecaTec.WebDav.Headers;

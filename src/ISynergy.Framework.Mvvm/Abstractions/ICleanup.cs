@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions;
+namespace ISynergy.Framework.Mvvm.Abstractions;
 
 /// <summary>
 /// Defines a common interface for classes that should be cleaned up,
@@ -12,5 +12,5 @@ public interface ICleanup
     /// Cleans up the instance, for example by saving its state,
     /// removing resources, etc...
     /// </summary>
-    void Cleanup();
+    void Cleanup(bool isClosing = true);
 }

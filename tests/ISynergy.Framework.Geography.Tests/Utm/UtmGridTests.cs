@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Geography.Global;
-using ISynergy.Framework.Geography.Tests;
+using ISynergy.Framework.Geography.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Utm.Tests;
+namespace ISynergy.Framework.Geography.Utm;
 
 /// <summary>
 /// Class UtmGridTests.
@@ -33,8 +32,8 @@ public class UtmGridTests
     public void TestConstructor1()
     {
         UtmGrid g = new(utm, 1, 'C');
-        Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
-        Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MinLatitude);
+        Assert.AreEqual(-180, g.LowerLeftCorner.Longitude);
+        Assert.AreEqual(utm.MinLatitude, g.LowerLeftCorner.Latitude);
         Assert.AreEqual(6.0, g.Width);
         ValidateCorners(g);
     }
@@ -46,8 +45,8 @@ public class UtmGridTests
     public void TestConstructor2()
     {
         UtmGrid g = new(utm, 1, 'X');
-        Assert.AreEqual(g.LowerLeftCorner.Longitude, -180);
-        Assert.AreEqual(g.LowerLeftCorner.Latitude, utm.MaxLatitude - g.Height);
+        Assert.AreEqual(-180, g.LowerLeftCorner.Longitude);
+        Assert.AreEqual(utm.MaxLatitude - g.Height, g.LowerLeftCorner.Latitude);
         Assert.AreEqual(12.0, g.Height);
         Assert.AreEqual(6.0, g.Width);
         ValidateCorners(g);
@@ -60,7 +59,7 @@ public class UtmGridTests
     public void TestConstructor3()
     {
         GlobalCoordinates loc = new(utm.MaxLatitude + 1.0, 0);
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, loc));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, loc));
     }
 
     /// <summary>
@@ -81,7 +80,7 @@ public class UtmGridTests
     [TestMethod]
     public void TestConstructor5()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 0, 'C'));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 0, 'C'));
     }
 
     /// <summary>
@@ -90,7 +89,7 @@ public class UtmGridTests
     [TestMethod]
     public void TestConstructor6()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 1, 'A'));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 1, 'A'));
     }
 
     /// <summary>
@@ -99,7 +98,7 @@ public class UtmGridTests
     [TestMethod]
     public void TestConstructor7()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, UtmGrid.NumberOfGrids + 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, UtmGrid.NumberOfGrids + 1));
     }
 
     /// <summary>
@@ -108,7 +107,7 @@ public class UtmGridTests
     [TestMethod]
     public void TestConstructor_32X()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 32, 'X'));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 32, 'X'));
     }
 
     /// <summary>
@@ -117,7 +116,7 @@ public class UtmGridTests
     [TestMethod]
     public void TestConstructor_34X()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 34, 'X'));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 34, 'X'));
     }
 
     /// <summary>
@@ -126,7 +125,7 @@ public class UtmGridTests
     [TestMethod]
     public void TestConstructor_36X()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 36, 'X'));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new UtmGrid(utm, 36, 'X'));
     }
 
     /// <summary>
@@ -427,7 +426,7 @@ public class UtmGridTests
     public void TestNorth1()
     {
         UtmGrid g = new(utm, 31, 'U');
-        Assert.ThrowsException<Exception>(() => g.North);
+        Assert.Throws<Exception>(() => g.North);
     }
 
     /// <summary>
@@ -437,7 +436,7 @@ public class UtmGridTests
     public void TestNorth2()
     {
         UtmGrid g = new(utm, 32, 'W');
-        Assert.ThrowsException<Exception>(() => g.North);
+        Assert.Throws<Exception>(() => g.North);
     }
 
     /// <summary>
@@ -447,7 +446,7 @@ public class UtmGridTests
     public void TestNorth3()
     {
         UtmGrid g = new(utm, 34, 'W');
-        Assert.ThrowsException<Exception>(() => g.North);
+        Assert.Throws<Exception>(() => g.North);
     }
 
     /// <summary>
@@ -457,7 +456,7 @@ public class UtmGridTests
     public void TestNorth4()
     {
         UtmGrid g = new(utm, 36, 'W');
-        Assert.ThrowsException<Exception>(() => g.North);
+        Assert.Throws<Exception>(() => g.North);
     }
 
     /// <summary>
@@ -467,7 +466,7 @@ public class UtmGridTests
     public void TestNorth5()
     {
         UtmGrid g = new(utm, 1, 'X');
-        Assert.ThrowsException<Exception>(() => g.North);
+        Assert.Throws<Exception>(() => g.North);
     }
 
     /// <summary>
@@ -477,7 +476,7 @@ public class UtmGridTests
     public void TestSouth1()
     {
         UtmGrid g = new(utm, 31, 'W');
-        Assert.ThrowsException<Exception>(() => g.South);
+        Assert.Throws<Exception>(() => g.South);
     }
 
     /// <summary>
@@ -487,7 +486,7 @@ public class UtmGridTests
     public void TestSouth2()
     {
         UtmGrid g = new(utm, 31, 'X');
-        Assert.ThrowsException<Exception>(() => g.South);
+        Assert.Throws<Exception>(() => g.South);
     }
 
     /// <summary>
@@ -497,7 +496,7 @@ public class UtmGridTests
     public void TestSouth3()
     {
         UtmGrid g = new(utm, 33, 'X');
-        Assert.ThrowsException<Exception>(() => g.South);
+        Assert.Throws<Exception>(() => g.South);
     }
 
     /// <summary>
@@ -507,7 +506,7 @@ public class UtmGridTests
     public void TestSouth4()
     {
         UtmGrid g = new(utm, 35, 'X');
-        Assert.ThrowsException<Exception>(() => g.South);
+        Assert.Throws<Exception>(() => g.South);
     }
 
     /// <summary>
@@ -517,7 +516,7 @@ public class UtmGridTests
     public void TestSouth5()
     {
         UtmGrid g = new(utm, 37, 'X');
-        Assert.ThrowsException<Exception>(() => g.South);
+        Assert.Throws<Exception>(() => g.South);
     }
 
     /// <summary>
@@ -527,6 +526,6 @@ public class UtmGridTests
     public void TestSouth6()
     {
         UtmGrid g = new(utm, 37, 'C');
-        Assert.ThrowsException<Exception>(() => g.South);
+        Assert.Throws<Exception>(() => g.South);
     }
 }

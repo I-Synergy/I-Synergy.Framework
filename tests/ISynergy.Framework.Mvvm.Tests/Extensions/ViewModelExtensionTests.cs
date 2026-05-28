@@ -1,10 +1,8 @@
-﻿using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.Extensions.Tests;
@@ -12,53 +10,59 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests;
 [TestClass]
 public class ViewModelExtensionTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
 
     public ViewModelExtensionTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     // Test classes
-    private class TestView : IView
+    public class TestView : IView
     {
-        public IViewModel? ViewModel { get; set; }
+        public required IViewModel ViewModel { get; set; }
+
         public bool IsEnabled { get; set; }
 
         public void Dispose()
         {
         }
     }
-    private class TestViewModel : ViewModel
+
+    public class TestWindow : IWindow
     {
-        public TestViewModel(ICommonServices commonServices, bool automaticValidation = false)
-            : base(commonServices, automaticValidation)
+        public required IViewModel ViewModel { get; set; }
+        public bool IsEnabled { get; set; }
+
+        public Task CloseAsync() =>
+            throw new NotImplementedException();
+
+        public void Dispose()
         {
         }
     }
 
-    private class GenericViewModel<T> : TestViewModel
+    public class TestViewModel : ViewModel
     {
-        public GenericViewModel(ICommonServices commonServices, bool automaticValidation = false)
-            : base(commonServices, automaticValidation)
+        public TestViewModel(ICommonServices commonServices, ILogger<TestViewModel> logger)
+            : base(commonServices, logger)
         {
         }
     }
-    private interface ITestViewModel : IViewModel { }
+
+    public class GenericViewModel<T> : TestViewModel
+    {
+        public GenericViewModel(ICommonServices commonServices, ILogger<GenericViewModel<T>> logger)
+            : base(commonServices, logger)
+        {
+        }
+    }
+    public interface ITestViewModel : IViewModel { }
 
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(ViewModels.MapsViewModel), "MapsViewModel")]
     [DataRow(typeof(ViewModels.NoteViewModel), "NoteViewModel")]
     public void GetNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
@@ -80,7 +84,7 @@ public class ViewModelExtensionTests
         Assert.AreEqual("GenericViewModel", result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(ViewModels.MapsViewModel), "ISynergy.Framework.Mvvm.ViewModels.MapsViewModel")]
     [DataRow(typeof(ViewModels.NoteViewModel), "ISynergy.Framework.Mvvm.ViewModels.NoteViewModel")]
     public void GetFullNameOfViewModelByTypeTest(Type viewModelType, string expectedName)
@@ -107,7 +111,7 @@ public class ViewModelExtensionTests
     public void GetViewModelName_FromInstance_ReturnsCorrectName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
         var result = viewModel.GetViewModelName();
@@ -120,7 +124,7 @@ public class ViewModelExtensionTests
     public void GetViewModelFullName_FromInstance_ReturnsCorrectFullName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
         var result = viewModel.GetViewModelFullName();
@@ -146,7 +150,7 @@ public class ViewModelExtensionTests
     public void GetRelatedView_FromViewModelInstance_ReturnsViewName()
     {
         // Arrange
-        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object);
+        IViewModel viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
         var result = viewModel.GetRelatedView();
@@ -185,10 +189,37 @@ public class ViewModelExtensionTests
     public void GetRelatedViewModel_FromViewInstance_ReturnsViewModelName()
     {
         // Arrange
-        IView view = new TestView();
+        var mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
+
+        var view = new TestView
+        {
+            ViewModel = new TestViewModel(mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object)
+        };
 
         // Act
         var result = view.GetRelatedViewModel();
+
+        // Assert
+        Assert.AreEqual("TestViewModel", result);
+    }
+
+    [TestMethod]
+    public void GetRelatedViewModel_FromWindowInstance_ReturnsViewModelName()
+    {
+        // Arrange
+        var mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
+
+        var window = new TestWindow
+        {
+            ViewModel = new TestViewModel(mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object)
+        };
+
+        // Act
+        var result = window.GetRelatedViewModel();
 
         // Assert
         Assert.AreEqual("TestViewModel", result);

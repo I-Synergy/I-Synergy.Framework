@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+using ISynergy.Framework.Mvvm.Commands;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
@@ -9,14 +10,16 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 /// <seealso cref="IViewModel" />
 public interface IViewModelBladeView : IViewModel
 {
-    /// <summary>
-    /// Gets or sets the blades.
-    /// </summary>
-    /// <value>The blades.</value>
-    ObservableCollection<IView> Blades { get; set; }
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is pane enabled.
-    /// </summary>
-    /// <value><c>true</c> if this instance is pane enabled; otherwise, <c>false</c>.</value>
+    AsyncRelayCommand AddCommand { get; }
+    ObservableCollection<IView>? Blades { get; set; }
+    bool DisableRefreshOnInitialization { get; set; }
     bool IsPaneVisible { get; set; }
+    bool IsUpdate { get; set; }
+    AsyncRelayCommand RefreshCommand { get; }
+    AsyncRelayCommand<object> SearchCommand { get; }
+
+    Task AddAsync();
+    Task RefreshAsync(CancellationToken cancellationToken = default);
+    Task RetrieveItemsAsync(CancellationToken cancellationToken);
+    Task SearchAsync(object e);
 }

@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Utilities.Tests;
+namespace ISynergy.Framework.Core.Utilities;
 
 /// <summary>
 /// Class FileNameUtilityTests.
@@ -13,7 +13,7 @@ public class FileNameUtilityTests
     /// Defines the test method TestIsNotValidFileName.
     /// </summary>
     /// <param name="fileName">Name of the file.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("test?")]
     [DataRow("test.")]
     [DataRow("/test")]
@@ -30,7 +30,7 @@ public class FileNameUtilityTests
     /// Defines the test method TestIsValidFileName.
     /// </summary>
     /// <param name="fileName">Name of the file.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(".test")]
     [DataRow("test")]
     public void TestIsValidFileName(string fileName)
@@ -42,7 +42,7 @@ public class FileNameUtilityTests
     /// Defines the test method CreateValidFileName.
     /// </summary>
     /// <param name="fileName">Name of the file.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("test?")]
     [DataRow(".test")]
     [DataRow("test.")]

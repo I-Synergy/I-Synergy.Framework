@@ -1,9 +1,8 @@
-﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Global;
-using ISynergy.Framework.Geography.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Geodetic.Tests;
+namespace ISynergy.Framework.Geography.Geodetic;
 
 /// <summary>
 /// Class GeodeticCalculatorTests.
@@ -92,7 +91,7 @@ public class GeodeticCalculatorTests
     [TestMethod]
     public void TestEndingNegDist()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => calc.CalculateEndingGlobalCoordinates(
+        Assert.Throws<ArgumentOutOfRangeException>(() => calc.CalculateEndingGlobalCoordinates(
             Constants.MyHome,
             0.0,
             -1.0));
@@ -143,7 +142,7 @@ public class GeodeticCalculatorTests
     [TestMethod]
     public void TestPath3()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyOffice, 1));
     }
 
     /// <summary>

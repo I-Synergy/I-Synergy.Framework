@@ -1,6 +1,13 @@
-﻿using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
@@ -12,16 +19,10 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     IDifferentiableLoss<bool, double, double>,
     IDifferentiableLoss<double, double, double>
 {
-    private double[][] expected;
-
     /// <summary>
-    ///     Gets the expected outputs (the ground truth).
+    ///     Gets or sets the expected outputs (the ground truth).
     /// </summary>
-    public double[][] Expected
-    {
-        get => expected;
-        set => expected = value;
-    }
+    public double[][] Expected { get; set; }
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="LogisticLoss" /> class.
@@ -29,7 +30,7 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public LogisticLoss(double[] expected)
     {
-        this.expected = Jagged.ColumnVector(expected);
+        Expected = Jagged.ColumnVector(expected);
     }
 
     /// <summary>
@@ -38,7 +39,7 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public LogisticLoss(double[][] expected)
     {
-        this.expected = expected;
+        Expected = expected;
     }
 
     /// <summary>
@@ -51,7 +52,7 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
             expected = expected.ToZeroOne();
 
         var oneHot = Jagged.OneHot<bool>(expected);
-        this.expected = Classes.ToMinusOnePlusOne(oneHot);
+        Expected = Classes.ToMinusOnePlusOne(oneHot);
     }
 
     /// <summary>

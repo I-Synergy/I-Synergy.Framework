@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Actions;
+using ISynergy.Framework.Automations.Actions;
 
 namespace ISynergy.Framework.Automations.Abstractions;
 

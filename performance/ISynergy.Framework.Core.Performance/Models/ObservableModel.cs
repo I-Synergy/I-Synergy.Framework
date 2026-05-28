@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 
 namespace ISynergy.Framework.Core.Performance.Models;
 
-public class ObservableModel : ObservableClass
+public class ObservableModel : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the Id property value.
@@ -35,6 +35,6 @@ public class ObservableModel : ObservableClass
     {
         Id = Guid.NewGuid();
         Name = $"Name {Id}";
-        Age = new Random().Next();
+        Age = Random.Shared.Next();
     }
 }

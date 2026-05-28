@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class StringExtensionsTests.
@@ -36,6 +36,16 @@ public class StringExtensionsTests
     {
         string result = "A19".IncreaseString2Long(1);
         Assert.AreEqual("A20", result);
+    }
+
+    /// <summary>
+    /// Defines the test method IncreaseStringAlphaNumericSummand1.
+    /// </summary>
+    [TestMethod]
+    public void IncreaseStringAlphaNumericSummand2()
+    {
+        string result = "A01".IncreaseString2Long(1);
+        Assert.AreEqual("A02", result);
     }
 
     /// <summary>

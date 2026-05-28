@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 /// <summary>
 /// Interface IForgotPasswordViewModel

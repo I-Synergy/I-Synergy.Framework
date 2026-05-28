@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Physics.Base;
 using ISynergy.Framework.Physics.Enumerations;
 
@@ -12,12 +12,12 @@ public class Unit : UnitBase
     /// <summary>
     /// Formula to convert unit to SI unit.
     /// </summary>
-    public Func<double, double> FormulaConvert;
+    public Func<double, double> FormulaConvert { get; set; }
 
     /// <summary>
     /// Formula to convert back from SI unit to this unit.
     /// </summary>
-    public Func<double, double> FormulaConvertBack;
+    public Func<double, double> FormulaConvertBack { get; set; }
 
     /// <summary>
     /// Default contructor for Units

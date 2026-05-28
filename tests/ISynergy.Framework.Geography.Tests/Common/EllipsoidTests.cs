@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Common.Tests;
+namespace ISynergy.Framework.Geography.Common;
 
 /// <summary>
 /// Class EllipsoidTests.
@@ -16,10 +16,10 @@ public class EllipsoidTests
     public void TestFactory1()
     {
         Ellipsoid e = Ellipsoid.FromAAndF(100000, 0.01);
-        Assert.AreEqual(e.SemiMinorAxis, (1 - 0.01) * 100000);
+        Assert.AreEqual((1 - 0.01) * 100000, e.SemiMinorAxis);
         Assert.AreEqual(100, e.InverseFlattening);
         Assert.AreEqual(100000, e.SemiMajorAxis);
-        Assert.AreEqual(e.Ratio, 1.0 - 0.01);
+        Assert.AreEqual(1.0 - 0.01, e.Ratio);
     }
 
     /// <summary>
@@ -29,10 +29,10 @@ public class EllipsoidTests
     public void TestFactory2()
     {
         Ellipsoid e = Ellipsoid.FromAAndInverseF(100000, 100);
-        Assert.AreEqual(e.SemiMinorAxis, (1 - 0.01) * 100000);
+        Assert.AreEqual((1 - 0.01) * 100000, e.SemiMinorAxis);
         Assert.AreEqual(0.01, e.Flattening);
         Assert.AreEqual(100000, e.SemiMajorAxis);
-        Assert.AreEqual(e.Ratio, 1.0 - 0.01);
+        Assert.AreEqual(1.0 - 0.01, e.Ratio);
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -21,6 +21,29 @@ public partial class Window : ContentDialog, IWindow
     private IViewModel? _viewModel;
 
     /// <summary>
+    /// Gets or sets the viewmodel and data context for a view.
+    /// </summary>
+    /// <value>The data context.</value>
+    public IViewModel ViewModel
+    {
+        get
+        {
+            if (_viewModel is not null)
+                return _viewModel;
+
+            if (DataContext is IViewModel viewModel)
+                return viewModel;
+
+            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+        }
+        set
+        {
+            _viewModel = value;
+            DataContext = value;
+        }
+    }
+
+    /// <summary>
     /// Default constructor.
     /// </summary>
     public Window()
@@ -31,25 +54,10 @@ public partial class Window : ContentDialog, IWindow
     /// <summary>
     /// Closes this instance.
     /// </summary>
-    public void Close() => Hide();
-
-    /// <summary>
-    /// Gets or sets the viewmodel and data context for a window.
-    /// </summary>
-    /// <value>The data context.</value>
-    public IViewModel? ViewModel
+    public Task CloseAsync()
     {
-        get => _viewModel;
-        set
-        {
-            _viewModel = value;
-            DataContext = _viewModel;
-        }
-    }
-
-    private void Window_Unloaded(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
+        Hide();
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -81,10 +89,10 @@ public partial class Window : ContentDialog, IWindow
     }
 
     /// <summary>
-    /// show as an asynchronous operation.
+    /// Shows the window as an asynchronous operation.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <returns><c>true</c> if the dialog was accepted or confirmed; otherwise, <c>false</c>.</returns>
     public async Task<bool> ShowAsync<TEntity>()
     {
         switch (await ShowAsync())
@@ -137,8 +145,12 @@ public partial class Window : ContentDialog, IWindow
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // DO NOT dispose ViewModel here.
+            // The Window may be disposed by the DI scope after the dialog is shown
+            // but before it is closed. Disposing the ViewModel prematurely clears its
+            // Closed event, preventing the DialogService's close handler from firing.
+            // The ViewModel lifecycle is managed by the DialogService close handler.
+            // ViewModel?.Dispose();
         }
 
         // free native resources if there are any.
@@ -152,13 +164,11 @@ public partial class Window : ContentDialog, IWindow
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            // free managed resources
-            ViewModel?.Dispose();
-        }
-
-        // free native resources if there are any.
+        // DO NOT dispose ViewModel here.
+        // The Window may be disposed by the DI scope after the dialog is shown
+        // but before it is closed. Disposing the ViewModel prematurely clears its
+        // Closed event, preventing the DialogService's close handler from firing.
+        // The ViewModel lifecycle is managed by the DialogService close handler.
     }
 #endif
     #endregion

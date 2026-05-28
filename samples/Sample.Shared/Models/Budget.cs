@@ -1,9 +1,18 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 
 namespace Sample.Models;
 
 public class Budget : BaseModel
 {
+    /// <summary>
+    /// Gets or sets the Description property value.
+    /// </summary>
+    public string Description
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
     /// <summary>
     /// Gets or sets the StartingDate property value.
     /// </summary>

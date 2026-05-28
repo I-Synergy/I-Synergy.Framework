@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Validation;
 using System.Text.Json.Serialization;
 
@@ -27,11 +27,11 @@ public class Property<T> : IProperty<T>
     /// <summary>
     /// The value
     /// </summary>
-    private T? _value = default;
+    private T _value = default!;
     /// <summary>
     /// The original value
     /// </summary>
-    private T? _originalValue = default;
+    private T _originalValue = default!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Property{T}"/> class.
@@ -75,7 +75,7 @@ public class Property<T> : IProperty<T>
     /// Gets or sets the value.
     /// </summary>
     /// <value>The value.</value>
-    public T? Value
+    public T Value
     {
         get { return _value; }
         set
@@ -105,7 +105,7 @@ public class Property<T> : IProperty<T>
     /// </summary>
     /// <value>The original value.</value>
     [JsonIgnore]
-    public T? OriginalValue
+    public T OriginalValue
     {
         get { return _originalValue; }
         set

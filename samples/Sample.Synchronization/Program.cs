@@ -1,5 +1,5 @@
 using Dotmim.Sync;
-using Dotmim.Sync.SqlServer;
+using Dotmim.Sync.PostgreSql;
 using Dotmim.Sync.Web.Server;
 using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Synchronization.Factories;
@@ -12,7 +12,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
 
 // [Required]: Get a connection string to your server data source
-var connectionString = builder.Configuration.GetSection("ConnectionStrings")["SqlConnection"];
+var connectionString = builder.Configuration.GetSection("ConnectionStrings")["synchronization"];
 
 // snapshot directory
 var snapshotDirectoryName = "snapshots";
@@ -43,19 +43,16 @@ var tables = new string[] {
     };
 
 // [Required] Tables involved in the sync process:
-//var setup = new SyncSetup(tables).WithTenantFilter();
 var setup = new SyncSetup(tables);
 
 // To add a converter, create an instance and add it to the special WebServerOptions
 var webServerOptions = new WebServerOptions();
 webServerOptions.SerializerFactories.Add(new MessagePackSerializerFactory());
 
-//var sqlChangeTrackingProvider = new SqlSyncChangeTrackingProvider(connectionString);
-var sqlProvider = new SqlSyncProvider(connectionString);
+var npgsqlProvider = new NpgsqlSyncProvider(connectionString);
 
-// add a SqlSyncProvider acting as the server hub
-//builder.Services.AddSyncServer(sqlChangeTrackingProvider(sqlChangeTrackingProvider, setup, options, webServerOptions);
-builder.Services.AddSyncServer(sqlProvider, setup, options, webServerOptions);
+// add a NpgsqlSyncProvider acting as the server hub
+builder.Services.AddSyncServer(npgsqlProvider, setup, options, webServerOptions);
 
 builder.Services.AddControllerWithDefaultJsonSerialization();
 

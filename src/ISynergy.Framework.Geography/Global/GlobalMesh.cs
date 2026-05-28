@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Geodetic;
 using ISynergy.Framework.Geography.Utm;
 
@@ -264,7 +264,7 @@ public class GlobalMesh
     /// <param name="distance">The distance (0-3 currently supported)</param>
     /// <returns>The list of mesh numbers of the neighbors</returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public List<long> Neighborhood(long meshNumber, int distance)
+    public List<long> Neighborhood(long meshNumber, int distance) // NOSONAR
     {
         const int maxDistance = 3;
 

@@ -1,4 +1,3 @@
-﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.MessageBus.Azure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,11 +28,11 @@ internal class Program
             IServiceCollection services = new ServiceCollection()
                 .AddLogging()
                 .AddOptions()
-                .AddMessageBusAzurePublishIntegration<TestDataModel>(config);
+                .AddAzureMessageBusPublishIntegration<TestDataModel>(config);
 
             services.TryAddSingleton<ApplicationAzure>();
 
-            var serviceProvider = services.BuildServiceProviderWithLocator();
+            var serviceProvider = services.BuildServiceProvider();
 
             ApplicationAzure application = serviceProvider.GetRequiredService<ApplicationAzure>();
             application.RunAsync().GetAwaiter().GetResult();

@@ -1,6 +1,14 @@
-﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Matrices;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
@@ -11,6 +19,7 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="array">The array to be saved to the array of bytes.</param>
     /// <returns>A byte array containig the saved array.</returns>
+    [RequiresDynamicCode("Calls Save(Array, Stream) which requires dynamic code generation.")]
     public static byte[] Save(Array array)
     {
         using (var stream = new MemoryStream())
@@ -26,6 +35,7 @@ public static partial class NpyFormat
     /// <param name="array">The array to be saved to disk.</param>
     /// <param name="path">The disk path under which the file will be saved.</param>
     /// <returns>The number of bytes written when saving the file to disk.</returns>
+    [RequiresDynamicCode("Calls Save(Array, Stream) which requires dynamic code generation.")]
     public static ulong Save(Array array, string path)
     {
         using (var stream = new FileStream(path, FileMode.Create))
@@ -40,6 +50,7 @@ public static partial class NpyFormat
     /// <param name="array">The array to be saved to disk.</param>
     /// <param name="stream">The stream to which the file will be saved.</param>
     /// <returns>The number of bytes written when saving the file to disk.</returns>
+    [RequiresDynamicCode("Calls GetDtypeFromType which uses Marshal.SizeOf(Type) with a runtime-resolved type.")]
     public static ulong Save(Array array, Stream stream)
     {
         using (var writer = new BinaryWriter(stream, Encoding.ASCII, true))
@@ -87,7 +98,7 @@ public static partial class NpyFormat
         ulong writtenBytes = 0;
         foreach (var arr in matrix.Enumerate<Array>(first))
         {
-            Array.Clear(buffer, arr.Length, buffer.Length - buffer.Length);
+            Array.Clear(buffer, arr.Length, 0);
             Buffer.BlockCopy(arr, 0, buffer, 0, buffer.Length);
             reader.Write(buffer, 0, buffer.Length);
             writtenBytes += (ulong)buffer.LongLength;
@@ -142,7 +153,7 @@ public static partial class NpyFormat
         writer.Write((byte)147);
         writer.Write(magic);
         writer.Write((byte)1); // major
-        writer.Write((byte)0); // minor;
+        writer.Write((byte)0); // minor version
 
         var tuple = string.Join(", ", shape.Select(i => i.ToString()).ToArray());
         var header = "{{'descr': '{0}', 'fortran_order': False, 'shape': ({1}), }}";
@@ -158,7 +169,7 @@ public static partial class NpyFormat
         headerSize = header.Length + preamble;
 
         if (headerSize % 16 != 0)
-            throw new Exception();
+            throw new InvalidOperationException("NumPy header size must be a multiple of 16.");
 
         writer.Write((ushort)header.Length);
         for (var i = 0; i < header.Length; i++)
@@ -167,6 +178,7 @@ public static partial class NpyFormat
         return headerSize;
     }
 
+    [RequiresDynamicCode("Uses Marshal.SizeOf(Type) with a runtime-resolved type.")]
     private static string GetDtypeFromType(Array array, out Type type, out int bytes)
     {
         type = array.GetInnerMostType();

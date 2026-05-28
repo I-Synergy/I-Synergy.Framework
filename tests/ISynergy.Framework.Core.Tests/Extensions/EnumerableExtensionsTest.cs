@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Data.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 
-namespace ISynergy.Framework.Core.Extensions.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class EnumerableExtensionsTest.
@@ -34,7 +34,7 @@ public class EnumerableExtensionsTest
     [TestMethod]
     public void NullEnumerableFailableTest()
     {
-        Assert.ThrowsExceptionAsync<NullReferenceException>(() =>
+        Assert.ThrowsAsync<NullReferenceException>(() =>
         {
             IEnumerable<object>? list = null;
 

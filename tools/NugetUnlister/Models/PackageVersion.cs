@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 
 namespace NugetUnlister.Models;
 
-public class PackageVersion : ObservableClass
+public class PackageVersion : ObservableValidatedClass
 {
 
     /// <summary>

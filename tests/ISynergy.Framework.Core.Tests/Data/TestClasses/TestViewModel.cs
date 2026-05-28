@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.Core.Data.Tests.TestClasses;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
-public class TestViewModel : ObservableClass
+public class TestViewModel : ObservableValidatedClass
 {
 
     /// <summary>
@@ -35,7 +35,7 @@ public class TestViewModel : ObservableClass
 
     public TestViewModel()
     {
-        Validator = new Action<IObservableClass>(arg =>
+        Validator = new Action<IObservableValidatedClass>(arg =>
         {
             if (arg is TestViewModel viewModel)
             {

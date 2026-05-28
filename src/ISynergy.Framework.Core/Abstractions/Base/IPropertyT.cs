@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Base;
+namespace ISynergy.Framework.Core.Abstractions.Base;
 
 /// <summary>
 /// Interface IProperty
@@ -12,10 +12,10 @@ public interface IProperty<T> : IProperty
     /// Gets or sets the original value.
     /// </summary>
     /// <value>The original value.</value>
-    T? OriginalValue { get; set; }
+    T OriginalValue { get; set; }
     /// <summary>
     /// Gets or sets the value.
     /// </summary>
     /// <value>The value.</value>
-    T? Value { get; set; }
+    T Value { get; set; }
 }

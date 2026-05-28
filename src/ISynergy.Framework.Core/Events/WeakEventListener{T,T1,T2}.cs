@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Events;
+namespace ISynergy.Framework.Core.Events;
 
 /// <summary>
 /// Implements a weak event listener that allows the owner to be garbage
@@ -8,7 +8,7 @@
 /// <typeparam name="TSource">Type of source for the event.</typeparam>
 /// <typeparam name="TEventArgs">Type of event arguments for the event.</typeparam>
 [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public sealed class WeakEventListener<TInstance, TSource, TEventArgs>
+public sealed class WeakEventListener<TInstance, TSource, TEventArgs> // NOSONAR - three type parameters are required for the weak event listener pattern
     where TInstance : class
 {
     /// <summary>

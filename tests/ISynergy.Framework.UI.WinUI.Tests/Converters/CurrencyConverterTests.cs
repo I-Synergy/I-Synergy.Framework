@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.UI.Converters;
 using System.Globalization;
 
-namespace ISynergy.Framework.UI.Converters.Tests;
+namespace ISynergy.Framework.UI.WinUI.Converters;
 
 [TestClass]
 public class CurrencyConverterTests
@@ -90,16 +90,13 @@ public class CurrencyConverterTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NotImplementedException))]
     public void CurrencyConverter_ConvertBack_ThrowsNotImplementedException()
     {
         // Arrange
         var converter = new CurrencyConverter();
 
         // Act
-        converter.ConvertBack("$ 1,234.56", typeof(decimal), null!, null!);
-
-        // Assert is handled by ExpectedException
+        Assert.Throws<NotImplementedException>(() => converter.ConvertBack("$ 1,234.56", typeof(decimal), null!, null!));
     }
 }
 

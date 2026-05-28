@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Abstractions.Timers;
+namespace ISynergy.Framework.Core.Abstractions.Timers;
 
 /// <summary>
 /// A repeated timer.

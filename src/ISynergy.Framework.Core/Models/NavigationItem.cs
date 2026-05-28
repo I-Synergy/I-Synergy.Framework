@@ -1,11 +1,11 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 
 namespace ISynergy.Framework.Core.Models;
 
 /// <summary>
 /// Class NavigationItem.
 /// </summary>
-public partial class NavigationItem : IDisposable
+public record NavigationItem : IDisposable
 {
     private bool _disposed = false;
 
@@ -43,7 +43,7 @@ public partial class NavigationItem : IDisposable
     /// Gets or sets the symbol.
     /// </summary>
     /// <value>The symbol.</value>
-    public object Symbol { get; set; }
+    public object Icon { get; set; }
 
     /// <summary>
     /// Gets or sets the color.
@@ -55,15 +55,15 @@ public partial class NavigationItem : IDisposable
     /// Initializes a new instance of the <see cref="NavigationItem"/> class.
     /// </summary>
     /// <param name="name">The name.</param>
-    /// <param name="symbol">The symbol.</param>
+    /// <param name="icon">The symbol.</param>
     /// <param name="color">The color.</param>
     /// <param name="command">The command.</param>
     /// <param name="commandParameter">The command parameter.</param>
-    public NavigationItem(string name, object symbol, string color, ICommand command, object? commandParameter = null)
+    public NavigationItem(string name, object icon, string color, ICommand command, object? commandParameter = null)
     {
         Name = name;
         ToolTipMenu = name;
-        Symbol = symbol;
+        Icon = icon;
         Color = color;
         Command = command;
         CommandParameter = commandParameter;
@@ -85,7 +85,7 @@ public partial class NavigationItem : IDisposable
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    private void Dispose(bool disposing)
+    protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
             return;

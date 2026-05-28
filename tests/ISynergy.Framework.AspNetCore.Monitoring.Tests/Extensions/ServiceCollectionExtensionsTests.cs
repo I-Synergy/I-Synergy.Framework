@@ -1,11 +1,9 @@
-﻿using ISynergy.Framework.AspNetCore.Monitoring.Extensions;
 using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Monitoring.Abstractions.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.AspNetCore.Monitoring.Tests.Extensions;
+namespace ISynergy.Framework.AspNetCore.Monitoring.Extensions;
 
 [TestClass()]
 public class ServiceCollectionExtensionsTests
@@ -17,7 +15,7 @@ public class ServiceCollectionExtensionsTests
     {
         _services = new ServiceCollection();
         _services.AddMonitorSignalR<object>();
-        _serviceProvider = _services.BuildServiceProviderWithLocator();
+        _serviceProvider = _services.BuildServiceProvider();
     }
 
     [TestMethod()]

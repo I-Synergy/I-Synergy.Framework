@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Base;
 using Sample.Enumerations;
 
@@ -7,7 +7,7 @@ namespace Sample.Models;
 /// <summary>
 /// Class PublicationItem.
 /// </summary>
-public class PublicationItem : ObservableClass
+public class PublicationItem : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the ItemId property value.

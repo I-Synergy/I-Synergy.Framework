@@ -1,4 +1,4 @@
-﻿using Sample.ViewModels;
+using Sample.ViewModels;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -21,6 +21,6 @@ public partial class SignInControl : UserControl
     private void TextBox_Password_PreviewKeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && DataContext is AuthenticationViewModel viewModel)
-            viewModel.SignInCommand.Execute(null);
+            viewModel.SignInCommand?.Execute(null);
     }
 }

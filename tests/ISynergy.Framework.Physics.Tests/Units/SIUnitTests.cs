@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Physics.Enumerations;
+using ISynergy.Framework.Physics.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Physics.Tests;
@@ -15,7 +15,7 @@ public class SIUnitTests
     [TestMethod()]
     public void BaseUnitEmptyContructorTest()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new SIUnit(Enumerations.Units.second, Array.Empty<UnitTypes>()));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SIUnit(Enumerations.Units.second, Array.Empty<UnitTypes>()));
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class SIUnitTests
     [TestMethod()]
     public void BaseUnitNulledConstructorTest()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new SIUnit(Enumerations.Units.second, Array.Empty<UnitTypes>()));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SIUnit(Enumerations.Units.second, Array.Empty<UnitTypes>()));
     }
 
     /// <summary>

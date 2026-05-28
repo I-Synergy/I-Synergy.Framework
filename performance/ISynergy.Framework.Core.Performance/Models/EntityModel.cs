@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.EntityFramework.Base;
+using ISynergy.Framework.EntityFramework.Base;
 
 namespace ISynergy.Framework.Core.Performance.Models;
 
@@ -12,6 +12,6 @@ public class EntityModel : BaseEntity
     {
         Id = Guid.NewGuid();
         Name = $"Name {Id}";
-        Age = new Random().Next();
+        Age = Random.Shared.Next();
     }
 }

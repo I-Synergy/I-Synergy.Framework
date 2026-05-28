@@ -1,4 +1,13 @@
-﻿namespace ISynergy.Framework.Mathematics.Decompositions.Base;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+
+namespace ISynergy.Framework.Mathematics.Decompositions.Base;
 
 /// <summary>
 ///     Common interface for matrix decompositions which
@@ -25,6 +34,8 @@ public interface ISolverArrayDecomposition<T> where T : struct
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
+    [RequiresUnreferencedCode("Implementations may use reflection-based type conversion.")]
+    [RequiresDynamicCode("Implementations may require dynamic code generation.")]
     T[][] Inverse();
 
     /// <summary>

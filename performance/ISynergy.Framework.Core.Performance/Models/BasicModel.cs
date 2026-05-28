@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Performance.Models;
+namespace ISynergy.Framework.Core.Performance.Models;
 
 public class BasicModel
 {
@@ -10,6 +10,6 @@ public class BasicModel
     {
         Id = Guid.NewGuid();
         Name = $"Name {Id}";
-        Age = new Random().Next();
+        Age = Random.Shared.Next();
     }
 }

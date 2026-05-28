@@ -1,4 +1,4 @@
-﻿using ITimer = ISynergy.Framework.Core.Abstractions.Timers.ITimer;
+using ITimer = ISynergy.Framework.Core.Abstractions.Timers.ITimer;
 
 namespace ISynergy.Framework.Core.Helpers;
 
@@ -15,12 +15,22 @@ public class DelayTimer : ITimer
     /// <param name="step">The step.</param>
     public async void Start(TimeSpan interval, Func<bool> step)
     {
-        var shouldContinue = step();
-
-        while (shouldContinue)
+        try
         {
-            await Task.Delay(interval);
-            shouldContinue = step();
+            var shouldContinue = step();
+
+            while (shouldContinue)
+            {
+                await Task.Delay(interval);
+                shouldContinue = step();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log exception to prevent it from being swallowed in async void method
+            System.Diagnostics.Debug.WriteLine($"DelayTimer exception: {ex}");
+            // Re-throw to crash the application if unhandled exception handler is configured
+            throw;
         }
     }
 }

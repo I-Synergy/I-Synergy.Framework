@@ -1,7 +1,7 @@
-﻿using ISynergy.Framework.Geography.Global;
+using ISynergy.Framework.Geography.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Geography.Utm.Tests;
+namespace ISynergy.Framework.Geography.Utm;
 
 /// <summary>
 /// Class GlobalPositionTests.
@@ -109,7 +109,7 @@ public class GlobalPositionTests
         Assert.AreEqual(a.Coordinates, c1);
         Assert.AreEqual(0, a.Elevation);
         a.Elevation = -100;
-        Assert.AreEqual(a.Elevation, -100);
+        Assert.AreEqual(-100, a.Elevation);
     }
 
     /// <summary>
@@ -124,7 +124,7 @@ public class GlobalPositionTests
         b.Elevation += 1e-13;
         Assert.AreEqual(0, a.CompareTo(b));
         b.Elevation = 100;
-        Assert.AreEqual(a.CompareTo(b), -1);
+        Assert.AreEqual(-1, a.CompareTo(b));
         b.Elevation = -100;
         Assert.AreEqual(1, a.CompareTo(b));
     }

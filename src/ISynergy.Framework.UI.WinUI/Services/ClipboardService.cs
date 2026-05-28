@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -18,7 +18,7 @@ public class ClipboardService : IClipboardService
     public ClipboardService(ILogger<ClipboardService> logger)
     {
         _logger = logger;
-        _logger.LogTrace($"ClipboardService instance created with ID: {Guid.NewGuid()}");
+        _logger.LogTrace("ClipboardService instance created with ID: {InstanceId}", Guid.NewGuid());
     }
 
     /// <summary>
@@ -28,6 +28,7 @@ public class ClipboardService : IClipboardService
 #if WINDOWS
     public async Task<ImageResult?> GetImageFromClipboardAsync()
     {
+        _logger.LogTrace("Getting image from clipboard");
         var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
 
         if (dataPackageView.Contains(StandardDataFormats.Bitmap) &&

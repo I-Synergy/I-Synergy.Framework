@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Events;
 
 namespace ISynergy.Framework.Core.Abstractions.Events;
 
@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Abstractions.Events;
 /// useful if you store multiple WeakFunc{T} instances but don't know in advance
 /// what type T represents.
 /// </summary>
-public interface IExecuteWithObjectAndResult<T>
+public interface IExecuteWithObjectAndResult<in T>
 {
     /// <summary>
     /// Executes a Func and returns the result.

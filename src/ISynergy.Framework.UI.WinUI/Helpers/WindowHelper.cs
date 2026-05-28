@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI;
@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Helpers;
 // of all active Windows.  The app code must call WindowHelper.CreateWindow
 // rather than "new Window" so we can keep track of all the relevant
 // windows.  In the future, we would like to support this in platform APIs.
-public class WindowHelper
+public static class WindowHelper
 {
     static public List<Microsoft.UI.Xaml.Window> ActiveWindows { get { return _activeWindows; } }
 
@@ -35,15 +35,6 @@ public class WindowHelper
         return newWindow;
     }
 
-
-#if WINDOWS && !HAS_UNO
-    static private AppWindow GetAppWindowForCurrentWindow(Microsoft.UI.Xaml.Window window)
-    {
-        var hWnd = WindowNative.GetWindowHandle(window);
-        var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-        return AppWindow.GetFromWindowId(wndId);
-    }
-#endif
 
     static public void TrackWindow(Microsoft.UI.Xaml.Window window)
     {
@@ -70,7 +61,7 @@ public class WindowHelper
         {
             foreach (var window in _activeWindows.EnsureNotNull())
             {
-                if (element.XamlRoot == window.Content.XamlRoot)
+                if (window.Content is { } content && element.XamlRoot == content.XamlRoot)
                 {
                     return window;
                 }

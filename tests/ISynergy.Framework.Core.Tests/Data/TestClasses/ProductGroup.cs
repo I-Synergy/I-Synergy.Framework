@@ -1,13 +1,13 @@
-﻿using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Base;
 
-namespace ISynergy.Framework.Core.Data.Tests.TestClasses;
+namespace ISynergy.Framework.Core.Data.TestClasses;
 
 /// <summary>
 /// Class ProductGroup.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// </summary>
-/// <seealso cref="ObservableClass" />
-public class ProductGroup : ObservableClass
+/// <seealso cref="ObservableValidatedClass" />
+public class ProductGroup : ObservableValidatedClass
 {
     /// <summary>
     /// Gets or sets the GroupId property value.

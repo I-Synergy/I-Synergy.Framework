@@ -1,7 +1,15 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions.Base;
+using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
@@ -32,6 +40,8 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 [Serializable]
 public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecomposition<double>
 {
+    private const string DestroyedMessage = "The decomposition has been destroyed.";
+    private const string UndefinedMessage = "The decomposition is undefined (zero in diagonal).";
     private bool destroyed;
     private double? determinant;
     private double[,] diagonalMatrix;
@@ -110,10 +120,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             if (leftTriangularFactor is null)
             {
                 if (destroyed)
-                    throw new InvalidOperationException("The decomposition has been destroyed.");
+                    throw new InvalidOperationException(DestroyedMessage);
 
                 if (IsUndefined)
-                    throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+                    throw new InvalidOperationException(UndefinedMessage);
 
                 leftTriangularFactor = L.GetLowerTriangle();
             }
@@ -132,7 +142,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             if (diagonalMatrix is null)
             {
                 if (destroyed)
-                    throw new InvalidOperationException("The decomposition has been destroyed.");
+                    throw new InvalidOperationException(DestroyedMessage);
 
                 diagonalMatrix = Matrix.Diagonal(Diagonal);
             }
@@ -156,10 +166,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             if (!determinant.HasValue)
             {
                 if (destroyed)
-                    throw new InvalidOperationException("The decomposition has been destroyed.");
+                    throw new InvalidOperationException(DestroyedMessage);
 
                 if (IsUndefined)
-                    throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+                    throw new InvalidOperationException(UndefinedMessage);
 
                 double detL = 1, detD = 1;
                 for (var i = 0; i < n; i++)
@@ -187,10 +197,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             if (!lndeterminant.HasValue)
             {
                 if (destroyed)
-                    throw new InvalidOperationException("The decomposition has been destroyed.");
+                    throw new InvalidOperationException(DestroyedMessage);
 
                 if (IsUndefined)
-                    throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+                    throw new InvalidOperationException(UndefinedMessage);
 
                 double detL = 0, detD = 0;
                 for (var i = 0; i < n; i++)
@@ -218,10 +228,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             if (!nonsingular.HasValue)
             {
                 if (destroyed)
-                    throw new InvalidOperationException("The decomposition has been destroyed.");
+                    throw new InvalidOperationException(DestroyedMessage);
 
                 if (IsUndefined)
-                    throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+                    throw new InvalidOperationException(UndefinedMessage);
 
                 var nonSingular = true;
                 for (var i = 0; i < n && nonSingular; i++)
@@ -264,6 +274,8 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
+    [RequiresUnreferencedCode("Calls Matrix.Identity<double>(int) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.Identity<double>(int) which requires dynamic code generation.")]
     public double[,] Inverse()
     {
         return Solve(Matrix.Identity<double>(n));
@@ -275,10 +287,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     public double[,] Reverse()
     {
         if (destroyed)
-            throw new InvalidOperationException("The decomposition has been destroyed.");
+            throw new InvalidOperationException(DestroyedMessage);
 
         if (IsUndefined)
-            throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+            throw new InvalidOperationException(UndefinedMessage);
 
         if (robust)
             return LeftTriangularFactor.Dot(DiagonalMatrix).DotWithTransposed(LeftTriangularFactor);
@@ -296,6 +308,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         var X = Reverse();
         return X.TransposeAndDot(X).Inverse();
     }
+
     private void LLt()
     {
         Diagonal = Vector.Ones<double>(n);
@@ -389,12 +402,11 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
 
         if (IsUndefined)
-            throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+            throw new InvalidOperationException(UndefinedMessage);
 
         if (destroyed)
-            throw new InvalidOperationException("The decomposition has been destroyed.");
+            throw new InvalidOperationException(DestroyedMessage);
 
-        // int count = value.Columns();
         var B = inPlace ? value : value.MemberwiseClone();
         int m = B.Columns();
 
@@ -447,10 +459,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
 
         if (IsUndefined)
-            throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+            throw new InvalidOperationException(UndefinedMessage);
 
         if (destroyed)
-            throw new InvalidOperationException("The decomposition has been destroyed.");
+            throw new InvalidOperationException(DestroyedMessage);
 
         var B = inPlace ? value : value.Copy();
 
@@ -504,10 +516,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             throw new NonPositiveDefiniteMatrixException("Matrix is not positive definite.");
 
         if (IsUndefined)
-            throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+            throw new InvalidOperationException(UndefinedMessage);
 
         if (destroyed)
-            throw new InvalidOperationException("The decomposition has been destroyed.");
+            throw new InvalidOperationException(DestroyedMessage);
 
         double[,] S;
 
@@ -575,10 +587,10 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             throw new NonPositiveDefiniteMatrixException("Matrix is not positive definite.");
 
         if (IsUndefined)
-            throw new InvalidOperationException("The decomposition is undefined (zero in diagonal).");
+            throw new InvalidOperationException(UndefinedMessage);
 
         if (destroyed)
-            throw new InvalidOperationException("The decomposition has been destroyed.");
+            throw new InvalidOperationException(DestroyedMessage);
 
         double[,] S;
 

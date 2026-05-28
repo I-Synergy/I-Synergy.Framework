@@ -1,6 +1,8 @@
 using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Logging.Extensions;
+using ISynergy.Framework.OpenTelemetry.ApplicationInsights.Extensions;
+using ISynergy.Framework.OpenTelemetry.Extensions;
+using ISynergy.Framework.OpenTelemetry.Sentry.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -21,71 +23,59 @@ public class Program
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly!);
 
-        builder.Logging.AddOpenTelemetryLogging(
-            infoService,
-            builder.Configuration,
-                logger =>
+        // Add telemetry
+        builder.Logging
+            .AddTelemetry(
+                builder,
+                infoService,
+                tracerProviderBuilderAction: (tracing) =>
                 {
-                    //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
-                    //{
-                    //    logger.AddAzureMonitorLogExporter(options =>
-                    //    {
-                    //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
-                    //    });
-                    //}
-                });
+                    tracing.AddAspNetCoreInstrumentation(opts =>
+                    {
+                        opts.RecordException = true;
+                        opts.EnrichWithHttpRequest = (activity, request) =>
+                        {
+                            activity.SetTag("http.request.header.user_agent", request.Headers.UserAgent);
+                            activity.SetTag("http.request.method", request.Method);
+                        };
+                        opts.EnrichWithHttpResponse = (activity, response) =>
+                        {
+                            activity.SetTag("http.response.status_code", response.StatusCode);
+                        };
+                    });
 
-        builder.Host.ConfigureOpenTelemetryLogging(infoService,
-            tracing =>
-            {
-                tracing.AddAspNetCoreInstrumentation();
+                    tracing.AddSqlClientInstrumentation(options =>
+                    {
+                        options.RecordException = true;
+                    });
 
-                tracing.AddSqlClientInstrumentation(options =>
+                    tracing.AddEntityFrameworkCoreInstrumentation();
+                },
+                meterProviderBuilderAction: (metrics) =>
                 {
-                    options.SetDbStatementForText = true;
-                    options.RecordException = true;
-                });
+                    metrics.AddAspNetCoreInstrumentation();
 
-                tracing.AddEntityFrameworkCoreInstrumentation(options =>
+                    // ASP.NET Core metrics
+                    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+                    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
+
+                    // EF Core metrics
+                    metrics.AddMeter("Microsoft.EntityFrameworkCore");
+                },
+                loggerProviderBuilderAction: (logger) =>
                 {
-                    options.SetDbStatementForText = true;
-                    options.SetDbStatementForStoredProcedure = true;
-                });
+                })
+                .AddOtlpExporter()
+                .AddApplicationInsightsExporter()
+                .AddSentryExporter(
+                    options =>
+                    {
+                        options.Environment = builder.Environment.EnvironmentName;
+                        options.Debug = builder.Environment.IsDevelopment();
+                    });
 
-                //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
-                //{
-                //    // Azure Monitor tracing
-                //    tracing.AddAzureMonitorTraceExporter(options =>
-                //    {
-                //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
-                //    });
-                //}
-            },
-            metrics =>
-            {
-                metrics.AddAspNetCoreInstrumentation();
-
-                // ASP.NET Core metrics
-                metrics.AddMeter("Microsoft.AspNetCore.Hosting");
-                metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
-
-                // EF Core metrics
-                metrics.AddMeter("Microsoft.EntityFrameworkCore");
-
-                //if (!string.IsNullOrEmpty(builder.Configuration[ApplicationInsightsConnectionString]))
-                //{
-                //    // Azure Monitor metrics
-                //    metrics.AddAzureMonitorMetricExporter(options =>
-                //    {
-                //        options.ConnectionString = builder.Configuration[ApplicationInsightsConnectionString];
-                //    });
-                //}
-            },
-            logger =>
-            {
-            });
-
-        builder.Services.AddHealthChecks()
+        builder.Services
+            .AddHealthChecks()
             // Add a default liveness check to ensure app is responsive
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
@@ -99,7 +89,10 @@ public class Program
 
         builder.Services.AddOpenApiDocument();
 
-        var app = builder.Build();
+
+        var app = builder
+            .Build()
+            .SetLocatorProvider();
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
@@ -128,6 +121,9 @@ public class Program
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
         if (app.Environment.IsDevelopment())
         {
+            // Map health checks with telemetry
+            app.MapTelemetryHealthChecks();
+
             // All health checks must pass for app to be considered ready to accept traffic after starting
             app.MapHealthChecks("/health");
 

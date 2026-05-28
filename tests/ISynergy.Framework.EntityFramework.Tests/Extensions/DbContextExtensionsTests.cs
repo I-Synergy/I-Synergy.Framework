@@ -1,12 +1,11 @@
-﻿using ISynergy.Framework.EntityFramework.Tests.Entities;
-using ISynergy.Framework.EntityFramework.Tests.Fixtures;
-using ISynergy.Framework.EntityFramework.Tests.Models;
+using ISynergy.Framework.EntityFramework.Entities;
+using ISynergy.Framework.EntityFramework.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions;
 
-namespace ISynergy.Framework.EntityFramework.Extensions.Tests;
+namespace ISynergy.Framework.EntityFramework.Extensions;
 
 [TestClass]
 public class DbContextExtensionsTests
@@ -58,41 +57,6 @@ public class DbContextExtensionsTests
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Id);
-    }
-
-    [TestMethod]
-    public async Task AddItemAsync_ShouldAddEntity()
-    {
-        // Arrange
-        var cancellationToken = new CancellationToken();
-        var testRecord = new TestModel
-        {
-            Id = 4,
-            Memo = "Test",
-            CreatedBy = "Test"
-        };
-
-        // Act
-        var result = await _dbContext.AddItemAsync<TestEntity, TestModel>(testRecord, cancellationToken);
-
-        // Assert
-        Assert.AreEqual(1, result);
-        Assert.AreEqual(4, _dbContext.TestEntities.Count());
-    }
-
-    [TestMethod]
-    public async Task UpdateItemAsync_ShouldUpdateEntity()
-    {
-        // Arrange
-        var cancellationToken = new CancellationToken();
-        var testRecord = new TestModel { Id = 1 };
-
-        // Act
-        var result = await _dbContext.UpdateItemAsync<TestEntity, TestModel>(testRecord, cancellationToken);
-
-        // Assert
-        Assert.AreEqual(1, result);
-        Assert.AreEqual(3, _dbContext.TestEntities.Count());
     }
 
     [TestMethod]

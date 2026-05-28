@@ -1,4 +1,4 @@
-﻿using Flurl;
+using Flurl;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Models.General;
 using System.Text.Json;

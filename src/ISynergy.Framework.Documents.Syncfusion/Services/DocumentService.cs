@@ -1,20 +1,31 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Models;
-using ISynergy.Framework.Documents.Options;
+using ISynergy.Framework.Documents.Syncfusion.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.XlsIO;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
-namespace ISynergy.Framework.Documents.Services;
+namespace ISynergy.Framework.Documents.Syncfusion.Services;
 
 /// <summary>
 /// Reporting service.
 /// </summary>
+/// <remarks>
+/// <para>
+/// <strong>AOT/Trimming notice:</strong> Syncfusion DocIO, DocIORenderer, and XlsIO libraries use reflection
+/// internally for MailMerge, document templating, and Excel I/O. This service is not compatible with
+/// Native AOT publishing. Applications targeting <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> cannot use
+/// this library and should implement a native document generation alternative.
+/// </para>
+/// </remarks>
+[RequiresUnreferencedCode("DocumentService uses Syncfusion libraries that rely on reflection for MailMerge and document processing. Not compatible with AOT publishing.")]
+[RequiresDynamicCode("Syncfusion DocIO and XlsIO libraries require dynamic code generation.")]
 internal class DocumentService : IDocumentService
 {
     private readonly ILogger _logger;
@@ -23,13 +34,13 @@ internal class DocumentService : IDocumentService
     /// Default constructor.
     /// </summary>
     /// <param name="options"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public DocumentService(
         IOptions<SyncfusionLicenseOptions> options,
-        ILoggerFactory loggerFactory)
+        ILogger<DocumentService> logger)
     {
-        _logger = loggerFactory.CreateLogger<DocumentService>();
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
+        _logger = logger;
+        global::Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
     }
 
     /// <summary>
@@ -52,14 +63,6 @@ internal class DocumentService : IDocumentService
         {
             using var engine = new ExcelEngine();
             workbook = engine.Excel.Workbooks.Create(1);
-
-            var importDataOptions = new ExcelImportDataOptions
-            {
-                FirstRow = 1,
-                FirstColumn = 1,
-                IncludeHeader = true,
-                PreserveTypes = false
-            };
 
             workbook.Worksheets[0].ImportDataTable(table, true, 1, 1);
             workbook.Worksheets[0].UsedRange.AutofitColumns();
@@ -86,7 +89,7 @@ internal class DocumentService : IDocumentService
     /// <param name="exportAsPdf">if set to <c>true</c> [export as PDF].</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task.</returns>
-    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default)
+    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default) // NOSONAR S3776
     {
         Argument.IsNotNull(documentRequest);
 
@@ -97,7 +100,7 @@ internal class DocumentService : IDocumentService
         {
             if (documentRequest.Template is { } templateBytes && templateBytes.ToMemoryStream() is { } stream)
             {
-                using (document = new WordDocument(stream, Syncfusion.DocIO.FormatType.Docx))
+                using (document = new WordDocument(stream, global::Syncfusion.DocIO.FormatType.Docx))
                 {
                     if (documentRequest.Stationery is { } imageArray && imageArray.Length > 0)
                     {
@@ -137,11 +140,11 @@ internal class DocumentService : IDocumentService
                     document.MailMerge.RemoveEmptyParagraphs = true;
                     document.MailMerge.ExecuteNestedGroup(dataSet, commands);
 
-                    foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull())
+                    foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull()) // NOSONAR
                     {
                         if (paragraph.ChildEntities is not null)
                         {
-                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull())
+                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull()) // NOSONAR
                             {
                                 if (paraItem is WPicture picture && paragraph.OwnerTextBody is WTableCell cell)
                                 {
@@ -172,18 +175,17 @@ internal class DocumentService : IDocumentService
                     {
                         using (var iORenderer = new DocIORenderer())
                         {
-                            iORenderer.Settings.ChartRenderingOptions.ImageFormat = Syncfusion.OfficeChart.ExportImageFormat.Jpeg;
+                            iORenderer.Settings.ChartRenderingOptions.ImageFormat = global::Syncfusion.OfficeChart.ExportImageFormat.Jpeg;
                             iORenderer.Settings.EmbedFonts = true;
 
                             var pdfDocument = iORenderer.ConvertToPDF(document);
                             pdfDocument.Save(result);
                             pdfDocument.Close();
                         }
-                        ;
                     }
                     else
                     {
-                        document.Save(result, Syncfusion.DocIO.FormatType.Docx);
+                        document.Save(result, global::Syncfusion.DocIO.FormatType.Docx);
                     }
                 }
             }

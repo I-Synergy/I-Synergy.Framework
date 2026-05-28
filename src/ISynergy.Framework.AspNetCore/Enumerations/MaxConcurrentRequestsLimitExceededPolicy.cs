@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.AspNetCore.Enumerations;
+namespace ISynergy.Framework.AspNetCore.Enumerations;
 
 /// <summary>
 /// Enum MaxConcurrentRequestsLimitExceededPolicy

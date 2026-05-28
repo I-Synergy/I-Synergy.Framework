@@ -1,14 +1,34 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.UI.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 
-namespace ISynergy.Framework.UI.Extensions.Tests;
+namespace ISynergy.Framework.UI.WinUI.Extensions;
 
 [TestClass()]
 public class BitmapExtensionsTests
 {
+    public BitmapExtensionsTests()
+    {
+        // Set up ServiceLocator with ILanguageService for Argument validation
+        var services = new ServiceCollection();
+        services.AddSingleton<ILanguageService, LanguageService>();
+        var serviceProvider = services.BuildServiceProvider();
+        ServiceLocator.SetLocatorProvider(serviceProvider);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        ServiceLocator.Default?.Dispose();
+    }
+
     [TestMethod]
     public async Task ZeroByteBitmapToImageBytesTest()
     {
@@ -18,7 +38,7 @@ public class BitmapExtensionsTests
         var format = ImageFormats.jpg;
 
         // Assert
-        await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => bitmap.ToImageBytesAsync(quality, format));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => bitmap.ToImageBytesAsync(quality, format));
     }
 
     [TestMethod]

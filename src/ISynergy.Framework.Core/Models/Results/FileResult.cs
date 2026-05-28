@@ -1,0 +1,186 @@
+using ISynergy.Framework.Core.Extensions;
+
+namespace ISynergy.Framework.Core.Models.Results;
+
+/// <summary>
+/// Class FileResult.
+/// </summary>
+public sealed class FileResult : IDisposable
+{
+    /// <summary>
+    /// Backing store for the FileName property
+    /// </summary>
+    private readonly string _fileName;
+
+    /// <summary>
+    /// Backing store for the FilePath property
+    /// </summary>
+    private readonly string _filePath;
+
+    /// <summary>
+    /// Function to get a stream to the picked file.
+    /// </summary>
+    private readonly Func<Stream>? _streamGetter;
+
+    /// <summary>
+    /// Async function to get a stream to the picked file.
+    /// Takes precedence over <see cref="_streamGetter"/> when both are set.
+    /// </summary>
+    private readonly Func<Task<Stream>>? _asyncStreamGetter;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileResult"/> class.
+    /// </summary>
+    /// <param name="filePath">The file path.</param>
+    /// <param name="streamGetter">The stream getter.</param>
+    /// <param name="dispose">The dispose.</param>
+    public FileResult(string filePath, Func<Stream> streamGetter, Action<bool>? dispose = null)
+    {
+        _filePath = filePath;
+        _fileName = Path.GetFileName(_filePath);
+        _dispose = dispose;
+        _streamGetter = streamGetter;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileResult"/> class with an async stream getter.
+    /// </summary>
+    /// <param name="filePath">The file path.</param>
+    /// <param name="asyncStreamGetter">The async stream getter.</param>
+    /// <param name="dispose">The dispose.</param>
+    public FileResult(string filePath, Func<Task<Stream>> asyncStreamGetter, Action<bool>? dispose = null)
+    {
+        _filePath = filePath;
+        _fileName = Path.GetFileName(_filePath);
+        _dispose = dispose;
+        _asyncStreamGetter = asyncStreamGetter;
+    }
+
+    /// <summary>
+    /// Filename of the picked file, without path
+    /// </summary>
+    /// <value>The name of the file.</value>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    public string FileName
+    {
+        get
+        {
+            if (_isDisposed)
+                throw new ObjectDisposedException(null);
+
+            return _fileName;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the file.
+    /// </summary>
+    /// <value>The file.</value>
+    public byte[] File
+    {
+        get
+        {
+            using var stream = GetStream();
+            return stream.ToByteArray();
+        }
+    }
+
+    /// <summary>
+    /// Gets stream to access the picked file.
+    /// Note that when DataArray property was already accessed, the stream
+    /// must be rewinded to the beginning.
+    /// </summary>
+    /// <returns>stream object</returns>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    public Stream GetStream()
+    {
+        if (_isDisposed)
+            throw new ObjectDisposedException(null);
+
+        if (_asyncStreamGetter is not null)
+            return Task.Run(async () => await _asyncStreamGetter()).GetAwaiter().GetResult();
+
+        return _streamGetter!();
+    }
+
+    /// <summary>
+    /// Gets a stream to access the picked file asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task{Stream}"/> representing the async stream operation.</returns>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    public async Task<Stream> GetStreamAsync()
+    {
+        if (_isDisposed)
+            throw new ObjectDisposedException(null);
+
+        if (_asyncStreamGetter is not null)
+            return await _asyncStreamGetter();
+
+        return _streamGetter!();
+    }
+
+    /// <summary>
+    /// Full filepath of the picked file.
+    /// Note that on specific platforms this can also contain an URI that
+    /// can't be opened with file related APIs. Use DataArray property or
+    /// GetStream() method in this cases.
+    /// </summary>
+    /// <value>The file path.</value>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    public string FilePath
+    {
+        get
+        {
+            if (_isDisposed)
+                throw new ObjectDisposedException(null);
+
+            return _filePath;
+        }
+    }
+
+    #region IDispose implementation
+    /// <summary>
+    /// Indicates if the object is already disposed
+    /// </summary>
+    private bool _isDisposed;
+
+    /// <summary>
+    /// Action to dispose of underlying resources of the picked file.
+    /// </summary>
+    private readonly Action<bool>? _dispose;
+
+    /// <summary>
+    /// Disposes of all resources in the object
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Disposes of managed resources
+    /// </summary>
+    /// <param name="disposing">True when called from Dispose(), false when called from the destructor</param>
+    private void Dispose(bool disposing)
+    {
+        if (_isDisposed)
+        {
+            return;
+        }
+
+        _isDisposed = true;
+        _dispose?.Invoke(disposing);
+    }
+
+    /// <summary>
+    /// Finalizer for this object
+    /// </summary>
+    ~FileResult()
+    {
+        Dispose(false);
+    }
+    #endregion
+}

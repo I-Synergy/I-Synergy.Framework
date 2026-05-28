@@ -1,11 +1,13 @@
-﻿namespace ISynergy.Framework.Core.Collections;
+using System.Diagnostics.CodeAnalysis;
+
+namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
 /// Base class for tree structures.
 /// </summary>
 /// <typeparam name="TKey">The type of the t identifier.</typeparam>
 /// <typeparam name="TModel">The type of the t model.</typeparam>
-public class Tree<TKey, TModel> : TreeNode<TKey, TModel>
+public class Tree<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel> : TreeNode<TKey, TModel>
     where TKey : struct
     where TModel : class
 {

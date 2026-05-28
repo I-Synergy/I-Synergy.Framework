@@ -1,5 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Documents.Extensions;
+using ISynergy.Framework.Documents.Syncfusion.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -19,10 +18,10 @@ internal class Program
                 .AddLogging()
                 .AddOptions();
 
-            services.AddDocumentsSyncfusionIntegration(config);
+            services.AddDocumentsIntegration(config);
             services.TryAddScoped<Startup>();
 
-            var serviceProvider = services.BuildServiceProviderWithLocator();
+            var serviceProvider = services.BuildServiceProvider();
             Startup application = serviceProvider.GetRequiredService<Startup>();
             await application.RunAsync();
         }

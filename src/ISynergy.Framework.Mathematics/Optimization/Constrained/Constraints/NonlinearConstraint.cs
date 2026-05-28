@@ -1,7 +1,16 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1117 // local variable shadowing is intentional in constructor parsing methods
+
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 
@@ -82,6 +91,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
     ///     </paramref>
     ///     .
     /// </param>
+    [RequiresDynamicCode("Calls parse() which uses Expression.Lambda requiring dynamic code generation.")]
     public NonlinearConstraint(IObjectiveFunction objective,
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
@@ -110,6 +120,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
     ///     </paramref>
     ///     .
     /// </param>
+    [RequiresDynamicCode("Calls parse() which uses Expression.Lambda requiring dynamic code generation.")]
     public NonlinearConstraint(int numberOfVariables,
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
@@ -291,6 +302,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
         this.function = function;
         this.gradient = gradient;
     }
+    [RequiresDynamicCode("Uses Expression.Lambda which requires dynamic code generation.")]
     private static void parse(Expression<Func<double[], bool>> constraint,
         out Func<double[], double> function, out ConstraintType shouldBe, out double value)
     {

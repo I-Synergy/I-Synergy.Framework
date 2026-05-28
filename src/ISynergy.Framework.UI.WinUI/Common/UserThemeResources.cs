@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Resources;
+using Microsoft.UI.Xaml.Resources;
 
 namespace ISynergy.Framework.UI.Common;
 
@@ -19,6 +19,11 @@ public sealed class UserThemeResources
     /// The high contrast resources path key name
     /// </summary>
     internal const string HighContrastResourcesPathKeyName = "HighContrastResourcesPath";
+
+    // Private constructor to prevent instantiation — all members are static.
+    private UserThemeResources()
+    {
+    }
 
     /// <summary>
     /// Initializes static members of the <see cref="UserThemeResources" /> class.

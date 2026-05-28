@@ -1,12 +1,13 @@
-﻿using ISynergy.Framework.UI.WinUI.Tests.Enumerations;
+using ISynergy.Framework.UI.Converters;
+using ISynergy.Framework.UI.WinUI.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.UI.Converters.Tests;
+namespace ISynergy.Framework.UI.WinUI.Converters;
 
 [TestClass]
 public class EnumConverterTests
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(TestEnum.Value1, 1)]
     [DataRow(TestEnum.Value2, 2)]
     [DataRow(TestEnum.Value3, 3)]
@@ -17,7 +18,7 @@ public class EnumConverterTests
         Assert.AreEqual(id, result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(1, TestEnum.Value1)]
     [DataRow(2, TestEnum.Value2)]
     [DataRow(3, TestEnum.Value3)]

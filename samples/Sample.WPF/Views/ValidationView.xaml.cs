@@ -1,11 +1,11 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 
 namespace Sample.Views;
 
 /// <summary>
 /// Interaction logic for ValidationView.xaml
 /// </summary>
-public partial class ValidationView : IView
+public partial class ValidationView
 {
     public ValidationView()
     {

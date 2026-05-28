@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Base;
 
 namespace ISynergy.Framework.Automations.Actions.Base;
@@ -14,7 +14,7 @@ public abstract class BaseAction : AutomationModel, IAction
     public Guid ActionId
     {
         get { return GetValue<Guid>(); }
-        private set { SetValue(value); }
+        private set { SetValue(value); } // NOSONAR - set via constructor
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public abstract class BaseAction : AutomationModel, IAction
     public bool Executed
     {
         get { return GetValue<bool>(); }
-        private set { SetValue(value); }
+        private set { SetValue(value); } // NOSONAR - reserved for future internal use
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public abstract class BaseAction : AutomationModel, IAction
     public DateTimeOffset ExecutedDateTime
     {
         get { return GetValue<DateTimeOffset>(); }
-        private set { SetValue(value); }
+        private set { SetValue(value); } // NOSONAR - reserved for future internal use
     }
 
     /// <summary>

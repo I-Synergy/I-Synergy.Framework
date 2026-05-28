@@ -1,10 +1,18 @@
-﻿namespace ISynergy.Framework.Mathematics.IO.Mat;
+namespace ISynergy.Framework.Mathematics.IO.Mat;
 
 using ISynergy.Framework.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 /// <summary>
 ///   Reader for .mat files (such as the ones created by Matlab and Octave).
@@ -51,8 +59,6 @@ using System.Linq;
 public class MatReader : IDisposable
 {
     private BinaryReader reader;
-    private bool autoTranspose;
-
     private Dictionary<string, MatNode> contents;
 
     /// <summary>
@@ -106,7 +112,7 @@ public class MatReader : IDisposable
     ///   to .NET row and column format if necessary.
     /// </summary>
     /// 
-    public bool Transpose { get { return autoTranspose; } }
+    public bool Transpose { get; private set; }
 
     /// <summary>
     ///   Returns the underlying stream.
@@ -149,6 +155,7 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(string fileName, bool autoTranspose = true, bool lazy = true)
     {
         init(new BinaryReader(new FileStream(fileName, FileMode.Open, FileAccess.Read)), autoTranspose, lazy);
@@ -164,6 +171,7 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(Stream input, bool autoTranspose = true, bool lazy = true)
     {
         init(new BinaryReader(input), autoTranspose, lazy);
@@ -179,6 +187,7 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(byte[] input, bool autoTranspose = true, bool lazy = true)
     {
         init(new BinaryReader(new MemoryStream(input)), autoTranspose, lazy);
@@ -194,16 +203,17 @@ public class MatReader : IDisposable
     /// <param name="lazy">Whether matrices should be read lazily (if set to true, only
     ///   matrices that have explicitly been asked for will be loaded).</param>
     /// 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     public MatReader(BinaryReader reader, bool autoTranspose = true, bool lazy = true)
     {
         init(reader, autoTranspose, lazy);
     }
 
+    [RequiresDynamicCode("Calls MatNode constructor which uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
     private void init(BinaryReader reader, bool autoTranspose, bool lazy)
     {
-        this.autoTranspose = autoTranspose;
+        Transpose = autoTranspose;
 
-        long startOffset = reader.BaseStream.Position;
         this.reader = reader;
 
         char[] title = reader.ReadChars(116);
@@ -313,16 +323,13 @@ public class MatReader : IDisposable
     /// 
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
+        if (disposing && reader is not null)
         {
             // free managed resources
-            if (reader is not null)
-            {
 #if !NETSTANDARD1_4
-                reader.Close();
+            reader.Close();
 #endif
-                reader = null;
-            }
+            reader = null;
         }
     }
 

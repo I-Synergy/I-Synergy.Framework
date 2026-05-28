@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mollie.Sample.Models;
 using Mollie.Sample.Services.Customer;

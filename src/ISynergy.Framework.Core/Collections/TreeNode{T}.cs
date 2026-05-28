@@ -3,19 +3,20 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Collections;
 
 /// <summary>
 /// Class TreeNode.
-/// Implements the <see cref="ObservableClass" />
+/// Implements the <see cref="ObservableValidatedClass" />
 /// Implements the <see cref="IDisposable" />
 /// </summary>
 /// <typeparam name="TKey">The type of the t identifier.</typeparam>
 /// <typeparam name="TModel">The type of the t model.</typeparam>
-/// <seealso cref="ObservableClass" />
+/// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IDisposable" />
-public class TreeNode<TKey, TModel> : ObservableClass
+public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel> : ObservableValidatedClass
     where TKey : struct
     where TModel : class
 {
@@ -119,13 +120,12 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// Adds the child.
     /// </summary>
     /// <param name="node">The node.</param>
-    private TreeNode<TKey, TModel> AddChild(TreeNode<TKey, TModel> node)
+    private void AddChild(TreeNode<TKey, TModel> node)
     {
         Argument.IsNotNull(node);
 
         node.Parent = this;
         Children.Add(node);
-        return node;
     }
 
     /// <summary>
@@ -236,7 +236,7 @@ public class TreeNode<TKey, TModel> : ObservableClass
     /// </summary>
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     /// The bulk of the clean-up code is implemented in Dispose(bool)
-    protected override void Dispose(bool disposing)
+    protected override void Dispose(bool disposing) // NOSONAR
     {
         if (disposing)
         {

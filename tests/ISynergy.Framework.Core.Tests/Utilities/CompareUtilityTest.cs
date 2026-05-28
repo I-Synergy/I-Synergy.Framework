@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Utilities.Tests;
+namespace ISynergy.Framework.Core.Utilities;
 
 /// <summary>
 /// Class CompareUtilityTest.
@@ -59,7 +59,7 @@ public class CompareUtilityTest
     /// <param name="operation">The operation.</param>
     /// <param name="value1">The value1.</param>
     /// <param name="value2">The value2.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(true, "==", 50.99, 50.99)]
     [DataRow(true, "!=", 50.99, 50)]
     [DataRow(true, ">", 1, 0)]

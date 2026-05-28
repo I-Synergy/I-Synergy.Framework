@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions;
 
 namespace ISynergy.Framework.UI.Abstractions.Views;
 

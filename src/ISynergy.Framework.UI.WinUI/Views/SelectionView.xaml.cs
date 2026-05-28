@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Views;
@@ -35,18 +35,18 @@ public partial class SelectionView : ISynergy.Framework.UI.Controls.View, ISelec
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
-            viewModel.SelectedItems = new List<object>();
+            viewModel.SetSelectedItems(new List<object>());
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
                 if (DataSummary.SelectedItem is not null)
-                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+                    viewModel.SelectedItems?.Add(DataSummary.SelectedItem);
             }
             else
             {
                 foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
                 {
-                    viewModel.SelectedItems.Add(item);
+                    viewModel.SelectedItems?.Add(item);
                 }
             }
 

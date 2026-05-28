@@ -1,4 +1,12 @@
-﻿namespace ISynergy.Framework.Mathematics.Random;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1264, S2245 // while(true) loops and weak PRNG are intentional in Ziggurat RNG
+
+namespace ISynergy.Framework.Mathematics.Random;
 
 /// <summary>
 ///     Exponential random number generator using the Ziggurat method.
@@ -121,7 +129,7 @@ public class ZigguratExponentialGenerator : IRandomNumberGenerator<double>
                 return jz * we[iz];
         }
 
-        //throw new InvalidOperationException("Execution should not reach here.");
+        // Execution does not normally reach here - loop exits via return above
     }
     private void setup()
     {

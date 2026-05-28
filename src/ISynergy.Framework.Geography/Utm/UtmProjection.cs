@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Geography.Common;
+using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Projection;
 
@@ -177,7 +177,7 @@ public class UtmProjection : MercatorProjection
             return new GlobalCoordinates(Angle.RadToDeg(phi), Angle.RadToDeg(lambda));
         }
 
-        throw new ArgumentException(Properties.Resources.NO_UTM_COORDINATE);
+        throw new ArgumentException(Properties.Resources.NO_UTM_COORDINATE, nameof(xy));
     }
 
     /// <summary>

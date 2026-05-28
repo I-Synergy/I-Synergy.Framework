@@ -1,18 +1,28 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
+
 public class DetailsViewModel : ViewModelBladeView<TestItem>
 {
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+
     public DetailsViewModel(
         ICommonServices commonServices,
-        bool refreshOnInitialization = true,
-        bool automaticValidation = false)
-        : base(commonServices, refreshOnInitialization, automaticValidation)
+        IDialogService dialogService,
+        INavigationService navigationService,
+        ILogger<DetailsViewModel> logger)
+        : base(commonServices, logger)
     {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
     }
 
     public override Task AddAsync()
@@ -32,7 +42,7 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
 
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>
+        Items?.AddNewRange(new List<TestItem>
             {
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},
@@ -52,7 +62,9 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = new DetailViewModel(_commonServices, e);
-        await _commonServices.NavigationService.OpenBladeAsync(this, detailsVm);
+        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailViewModel>();
+        detailsVm.SetSelectedItem(e);
+        await _navigationService.OpenBladeAsync(this, detailsVm);
     }
 }
+

@@ -1,13 +1,10 @@
-﻿using ISynergy.Framework.AspNetCore.Monitoring.Hubs;
+using ISynergy.Framework.Core.Constants;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Security.Claims;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
-
-namespace ISynergy.Framework.AspNetCore.Monitoring.Tests.Hubs;
+namespace ISynergy.Framework.AspNetCore.Monitoring.Hubs;
 
 [TestClass()]
 public class MonitorHubTests
@@ -21,7 +18,7 @@ public class MonitorHubTests
     private readonly Mock<HubCallerContext> _mockHubCallerContext;
     private readonly Mock<IHubCallerClients> _mockClients;
     private readonly Mock<IClientProxy> _mockClientProxy;
-    private readonly Mock<ILoggerFactory> _mockLoggerFactory;
+    private readonly Mock<ILogger<MonitorHub>> _mockLogger;
     private readonly MonitorHub _monitorHub;
 
     public MonitorHubTests()
@@ -30,10 +27,7 @@ public class MonitorHubTests
         _mockClients = new Mock<IHubCallerClients>();
         _mockGroupManager = new Mock<IGroupManager>();
 
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
+        _mockLogger = new Mock<ILogger<MonitorHub>>();
 
         _mockHubCallerContext = new Mock<HubCallerContext>();
         _mockHubCallerContext.Setup(x => x.ConnectionId).Returns(connectionId);
@@ -45,10 +39,10 @@ public class MonitorHubTests
                     Claims.Username,
                     Claims.Role);
 
-                identity.AddClaim(new Claim(Claims.KeyId, groupName.ToString()));
+                identity.AddClaim(new Claim(Claims.TenantId, groupName.ToString()));
                 identity.AddClaim(new Claim(Claims.Name, "Test"));
                 identity.AddClaim(new Claim(Claims.Username, userName));
-                identity.AddClaim(new Claim(Claims.Subject, userId.ToString()));
+                identity.AddClaim(new Claim(Claims.UserId, userId.ToString()));
 
                 return new ClaimsPrincipal(identity);
             });
@@ -59,7 +53,7 @@ public class MonitorHubTests
         _mockClients.Setup(x => x.OthersInGroup(groupName.ToString()))
             .Returns(_mockClientProxy.Object);
 
-        _monitorHub = new MonitorHub(_mockLoggerFactory.Object)
+        _monitorHub = new MonitorHub(_mockLogger.Object)
         {
             Clients = _mockClients.Object,
             Context = _mockHubCallerContext.Object,

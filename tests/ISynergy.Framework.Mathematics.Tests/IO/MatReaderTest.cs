@@ -1,8 +1,8 @@
-﻿using ISynergy.Framework.Mathematics.IO.Mat;
+using ISynergy.Framework.Mathematics.IO.Mat;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.IO;
+namespace ISynergy.Framework.Mathematics.IO;
 [TestClass]
 public class MatReaderTest
 {

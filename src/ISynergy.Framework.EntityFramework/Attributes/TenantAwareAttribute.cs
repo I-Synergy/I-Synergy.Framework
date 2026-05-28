@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.EntityFramework.Attributes;
+namespace ISynergy.Framework.EntityFramework.Attributes;
 
 /// <summary>
 /// Class TenantAwareAttribute. This class cannot be inherited.

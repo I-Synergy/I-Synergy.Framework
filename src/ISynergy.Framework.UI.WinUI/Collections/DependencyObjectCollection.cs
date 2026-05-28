@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using System.Collections.Specialized;
 using Windows.Foundation.Collections;
 
@@ -80,7 +80,7 @@ public partial class DependencyObjectCollection<T> : DependencyObjectCollection,
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(e));
         }
     }
 

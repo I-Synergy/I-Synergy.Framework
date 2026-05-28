@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Extensions;
@@ -81,6 +81,8 @@ public static class TaskExtensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void GetResult()
             {
+                // Intentionally empty: GetResult() for a ConfiguredTaskAwaitable has no result to return.
+                // The awaiter contract requires this method to exist for the await pattern to work.
             }
 
             /// <inheritdoc/>

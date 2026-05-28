@@ -1,8 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+		<TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<IsPackable>false</IsPackable>
@@ -10,6 +9,7 @@
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		<WindowsSdkPackageVersion>10.0.26100.57</WindowsSdkPackageVersion>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RootNamespace>ISynergy.Framework.UI.WinUI</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

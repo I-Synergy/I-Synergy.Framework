@@ -1,9 +1,9 @@
-﻿using ISynergy.Framework.Core.Serializers;
+using ISynergy.Framework.Core.Serializers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace ISynergy.Framework.Core.Converters.Tests;
+namespace ISynergy.Framework.Core.Converters;
 
 [TestClass()]
 public class DateTimeConverterTests
@@ -93,7 +93,7 @@ public class DateTimeConverterTests
     {
         const string json = "{\"dt\":null}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 
     [TestMethod]
@@ -101,6 +101,6 @@ public class DateTimeConverterTests
     {
         const string json = "{\"dt\":\"not-date\"}";
         Action act = () => _ = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json, _serializerOptions);
-        Assert.ThrowsException<FormatException>(act);
+        Assert.Throws<FormatException>(act);
     }
 }

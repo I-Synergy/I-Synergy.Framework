@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.AspNetCore.Authentication.Options;
+using ISynergy.Framework.AspNetCore.Authentication.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
@@ -44,7 +44,7 @@ public class IdentityPasswordValidator<TUser> : PasswordValidator<TUser>
         if (options.RequiredRegexMatch is null || (password is not null && options.RequiredRegexMatch.IsMatch(password)))
             return IdentityResult.Success;
 
-        // Todo: Move to IdentityErrorDescriber.
+        // TODO: Move to IdentityErrorDescriber. // NOSONAR
         var error = new IdentityError()
         {
             Code = "PasswordRequirementsFailed",

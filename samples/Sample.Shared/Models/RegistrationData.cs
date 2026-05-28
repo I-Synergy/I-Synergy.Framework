@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Models.Accounts;
 using System.ComponentModel.DataAnnotations;

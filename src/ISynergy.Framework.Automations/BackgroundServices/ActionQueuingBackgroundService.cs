@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -28,15 +28,15 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// </summary>
     /// <param name="actionService"></param>
     /// <param name="options"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public ActionQueuingBackgroundService(
         IActionService actionService,
         IOptions<AutomationOptions> options,
-        ILoggerFactory loggerFactory)
+        ILogger<ActionQueuingBackgroundService> logger)
     {
         _service = actionService;
         _options = options.Value;
-        _logger = loggerFactory.CreateLogger<ActionQueuingBackgroundService>();
+        _logger = logger;
     }
 
     /// <summary>
@@ -72,14 +72,23 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// <param name="state"></param>
     private async void RefreshQueue(object? state)
     {
-        await _service.RefreshTasksAsync();
+        try
+        {
+            await _service.RefreshTasksAsync();
 
-        var result = await _service.CalculateTimespanAsync();
+            var result = await _service.CalculateTimespanAsync();
 
-        if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
-            _executionTimer = new Timer(ExecuteTask, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration);
-        else
-            _executionTimer?.Change(Timeout.Infinite, 0);
+            if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
+                _executionTimer = new Timer(ExecuteTask, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration);
+            else
+                _executionTimer?.Change(Timeout.Infinite, 0);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error refreshing automation queue");
+            // Re-throw to crash the application if unhandled exception handler is configured
+            throw;
+        }
     }
 
     /// <summary>
@@ -88,8 +97,17 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// <param name="state"></param>
     private async void ExecuteTask(object? state)
     {
-        if (state is IAction action)
-            await _service.ExcecuteActionAsync(action);
+        try
+        {
+            if (state is IAction action)
+                await _service.ExcecuteActionAsync(action);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error executing automation action");
+            // Re-throw to crash the application if unhandled exception handler is configured
+            throw;
+        }
     }
 
     /// <summary>
@@ -97,7 +115,20 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// </summary>
     public void Dispose()
     {
-        _executionTimer?.Dispose();
-        _backgroundTimer?.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _executionTimer?.Dispose();
+            _backgroundTimer?.Dispose();
+        }
     }
 }

@@ -1,7 +1,16 @@
-﻿using ISynergy.Framework.Mathematics.Common;
+using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1192, S3427 // algorithm comments and repeated strings are intentional
+
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
@@ -136,9 +145,13 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
 
             for (var i = 0; i < p; i++)
                 if (Diagonal[i] == 0)
-                    return (bool)(fullRank = false);
+                {
+                    fullRank = false;
+                    return false;
+                }
 
-            return (bool)(fullRank = true);
+            fullRank = true;
+            return true;
         }
     }
 
@@ -307,6 +320,8 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     }
 
     /// <summary>Least squares solution of <c>A * X = I</c></summary>
+    [RequiresUnreferencedCode("Implements ISolverArrayDecomposition<T>.Inverse() which may use reflection-based type conversion.")]
+    [RequiresDynamicCode("Implements ISolverArrayDecomposition<T>.Inverse() which may require dynamic code generation.")]
     public double[][] Inverse()
     {
         if (!FullRank)

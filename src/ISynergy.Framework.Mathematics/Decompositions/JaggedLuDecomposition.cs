@@ -1,6 +1,15 @@
-﻿using ISynergy.Framework.Mathematics.Decompositions.Base;
+using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S125, S1192 // algorithm comments and repeated strings are intentional in numerical code
+
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
@@ -263,6 +272,8 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
+    [RequiresUnreferencedCode("Implements ISolverArrayDecomposition<T>.Inverse() which may use reflection-based type conversion.")]
+    [RequiresDynamicCode("Implements ISolverArrayDecomposition<T>.Inverse() which may require dynamic code generation.")]
     public double[][] Inverse()
     {
         if (!Nonsingular)

@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Decompositions;
@@ -6,7 +6,16 @@ using ISynergy.Framework.Mathematics.Enumerations;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+#pragma warning disable S1192, S2342, S2346 // repeated strings and enum naming are intentional in matrix library
+
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -70,6 +79,7 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the number of bytes contained in an array.
     /// </summary>
+    [RequiresDynamicCode("Uses Marshal.SizeOf(Type) on a runtime-resolved element type.")]
     public static int GetNumberOfBytes(this Array array)
     {
         var elementType = array.GetInnerMostType();
@@ -141,7 +151,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] MemberwiseClone<T>(this T[,] a)
     {
-        // TODO: Rename to Copy and implement shallow and deep copies
+        // TODO: Rename to Copy and implement shallow and deep copies // NOSONAR
         return (T[,])a.Clone();
     }
 
@@ -151,7 +161,7 @@ public static partial class Matrix
     /// </summary>
     public static T[] MemberwiseClone<T>(this T[] a)
     {
-        // TODO: Rename to Copy and implement shallow and deep copies
+        // TODO: Rename to Copy and implement shallow and deep copies // NOSONAR
         return (T[])a.Clone();
     }
 
@@ -426,9 +436,10 @@ public static partial class Matrix
             if (rtol > 0)
                 return Math.Abs(a - b) < rtol * b;
         }
-        catch
+        catch (Exception)
         {
-        } // TODO: Remove this try-catch block
+            // intentional - overflow/comparison errors return false
+        }
 
         return false;
     }
@@ -442,15 +453,15 @@ public static partial class Matrix
             return true;
 
         if (objA is null)
-            throw new ArgumentNullException("objA");
+            throw new ArgumentNullException(nameof(objA));
 
         if (objB is null)
-            throw new ArgumentNullException("objB");
+            throw new ArgumentNullException(nameof(objB));
 
         if (!objA.GetLength().IsEqual(objB.GetLength()))
             return false;
 
-        // TODO: Implement this cache mechanism here
+        // TODO: Implement this cache mechanism here // NOSONAR
         // http://blog.slaks.net/2015-06-26/code-snippets-fast-property-access-reflection/
 
         // Check if there is already an optimized method to perform this comparison
@@ -712,7 +723,7 @@ public static partial class Matrix
         if (inPlace)
         {
             if (rows != cols)
-                throw new ArgumentException("Only square matrices can be transposed in place.", "matrix");
+                throw new ArgumentException("Only square matrices can be transposed in place.", nameof(matrix));
 
 #if DEBUG
             var expected = matrix.Transpose();
@@ -728,7 +739,7 @@ public static partial class Matrix
 
 #if DEBUG
             if (!expected.IsEqual(matrix))
-                throw new Exception();
+                throw new InvalidOperationException("Debug assertion failed: transposed matrix does not match expected.");
 #endif
 
             return matrix;
@@ -771,6 +782,7 @@ public static partial class Matrix
     /// </summary>
     /// <param name="array">A tensor.</param>
     /// <returns>The transpose of the given tensor.</returns>
+    [RequiresDynamicCode("Calls transpose() which uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Transpose(this Array array)
     {
         return Transpose(array, Vector.Range(array.Rank - 1, -1));
@@ -782,6 +794,7 @@ public static partial class Matrix
     /// <param name="array">A tensor.</param>
     /// <param name="order">The new order for the tensor's dimensions.</param>
     /// <returns>The transpose of the given tensor.</returns>
+    [RequiresDynamicCode("Calls transpose() which uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array Transpose(this Array array, int[] order)
     {
         return transpose(array, order);
@@ -793,21 +806,23 @@ public static partial class Matrix
     /// <param name="array">A tensor.</param>
     /// <param name="order">The new order for the tensor's dimensions.</param>
     /// <returns>The transpose of the given tensor.</returns>
+    [RequiresDynamicCode("Calls transpose() which uses Array.CreateInstance with a runtime-resolved element type.")]
     public static T Transpose<T>(this T array, int[] order)
         where T : class, IList
     {
         var arr = array as Array;
 
         if (arr is null)
-            throw new ArgumentException("The given object must inherit from System.Array.", "array");
+            throw new ArgumentException("The given object must inherit from System.Array.", nameof(array));
 
         return transpose(arr, order) as T;
     }
 
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     private static Array transpose(Array array, int[] order)
     {
         if (order.Length != array.Rank)
-            throw new ArgumentException("order");
+            throw new ArgumentException("Invalid order specification.", nameof(order));
 
         if (array.Length == 1 || array.Length == 0)
             return array;
@@ -865,7 +880,7 @@ public static partial class Matrix
     /// </summary>
     public static int GetSizeInBytes<T>(this T[] elements)
     {
-        return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
+        return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
     }
 
     /// <summary>
@@ -873,7 +888,7 @@ public static partial class Matrix
     /// </summary>
     public static int GetSizeInBytes<T>(this T[][] elements)
     {
-        return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
+        return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
     }
 
     /// <summary>
@@ -881,11 +896,7 @@ public static partial class Matrix
     /// </summary>
     public static int GetSizeInBytes<T>(this T[,] elements)
     {
-#if NETSTANDARD1_4
         return elements.GetNumberOfElements() * Marshal.SizeOf<T>();
-#else
-        return elements.GetNumberOfElements() * Marshal.SizeOf(typeof(T));
-#endif
     }
 
     /// <summary>
@@ -997,7 +1008,7 @@ public static partial class Matrix
     public static bool IsSquare<T>(this T[][] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return matrix.Rows() == matrix.Columns(true);
     }
@@ -1008,7 +1019,7 @@ public static partial class Matrix
     public static bool IsSquare<T>(this T[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return matrix.Rows() == matrix.Columns();
     }
@@ -1017,7 +1028,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsUpperTriangular<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var zero = default(T);
 
@@ -1037,7 +1048,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsLowerTriangular<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var zero = default(T);
 
@@ -1174,7 +1185,6 @@ public static partial class Matrix
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = 0; j < i + s; j++)
                 r[i, j] = matrix[i, j];
-        ;
         return r;
     }
 
@@ -1188,7 +1198,6 @@ public static partial class Matrix
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = i + s; j < matrix.Columns(); j++)
                 r[i, j] = matrix[i, j];
-        ;
         return r;
     }
 
@@ -1214,7 +1223,7 @@ public static partial class Matrix
                         result[i, j] = result[j, i] = matrix[i, j];
                 break;
             default:
-                throw new Exception("Matrix type can be either LowerTriangular or UpperTrianguler.");
+                throw new ArgumentException("Matrix type can be either LowerTriangular or UpperTriangular.", nameof(type));
         }
 
         return result;
@@ -1225,7 +1234,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsDiagonal<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var zero = default(T);
 
@@ -1250,7 +1259,7 @@ public static partial class Matrix
     /// </remarks>
     public static double Trace(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
 
@@ -1270,20 +1279,15 @@ public static partial class Matrix
 
         var length = matrixA.Length;
 
-        unsafe
-        {
-            fixed (double* ptrA = matrixA)
-            fixed (double* ptrB = matrixB)
-            {
-                var a = ptrA;
-                var b = ptrB;
+        if (length == 0)
+            return 0.0;
 
-                var trace = 0.0;
-                for (var i = 0; i < length; i++)
-                    trace += *a++ * *b++;
-                return trace;
-            }
-        }
+        var spanA = MemoryMarshal.CreateSpan(ref matrixA[0, 0], length);
+        var spanB = MemoryMarshal.CreateSpan(ref matrixB[0, 0], length);
+        var trace = 0.0;
+        for (var i = 0; i < length; i++)
+            trace += spanA[i] * spanB[i];
+        return trace;
     }
 
     /// <summary>
@@ -1297,7 +1301,7 @@ public static partial class Matrix
     public static int Trace(this int[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
 
@@ -1318,7 +1322,7 @@ public static partial class Matrix
     public static float Trace(this float[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
 
@@ -1336,7 +1340,7 @@ public static partial class Matrix
     public static T[] Diagonal<T>(this T[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var r = new T[matrix.GetLength(0)];
         for (var i = 0; i < r.Length; i++)
@@ -1360,7 +1364,7 @@ public static partial class Matrix
     public static double Determinant(this double[,] matrix, bool symmetric)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
@@ -1392,7 +1396,7 @@ public static partial class Matrix
     public static double LogDeterminant(this double[,] matrix, bool symmetric)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
@@ -1415,7 +1419,7 @@ public static partial class Matrix
     public static double PseudoDeterminant(this double[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new SingularValueDecomposition(matrix,
             false, false,
@@ -1428,7 +1432,7 @@ public static partial class Matrix
     public static double PseudoDeterminant(this double[][] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new JaggedSingularValueDecomposition(matrix,
             false, false,
@@ -1441,7 +1445,7 @@ public static partial class Matrix
     public static double LogPseudoDeterminant(this double[,] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new SingularValueDecomposition(matrix,
             false, false,
@@ -1454,7 +1458,7 @@ public static partial class Matrix
     public static double LogPseudoDeterminant(this double[][] matrix)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         return new JaggedSingularValueDecomposition(matrix,
             false, false,
@@ -1475,7 +1479,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsSingular(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
         return new SingularValueDecomposition(matrix).IsSingular;
     }
 
@@ -1484,7 +1488,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsPositiveDefinite(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException("matrix");
+        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
 
         return new CholeskyDecomposition(matrix).IsPositiveDefinite;
     }
@@ -1599,7 +1603,7 @@ public static partial class Matrix
     public static double[,] Round(this double[,] matrix, int decimals = 0)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix");
+            throw new ArgumentNullException(nameof(matrix));
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -1619,7 +1623,7 @@ public static partial class Matrix
     public static double[] Round(double[] vector, int decimals = 0)
     {
         if (vector is null)
-            throw new ArgumentNullException("vector");
+            throw new ArgumentNullException(nameof(vector));
 
         var result = new double[vector.Length];
         for (var i = 0; i < result.Length; i++)
@@ -1634,6 +1638,7 @@ public static partial class Matrix
     ///     Transforms a jagged array matrix into a single vector.
     /// </summary>
     /// <param name="array">A jagged array.</param>
+    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public static Array DeepFlatten(this Array array)
     {
         var totalLength = array.GetTotalLength();

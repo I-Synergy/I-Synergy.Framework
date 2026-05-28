@@ -1,4 +1,4 @@
-﻿#if NET8_0_OR_GREATER
+#if NET8_0_OR_GREATER
 using System.Diagnostics;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -46,7 +46,7 @@ public static class Uuidv7
     /// <returns>
     /// Guid that follows UUID v7 format whose string and integer representations are time-sortable.
     /// </returns>
-    public static Guid NewGuid(long? asOfCurrentTime = null)
+    public static Guid NewGuid(long? asOfCurrentTime = null) // NOSONAR
     {
         /* The time resolution stored here is 24 fractional bits,
          * corresponding to 50ns. This is sufficient for the underlying

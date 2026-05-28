@@ -1,4 +1,12 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.Common;
 
@@ -22,6 +30,8 @@ public static class Constants
     ///   The number one (1).
     /// </summary>
     /// 
+    [RequiresUnreferencedCode("Calls ObjectExtensions.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls ObjectExtensions.To<T> which requires dynamic code generation.")]
     public static T One<T>()
     {
         return 1.To<T>();
@@ -30,7 +40,9 @@ public static class Constants
     /// <summary>
     ///   The number zero (0).
     /// </summary>
-    /// 
+    ///
+    [RequiresUnreferencedCode("Calls ObjectExtensions.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls ObjectExtensions.To<T> which requires dynamic code generation.")]
     public static T Zero<T>()
     {
         return 0.To<T>();

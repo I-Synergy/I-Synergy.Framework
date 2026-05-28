@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Printer.Label.Abstractions.Services;
+namespace ISynergy.Framework.Printer.Label.Abstractions.Services;
 
 /// <summary>
 /// Label printer interface.

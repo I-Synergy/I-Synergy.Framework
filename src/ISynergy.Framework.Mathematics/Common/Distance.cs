@@ -1,8 +1,16 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.Common;
 
@@ -74,6 +82,8 @@ public static partial class Distance
     /// <returns>
     ///     An object of the class that implements the given distance.
     /// </returns>
+    [RequiresUnreferencedCode("Uses Type.GetType(string) and Activator.CreateInstance to resolve distance types by name.")]
+    [RequiresDynamicCode("Uses Activator.CreateInstance on runtime-resolved types.")]
     public static IDistance<T> GetDistance<T>(Func<T, T, double> func)
     {
         var methods = typeof(Distance).GetMethods(BindingFlags.Public | BindingFlags.Static);
@@ -86,11 +96,9 @@ public static partial class Distance
             {
                 var t = Type.GetType("ISynergy.Framework.Mathematics.Distances." + method.Name);
 
-                if (t is null)
-                    // TODO: Remove the following special case, as it is needed only
-                    // for preserving compatibility for a few next releases more.
-                    if (methodInfo.Name == "BitwiseHamming")
-                        return new Hamming() as IDistance<T>;
+                // TODO: Remove the following special case, as it is needed only for preserving compatibility. // NOSONAR
+                if (t is null && methodInfo.Name == "BitwiseHamming")
+                    return new Hamming() as IDistance<T>;
 
                 return (IDistance<T>)Activator.CreateInstance(t);
             }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 #if NET8_0_OR_GREATER
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -11,11 +11,24 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, Prob
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "Whoopsie");
+        // Client disconnected — this is expected behaviour (browser tab closed, network
+        // drop, Blazor Server SignalR circuit reset, etc.).  Log at Debug so it is
+        // traceable without polluting error dashboards, and return without attempting
+        // to write a response to a dead connection.
+        if (exception is OperationCanceledException && httpContext.RequestAborted.IsCancellationRequested)
+        {
+            logger.LogDebug("Request cancelled — client disconnected before the response was sent.");
+            return true;
+        }
 
+        logger.LogError(exception, "An unhandled exception occurred while processing the request.");
+
+        // Do not expose the raw exception message to the caller — it may contain sensitive
+        // implementation details (connection strings, file paths, table names, etc.).
+        // The TraceIdentifier allows the caller to correlate with server-side logs.
         var problemDetails = problemDetailsFactory.CreateProblemDetails(httpContext,
             statusCode: StatusCodes.Status500InternalServerError,
-            detail: exception.Message);
+            detail: $"An unexpected error occurred. If the problem persists, contact support and provide trace ID: {httpContext.TraceIdentifier}.");
 
         httpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
         httpContext.Response.StatusCode = (int)problemDetails.Status!;

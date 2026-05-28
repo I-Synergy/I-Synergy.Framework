@@ -1,11 +1,11 @@
-﻿using ISynergy.Framework.AspNetCore.Globalization.Options;
+using ISynergy.Framework.AspNetCore.Globalization.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace ISynergy.Framework.AspNetCore.Globalization.Constraints.Tests;
+namespace ISynergy.Framework.AspNetCore.Globalization.Constraints;
 
 [TestClass]
 public class CultureRouteConstraintTests

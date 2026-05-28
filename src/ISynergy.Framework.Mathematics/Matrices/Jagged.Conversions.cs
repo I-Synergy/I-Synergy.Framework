@@ -1,4 +1,12 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -71,6 +79,8 @@ public static partial class Jagged
     /// </summary>
     /// <typeparam name="TOutput">The type of the output.</typeparam>
     /// <param name="array">The tensor to be converted.</param>
+    [RequiresUnreferencedCode("Calls Convert(Array, Type) which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Convert(Array, Type) which requires dynamic code generation.")]
     public static Array Convert<TOutput>(this Array array)
     {
         return Convert(array, typeof(TOutput));
@@ -81,6 +91,8 @@ public static partial class Jagged
     /// </summary>
     /// <param name="type">The type of the output.</param>
     /// <param name="array">The tensor to be converted.</param>
+    [RequiresUnreferencedCode("Uses ObjectExtensions.To(Object, Type) which is not AOT-safe.")]
+    [RequiresDynamicCode("Uses ObjectExtensions.To(Object, Type) and Jagged.Zeros(Type,...) with runtime types.")]
     public static Array Convert(this Array array, Type type)
     {
         var r = Zeros(type, array.GetLength(true));

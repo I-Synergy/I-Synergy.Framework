@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,6 +8,7 @@ namespace ISynergy.Framework.AspNetCore.Filters;
 /// Checks if HttpResponse content is null.
 /// If it's null, then return a HTTP 404 (Not Found) instead of HTTP 200 (OK).
 /// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public sealed class NullResultFilterAttribute : ActionFilterAttribute
 {
     /// <summary>

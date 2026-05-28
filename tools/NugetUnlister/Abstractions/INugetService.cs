@@ -1,4 +1,4 @@
-﻿using NugetUnlister.Models;
+using NugetUnlister.Models;
 
 namespace NugetUnlister.Abstractions;
 

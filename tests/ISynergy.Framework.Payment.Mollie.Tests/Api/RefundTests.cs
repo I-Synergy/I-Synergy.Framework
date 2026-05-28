@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using ISynergy.Framework.Payment.Mollie.Models;
 using ISynergy.Framework.Payment.Mollie.Models.Payment.Request;

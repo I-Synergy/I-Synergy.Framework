@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Core.Validation;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
@@ -20,7 +20,7 @@ public static class NetworkUtility
             using var ping = new Ping();
 
             // Try multiple reliable DNS servers in case one fails
-            string[] hosts = { "8.8.8.8", "1.1.1.1", "8.8.4.4" };
+            string[] hosts = { "8.8.8.8", "1.1.1.1", "8.8.4.4" }; // NOSONAR - these are well-known public DNS server addresses, not sensitive data
 
             foreach (var host in hosts)
             {
@@ -36,7 +36,7 @@ public static class NetworkUtility
         }
     }
 
-    public static string GetInternetIPAddress()
+    public static async Task<string> GetInternetIPAddressAsync()
     {
         using var client = new HttpClient();
         client.Timeout = TimeSpan.FromSeconds(5);
@@ -52,16 +52,27 @@ public static class NetworkUtility
         {
             try
             {
-                var response = client.GetStringAsync(service).GetAwaiter().GetResult();
+                var response = await client.GetStringAsync(service);
                 return response.Trim();
             }
             catch
             {
-                continue;
+                // Continue to next service
             }
         }
 
         return "127.0.0.1";
+    }
+
+    /// <summary>
+    /// Gets the internet IP address synchronously. This method blocks the calling thread.
+    /// Consider using GetInternetIPAddressAsync() instead.
+    /// </summary>
+    /// <returns>The IP address or "127.0.0.1" if unable to retrieve.</returns>
+    [Obsolete("Use GetInternetIPAddressAsync() instead. This method can cause deadlocks.")] // NOSONAR
+    public static string GetInternetIPAddress()
+    {
+        return GetInternetIPAddressAsync().GetAwaiter().GetResult();
     }
 
     /// <summary>

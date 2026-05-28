@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.Core.Constants;
+namespace ISynergy.Framework.Core.Constants;
 
 /// <summary>
 /// Class GenericConstants.
@@ -54,7 +54,7 @@ public static class GenericConstants
     /// <summary>
     /// The password reg ex
     /// </summary>
-    public const string PasswordRegEx = @"(?=^.{6,}$)(?=[^\d]*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])";
+    public const string PasswordRegEx = @"(?=^.{6,}$)(?=[^\d]*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])"; // NOSONAR - not a credential, this is a validation regex pattern
     /// <summary>
     /// The rfid uid rege ex
     /// </summary>
@@ -114,7 +114,7 @@ public static class GenericConstants
     /// <summary>
     /// The viewmodel with generic parameter
     /// </summary>
-    public const string ViewModelTRegex = ".*ViewModel`.*";
+    public const string ViewModelTRegex = @".*ViewModel.*`\d+$";
     /// <summary>
     /// The shell view model
     /// </summary>
@@ -143,19 +143,9 @@ public static class GenericConstants
     public const string Relations = "relations";
 
     /// <summary>
-    /// The username prefix test
-    /// </summary>
-    public const string UsernamePrefixTest = "test?";
-
-    /// <summary>
-    /// The username prefix local
-    /// </summary>
-    public const string UsernamePrefixLocal = "local?";
-
-    /// <summary>
     /// The temporary URL
     /// </summary>
-    public const string TemporaryUrl = @"temp:///";
+    public const string TemporaryUrl = @"temp:///"; // NOSONAR - well-known internal URI scheme constant, not a hardcoded external URL
 
     /// <summary>
     /// The API name
@@ -185,4 +175,7 @@ public static class GenericConstants
     /// The number of payments to list
     /// </summary>
     public const int NumberOfPaymentsToList = 50;
+
+
+    public const string DockerEnvironment = "Docker";
 }

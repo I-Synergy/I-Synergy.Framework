@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
 
@@ -9,6 +9,7 @@ namespace ISynergy.Framework.AspNetCore.Filters;
 /// Implements the <see cref="ActionFilterAttribute" />
 /// </summary>
 /// <seealso cref="ActionFilterAttribute" />
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public sealed class NoCacheFilterAttribute : ActionFilterAttribute
 {
     /// <summary>

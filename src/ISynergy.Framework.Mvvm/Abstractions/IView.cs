@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
 namespace ISynergy.Framework.Mvvm.Abstractions;
 
@@ -11,7 +11,7 @@ public interface IView : IDisposable
     /// Gets or sets the data context.
     /// </summary>
     /// <value>The data context.</value>
-    IViewModel? ViewModel { get; set; }
+    IViewModel ViewModel { get; set; }
     /// <summary>
     /// Gets or sets a value indicating whether this instance is enabled.
     /// </summary>

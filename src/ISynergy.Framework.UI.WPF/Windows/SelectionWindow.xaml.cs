@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Enumerations;
@@ -14,6 +14,12 @@ public partial class SelectionWindow : ISelectionWindow
     {
         InitializeComponent();
         DataContextChanged += this.SelectionWindow_DataContextChanged;
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        DataContextChanged -= SelectionWindow_DataContextChanged;
+        base.OnClosed(e);
     }
 
     private void SelectionWindow_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
@@ -38,18 +44,18 @@ public partial class SelectionWindow : ISelectionWindow
     {
         if (ViewModel is ISelectionViewModel viewModel)
         {
-            viewModel.SelectedItems = new List<object>();
+            viewModel.SetSelectedItems(new List<object>());
 
             if (viewModel.SelectionMode == SelectionModes.Single)
             {
                 if (DataSummary.SelectedItem is not null)
-                    viewModel.SelectedItems.Add(DataSummary.SelectedItem);
+                    viewModel.SelectedItems?.Add(DataSummary.SelectedItem);
             }
             else
             {
                 foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
                 {
-                    viewModel.SelectedItems.Add(item);
+                    viewModel.SelectedItems?.Add(item);
                 }
             }
 

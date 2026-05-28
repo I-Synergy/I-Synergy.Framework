@@ -1,7 +1,8 @@
-﻿using ISynergy.Framework.Core.Data.Tests.TestClasses;
+using ISynergy.Framework.Core.Data.TestClasses;
+using ISynergy.Framework.Core.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Core.Utilities.Tests;
+namespace ISynergy.Framework.Core.Extensions;
 
 /// <summary>
 /// Class TypeExtensionsTests.
@@ -13,7 +14,7 @@ public class TypeExtensionsTests
     /// Defines the test method BasicTypeActivatorTest.
     /// </summary>
     /// <param name="type">The type.</param>
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(typeof(string))]
     [DataRow(typeof(bool))]
     [DataRow(typeof(object))]

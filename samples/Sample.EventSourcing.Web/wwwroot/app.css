@@ -1,0 +1,18 @@
+/* Event Sourcing Sample — minimal overrides on top of Bootstrap */
+
+.font-monospace {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: .875em;
+}
+
+.navbar-brand {
+    letter-spacing: .02em;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}

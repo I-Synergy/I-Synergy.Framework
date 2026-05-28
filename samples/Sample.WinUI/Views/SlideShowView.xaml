@@ -8,7 +8,8 @@
     xmlns:Controls="using:ISynergy.Framework.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    Scrollable="False">
 
     <c:View.Resources>
         <Converters:UriToImageSourceConverter x:Name="UriToImageSourceConverter"/>

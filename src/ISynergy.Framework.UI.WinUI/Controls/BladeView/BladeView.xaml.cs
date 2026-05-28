@@ -59,7 +59,7 @@ public partial class BladeView : UserControl, IDisposable
         set { SetValue(DisabledBackgroundProperty, value); }
     }
 
-    public static readonly DependencyProperty DisabledBackgroundProperty = DependencyProperty.Register(nameof(DisabledBackground), typeof(Brush), typeof(BladeView), new PropertyMetadata(Microsoft.UI.Xaml.Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"] as Brush));
+    public static readonly DependencyProperty DisabledBackgroundProperty = DependencyProperty.Register(nameof(DisabledBackground), typeof(Brush), typeof(BladeView), new PropertyMetadata(null));
 
     public Orientation Orientation
     {
@@ -112,7 +112,7 @@ public partial class BladeView : UserControl, IDisposable
     #endregion
 
     private readonly Dictionary<IView, BladeState> _bladeStates = new();
-    private readonly ILogger _logger = ServiceLocator.Default.GetService<ILogger<BladeView>>();
+    private readonly ILogger _logger = ServiceLocator.Default.GetRequiredService<ILogger<BladeView>>();
     private bool _isInternalUpdate;
     private bool _isDisposed;
 
@@ -139,7 +139,6 @@ public partial class BladeView : UserControl, IDisposable
         this.HorizontalAlignment = HorizontalAlignment.Stretch;
         this.Orientation = Orientation.Horizontal;
         this.BladeSpacing = 10;
-        this.DisabledBackground = (Brush)Microsoft.UI.Xaml.Application.Current.Resources.ThemeDictionaries["ApplicationPageBackgroundThemeBrush"];
         this.DisabledOpacity = 0.75;
     }
 
@@ -215,7 +214,7 @@ public partial class BladeView : UserControl, IDisposable
 
     private void UnregisterBlade(IView view)
     {
-        if (_bladeStates.TryGetValue(view, out var state))
+        if (_bladeStates.ContainsKey(view))
         {
             _bladeStates.Remove(view);
         }
@@ -233,7 +232,7 @@ public partial class BladeView : UserControl, IDisposable
 
             if (this.DataContext is IViewModelBladeView bladeView)
             {
-                bladeView.Blades.Remove(view);
+                bladeView.Blades?.Remove(view);
             }
 
             if (view is IDisposable disposableView)
@@ -241,7 +240,7 @@ public partial class BladeView : UserControl, IDisposable
                 disposableView.Dispose();
             }
 
-            if (state.ViewModel is not null && state.ViewModel.TryGetTarget(out var viewModel) &&
+            if (state.ViewModel is not null && state.ViewModel.TryGetTarget(out var viewModel) && // NOSONAR
                 viewModel is IDisposable disposableViewModel)
             {
                 disposableViewModel.Dispose();
@@ -265,9 +264,9 @@ public partial class BladeView : UserControl, IDisposable
         if (this.DataContext is not IViewModelBladeView bladeView)
             return;
 
-        this.Visibility = bladeView.Blades.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        this.Visibility = bladeView.Blades?.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-        if (bladeView.Blades.Count > 0)
+        if (bladeView.Blades?.Count > 0)
         {
             for (int i = 0; i < bladeView.Blades.Count; i++)
             {
@@ -294,7 +293,7 @@ public partial class BladeView : UserControl, IDisposable
     {
         if (this.DataContext is IViewModelBladeView bladeView)
         {
-            foreach (var view in bladeView.Blades.OfType<IView>().ToList())
+            foreach (var view in bladeView.Blades?.OfType<IView>().ToList() ?? new List<IView>())
             {
                 RemoveBlade(view);
             }

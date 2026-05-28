@@ -1,8 +1,7 @@
-﻿using ISynergy.Framework.Mathematics.Exceptions;
-using ISynergy.Framework.Mathematics.Optimization;
+using ISynergy.Framework.Mathematics.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ISynergy.Framework.Mathematics.Tests.Optimization;
+namespace ISynergy.Framework.Mathematics.Optimization;
 [TestClass]
 public class BrentSearchTest
 {
@@ -162,7 +161,7 @@ public class BrentSearchTest
         double a = -1;
         double b = +1;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.FindRoot(f, a, b);
         });
@@ -179,7 +178,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b);
         bool isSuccess = search.FindRoot();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.RootNotBracketed, search.Status);
     }
 
@@ -191,7 +190,7 @@ public class BrentSearchTest
         double a = -3;
         double b = +3;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.FindRoot(f, a, b);
         });
@@ -208,7 +207,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b);
         bool isSuccess = search.FindRoot();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.RootNotBracketed, search.Status);
     }
 
@@ -220,7 +219,7 @@ public class BrentSearchTest
         double a = -1;
         double b = +3000;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.FindRoot(f, a, b, maxIterations: 5);
         });
@@ -237,7 +236,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b, maxIterations: 5);
         bool isSuccess = search.FindRoot();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.MaxIterationsReached, search.Status);
 
         Assert.IsTrue(search.Solution > a && search.Solution < b);
@@ -251,7 +250,7 @@ public class BrentSearchTest
         double a = -200;
         double b = +200;
 
-        Assert.ThrowsException<ConvergenceException>(() =>
+        Assert.Throws<ConvergenceException>(() =>
         {
             double actual = BrentSearch.Maximize(f, a, b, maxIterations: 10);
         });
@@ -268,7 +267,7 @@ public class BrentSearchTest
         BrentSearch search = new(f, a, b, maxIterations: 10);
         bool isSuccess = search.Maximize();
 
-        Assert.AreEqual(false, isSuccess);
+        Assert.IsFalse(isSuccess);
         Assert.AreEqual(BrentSearchStatus.MaxIterationsReached, search.Status);
 
         Assert.IsTrue(search.Solution > a && search.Solution < b);

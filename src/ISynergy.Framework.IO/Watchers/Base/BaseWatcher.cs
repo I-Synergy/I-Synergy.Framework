@@ -1,8 +1,9 @@
-﻿using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.IO.Events.Base;
 using ISynergy.Framework.IO.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.IO.Watchers.Base;
 
@@ -11,7 +12,9 @@ namespace ISynergy.Framework.IO.Watchers.Base;
 /// Implements the <see cref="IDisposable" />
 /// </summary>
 /// <seealso cref="IDisposable" />
-public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
+public abstract class BaseWatcher<
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TWatcher,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TWatcherEventArgs> : IDisposable
     where TWatcher : FileSystemWatcher, new()
     where TWatcherEventArgs : BaseEventArgs<TWatcher>
 {
@@ -124,7 +127,7 @@ public abstract class BaseWatcher<TWatcher, TWatcherEventArgs> : IDisposable
     /// </summary>
     /// <param name="changedWatcher">if set to <c>true</c> [changed watcher].</param>
     /// <param name="filter">The filter.</param>
-    protected void CreateWatcher(bool changedWatcher, NotifyFilters filter)
+    protected void CreateWatcher(bool changedWatcher, NotifyFilters filter) // NOSONAR
     {
         TWatcher? watcher = null;
         int bufferSize = (int)_watcherInfo.BufferKBytes * 1024;

@@ -1,6 +1,14 @@
-﻿using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Matrices;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
+
+#pragma warning disable S1244 // float equality is intentional in numerical algorithms
+#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
+#pragma warning disable S2368 // object overloads are part of the library API
+#pragma warning disable S1905 // casts may be intentional for type clarity
+#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
 
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
@@ -23,6 +31,8 @@ public static partial class NpyFormat
     /// <typeparam name="T">The type to be loaded from the npy-formatted file.</typeparam>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
+    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(byte[] bytes)
         where T : class,
 #if !NETSTANDARD1_4
@@ -48,6 +58,8 @@ public static partial class NpyFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
+    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(byte[] bytes, out T value)
         where T : class,
 #if !NETSTANDARD1_4
@@ -71,6 +83,8 @@ public static partial class NpyFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
+    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(string path, out T value)
         where T : class,
 #if !NETSTANDARD1_4
@@ -94,6 +108,8 @@ public static partial class NpyFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
+    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(Stream stream, out T value)
         where T : class,
 #if !NETSTANDARD1_4
@@ -112,6 +128,8 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
+    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(string path)
         where T : class,
 #if !NETSTANDARD1_4
@@ -134,6 +152,8 @@ public static partial class NpyFormat
     /// <typeparam name="T">The type to be loaded from the npy-formatted file.</typeparam>
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
+    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
+    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(Stream stream)
         where T : class,
 #if !NETSTANDARD1_4
@@ -153,6 +173,7 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
+    [RequiresDynamicCode("Calls LoadMatrix(Stream) which requires dynamic code generation.")]
     public static Array LoadMatrix(byte[] bytes)
     {
         using (var stream = new MemoryStream(bytes))
@@ -166,6 +187,7 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
+    [RequiresDynamicCode("Calls LoadMatrix(Stream) which requires dynamic code generation.")]
     public static Array LoadMatrix(string path)
     {
         using (var stream = new FileStream(path, FileMode.Open))
@@ -179,6 +201,8 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>A jagged array containing the values available in the given stream.</returns>
+    [RequiresUnreferencedCode("Calls LoadJagged(Stream) which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls LoadJagged(Stream) which requires dynamic code generation.")]
     public static Array LoadJagged(byte[] bytes)
     {
         using (var stream = new MemoryStream(bytes))
@@ -192,6 +216,8 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>A jagged array containing the values available in the given stream.</returns>
+    [RequiresUnreferencedCode("Calls LoadJagged(Stream) which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls LoadJagged(Stream) which requires dynamic code generation.")]
     public static Array LoadJagged(string path)
     {
         using (var stream = new FileStream(path, FileMode.Open))
@@ -204,6 +230,7 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
+    [RequiresDynamicCode("Calls Matrix.Zeros(Type, ...) and Matrix.SetValue which require dynamic code generation.")]
     public static Array LoadMatrix(Stream stream)
     {
         using (var reader = new BinaryReader(stream, Encoding.ASCII
@@ -232,6 +259,8 @@ public static partial class NpyFormat
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <param name="trim">Pass true to remove null or empty elements from the loaded array.</param>
     /// <returns>A jagged array containing the values available in the given stream.</returns>
+    [RequiresUnreferencedCode("Calls Jagged.Zeros(Type, ...) which is not AOT-safe.")]
+    [RequiresDynamicCode("Calls Jagged.Zeros(Type, ...) and Matrix.Trim which require dynamic code generation.")]
     public static Array LoadJagged(Stream stream, bool trim = true)
     {
         using (var reader = new BinaryReader(stream, Encoding.ASCII
@@ -304,42 +333,41 @@ public static partial class NpyFormat
         return matrix;
     }
 
+    [RequiresDynamicCode("Calls Matrix.SetValue which requires dynamic code generation.")]
     private static Array readStringMatrix(BinaryReader reader, Array matrix, int bytes, Type type, int[] shape)
     {
+        if (bytes <= 0)
+            throw new InvalidDataException($"Invalid NumPy string element size {bytes}: must be greater than zero.");
+
         var buffer = new byte[bytes];
 
-        unsafe
+        foreach (var p in matrix.GetIndices(true))
         {
-            fixed (byte* b = buffer)
-            {
-                foreach (var p in matrix.GetIndices(true))
-                {
-                    reader.Read(buffer, 0, bytes);
-                    if (buffer[0] == byte.MinValue)
-                    {
-                        var isNull = true;
-                        for (var i = 1; i < buffer.Length; i++)
-                            if (buffer[i] != byte.MaxValue)
-                            {
-                                isNull = false;
-                                break;
-                            }
+            reader.Read(buffer, 0, bytes);
 
-                        if (isNull)
-                        {
-                            matrix.SetValue(null, true, p);
-                            continue;
-                        }
+            if (buffer[0] == byte.MinValue)
+            {
+                var isNull = true;
+                for (var i = 1; i < buffer.Length; i++)
+                    if (buffer[i] != byte.MaxValue)
+                    {
+                        isNull = false;
+                        break;
                     }
 
-#if NETSTANDARD1_4
-                    String s = new String((char*)b);
-#else
-                    var s = new string((sbyte*)b);
-#endif
-                    matrix.SetValue(s, true, p);
+                if (isNull)
+                {
+                    matrix.SetValue(null, true, p);
+                    continue;
                 }
             }
+
+            // Find the null terminator within the buffer bounds so we never read past it.
+            // Using Encoding.ASCII.GetString is safe and avoids a null-terminated pointer read.
+            var nullIdx = Array.IndexOf(buffer, (byte)0);
+            var strLen = nullIdx >= 0 ? nullIdx : bytes;
+            var s = System.Text.Encoding.ASCII.GetString(buffer, 0, strLen);
+            matrix.SetValue(s, true, p);
         }
 
         return matrix;
@@ -374,8 +402,8 @@ public static partial class NpyFormat
         bool? isLittleEndian;
         t = GetType(type, out bytes, out isLittleEndian);
 
-        if (isLittleEndian.HasValue && isLittleEndian.Value == false)
-            throw new Exception();
+        if (isLittleEndian.HasValue && !isLittleEndian.Value)
+            throw new NotSupportedException("Big-endian NumPy format is not supported.");
 
         mark = "'fortran_order': ";
         s = header.IndexOf(mark) + mark.Length;
@@ -383,7 +411,7 @@ public static partial class NpyFormat
         var fortran = bool.Parse(header.Substring(s, e - s));
 
         if (fortran)
-            throw new Exception();
+            throw new NotSupportedException("Fortran-order (column-major) NumPy format is not supported.");
 
         mark = "'shape': (";
         s = header.IndexOf(mark) + mark.Length;
@@ -444,7 +472,7 @@ public static partial class NpyFormat
                 littleEndian = null;
                 break;
             default:
-                throw new Exception();
+                throw new NotSupportedException("The specified NumPy data type is not supported.");
         }
 
         return littleEndian;

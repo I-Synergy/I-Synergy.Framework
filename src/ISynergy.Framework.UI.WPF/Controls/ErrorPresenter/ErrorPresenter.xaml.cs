@@ -1,4 +1,4 @@
-﻿namespace ISynergy.Framework.UI.Controls;
+namespace ISynergy.Framework.UI.Controls;
 
 public sealed partial class ErrorPresenter
 {

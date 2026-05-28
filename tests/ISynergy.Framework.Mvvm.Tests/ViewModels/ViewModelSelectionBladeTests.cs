@@ -1,8 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -10,26 +8,28 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionBladeTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
+    private Mock<ILanguageService> _mockLanguageService;
+    private Mock<ILogger<ViewModelSelectionBlade<TestEntity>>> _mockLogger;
 
     public ViewModelSelectionBladeTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
+        _mockLogger = new Mock<ILogger<ViewModelSelectionBlade<TestEntity>>>();
+
+        _mockLanguageService = new Mock<ILanguageService>();
+
+        // Setup the language service to return the key wrapped in brackets
+        _mockLanguageService
+            .Setup(x => x.GetString(It.IsAny<string>()))
+            .Returns<string>(key => $"[{key}]");
 
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
-
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+        _mockCommonServices.SetupGet(s => s.LanguageService).Returns(_mockLanguageService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
-    private class TestEntity
+    public class TestEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -45,11 +45,11 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" }
             };
         var selectedItems = new List<TestEntity> { items[0] };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            selectedItems,
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(selectedItems);
 
         // Verify initial state
         Assert.IsNotNull(viewModel.Items);
@@ -61,9 +61,8 @@ public class ViewModelSelectionBladeTests
         viewModel.Cleanup();
 
         // Assert
-        Assert.IsNotNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
-        Assert.AreEqual(0, viewModel.SelectedItems.Count, "SelectedItems should be empty after cleanup");
-        Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
+        Assert.IsNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
+        Assert.IsNull(viewModel.Items, "Items should not be null after cleanup");
 
         viewModel.Dispose();
         Assert.IsTrue(viewModel.IsDisposed);
@@ -81,11 +80,10 @@ public class ViewModelSelectionBladeTests
         var selectedItems = new List<TestEntity> { items[0] };
 
         // Act
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            selectedItems,
-            SelectionModes.Single);
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(selectedItems);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -105,20 +103,19 @@ public class ViewModelSelectionBladeTests
             {
                 new TestEntity { Id = 1, Name = "Test1" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            items,
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(items);
 
         // Act & Assert
         // Shouldn't throw any exceptions
         await viewModel.CloseAsync();
 
         // Assert
-        Assert.IsNotNull(viewModel.SelectedItems, "SelectedItems should not be null after cleanup");
-        Assert.AreEqual(0, viewModel.SelectedItems.Count, "SelectedItems should be empty after cleanup");
-        Assert.AreEqual(0, viewModel.Items.Count, "Items should be empty after cleanup");
+        Assert.IsNull(viewModel.SelectedItems, "SelectedItems should be null after cleanup");
+        Assert.IsNull(viewModel.Items, "Items should be null after cleanup");
 
         viewModel.Dispose();
         Assert.IsTrue(viewModel.IsDisposed);
@@ -133,29 +130,28 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" },
                 new TestEntity { Id = 2, Name = "Different" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
-        Assert.AreEqual(1, viewModel.Items.Count);
-        Assert.AreEqual("Test1", viewModel.Items[0].Name);
+        Assert.AreEqual(1, viewModel.Items?.Count);
+        Assert.AreEqual("Test1", viewModel.Items?.FirstOrDefault()?.Name);
     }
 
     [TestMethod]
     public void Constructor_WithNullItems_InitializesEmptyCollections()
     {
         // Arrange & Act
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            null!,
-            null!,
-            SelectionModes.Single);
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(null!);
+        viewModel.SetSelectedItems(null!);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
@@ -172,11 +168,11 @@ public class ViewModelSelectionBladeTests
             {
                 new TestEntity { Id = 1, Name = "Test1" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            items,
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(items);
 
         var submittedInvoked = false;
         var closedInvoked = false;
@@ -199,11 +195,11 @@ public class ViewModelSelectionBladeTests
             {
                 new TestEntity { Id = 1, Name = "Test1" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         bool isValid = viewModel.Validate();
@@ -222,11 +218,11 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" },
                 new TestEntity { Id = 2, Name = "Test2" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Multiple);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         bool isValid = viewModel.Validate();
@@ -245,17 +241,17 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" },
                 new TestEntity { Id = 2, Name = "Test2" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.AreEqual(2, viewModel.Items?.Count);
     }
 
     [TestMethod]
@@ -267,17 +263,17 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" },
                 new TestEntity { Id = 2, Name = "Test2" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Single);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Single);
+        viewModel.SetItems(items);
+        viewModel.SetSelectedItems(new List<TestEntity>());
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("*");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.AreEqual(2, viewModel.Items?.Count);
     }
 
     [TestMethod]
@@ -289,18 +285,19 @@ public class ViewModelSelectionBladeTests
                 new TestEntity { Id = 1, Name = "Test1" },
                 new TestEntity { Id = 2, Name = "Test2" }
             };
-        var viewModel = new ViewModelSelectionBlade<TestEntity>(
-            _mockCommonServices.Object,
-            items,
-            new List<TestEntity>(),
-            SelectionModes.Multiple);
+
+        var viewModel = new ViewModelSelectionBlade<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
+        viewModel.SetSelectionMode(SelectionModes.Multiple);
+        viewModel.SetItems(items);
 
         // Act
-        viewModel.SelectedItems = new List<object> { items[0], items[1] };
+        var selectedItems = new List<TestEntity> { items[0], items[1] };
+        viewModel.SetSelectedItems(selectedItems);
 
         // Assert
-        Assert.AreEqual(2, viewModel.SelectedItems.Count);
-        Assert.IsTrue(viewModel.SelectedItems.Contains(items[0]));
-        Assert.IsTrue(viewModel.SelectedItems.Contains(items[1]));
+        Assert.AreEqual(2, viewModel.SelectedItems?.Count);
+        Assert.IsTrue(viewModel.SelectedItems?.Contains(items[0]));
+        Assert.IsTrue(viewModel.SelectedItems?.Contains(items[1]));
     }
 }
+

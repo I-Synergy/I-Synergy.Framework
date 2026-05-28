@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.Actions;
 using ISynergy.Framework.Automations.Extensions;
 using ISynergy.Framework.Automations.Options;
@@ -23,16 +23,16 @@ public class ActionService : IActionService
     /// </summary>
     /// <param name="manager"></param>
     /// <param name="options"></param>
-    /// <param name="loggerFactory"></param>
+    /// <param name="logger"></param>
     public ActionService(
         IActionManager manager,
         IOptions<AutomationOptions> options,
-        ILoggerFactory loggerFactory)
+        ILogger<ActionService> logger)
     {
         _tasks = new List<IAction>();
         _manager = manager;
         _options = options.Value;
-        _logger = loggerFactory.CreateLogger<ActionService>();
+        _logger = logger;
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public class ActionService : IActionService
                 {
                     if (x.IsCompleted)
                         await _manager.SetActionExcecutedAsync(action.ActionId);
-                    _logger.LogInformation($"Task with {action.ActionId} executed");
+                    _logger.LogInformation("Task with {ActionId} executed", action.ActionId);
                 });
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Media.Animation;
 
 namespace ISynergy.Framework.UI.Controls;

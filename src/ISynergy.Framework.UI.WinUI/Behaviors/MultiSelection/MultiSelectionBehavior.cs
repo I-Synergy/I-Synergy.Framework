@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
@@ -66,7 +66,7 @@ public class MultiSelectionBehavior : Behavior<ListView>
         if (e.NewValue is INotifyCollectionChanged newValue)
         {
             behavior.AssociatedObject.SelectedItems.Clear();
-            foreach (var item in ((IEnumerable<object>)newValue).EnsureNotNull())
+            foreach (var item in (newValue as IEnumerable<object>).EnsureNotNull())
             {
                 behavior.AssociatedObject.SelectedItems.Add(item);
             }

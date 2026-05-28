@@ -1,4 +1,4 @@
-﻿using ISynergy.Framework.Automations.Abstractions;
+using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Validation;
 
@@ -58,22 +58,11 @@ public abstract class BaseNumericTrigger<T> : BaseTrigger, ITrigger
     /// <param name="callbackAsync"></param>
     protected BaseNumericTrigger(
         Guid automationId,
-        Func<(IObservableClass Entity, IProperty<T> Property)> function,
+        Func<(IObservableValidatedClass Entity, IProperty<T> Property)> function,
         T below,
         T above,
         Func<T, Task> callbackAsync)
         : this(automationId, below, above, TimeSpan.Zero)
     {
-        //if (function.Invoke() is (IObservableClass Entity, IProperty<T> Property) result)
-        //{
-        //    result.Property.BroadCastChanges = true;
-
-        //    MessageService.Default.Register<PropertyChangedMessage<T>>(this, m =>
-        //    {
-        //        var comparer = Comparer<T>.Default;
-        //        if (comparer.Compare(m.NewValue, below) < 0 && comparer.Compare(m.NewValue, above) > 0)
-        //            callbackAsync.Invoke(m.NewValue).Wait();
-        //    });
-        //}
     }
 }

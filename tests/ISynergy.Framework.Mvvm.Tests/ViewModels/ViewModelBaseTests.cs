@@ -1,8 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -13,24 +11,25 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelBaseTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILoggerFactory> _mockLoggerFactory;
+    private Mock<ILanguageService> _mockLanguageService;
 
     public ViewModelBaseTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
-        _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
-        _mockLoggerFactory = new Mock<ILoggerFactory>();
-        _mockLoggerFactory
-            .Setup(x => x.CreateLogger(It.IsAny<string>()))
-            .Returns(new Mock<ILogger>().Object);
+        _mockLanguageService = new Mock<ILanguageService>();
 
-        _mockCommonServices.SetupGet(s => s.LoggerFactory).Returns(_mockLoggerFactory.Object);
+        // Setup the language service to return the key wrapped in brackets
+        _mockLanguageService
+            .Setup(x => x.GetString(It.IsAny<string>()))
+            .Returns<string>(key => $"[{key}]");
+
+        _mockCommonServices = new Mock<ICommonServices>();
+        _mockCommonServices.SetupGet(s => s.LanguageService).Returns(_mockLanguageService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
-    private class TestViewModel : ViewModel
+    public class TestViewModel : ViewModel
     {
         /// <summary>
         /// Gets or sets the TestProperty property value.
@@ -41,8 +40,8 @@ public class ViewModelBaseTests
             set => SetValue(value);
         }
 
-        public TestViewModel(ICommonServices commonServices, bool automaticValidation = false)
-            : base(commonServices, automaticValidation) { }
+        public TestViewModel(ICommonServices commonServices, ILogger<TestViewModel> logger)
+            : base(commonServices, logger) { }
 
         public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -53,7 +52,7 @@ public class ViewModelBaseTests
         }
     }
 
-    private enum TestEnum
+    public enum TestEnum
     {
         [Display(Description = "TestDescription")]
         TestValue
@@ -63,7 +62,7 @@ public class ViewModelBaseTests
     public void Constructor_InitializesProperties()
     {
         // Arrange & Act
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Assert
         Assert.IsNotNull(viewModel.CloseCommand);
@@ -78,7 +77,7 @@ public class ViewModelBaseTests
     public async Task CloseAsync_InvokesClosedEvent()
     {
         // Arrange
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
         var eventInvoked = false;
         viewModel.Closed += (s, e) => eventInvoked = true;
 
@@ -93,7 +92,7 @@ public class ViewModelBaseTests
     public async Task CancelAsync_InvokesCancelledAndClosedEvents()
     {
         // Arrange
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
         var cancelledInvoked = false;
         var closedInvoked = false;
         viewModel.Cancelled += (s, e) => cancelledInvoked = true;
@@ -112,7 +111,7 @@ public class ViewModelBaseTests
     public void Cleanup_DisposesCommands()
     {
         // Arrange
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
         viewModel.Dispose();
@@ -125,7 +124,8 @@ public class ViewModelBaseTests
     public void Constructor_WithAutomaticValidation_SetsValidation()
     {
         // Arrange & Act
-        var viewModel = new TestViewModel(_mockCommonServices.Object, true);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
+        viewModel.AutomaticValidationTrigger = true;
 
         // Assert
         // Note: You might need to expose a way to check if automatic validation is enabled
@@ -136,7 +136,7 @@ public class ViewModelBaseTests
     public void GetEnumDescription_ReturnsLocalizedString()
     {
         // Arrange
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
         var result = viewModel.GetEnumDescription(TestEnum.TestValue);
@@ -149,10 +149,10 @@ public class ViewModelBaseTests
     public void GetEnumDescription_WithoutDisplayAttribute_ReturnsEnumString()
     {
         // Arrange
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
-        var result = viewModel.GetEnumDescription(MessageBoxButton.OK);
+        var result = viewModel.GetEnumDescription(MessageBoxButtons.OK);
 
         // Assert
         Assert.AreEqual("OK", result);
@@ -162,7 +162,7 @@ public class ViewModelBaseTests
     public async Task InitializeAsync_SetsProperState()
     {
         // Arrange
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         // Act
         await viewModel.InitializeAsync();
@@ -177,7 +177,7 @@ public class ViewModelBaseTests
     {
         // Arrange
         var propertyChangedRaised = false;
-        var viewModel = new TestViewModel(_mockCommonServices.Object);
+        var viewModel = new TestViewModel(_mockCommonServices.Object, new Mock<ILogger<TestViewModel>>().Object);
 
         viewModel.PropertyChanged += (s, e) =>
         {
