@@ -69,7 +69,7 @@
 |-----------|---------|-------|
 | **OpenTelemetry** | 1.15.3 | Tracing + metrics (Console, OTLP exporters) |
 | **Application Insights** | 1.8.1 | Azure Monitor exporter + Microsoft.ApplicationInsights 3.1.1 |
-| **Sentry** | 6.5.0 | Error monitoring via Sentry.OpenTelemetry |
+| **Sentry** | 6.6.0 | Error monitoring via Sentry.OpenTelemetry |
 | **Health Checks** | Built-in | ASP.NET Core health checks |
 
 ## Package Management

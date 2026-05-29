@@ -140,5 +140,6 @@ See `.ai/reference/readme-maintenance.md` — README.md must be updated in the s
 - `.ai/skills/user-story/SKILL.md` — user stories with Gherkin
 - `.ai/skills/verify-config/SKILL.md` — config drift detection
 - `.ai/skills/vertical-slices/SKILL.md` — vertical slice blueprints
+- `.ai/skills/winui-specialist/SKILL.md` — WinUI 3 specialist
 
 

@@ -192,8 +192,8 @@ stages:
                   nuGetFeedType: 'external'
                   publishFeedCredentials: 'Nuget.org'
 
-    - job: GitHubReleaseJob
-      displayName: 'Create GitHub Tag and Release'
+    - job: TagJob
+      displayName: 'Create Git Tag'
       dependsOn: DeployNuget
       condition: and(succeeded('DeployNuget'), ne(variables['Build.Reason'], 'PullRequest'))
       steps:
@@ -207,14 +207,3 @@ stages:
             targetType: 'filePath'
             filePath: '$(Build.SourcesDirectory)/scripts/New-GitTag.ps1'
             arguments: '-BuildNumber "$(Build.BuildNumber)" -SourceVersion "$(Build.SourceVersion)"'
-
-        - task: GitHubRelease@1
-          displayName: 'Create GitHub Release'
-          inputs:
-            gitHubConnection: 'GitHub'
-            repositoryName: '$(Build.Repository.Name)'
-            action: 'create'
-            target: '$(Build.SourceVersion)'
-            tagSource: 'gitTag'
-            tag: '$(Build.BuildNumber)'
-            isPreRelease: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
