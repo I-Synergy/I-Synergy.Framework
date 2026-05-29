@@ -1,11 +1,11 @@
 ---
 name: update-skills
-description: Syncs .claude/skills/ and .github/skills/ from .ai/skills/ (the source of truth). Run after adding, editing, or removing a skill in .ai/skills/.
+description: Syncs .claude/skills/, .github/skills/, and .reasonix/skills/ from .ai/skills/ (the source of truth). Run after adding, editing, or removing a skill in .ai/skills/.
 ---
 
 # Update Skills Skill
 
-Runs `.ai/scripts/sync-skills.py` to keep `.claude/skills/` and `.github/skills/` in sync with `.ai/skills/`.
+Runs `.ai/scripts/sync-skills.py` to keep `.claude/skills/`, `.github/skills/`, and `.reasonix/skills/` in sync with `.ai/skills/`.
 
 ## Steps
 
@@ -21,6 +21,7 @@ Runs `.ai/scripts/sync-skills.py` to keep `.claude/skills/` and `.github/skills/
 3. **Verify**
    - Confirm `.claude/skills/` wrappers contain `!`cat .ai/skills/.../SKILL.md``
    - Confirm `.github/skills/` copies are identical to their `.ai/skills/` source
+   - Confirm `.reasonix/skills/` wrappers contain `Load and follow the instructions in `.ai/skills/.../SKILL.md```
 
 ## Output Format
 
@@ -30,9 +31,10 @@ Runs `.ai/scripts/sync-skills.py` to keep `.claude/skills/` and `.github/skills/
 Dry run:
   CREATE .claude/skills/new-skill/SKILL.md
   CREATE .github/skills/new-skill/SKILL.md
+  CREATE .reasonix/skills/new-skill/SKILL.md
 
 Applied. Result:
-  2 file(s) changed.
+  3 file(s) changed.
 
 Verification: OK
 ```

@@ -23,9 +23,9 @@ Start new session when:
 
 ## Session Handoff
 
-Before ending: Use `.ai/reference/templates/session-handoff.md.txt` template. Write to `.ai/session-context.md`. Always set **Written By: Claude Code** in the handoff.
+Before ending: Use `.ai/reference/templates/session-handoff.md.txt` template. Write to `.ai/session-context.md`. Always set **Written By: [assistant name]** in the handoff (e.g. "Claude Code", "Reasonix Code", or "Copilot").
 
-The session context is shared — GitHub Copilot reads and writes the same `.ai/session-context.md`. When picking up after a Copilot session:
+The session context is shared — all assistants (Claude Code, GitHub Copilot, Reasonix Code) read and write the same `.ai/session-context.md`. When picking up after another assistant's session:
 - Read `.ai/session-context.md` for full context
 - Check `.ai/progress/` for in-progress tasks
 - Check `.ai/plans/` for approved plans not yet executed

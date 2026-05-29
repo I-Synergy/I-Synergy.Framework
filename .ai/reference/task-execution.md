@@ -4,9 +4,7 @@
 
 **On every non-trivial task (3+ steps or multi-file):**
 
-1. **Enter plan mode first** — call `EnterPlanMode`, present the plan, wait for approval before writing any code
-   - Claude Code saves the plan with a random filename. **Immediately rename it** to a meaningful slug:
-     `mv .ai/plans/<random-name>.md .ai/plans/{task-slug}.md`
+1. **Create a plan** — use your assistant's planning tool (e.g. `submit_plan` in Reasonix, plan mode in Claude Code). Name the plan with a meaningful slug in `.ai/plans/{task-slug}.md`. Wait for approval before writing any code.
    - Use the same slug for the progress file (step 2) so both files stay linked
 2. **Create a progress file** — immediately write `.ai/progress/{task-slug}.md` using this structure:
    ```
@@ -23,7 +21,7 @@
 3. **Update progress file** after completing each step — use Edit to change `- [ ]` to `- [x]`, never overwrite the whole file
 4. **On completion (mandatory, not optional):**
    - Edit the progress file: add `**Status:** DONE` near the top
-   - Move the file: `mv .ai/progress/{task-slug}.md .ai/completed/`
+   - Move the file from `.ai/progress/{task-slug}.md` to `.ai/completed/{task-slug}.md`
    - If a copy already exists in `.ai/completed/`, delete the one in `progress/` instead
    - **Do not end the session without completing this step**
 
@@ -85,32 +83,37 @@ Which approach should I take?
 
 ## Progress Tracking: Local Files Only
 
-**Do NOT use the built-in `TaskCreate`/`TaskUpdate`/`TaskList` tools** — they store data globally in `~/.claude/todos/` and are not visible in the repository. Instead, always use local `.ai/progress/` markdown files for tracking task progress. Plans are already configured to write locally via `plansDirectory` in `.claude/settings.json`.
+**Do NOT use built-in task tracking tools** — some assistants store task data globally, outside the repository. Always use local `.ai/progress/` markdown files for tracking task progress. Plans are already configured to write locally via `plansDirectory` in the assistant's settings file.
 
-## Subagent Template
+## Subagent Delegation
 
-**Code changes must be delegated.** Never use Edit or Write directly in the main conversation. All code implementation, edits, and file creation must be done by the `programmer` sub-agent (Haiku model). Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
+**Code changes must be delegated.** Never write or edit code files directly in the main conversation. All code implementation, edits, and file creation must be done by a dedicated subagent (flash model for execution, pro model for reasoning). Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
 
-**Valid `subagent_type` values** (skill names like `dotnet-engineer` are NOT valid agent types):
+**Which agent to use** (from the agent table in the root instruction file):
 
-| Use case | `subagent_type` |
-|-|-|
-| Code implementation, CQRS, tests | `programmer` |
-| File/codebase exploration | `Explore` |
-| Implementation planning | `Plan` |
-| Shell commands, git, build | `Bash` |
+| Task | Agent | Model |
+|-|-|-|
+| Architecture & design decisions | `architect` | deepseek-v4-pro |
+| .NET/C# implementation | `developer` | deepseek-v4-flash |
+| Unit/integration tests | `tester` | deepseek-v4-pro |
+| E2E/UI tests | `ui-tester` | deepseek-v4-flash |
+| UI components & styling | `ui-developer` | deepseek-v4-flash |
+| Code review | `reviewer` | deepseek-v4-pro |
+| Documentation | `writer` | deepseek-v4-flash |
+| Visual design | `designer` | deepseek-v4-pro |
+| Generic codebase exploration | `explore` | deepseek-v4-flash |
 
-When delegating to a subagent via the Agent tool, always include in the task prompt:
+When delegating to a subagent, always include in the task prompt:
 
 ```
 Progress file: .ai/progress/{task-slug}.md
-After completing each step, use the Edit tool to mark it done:
+After completing each step, use Edit to mark it done:
   old: "- [ ] {step description}"
   new: "- [x] {step description}"
 Do NOT use Write on the progress file — only Edit individual lines.
 ```
 
-Subagents do not inherit this CLAUDE.md. All progress instructions must be explicit in the task prompt.
+Subagents do not inherit the root instruction file. All progress instructions must be explicit in the task prompt.
 
 ## Task Definition Template
 

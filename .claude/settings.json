@@ -23,7 +23,8 @@
       "./.ai/project",
       "./.ai/reference",
       "./.ai/skills",
-      "./.ai/agents"
+      "./.ai/agents",
+      "./.reasonix"
     ]
   },
   "hooks": {
@@ -33,17 +34,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "dotnet build --nologo --verbosity minimal",
-            "statusMessage": "Building solution..."
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 .ai/scripts/sync-skills.py --from-hook"
+            "if": "Write(.ai/skills/**)|Edit(.ai/skills/**)",
+            "command": "python3 .ai/scripts/sync-skills.py --from-hook",
+            "statusMessage": "Syncing skill to .claude/, .github/, and .reasonix/..."
           }
         ]
       },
@@ -52,8 +45,8 @@
         "hooks": [
           {
             "type": "agent",
-            "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* → Data & Persistence; Storage.* → Data & Persistence; KeyVault.* → Key Vault & Secrets; MessageBus.* → Communication & Messaging; Mail.* → Communication & Messaging; Monitoring.* / OpenTelemetry.* → Monitoring & Observability; UI.* → UI & Client Frameworks; AspNetCore.* → Web & API Development or Enterprise Features; CQRS / Core / Automations → Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm → Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
             "if": "Write(src/**/*.csproj)|Edit(src/**/*.csproj)",
+            "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* → Data & Persistence; Storage.* → Data & Persistence; KeyVault.* → Key Vault & Secrets; MessageBus.* → Communication & Messaging; Mail.* → Communication & Messaging; Monitoring.* / OpenTelemetry.* → Monitoring & Observability; UI.* → UI & Client Frameworks; AspNetCore.* → Web & API Development or Enterprise Features; CQRS / Core / Automations → Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm → Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
             "timeout": 120,
             "statusMessage": "Syncing README package tables..."
           }
@@ -64,19 +57,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if ls *.sln *.slnx 2>/dev/null | grep -q .; then dotnet build --nologo --verbosity minimal; fi",
-            "statusMessage": "Building solution..."
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 .ai/scripts/sync-agents.py --from-hook",
             "if": "Write(.ai/agents/**)|Edit(.ai/agents/**)",
-            "statusMessage": "Syncing agent to .claude/ and .github/..."
+            "command": "python3 .ai/scripts/sync-agents.py --from-hook",
+            "statusMessage": "Syncing agent to .claude/, .github/, and .reasonix/skills/..."
           }
         ]
       }

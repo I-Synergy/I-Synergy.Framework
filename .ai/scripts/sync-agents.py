@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
 Sync agent files from .ai/agents/ (the single source of truth) to:
-  - .claude/agents/  thin wrappers using !`cat ...` (Claude Code executes these)
-  - .github/agents/  full content copies       (GitHub Copilot reads these directly)
+  - .claude/agents/   thin wrappers using !`cat ...` (Claude Code executes these)
+  - .github/agents/   full content copies       (GitHub Copilot reads these directly)
+  - .reasonix/skills/ as subagent skills        (Reasonix runs these via run_skill)
 
 Usage:
-    python sync-agents.py              # sync all agents to both targets
+    python sync-agents.py              # sync all agents to all targets
     python sync-agents.py --from-hook  # hook mode: reads tool JSON from stdin,
                                        # only acts on .ai/agents/ writes
     python sync-agents.py --dry-run    # show what would change without writing
@@ -20,9 +21,10 @@ from pathlib import Path
 
 
 SCRIPT_DIR    = Path(__file__).parent.parent.parent  # .ai/scripts/ -> .ai/ -> repo root
-AI_AGENTS     = SCRIPT_DIR / ".ai"     / "agents"
-CLAUDE_AGENTS = SCRIPT_DIR / ".claude" / "agents"
-GITHUB_AGENTS = SCRIPT_DIR / ".github" / "agents"
+AI_AGENTS      = SCRIPT_DIR / ".ai"      / "agents"
+CLAUDE_AGENTS  = SCRIPT_DIR / ".claude"  / "agents"
+GITHUB_AGENTS  = SCRIPT_DIR / ".github"  / "agents"
+REASONIX_SKILLS = SCRIPT_DIR / ".reasonix" / "skills"
 
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 FIELD_RE       = re.compile(r"^(\w[\w-]*):\s*(.+)$", re.MULTILINE)
@@ -114,6 +116,20 @@ def sync_agent(agent_file: Path, dry_run: bool = False) -> list[str]:
     if action != "OK":
         msgs.append(f"  {action} .github/agents/{agent_file.name}")
 
+    # .reasonix/skills/<name>/SKILL.md — subagent skill referencing .ai/agents/<name>.md
+    reasonix_wrapper = (
+        f"---\n"
+        f"name: {name}\n"
+        f"description: {fm.get('description', '').strip()}\n"
+        f"runAs: subagent\n"
+        f"---\n\n"
+        f"Load and follow the instructions in `.ai/agents/{agent_file.name}`.\n"
+    )
+    reasonix_path = REASONIX_SKILLS / name / "SKILL.md"
+    action = _write_if_changed(reasonix_path, reasonix_wrapper, dry_run)
+    if action != "OK":
+        msgs.append(f"  {action} .reasonix/skills/{name}/SKILL.md")
+
     if not msgs:
         msgs.append(f"  OK   {agent_file.stem}")
 
@@ -128,7 +144,7 @@ def sync_all(dry_run: bool = False) -> int:
         return 1
 
     prefix = "[DRY RUN] " if dry_run else ""
-    print(f"{prefix}Syncing .ai/agents/ -> .claude/agents/ + .github/agents/")
+    print(f"{prefix}Syncing .ai/agents/ -> .claude/agents/ + .github/agents/ + .reasonix/skills/")
 
     results = []
     valid_names = set()
@@ -140,6 +156,7 @@ def sync_all(dry_run: bool = False) -> int:
 
     results.extend(_remove_stale(CLAUDE_AGENTS, valid_names, ".claude/agents", dry_run))
     results.extend(_remove_stale(GITHUB_AGENTS, valid_names, ".github/agents", dry_run))
+    # NOTE: no _remove_stale for .reasonix/skills — it's shared with sync-skills.py
 
     for r in results:
         print(r)
@@ -179,7 +196,7 @@ def sync_from_hook() -> int:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Sync .claude/agents/ and .github/agents/ from .ai/agents/"
+        description="Sync .claude/agents/ + .github/agents/ + .reasonix/skills/ from .ai/agents/"
     )
     parser.add_argument("--from-hook", action="store_true",
                         help="Hook mode: read tool JSON from stdin")

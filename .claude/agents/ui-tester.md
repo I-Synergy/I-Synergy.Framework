@@ -1,7 +1,7 @@
 ---
 name: ui-tester
 description: Playwright E2E testing specialist — writes UI tests, accessibility checks, visual regression tests
-model: haiku
+model: deepseek-v4-flash
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 

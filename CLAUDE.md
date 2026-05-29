@@ -18,6 +18,7 @@ When searching for code references, frameworks, or dependencies, search the ENTI
 
 - Use local `.ai/` folder (project-level) for documentation, patterns, skills, progress, and plan files.
 - Claude Code config stays in `.claude/settings.json` — do NOT move or duplicate it.
+- This project also supports **Reasonix Code** (`REASONIX.md`). Its root instruction file mirrors this one and points to `.ai/` as canonical.
 - Do NOT place project-specific config in the global `~/.claude/` directory unless explicitly instructed.
 - When modifying CLAUDE.md or any configuration files, always read the existing file first and preserve existing conventions before making changes.
 
@@ -29,22 +30,60 @@ When searching for code references, frameworks, or dependencies, search the ENTI
 
 ## Task Execution
 
-See `.ai/reference/task-execution.md` for the full protocol: plan mode, progress files, ReAct loop, subagent delegation, and the task definition template.
+**Progress files are MANDATORY for every non-trivial task (3+ steps or multi-file).** They persist across sessions and are shared between all assistants. Do not skip them.
 
-### Subagent Delegation
+1. **Plan first:** Use plan mode (`/plan` or `EnterPlanMode`) for multi-file work. Wait for approval.
+2. **Create progress file:** Write `.ai/progress/{task-slug}.md` with this structure:
+   ```
+   # {Task Name}
+   Status: IN PROGRESS
+   Started: {date}
 
-All code writing must be delegated to specialized subagents, never done in the main conversation:
+   ## Steps
+   - [ ] Step 1
+   - [ ] Step 2
 
-| Agent | Use For |
-|-------|---------|
-| `architect` | Feature design, pattern selection, component boundaries, implementation blueprints |
-| `developer` | .NET/C# code — CQRS handlers, API endpoints, Blazor components, EF Core, refactoring, builds |
-| `tester` | MSTest unit/integration tests, Moq mocks, Reqnroll BDD scenarios |
-| `ui-tester` | Playwright E2E tests, accessibility checks, visual regression |
-| `designer` | Visual design — color palettes, typography, spacing, branding, design tokens |
-| `ui-developer` | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
-| `reviewer` | Code quality, SOLID, CQRS compliance, security issues, architecture |
-| `writer` | XML documentation, API docs, READMEs, ADRs, technical prose |
+   ## Notes
+   ```
+3. **Update after each step:** Edit the progress file to check off `- [ ]` → `- [x]`.
+4. **On completion (not optional):**
+   - Add `**Status:** DONE` near the top
+   - Move to `.ai/completed/{task-slug}.md`
+   - **Never end a session without completing this step**
+
+**Trivial tasks** (single file, obvious fix): skip plan mode and progress file.
+
+See also `.ai/reference/task-execution.md` for the full ReAct loop and subagent delegation protocol.
+
+### Subagent Delegation — HARD RULE
+
+The main conversation is **orchestration only**. It does:
+- Reading instructions, planning, creating progress files
+- Delegating work to subagents, reviewing their output
+- Running sync scripts, git operations, final verification
+
+**It does NOT:**
+- Write or edit any code files directly
+- Perform deep analysis, architecture reasoning, or code review
+- Write or modify tests, documentation, or configuration
+
+All substantive work goes to a subagent with the correct model for the task:
+
+| Agent | Model | Use For |
+|-------|-------|---------|
+| `architect` | **deepseek-v4-pro** | Feature design, pattern selection, component boundaries, architecture analysis |
+| `reviewer` | **deepseek-v4-pro** | Code quality, SOLID, CQRS compliance, security review, architecture audit |
+| `tester` | **deepseek-v4-pro** | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
+| `designer` | **deepseek-v4-pro** | Visual design — color palettes, typography, branding, design tokens |
+| `developer` | **deepseek-v4-flash** | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring |
+| `ui-developer` | **deepseek-v4-flash** | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
+| `ui-tester` | **deepseek-v4-flash** | Playwright E2E tests, accessibility checks, visual regression |
+| `writer` | **deepseek-v4-flash** | XML docs, READMEs, ADRs, technical prose |
+
+**deepseek-v4-pro agents** do deep reasoning (architecture, review, test design, visual design).
+**deepseek-v4-flash agents** do execution (code, UI, tests, docs).
+
+**Model name mapping:** `deepseek-v4-pro` ↔ Claude `sonnet` tier · `deepseek-v4-flash` ↔ Claude `haiku` tier
 
 Agents are defined in `.ai/agents/` and `.claude/agents/`.
 
