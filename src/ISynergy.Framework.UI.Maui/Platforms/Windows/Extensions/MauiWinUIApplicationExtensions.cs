@@ -38,18 +38,59 @@ public static partial class MauiWinUIApplicationExtensions
     // ──────────────────────────────────────────────
 
     /// <summary>
-    /// Subscribes to AppInstance.Activated so that when a second instance redirects
-    /// its activation to this process, the window is brought to the foreground and
-    /// the activation callbacks (set by ConfigureActivationHandlers) are invoked.
+    /// Call from the WinUI App constructor before InitializeComponent().
+    /// Checks for existing instances and, if found, redirects activation to the
+    /// first instance and terminates the current process — BEFORE the MAUI window
+    /// is created, so no flash is visible.
     /// <para>
-    /// Call from the WinUI App constructor. This does NOT enforce single-instance
-    /// behavior — use <see cref="AppWindowExtensions.ConfigureSingleInstance"/> to
-    /// enable redirect + kill on duplicate launches.
+    /// On the first instance, subscribes to AppInstance.Activated so that future
+    /// redirects bring the window to the foreground and dispatch activation callbacks.
     /// </para>
     /// </summary>
     public static void InitializeSingleInstanceApp(this MauiWinUIApplication app)
     {
-        Debug.WriteLine("[SingleInstance] Subscribing to AppInstance.Activated event.");
+        Debug.WriteLine("[SingleInstance] Checking for existing instances...");
+
+        var instances = AppInstance.GetInstances();
+        Debug.WriteLine($"[SingleInstance] GetInstances returned {instances.Count} instance(s).");
+
+        // Find an existing instance that isn't the current process
+        AppInstance? existing = null;
+        foreach (var instance in instances)
+        {
+            if (!instance.IsCurrent)
+            {
+                existing = instance;
+                break;
+            }
+        }
+
+        if (existing is not null)
+        {
+            // Second (or later) instance — redirect activation and exit BEFORE
+            // the window is created. No SynchronizationContext yet, so .Wait() is safe.
+            Debug.WriteLine("[SingleInstance] Existing instance found. Redirecting activation...");
+
+            var args = AppInstance.GetCurrent().GetActivatedEventArgs();
+            Debug.WriteLine($"[SingleInstance] Activation kind: {args.Kind}");
+
+            try
+            {
+                existing.RedirectActivationToAsync(args).AsTask().Wait();
+                Debug.WriteLine("[SingleInstance] Redirect completed.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[SingleInstance] Redirect failed: {ex}");
+            }
+
+            Debug.WriteLine("[SingleInstance] Exiting second instance.");
+            Process.GetCurrentProcess().Kill();
+            return;
+        }
+
+        // First instance — subscribe to future redirected activations
+        Debug.WriteLine("[SingleInstance] First instance. Subscribing to Activated event.");
         AppInstance.GetCurrent().Activated += OnAppInstanceActivated;
         Debug.WriteLine("[SingleInstance] Ready to receive redirected activations.");
     }
@@ -57,7 +98,7 @@ public static partial class MauiWinUIApplicationExtensions
     /// <summary>
     /// Checks for existing instances and, if found, redirects activation to the
     /// first instance and terminates the current process.
-    /// Called by ConfigureSingleInstance from the OnLaunched handler.
+    /// Called by ConfigureSingleInstance from the OnLaunched handler as a fallback.
     /// </summary>
     internal static void RedirectAndExitIfNotFirst()
     {

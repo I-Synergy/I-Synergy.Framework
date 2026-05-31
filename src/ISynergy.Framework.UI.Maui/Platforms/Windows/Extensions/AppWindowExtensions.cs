@@ -116,14 +116,16 @@ public static class AppWindowExtensions
             {
                 windows.OnLaunched((app, args) =>
                 {
-                    Debug.WriteLine("[SingleInstance] OnLaunched — checking for existing instances.");
-                    MauiWinUIApplicationExtensions.RedirectAndExitIfNotFirst();
+                    Debug.WriteLine("[SingleInstance] OnLaunched — first instance.");
 
-                    // If we reach here, this is the first instance.
-                    // Subscribe so future redirects dispatch activation callbacks
-                    // and bring the window to foreground.
+                    // The redirect/kill for second instances already happened in the
+                    // WinUI App constructor (InitializeSingleInstanceApp). Here we
+                    // just ensure Activated is subscribed (safety net) and handle
+                    // the initial launch activation args.
+
+                    // Safety-net subscription in case InitializeSingleInstanceApp's
+                    // subscription was removed or failed.
                     AppInstance.GetCurrent().Activated += MauiWinUIApplicationExtensions.OnAppInstanceActivated;
-                    Debug.WriteLine("[SingleInstance] Subscribed to Activated for redirects.");
 
                     // Process the INITIAL launch activation args (from launchSettings.json
                     // commandLineArgs, protocol URIs, etc.). Defer with low priority so the
