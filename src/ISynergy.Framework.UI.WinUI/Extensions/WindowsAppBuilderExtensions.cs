@@ -22,6 +22,8 @@ using OpenTelemetry.Trace;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
+using Windows.ApplicationModel.Activation;
+
 namespace ISynergy.Framework.UI.Extensions;
 
 public static class WindowsAppBuilderExtensions
@@ -185,5 +187,40 @@ public static class WindowsAppBuilderExtensions
         action.Invoke(appBuilder.Services);
 
         return appBuilder;
+    }
+
+    /// <summary>
+    /// Registers callbacks that are invoked when a second instance redirects its
+    /// activation (protocol URI, command-line args, etc.) to this instance.
+    /// <para>
+    /// Separate from single-instance enforcement (handled by WindowsAppSdkHost).
+    /// This method only handles WHAT to do with the activation arguments.
+    /// </para>
+    /// </summary>
+    /// <param name="builder">The host application builder.</param>
+    /// <param name="defaultAction">Called with command-line arguments (fallback).</param>
+    /// <param name="protocolAction">Called for protocol URI activations (myapp://...).</param>
+    /// <param name="launchAction">Called for standard launch activations.</param>
+    public static IHostApplicationBuilder ConfigureActivationHandlers(
+        this IHostApplicationBuilder builder,
+        Action<string[]> defaultAction,
+        Action<ProtocolActivatedEventArgs> protocolAction,
+        Action<LaunchActivatedEventArgs> launchAction)
+    {
+        AppActivationExtensions.SetCallbacks(defaultAction, protocolAction, launchAction);
+        return builder;
+    }
+
+    /// <summary>
+    /// Enables single-instance behavior. When a second instance is launched, its
+    /// activation is redirected to the first instance and the second process exits.
+    /// <para>
+    /// Without this call, multiple instances can run simultaneously.
+    /// </para>
+    /// </summary>
+    public static IHostApplicationBuilder ConfigureSingleInstance(this IHostApplicationBuilder builder)
+    {
+        AppActivationExtensions.IsSingleInstanceEnabled = true;
+        return builder;
     }
 }

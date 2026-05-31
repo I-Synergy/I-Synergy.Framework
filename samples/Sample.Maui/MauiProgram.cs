@@ -69,7 +69,8 @@ public static class MauiProgram
                 f => f.Name!.StartsWith(typeof(App).Namespace!))
 #if WINDOWS
             //.ConfigureStoreUpdateIntegration()
-            .ConfigureSingleInstanceApp(async e =>
+            .ConfigureSingleInstance()
+            .ConfigureActivationHandlers(async e =>
             {
                 foreach (var arg in e.EnsureNotNull())
                 {
