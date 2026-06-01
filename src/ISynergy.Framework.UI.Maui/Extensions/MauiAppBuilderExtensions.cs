@@ -223,7 +223,7 @@ public static class MauiAppBuilderExtensions
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("segoeui.ttf", "SegoeUI");
-                fonts.AddFont("segoesb.ttf", "SegoeSemiBold");
+                fonts.AddFont("segoeuisb.ttf", "SegoeSemiBold");
                 fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
                 fonts.AddFont("segoeuil.ttf", "SegoeUILight");
                 fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");

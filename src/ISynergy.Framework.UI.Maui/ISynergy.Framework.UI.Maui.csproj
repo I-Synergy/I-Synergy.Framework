@@ -27,17 +27,10 @@
 		<MauiFont Include="Resources\Fonts\*" />
 	</ItemGroup>
 	<ItemGroup>
-		<EmbeddedResource Include="Resources\Fonts\opendyslexic3-bold.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\opendyslexic3-regular.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\opensans-medium.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\opensans-regular.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\opensans-semibold.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\segoemdl2.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\segoeui.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\segoeuib.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\segoeuil.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\segoeuisb.ttf" />
-		<EmbeddedResource Include="Resources\Fonts\segoeuisl.ttf" />
+		<!-- Ship font files in NuGet package so they are available to consuming apps -->
+		<None Include="Resources\Fonts\*" Pack="true" PackagePath="contentFiles\any\any\Resources\Fonts\%(Filename)%(Extension)" />
+		<!-- Ship MSBuild targets so fonts are added as MauiFont items in consuming apps -->
+		<None Include="I-Synergy.Framework.UI.Maui.targets" Pack="true" PackagePath="buildTransitive\%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
