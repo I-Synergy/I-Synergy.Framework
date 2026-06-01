@@ -218,23 +218,39 @@ public static class MauiAppBuilderExtensions
 
         action.Invoke(appBuilder);
 
-        appBuilder
-            .UseMauiCommunityToolkitMediaElement(false)
-            .ConfigureFonts(fonts =>
-            {
-                fonts.AddFont("segoeui.ttf", "SegoeUI");
-                fonts.AddFont("segoeuisb.ttf", "SegoeSemiBold");
-                fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
-                fonts.AddFont("segoeuil.ttf", "SegoeUILight");
-                fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");
-                fonts.AddFont("segoeuisb.ttf", "SegoeUISemiBold");
-                fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
-                fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
-                fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
-                fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
-                fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
-            });
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Registers the framework's default fonts with the app builder, then invokes an optional
+    /// delegate for the consumer's own fonts. Framework fonts are registered first, so consumer
+    /// fonts passed via <paramref name="configureFonts"/> take priority when aliases overlap.
+    /// </summary>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configureFonts">Optional delegate to register additional consumer fonts.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder UseFonts(
+        this MauiAppBuilder appBuilder,
+        Action<IFontCollection>? configureFonts = null)
+    {
+        appBuilder.ConfigureFonts(fonts =>
+        {
+            fonts.AddFont("segoeui.ttf", "SegoeUI");
+            fonts.AddFont("segoeuisb.ttf", "SegoeSemiBold");
+            fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
+            fonts.AddFont("segoeuil.ttf", "SegoeUILight");
+            fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");
+            fonts.AddFont("segoeuisb.ttf", "SegoeUISemiBold");
+            fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
+            fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
+            fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
+            fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
+            fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
+            fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
+        });
+
+        if (configureFonts is not null)
+            appBuilder.ConfigureFonts(configureFonts);
 
         return appBuilder;
     }
