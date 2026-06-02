@@ -4,7 +4,6 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -188,8 +187,8 @@ public static class ReflectionExtensions
 
     private static void Register(
         this IServiceCollection services,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type type,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type? abstraction)
+        Type type,
+        Type? abstraction)
     {
         if (type.IsSingleton())
         {

@@ -5,7 +5,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Input;
 
@@ -65,8 +64,7 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// When <typeparamref name="TViewModel"/> implements <see cref="ICommandProvider"/>, commands are
     /// discovered via <see cref="ICommandProvider.GetCommands"/> — this path is AOT-safe.
     /// For ViewModels that do not implement <see cref="ICommandProvider"/>, a reflection-based fallback
-    /// is used. The fallback is annotated with <see cref="RequiresUnreferencedCodeAttribute"/> so that
-    /// IL trimmer analysis correctly flags untrimmed-safe assemblies consuming that path.
+    /// is used. The fallback uses reflection and is not trim-safe.
     /// Implement <see cref="ICommandProvider"/> on your ViewModels to use Blazor WASM AOT compilation.
     /// </remarks>
     private void SubscribeToViewModelCommands()
@@ -84,9 +82,7 @@ public partial class View<TViewModel> : ComponentBase, IView
         }
         else
         {
-#pragma warning disable IL2026 // Reflection path: ViewModel does not implement ICommandProvider; trim-unsafe for WASM AOT
             SubscribeToViewModelCommandsViaReflection(ViewModel);
-#pragma warning restore IL2026
         }
     }
 

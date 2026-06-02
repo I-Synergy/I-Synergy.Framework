@@ -13,7 +13,6 @@ using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Extensions;
@@ -56,12 +55,10 @@ public static class ServiceCollectionExtensions
         services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
         var languageService = new LanguageService();
         languageService.AddResourceManager(typeof(Framework.Mvvm.Properties.Resources));
         languageService.AddResourceManager(typeof(Framework.AspNetCore.Blazor.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
