@@ -15,7 +15,7 @@
     <PackageVersion Include="Azure.Security.KeyVault.Secrets" Version="4.11.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.28.0" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="9.0.0" />
+    <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="10.0.0" />
     <PackageVersion Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
     <PackageVersion Include="CompareNETObjects" Version="4.84.0" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
@@ -96,17 +96,17 @@
     <PackageVersion Include="Sentry" Version="6.6.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.6.0" />
     <PackageVersion Include="SkiaSharp" Version="3.119.4" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.2.8" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.2.8" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="33.2.8" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="33.2.8" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="33.2.8" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.2.10" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.2.10" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="33.2.10" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="33.2.10" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="33.2.10" />
     <PackageVersion Include="Syncfusion.Licensing" Version="33.2.10" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="33.2.8" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="33.2.8" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="33.2.10" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="33.2.10" />
     <PackageVersion Include="Syncfusion.SfInput.WPF" Version="33.2.10" />
     <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="33.2.10" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="33.2.8" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="33.2.10" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
   </ItemGroup>
 </Project>
