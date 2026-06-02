@@ -7,12 +7,14 @@ using ISynergy.Framework.AspNetCore.Blazor.Security;
 using ISynergy.Framework.AspNetCore.Blazor.Services;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Globalization;
 using System.Reflection;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Extensions;
@@ -62,6 +64,11 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
+
+        // Fallback: English-only if ConfigureSupportedCultures was not called
+        services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GenericConstants.DefaultCultureInfoName)]));
+
         services.TryAddSingleton<IMessengerService, MessengerService>();
         services.TryAddSingleton<IBusyService, BusyService>();
         services.AddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
@@ -131,5 +138,23 @@ public static class ServiceCollectionExtensions
         services.RegisterViewModels(viewModelTypes);
         services.RegisterViews(viewTypes);
         services.RegisterWindows(windowTypes);
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection ConfigureSupportedCultures(
+        this IServiceCollection services,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        var builder = new SupportedCulturesBuilder();
+        configure(builder);
+        services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+            s => new SupportedCulturesService(builder.Build())));
+        return services;
     }
 }

@@ -50,6 +50,12 @@ public static class Program
             },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(App).Namespace!))
+            .ConfigureSupportedCultures(cultures =>
+            {
+                cultures.AddCulture("nl");
+                cultures.AddCulture("de");
+                cultures.AddCulture("fr");
+            })
             .ConfigureSingleInstance()
             .ConfigureActivationHandlers(async e =>
             {

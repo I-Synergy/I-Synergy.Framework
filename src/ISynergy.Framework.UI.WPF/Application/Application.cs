@@ -80,7 +80,7 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _commonServices.BusyService.StartBusy();
 
-        if (_settingsService.LocalSettings is not null)
+        if (_settingsService.LocalSettings is not null && !string.IsNullOrEmpty(_settingsService.LocalSettings.Language))
             _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
         _lifecycleService.ApplicationLoaded += OnApplicationLoaded;

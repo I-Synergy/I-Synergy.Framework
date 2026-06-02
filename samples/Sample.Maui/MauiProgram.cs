@@ -87,6 +87,12 @@ public static class MauiProgram
                     await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
             })
 #endif
+            .ConfigureSupportedCultures(cultures =>
+            {
+                cultures.AddCulture("nl");
+                cultures.AddCulture("de");
+                cultures.AddCulture("fr");
+            })
             .ConfigureOfflineSynchronization(builder =>
             {
                 Debug.WriteLine("Configuring offline synchronization");

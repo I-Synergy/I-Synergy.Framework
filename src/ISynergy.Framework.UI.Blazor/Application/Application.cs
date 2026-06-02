@@ -84,7 +84,7 @@ public abstract class Application : ComponentBase
 
             _commonServices.BusyService.StartBusy();
 
-            if (_settingsService.LocalSettings is not null)
+            if (_settingsService.LocalSettings is not null && !string.IsNullOrEmpty(_settingsService.LocalSettings.Language))
                 _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
             _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional

@@ -129,7 +129,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
                 languageVM.Submitted += (s, e) =>
                 {
-                    _settingsService.LocalSettings.Language = e.Result;
+                    _settingsService.LocalSettings.Language = e.Result.Name;
                     _settingsService.SaveLocalSettings();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();

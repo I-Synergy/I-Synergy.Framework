@@ -1,6 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
+using System.Globalization;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -201,14 +201,14 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
+    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<CultureInfo> e)
     {
         try
         {
             if (sender is LanguageViewModel vm)
                 vm.Submitted -= LanguageVM_Submitted;
 
-            _settingsService.LocalSettings.Language = e.Result;
+            _settingsService.LocalSettings.Language = e.Result.Name;
             _settingsService.SaveLocalSettings();
 
             e.Result.SetLocalizationLanguage();
@@ -217,7 +217,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
                         _commonServices.LanguageService.GetString("WarningLanguageChange") +
                         Environment.NewLine +
                         _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                        _commonServices.LanguageService.GetString("TitleQuestion"),
+                        _commonServices.LanguageService.GetString("WarningInfo"),
                         MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
                 _commonServices.RestartApplication();
@@ -225,11 +225,9 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         }
         catch (Exception ex)
         {
-            // Log exception to prevent it from being swallowed in async void method
-            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler"); // NOSONAR
+            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
             var exceptionHandlerService = _commonServices?.ExceptionHandlerService;
             exceptionHandlerService?.HandleException(ex);
-            // Re-throw to crash the application if unhandled exception handler is configured
             throw;
         }
     }

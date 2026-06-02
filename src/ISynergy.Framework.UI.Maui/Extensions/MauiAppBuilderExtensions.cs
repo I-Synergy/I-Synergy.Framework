@@ -3,6 +3,8 @@ using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
+using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
@@ -18,6 +20,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
 
@@ -189,6 +192,11 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
+
+        // Fallback: English-only if ConfigureSupportedCultures was not called
+        appBuilder.Services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GenericConstants.DefaultCultureInfoName)]));
+
         appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
         appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
@@ -251,6 +259,26 @@ public static class MauiAppBuilderExtensions
 
         if (configureFonts is not null)
             appBuilder.ConfigureFonts(configureFonts);
+
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder ConfigureSupportedCultures(
+        this MauiAppBuilder appBuilder,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        var builder = new SupportedCulturesBuilder();
+        configure(builder);
+
+        appBuilder.Services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+            s => new SupportedCulturesService(builder.Build())));
 
         return appBuilder;
     }

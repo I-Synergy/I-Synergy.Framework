@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -13,6 +12,7 @@ using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
 
@@ -246,14 +246,14 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
+    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<CultureInfo> e)
     {
         try
         {
             if (sender is LanguageViewModel vm)
                 vm.Submitted -= LanguageVM_Submitted;
 
-            _settingsService.LocalSettings.Language = e.Result;
+            _settingsService.LocalSettings.Language = e.Result.Name;
             _settingsService.SaveLocalSettings();
 
             e.Result.SetLocalizationLanguage();

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
 using System.Globalization;
 
@@ -7,7 +8,7 @@ namespace Sample.Models;
 
 public class LocalSettings : ObservableValidatedClass, ILocalSettings
 {
-    public Languages Language { get; set; } = Languages.English;
+    public string Language { get; set; } = GenericConstants.DefaultCultureInfoName;
     public bool IsFullscreen { get; set; }
     public List<string> Users { get; set; } = new List<string>();
     public string DefaultUser { get; set; } = string.Empty;
@@ -22,13 +23,7 @@ public class LocalSettings : ObservableValidatedClass, ILocalSettings
 
     public LocalSettings()
     {
-        Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
-        {
-            "nl" => Languages.Dutch,
-            "de" => Languages.German,
-            "fr" => Languages.French,
-            _ => Languages.English,
-        };
+        Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
         MigrationVersion = 0;
     }
 }

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Windows;
 
@@ -63,6 +65,11 @@ public static class WpfAppBuilderExtensions
 
             services.TryAddSingleton<IInfoService>(s => infoService);
             services.TryAddSingleton<ILanguageService>(s => languageService);
+
+            // Fallback: English-only if ConfigureSupportedCultures was not called
+            services.TryAddSingleton<ISupportedCulturesService>(s =>
+                new SupportedCulturesService([CultureInfo.GetCultureInfo(GenericConstants.DefaultCultureInfoName)]));
+
             services.TryAddSingleton<IMessengerService, MessengerService>();
 
             services.TryAddSingleton<TContext>();
@@ -121,5 +128,26 @@ public static class WpfAppBuilderExtensions
             resources.Add(key, serviceProvider.GetService(typeof(T)));
 
         return resources;
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="hostBuilder">The host builder.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="IHostBuilder"/>.</returns>
+    public static IHostBuilder ConfigureSupportedCultures(
+        this IHostBuilder hostBuilder,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        hostBuilder.ConfigureServices((_, services) =>
+        {
+            var builder = new SupportedCulturesBuilder();
+            configure(builder);
+            services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+                s => new SupportedCulturesService(builder.Build())));
+        });
+        return hostBuilder;
     }
 }

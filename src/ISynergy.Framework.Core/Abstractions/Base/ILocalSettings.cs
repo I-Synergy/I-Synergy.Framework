@@ -13,7 +13,7 @@ public interface ILocalSettings
     /// <summary>
     /// Setting for maintaining the default culture used.
     /// </summary>
-    Languages Language { get; set; }
+    string Language { get; set; }
     /// <summary>
     /// Setting for maintaining if application is in fullscreen mode or not.
     /// </summary>
