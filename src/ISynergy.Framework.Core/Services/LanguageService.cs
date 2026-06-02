@@ -31,15 +31,18 @@ public sealed class LanguageService : ILanguageService
         _managers.Add(new ResourceManager(resourceType));
 
     /// <summary>
-    /// Gets the string.
+    /// Gets the string by searching resource managers in reverse registration order.
+    /// The last-registered resource manager (typically the consuming application's)
+    /// is checked first, allowing it to override framework resource strings.
     /// </summary>
     /// <param name="key">The key.</param>
     /// <returns>System.String.</returns>
     public string GetString(string key)
     {
-        foreach (var manager in _managers.EnsureNotNull())
+        // Search in reverse order — last-registered (consumer) wins over framework defaults
+        for (int i = _managers.Count - 1; i >= 0; i--)
         {
-            string? result = manager.GetString(key, CultureInfo.CurrentUICulture);
+            string? result = _managers[i].GetString(key, CultureInfo.CurrentUICulture);
 
             if (!string.IsNullOrEmpty(result))
                 return result;
