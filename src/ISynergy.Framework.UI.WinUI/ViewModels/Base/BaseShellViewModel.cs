@@ -51,8 +51,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             set => SetValue(value);
         }
 
-        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
-            "ViewModelBladeView base constructor uses JSON serialization without a JsonSerializerContext, which is not trim-safe.")]
         protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IServiceScopeFactory scopeFactory, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
         {

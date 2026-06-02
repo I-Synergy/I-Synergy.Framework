@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.Core.Extensions;
@@ -64,8 +63,6 @@ public static class ConfigurationExtensions
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <param name="instance">The instance.</param>
-    [RequiresUnreferencedCode("ConfigurationBinder.Bind uses reflection and may not work after trimming.")]
-    [RequiresDynamicCode("ConfigurationBinder.Bind requires dynamic code generation at runtime.")]
     public static void BindWithReload(this IConfiguration configuration, object instance)
     {
         var logger = GetLogger();
@@ -100,13 +97,9 @@ public static class ConfigurationExtensions
         }
     }
 
-    [RequiresUnreferencedCode("ConfigurationBinder.Get<T> uses reflection and may not work after trimming.")]
-    [RequiresDynamicCode("ConfigurationBinder.Get<T> requires dynamic code generation at runtime.")]
     public static LogLevel GetDefaultLogLevel(this IConfiguration configuration) =>
         configuration.GetLogLevel("Default");
 
-    [RequiresUnreferencedCode("ConfigurationBinder.Get<T> uses reflection and may not work after trimming.")]
-    [RequiresDynamicCode("ConfigurationBinder.Get<T> requires dynamic code generation at runtime.")]
     public static LogLevel GetLogLevel(this IConfiguration configuration, string category)
     {
         var logLevel = configuration.GetSection($"LogLevel:{category}").Get<LogLevel>();

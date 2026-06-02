@@ -1,6 +1,5 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -750,9 +749,6 @@ public static class Sort
     // sort the first, middle and last elements to prevent cases that
     // would trigger worst-case performance in the sorting algorithm.
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static int pivot<T, U>(T[] keys, U[] items, int first, int last, bool asc)
         where T : IComparable<T>
     {
@@ -779,9 +775,6 @@ public static class Sort
         return middle;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static int pivot<T>(T[] keys, int first, int last, bool asc)
         where T : IComparable<T>
     {
@@ -799,9 +792,7 @@ public static class Sort
 
         return middle;
     }
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
+
     private static int pivot<T, U>(T[] keys, U[] items, int first, int last, Func<T, T, int> comparer, bool asc)
     {
         var dir = asc ? 1 : -1;
@@ -827,9 +818,6 @@ public static class Sort
         return middle;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static int pivot<T>(T[] keys, int first, int last, Func<T, T, int> comparer, bool asc)
     {
         var dir = asc ? 1 : -1;

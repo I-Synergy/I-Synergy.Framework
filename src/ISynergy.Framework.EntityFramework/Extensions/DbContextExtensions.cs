@@ -45,8 +45,6 @@ public static class DbContextExtensions
     /// and is therefore not AOT-safe. AOT-publishing applications should use pre-compiled
     /// <c>EF.CompileAsyncQuery</c> delegates in their repositories instead of calling this helper.
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
-    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async ValueTask<TEntity?> GetItemByIdAsync<TEntity, TId>(this DbContext context, TId id, CancellationToken cancellationToken)
         where TEntity : BaseEntity, new()
         where TId : struct
@@ -97,8 +95,6 @@ public static class DbContextExtensions
     /// This method delegates to <see cref="GetItemByIdAsync{TEntity,TId}(DbContext,TId,CancellationToken)"/>
     /// which uses runtime reflection and is not AOT-safe. See that method's remarks for migration guidance.
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
-    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static async Task<int> RemoveItemAsync<TEntity, TIdType>(this DbContext context, TIdType id, CancellationToken cancellationToken, bool soft = false)
         where TEntity : BaseEntity, new()
         where TIdType : struct

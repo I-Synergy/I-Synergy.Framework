@@ -5,7 +5,6 @@ using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 using ISynergy.Framework.MessageBus.RabbitMQ.Services.Queue;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization.Metadata;
 
 namespace ISynergy.Framework.MessageBus.RabbitMQ.Extensions;
@@ -28,8 +27,6 @@ public static class ServiceCollectionExtensions
     /// </param>
     /// <param name="prefix">Optional configuration section prefix.</param>
     /// <returns>The service collection.</returns>
-    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not AOT-safe.")]
-    [RequiresDynamicCode("Configuration binding via BindWithReload requires dynamic code generation.")]
     public static IServiceCollection AddRabbitMQMessageBusPublishIntegration<TQueuePublishMessage>(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -60,8 +57,6 @@ public static class ServiceCollectionExtensions
     /// compatible with Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/>
     /// for AOT scenarios.
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Serialization uses reflection. Pass a JsonTypeInfo<T> for AOT compatibility.")]
-    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Serialization uses dynamic code generation. Pass a JsonTypeInfo<T> for AOT compatibility.")]
     public static IServiceCollection AddRabbitMQMessageBusPublishIntegration<TQueuePublishMessage>(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -87,8 +82,6 @@ public static class ServiceCollectionExtensions
     /// </param>
     /// <param name="prefix">Optional configuration section prefix.</param>
     /// <returns>The service collection.</returns>
-    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not AOT-safe.")]
-    [RequiresDynamicCode("Configuration binding via BindWithReload requires dynamic code generation.")]
     public static IServiceCollection AddRabbitMQMessageBusSubscribeIntegration<TQueueSubscribeMessage>(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -115,8 +108,6 @@ public static class ServiceCollectionExtensions
     /// compatible with Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/>
     /// for AOT scenarios.
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Deserialization uses reflection. Pass a JsonTypeInfo<T> for AOT compatibility.")]
-    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Deserialization uses dynamic code generation. Pass a JsonTypeInfo<T> for AOT compatibility.")]
     public static IServiceCollection AddRabbitMQMessageBusSubscribeIntegration<TQueueSubscribeMessage>(
         this IServiceCollection services,
         IConfiguration configuration,

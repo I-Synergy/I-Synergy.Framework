@@ -2,7 +2,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -26,9 +25,6 @@ public static class NavigationExtensions
     /// The view-type resolution uses <c>GetRelatedViewType()</c> which scans loaded assemblies —
     /// not compatible with IL trimming without a source-generated registration.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
     public static View CreatePage<TViewModel>(IServiceProvider serviceProvider, object? parameter = null) where TViewModel : class, IViewModel
         => CreatePage<TViewModel>(serviceProvider, default(TViewModel), parameter);
 
@@ -50,9 +46,6 @@ public static class NavigationExtensions
     /// Note: WPF does not support NativeAOT (<c>PublishAot=true</c>) as of .NET 10.
     /// This trim annotation targets <c>PublishTrimmed=true</c> scenarios only.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
     public static View CreatePage<TViewModel>(IServiceProvider serviceProvider, TViewModel? viewModel, object? parameter = null) where TViewModel : class, IViewModel
     {
         if (viewModel is null)

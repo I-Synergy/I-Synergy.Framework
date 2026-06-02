@@ -21,8 +21,6 @@ public static class ServiceCollectionExtensions
     /// <param name="configuration"></param>
     /// <param name="prefix"></param>
     /// <returns></returns>
-    [RequiresUnreferencedCode("Calls BindWithReload which uses ConfigurationBinder.Bind with reflection.")]
-    [RequiresDynamicCode("Calls BindWithReload which requires dynamic code generation at runtime.")]
     public static IServiceCollection AddMonitorSignalRIntegration<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TClientMonitorService>(this IServiceCollection services, IConfiguration configuration, string prefix = "")
         where TClientMonitorService : BaseClientMonitorService, IClientMonitorService
     {

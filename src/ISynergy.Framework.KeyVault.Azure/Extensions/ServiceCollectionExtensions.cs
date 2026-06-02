@@ -5,7 +5,6 @@ using ISynergy.Framework.KeyVault.Abstractions.Services;
 using ISynergy.Framework.KeyVault.Azure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.KeyVault.Azure.Extensions;
 
@@ -30,7 +29,6 @@ public static class ServiceCollectionExtensions
     /// <see cref="ClientSecretCredential"/> instead.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("DefaultAzureCredential uses reflection to probe credential providers. For AOT publishing, use a specific credential type such as ClientSecretCredential or ManagedIdentityCredential.")]
     public static IServiceCollection AddAzureKeyVaultIntegration(this IServiceCollection services, string vaultUri)
     {
         services.TryAddSingleton(_ => new SecretClient(new Uri(vaultUri), new DefaultAzureCredential()));

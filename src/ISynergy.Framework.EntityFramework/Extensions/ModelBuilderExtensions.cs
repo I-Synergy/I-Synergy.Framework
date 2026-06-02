@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.EntityFramework.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -26,8 +25,6 @@ public static class ModelBuilderExtensions
     /// (<c>dotnet ef dbcontext optimize</c>) and register them via <c>UseModel()</c> in
     /// <c>OnConfiguring</c> to avoid runtime model-building reflection.
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
-    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplyDecimalPrecision(this ModelBuilder modelBuilder, string currencyPrecision = "decimal(38, 10)")
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -58,8 +55,6 @@ public static class ModelBuilderExtensions
     /// (<c>dotnet ef dbcontext optimize</c>) and register them via <c>UseModel()</c> in
     /// <c>OnConfiguring</c> to avoid runtime model-building reflection.
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
-    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplyVersioning(this ModelBuilder modelBuilder)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes()
@@ -90,8 +85,6 @@ public static class ModelBuilderExtensions
     /// in <c>OnModelCreating</c> using the strongly-typed
     /// <c>HasQueryFilter&lt;T&gt;(Expression&lt;Func&lt;T, bool&gt;&gt;)</c> overload instead of calling this helper.
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
-    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplyTenantFilters(this ModelBuilder modelBuilder, Func<Guid> tenantId)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes().Select(et => et.ClrType).ToList();
@@ -142,8 +135,6 @@ public static class ModelBuilderExtensions
     /// in <c>OnModelCreating</c> using the strongly-typed
     /// <c>HasQueryFilter&lt;T&gt;(Expression&lt;Func&lt;T, bool&gt;&gt;)</c> overload instead of calling this helper.
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
-    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static ModelBuilder ApplySoftDeleteFilters(this ModelBuilder modelBuilder)
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes()
@@ -197,8 +188,6 @@ public static class ModelBuilderExtensions
     /// <remarks>
     /// This method constructs LINQ expression trees at runtime and is not AOT-safe.
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building uses reflection. Use compiled models for AOT.")]
-    [RequiresDynamicCode("Builds LINQ expression trees at runtime.")]
     public static LambdaExpression CombineQueryFilters(Type entityType, IEnumerable<LambdaExpression> expressions)
     {
         var parameter = Expression.Parameter(entityType);
@@ -244,8 +233,6 @@ public static class ModelBuilderExtensions
     /// that accepts an explicit list of configuration types for AOT/trimming compatibility.
     /// </remarks>
     [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")] // NOSONAR
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use the IReadOnlyList<Type> overload instead.")]
-    [RequiresDynamicCode("Assembly scanning uses reflection.")]
     public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, Assembly[] assemblies)
     {
         // Get the open generic type for IEntityTypeConfiguration
@@ -288,7 +275,6 @@ public static class ModelBuilderExtensions
     /// </para>
     /// <para>
     /// <c>Activator.CreateInstance</c> is still used internally, so the method requires
-    /// <c>RequiresDynamicCode</c> — but the assembly-scanning blocker is eliminated.
     /// </para>
     /// <example>
     /// <code>
@@ -304,8 +290,6 @@ public static class ModelBuilderExtensions
     /// Thrown when a type in <paramref name="configurationTypes"/> does not implement
     /// <see cref="IEntityTypeConfiguration{TEntity}"/> or cannot be instantiated.
     /// </exception>
-    [RequiresUnreferencedCode("Uses Type.GetInterfaces() and Activator.CreateInstance with runtime-resolved types. Not AOT-safe.")]
-    [RequiresDynamicCode("Uses Activator.CreateInstance to instantiate configuration types at runtime.")]
     public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, IReadOnlyList<Type> configurationTypes)
     {
         var configurationInterface = typeof(IEntityTypeConfiguration<>);

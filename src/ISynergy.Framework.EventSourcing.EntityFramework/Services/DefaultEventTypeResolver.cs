@@ -1,5 +1,4 @@
 using ISynergy.Framework.EventSourcing.EntityFramework.Abstractions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.EventSourcing.EntityFramework.Services;
 
@@ -14,7 +13,6 @@ namespace ISynergy.Framework.EventSourcing.EntityFramework.Services;
 /// For applications with many assemblies, consider supplying a custom <see cref="IEventTypeResolver"/>
 /// that maintains an explicit type map to avoid assembly scanning on the hot path.
 /// </remarks>
-[RequiresUnreferencedCode("Scans AppDomain assemblies at runtime. Use a custom IEventTypeResolver with an explicit type map for AOT/trim-safe scenarios.")]
 public sealed class DefaultEventTypeResolver : IEventTypeResolver
 {
     /// <inheritdoc />

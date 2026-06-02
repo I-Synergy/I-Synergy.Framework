@@ -133,7 +133,6 @@ public static class ViewModelExtensions
     public static string GetRelatedWindow(this IViewModel viewModel) =>
         viewModel.GetType().GetRelatedWindow();
 
-    [RequiresUnreferencedCode("Inspecting interfaces of a type at runtime is not trim-safe.")]
     public static string GetRelatedViewModel([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] this Type type)
     {
         var result = type.Name;
@@ -149,11 +148,9 @@ public static class ViewModelExtensions
         return result;
     }
 
-    [RequiresUnreferencedCode("Inspecting interfaces of a type at runtime is not trim-safe.")]
     public static string GetRelatedViewModel(this IView view) =>
         view.GetType().GetRelatedViewModel();
 
-    [RequiresUnreferencedCode("Inspecting interfaces of a type at runtime is not trim-safe.")]
     public static string GetRelatedViewModel(this IWindow window) =>
         window.GetType().GetRelatedViewModel();
 
@@ -187,8 +184,6 @@ public static class ViewModelExtensions
     /// In AOT-compiled applications, call <see cref="RegisterViewTypes"/> at startup to populate the registry.
     /// The assembly-scan fallback will be trimmed away by the linker and will not work under AOT.
     /// </remarks>
-    [RequiresUnreferencedCode("Fallback assembly scanning is not AOT-compatible. " +
-        "Call ViewModelExtensions.RegisterViewTypes() at startup to enable AOT-safe view resolution.")]
     public static Type? GetRelatedViewType(this string name)
     {
         // Fast AOT-safe path: use the registered map.
@@ -219,7 +214,6 @@ public static class ViewModelExtensions
     /// It is not AOT-compatible. In AOT-published applications, suppress IL2026 with a justified pragma
     /// or implement explicit command cancellation in your ViewModel.
     /// </remarks>
-    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     public static void CancelAllCommands(this IViewModel viewModel)
     {
         if (viewModel == null) return;
@@ -247,7 +241,6 @@ public static class ViewModelExtensions
     /// It is not AOT-compatible. In AOT-published applications, suppress IL2026 with a justified pragma
     /// or implement explicit command state reset in your ViewModel.
     /// </remarks>
-    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     public static void ResetAllCommandStates(this IViewModel viewModel)
     {
         if (viewModel == null) return;

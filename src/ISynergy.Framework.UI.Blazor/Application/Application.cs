@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 #pragma warning disable IDE0130, S1200
@@ -37,14 +35,13 @@ public abstract class Application : ComponentBase
     private bool _isDisposing = false;
 
     // Use ConcurrentDictionary for thread-safe access and limit size to prevent unbounded growth
-    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Exception> _processedExceptions = 
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Exception> _processedExceptions =
         new System.Collections.Concurrent.ConcurrentDictionary<string, Exception>();
     private const int MaxProcessedExceptions = 100;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    [RequiresUnreferencedCode("Calls InitializeEnvironmentVariables which uses ConfigurationBinder.GetValue<T> that is not trim-safe.")]
     protected Application(
         ICommonServices commonServices,
         ISettingsService settingsService,
@@ -130,7 +127,6 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    [RequiresUnreferencedCode("ConfigurationBinder.GetValue<T> is not trim-safe.")]
     protected virtual void InitializeEnvironmentVariables()
     {
         try

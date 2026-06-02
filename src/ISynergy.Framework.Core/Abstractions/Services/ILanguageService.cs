@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace ISynergy.Framework.Core.Abstractions.Services;
 
 /// <summary>
@@ -23,6 +21,5 @@ public interface ILanguageService
     /// Pass a compile-time <c>typeof(…)</c> expression and suppress IL2026 at the call site, or refactor to pass a
     /// pre-built <see cref="System.Resources.ResourceManager"/> instance.
     /// </param>
-    [RequiresUnreferencedCode("ResourceManager requires the resource type and its satellite assemblies to be preserved by the linker.")]
     void AddResourceManager(Type resourceType);
 }

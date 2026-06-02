@@ -2,7 +2,6 @@ using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
-using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -285,8 +284,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
-    [RequiresUnreferencedCode("Calls Jagged.Identity<double>(int) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Jagged.Identity<double>(int) which requires dynamic code generation.")]
     public double[][] Inverse()
     {
         return Solve(Jagged.Identity<double>(n));

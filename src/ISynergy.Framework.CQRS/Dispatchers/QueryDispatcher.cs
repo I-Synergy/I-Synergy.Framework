@@ -3,7 +3,6 @@ using ISynergy.Framework.CQRS.Dispatch;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.CQRS.Dispatchers;
 
@@ -83,8 +82,6 @@ public class QueryDispatcher : IQueryDispatcher
         }
     }
 
-    [RequiresDynamicCode("Reflection-based query dispatch is not AOT-compatible. Register a QueryDispatchTable via AddQueryDispatchTable() or use DispatchAsync<TQuery, TResult> instead.")]
-    [RequiresUnreferencedCode("Reflection-based query dispatch may not work after trimming. Register a QueryDispatchTable via AddQueryDispatchTable() or use DispatchAsync<TQuery, TResult> instead.")]
     private async Task<TResult> DispatchViaReflection<TResult>(
         IQuery<TResult> query,
         CancellationToken cancellationToken)

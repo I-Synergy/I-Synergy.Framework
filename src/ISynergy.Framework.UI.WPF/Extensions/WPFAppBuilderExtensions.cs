@@ -36,7 +36,6 @@ public static class WpfAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    [RequiresUnreferencedCode("Assembly scanning via RegisterAssemblies and configuration binding via BindWithReload are not trim-safe.")]
     public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>( // NOSONAR
         this IHostBuilder wpfAppBuilder,
         IInfoService infoService,
@@ -101,7 +100,6 @@ public static class WpfAppBuilderExtensions
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     /// <returns></returns>
-    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not trim-safe.")]
     public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).BindWithReload);

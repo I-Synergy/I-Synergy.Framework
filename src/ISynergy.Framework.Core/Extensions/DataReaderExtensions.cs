@@ -18,8 +18,6 @@ public static class DataReaderExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="datareader">The datareader.</param>
     /// <returns>List&lt;T&gt;.</returns>
-    [RequiresUnreferencedCode("Calls TypeActivator.CreateInstance<T>() which is not AOT-safe.")]
-    [RequiresDynamicCode("Calls TypeActivator.CreateInstance<T>() which requires dynamic code generation.")]
     public static List<T> MapToList<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(this IDataReader datareader)
     {
         var list = new List<T>();

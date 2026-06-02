@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
@@ -85,8 +84,6 @@ public static class HtmlHelperExtensions
     /// Prefer the <see cref="InlineImageAsync(IHtmlHelper, string, byte[], string, IDictionary{string, object?}?)"/> overload instead.
     /// </param>
     /// <returns>HtmlString.</returns>
-    [RequiresUnreferencedCode("Reflects over arbitrary attribute object type. Use the IDictionary<string, object?> overload for AOT-safe publishing.")]
-    [RequiresDynamicCode("Reflects over arbitrary attribute object type. Use the IDictionary<string, object?> overload for AOT-safe publishing.")]
     public static HtmlString InlineImageAsync(this IHtmlHelper html, string path, byte[] image, string extension, object? attributes = null)
     {
         if (attributes is IDictionary<string, object?> dict)
@@ -141,8 +138,6 @@ public static class HtmlHelperExtensions
     /// <param name="contentType">Type of the content.</param>
     /// <param name="attributes">The attributes object.</param>
     /// <returns>HtmlString.</returns>
-    [RequiresUnreferencedCode("Reflects over arbitrary attribute object type.")]
-    [RequiresDynamicCode("Reflects over arbitrary attribute object type.")]
     private static HtmlString ConvertArrayToHtmlStringWithReflection(byte[] array, string contentType, object? attributes)
     {
         var base64 = Convert.ToBase64String(array);

@@ -1,6 +1,5 @@
 using Dotmim.Sync.Serialization;
 using ISynergy.Framework.Synchronization.Serializers;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Synchronization.Factories;
 
@@ -17,9 +16,6 @@ namespace ISynergy.Framework.Synchronization.Factories;
 /// migration guidance.
 /// </para>
 /// </remarks>
-[RequiresUnreferencedCode("Returns DefaultMessagePackSerializer which is not AOT-compatible. " +
-    "See DefaultMessagePackSerializer remarks for migration guidance.")]
-[RequiresDynamicCode("Returns DefaultMessagePackSerializer which uses dynamic code generation.")]
 public class MessagePackSerializerFactory : ISerializerFactory
 {
     /// <summary>

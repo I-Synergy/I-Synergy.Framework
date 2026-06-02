@@ -95,9 +95,6 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// This path is not trim-safe; implement <see cref="ICommandProvider"/> on the ViewModel instead.
     /// </summary>
     /// <param name="viewModel">The ViewModel instance to scan for command properties.</param>
-    [RequiresUnreferencedCode(
-        "Reflection-based command subscription scans ViewModel properties and is not trim-safe. " +
-        "Implement ICommandProvider on the ViewModel for AOT-compatible command discovery.")]
     private void SubscribeToViewModelCommandsViaReflection(TViewModel viewModel)
     {
         var commandProperties = viewModel.GetType()

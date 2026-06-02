@@ -1,6 +1,3 @@
-#if !NET35 && !NET40
-using System.Diagnostics.CodeAnalysis;
-
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
 #pragma warning disable S2368 // object overloads are part of the library API
@@ -27,8 +24,6 @@ public class NpzDictionary : NpzDictionary<Array>
     ///     Pass true to deserialize matrices as jagged matrices. Pass false
     ///     to deserialize them as multi-dimensional matrices.
     /// </param>
-    [RequiresUnreferencedCode("Calls NpzDictionary<T>(Stream) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls NpzDictionary<T>(Stream) which requires dynamic code generation.")]
     public NpzDictionary(Stream stream, bool jagged)
         : base(stream)
     {
@@ -38,8 +33,6 @@ public class NpzDictionary : NpzDictionary<Array>
     /// <summary>
     ///     Loads the array from the specified stream.
     /// </summary>
-    [RequiresUnreferencedCode("Calls NpyFormat.LoadJagged(Stream) which is not AOT-safe.")]
-    [RequiresDynamicCode("Calls NpyFormat.LoadJagged/LoadMatrix which require dynamic code generation.")]
     protected override Array Load(Stream s)
     {
         if (jagged)
@@ -47,4 +40,3 @@ public class NpzDictionary : NpzDictionary<Array>
         return NpyFormat.LoadMatrix(s);
     }
 }
-#endif

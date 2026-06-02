@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Services;
 
@@ -30,7 +29,6 @@ internal class LanguageService : ILanguageService
     /// The resource type whose full name is used to locate the manifest resource stream.
     /// The type and its satellite assemblies must be preserved by the linker in AOT-published applications.
     /// </param>
-    [RequiresUnreferencedCode("ResourceManager requires the resource type and its satellite assemblies to be preserved by the linker.")]
     public void AddResourceManager(Type resourceType) =>
         _managers.Add(new ResourceManager(resourceType));
 

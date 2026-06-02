@@ -2,7 +2,6 @@ using DymoSDK.Implementations;
 using DymoSDK.Interfaces;
 using ISynergy.Framework.Printer.Label.Abstractions.Services;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Printer.Label.Dymo.Services;
 
@@ -18,8 +17,6 @@ namespace ISynergy.Framework.Printer.Label.Dymo.Services;
 /// <c>AddPrinterLabelDymoIntegration</c> call site.
 /// </para>
 /// </remarks>
-[RequiresUnreferencedCode("DymoSDK uses COM interop and reflection for printer access. Not compatible with AOT publishing.")]
-[RequiresDynamicCode("DymoSDK requires dynamic code generation for COM/native interop.")]
 internal class LabelPrinterService : ILabelPrinterService
 {
     private readonly ILogger _logger;

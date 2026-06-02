@@ -1,4 +1,3 @@
-#if NET8_0_OR_GREATER
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -21,4 +20,3 @@ public class TimeOnlyConverter : JsonConverter<TimeOnly>
     public override void Write(Utf8JsonWriter writer, TimeOnly value, JsonSerializerOptions options)
         => writer.WriteStringValue(value.ToString(format));
 }
-#endif

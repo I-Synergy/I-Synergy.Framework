@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Collections;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 
@@ -38,7 +37,7 @@ public class MatNode : IEnumerable<MatNode>
     private readonly Type type;
     private readonly int typeSize;
     private object value;
-    [RequiresDynamicCode("Uses Marshal.SizeOf(Type) and Array.CreateInstance with runtime-resolved types.")]
+
     internal unsafe MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
     {
         // TODO: Completely refactor this method. // NOSONAR
@@ -409,7 +408,6 @@ public class MatNode : IEnumerable<MatNode>
     /// </summary>
     /// <typeparam name="T">The object type, if known.</typeparam>
     /// <returns>The object stored at this node.</returns>
-    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved element type.")]
     public T GetValue<T>()
     {
         if (Value is T)
@@ -440,7 +438,6 @@ public class MatNode : IEnumerable<MatNode>
             reader.ReadBytes(8 - mod);
     }
 
-    [RequiresDynamicCode("Calls read(BinaryReader) which uses Array.CreateInstance with a runtime-resolved type.")]
     private object read()
     {
         var reader = this.reader;
@@ -462,7 +459,6 @@ public class MatNode : IEnumerable<MatNode>
         return array;
     }
 
-    [RequiresDynamicCode("Uses Array.CreateInstance with a runtime-resolved type field.")]
     private Array read(BinaryReader reader)
     {
         var rawData = GetBytes(reader);

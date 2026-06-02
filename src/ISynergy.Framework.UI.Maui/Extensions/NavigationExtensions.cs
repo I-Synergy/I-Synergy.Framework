@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -22,9 +21,6 @@ public static class NavigationExtensions
     /// This is not compatible with MAUI iOS/Android linker trimming without a source-generated view map.
     /// Ensure view/ViewModel types are preserved via a linker configuration file or source-generated registration.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
     public static IView CreatePage<TViewModel>(object? parameter = null) where TViewModel : class, IViewModel
         => CreatePage<TViewModel>(default(TViewModel), parameter);
 
@@ -43,9 +39,6 @@ public static class NavigationExtensions
     /// The view-type lookup calls <c>GetRelatedViewType()</c> which performs an assembly scan.
     /// This is not compatible with MAUI iOS/Android linker trimming without a source-generated view map.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
     public static IView CreatePage<TViewModel>(TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var view = typeof(TViewModel).GetRelatedView();
@@ -80,9 +73,6 @@ public static class NavigationExtensions
     /// <param name="viewModel">An optional ViewModel instance. When <see langword="null"/>, resolved from DI.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
     /// <returns>A task representing the asynchronous navigation operation.</returns>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
     public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, TViewModel? viewModel = null, object? parameter = null)
         where TViewModel : class, IViewModel
     {
@@ -101,9 +91,6 @@ public static class NavigationExtensions
     /// <param name="viewModel">An optional ViewModel instance. When <see langword="null"/>, resolved from DI.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
     /// <returns>A task representing the asynchronous modal navigation operation.</returns>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
     public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var page = CreatePage<TViewModel>(viewModel, parameter);

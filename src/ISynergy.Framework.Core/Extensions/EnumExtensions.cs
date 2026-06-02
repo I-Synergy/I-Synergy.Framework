@@ -70,7 +70,6 @@ public static class EnumExtensions
     /// </summary>
     /// <param name="enumeration"></param>
     /// <returns></returns>
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static List<Enum> ToList([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] this Type enumeration)
     {
         var list = new List<Enum>();

@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
-using System.Runtime.CompilerServices;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -316,9 +315,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q1(double[] x, double p)
     {
         if (p == 0.0)
@@ -346,9 +342,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q2(double[] x, double p)
     {
         if (p == 0.0)
@@ -385,9 +378,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static T Q3<T>(T[] x, double p, double lowThreshold)
     {
         if (p <= lowThreshold)
@@ -417,9 +407,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q4(double[] x, double pj, double lowThreshold)
     {
         if (pj < lowThreshold)
@@ -460,9 +447,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q5(double[] x, double p, double lowThreshold, double highThreshold)
     {
         if (p < lowThreshold)
@@ -503,9 +487,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q6(double[] x, double p, double lowThreshold, double highThreshold)
     {
         if (p < lowThreshold)
@@ -544,9 +525,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q7(double[] x, double p)
     {
         if (p == 1.0)
@@ -585,9 +563,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q8(double[] x, double p, double lowThreshold, double highThreshold)
     {
         if (p < lowThreshold)
@@ -629,9 +604,6 @@ public static partial class Measures
         return result;
     }
 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static double Q9(double[] x, double p, double lowThreshold, double highThreshold)
     {
         if (p < lowThreshold)
