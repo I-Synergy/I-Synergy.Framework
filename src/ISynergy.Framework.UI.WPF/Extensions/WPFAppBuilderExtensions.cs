@@ -60,7 +60,6 @@ public static class WpfAppBuilderExtensions
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
             var languageService = LanguageService.Default;
-            languageService.AddResourceManager(typeof(Framework.Globalization.Properties.Resources));
             languageService.AddResourceManager(typeof(TResource));
 #pragma warning restore IL2026
 

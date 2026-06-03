@@ -60,7 +60,6 @@ public static class ServiceCollectionExtensions
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
         var languageService = LanguageService.Default;
-        languageService.AddResourceManager(typeof(Framework.Globalization.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
 
         services.TryAddSingleton<IInfoService>(s => infoService);
