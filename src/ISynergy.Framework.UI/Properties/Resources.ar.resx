@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Add" xml:space="preserve">
+	    <value>إضافة</value>
+	  </data>
+	<data name="By" xml:space="preserve">
+	    <value>بواسطة</value>
+	  </data>
+	<data name="Cancel" xml:space="preserve">
+	    <value>إلغاء</value>
+	  </data>
+	<data name="Close" xml:space="preserve">
+	    <value>إغلاق</value>
+	  </data>
+	<data name="Collapsed" xml:space="preserve">
+	    <value>مطوي</value>
+	  </data>
+	<data name="Theme" xml:space="preserve">
+	    <value>سمة</value>
+	  </data>
+	<data name="Day_s" xml:space="preserve">
+	    <value>يوم/أيام</value>
+	  </data>
+	<data name="WarningDoYouWantToDoItNow" xml:space="preserve">
+	    <value>هل تريد القيام بذلك الآن؟</value>
+	  </data>
+	<data name="Edit" xml:space="preserve">
+	    <value>تعديل</value>
+	  </data>
+	<data name="Expanded" xml:space="preserve">
+	    <value>موسع</value>
+	  </data>
+	<data name="Greeting_Afternoon" xml:space="preserve">
+	    <value>مساء الخير {0}</value>
+	  </data>
+	<data name="Greeting_Evening" xml:space="preserve">
+	    <value>مساء الخير {0}</value>
+	  </data>
+	<data name="Greeting_Morning" xml:space="preserve">
+	    <value>صباح الخير {0}</value>
+	  </data>
+	<data name="Greeting_Night" xml:space="preserve">
+	    <value>ليلة سعيدة {0}</value>
+	  </data>
+	<data name="Hour_s" xml:space="preserve">
+	    <value>ساعة/ساعات</value>
+	  </data>
+	<data name="InputFirst" xml:space="preserve">
+	    <value>تم الإنشاء</value>
+	  </data>
+	<data name="InputLast" xml:space="preserve">
+	    <value>آخر تغيير</value>
+	  </data>
+	<data name="Language" xml:space="preserve">
+	    <value>اللغة</value>
+	  </data>
+	<data name="Language_Dutch" xml:space="preserve">
+	    <value>الهولندية</value>
+	  </data>
+	<data name="Language_English" xml:space="preserve">
+	    <value>الإنجليزية</value>
+	  </data>
+	<data name="Language_French" xml:space="preserve">
+	    <value>الفرنسية</value>
+	  </data>
+	<data name="Language_German" xml:space="preserve">
+	    <value>الألمانية</value>
+	  </data>
+	<data name="Language_Spanish" xml:space="preserve">
+	    <value>الإسبانية</value>
+	  </data>
+	<data name="Language_Arabic" xml:space="preserve">
+	    <value>العربية</value>
+	  </data>
+	<data name="Minute_s" xml:space="preserve">
+	    <value>دقيقة/دقائق</value>
+	  </data>
+	<data name="No" xml:space="preserve">
+	    <value>لا</value>
+	  </data>
+	<data name="Ok" xml:space="preserve">
+	    <value>موافق</value>
+	  </data>
+	<data name="Pin" xml:space="preserve">
+	    <value>رمز PIN</value>
+	  </data>
+	<data name="PleaseWait" xml:space="preserve">
+	    <value>لحظة من فضلك</value>
+	  </data>
+	<data name="Refresh" xml:space="preserve">
+	    <value>تحديث</value>
+	  </data>
+	<data name="Save" xml:space="preserve">
+	    <value>حفظ</value>
+	  </data>
+	<data name="Search" xml:space="preserve">
+	    <value>بحث</value>
+	  </data>
+	<data name="TitleCriticalError" xml:space="preserve">
+	    <value>خطأ فادح</value>
+	  </data>
+	<data name="TitleError" xml:space="preserve">
+	    <value>خطأ</value>
+	  </data>
+	<data name="TitleInfo" xml:space="preserve">
+	    <value>معلومات</value>
+	  </data>
+	<data name="TitleQuestion" xml:space="preserve">
+	    <value>سؤال</value>
+	  </data>
+	<data name="TitleWarning" xml:space="preserve">
+	    <value>تحذير</value>
+	  </data>
+	<data name="TitleWelcome" xml:space="preserve">
+	    <value>مرحباً</value>
+	  </data>
+	<data name="Unknown" xml:space="preserve">
+	    <value>غير معروف</value>
+	  </data>
+	<data name="UpdateRestart" xml:space="preserve">
+	    <value>يتوفر تحديث.
+	احفظ عملك وأعد تشغيل التطبيق.</value>
+	  </data>
+	<data name="WarningColorChange" xml:space="preserve">
+	    <value>تحتاج إلى إعادة تشغيل التطبيق لتطبيق تغييرات الألوان.</value>
+	  </data>
+	<data name="WarningDocumentSizeTooBig" xml:space="preserve">
+	    <value>لا يمكن أن يتجاوز حجم المستند {0}.</value>
+	  </data>
+	<data name="WarningLanguageChange" xml:space="preserve">
+	    <value>تحتاج إلى إعادة تشغيل التطبيق لتطبيق تغييرات اللغة.</value>
+	  </data>
+	<data name="Yes" xml:space="preserve">
+	    <value>نعم</value>
+	  </data>
+	<data name="ThisItem" xml:space="preserve">
+	    <value>هذا العنصر</value>
+	  </data>
+	<data name="UpdateCheckForUpdates" xml:space="preserve">
+	    <value>جاري البحث عن تحديثات...</value>
+	  </data>
+	<data name="UpdateDownloadAndInstall" xml:space="preserve">
+	    <value>جاري تنزيل التحديث وتثبيته...</value>
+	  </data>
+	<data name="UpdateExecuteNow" xml:space="preserve">
+	    <value>هل تريد حقاً تثبيت التحديث الآن؟</value>
+	  </data>
+	<data name="UpdateFoundNewUpdate" xml:space="preserve">
+	    <value>يوجد تحديث جديد.</value>
+	  </data>
+	<data name="CannotAttachBehaviorMultipleTimesExceptionMessage" xml:space="preserve">
+	    <value>لا يمكن إرفاق مثيل سلوك بأكثر من كائن واحد في نفس الوقت.</value>
+	  </data>
+	<data name="DuplicateBehaviorInCollectionExceptionMessage" xml:space="preserve">
+	    <value>لا يمكن إضافة مثيل سلوك إلى BehaviorCollection أكثر من مرة.</value>
+	  </data>
+	<data name="InvalidAssociatedObjectExceptionMessage" xml:space="preserve">
+	    <value>AssociatedObject من النوع {0} ولكن يجب أن يكون من النوع {1}.</value>
+	  </data>
+	<data name="NonActionAddedToActionCollectionExceptionMessage" xml:space="preserve">
+	    <value>يتم دعم أنواع IAction فقط في ActionCollection.</value>
+	  </data>
+	<data name="NonBehaviorAddedToBehaviorCollectionExceptionMessage" xml:space="preserve">
+	    <value>يتم دعم أنواع IBehavior فقط في BehaviorCollection.</value>
+	  </data>
+	<data name="Select" xml:space="preserve">
+	    <value>تحديد</value>
+	  </data>
+	<data name="SignOut" xml:space="preserve">
+	    <value>تسجيل الخروج</value>
+	  </data>
+	<data name="SignIn" xml:space="preserve">
+	    <value>تسجيل الدخول</value>
+	  </data>
+	<data name="Register" xml:space="preserve">
+	    <value>تسجيل</value>
+	  </data>
+	<data name="Settings" xml:space="preserve">
+	    <value>الإعدادات</value>
+	  </data>
+	<data name="Default" xml:space="preserve">
+	    <value>افتراضي</value>
+	  </data>
+	<data name="Light" xml:space="preserve">
+	    <value>فاتح</value>
+	  </data>
+	<data name="Dark" xml:space="preserve">
+	    <value>داكن</value>
+	  </data>
+	<data name="NoItems" xml:space="preserve">
+	    <value>لا توجد عناصر متاحة</value>
+	  </data>
+	<data name="Username" xml:space="preserve">
+	    <value>اسم المستخدم</value>
+	  </data>
+	<data name="Password" xml:space="preserve">
+	    <value>كلمة المرور</value>
+	  </data>
+	<data name="LoginAccount" xml:space="preserve">
+	    <value>هل لديك حساب بالفعل؟</value>
+	  </data>
+	<data name="LoginNoAccount" xml:space="preserve">
+	    <value>ليس لديك حساب؟</value>
+	  </data>
+	<data name="LoginText" xml:space="preserve">
+	    <value>إذا كان لديك حساب بالفعل، يمكنك استخدام عنوان بريدك الإلكتروني وكلمة المرور لتسجيل الدخول.</value>
+	  </data>
+	<data name="LoginTitle" xml:space="preserve">
+	    <value>هل لديك حساب؟</value>
+	  </data>
+	<data name="SignInHere" xml:space="preserve">
+	    <value>سجل الدخول هنا</value>
+	  </data>
+	<data name="SignupHere" xml:space="preserve">
+	    <value>سجل هنا</value>
+	  </data>
+	<data name="SignupText" xml:space="preserve">
+	    <value>إذا لم يكن لديك حساب، املأ الحقول المطلوبة وسجل.
+	بعد تأكيد تسجيلك، يمكنك استخدام عنوان بريدك الإلكتروني وكلمة المرور لتسجيل الدخول.</value>
+	  </data>
+	<data name="SignupTitle" xml:space="preserve">
+	    <value>ليس لديك حساب؟</value>
+	  </data>
+	<data name="WarningNoModulesSelected" xml:space="preserve">
+	    <value>لم يتم تحديد أي وحدات. حدد واحدة على الأقل.</value>
+	  </data>
+	<data name="WarningPasswordMatch" xml:space="preserve">
+	    <value>كلمات المرور غير متطابقة!</value>
+	  </data>
+	<data name="WarningPasswordSize" xml:space="preserve">
+	    <value>يجب أن تتكون كلمة المرور من 6 أحرف على الأقل وتحتوي على حرف صغير واحد وحرف كبير واحد ورقم واحد على الأقل.</value>
+	  </data>
+	<data name="WarningResetPassword" xml:space="preserve">
+	    <value>ستتلقى بريداً إلكترونياً يحتوي على رابط لإعادة تعيين كلمة المرور الخاصة بك.</value>
+	  </data>
+	<data name="PasswordForgot" xml:space="preserve">
+	    <value>هل نسيت كلمة المرور؟</value>
+	  </data>
+	<data name="PasswordRetype" xml:space="preserve">
+	    <value>أعد كتابة كلمة المرور</value>
+	  </data>
+	<data name="EmailAddress" xml:space="preserve">
+	    <value>عنوان البريد الإلكتروني</value>
+	  </data>
+	<data name="Country" xml:space="preserve">
+	    <value>البلد</value>
+	  </data>
+	<data name="Modules" xml:space="preserve">
+	    <value>الوحدات</value>
+	  </data>
+	<data name="TimeZone" xml:space="preserve">
+	    <value>المنطقة الزمنية</value>
+	  </data>
+	<data name="WarningNoCountrySelected" xml:space="preserve">
+	    <value>لم يتم تحديد أي بلد.</value>
+	  </data>
+	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
+	    <value>لم يتم تحديد أي منطقة زمنية.</value>
+	  </data>
+	<data name="WarningInvalidEmail" xml:space="preserve">
+	    <value>عنوان البريد الإلكتروني المدخل غير صالح.</value>
+	  </data>
+	<data name="WarningLicenseNameSize" xml:space="preserve">
+	    <value>يجب عليك إدخال اسم (شركة) يتكون من 3 أحرف على الأقل.</value>
+	  </data>
+	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
+	    <value>ستتلقى بريداً إلكترونياً تحتاج إلى تأكيده أولاً قبل أن تتمكن من تسجيل الدخول.</value>
+	  </data>
+	<data name="Fullname" xml:space="preserve">
+	    <value>الاسم الكامل</value>
+	  </data>
+	<data name="WarningBuildCalled" xml:space="preserve">
+	    <value>لا يمكن استدعاء Build إلا مرة واحدة.</value>
+	  </data>
+	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+	    <value>يجب استدعاء CreateBuilder قبل CreateServiceProvider.</value>
+	  </data>
+	<data name="WarningNullIServiceProvider" xml:space="preserve">
+	    <value>أعاد IServiceProviderFactory قيمة null لـ IServiceProvider.</value>
+	  </data>
+	<data name="WarningResolverReturnedNull" xml:space="preserve">
+	    <value>أعاد المحلل قيمة null لـ IServiceProviderFactory.</value>
+	  </data>
+	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+	    <value>استبدال IHostApplicationLifetime غير مدعوم.</value>
+	  </data>
+	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
+	    <value>اسم الملف فارغ أو null. حدد اسم ملف صالح.</value>
+	  </data>
+	<data name="CannotFindUpdateFile" xml:space="preserve">
+	    <value>لا يمكن العثور على ملف التحديث.</value>
+	  </data>
+	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
+	    <value>تعذر استرداد معلومات الإصدار.</value>
+	  </data>
+	<data name="NoInternetConnectionAvailable" xml:space="preserve">
+	    <value>لا يتوفر اتصال بالإنترنت.</value>
+	  </data>
+	<data name="CannotInstallUpdate" xml:space="preserve">
+	    <value>لا يمكن تثبيت التحديث.</value>
+	  </data>
+	<data name="MandatoryUpdateFailed" xml:space="preserve">
+	    <value>فشل التحديث الإلزامي!</value>
+	  </data>
+	<data name="WarningUsernameSize" xml:space="preserve">
+	    <value>يجب أن يحتوي اسم المستخدم على 3 أحرف على الأقل.</value>
+	  </data>
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+	    <value>فشل تحديث الحزمة الإلزامي.
+	حاول مرة أخرى أو قم بتحديث التطبيق من خلال متجر Microsoft.</value>
+	  </data>
+	<data name="Remember" xml:space="preserve">
+	    <value>تذكر</value>
+	  </data>
+	<data name="WarningEmailExists" xml:space="preserve">
+	    <value>عنوان البريد الإلكتروني المدخل موجود بالفعل. قدم عنواناً جديداً وحاول مرة أخرى.</value>
+	  </data>
+	<data name="WarningNameExists" xml:space="preserve">
+	    <value>الاسم المدخل موجود بالفعل. حدد اسماً جديداً وحاول مرة أخرى.</value>
+	  </data>
+	<data name="WarningRegistrationExists" xml:space="preserve">
+	    <value>مجموعة الاسم وعنوان البريد الإلكتروني موجودة بالفعل. قدم اسماً و/أو عنوان بريد إلكتروني جديداً وحاول مرة أخرى.</value>
+	  </data>
+	<data name="EnterNote" xml:space="preserve">
+	    <value>أدخل الملاحظة هنا...</value>
+	  </data>
+	<data name="Skip" xml:space="preserve">
+	    <value>تخطي</value>
+	  </data>
+	<data name="WarningSynchronizationRestart" xml:space="preserve">
+	    <value>لتتمكن من المزامنة، يجب عليك إعادة تشغيل التطبيق لتطبيق إعدادات المزامنة.</value>
+	  </data>
+	<data name="TakePhoto" xml:space="preserve">
+	    <value>التقاط صورة</value>
+	  </data>
+	<data name="Browse" xml:space="preserve">
+	    <value>تصفح</value>
+	  </data>
+	<data name="Paste" xml:space="preserve">
+	    <value>لصق</value>
+	  </data>
+	<data name="SelectCountry" xml:space="preserve">
+	    <value>اختر البلد</value>
+	  </data>
+	<data name="SelectTimeZone" xml:space="preserve">
+	    <value>اختر المنطقة الزمنية</value>
+	  </data>
+	<data name="CreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+	    <value>يجب استدعاء CreateBuilder قبل CreateServiceProvider</value>
+	  </data>
+	<data name="NullIServiceProvider" xml:space="preserve">
+	    <value>أعاد IServiceProviderFactory قيمة IServiceProvider فارغة</value>
+	  </data>
+	<data name="ResolverReturnedNull" xml:space="preserve">
+	    <value>أعاد المحلل قيمة IServiceProviderFactory فارغة</value>
+	  </data>
+	<data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+	    <value>استبدال IHostApplicationLifetime غير مدعوم.</value>
+	  </data>
+	<data name="DefaultException" xml:space="preserve">
+	    <value>حدث خطأ ما.
+	اتصل بالدعم.</value>
+	  </data>
+	<data name="System" xml:space="preserve">
+		<value>النظام</value>
+	</data>
+</root>

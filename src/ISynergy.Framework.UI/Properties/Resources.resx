@@ -183,6 +183,12 @@
 	<data name="Language_German" xml:space="preserve">
     <value>German</value>
   </data>
+	<data name="Language_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+	<data name="Language_Arabic" xml:space="preserve">
+    <value>Arabic</value>
+  </data>
 	<data name="Minute_s" xml:space="preserve">
     <value>Minute(s)</value>
   </data>
