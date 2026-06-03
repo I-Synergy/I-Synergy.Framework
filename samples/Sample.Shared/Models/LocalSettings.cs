@@ -1,14 +1,14 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
-using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Globalization.Constants;
 using System.Globalization;
 
 namespace Sample.Models;
 
 public class LocalSettings : ObservableValidatedClass, ILocalSettings
 {
-    public string Language { get; set; } = GenericConstants.DefaultCultureInfoName;
+    public string Language { get; set; } = GlobalizationConstants.DefaultCultureInfoName;
     public bool IsFullscreen { get; set; }
     public List<string> Users { get; set; } = new List<string>();
     public string DefaultUser { get; set; } = string.Empty;

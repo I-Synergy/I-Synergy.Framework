@@ -1,11 +1,11 @@
-using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
-using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -19,7 +19,6 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
@@ -185,8 +184,7 @@ public static class MauiAppBuilderExtensions
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
         var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+        languageService.AddResourceManager(typeof(Framework.Globalization.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
 #pragma warning restore IL2026
 
@@ -195,7 +193,7 @@ public static class MauiAppBuilderExtensions
 
         // Fallback: English-only if ConfigureSupportedCultures was not called
         appBuilder.Services.TryAddSingleton<ISupportedCulturesService>(s =>
-            new SupportedCulturesService([CultureInfo.GetCultureInfo(GenericConstants.DefaultCultureInfoName)]));
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
 
         appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);

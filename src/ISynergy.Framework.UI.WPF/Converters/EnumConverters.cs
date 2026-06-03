@@ -1,6 +1,5 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Globalization.Services;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -56,6 +55,6 @@ public class EnumToArrayConverter : IValueConverter
     public static string GetDescription(Enum value)
     {
         Argument.IsNotNull(nameof(value));
-        return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(value.ToString());
+        return LanguageService.Default.GetString(value.ToString());
     }
 }

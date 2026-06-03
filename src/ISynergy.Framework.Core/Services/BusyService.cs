@@ -1,5 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Services;
 
 namespace ISynergy.Framework.Core.Services;
 

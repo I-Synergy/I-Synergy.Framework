@@ -1,5 +1,5 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 
 namespace ISynergy.Framework.UI;

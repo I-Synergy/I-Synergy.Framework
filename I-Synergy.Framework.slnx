@@ -34,6 +34,7 @@
     <Project Path="src/ISynergy.Framework.EventSourcing/ISynergy.Framework.EventSourcing.csproj" />
     <Project Path="src/ISynergy.Framework.Financial/ISynergy.Framework.Financial.csproj" />
     <Project Path="src/ISynergy.Framework.Geography/ISynergy.Framework.Geography.csproj" />
+    <Project Path="src/ISynergy.Framework.Globalization/ISynergy.Framework.Globalization.csproj" Id="7cc35310-6117-4252-ae5b-8c367460d087" />
     <Project Path="src/ISynergy.Framework.IO/ISynergy.Framework.IO.csproj" />
     <Project Path="src/ISynergy.Framework.KeyVault.Azure/ISynergy.Framework.KeyVault.Azure.csproj" Id="caf57bae-d6d9-43de-8016-195ba0a4354f" />
     <Project Path="src/ISynergy.Framework.KeyVault.OpenBao/ISynergy.Framework.KeyVault.OpenBao.csproj" Id="5fb1fef7-ea38-4228-8486-09be06210b65" />
@@ -148,6 +149,7 @@
     <Project Path="tests/ISynergy.Framework.EventSourcing.Tests/ISynergy.Framework.EventSourcing.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Financial.Tests/ISynergy.Framework.Financial.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Geography.Tests/ISynergy.Framework.Geography.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.Globalization.Tests/ISynergy.Framework.Globalization.Tests.csproj" Id="58151af4-6381-4298-8e3a-3645b5e027f1" />
     <Project Path="tests/ISynergy.Framework.IO.Tests/ISynergy.Framework.IO.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.KeyVault.OpenBao.Tests/ISynergy.Framework.KeyVault.OpenBao.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mail.Microsoft365.Tests/ISynergy.Framework.Mail.Microsoft365.Tests.csproj" />

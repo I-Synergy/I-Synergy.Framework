@@ -59,14 +59,7 @@ public static class GenericConstants
     /// The rfid uid rege ex
     /// </summary>
     public const string RfidUidRegeEx = @"^[A-F0-9]{8}$";
-    /// <summary>
-    /// The date time offset format
-    /// </summary>
-    public const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ssZ";
-    /// <summary>
-    /// The default culture information name
-    /// </summary>
-    public const string DefaultCultureInfoName = "en";
+
 
     /// <summary>
     /// The activate state key

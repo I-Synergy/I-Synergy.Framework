@@ -1,7 +1,7 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

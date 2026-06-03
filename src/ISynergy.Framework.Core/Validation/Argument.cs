@@ -1,5 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Services;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -21,7 +20,7 @@ public static class Argument
     {
         try
         {
-            return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(key);
+            return LanguageService.Default.GetString(key);
         }
         catch
         {

@@ -7,10 +7,12 @@ using ISynergy.Framework.AspNetCore.Blazor.Security;
 using ISynergy.Framework.AspNetCore.Blazor.Services;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -58,8 +60,7 @@ public static class ServiceCollectionExtensions
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
         var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(Framework.AspNetCore.Blazor.Properties.Resources));
+        languageService.AddResourceManager(typeof(Framework.Globalization.Properties.Resources));
         languageService.AddResourceManager(typeof(TResource));
 
         services.TryAddSingleton<IInfoService>(s => infoService);
@@ -67,7 +68,7 @@ public static class ServiceCollectionExtensions
 
         // Fallback: English-only if ConfigureSupportedCultures was not called
         services.TryAddSingleton<ISupportedCulturesService>(s =>
-            new SupportedCulturesService([CultureInfo.GetCultureInfo(GenericConstants.DefaultCultureInfoName)]));
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
 
         services.TryAddSingleton<IMessengerService, MessengerService>();
         services.TryAddSingleton<IBusyService, BusyService>();

@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Extensions;
 using Microsoft.UI.Xaml.Data;
 using System.Collections.ObjectModel;
 using System.Globalization;

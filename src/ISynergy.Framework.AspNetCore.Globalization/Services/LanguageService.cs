@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 
 namespace ISynergy.Framework.AspNetCore.Globalization.Services;
 

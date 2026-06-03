@@ -1,5 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Services;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -14,5 +13,5 @@ public static class StringExtensions
     /// <param name="resourceKey">The resource key.</param>
     /// <returns>System.String.</returns>
     public static string GetLocalized(this string resourceKey) =>
-        ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(resourceKey);
+        LanguageService.Default.GetString(resourceKey);
 }

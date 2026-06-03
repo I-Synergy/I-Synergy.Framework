@@ -1,9 +1,9 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Syncfusion.Options;
 using ISynergy.Framework.Documents.Syncfusion.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

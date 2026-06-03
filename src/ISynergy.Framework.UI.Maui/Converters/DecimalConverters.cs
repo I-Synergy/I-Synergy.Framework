@@ -1,5 +1,4 @@
 using ISynergy.Framework.UI.Converters.Shared;
-using ISynergy.Framework.Core.Formatters;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
@@ -316,17 +315,17 @@ public class DecimalToStringConverter : IValueConverter
         if (value is string stringValue && !string.IsNullOrWhiteSpace(stringValue))
         {
             // Parse without strict formatting - accept any valid decimal input
-            var cleaned = new string(stringValue.Where(c => 
-                char.IsDigit(c) || 
-                c.ToString() == culture.NumberFormat.NumberDecimalSeparator || 
+            var cleaned = new string(stringValue.Where(c =>
+                char.IsDigit(c) ||
+                c.ToString() == culture.NumberFormat.NumberDecimalSeparator ||
                 c == '-' ||
                 c == '.' ||
                 c == ',').ToArray());
-            
+
             // Normalize decimal separator
             cleaned = cleaned.Replace(",", culture.NumberFormat.NumberDecimalSeparator);
             cleaned = cleaned.Replace(".", culture.NumberFormat.NumberDecimalSeparator);
-            
+
             if (decimal.TryParse(cleaned, NumberStyles.Number, culture, out var result))
             {
                 return result;

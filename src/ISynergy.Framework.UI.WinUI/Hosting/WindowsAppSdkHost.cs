@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -45,7 +46,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
         if (_applicationLifetime is null)
         {
-            throw new ArgumentException(ISynergy.Framework.UI.Properties.Resources.WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported, nameof(applicationLifetime));
+            throw new ArgumentException(LanguageService.Default.GetString("WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported"), nameof(applicationLifetime));
         }
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _hostLifetime = hostLifetime ?? throw new ArgumentNullException(nameof(hostLifetime));
