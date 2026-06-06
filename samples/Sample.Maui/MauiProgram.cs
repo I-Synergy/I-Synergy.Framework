@@ -92,6 +92,7 @@ public static class MauiProgram
                 cultures.AddCulture("nl");
                 cultures.AddCulture("de");
                 cultures.AddCulture("fr");
+                cultures.AddCulture("ar");
             })
             .ConfigureOfflineSynchronization(builder =>
             {

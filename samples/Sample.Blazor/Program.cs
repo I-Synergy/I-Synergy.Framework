@@ -47,6 +47,7 @@ public static class Program
             cultures.AddCulture("nl");
             cultures.AddCulture("de");
             cultures.AddCulture("fr");
+            cultures.AddCulture("ar");
         });
 
         var app = builder

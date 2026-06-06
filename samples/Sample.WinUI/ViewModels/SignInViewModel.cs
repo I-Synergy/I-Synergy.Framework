@@ -1,16 +1,13 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Constants;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
-using Sample.Services;
 using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;

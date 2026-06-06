@@ -1,29 +1,88 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Globalization.Constants;
 using System.Globalization;
 
 namespace Sample.Models;
 
 public class LocalSettings : ObservableValidatedClass, ILocalSettings
 {
-    public string Language { get; set; } = GlobalizationConstants.DefaultCultureInfoName;
-    public bool IsFullscreen { get; set; }
-    public List<string> Users { get; set; } = new List<string>();
-    public string DefaultUser { get; set; } = string.Empty;
-    public string? RefreshToken { get; set; } = string.Empty;
-    public string Color { get; set; } = ThemeColors.Default;
-    public Themes Theme { get; set; } = Themes.Dark;
+    public string Language
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public bool IsFullscreen
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    public List<string> Users
+    {
+        get => GetValue<List<string>>();
+        set => SetValue(value);
+    }
+
+    public string DefaultUser
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public string? RefreshToken
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public string Color
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public Themes Theme
+    {
+        get => GetValue<Themes>();
+        set => SetValue(value);
+    }
+
     public bool IsLightThemeEnabled => Theme == Themes.Light;
-    public bool IsAutoLogin { get; set; }
-    public bool IsAdvanced { get; set; }
-    public int MigrationVersion { get; set; }
-    public bool ShowConsole { get; set; }
+
+    public bool IsAutoLogin
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    public bool IsAdvanced
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    public int MigrationVersion
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    public bool ShowConsole
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
 
     public LocalSettings()
     {
         Language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        Users = new List<string>();
+        Color = ThemeColors.Default;
+        Theme = Themes.Dark;
+        DefaultUser = string.Empty;
+        RefreshToken = string.Empty;
         MigrationVersion = 0;
     }
 }

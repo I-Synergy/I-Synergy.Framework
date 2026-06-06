@@ -15,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -62,7 +61,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         _fileService = fileService;
 
-        _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
+        _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _clockTimer.Tick += ClockTimerCallBack;
         _clockTimer.Start();
 

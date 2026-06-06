@@ -3,8 +3,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-
-#pragma warning disable S2583 // FluentUI icon constants may be null at runtime; null-coalescing guard is intentional
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -13,18 +11,13 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
 using Sample.Extensions;
-using Timer = System.Timers.Timer;
 
 namespace Sample.ViewModels;
 
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
-    private readonly Timer _clockTimer; // NOSONAR - field is needed to prevent the timer from being garbage collected
-
     /// <summary>
     /// Gets or sets the Version property value.
     /// </summary>
@@ -58,12 +51,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         ILogger<ShellViewModel> logger)
         : base(commonServices, dialogService, navigationService, settingsService, scopeFactory, logger)
     {
-        SetClock();
-
-        _clockTimer = new Timer(TimeSpan.FromSeconds(30));
-        _clockTimer.Elapsed += ClockTimerCallBack;
-        _clockTimer.Start();
-
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
 
@@ -150,14 +137,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
             await _navigationService.OpenBladeAsync(this, wizardVM);
         }
-    }
-
-    private void ClockTimerCallBack(object? sender, System.Timers.ElapsedEventArgs e) => SetClock();
-
-    private void SetClock()
-    {
-        if (ServiceLocator.Default.GetRequiredService<IContext>() is not null)
-            base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
     }
 
     /// <summary>

@@ -1,8 +1,10 @@
+@using ISynergy.Framework.Globalization.Constants
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Globalization
 @using Microsoft.AspNetCore.Components.Web
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@GlobalizationConstants.GetDirection(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)">
 
 <head>
     <meta charset="utf-8" />

@@ -74,6 +74,7 @@ public partial class App : Application
                 cultures.AddCulture("nl");
                 cultures.AddCulture("de");
                 cultures.AddCulture("fr");
+                cultures.AddCulture("ar");
             });
 
         return hostBuilder;
