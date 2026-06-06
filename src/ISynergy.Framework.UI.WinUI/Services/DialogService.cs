@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Globalization.Abstractions.Services;
@@ -7,7 +8,9 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Globalization;
 using Windows.Foundation;
 
 namespace ISynergy.Framework.UI.Services;
@@ -17,6 +20,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     private const string DefaultDialogButtonStyleKey = "DefaultDialogButtonStyle";
 
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILocalSettings _localSettings;
     private readonly ILanguageService _languageService;
     private readonly ILogger<DialogService> _logger;
 
@@ -27,10 +31,12 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="scopeFactory"></param>
+    /// <param name="localSettings"></param>
     /// <param name="languageService"></param>
     /// <param name="logger"></param>
     public DialogService(
         IServiceScopeFactory scopeFactory,
+        ILocalSettings localSettings,
         ILanguageService languageService,
         ILogger<DialogService> logger)
     {
@@ -38,6 +44,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
         _logger.LogTrace("DialogService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+        _localSettings = localSettings ?? throw new ArgumentNullException(nameof(localSettings));
         _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
     }
 
@@ -150,6 +157,9 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     _logger.LogWarning(ex, "Failed to set XamlRoot for dialog");
                 }
             }
+
+            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                dialog.FlowDirection = FlowDirection.RightToLeft;
 
             switch (buttons)
             {
@@ -398,6 +408,9 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                         _logger.LogWarning(ex, "Failed to set XamlRoot for dialog");
                     }
                 }
+
+                if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                    window.FlowDirection = FlowDirection.RightToLeft;
 
                 window.ViewModel = viewmodel;
 

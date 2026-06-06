@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -339,15 +340,17 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     {
         try
         {
+            var theme = _settingsService?.LocalSettings?.Theme ?? ISynergy.Framework.Core.Enumerations.Themes.Default;
+            var language = _settingsService?.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
+
             try
             {
-                var theme = _settingsService?.LocalSettings?.Theme ?? ISynergy.Framework.Core.Enumerations.Themes.Default;
-                _mainWindow = WindowHelper.CreateWindow(theme);
+                _mainWindow = WindowHelper.CreateWindow(theme, language);
             }
             catch (Exception ex)
             {
                 _logger?.LogWarning(ex, "Error creating main window; falling back to default theme");
-                _mainWindow = WindowHelper.CreateWindow(ISynergy.Framework.Core.Enumerations.Themes.Default);
+                _mainWindow = WindowHelper.CreateWindow(ISynergy.Framework.Core.Enumerations.Themes.Default, language);
             }
 
             _logger?.LogTrace("Loading custom resource dictionaries");
@@ -371,21 +374,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             }
 
             _logger?.LogTrace("Setting up theming.");
-
-            try
-            {
-                var colorStr = _settingsService?.LocalSettings?.Color;
-                var hexColor = !string.IsNullOrEmpty(colorStr)
-                    ? ColorHelper.GetColorFromHexString(colorStr)
-                    : ColorHelper.GetColorFromHexString("#ffb900");
-                this.SetApplicationColor(hexColor);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogWarning(ex, "Error setting application color; applying default theme");
-                try { this.SetApplicationColor(ColorHelper.GetColorFromHexString("#ffb900")); }
-                catch { /* best-effort */ }
-            }
+            _themeService.ApplyTheme();
 
             // LoadingView shows the spinner for all splash screen types, including None.
             // Its Loaded event fires SignalApplicationUIReady(); InitializeApplicationAsync
@@ -393,6 +382,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             // ApplicationLifecycleService raises ApplicationLoaded and navigation begins.
             _mainWindow.Content = CreateLoadingView();
             _mainWindow.Activate();
+
             InitializeApplication();
         }
         catch (Exception ex)

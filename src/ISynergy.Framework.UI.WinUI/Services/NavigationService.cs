@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Globalization;
 using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Services;
@@ -24,9 +26,10 @@ public class NavigationService : BaseNavigationService
     public NavigationService(
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
+        ILocalSettings localSettings,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
-        : base(exceptionHandlerService, commonServices, serviceScopeFactory, logger)
+        : base(exceptionHandlerService, commonServices, localSettings, serviceScopeFactory, logger)
     {
     }
 
@@ -93,6 +96,9 @@ public class NavigationService : BaseNavigationService
 
             if (parameter is not null && resolvedPage.ViewModel is not null)
                 resolvedPage.ViewModel.Parameter = parameter;
+
+            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                resolvedPage.FlowDirection = FlowDirection.RightToLeft;
 
             return resolvedPage;
         }

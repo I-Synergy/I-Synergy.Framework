@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -25,9 +26,10 @@ public class NavigationService : BaseNavigationService
     public NavigationService(
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
+        ILocalSettings localSettings,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
-        : base(exceptionHandlerService, commonServices, serviceScopeFactory, logger)
+        : base(exceptionHandlerService, commonServices, localSettings, serviceScopeFactory, logger)
     {
     }
 

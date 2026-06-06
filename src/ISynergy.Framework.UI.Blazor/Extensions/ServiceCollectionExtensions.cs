@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
@@ -72,6 +73,9 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
         services.TryAddScoped<ISettingsService, TSettingsService>();
+        services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
         services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
         services.TryAddSingleton<TCommonServices>();

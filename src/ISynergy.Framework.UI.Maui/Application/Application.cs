@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Globalization;
+using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Abstractions;
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
@@ -37,10 +39,15 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly ILogger<Application> _logger;
     protected readonly IMessengerService _messengerService;
 
+
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
     protected LoadingView? _loadingView;
     protected Microsoft.Maui.Controls.Window? _mainWindow;
+
+
+    private readonly IDispatcherTimer _clockTimer;
+    private readonly TitleBar _titleBar = new TitleBar();
 
     private Task? Initialize { get; set; }
     private int lastErrorMessage = 0;
@@ -54,6 +61,11 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         try
         {
             _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
+
+            _clockTimer = Dispatcher.CreateTimer();
+            _clockTimer.Interval = TimeSpan.FromSeconds(1);
+            _clockTimer.Tick += ClockTimerCallback;
+            _clockTimer.Start();
 
             // Get logger first for proper error tracking
             try
@@ -189,6 +201,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState? activationState)
     {
+        // Apply RTL flow direction from saved settings so every MAUI app
+        // gets correct layout from the very first frame — no per-app code needed.
+        var language = _settingsService?.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
+
         Microsoft.Maui.Controls.Page mainPage;
 
         switch (_splashScreenOptions.SplashScreenType)
@@ -202,12 +218,51 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 break;
         }
 
+        mainPage.ApplyFlowDirection(language);
+
         _mainWindow = new Microsoft.Maui.Controls.Window(mainPage);
+        _mainWindow.ApplyFlowDirection(language);
+
+        var isRightToLeft = CultureInfo.GetCultureInfo(language).TextInfo.IsRightToLeft;
+
+        if (isRightToLeft)
+            _titleBar.FlowDirection = FlowDirection.RightToLeft;
+        else
+            _titleBar.FlowDirection = FlowDirection.LeftToRight;
+
+        _titleBar.Icon = "icon.png";
+
+        SetClock();
+
+        _mainWindow.TitleBar = _titleBar;
         _mainWindow.Title = InfoService.Default.ProductName ?? string.Empty;
+
+#if WINDOWS
+        // Configure the native Windows title bar once the platform handler is attached.
+        _mainWindow.HandlerChanged += OnMainWindowHandlerChanged;
+
+        void OnMainWindowHandlerChanged(object? s, EventArgs e)
+        {
+            if (_mainWindow?.Handler?.PlatformView is Microsoft.UI.Xaml.Window win)
+            {
+                _mainWindow.HandlerChanged -= OnMainWindowHandlerChanged;
+                var appWindow = win.GetAppWindow();
+                appWindow?.ApplyFlowDirectionToTitleBar(language);
+            }
+        }
+#endif
 
         _themeService.ApplyTheme();
 
         return _mainWindow;
+    }
+
+    private void ClockTimerCallback(object? sender, object e) => SetClock();
+
+    private void SetClock()
+    {
+        if (ServiceLocator.Default.GetRequiredService<IContext>() is not null)
+            _titleBar.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
     }
 
     /// <summary>

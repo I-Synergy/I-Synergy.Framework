@@ -1,6 +1,6 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Utilities;
@@ -24,7 +24,7 @@ public class ThemeService : IThemeService
 
     private Themes _theme;
     private string _color;
-    private readonly ISettingsService _settingsService;
+    private readonly ILocalSettings _localSettings;
     private readonly ILogger<ThemeService> _logger;
 
     /// <summary>
@@ -36,27 +36,17 @@ public class ThemeService : IThemeService
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeService"/> class.
     /// </summary>
-    /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
+    /// <param name="localSettings">An application settings service that provides persisted theme and color values.</param>
     /// <param name="logger">A logger used for diagnostics and structured logging.</param>
     public ThemeService(
-        ISettingsService settingsService,
-        IMessengerService messengerService,
+        ILocalSettings localSettings,
         ILogger<ThemeService> logger)
     {
-        _settingsService = settingsService;
+        _localSettings = localSettings;
         _logger = logger;
 
-        _theme = settingsService.LocalSettings.Theme;
-        _color = settingsService.LocalSettings.Color;
-
-        messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
-    }
-
-    private void OnUserSignedIn(UserSignedInMessage message)
-    {
-        _theme = _settingsService.LocalSettings.Theme;
-        _color = _settingsService.LocalSettings.Color;
-        ApplyTheme();
+        _theme = localSettings.Theme;
+        _color = localSettings.Color;
     }
 
     /// <summary>

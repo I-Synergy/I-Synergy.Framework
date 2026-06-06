@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
@@ -81,6 +82,9 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
             services.TryAddSingleton<ISettingsService, TSettingsService>();
+            services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+            services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+            services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
             services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
             services.TryAddSingleton<IBusyService, BusyService>();

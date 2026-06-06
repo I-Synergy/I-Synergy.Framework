@@ -1,6 +1,8 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -48,18 +50,24 @@ public static class NavigationExtensions
             throw new InvalidNavigationException($"Cannot determine view type for ViewModel: {typeof(TViewModel).Name}.");
 
         var resolvedService = ServiceLocator.Default.GetRequiredService(viewType);
-        if (resolvedService is IView resolvedPage)
+
+        if (resolvedService is IView resolvedView)
         {
             if (viewModel is not null)
-                resolvedPage.ViewModel = viewModel;
+                resolvedView.ViewModel = viewModel;
 
-            if (resolvedPage.ViewModel is null)
-                resolvedPage.ViewModel = ServiceLocator.Default.GetRequiredService<TViewModel>();
+            if (resolvedView.ViewModel is null)
+                resolvedView.ViewModel = ServiceLocator.Default.GetRequiredService<TViewModel>();
 
-            if (parameter is not null && resolvedPage.ViewModel is not null)
-                resolvedPage.ViewModel.Parameter = parameter;
+            if (parameter is not null && resolvedView.ViewModel is not null)
+                resolvedView.ViewModel.Parameter = parameter;
 
-            return resolvedPage;
+            var language = ServiceLocator.Default.GetRequiredService<ILocalSettings>().Language;
+
+            if (resolvedView is VisualElement visualElement && CultureInfo.GetCultureInfo(language).TextInfo.IsRightToLeft)
+                visualElement.FlowDirection = FlowDirection.RightToLeft;
+
+            return resolvedView;
         }
 
         throw new InvalidNavigationException($"Cannot create or navigate to page: {view}.");

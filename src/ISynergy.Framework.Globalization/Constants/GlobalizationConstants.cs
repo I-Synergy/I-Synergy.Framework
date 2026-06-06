@@ -13,5 +13,4 @@ public class GlobalizationConstants
     /// The date time offset format
     /// </summary>
     public const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ssZ";
-
 }

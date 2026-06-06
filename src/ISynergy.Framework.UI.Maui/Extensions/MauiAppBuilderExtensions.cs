@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
@@ -207,6 +208,9 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
         appBuilder.Services.TryAddSingleton<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        appBuilder.Services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        appBuilder.Services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
         appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();

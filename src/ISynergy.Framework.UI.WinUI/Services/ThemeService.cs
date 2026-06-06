@@ -1,6 +1,5 @@
-using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
@@ -8,7 +7,6 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.UI;
-using WinRT.Interop;
 using ColorHelper = ISynergy.Framework.UI.Helpers.ColorHelper;
 
 namespace ISynergy.Framework.UI.Services;
@@ -28,13 +26,8 @@ public class ThemeService : IThemeService
     private Themes _theme;
     private string _color;
 
-    private readonly ISettingsService _settingsService;
+    private readonly ILocalSettings _localSettings;
     private readonly ILogger<ThemeService> _logger;
-
-    /// <summary>
-    /// The window
-    /// </summary>
-    private Microsoft.UI.Xaml.Window? _window;
 
     /// <summary>
     /// Gets a value indicating whether this instance is light theme enabled.
@@ -45,44 +38,17 @@ public class ThemeService : IThemeService
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeService"/> class.
     /// </summary>
-    /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
+    /// <param name="localSettings">An application settings service that provides persisted theme and color values.</param>
     /// <param name="logger">A logger used for diagnostics and structured logging.</param>
     public ThemeService(
-        ISettingsService settingsService,
-        IMessengerService messengerService,
+        ILocalSettings localSettings,
         ILogger<ThemeService> logger)
     {
-        _settingsService = settingsService;
+        _localSettings = localSettings;
         _logger = logger;
 
-        _theme = settingsService.LocalSettings.Theme;
-        _color = settingsService.LocalSettings.Color;
-
-        messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
-    }
-
-    private void OnUserSignedIn(UserSignedInMessage message)
-    {
-        _theme = _settingsService.LocalSettings.Theme;
-        _color = _settingsService.LocalSettings.Color;
-        ApplyTheme();
-    }
-
-    /// <summary>
-    /// Ininitialize main window for service.
-    /// </summary>
-    /// <param name="mainWindow">The main window.</param>
-    /// <exception cref="System.ArgumentException">MainWindow could not be set.</exception>
-    public void InitializeMainWindow(object mainWindow)
-    {
-        if (mainWindow is Microsoft.UI.Xaml.Window window)
-        {
-            _window = window;
-        }
-        else
-        {
-            throw new ArgumentException("MainWindow could not be set.");
-        }
+        _theme = localSettings.Theme;
+        _color = localSettings.Color;
     }
 
     /// <summary>
@@ -122,7 +88,7 @@ public class ThemeService : IThemeService
             }
 
             // Update platform-specific color resources
-            UpdatePlatformColors(application);
+            UpdatePlatformColors();
 
             _logger.LogInformation("Application style successfully applied");
         }
@@ -132,12 +98,12 @@ public class ThemeService : IThemeService
         }
     }
 
-    private void UpdatePlatformColors(Application application)
+    private void UpdatePlatformColors()
     {
-        if (_window is null)
+        if (Application.MainWindow is null)
             return;
 
-        if (_window.Content is FrameworkElement frameworkElement)
+        if (Application.MainWindow.Content is FrameworkElement frameworkElement)
         {
             switch (_theme)
             {
@@ -153,9 +119,7 @@ public class ThemeService : IThemeService
             }
         }
 
-#if WINDOWS
         SetTitlebar();
-#endif
     }
 
     /// <summary>
@@ -163,10 +127,9 @@ public class ThemeService : IThemeService
     /// </summary>
     private void SetTitlebar()
     {
-#if WINDOWS
-        var appWindow = GetAppWindowForCurrentWindow(_window);
+        var appWindow = WindowNativeExtensions.GetAppWindowForCurrentWindow(Application.MainWindow!);
 
-        var iconPath = Path.Combine(Environment.CurrentDirectory, "icon.ico");
+        var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon.ico");
 
         if (File.Exists(iconPath))
             appWindow.SetIcon(iconPath);
@@ -213,15 +176,5 @@ public class ThemeService : IThemeService
             appWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;
             appWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
         }
-#endif
     }
-
-#if WINDOWS && !HAS_UNO
-    private AppWindow GetAppWindowForCurrentWindow(Microsoft.UI.Xaml.Window window)
-    {
-        var hWnd = WindowNative.GetWindowHandle(window);
-        var wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-        return AppWindow.GetFromWindowId(wndId);
-    }
-#endif
 }

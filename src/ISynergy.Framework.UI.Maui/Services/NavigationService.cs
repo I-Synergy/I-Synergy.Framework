@@ -1,8 +1,10 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -10,6 +12,7 @@ public class NavigationService : INavigationService
 {
     private const string DefaultPageNotAvailable = "Main page is not available.";
 
+    private readonly ILocalSettings _localSettings;
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILogger _logger;
     private const bool Animated = true;
@@ -19,15 +22,18 @@ public class NavigationService : INavigationService
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
+    /// <param name="localSettings"></param>
     /// <param name="exceptionHandlerService"></param>
     /// <param name="logger"></param>
     public NavigationService(
+        ILocalSettings localSettings,
         IExceptionHandlerService exceptionHandlerService,
         ILogger<NavigationService> logger)
     {
         _logger = logger;
         _logger.LogTrace("NavigationService instance created with ID: {InstanceId}", Guid.NewGuid());
 
+        _localSettings = localSettings ?? throw new ArgumentNullException(nameof(localSettings));
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
     }
 
@@ -72,6 +78,9 @@ public class NavigationService : INavigationService
     {
         if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is { } view && view is Page page)
         {
+            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                page.FlowDirection = FlowDirection.RightToLeft;
+
             var mainPage = GetMainPage();
 
             if (mainPage is null)
