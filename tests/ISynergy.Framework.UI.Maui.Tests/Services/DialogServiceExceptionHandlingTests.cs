@@ -29,6 +29,7 @@ public class DialogServiceExceptionHandlingTests
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockLanguageService = new Mock<ILanguageService>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        _mockLocalSettings = new Mock<ILocalSettings>();
         _mockLogger = new Mock<ILogger<DialogService>>();
 
         _mockLanguageService
