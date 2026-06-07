@@ -131,6 +131,9 @@ public class ThemeService : IThemeService
             UpdateOrAddResource(application, "SystemAccentColorLight2", Application.AccentColor);
             UpdateOrAddResource(application, "SystemAccentColorLight3", Application.AccentColor);
 
+            // Register WinUI text control focus border overrides.
+            ISynergy.Framework.UI.Maui.Platforms.Windows.Extensions.ControlAccentStyler.Register();
+
             // Update Windows title bar colors
             UpdateWindowsTitleBar();
 #endif
