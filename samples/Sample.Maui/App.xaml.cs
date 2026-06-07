@@ -155,6 +155,8 @@ public partial class App : Application
 
                 CultureInfo.DefaultThreadCurrentCulture = culture;
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
             }
 
             _logger?.LogTrace("Authentication succeeded event received");

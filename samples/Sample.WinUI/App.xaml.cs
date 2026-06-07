@@ -159,6 +159,8 @@ public sealed partial class App : Application
 
                         CultureInfo.DefaultThreadCurrentCulture = culture;
                         CultureInfo.DefaultThreadCurrentUICulture = culture;
+                        CultureInfo.CurrentCulture = culture;
+                        CultureInfo.CurrentUICulture = culture;
                     }
                 }
                 catch (Exception ex)
