@@ -138,7 +138,7 @@ public partial class App : Application
             if (CultureInfo.DefaultThreadCurrentCulture != null &&
                     CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
             {
-                culture.NumberFormat.CurrencySymbol = "€";
+                culture.NumberFormat.CurrencySymbol = "\u20AC";
 
                 culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
                 culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
