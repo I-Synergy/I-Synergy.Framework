@@ -135,10 +135,16 @@ public partial class App : Application
     {
         try
         {
-            if (CultureInfo.DefaultThreadCurrentCulture != null &&
-                    CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
+            // Use the persisted language or the current default; fall back to
+            // the system culture to ensure CurrencySymbol is always applied.
+            var baseCulture = CultureInfo.DefaultThreadCurrentCulture
+                ?? (!string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
+                    ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings!.Language)
+                    : CultureInfo.CurrentCulture);
+
+            if (baseCulture.Clone() is CultureInfo culture)
             {
-                culture.NumberFormat.CurrencySymbol = "\u20AC";
+                culture.NumberFormat.CurrencySymbol = "€";
 
                 culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
                 culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;

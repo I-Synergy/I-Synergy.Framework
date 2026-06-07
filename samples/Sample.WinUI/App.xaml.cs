@@ -135,23 +135,31 @@ public sealed partial class App : Application
             _logger?.LogTrace("Authentication succeeded event received");
             _logger?.LogTrace("Setting culture");
 
-            if (_settingsService?.GlobalSettings is not null &&
-                CultureInfo.DefaultThreadCurrentCulture != null &&
-                CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
+            if (_settingsService?.GlobalSettings is not null)
             {
                 try
                 {
-                    culture.NumberFormat.CurrencySymbol = "€";
+                    // Use the persisted language or the current default; fall back to
+                    // the system culture to ensure CurrencySymbol is always applied.
+                    var baseCulture = CultureInfo.DefaultThreadCurrentCulture
+                        ?? (!string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
+                            ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings!.Language)
+                            : CultureInfo.CurrentCulture);
 
-                    culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
-                    culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
+                    if (baseCulture.Clone() is CultureInfo culture)
+                    {
+                        culture.NumberFormat.CurrencySymbol = "€";
 
-                    culture.NumberFormat.CurrencyNegativePattern = 1;
-                    culture.NumberFormat.NumberNegativePattern = 1;
-                    culture.NumberFormat.PercentNegativePattern = 1;
+                        culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
+                        culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
 
-                    CultureInfo.DefaultThreadCurrentCulture = culture;
-                    CultureInfo.DefaultThreadCurrentUICulture = culture;
+                        culture.NumberFormat.CurrencyNegativePattern = 1;
+                        culture.NumberFormat.NumberNegativePattern = 1;
+                        culture.NumberFormat.PercentNegativePattern = 1;
+
+                        CultureInfo.DefaultThreadCurrentCulture = culture;
+                        CultureInfo.DefaultThreadCurrentUICulture = culture;
+                    }
                 }
                 catch (Exception ex)
                 {
