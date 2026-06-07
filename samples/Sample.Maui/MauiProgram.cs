@@ -54,7 +54,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkitMediaElement(false)
-            .ConfigureFonts(fonts =>
+            .UseFonts(fonts =>
             {
                 fonts.AddFont("FontAwesomeRegular.otf", "fontawesome");
                 fonts.AddFont("FluentSystemIconsRegular.ttf", FluentUI.FontFamily);
