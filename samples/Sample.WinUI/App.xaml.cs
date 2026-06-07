@@ -265,10 +265,6 @@ public sealed partial class App : Application
         }
     }
 
-
-
-
-
     protected override void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
     {
         // Add specific handling for App-level exceptions if needed

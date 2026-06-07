@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <c:Window
-    x:Class="ISynergy.Framework.UI.Windows.SelectionWindow"
+    x:Class="ISynergy.Framework.UI.Windows.MultipleSelectionWindow"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
-    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     Title="{Binding Title}">
-
-    <c:Window.Resources>
-        <converters:SelectionModeConverter x:Key="SelectionModeConverter" />
-    </c:Window.Resources>
 
     <ContentView ControlTemplate="{StaticResource DefaultSelectionDialogTemplate}" WidthRequest="{OnPlatform WinUI=600, Default=400}">
         <Grid>
@@ -48,7 +43,7 @@
                 Grid.ColumnSpan="2"
                 ItemsSource="{Binding Items}"
                 MinimumHeightRequest="400"
-                SelectionMode="{Binding SelectionMode, Converter={StaticResource SelectionModeConverter}}">
+                SelectionMode="Multiple">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

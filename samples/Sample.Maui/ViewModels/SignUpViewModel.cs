@@ -12,7 +12,6 @@ using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
@@ -206,12 +205,11 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync()
     {
-        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<Module>>();
-        selectionVM.SetSelectionMode(SelectionModes.Multiple);
+        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelMultipleSelectionDialog<Module>>();
         selectionVM.SetItems(Modules);
         selectionVM.SetSelectedItems(SelectedModules);
         selectionVM.Submitted += SelectionVM_Submitted;
-        return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
+        return _dialogService.ShowDialogAsync(typeof(IMultipleSelectionWindow), selectionVM);
     }
 
     /// <summary>
@@ -221,7 +219,7 @@ public class SignUpViewModel : ViewModel
     /// <param name="e">The e.</param>
     private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<Module>> e)
     {
-        if (sender is ViewModelSelectionDialog<Module> vm)
+        if (sender is ViewModelMultipleSelectionDialog<Module> vm)
             vm.Submitted -= SelectionVM_Submitted;
 
         List<Module> selectedItems = [];

@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -9,11 +8,11 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 public class ViewModelSelectionTests
 {
     private Mock<ICommonServices> _mockCommonServices;
-    private Mock<ILogger<ViewModelSelectionDialog<TestEntity>>> _mockLogger;
+    private Mock<ILogger<ViewModelSingleSelectionDialog<TestEntity>>> _mockLogger;
 
     public ViewModelSelectionTests()
     {
-        _mockLogger = new Mock<ILogger<ViewModelSelectionDialog<TestEntity>>>();
+        _mockLogger = new Mock<ILogger<ViewModelSingleSelectionDialog<TestEntity>>>();
 
         _mockCommonServices = new Mock<ICommonServices>();
         var mockMessengerService = new Mock<IMessengerService>();
@@ -43,17 +42,14 @@ public class ViewModelSelectionTests
         var selectedItems = new List<TestEntity> { items[0] };
 
         // Act
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
-        viewModel.SetSelectionMode(SelectionModes.Single);
+        var viewModel = new ViewModelSingleSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetItems(items);
-        viewModel.SetSelectedItems(selectedItems);
+        viewModel.SetSelectedItem(selectedItems[0]);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
         Assert.AreEqual(2, viewModel.Items.Count);
-        Assert.IsNotNull(viewModel.SelectedItems);
-        Assert.AreEqual(1, viewModel.SelectedItems.Count);
-        Assert.AreEqual(SelectionModes.Single, viewModel.SelectionMode);
+        Assert.IsNotNull(viewModel.SelectedItem);
     }
 
     [TestMethod]
@@ -67,10 +63,9 @@ public class ViewModelSelectionTests
                 new TestEntity { Id = 3, Name = "Other" }
             };
 
-        var viewModel = new ViewModelSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
-        viewModel.SetSelectionMode(SelectionModes.Single);
+        var viewModel = new ViewModelSingleSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetItems(items);
-        viewModel.SetSelectedItems(new List<TestEntity>());
+        viewModel.SetSelectedItem(null!);
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("Test");

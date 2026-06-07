@@ -65,6 +65,14 @@
 		</Using>
 	</ItemGroup>
 	<ItemGroup>
+	  <Compile Update="Windows\MultipleSelectionWindow.xaml.cs">
+	    <DependentUpon>MultipleSelectionWindow.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Windows\SingleSelectionWindow.xaml.cs">
+	    <DependentUpon>SingleSelectionWindow.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
 		<MauiXaml Update="Controls\ErrorPresenter\ErrorPresenter.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -188,7 +196,10 @@
 		<MauiXaml Update="Windows\NoteWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Windows\SelectionWindow.xaml">
+		<MauiXaml Update="Windows\SingleSelectionWindow.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Windows\MultipleSelectionWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>

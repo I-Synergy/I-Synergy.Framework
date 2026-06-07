@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
@@ -76,7 +75,7 @@ public abstract class ViewModelSelectable<TModel> : ViewModel
     /// <summary>
     /// Handles property changes within SelectedItem and propagates them.
     /// </summary>
-    private void SelectedItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    protected void SelectedItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         _logger.LogTrace("SelectedItem property '{PropertyName}' changed in {ViewModelName}", e.PropertyName, GetType().Name);
         RaisePropertyChanged(nameof(SelectedItem));

@@ -144,19 +144,24 @@ public class NavigationService : BaseNavigationService
 
     /// <summary>
     /// Gets a navigation blade for the specified ViewModel.
-    /// WinUI-specific: checks for <see cref="ISelectionViewModel"/> and resolves a <see cref="SelectionView"/> when applicable.
+    /// WinUI-specific: checks for selection ViewModel interfaces and resolves the matching view.
     /// </summary>
     protected override async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
         var viewType = default(Type);
-        var view = viewModel.GetRelatedView();
 
-        if (viewModel is ISelectionViewModel)
-            viewType = typeof(SelectionView);
+        if (viewModel is ISingleSelectionViewModel)
+            viewType = typeof(SingleSelectionView);
+        else if (viewModel is IMultipleSelectionViewModel)
+            viewType = typeof(MultipleSelectionView);
         else
+        {
+            var view = viewModel.GetRelatedView();
             viewType = view.GetRelatedViewType();
+        }
 
         using var scope = _serviceScopeFactory.CreateScope();
+
         if (viewType is not null && scope.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
         {
             resolvedPage.ViewModel = viewModel;
@@ -177,6 +182,6 @@ public class NavigationService : BaseNavigationService
             return resolvedPage;
         }
 
-        throw new InvalidOperationException($"Instance create or navigate to page: {view}.");
+        throw new InvalidOperationException($"Instance create or navigate to page: {viewModel.GetRelatedView()}.");
     }
 }

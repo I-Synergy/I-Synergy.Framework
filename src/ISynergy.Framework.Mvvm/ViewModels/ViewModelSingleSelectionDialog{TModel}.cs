@@ -1,10 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -12,35 +10,16 @@ using System.Collections.ObjectModel;
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
 /// <summary>
-/// Class ViewModelDialogSelection.
-/// Implements the <see name="ViewModelDialog{List{object}}" />
+/// A selection dialog ViewModel hardcoded to single-selection mode.
+/// The user can pick exactly one item.
 /// </summary>
-/// <seealso name="ViewModelDialog{List{object}}" />
-public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, ISelectionViewModel
+/// <typeparam name="TModel">The model type.</typeparam>
+public class ViewModelSingleSelectionDialog<TModel> : ViewModelDialog<TModel>, ISingleSelectionViewModel
 {
-    /// <summary>
-    /// Gets the title.
-    /// </summary>
-    /// <value>The title.</value>
+    /// <inheritdoc/>
     public override string Title { get { return _commonServices.LanguageService.GetString("Selection"); } }
 
-    /// <summary>
-    /// Gets or sets the raw items.
-    /// </summary>
-    /// <value>The raw items.</value>
-    [IgnoreValidation]
     private List<TModel> RawItems { get; set; }
-
-    /// <summary>
-    /// Gets or sets the SelectionMode property value.
-    /// </summary>
-    /// <value>The selection mode.</value>
-    public SelectionModes SelectionMode
-    {
-        get { return GetValue<SelectionModes>(); }
-        set { SetValue(value); }
-    }
-
 
     /// <summary>
     /// Gets or sets the CanSubmit property value.
@@ -51,25 +30,16 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
         set => SetValue(value);
     }
 
-    public virtual void SetSelectionMode(SelectionModes selectionMode)
-    {
-        SelectionMode = selectionMode;
-    }
-
     /// <summary>
-    /// Gets or sets the Item property value.
+    /// Gets or sets the items available for selection.
     /// </summary>
-    /// <value>The items.</value>
     public ObservableCollection<TModel>? Items
     {
         get { return GetValue<ObservableCollection<TModel>?>(); }
         set { SetValue(value); }
     }
 
-    /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="e">The entity.</param>
+    /// <inheritdoc />
     public virtual void SetItems(IEnumerable<object> e)
     {
         RawItems = new List<TModel>();
@@ -82,29 +52,11 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
         }
     }
 
-    /// <summary>
-    /// Gets or sets the SelectedItems property value.
-    /// </summary>
-    public List<object>? SelectedItems
-    {
-        get => GetValue<List<object>?>();
-        set => SetValue(value);
-    }
+    /// <inheritdoc />
+    object? ISingleSelectionViewModel.SelectedItem => SelectedItem;
 
-
-    /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="e">The entity.</param>
-    public virtual void SetSelectedItems(IEnumerable<object> e)
-    {
-        SelectedItems = new List<object>();
-
-        foreach (var item in e.EnsureNotNull())
-        {
-            SelectedItems.Add(item!);
-        }
-    }
+    /// <inheritdoc />
+    void ISingleSelectionViewModel.SetSelectedItem(object? item) => SetSelectedItem((TModel?)item);
 
     /// <summary>
     /// Gets or sets the Query property value.
@@ -116,33 +68,27 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
     }
 
     public AsyncRelayCommand<string> RefreshCommand { get; private set; }
-    public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
+    public AsyncRelayCommand<object> SelectCommand { get; private set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
+    /// Initializes a new instance of the <see cref="ViewModelSingleSelectionDialog{TEntity}"/> class.
     /// </summary>
-    /// <param name="commonServices">The common services.</param>
-    /// <param name="logger"></param>
-    public ViewModelSelectionDialog(
+    public ViewModelSingleSelectionDialog(
         ICommonServices commonServices,
-        ILogger<ViewModelSelectionDialog<TModel>> logger)
+        ILogger<ViewModelSingleSelectionDialog<TModel>> logger)
         : base(commonServices, logger)
     {
         RawItems = new List<TModel>();
         Items = new ObservableCollection<TModel>();
-        SelectedItems = new List<object>();
 
         Validator = new Action<IObservableValidatedClass>(arg =>
         {
-            if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
-
-            if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
+            if (SelectedItem == null)
+                AddValidationError(nameof(SelectedItem), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
         RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
-        SelectCommand = new AsyncRelayCommand<List<object>>((e) => SelectAsync(e), (s) => s is not null && s.Count > 0);
+        SelectCommand = new AsyncRelayCommand<object>((e) => SelectAsync(e), (s) => s is not null);
 
         IsInitialized = true;
     }
@@ -150,7 +96,6 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
     /// <summary>
     /// Queries the items.
     /// </summary>
-    /// <param name="query">Query parameter.</param>
     protected virtual Task QueryItemsAsync(string query)
     {
         if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
@@ -177,22 +122,13 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
     }
 
     /// <summary>
-    /// Submits selection
+    /// Submits the selected item.
     /// </summary>
-    /// <param name="e"></param>
-    /// <returns></returns>
-    private async Task SelectAsync(List<object> e)
+    private async Task SelectAsync(object e)
     {
         if (Validate())
         {
-            var result = new List<TModel>();
-
-            foreach (TModel item in SelectedItems.EnsureNotNull())
-            {
-                result.Add(item);
-            }
-
-            OnSubmitted(new SubmitEventArgs<List<TModel>>(result));
+            OnSubmitted(new SubmitEventArgs<TModel>((TModel)e));
             await CloseAsync();
         }
     }
@@ -201,15 +137,9 @@ public class ViewModelSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, I
     {
         try
         {
-            // Set flag to prevent property change notifications during cleanup
             IsInCleanup = true;
 
-            // Clear collections
             Items = null;
-            SelectedItems = null;
-
-            // Reset selection state
-            SelectionMode = SelectionModes.Single;
 
             base.Cleanup(isClosing);
         }

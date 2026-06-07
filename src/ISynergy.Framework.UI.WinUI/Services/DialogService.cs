@@ -568,6 +568,14 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                 _logger.LogError(ex, "Error showing dialog");
                 return ContentDialogResult.None;
             }
+            finally
+            {
+                // Clear the active dialog reference after the dialog has been dismissed.
+                // ContentDialog.Hide() does NOT raise the Closed event, so we must
+                // manually clear this to prevent the next dialog from trying to close
+                // an already-dismissed dialog and hitting the 500ms timeout.
+                _activeDialog = null;
+            }
         }
         finally
         {

@@ -1,16 +1,15 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
-using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.UI.Windows;
 
 [XamlCompilation(XamlCompilationOptions.Skip)]
-public partial class SelectionWindow : ISelectionWindow
+public partial class MultipleSelectionWindow : IMultipleSelectionWindow
 {
     private bool _isDisposed = false;
 
-    public SelectionWindow()
+    public MultipleSelectionWindow()
     {
         InitializeComponent();
         BindingContextChanged += SelectionWindow_BindingContextChanged;
@@ -19,40 +18,23 @@ public partial class SelectionWindow : ISelectionWindow
 
     private void SelectionWindow_BindingContextChanged(object? sender, EventArgs e)
     {
-        if (ViewModel is ISelectionViewModel viewModel)
+        if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
-            // Only initialize DataSummary selection if ViewModel has pre-selected items
-            // Don't clear existing selections when BindingContext changes
-            if (viewModel.SelectedItems is not null && viewModel.SelectedItems.Count > 0 &&
-                viewModel.SelectionMode == SelectionModes.Single && viewModel.SelectedItems.Count == 1)
-            {
-                DataSummary.SelectedItem = viewModel.SelectedItems.Single();
-            }
-            else if (viewModel.SelectedItems is not null && viewModel.SelectedItems.Count > 0 &&
-                     viewModel.SelectionMode == SelectionModes.Multiple)
-            {
+            // Multiple mode: pre-select all items
+            if (viewModel.SelectedItems is not null && viewModel.SelectedItems.Count > 0)
                 DataSummary.SelectedItems = viewModel.SelectedItems.EnsureNotNull().ToList<object>();
-            }
         }
     }
 
     private void DataSummary_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel is ISelectionViewModel viewModel)
+        if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
             viewModel.SelectedItems?.Clear();
 
-            if (viewModel.SelectionMode == SelectionModes.Single)
+            foreach (var item in DataSummary.SelectedItems.EnsureNotNull().Where(item => item is not null)) // NOSONAR
             {
-                if (DataSummary.SelectedItem is not null)
-                    viewModel.SelectedItems?.Add(DataSummary.SelectedItem);
-            }
-            else
-            {
-                foreach (var item in DataSummary.SelectedItems.EnsureNotNull().Where(item => item is not null)) // NOSONAR
-                {
-                    viewModel.SelectedItems?.Add(item);
-                }
+                viewModel.SelectedItems?.Add(item);
             }
 
             // Force UI refresh by triggering NotifyCanExecuteChanged

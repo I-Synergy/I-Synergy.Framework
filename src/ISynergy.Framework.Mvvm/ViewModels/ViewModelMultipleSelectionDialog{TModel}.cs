@@ -4,7 +4,6 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -13,10 +12,10 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 
 /// <summary>
 /// Class ViewModelDialogSelection.
-/// Implements the <see name="ViewModelDialog{List{TEntity}}" />
+/// Implements the <see name="ViewModelDialog{List{object}}" />
 /// </summary>
-/// <seealso name="ViewModelDialog{List{TEntity}}" />
-public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISelectionViewModel
+/// <seealso name="ViewModelDialog{List{object}}" />
+public class ViewModelMultipleSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, IMultipleSelectionViewModel
 {
     /// <summary>
     /// Gets the title.
@@ -32,18 +31,12 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
     private List<TModel> RawItems { get; set; }
 
     /// <summary>
-    /// Gets or sets the SelectionMode property value.
+    /// Gets or sets the CanSubmit property value.
     /// </summary>
-    /// <value>The selection mode.</value>
-    public SelectionModes SelectionMode
+    public bool CanSubmit
     {
-        get { return GetValue<SelectionModes>(); }
-        set { SetValue(value); }
-    }
-
-    public virtual void SetSelectionMode(SelectionModes selectionMode)
-    {
-        SelectionMode = selectionMode;
+        get => GetValue<bool>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -56,6 +49,10 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
         set { SetValue(value); }
     }
 
+    /// <summary>
+    /// Sets the selected item.
+    /// </summary>
+    /// <param name="e">The entity.</param>
     public virtual void SetItems(IEnumerable<object> e)
     {
         RawItems = new List<TModel>();
@@ -77,6 +74,11 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
         set => SetValue(value);
     }
 
+
+    /// <summary>
+    /// Sets the selected item.
+    /// </summary>
+    /// <param name="e">The entity.</param>
     public virtual void SetSelectedItems(IEnumerable<object> e)
     {
         SelectedItems = new List<object>();
@@ -87,31 +89,35 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
         }
     }
 
+    /// <summary>
+    /// Gets or sets the Query property value.
+    /// </summary>
+    public string Query
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
     public AsyncRelayCommand<string> RefreshCommand { get; private set; }
     public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ViewModelSelectionDialog{TEntity}"/> class.
+    /// Initializes a new instance of the <see cref="ViewModelMultipleSelectionDialog{TEntity}"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    public ViewModelSelectionBlade(
+    public ViewModelMultipleSelectionDialog(
         ICommonServices commonServices,
-        ILogger<ViewModelSelectionBlade<TModel>> logger)
+        ILogger<ViewModelMultipleSelectionDialog<TModel>> logger)
         : base(commonServices, logger)
     {
         RawItems = new List<TModel>();
         Items = new ObservableCollection<TModel>();
         SelectedItems = new List<object>();
 
-        SelectionMode = SelectionModes.Single;
-
         Validator = new Action<IObservableValidatedClass>(arg =>
         {
-            if (SelectionMode == SelectionModes.Single && SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
-
-            if (SelectionMode == SelectionModes.Multiple && SelectedItems.Count < 1)
+            if (SelectedItems.Count < 1)
                 AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
@@ -120,8 +126,6 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
 
         IsInitialized = true;
     }
-
-
 
     /// <summary>
     /// Queries the items.
@@ -184,9 +188,6 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
             Items = null;
             SelectedItems = null;
 
-            // Reset selection state
-            SelectionMode = SelectionModes.Single;
-
             base.Cleanup(isClosing);
         }
         finally
@@ -199,13 +200,6 @@ public class ViewModelSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, ISe
     {
         if (disposing)
         {
-            // Make sure cleanup is done before disposal
-            if (!IsInCleanup)
-            {
-                Cleanup();
-            }
-
-            // Dispose and clear commands
             RefreshCommand?.Dispose();
             SelectCommand?.Dispose();
 
