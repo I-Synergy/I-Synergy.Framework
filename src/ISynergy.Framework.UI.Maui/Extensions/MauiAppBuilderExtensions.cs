@@ -227,10 +227,6 @@ public static class MauiAppBuilderExtensions
 
         action.Invoke(appBuilder);
 
-#if WINDOWS
-        ConfigureWindowsTextCursorColor();
-#endif
-
         return appBuilder;
     }
 
@@ -296,45 +292,4 @@ public static class MauiAppBuilderExtensions
     {
         services.TryAddEnumerable(ServiceDescriptor.Transient<IMauiInitializeService, MauiInitializerService>());
     }
-
-#if WINDOWS
-    /// <summary>
-    /// Configures the text cursor (caret) color for Entry and Editor controls on Windows
-    /// to use the application accent color instead of the system default blue.
-    /// </summary>
-    private static void ConfigureWindowsTextCursorColor()
-    {
-        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("AccentCursorColor", (handler, view) =>
-        {
-            if (Microsoft.Maui.Controls.Application.AccentColor is Color accentColor
-                && handler.PlatformView is Microsoft.UI.Xaml.Controls.TextBox textBox)
-            {
-                var winColor = global::Windows.UI.Color.FromArgb(
-                    (byte)(accentColor.Alpha * 255),
-                    (byte)(accentColor.Red * 255),
-                    (byte)(accentColor.Green * 255),
-                    (byte)(accentColor.Blue * 255));
-                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(winColor);
-                textBox.Resources["TextControlCursorColor"] = brush;
-                textBox.Resources["TextControlSelectionHighlightColor"] = brush;
-            }
-        });
-
-        Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("AccentCursorColor", (handler, view) =>
-        {
-            if (Microsoft.Maui.Controls.Application.AccentColor is Color accentColor
-                && handler.PlatformView is Microsoft.UI.Xaml.Controls.TextBox textBox)
-            {
-                var winColor = global::Windows.UI.Color.FromArgb(
-                    (byte)(accentColor.Alpha * 255),
-                    (byte)(accentColor.Red * 255),
-                    (byte)(accentColor.Green * 255),
-                    (byte)(accentColor.Blue * 255));
-                var brush = new Microsoft.UI.Xaml.Media.SolidColorBrush(winColor);
-                textBox.Resources["TextControlCursorColor"] = brush;
-                textBox.Resources["TextControlSelectionHighlightColor"] = brush;
-            }
-        });
-    }
-#endif
 }
