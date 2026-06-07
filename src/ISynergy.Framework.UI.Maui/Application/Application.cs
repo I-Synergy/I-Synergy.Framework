@@ -238,7 +238,8 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _mainWindow.Title = InfoService.Default.ProductName ?? string.Empty;
 
 #if WINDOWS
-        // Configure the native Windows title bar once the platform handler is attached.
+        // Defer theme application until the native WinUI window handler is
+        // attached, so title bar colors can be set from the very first frame.
         _mainWindow.HandlerChanged += OnMainWindowHandlerChanged;
 
         void OnMainWindowHandlerChanged(object? s, EventArgs e)
@@ -248,11 +249,12 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _mainWindow.HandlerChanged -= OnMainWindowHandlerChanged;
                 var appWindow = win.GetAppWindow();
                 appWindow?.ApplyFlowDirectionToTitleBar(language);
+                _themeService.ApplyTheme();
             }
         }
-#endif
-
+#else
         _themeService.ApplyTheme();
+#endif
 
         return _mainWindow;
     }

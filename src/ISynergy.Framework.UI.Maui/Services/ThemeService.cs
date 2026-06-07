@@ -21,6 +21,8 @@ public class ThemeService : IThemeService
     private const string Primary = nameof(Primary);
     private const string Secondary = nameof(Secondary);
     private const string Tertiary = nameof(Tertiary);
+    private const string TintedGray000 = nameof(TintedGray000);
+    private const string TintedGray950 = nameof(TintedGray950);
 
     private Themes _theme;
     private string _color;
@@ -152,33 +154,49 @@ public class ThemeService : IThemeService
                 return;
             }
 
-            var primaryColor = Application.AccentColor;
+            // Use the page background color (TintedGray000 light / TintedGray950 dark)
+            // so the title bar blends seamlessly with the page content.
+            var backgroundResourceKey = IsLightThemeEnabled ? TintedGray000 : TintedGray950;
+            var pageBackgroundColor = ResourceUtility.FindResource<Color>(backgroundResourceKey);
 
-            if (primaryColor is not null)
+            if (pageBackgroundColor is not null)
             {
                 // Convert MAUI Color to Windows.UI.Color (use global:: to avoid namespace conflict)
                 var winColor = global::Windows.UI.Color.FromArgb(
-                    (byte)(primaryColor.Alpha * 255),
-                    (byte)(primaryColor.Red * 255),
-                    (byte)(primaryColor.Green * 255),
-                    (byte)(primaryColor.Blue * 255)
+                    (byte)(pageBackgroundColor.Alpha * 255),
+                    (byte)(pageBackgroundColor.Red * 255),
+                    (byte)(pageBackgroundColor.Green * 255),
+                    (byte)(pageBackgroundColor.Blue * 255)
                  );
 
                 var titleBar = window.AppWindow.TitleBar;
 
-                // Set background colors
+                // Set native title bar button colors to match page background
                 titleBar.ButtonBackgroundColor = winColor;
                 titleBar.ButtonInactiveBackgroundColor = winColor;
                 titleBar.BackgroundColor = winColor;
 
-                // Set text colors to white for contrast
-                var whiteColor = global::Windows.UI.Color.FromArgb(255, 255, 255, 255);
-                titleBar.ForegroundColor = whiteColor;
-                titleBar.ButtonForegroundColor = whiteColor;
-                titleBar.ButtonHoverForegroundColor = whiteColor;
-                titleBar.ButtonPressedForegroundColor = whiteColor;
+                // Set text/foreground colors based on theme for contrast
+                var foregroundColor = IsLightThemeEnabled
+                    ? global::Windows.UI.Color.FromArgb(255, 0, 0, 0)       // Black text on light background
+                    : global::Windows.UI.Color.FromArgb(255, 255, 255, 255); // White text on dark background
 
-                _logger.LogTrace("Windows title bar colors updated to accent color");
+                titleBar.ForegroundColor = foregroundColor;
+                titleBar.ButtonForegroundColor = foregroundColor;
+                titleBar.ButtonHoverForegroundColor = foregroundColor;
+                titleBar.ButtonPressedForegroundColor = foregroundColor;
+
+                // Also set the MAUI TitleBar colors, which renders
+                // the title bar area when Window.TitleBar is assigned.
+                if (Microsoft.Maui.Controls.Application.Current?.Windows?.FirstOrDefault() is Microsoft.Maui.Controls.Window mauiWindow
+                    && mauiWindow.TitleBar is Microsoft.Maui.Controls.TitleBar mauiTitleBar)
+                {
+                    mauiTitleBar.BackgroundColor = pageBackgroundColor;
+                    mauiTitleBar.ForegroundColor = IsLightThemeEnabled ? Colors.Black : Colors.White;
+                }
+
+                _logger.LogTrace("Windows title bar colors updated to page background ({Theme})",
+                    IsLightThemeEnabled ? "Light" : "Dark");
             }
         }
         catch (Exception ex)
