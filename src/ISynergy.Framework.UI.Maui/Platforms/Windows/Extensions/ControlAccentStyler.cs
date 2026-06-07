@@ -6,14 +6,29 @@ using Microsoft.UI.Xaml.Media;
 namespace ISynergy.Framework.UI.Maui.Platforms.Windows.Extensions;
 
 /// <summary>
-/// Registers handler mappings that override the WinUI focus border color on
-/// text input controls (Entry, Editor, Picker, SearchBar, DatePicker, TimePicker)
-/// to use the MAUI <c>Application.AccentColor</c> instead of the OS system accent.
-/// Only the bottom border is styled (2px accent); top/left/right thickness is zeroed.
+/// Overrides the WinUI system accent on native controls so focus borders and
+/// selection indicators use MAUI's <c>Application.AccentColor</c>.
 /// </summary>
 public static class ControlAccentStyler
 {
     private static bool _registered;
+
+    private static readonly string[] GlobalAccentKeys =
+    [
+        // CollectionView selection indicators
+        "ListViewItemSelectionIndicatorBrush",
+        "ListViewItemSelectionIndicatorPointerOverBrush",
+        "ListViewItemSelectionIndicatorPressedBrush",
+        "ListViewItemCheckBoxSelectedBrush",
+        "ListViewItemCheckBoxSelectedPointerOverBrush",
+        "ListViewItemCheckBoxSelectedPressedBrush",
+        "GridViewItemSelectedBorderBrush",
+        "GridViewItemSelectedPointerOverBorderBrush",
+        "GridViewItemSelectedPressedBorderBrush",
+        "GridViewItemCheckBoxSelectedBrush",
+        "GridViewItemCheckBoxSelectedPointerOverBrush",
+        "GridViewItemCheckBoxSelectedPressedBrush",
+    ];
 
     public static void Register()
     {
@@ -22,35 +37,26 @@ public static class ControlAccentStyler
 
         _registered = true;
 
-        // Entry → MauiPasswordTextBox → TextBox
-        EntryHandler.Mapper.AppendToMapping(
-            "AccentFocusBorder",
-            (handler, view) => ApplyTextBoxAccent(handler.PlatformView));
+        ApplyToWinUIApplicationResources();
 
-        // Editor → TextBox
+        // Entry / Editor → TextBox
+        EntryHandler.Mapper.AppendToMapping(
+            "AccentStyler",
+            (handler, view) => ApplyTextBoxAccent(handler.PlatformView));
         EditorHandler.Mapper.AppendToMapping(
-            "AccentFocusBorder",
+            "AccentStyler",
             (handler, view) => ApplyTextBoxAccent(handler.PlatformView));
 
         // Picker → ComboBox
         PickerHandler.Mapper.AppendToMapping(
-            "AccentFocusBorder",
+            "AccentStyler",
             (handler, view) => ApplyComboBoxAccent(handler.PlatformView));
 
-        // SearchBar → AutoSuggestBox (inner TextBox via Loaded)
+        // SearchBar → AutoSuggestBox
         SearchBarHandler.Mapper.AppendToMapping(
-            "AccentFocusBorder",
+            "AccentStyler",
             (handler, view) => ApplyAutoSuggestBoxAccent(handler.PlatformView));
 
-        // DatePicker → CalendarDatePicker
-        DatePickerHandler.Mapper.AppendToMapping(
-            "AccentFocusBorder",
-            (handler, view) => ApplyCalendarDatePickerAccent(handler.PlatformView));
-
-        // TimePicker → TimePicker
-        TimePickerHandler.Mapper.AppendToMapping(
-            "AccentFocusBorder",
-            (handler, view) => ApplyTimePickerAccent(handler.PlatformView));
     }
 
     private static void ApplyTextBoxAccent(object? platformView)
@@ -74,9 +80,11 @@ public static class ControlAccentStyler
         if (Microsoft.Maui.Controls.Application.AccentColor is not { } accent)
             return;
 
-        comboBox.Resources["ComboBoxBorderBrushFocused"] = ToBrush(accent);
+        var brush = ToBrush(accent);
+        comboBox.Resources["ComboBoxBorderBrushFocused"] = brush;
         comboBox.Resources["ComboBoxBorderThemeThicknessFocused"] =
             new Microsoft.UI.Xaml.Thickness(0, 0, 0, 2);
+        comboBox.Resources["ComboBoxItemPillFillBrush"] = brush;
     }
 
     private static void ApplyAutoSuggestBoxAccent(object? platformView)
@@ -89,7 +97,8 @@ public static class ControlAccentStyler
 
         suggestBox.Loaded += (_, _) =>
         {
-            if (suggestBox.FindName("TextBox") is TextBox innerTextBox)
+            var innerTextBox = FindFirstDescendant<TextBox>(suggestBox);
+            if (innerTextBox is not null)
             {
                 innerTextBox.Resources["TextControlBorderBrushFocused"] = ToBrush(accent);
                 innerTextBox.Resources["TextControlBorderThemeThicknessFocused"] =
@@ -98,30 +107,37 @@ public static class ControlAccentStyler
         };
     }
 
-    private static void ApplyCalendarDatePickerAccent(object? platformView)
+    private static T? FindFirstDescendant<T>(DependencyObject parent) where T : DependencyObject
     {
-        if (platformView is not Microsoft.UI.Xaml.Controls.CalendarDatePicker picker)
-            return;
+        var count = VisualTreeHelper.GetChildrenCount(parent);
+        for (int i = 0; i < count; i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T match)
+                return match;
 
-        if (Microsoft.Maui.Controls.Application.AccentColor is not { } accent)
-            return;
-
-        picker.Resources["TextControlBorderBrushFocused"] = ToBrush(accent);
-        picker.Resources["TextControlBorderThemeThicknessFocused"] =
-            new Microsoft.UI.Xaml.Thickness(0, 0, 0, 2);
+            var result = FindFirstDescendant<T>(child);
+            if (result is not null)
+                return result;
+        }
+        return null;
     }
 
-    private static void ApplyTimePickerAccent(object? platformView)
+    private static void ApplyToWinUIApplicationResources()
     {
-        if (platformView is not Microsoft.UI.Xaml.Controls.TimePicker picker)
+        if (Microsoft.UI.Xaml.Application.Current is not { } winUIApp)
             return;
 
-        if (Microsoft.Maui.Controls.Application.AccentColor is not { } accent)
+        var accent = Microsoft.Maui.Controls.Application.AccentColor;
+        if (accent is null)
             return;
 
-        picker.Resources["TextControlBorderBrushFocused"] = ToBrush(accent);
-        picker.Resources["TextControlBorderThemeThicknessFocused"] =
-            new Microsoft.UI.Xaml.Thickness(0, 0, 0, 2);
+        var brush = ToBrush(accent);
+        var dict = new Microsoft.UI.Xaml.ResourceDictionary();
+        foreach (var key in GlobalAccentKeys)
+            dict[key] = brush;
+
+        winUIApp.Resources.MergedDictionaries.Add(dict);
     }
 
     private static Microsoft.UI.Xaml.Media.SolidColorBrush ToBrush(Microsoft.Maui.Graphics.Color c) =>

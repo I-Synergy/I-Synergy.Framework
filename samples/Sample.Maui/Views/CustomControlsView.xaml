@@ -53,6 +53,9 @@
                                 MinimumValue="0" />
                     </Entry.Behaviors>
                 </Entry>
+                <!-- SearchBar -->
+                <Label Text="Search:" />
+                <SearchBar Text="{Binding SearchText}" Placeholder="Search items..." />
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="4">

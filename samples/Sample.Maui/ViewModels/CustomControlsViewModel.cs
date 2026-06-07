@@ -43,6 +43,12 @@ public class CustomControlsViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
+    public string SearchText
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
     public ObservableCollection<TestItem> Items { get; set; } = new();
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = new();
 
@@ -80,6 +86,7 @@ public class CustomControlsViewModel : ViewModelNavigation<object>
         AsyncNotImplementedErrorCommand = new AsyncRelayCommand(() => throw new NotImplementedException());
         ShowErrorWindowCommand = new AsyncRelayCommand(ShowErrorWindowAsync);
 
+        SearchText = string.Empty;
         Quantity = 19;
         Weight = 91.19m;
         Price = 19.19m;
