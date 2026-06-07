@@ -17,6 +17,8 @@ using System.Diagnostics;
 using System.Globalization;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Globalization;
+
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
@@ -278,12 +280,12 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// UI thread (affects the already-running dispatcher thread).
     /// </summary>
     /// <remarks>
-    /// Delegates to <see cref="ISynergy.Framework.Globalization.CultureManager"/> for
+    /// Delegates to <see cref="CultureManager"/> for
     /// the process-wide defaults, then dispatches the per-thread culture to the UI thread.
     /// </remarks>
     protected void ApplyApplicationCulture(CultureInfo culture)
     {
-        ISynergy.Framework.Globalization.CultureManager.Apply(culture, ConfigureNumberFormat);
+        CultureManager.Apply(culture, ConfigureNumberFormat);
 
         // Per-thread culture for the UI dispatcher thread.
         Dispatcher.Dispatch(() =>

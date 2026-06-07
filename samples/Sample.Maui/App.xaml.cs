@@ -137,7 +137,7 @@ public partial class App : Application
 
         if (_settingsService?.GlobalSettings is not null)
         {
-            culture.NumberFormat.CurrencySymbol = "€";
+            culture.NumberFormat.CurrencySymbol = _settingsService.GlobalSettings.CurrencySymbol;
             culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
             culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
             culture.NumberFormat.CurrencyNegativePattern = 1;
