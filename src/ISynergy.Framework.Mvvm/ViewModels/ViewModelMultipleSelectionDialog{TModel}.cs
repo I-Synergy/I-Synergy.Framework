@@ -1,35 +1,20 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Mvvm.ViewModels.Base;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
 /// <summary>
-/// Class ViewModelDialogSelection.
-/// Implements the <see name="ViewModelDialog{List{object}}" />
+/// A multiple-selection dialog ViewModel. The user can pick multiple items at once.
 /// </summary>
-/// <seealso name="ViewModelDialog{List{object}}" />
-public class ViewModelMultipleSelectionDialog<TModel> : ViewModelDialog<List<TModel>>, IMultipleSelectionViewModel
+/// <typeparam name="TModel">The model type.</typeparam>
+public class ViewModelMultipleSelectionDialog<TModel> : BaseMultipleSelectionViewModel<TModel>, IViewModelDialog<List<TModel>>
 {
-    /// <summary>
-    /// Gets the title.
-    /// </summary>
-    /// <value>The title.</value>
-    public override string Title { get { return _commonServices.LanguageService.GetString("Selection"); } }
-
-    /// <summary>
-    /// Gets or sets the raw items.
-    /// </summary>
-    /// <value>The raw items.</value>
-    [IgnoreValidation]
-    private List<TModel> RawItems { get; set; }
-
     /// <summary>
     /// Gets or sets the CanSubmit property value.
     /// </summary>
@@ -37,56 +22,6 @@ public class ViewModelMultipleSelectionDialog<TModel> : ViewModelDialog<List<TMo
     {
         get => GetValue<bool>();
         set => SetValue(value);
-    }
-
-    /// <summary>
-    /// Gets or sets the Item property value.
-    /// </summary>
-    /// <value>The items.</value>
-    public ObservableCollection<TModel>? Items
-    {
-        get { return GetValue<ObservableCollection<TModel>?>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="e">The entity.</param>
-    public virtual void SetItems(IEnumerable<object> e)
-    {
-        RawItems = new List<TModel>();
-        Items = new ObservableCollection<TModel>();
-
-        foreach (TModel item in e.EnsureNotNull())
-        {
-            RawItems.Add(item);
-            Items.Add(item);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the SelectedItems property value.
-    /// </summary>
-    public List<object>? SelectedItems
-    {
-        get => GetValue<List<object>?>();
-        set => SetValue(value);
-    }
-
-
-    /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="e">The entity.</param>
-    public virtual void SetSelectedItems(IEnumerable<object> e)
-    {
-        SelectedItems = new List<object>();
-
-        foreach (var item in e.EnsureNotNull())
-        {
-            SelectedItems.Add(item!);
-        }
     }
 
     /// <summary>
@@ -98,95 +33,34 @@ public class ViewModelMultipleSelectionDialog<TModel> : ViewModelDialog<List<TMo
         set => SetValue(value);
     }
 
-    public AsyncRelayCommand<string> RefreshCommand { get; private set; }
-    public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelMultipleSelectionDialog{TEntity}"/> class.
     /// </summary>
-    /// <param name="commonServices">The common services.</param>
-    /// <param name="logger"></param>
     public ViewModelMultipleSelectionDialog(
         ICommonServices commonServices,
         ILogger<ViewModelMultipleSelectionDialog<TModel>> logger)
         : base(commonServices, logger)
     {
-        RawItems = new List<TModel>();
-        Items = new ObservableCollection<TModel>();
-        SelectedItems = new List<object>();
-
-        Validator = new Action<IObservableValidatedClass>(arg =>
-        {
-            if (SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
-        });
-
-        RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
-        SelectCommand = new AsyncRelayCommand<List<object>>((e) => SelectAsync(e), (s) => s is not null && s.Count > 0);
-
-        IsInitialized = true;
+        SubmitCommand = new AsyncRelayCommand<List<TModel>>(
+            execute: async e => await SubmitAsync(e ?? SelectedItem!),
+            canExecute: e => (e ?? SelectedItem) is not null);
     }
 
-    /// <summary>
-    /// Queries the items.
-    /// </summary>
-    /// <param name="query">Query parameter.</param>
-    protected virtual Task QueryItemsAsync(string query)
+    /// <inheritdoc />
+    public virtual void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
-        {
-            Items = new ObservableCollection<TModel>(RawItems);
-        }
-        else
-        {
-            var filteredList = new List<TModel>();
-
-            foreach (var item in RawItems.EnsureNotNull())
-            {
-                if (item!.ToString()?.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
-                {
-                    filteredList.Add(item);
-                }
-            }
-
-            Items = new ObservableCollection<TModel>();
-            Items.AddRange(filteredList);
-        }
-
-        return Task.CompletedTask;
+        if (query.TryGetValue(GenericConstants.Parameter, out object? result) && result is List<TModel> entities)
+            SetSelectedItem(entities);
     }
 
-    /// <summary>
-    /// Submits selection
-    /// </summary>
-    /// <param name="e"></param>
-    /// <returns></returns>
-    private async Task SelectAsync(List<object> e)
-    {
-        if (Validate())
-        {
-            var result = new List<TModel>();
-
-            foreach (TModel item in SelectedItems.EnsureNotNull())
-            {
-                result.Add(item);
-            }
-
-            OnSubmitted(new SubmitEventArgs<List<TModel>>(result));
-            await CloseAsync();
-        }
-    }
-
+    /// <inheritdoc />
     public override void Cleanup(bool isClosing = true)
     {
         try
         {
-            // Set flag to prevent property change notifications during cleanup
             IsInCleanup = true;
 
-            // Clear collections
-            Items = null;
-            SelectedItems = null;
+            IsUpdate = false;
 
             base.Cleanup(isClosing);
         }
@@ -196,14 +70,10 @@ public class ViewModelMultipleSelectionDialog<TModel> : ViewModelDialog<List<TMo
         }
     }
 
+    /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (disposing)
-        {
-            RefreshCommand?.Dispose();
-            SelectCommand?.Dispose();
-
             base.Dispose(disposing);
-        }
     }
 }

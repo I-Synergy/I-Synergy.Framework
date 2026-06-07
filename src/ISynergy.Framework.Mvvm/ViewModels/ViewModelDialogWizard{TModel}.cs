@@ -19,18 +19,6 @@ public abstract class ViewModelDialogWizard<TModel> : WizardViewModelBase<TModel
         ILogger<ViewModelDialogWizard<TModel>> logger)
         : base(commonServices, logger)
     {
-        SubmitCommand = new AsyncRelayCommand<TModel>(
-            execute: async e => await SubmitAsync(e ?? SelectedItem!),
-            canExecute: e => (e ?? SelectedItem) is not null);
-    }
-
-    public virtual async Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true)
-    {
-        if (Validate(validateUnderlayingProperties))
-        {
-            OnSubmitted(new Events.SubmitEventArgs<TModel>(e));
-            await CloseAsync();
-        }
     }
 
     public virtual void ApplyQueryAttributes(IDictionary<string, object> query)

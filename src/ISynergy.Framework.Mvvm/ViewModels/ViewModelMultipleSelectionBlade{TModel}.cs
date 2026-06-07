@@ -1,168 +1,54 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.Mvvm.ViewModels.Base;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
 /// <summary>
-/// Class ViewModelDialogSelection.
-/// Implements the <see name="ViewModelDialog{List{TEntity}}" />
+/// A multiple-selection blade ViewModel. The user can pick multiple items at once.
 /// </summary>
-/// <seealso name="ViewModelDialog{List{TEntity}}" />
-public class ViewModelMultipleSelectionBlade<TModel> : ViewModelBlade<List<TModel>>, IMultipleSelectionViewModel
+/// <typeparam name="TModel">The model type.</typeparam>
+public class ViewModelMultipleSelectionBlade<TModel> : BaseMultipleSelectionViewModel<TModel>, IViewModelBlade<List<TModel>>
 {
-    /// <summary>
-    /// Gets the title.
-    /// </summary>
-    /// <value>The title.</value>
-    public override string Title { get { return _commonServices.LanguageService.GetString("Selection"); } }
-
-    /// <summary>
-    /// Gets or sets the raw items.
-    /// </summary>
-    /// <value>The raw items.</value>
+    /// <inheritdoc />
     [IgnoreValidation]
-    private List<TModel> RawItems { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Item property value.
-    /// </summary>
-    /// <value>The items.</value>
-    public ObservableCollection<TModel>? Items
+    public IViewModelBladeView Owner
     {
-        get { return GetValue<ObservableCollection<TModel>?>(); }
-        set { SetValue(value); }
-    }
-
-    public virtual void SetItems(IEnumerable<object> e)
-    {
-        RawItems = new List<TModel>();
-        Items = new ObservableCollection<TModel>();
-
-        foreach (TModel item in e.EnsureNotNull())
-        {
-            RawItems.Add(item);
-            Items.Add(item);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the SelectedItems property value.
-    /// </summary>
-    public List<object>? SelectedItems
-    {
-        get => GetValue<List<object>?>();
+        get => GetValue<IViewModelBladeView>();
         set => SetValue(value);
     }
 
-    public virtual void SetSelectedItems(IEnumerable<object> e)
+    /// <inheritdoc />
+    public bool IsDisabled
     {
-        SelectedItems = new List<object>();
-
-        foreach (var item in e.EnsureNotNull())
-        {
-            SelectedItems.Add(item!);
-        }
+        get => GetValue<bool>();
+        set => SetValue(value);
     }
-
-    public AsyncRelayCommand<string> RefreshCommand { get; private set; }
-    public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelMultipleSelectionBlade{TEntity}"/> class.
     /// </summary>
-    /// <param name="commonServices">The common services.</param>
-    /// <param name="logger"></param>
     public ViewModelMultipleSelectionBlade(
         ICommonServices commonServices,
         ILogger<ViewModelMultipleSelectionBlade<TModel>> logger)
         : base(commonServices, logger)
     {
-        RawItems = new List<TModel>();
-        Items = new ObservableCollection<TModel>();
-        SelectedItems = new List<object>();
-
-        Validator = new Action<IObservableValidatedClass>(arg =>
-        {
-            if (SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
-        });
-
-        RefreshCommand = new AsyncRelayCommand<string>((e) => QueryItemsAsync(e));
-        SelectCommand = new AsyncRelayCommand<List<object>>((e) => SelectAsync(e), (s) => s is not null && s.Count > 0);
-
-        IsInitialized = true;
+        SubmitCommand = new AsyncRelayCommand<List<TModel>>(
+            execute: async e => await SubmitAsync(e ?? SelectedItem!),
+            canExecute: e => (e ?? SelectedItem) is not null);
     }
 
-
-
-    /// <summary>
-    /// Queries the items.
-    /// </summary>
-    /// <param name="query">Query parameter.</param>
-    protected virtual Task QueryItemsAsync(string query)
-    {
-        if (IsInitialized && RawItems is not null && (string.IsNullOrEmpty(query) || query.Trim() == "*"))
-        {
-            Items = new ObservableCollection<TModel>(RawItems);
-        }
-        else
-        {
-            var filteredList = new List<TModel>();
-
-            foreach (var item in RawItems.EnsureNotNull())
-            {
-                if (item!.ToString()?.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
-                {
-                    filteredList.Add(item);
-                }
-            }
-
-            Items = new ObservableCollection<TModel>();
-            Items.AddRange(filteredList);
-        }
-
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Submits selection
-    /// </summary>
-    /// <param name="e"></param>
-    /// <returns></returns>
-    private async Task SelectAsync(List<object> e)
-    {
-        if (Validate())
-        {
-            var result = new List<TModel>();
-
-            foreach (TModel item in SelectedItems.EnsureNotNull())
-            {
-                result.Add(item);
-            }
-
-            OnSubmitted(new SubmitEventArgs<List<TModel>>(result));
-            await CloseAsync();
-        }
-    }
-
+    /// <inheritdoc />
     public override void Cleanup(bool isClosing = true)
     {
         try
         {
-            // Set flag to prevent property change notifications during cleanup
             IsInCleanup = true;
-
-            // Clear collections
-            Items = null;
-            SelectedItems = null;
-
             base.Cleanup(isClosing);
         }
         finally
@@ -171,21 +57,10 @@ public class ViewModelMultipleSelectionBlade<TModel> : ViewModelBlade<List<TMode
         }
     }
 
+    /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (disposing)
-        {
-            // Make sure cleanup is done before disposal
-            if (!IsInCleanup)
-            {
-                Cleanup();
-            }
-
-            // Dispose and clear commands
-            RefreshCommand?.Dispose();
-            SelectCommand?.Dispose();
-
             base.Dispose(disposing);
-        }
     }
 }

@@ -41,7 +41,7 @@ public abstract class ViewModelNavigation<TModel> : ViewModelSelectable<TModel>,
     /// <param name="e">The e.</param>
     /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public virtual Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true)
+    public new virtual Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true)
     {
         if (Validate(validateUnderlayingProperties))
             OnSubmitted(new SubmitEventArgs<TModel>(e));

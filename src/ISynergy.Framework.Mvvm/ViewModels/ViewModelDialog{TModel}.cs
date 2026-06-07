@@ -29,26 +29,6 @@ public abstract class ViewModelDialog<TModel> : ViewModelSelectable<TModel>, IVi
         ILogger<ViewModelDialog<TModel>> logger)
     : base(commonServices, logger)
     {
-        // CanExecute checks both parameter and property to handle MAUI Button visual state correctly
-        // Execute uses parameter if provided, falls back to SelectedItem
-        SubmitCommand = new AsyncRelayCommand<TModel>(
-            execute: async e => await SubmitAsync(e ?? SelectedItem!),
-            canExecute: e => (e ?? SelectedItem) is not null);
-    }
-
-    /// <summary>
-    /// Submits the asynchronous.
-    /// </summary>
-    /// <param name="e">The e.</param>
-    /// <param name="validateUnderlayingProperties"></param>
-    /// <returns>Task.</returns>
-    public virtual async Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true)
-    {
-        if (Validate(validateUnderlayingProperties))
-        {
-            OnSubmitted(new SubmitEventArgs<TModel>(e));
-            await CloseAsync();
-        }
     }
 
     public virtual void ApplyQueryAttributes(IDictionary<string, object> query)
