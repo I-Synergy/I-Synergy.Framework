@@ -128,8 +128,12 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
                 _commonServices.BusyService.StartBusy();
 
-                if (_settingsService.LocalSettings is not null && !string.IsNullOrEmpty(_settingsService.LocalSettings.Language))
-                    _settingsService.LocalSettings.Language.SetLocalizationLanguage();
+                // Always initialize the culture so DefaultThreadCurrentCulture is never null.
+                // Falls back to the OS culture when no language is persisted yet.
+                var initialCulture = !string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
+                    ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings.Language)
+                    : CultureInfo.CurrentCulture;
+                ApplyApplicationCulture(initialCulture);
 
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
@@ -244,6 +248,36 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         {
             _logger?.LogError(ex, "Error during environment variable initialization");
         }
+    }
+
+    /// <summary>
+    /// Applies a <see cref="CultureInfo"/> as the application-wide culture.
+    /// Sets both <see cref="CultureInfo.DefaultThreadCurrentCulture"/> (process-wide)
+    /// and <see cref="CultureInfo.CurrentCulture"/> on the UI thread.
+    /// </summary>
+    protected void ApplyApplicationCulture(CultureInfo culture)
+    {
+        ISynergy.Framework.Globalization.CultureManager.Apply(culture, ConfigureNumberFormat);
+
+        // Per-thread culture for the UI dispatcher thread.
+        var dq = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+        if (dq is not null)
+        {
+            dq.TryEnqueue(() =>
+            {
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
+            });
+        }
+    }
+
+    /// <summary>
+    /// Override to customize the <see cref="NumberFormatInfo"/> of the application
+    /// culture (currency symbol, decimal places, negative patterns, etc.).
+    /// Called automatically by <see cref="ApplyApplicationCulture"/>.
+    /// </summary>
+    protected virtual void ConfigureNumberFormat(CultureInfo culture)
+    {
     }
 
     /// <summary>

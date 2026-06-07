@@ -126,6 +126,25 @@ public sealed partial class App : Application
     }
 
     /// <summary>
+    /// Customizes the <see cref="NumberFormatInfo"/> after the culture is applied.
+    /// Called automatically by <see cref="Application.ApplyApplicationCulture"/>.
+    /// </summary>
+    protected override void ConfigureNumberFormat(CultureInfo culture)
+    {
+        base.ConfigureNumberFormat(culture);
+
+        if (_settingsService?.GlobalSettings is not null)
+        {
+            culture.NumberFormat.CurrencySymbol = "€";
+            culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
+            culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
+            culture.NumberFormat.CurrencyNegativePattern = 1;
+            culture.NumberFormat.NumberNegativePattern = 1;
+            culture.NumberFormat.PercentNegativePattern = 1;
+        }
+    }
+
+    /// <summary>
     /// Called when a user signs in.
     /// </summary>
     private async void OnUserSignedIn(UserSignedInMessage message)
@@ -133,41 +152,12 @@ public sealed partial class App : Application
         try
         {
             _logger?.LogTrace("Authentication succeeded event received");
-            _logger?.LogTrace("Setting culture");
 
-            if (_settingsService?.GlobalSettings is not null)
-            {
-                try
-                {
-                    // Use the persisted language or the current default; fall back to
-                    // the system culture to ensure CurrencySymbol is always applied.
-                    var baseCulture = CultureInfo.DefaultThreadCurrentCulture
-                        ?? (!string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
-                            ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings!.Language)
-                            : CultureInfo.CurrentCulture);
-
-                    if (baseCulture.Clone() is CultureInfo culture)
-                    {
-                        culture.NumberFormat.CurrencySymbol = "€";
-
-                        culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
-                        culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
-
-                        culture.NumberFormat.CurrencyNegativePattern = 1;
-                        culture.NumberFormat.NumberNegativePattern = 1;
-                        culture.NumberFormat.PercentNegativePattern = 1;
-
-                        CultureInfo.DefaultThreadCurrentCulture = culture;
-                        CultureInfo.DefaultThreadCurrentUICulture = culture;
-                        CultureInfo.CurrentCulture = culture;
-                        CultureInfo.CurrentUICulture = culture;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "Error setting culture");
-                }
-            }
+            // Re-apply the culture so ConfigureNumberFormat picks up the
+            // latest GlobalSettings. The framework handles both
+            // DefaultThreadCurrentCulture and UI-thread CurrentCulture.
+            var culture = CultureInfo.DefaultThreadCurrentCulture ?? CultureInfo.CurrentCulture;
+            ApplyApplicationCulture(culture);
 
             _logger?.LogTrace("Navigate to Shell");
             if (_navigationService != null)
