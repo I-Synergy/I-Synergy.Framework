@@ -104,8 +104,12 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
                 _commonServices.BusyService.StartBusy();
 
-                if (_settingsService.LocalSettings is not null && !string.IsNullOrEmpty(_settingsService.LocalSettings.Language))
-                    _settingsService.LocalSettings.Language.SetLocalizationLanguage();
+                // Always initialize the culture so DefaultThreadCurrentCulture is never null.
+                // Falls back to the OS culture when no language is persisted yet.
+                var initialCulture = !string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
+                    ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings.Language)
+                    : CultureInfo.CurrentCulture;
+                ApplyApplicationCulture(initialCulture);
 
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional
 
@@ -265,6 +269,39 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (ServiceLocator.Default.GetRequiredService<IContext>() is not null)
             _titleBar.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+    }
+
+    /// <summary>
+    /// Applies a <see cref="CultureInfo"/> as the application-wide culture.
+    /// Sets both <see cref="CultureInfo.DefaultThreadCurrentCulture"/> (process-wide,
+    /// inherited by new threads) and <see cref="CultureInfo.CurrentCulture"/> on the
+    /// UI thread (affects the already-running dispatcher thread).
+    /// </summary>
+    /// <remarks>
+    /// Delegates to <see cref="ISynergy.Framework.Globalization.CultureManager"/> for
+    /// the process-wide defaults, then dispatches the per-thread culture to the UI thread.
+    /// </remarks>
+    protected void ApplyApplicationCulture(CultureInfo culture)
+    {
+        ISynergy.Framework.Globalization.CultureManager.Apply(culture, ConfigureNumberFormat);
+
+        // Per-thread culture for the UI dispatcher thread.
+        Dispatcher.Dispatch(() =>
+        {
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
+        });
+    }
+
+    /// <summary>
+    /// Override to customize the <see cref="NumberFormatInfo"/> of the application
+    /// culture (currency symbol, decimal places, negative patterns, etc.).
+    /// Called automatically by <see cref="ApplyApplicationCulture"/>.
+    /// </summary>
+    /// <param name="culture">A mutable clone of the culture to customize.</param>
+    protected virtual void ConfigureNumberFormat(CultureInfo culture)
+    {
+        // Default: no customization. Override in derived classes.
     }
 
     /// <summary>
