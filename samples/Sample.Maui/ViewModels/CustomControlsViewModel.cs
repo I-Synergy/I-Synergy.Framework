@@ -17,35 +17,26 @@ using System.Collections.ObjectModel;
 namespace Sample.ViewModels;
 
 [Lifetime(Lifetimes.Scoped)]
-public class ControlsViewModel : ViewModelNavigation<object>
+public class CustomControlsViewModel : ViewModelNavigation<object>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
     private System.Timers.Timer? _timer;
 
-    public override string Title { get { return _commonServices.LanguageService.GetString("Controls"); } }
+    public override string Title { get { return _commonServices.LanguageService.GetString("CustomControls"); } }
 
-    /// <summary>
-    /// Gets or sets the Price property value.
-    /// </summary>
     public decimal Price
     {
         get => GetValue<decimal>();
         set => SetValue(value);
     }
 
-    /// <summary>
-    /// Gets or sets the Weight property value.
-    /// </summary>
     public decimal Weight
     {
         get => GetValue<decimal>();
         set => SetValue(value);
     }
 
-    /// <summary>
-    /// Gets or sets the Quantity property value.
-    /// </summary>
     public int Quantity
     {
         get => GetValue<int>();
@@ -55,9 +46,6 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public ObservableCollection<TestItem> Items { get; set; } = new();
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = new();
 
-    /// <summary>
-    /// Gets or sets the File property value.
-    /// </summary>
     public byte[] File
     {
         get => GetValue<byte[]>();
@@ -73,11 +61,11 @@ public class ControlsViewModel : ViewModelNavigation<object>
     public AsyncRelayCommand NavigateToDetailCommand { get; private set; }
     public AsyncRelayCommand ShowErrorWindowCommand { get; private set; }
 
-    public ControlsViewModel(
+    public CustomControlsViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
-        ILogger<ControlsViewModel> logger)
+        ILogger<CustomControlsViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
@@ -115,8 +103,6 @@ public class ControlsViewModel : ViewModelNavigation<object>
 
     private void TestVm_Submitted(object? sender, SubmitEventArgs<TestItem> e)
     {
-        // Intentionally empty: this handler is subscribed to clean up the event subscription,
-        // but no action is required when the test exception dialog is submitted.
     }
 
     private async Task NavigateToDetailAsync()
@@ -125,10 +111,6 @@ public class ControlsViewModel : ViewModelNavigation<object>
         await _navigationService.NavigateAsync(detailsVm);
     }
 
-    /// <summary>
-    /// Selects the multiple asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
     private Task SelectMultipleAsync()
     {
         var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
@@ -139,10 +121,6 @@ public class ControlsViewModel : ViewModelNavigation<object>
         return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
-    /// <summary>
-    /// Selects the single asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
     private Task SelectSingleAsync()
     {
         var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionDialog<TestItem>>();
@@ -153,11 +131,6 @@ public class ControlsViewModel : ViewModelNavigation<object>
         return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVm);
     }
 
-    /// <summary>
-    /// Selections the vm multiple submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
     private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
@@ -169,11 +142,6 @@ public class ControlsViewModel : ViewModelNavigation<object>
         await _dialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
     }
 
-    /// <summary>
-    /// Selections the vm single submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
     private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
         if (sender is ViewModelSelectionDialog<TestItem> vm)
@@ -224,4 +192,3 @@ public class ControlsViewModel : ViewModelNavigation<object>
         }
     }
 }
-

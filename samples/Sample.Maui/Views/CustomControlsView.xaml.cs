@@ -5,9 +5,9 @@ using Sample.ViewModels;
 namespace Sample.Views;
 
 [Lifetime(Lifetimes.Scoped)]
-public partial class ControlsView
+public partial class CustomControlsView
 {
-    public ControlsView(ControlsViewModel viewModel)
+    public CustomControlsView(CustomControlsViewModel viewModel)
        : base(viewModel)
     {
         InitializeComponent();

@@ -30,7 +30,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     public AsyncRelayCommand SlideshowCommand { get; private set; }
     public AsyncRelayCommand InfoCommand { get; private set; }
-    public AsyncRelayCommand ControlsCommand { get; private set; }
+    public AsyncRelayCommand CustomControlsCommand { get; private set; }
+    public AsyncRelayCommand MauiControlsCommand { get; private set; }
     public AsyncRelayCommand SyncCommand { get; private set; }
 
     /// <summary>
@@ -55,7 +56,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         Version = commonServices.InfoService.ProductVersion;
 
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
-        ControlsCommand = new AsyncRelayCommand(OpenControlsAsync);
+        CustomControlsCommand = new AsyncRelayCommand(OpenCustomControlsAsync);
+        MauiControlsCommand = new AsyncRelayCommand(OpenMauiControlsAsync);
         SlideshowCommand = new AsyncRelayCommand(OpenSlideshowAsync);
         SyncCommand = new AsyncRelayCommand(OpenSyncAsync);
 
@@ -86,7 +88,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             PrimaryItems?.Clear();
 
             PrimaryItems?.Add(new NavigationItem("Info", FluentUI.info_20_regular ?? string.Empty, primaryColor, InfoCommand)); // NOSONAR
-            PrimaryItems?.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, ControlsCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("CustomControls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, CustomControlsCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("MAUI Controls", FluentUI.app_generic_20_regular ?? string.Empty, primaryColor, MauiControlsCommand)); // NOSONAR
             PrimaryItems?.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular ?? string.Empty, primaryColor, SlideshowCommand)); // NOSONAR
             PrimaryItems?.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular ?? string.Empty, primaryColor, SyncCommand)); // NOSONAR
 
@@ -147,11 +150,16 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         _navigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
-    /// Opens the controls page asynchronous.
+    /// Opens the custom controls page.
     /// </summary>
-    /// <returns></returns>
-    private Task OpenControlsAsync() =>
-        _navigationService.NavigateAsync<ControlsViewModel>();
+    private Task OpenCustomControlsAsync() =>
+        _navigationService.NavigateAsync<CustomControlsViewModel>();
+
+    /// <summary>
+    /// Opens the MAUI controls showcase page.
+    /// </summary>
+    private Task OpenMauiControlsAsync() =>
+        _navigationService.NavigateAsync<MauiControlsViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.
