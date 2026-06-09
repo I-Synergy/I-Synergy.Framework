@@ -56,7 +56,7 @@ internal class SynchronizationService : ISynchronizationService
             throw new InvalidOperationException("User profile is not available");
 
         var options = configurationOptions.Value;
-        var tenantId = _context.Profile.AccountId.ToString("N");
+        var tenantId = _context.Profile.TenantId.ToString("N");
 
         _synchronizationSettings = ((RoamingSettings)_settingsService.RoamingSettings).SynchronizationSetting;
 
@@ -176,7 +176,7 @@ internal class SynchronizationService : ISynchronizationService
 
             var parameters = new SyncParameters()
             {
-                new SyncParameter(GenericConstants.TenantId, _context.Profile.AccountId)
+                new SyncParameter(GenericConstants.TenantId, _context.Profile.TenantId)
             };
 
             cancellationToken.ThrowIfCancellationRequested();
