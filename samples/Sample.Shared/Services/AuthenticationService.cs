@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
 using Sample.Models;
 
 namespace Sample.Services;
@@ -52,17 +51,24 @@ public class AuthenticationService : Sample.Abstractions.Services.IAuthenticatio
                 ExpiresIn = 3600,
                 TokenType = "Bearer"
             },
-            AccountId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
-            Description = $"Demo Account - {username}",
+            UserId = Guid.NewGuid(),
+            TenantId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+            Name = $"Demo User - {username}",
             TimeZoneId = "Europe/Amsterdam",
             CountryCode = "NL",
             CultureCode = "nl-NL",
-            UserId = Guid.NewGuid(),
-            Username = username,
             Email = $"{username}@demo.com",
             Roles = new List<string> { "Administrator", "User" },
             Features = new List<string> { "Dashboard", "Settings", "Admin" },
-            Expiration = DateTimeOffset.Now.AddHours(24)
+            Expiration = DateTimeOffset.Now.AddHours(24),
+            Organizations = new List<Organization>
+            {
+                new Organization
+                {
+                    OrganizationId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+                    Name = "Demo Organization"
+                }
+            }
         };
 
         _context.Profile = profile;
@@ -82,6 +88,25 @@ public class AuthenticationService : Sample.Abstractions.Services.IAuthenticatio
         _logger.LogTrace("Demo sign out");
         _context.Profile = null;
         _messengerService.Send(new UserSignedOutMessage());
+        return Task.CompletedTask;
+    }
+
+    public Task SwitchOrganizationAsync(Guid organizationId, CancellationToken cancellationToken = default)
+    {
+        if (_context.Profile is not { } profile)
+            return Task.CompletedTask;
+
+        // Validate: must be either switching to personal context (UserId) or to an org in the list
+        var isPersonalContext = organizationId == profile.UserId;
+        var isKnownOrg = profile.Organizations.Any(o => o.OrganizationId == organizationId);
+
+        if (!isPersonalContext && !isKnownOrg)
+            return Task.CompletedTask;
+
+        profile.TenantId = organizationId;
+        _messengerService.Send(new TenantSwitchedMessage(organizationId));
+
+        _logger.LogTrace("Demo tenant switched to: {TenantId}", organizationId);
         return Task.CompletedTask;
     }
 

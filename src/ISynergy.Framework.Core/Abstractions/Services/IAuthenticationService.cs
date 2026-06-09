@@ -32,4 +32,18 @@ public interface IAuthenticationService
 
     /// <summary>Signs out the current user and clears any stored session data.</summary>
     Task SignOutAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Switches the active tenant to the specified organization.
+    /// Pass <see cref="IProfile.UserId"/> to switch back to a personal context
+    /// (no organization selected). The organization must be present in
+    /// <see cref="IProfile.Organizations"/> unless switching to a personal context.
+    /// </summary>
+    /// <param name="organizationId">
+    /// The organization identifier to switch to, or <see cref="IProfile.UserId"/>
+    /// to switch to a personal context.
+    /// </param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task SwitchOrganizationAsync(Guid organizationId, CancellationToken cancellationToken = default);
 }

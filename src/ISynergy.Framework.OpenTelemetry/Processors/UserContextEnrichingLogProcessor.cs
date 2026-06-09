@@ -23,15 +23,20 @@ public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
 
         if (context is not null && context.Profile is not null)
         {
-            attributes.Add(new KeyValuePair<string, object?>("Username", context.Profile.Username));
             attributes.Add(new KeyValuePair<string, object?>("UserId", context.Profile.UserId));
-            attributes.Add(new KeyValuePair<string, object?>("AccountId", context.Profile.AccountId));
-            attributes.Add(new KeyValuePair<string, object?>("Description", context.Profile.Description));
+            attributes.Add(new KeyValuePair<string, object?>("TenantId", context.Profile.TenantId));
+            attributes.Add(new KeyValuePair<string, object?>("Name", context.Profile.Name));
             attributes.Add(new KeyValuePair<string, object?>("Email", context.Profile.Email));
+
+            foreach (var organization in context.Profile.Organizations)
+            {
+                attributes.Add(new KeyValuePair<string, object?>($"Organization_{organization.OrganizationId}", organization.Name));
+            }
+
             attributes.Add(new KeyValuePair<string, object?>("CountryCode", context.Profile.CountryCode));
             attributes.Add(new KeyValuePair<string, object?>("CultureCode", context.Profile.CultureCode));
             attributes.Add(new KeyValuePair<string, object?>("TimeZoneId", context.Profile.TimeZoneId));
-            attributes.Add(new KeyValuePair<string, object?>("Expration", context.Profile.Expiration));
+            attributes.Add(new KeyValuePair<string, object?>("Expiration", context.Profile.Expiration));
             attributes.Add(new KeyValuePair<string, object?>("Features", JsonSerializer.Serialize(context.Profile.Features, TelemetryJsonContext.Default.ListString)));
             attributes.Add(new KeyValuePair<string, object?>("Roles", JsonSerializer.Serialize(context.Profile.Roles, TelemetryJsonContext.Default.ListString)));
         }
