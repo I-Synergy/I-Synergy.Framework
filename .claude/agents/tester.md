@@ -1,7 +1,7 @@
 ---
 name: tester
 description: Unit and integration test specialist — writes MSTest tests, Moq mocks, Reqnroll BDD scenarios
-model: sonnet
+model: deepseek-v4-pro
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 

@@ -42,10 +42,7 @@ public sealed partial class ShellView : View, IShellView
             await Task.Delay(100);
 
             if (DataContext is ShellViewModel viewModel)
-            {
                 await viewModel.ShellLoadedAsync();
-                await viewModel.InitializeFirstRunAsync();
-            }
         }
     }
 
@@ -53,6 +50,7 @@ public sealed partial class ShellView : View, IShellView
     {
         Loaded -= OnViewLoaded;
         Unloaded -= OnViewUnloaded;
+
         _isLoaded = false;
     }
 

@@ -10,10 +10,13 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Extensions;
@@ -56,15 +59,16 @@ public static class ServiceCollectionExtensions
         services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-        var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(Framework.AspNetCore.Blazor.Properties.Resources));
+        var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
+
+        // Fallback: English-only if ConfigureSupportedCultures was not called
+        services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
+
         services.TryAddSingleton<IMessengerService, MessengerService>();
         services.TryAddSingleton<IBusyService, BusyService>();
         services.AddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
@@ -134,5 +138,23 @@ public static class ServiceCollectionExtensions
         services.RegisterViewModels(viewModelTypes);
         services.RegisterViews(viewTypes);
         services.RegisterWindows(windowTypes);
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection ConfigureSupportedCultures(
+        this IServiceCollection services,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        var builder = new SupportedCulturesBuilder();
+        configure(builder);
+        services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+            s => new SupportedCulturesService(builder.Build())));
+        return services;
     }
 }

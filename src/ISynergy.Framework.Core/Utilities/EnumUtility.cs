@@ -56,8 +56,6 @@ public static class EnumUtility
     /// </summary>
     /// <param name="flags">The flags.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
-    [RequiresUnreferencedCode("Enum.GetValues on a runtime-typed enum is not AOT-safe.")]
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static IEnumerable<Enum> GetUniqueFlags(this Enum flags)
     {
         ulong flag = 1;

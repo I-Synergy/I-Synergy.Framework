@@ -1,6 +1,5 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
 
@@ -141,7 +140,7 @@ public class EnumToArrayConverter : IValueConverter
             throw new ArgumentNullException(nameof(value));
         }
 
-        return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(value.ToString());
+        return LanguageService.Default.GetString(value.ToString());
     }
 }
 

@@ -117,11 +117,8 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectMultipleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
-        selectionVm.SetSelectionMode(SelectionModes.Multiple);
+        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelMultipleSelectionBlade<TestItem>>();
         selectionVm.SetItems(Items!);
-        selectionVm.SetSelectedItems(SelectedTestItems);
-
         selectionVm.Submitted += SelectionVm_MultipleSubmitted;
         return _navigationService.OpenBladeAsync(this, selectionVm);
     }
@@ -132,10 +129,9 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectSingleAsync()
     {
-        ViewModelSelectionBlade<TestItem> selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
-        selectionVm.SetSelectionMode(SelectionModes.Single);
+        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSingleSelectionBlade<TestItem>>();
         selectionVm.SetItems(Items!);
-        selectionVm.SetSelectedItems(SelectedTestItems);
+        // Single-select should not inherit multi-select pre-selections
         selectionVm.Submitted += SelectionVm_SingleSubmitted;
         return _navigationService.OpenBladeAsync(this, selectionVm);
     }
@@ -147,7 +143,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <param name="e">The e.</param>
     private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
     {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
+        if (sender is ViewModelMultipleSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVm_MultipleSubmitted;
 
         SelectedTestItems = new ObservableCollection<TestItem>();
@@ -161,12 +157,15 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
+    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<TestItem> e)
     {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
+        if (sender is ViewModelSingleSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVm_SingleSubmitted;
 
-        await _dialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
+        var item = e.Result;
+        SelectedTestItems = new ObservableCollection<TestItem> { item };
+
+        await _dialogService.ShowInformationAsync($"{item.Description} selected.");
     }
 
     /// <summary>

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -15,12 +16,14 @@ public class NavigationServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
+    private Mock<ILocalSettings> _mockLocalSettings;
     private Mock<ILogger<NavigationService>> _mockLogger;
     private NavigationService _navigationService;
 
     public NavigationServiceExceptionHandlingTests()
     {
         _mockServiceProvider = new Mock<IServiceProvider>();
+        _mockLocalSettings = new Mock<ILocalSettings>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockLogger = new Mock<ILogger<NavigationService>>();
 
@@ -41,6 +44,7 @@ public class NavigationServiceExceptionHandlingTests
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
 
         _navigationService = new NavigationService(
+            _mockLocalSettings.Object,
             _mockExceptionHandler.Object,
             _mockLogger.Object);
     }

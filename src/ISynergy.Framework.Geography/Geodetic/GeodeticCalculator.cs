@@ -1,3 +1,4 @@
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Global;
@@ -68,7 +69,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
         var sinU1 = tanU1 * cosU1;
 
         if (Math.Sign(distance) < 0)
-            throw new ArgumentOutOfRangeException(Properties.Resources.NEGATIVE_DISTANCE);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("NEGATIVE_DISTANCE"));
 
         // eq. 1
         var sigma1 = Math.Atan2(tanU1, cosAlpha1);
@@ -396,7 +397,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
         int numberOfPoints = 10)
     {
         if (numberOfPoints < 2)
-            throw new ArgumentOutOfRangeException(Properties.Resources.GEODETIC_PATH_MIN_2);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("GEODETIC_PATH_MIN_2"));
 
         if (start == end || numberOfPoints == 2)
             return [start, end];

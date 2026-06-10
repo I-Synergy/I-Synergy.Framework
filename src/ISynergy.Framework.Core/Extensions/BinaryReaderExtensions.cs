@@ -63,7 +63,6 @@ public static class BinaryReaderExtensions
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
     ///
-    [RequiresDynamicCode("Calls the non-generic ReadMatrix overload which requires dynamic code generation.")]
     public static T[,] ReadMatrix<T>(this BinaryReader stream, int rows, int columns)
         where T : struct
     {
@@ -74,7 +73,6 @@ public static class BinaryReaderExtensions
     ///   Reads a <c>struct</c> from a stream.
     /// </summary>
     /// 
-    [RequiresDynamicCode("Marshal.SizeOf and Array.CreateInstance with runtime types require dynamic code generation.")]
     public static Array ReadMatrix(this BinaryReader stream, Type type, params int[] lengths)
     {
         int size = Marshal.SizeOf(type);

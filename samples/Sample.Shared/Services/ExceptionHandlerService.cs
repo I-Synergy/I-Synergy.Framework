@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.Logging;
 

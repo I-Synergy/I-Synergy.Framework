@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 
 namespace ISynergy.Framework.Mathematics.Optimization;
 
-#if !NET35
 internal static class ExpressionParser
 {
     public static void Parse(SortedSet<string> list, Expression expr)
@@ -114,5 +113,4 @@ internal static class ExpressionParser
         return expr;
     }
 }
-#endif
 

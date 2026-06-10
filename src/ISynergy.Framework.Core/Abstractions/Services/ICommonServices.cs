@@ -1,3 +1,5 @@
+using ISynergy.Framework.Globalization.Abstractions.Services;
+
 namespace ISynergy.Framework.Core.Abstractions.Services;
 
 /// <summary>

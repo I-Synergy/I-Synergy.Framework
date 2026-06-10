@@ -1,8 +1,12 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Security;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -13,7 +17,7 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -53,15 +57,13 @@ public static class ServiceCollectionExtensions
         services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
         services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-        var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+        var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
+        services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
         services.TryAddSingleton<IMessengerService, MessengerService>();
         services.TryAddSingleton<IBusyService, BusyService>();
 
@@ -71,6 +73,9 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
         services.TryAddScoped<ISettingsService, TSettingsService>();
+        services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
         services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
         services.TryAddSingleton<TCommonServices>();
@@ -90,6 +95,19 @@ public static class ServiceCollectionExtensions
 
         action.Invoke(services);
 
+        return services;
+    }
+
+    /// <summary>
+    /// Configures the supported cultures for the application.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="cultures">The cultures to support.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection ConfigureSupportedCultures(this IServiceCollection services, params CultureInfo[] cultures)
+    {
+        services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService(cultures)));
         return services;
     }
 }

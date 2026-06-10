@@ -2,7 +2,7 @@ using ISynergy.Framework.AspNetCore.Globalization.Constraints;
 using ISynergy.Framework.AspNetCore.Globalization.Enumerations;
 using ISynergy.Framework.AspNetCore.Globalization.Options;
 using ISynergy.Framework.AspNetCore.Globalization.Providers;
-using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

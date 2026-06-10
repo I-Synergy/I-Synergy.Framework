@@ -77,11 +77,15 @@
 
     <!-- Tinted Gray control styles matching MAUI patterns -->
 
+    <Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
+    </Style>
+
     <Style x:Key="DefaultTextBoxStyle" TargetType="TextBox">
         <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
         <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="MinHeight" Value="32" />
+        <Setter Property="TextAlignment" Value="Start"/>
     </Style>
 
     <Style
@@ -93,6 +97,7 @@
         <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextAlignment" Value="Start"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     </Style>
 

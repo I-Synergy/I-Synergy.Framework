@@ -1,12 +1,12 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -20,6 +20,7 @@ public class DialogService : IDialogService, IDisposable
     private const string DialogCreationExceptionHandlerNotAvailable = "Exception handler service not available for dialog creation error";
 
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILocalSettings _localSettings;
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILanguageService _languageService;
     private readonly ILogger<DialogService>? _logger;
@@ -36,16 +37,19 @@ public class DialogService : IDialogService, IDisposable
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
     /// <param name="scopeFactory"></param>
+    /// <param name="localSettings"></param>
     /// <param name="exceptionHandlerService"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="logger">Optional logger for enhanced error handling.</param>
     public DialogService(
         IServiceScopeFactory scopeFactory,
+        ILocalSettings localSettings,
         IExceptionHandlerService exceptionHandlerService,
         ILanguageService languageService,
         ILogger<DialogService>? logger = null)
     {
         _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+        _localSettings = localSettings ?? throw new ArgumentNullException(nameof(localSettings));
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
         _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
         _logger = logger;
@@ -149,10 +153,9 @@ public class DialogService : IDialogService, IDisposable
 
         // Use semaphore to prevent multiple dialogs
         await _dialogSemaphore.WaitAsync();
+
         try
         {
-
-
             return await ShowMessageWithRetryAsync(
                 message,
                 title,
@@ -572,8 +575,6 @@ public class DialogService : IDialogService, IDisposable
     /// Prefer the strongly-typed overload <c>ShowDialogAsync&lt;TWindow, TViewModel, TEntity&gt;()</c>
     /// when the concrete window type is known at compile time.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "GetType() on the window instance is not trim-safe. Use ShowDialogAsync<TWindow,TViewModel,TEntity>() for AOT-safe dialog display.")]
     private async Task ShowDialogAsyncInternal<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
         try
@@ -805,6 +806,9 @@ public class DialogService : IDialogService, IDisposable
         {
             windowRef = window;
             viewModelRef = viewmodel;
+
+            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                window.FlowDirection = FlowDirection.RightToLeft;
 
             window.ViewModel = viewmodel;
 

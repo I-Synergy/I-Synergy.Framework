@@ -9,7 +9,6 @@ using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.XlsIO;
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Documents.Syncfusion.Services;
 
@@ -24,8 +23,6 @@ namespace ISynergy.Framework.Documents.Syncfusion.Services;
 /// this library and should implement a native document generation alternative.
 /// </para>
 /// </remarks>
-[RequiresUnreferencedCode("DocumentService uses Syncfusion libraries that rely on reflection for MailMerge and document processing. Not compatible with AOT publishing.")]
-[RequiresDynamicCode("Syncfusion DocIO and XlsIO libraries require dynamic code generation.")]
 internal class DocumentService : IDocumentService
 {
     private readonly ILogger _logger;

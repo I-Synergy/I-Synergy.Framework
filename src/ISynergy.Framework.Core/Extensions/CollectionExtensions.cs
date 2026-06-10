@@ -87,7 +87,7 @@ public static class CollectionExtensions
     public static bool CanMoveItemDown(this IList list, object? item)
     {
         Argument.IsNotNull(list);
-        
+
         if (item is null || list.Count <= 1)
             return false;
 
@@ -254,13 +254,12 @@ public static class CollectionExtensions
     /// <param name="collection">The collection.</param>
     /// <param name="elementType">Type of the array elements.</param>
     /// <returns>An array containing the collection items.</returns>
-    [RequiresDynamicCode("Array.CreateInstance with a runtime Type requires dynamic code generation.")]
     public static Array ToArray(this IEnumerable? collection, Type elementType)
     {
         Argument.IsNotNull(elementType);
 
         List<object> items;
-        
+
         if (collection is null)
         {
             items = [];

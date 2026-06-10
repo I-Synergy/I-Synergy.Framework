@@ -42,6 +42,13 @@ public static class Program
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(Program).Namespace!));
 
+        builder.Services.ConfigureSupportedCultures(cultures =>
+        {
+            cultures.AddCulture("nl");
+            cultures.AddCulture("de");
+            cultures.AddCulture("fr");
+            cultures.AddCulture("ar");
+        });
 
         var app = builder
             .Build()

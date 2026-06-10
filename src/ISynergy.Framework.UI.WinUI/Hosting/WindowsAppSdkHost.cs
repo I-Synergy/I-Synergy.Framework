@@ -1,5 +1,7 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Services;
+using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -7,6 +9,8 @@ using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.UI.Dispatching;
+using Microsoft.Windows.AppLifecycle;
+using System.Diagnostics;
 using WinRT;
 using HostOptions = ISynergy.Framework.UI.Options.HostOptions;
 using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
@@ -42,7 +46,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
         if (_applicationLifetime is null)
         {
-            throw new ArgumentException(ISynergy.Framework.UI.Properties.Resources.WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported, nameof(applicationLifetime));
+            throw new ArgumentException(LanguageService.Default.GetString("WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported"), nameof(applicationLifetime));
         }
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _hostLifetime = hostLifetime ?? throw new ArgumentNullException(nameof(hostLifetime));
@@ -81,6 +85,53 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
         ComWrappersSupport.InitializeComWrappers();
 
+        // ── Single-instance enforcement (opt-in) ────────────────
+        // Only enforced when ConfigureSingleInstance() was called on the builder.
+        if (AppActivationExtensions.IsSingleInstanceEnabled)
+        {
+            // Check for existing instances BEFORE creating the Application.
+            // No SynchronizationContext exists yet, so .Wait() is safe.
+            var instances = AppInstance.GetInstances();
+            Debug.WriteLine($"[SingleInstance] GetInstances returned {instances.Count} instance(s).");
+
+            AppInstance? existing = null;
+            foreach (var instance in instances)
+            {
+                if (!instance.IsCurrent)
+                {
+                    existing = instance;
+                    break;
+                }
+            }
+
+            if (existing is not null)
+            {
+                // Second instance — redirect activation and exit
+                Debug.WriteLine("[SingleInstance] Existing instance found. Redirecting...");
+                var activationArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+                Debug.WriteLine($"[SingleInstance] Activation kind: {activationArgs.Kind}");
+
+                try
+                {
+                    existing.RedirectActivationToAsync(activationArgs).AsTask().Wait();
+                    Debug.WriteLine("[SingleInstance] Redirect completed.");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[SingleInstance] Redirect failed: {ex}");
+                }
+
+                Debug.WriteLine("[SingleInstance] Exiting second instance.");
+                return;
+            }
+
+            // First instance — subscribe to future redirected activations
+            Debug.WriteLine("[SingleInstance] First instance. Subscribing to Activated event.");
+            AppInstance.GetCurrent().Activated += OnAppInstanceActivated;
+            Debug.WriteLine("[SingleInstance] Ready to receive redirected activations.");
+        }
+        // ── End single-instance enforcement ─────────────────────
+
         // Make the final service provider available via ServiceLocator before TApp is constructed,
         // so the Application base constructor can resolve services before Services is injected.
         ServiceLocator.SetLocatorProvider(Services);
@@ -113,6 +164,18 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
                     // Fire IHostApplicationLifetime.Started
                     _applicationLifetime.NotifyStarted();
+
+                    // Process initial activation args (command-line, protocol URI, etc.)
+                    // from the first launch. Defer with low priority so the UI window
+                    // has been created before callbacks try to show dialogs.
+                    if (AppActivationExtensions.IsSingleInstanceEnabled)
+                    {
+                        var initialArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+                        Debug.WriteLine($"[SingleInstance] Processing initial activation: Kind={initialArgs.Kind}");
+                        DispatcherQueue.GetForCurrentThread().TryEnqueue(
+                            DispatcherQueuePriority.Low,
+                            () => AppActivationExtensions.Dispatch(null, initialArgs));
+                    }
                 }
                 catch (Exception e)
                 {
@@ -222,6 +285,16 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         }
 
         //_logger.Stopped();
+    }
+
+    /// <summary>
+    /// Handles redirected activations from second instances.
+    /// Dispatches to the registered activation callbacks.
+    /// </summary>
+    private static void OnAppInstanceActivated(object? sender, AppActivationArguments e)
+    {
+        Debug.WriteLine($"[SingleInstance] Activated event fired: Kind={e.Kind}");
+        AppActivationExtensions.Dispatch(sender, e);
     }
 
     public void Dispose() => DisposeAsync().AsTask().GetAwaiter().GetResult();

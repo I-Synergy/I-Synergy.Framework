@@ -1,7 +1,6 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -23,9 +22,6 @@ public static class NavigationExtensions
     /// This overload calls <see cref="CreatePage{TViewModel}(IServiceProvider, TViewModel, object?)"/>
     /// with a <see langword="null"/> ViewModel; the ViewModel is resolved from the service container.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
     public static View CreatePage<TViewModel>(IServiceProvider serviceProvider, object? parameter = null) where TViewModel : class, IViewModel
         => CreatePage<TViewModel>(serviceProvider, default(TViewModel)!, parameter);
 
@@ -45,9 +41,6 @@ public static class NavigationExtensions
     /// The view-type lookup calls <c>GetRelatedViewType()</c> which performs an assembly scan.
     /// This is not compatible with NativeAOT or aggressive trimming without a source-generated view map.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
     public static View CreatePage<TViewModel>(IServiceProvider serviceProvider, TViewModel viewModel, object? parameter = null) where TViewModel : class, IViewModel
     {
         if (viewModel is null)

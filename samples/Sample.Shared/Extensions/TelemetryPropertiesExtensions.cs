@@ -14,14 +14,13 @@ public static class TelemetryPropertiesExtensions
 
         if (context.IsAuthenticated && context.Profile is { } profile)
         {
-            properties.Add(nameof(profile.Username), profile.Username);
-            properties.Add(nameof(profile.Email), profile.Email);
             properties.Add(nameof(profile.UserId), profile.UserId.ToString());
+            properties.Add(nameof(profile.Name), profile.Name);
+            properties.Add(nameof(profile.Email), profile.Email);
 
-            properties.Add(nameof(profile.AccountId), profile.AccountId.ToString());
-            properties.Add(nameof(profile.Description), profile.Description);
+            properties.Add(nameof(profile.TenantId), profile.TenantId.ToString());
+
             properties.Add(nameof(profile.Expiration), profile.Expiration.ToString());
-
             properties.Add(nameof(profile.CountryCode), profile.CountryCode);
             properties.Add(nameof(profile.CultureCode), profile.CultureCode);
             properties.Add(nameof(profile.TimeZoneId), profile.TimeZoneId);

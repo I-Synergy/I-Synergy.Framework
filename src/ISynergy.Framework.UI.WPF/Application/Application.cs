@@ -7,6 +7,7 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,7 +81,7 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _commonServices.BusyService.StartBusy();
 
-        if (_settingsService.LocalSettings is not null)
+        if (_settingsService.LocalSettings is not null && !string.IsNullOrEmpty(_settingsService.LocalSettings.Language))
             _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
         _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
@@ -324,6 +325,14 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         MainWindow.Show();
         MainWindow.Activate();
+
+        // Apply RTL flow direction from saved settings so every WPF app
+        // gets correct layout from the first frame.
+        var language = _settingsService?.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
+        if (MainWindow is FrameworkElement wpfRoot)
+        {
+            wpfRoot.ApplyFlowDirection(language);
+        }
 
         InitializeApplication();
     }

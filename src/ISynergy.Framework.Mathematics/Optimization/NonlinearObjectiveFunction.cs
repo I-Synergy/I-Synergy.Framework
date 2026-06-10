@@ -86,7 +86,6 @@ public class NonlinearObjectiveFunction : IObjectiveFunction
         Gradient = gradient;
     }
 
-#if !NET35
     /// <summary>
     ///     Creates a new objective function specified through a lambda expression.
     /// </summary>
@@ -121,7 +120,6 @@ public class NonlinearObjectiveFunction : IObjectiveFunction
         Function = func.Compile();
         Gradient = grad.Compile();
     }
-#endif
 
     /// <summary>
     ///     Gets the name of each input variable.

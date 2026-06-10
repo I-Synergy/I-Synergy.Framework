@@ -1,5 +1,4 @@
 using System.Globalization;
-using ISynergy.Framework.Core.Formatters;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -87,19 +86,19 @@ public class CurrencyToStringConverter : IValueConverter
             {
                 return currencyResult;
             }
-            
+
             // Fallback: Remove currency symbols and other formatting - accept any valid input
-            var cleaned = new string(stringValue.Where(c => 
-                char.IsDigit(c) || 
-                c.ToString() == culture.NumberFormat.NumberDecimalSeparator || 
+            var cleaned = new string(stringValue.Where(c =>
+                char.IsDigit(c) ||
+                c.ToString() == culture.NumberFormat.NumberDecimalSeparator ||
                 c == '-' ||
                 c == '.' ||
                 c == ',').ToArray());
-            
+
             // Normalize decimal separator
             cleaned = cleaned.Replace(",", culture.NumberFormat.NumberDecimalSeparator);
             cleaned = cleaned.Replace(".", culture.NumberFormat.NumberDecimalSeparator);
-            
+
             if (decimal.TryParse(cleaned, NumberStyles.Number, culture, out var result))
             {
                 return result;

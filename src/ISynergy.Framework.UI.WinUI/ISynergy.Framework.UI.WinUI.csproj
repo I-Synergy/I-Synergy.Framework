@@ -93,7 +93,8 @@
 		<None Remove="Styles\Themeff4343.xaml" />
 		<None Remove="Styles\Themeff8c00.xaml" />
 		<None Remove="Styles\Themeffb900.xaml" />
-		<None Remove="Views\SelectionView.xaml" />
+		<None Remove="Views\SingleSelectionView.xaml" />
+		<None Remove="Views\MultipleSelectionView.xaml" />
 		<None Remove="Windows\LanguageWindow.xaml" />
 		<None Remove="Windows\NoteWindow.xaml" />
 		<None Remove="Windows\ThemeWindow.xaml" />
@@ -268,7 +269,10 @@
 		<Page Include="Styles\Themeffb900.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Views\SelectionView.xaml">
+		<Page Include="Views\SingleSelectionView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\MultipleSelectionView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Windows\LanguageWindow.xaml">

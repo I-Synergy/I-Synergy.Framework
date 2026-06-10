@@ -1,4 +1,4 @@
-using ISynergy.Framework.Core.Formatters;
+using ISynergy.Framework.Globalization.Formatters;
 using ISynergy.Framework.UI.Behaviors.Base;
 
 namespace ISynergy.Framework.UI.Behaviors;

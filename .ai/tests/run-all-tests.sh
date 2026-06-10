@@ -45,6 +45,7 @@ run_test "6. CLAUDE.md References" "python3 '$SCRIPT_DIR/validate-claude-md.py'"
 run_test "7. Settings & Structure" "python3 '$SCRIPT_DIR/validate-settings.py'"
 run_test "8. Copilot Integration" "python3 '$SCRIPT_DIR/validate-copilot.py'"
 run_test "9. Integration Smoke Tests" "python3 '$SCRIPT_DIR/smoke-test.py'"
+run_test "10. Reasonix Integration" "python3 '$SCRIPT_DIR/validate-reasonix.py'"
 
 # Final Summary
 echo "========================================="

@@ -271,6 +271,26 @@ public abstract class View : ContentPage, IView
         ViewModel = viewModel;
     }
 
+    /// <summary>
+    /// When the page appears, automatically inherits the <see cref="FlowDirection"/>
+    /// from the application's main <see cref="Microsoft.Maui.Controls.Window"/>.
+    /// This ensures all runtime-created pages (dialogs, modal navigation, etc.)
+    /// respect the RTL/LTR setting without per-view configuration.
+    /// </summary>
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (Application.Current?.Windows.Count > 0)
+        {
+            var mainWindow = Application.Current.Windows[0];
+            if (mainWindow.FlowDirection != FlowDirection.MatchParent)
+            {
+                FlowDirection = mainWindow.FlowDirection;
+            }
+        }
+    }
+
     #region IDisposable
     // Dispose() calls Dispose(true)
     /// <summary>

@@ -5,7 +5,6 @@ using ISynergy.Framework.Mail.Microsoft365.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mail.Microsoft365.Extensions;
 
@@ -30,8 +29,6 @@ public static class ServiceCollectionExtensions
     /// full AOT annotations.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("Registers MailService which depends on Microsoft.Graph SDK using reflection-based JSON serialization. Not compatible with AOT publishing in this configuration.")]
-    [RequiresDynamicCode("Calls BindWithReload which uses ConfigurationBinder.Bind requiring dynamic code generation at runtime.")]
     public static IServiceCollection AddMicrosoft365MailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();

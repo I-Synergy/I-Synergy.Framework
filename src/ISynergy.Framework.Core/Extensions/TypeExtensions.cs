@@ -55,8 +55,6 @@ public static class TypeExtensions
     ///
     /// <param name="type">The type whose default value should be retrieved.</param>
     ///
-    [RequiresUnreferencedCode("Creating an instance of a value type by runtime Type is not AOT-safe.")]
-    [RequiresDynamicCode("Activator.CreateInstance on an unknown value type requires dynamic code.")]
     public static object? GetDefaultValue(this Type type)
     {
         if (type.GetTypeInfo().IsValueType)
@@ -72,7 +70,6 @@ public static class TypeExtensions
     /// <param name="jagged">Whether to return a type for a jagged array of the given rank, or a 
     /// multdimensional array. Default is false (default is to return multidimensional array types).</param>
     /// 
-    [RequiresDynamicCode("Creating an array type at runtime requires dynamic code generation.")]
     public static Type MakeArrayType(this Type elementType, int rank, bool jagged)
     {
         if (!jagged)

@@ -9,72 +9,66 @@ namespace Sample.Models;
 public sealed class Profile : IProfile
 {
     /// <summary>
-    /// Gets the account identifier.
+    /// Gets or sets the user identifier.
     /// </summary>
-    /// <value>The account identifier.</value>
-    public Guid AccountId { get; set; }
-    /// <summary>
-    /// Gets the account description.
-    /// </summary>
-    /// <value>The account description.</value>
-    public required string Description { get; set; }
+    public Guid UserId { get; set; }
 
     /// <summary>
-    /// Gets the time zone identifier.
+    /// Gets or sets the active tenant identifier.
+    /// Equals UserId for personal accounts (no organizations),
+    /// or the selected organization's ID when an organization is active.
     /// </summary>
-    /// <value>The time zone identifier.</value>
+    public Guid TenantId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the full name of the user or organization.
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the time zone identifier.
+    /// </summary>
     public required string TimeZoneId { get; set; }
 
     /// <summary>
-    /// Gets the country code.
+    /// Gets or sets the country code.
     /// </summary>
     public required string CountryCode { get; set; }
 
     /// <summary>
-    /// Gets the culture code.
+    /// Gets or sets the culture code.
     /// </summary>
-    /// <value>The culture code.</value>
     public required string CultureCode { get; set; }
 
     /// <summary>
-    /// Gets the user identifier.
+    /// Gets or sets the email.
     /// </summary>
-    /// <value>The user identifier.</value>
-    public Guid UserId { get; set; }
-
-    /// <summary>
-    /// Gets the username.
-    /// </summary>
-    /// <value>The username.</value>
-    public required string Username { get; set; }
-
-    /// <summary>
-    /// Gets the email.
-    /// </summary>
-    /// <value>The email.</value>
     public required string Email { get; set; }
 
     /// <summary>
-    /// Gets the roles.
+    /// Gets or sets the roles.
     /// </summary>
-    /// <value>The roles.</value>
     public List<string> Roles { get; set; } = new();
 
     /// <summary>
-    /// Gets the features.
+    /// Gets or sets the features.
     /// </summary>
-    /// <value>The features.</value>
     public List<string> Features { get; set; } = new();
 
     /// <summary>
-    /// Gets the license expration.
+    /// Gets or sets the license expiration.
     /// </summary>
-    /// <value>The license expration.</value>
     public DateTimeOffset Expiration { get; set; } = DateTimeOffset.Now;
 
     /// <summary>
-    /// Gets the token.
+    /// Gets or sets the token.
     /// </summary>
-    /// <value>The token.</value>
     public required Token Token { get; set; }
+
+    /// <summary>
+    /// Gets or sets the organizations the user belongs to.
+    /// </summary>
+    public List<Organization> Organizations { get; set; } = new();
+
+    IReadOnlyList<IOrganization> IProfile.Organizations => Organizations.Cast<IOrganization>().ToList();
 }

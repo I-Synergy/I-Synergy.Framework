@@ -32,17 +32,5 @@ public abstract class ViewModelBladeWizard<TModel> : WizardViewModelBase<TModel>
         ILogger<ViewModelBladeWizard<TModel>> logger)
         : base(commonServices, logger)
     {
-        SubmitCommand = new AsyncRelayCommand<TModel>(
-            execute: async e => await SubmitAsync(e ?? SelectedItem!),
-            canExecute: e => (e ?? SelectedItem) is not null);
-    }
-
-    public virtual async Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true)
-    {
-        if (Validate(validateUnderlayingProperties))
-        {
-            OnSubmitted(new Events.SubmitEventArgs<TModel>(e));
-            await CloseAsync();
-        }
     }
 }

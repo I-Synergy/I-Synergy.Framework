@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -8,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
-#if !NET35 && !NET40
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 /// <summary>
@@ -27,12 +25,9 @@ public static partial class NpzFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static void Load<T>(byte[] bytes, out T value)
+    public static void Load<T>(byte[] bytes, out T value)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         using (var dict = Load<T>(bytes))
@@ -51,12 +46,9 @@ public static partial class NpzFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static void Load<T>(string path, out T value)
+    public static void Load<T>(string path, out T value)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         using (var dict = Load<T>(path))
@@ -75,12 +67,9 @@ public static partial class NpzFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static void Load<T>(Stream stream, out T value)
+    public static void Load<T>(Stream stream, out T value)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         using (var dict = Load<T>(stream))
@@ -95,12 +84,9 @@ public static partial class NpzFormat
     /// <typeparam name="T">The type to be loaded from the npy-formatted file.</typeparam>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static NpzDictionary<T> Load<T>(byte[] bytes)
+    public static NpzDictionary<T> Load<T>(byte[] bytes)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         return Load<T>(new MemoryStream(bytes));
@@ -117,13 +103,10 @@ public static partial class NpzFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static NpzDictionary<T> Load<T>(string path, out NpzDictionary<T> value)
-        where T : class,
-#if !NETSTANDARD1_4
-        ICloneable,
-#endif
-        IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
+    public static NpzDictionary<T> Load<T>(string path, out NpzDictionary<T> value)
+         where T : class,
+         ICloneable,
+         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         return value = Load<T>(new FileStream(path, FileMode.Open));
     }
@@ -139,12 +122,9 @@ public static partial class NpzFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static NpzDictionary<T> Load<T>(Stream stream, out NpzDictionary<T> value)
+    public static NpzDictionary<T> Load<T>(Stream stream, out NpzDictionary<T> value)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         return value = Load<T>(stream);
@@ -156,12 +136,9 @@ public static partial class NpzFormat
     /// <typeparam name="T">The type to be loaded from the npy-formatted file.</typeparam>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static NpzDictionary<T> Load<T>(string path)
+    public static NpzDictionary<T> Load<T>(string path)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         return Load<T>(new FileStream(path, FileMode.Open));
@@ -174,12 +151,9 @@ public static partial class NpzFormat
     /// <typeparam name="T">The type to be loaded from the npy-formatted file.</typeparam>
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary<T> which requires dynamic code generation.")]    public static NpzDictionary<T> Load<T>(Stream stream)
+    public static NpzDictionary<T> Load<T>(Stream stream)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         return new(stream);
@@ -190,8 +164,6 @@ public static partial class NpzFormat
     /// </summary>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>A collection of arrays.</returns>
-    [RequiresUnreferencedCode("Calls LoadMatrix(Stream) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls LoadMatrix(Stream) which requires dynamic code generation.")]
     public static NpzDictionary<Array> LoadMatrix(byte[] bytes)
     {
         return LoadMatrix(new MemoryStream(bytes));
@@ -203,8 +175,6 @@ public static partial class NpzFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>A collection of arrays.</returns>
-    [RequiresUnreferencedCode("Calls LoadMatrix(Stream) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls LoadMatrix(Stream) which requires dynamic code generation.")]
     public static NpzDictionary<Array> LoadMatrix(string path)
     {
         return LoadMatrix(new FileStream(path, FileMode.Open));
@@ -216,8 +186,6 @@ public static partial class NpzFormat
     /// </summary>
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <returns>A collection of arrays.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary which requires dynamic code generation.")]
     public static NpzDictionary<Array> LoadMatrix(Stream stream)
     {
         return new NpzDictionary(stream, false);
@@ -228,8 +196,6 @@ public static partial class NpzFormat
     /// </summary>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>A collection of arrays.</returns>
-    [RequiresUnreferencedCode("Calls LoadJagged(Stream) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls LoadJagged(Stream) which requires dynamic code generation.")]
     public static NpzDictionary<Array> LoadJagged(byte[] bytes)
     {
         return LoadJagged(new MemoryStream(bytes));
@@ -241,8 +207,6 @@ public static partial class NpzFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>A collection of arrays.</returns>
-    [RequiresUnreferencedCode("Calls LoadJagged(Stream) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls LoadJagged(Stream) which requires dynamic code generation.")]
     public static NpzDictionary<Array> LoadJagged(string path)
     {
         return LoadJagged(new FileStream(path, FileMode.Open));
@@ -254,11 +218,8 @@ public static partial class NpzFormat
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <param name="trim">Pass true to remove null or empty elements from the loaded array.</param>
     /// <returns>A jagged array containing the values available in the given stream.</returns>
-    [RequiresUnreferencedCode("Instantiates NpzDictionary which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Instantiates NpzDictionary which requires dynamic code generation.")]
     public static NpzDictionary<Array> LoadJagged(Stream stream, bool trim = true)
     {
         return new NpzDictionary(stream, true);
     }
 }
-#endif

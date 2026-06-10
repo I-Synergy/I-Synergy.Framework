@@ -1,11 +1,10 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
@@ -203,12 +202,11 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
+        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelSingleSelectionBlade<TestItem>>();
         selectionVM.SetItems(Items!);
-        selectionVM.SetSelectedItems(SelectedItems);
-        selectionVM.SetSelectionMode(SelectionModes.Single);
+        selectionVM.SetSelectedItem(SelectedItems.FirstOrDefault());
         selectionVM.Submitted += SelectionVM_Submitted;
-        return _navigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
+        return _navigationService.OpenBladeAsync<ISingleSelectionView>(this, selectionVM);
     }
 
     /// <summary>
@@ -216,12 +214,12 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<TestItem>> e)
+    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<TestItem> e)
     {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
+        if (sender is ViewModelSingleSelectionBlade<TestItem> vm)
             vm.Submitted -= SelectionVM_Submitted;
 
-        SelectedItems = e.Result;
+        SelectedItems = new List<TestItem> { e.Result };
     }
 }
 

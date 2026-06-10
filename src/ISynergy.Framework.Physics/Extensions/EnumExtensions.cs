@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Attributes;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ISynergy.Framework.Physics.Extensions;
@@ -32,7 +31,6 @@ public static class EnumExtensions
     ///   that maps each enum value to its symbol string using compile-time-known string literals.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("GetSymbol uses reflection to read SymbolAttribute from enum members. Use a static lookup table for AOT-compatible scenarios.")]
     public static string GetSymbol<T>(this T enumerationValue)
         where T : struct
     {

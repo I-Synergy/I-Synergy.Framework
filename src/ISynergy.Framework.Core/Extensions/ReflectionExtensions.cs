@@ -315,7 +315,6 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="_self">The root assembly.</param>
     /// <returns>A list of all referenced assemblies.</returns>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible; loaded types may be trimmed.")]
     public static List<Assembly> GetAllReferencedAssemblies(this Assembly _self)
     {
         var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());
@@ -361,7 +360,6 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="_self">The root assembly.</param>
     /// <returns>An array of all referenced assembly names.</returns>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible; loaded types may be trimmed.")]
     public static AssemblyName[] GetAllReferencedAssemblyNames(this Assembly _self)
     {
         var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());

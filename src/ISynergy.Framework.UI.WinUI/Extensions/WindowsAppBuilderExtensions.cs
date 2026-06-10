@@ -1,10 +1,13 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -19,8 +22,10 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
+
+using Windows.ApplicationModel.Activation;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -147,14 +152,17 @@ public static class WindowsAppBuilderExtensions
         }
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-        var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+        var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
 #pragma warning restore IL2026
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
+
+        // Fallback: English-only if ConfigureSupportedCultures was not called
+        appBuilder.Services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
+
         appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
 
         appBuilder.Services.TryAddSingleton<TContext>();
@@ -166,6 +174,10 @@ public static class WindowsAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
         appBuilder.Services.TryAddSingleton<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        appBuilder.Services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        appBuilder.Services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
+
         appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
         appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
         appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
@@ -184,6 +196,59 @@ public static class WindowsAppBuilderExtensions
 
         action.Invoke(appBuilder.Services);
 
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Registers callbacks that are invoked when a second instance redirects its
+    /// activation (protocol URI, command-line args, etc.) to this instance.
+    /// <para>
+    /// Separate from single-instance enforcement (handled by WindowsAppSdkHost).
+    /// This method only handles WHAT to do with the activation arguments.
+    /// </para>
+    /// </summary>
+    /// <param name="builder">The host application builder.</param>
+    /// <param name="defaultAction">Called with command-line arguments (fallback).</param>
+    /// <param name="protocolAction">Called for protocol URI activations (myapp://...).</param>
+    /// <param name="launchAction">Called for standard launch activations.</param>
+    public static IHostApplicationBuilder ConfigureActivationHandlers(
+        this IHostApplicationBuilder builder,
+        Action<string[]> defaultAction,
+        Action<ProtocolActivatedEventArgs> protocolAction,
+        Action<LaunchActivatedEventArgs> launchAction)
+    {
+        AppActivationExtensions.SetCallbacks(defaultAction, protocolAction, launchAction);
+        return builder;
+    }
+
+    /// <summary>
+    /// Enables single-instance behavior. When a second instance is launched, its
+    /// activation is redirected to the first instance and the second process exits.
+    /// <para>
+    /// Without this call, multiple instances can run simultaneously.
+    /// </para>
+    /// </summary>
+    public static IHostApplicationBuilder ConfigureSingleInstance(this IHostApplicationBuilder builder)
+    {
+        AppActivationExtensions.IsSingleInstanceEnabled = true;
+        return builder;
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="appBuilder">The host application builder.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="IHostApplicationBuilder"/>.</returns>
+    public static IHostApplicationBuilder ConfigureSupportedCultures(
+        this IHostApplicationBuilder appBuilder,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        var builder = new SupportedCulturesBuilder();
+        configure(builder);
+        appBuilder.Services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+            s => new SupportedCulturesService(builder.Build())));
         return appBuilder;
     }
 }

@@ -68,7 +68,14 @@ public partial class App : Application
                 services.AddNugetServiceIntegrations(configuration);
             },
             mainAssembly,
-            f => f.Name!.StartsWith(typeof(App).Namespace!));
+            f => f.Name!.StartsWith(typeof(App).Namespace!))
+            .ConfigureSupportedCultures(cultures =>
+            {
+                cultures.AddCulture("nl");
+                cultures.AddCulture("de");
+                cultures.AddCulture("fr");
+                cultures.AddCulture("ar");
+            });
 
         return hostBuilder;
     }

@@ -1,6 +1,5 @@
 using ISynergy.Framework.Monitoring.Messages;
 using Microsoft.AspNetCore.SignalR.Client;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Monitoring.Client.Abstractions.Services;
 
@@ -21,7 +20,6 @@ public interface IClientMonitorService
     /// the JSON protocol with a source-generated <c>JsonSerializerContext</c> that includes
     /// <see cref="HubMessage"/> via the <paramref name="connectionAction"/> callback.
     /// </remarks>
-    [RequiresUnreferencedCode("SignalR HubConnectionBuilder may use reflection for message deserialization. Configure AddJsonProtocol with a JsonSerializerContext for AOT compatibility.")]
     Task ConnectAsync(string? token, Action<HubConnection> connectionAction);
     /// <summary>
     /// Disconnects the asynchronous.

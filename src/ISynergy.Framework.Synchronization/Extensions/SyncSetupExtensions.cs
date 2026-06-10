@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Synchronization.Extensions;
 
@@ -42,9 +41,6 @@ public static class SyncSetupExtensions
     /// use <c>ISynergy.Framework.Synchronization</c> until <c>Dotmim.Sync</c> gains AOT support.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "WithTenantFilter uses reflection to read TableAttribute and property names from runtime types. " +
-        "Ensure entity types and their attributes are preserved in trimmed builds.")]
     public static SyncSetup WithTenantFilter(this SyncSetup setup, Type[] entities)
     {
         foreach (var entity in entities.EnsureNotNull())

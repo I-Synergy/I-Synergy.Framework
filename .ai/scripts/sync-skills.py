@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
 Sync skill files from .ai/skills/ (the single source of truth) to:
-  - .claude/skills/  thin wrappers using !`cat ...` (Claude Code executes these)
-  - .github/skills/  full content copies       (GitHub Copilot reads these directly)
+  - .claude/skills/   thin wrappers using !`cat ...` (Claude Code executes these)
+  - .github/skills/   full content copies       (GitHub Copilot reads these directly)
+  - .reasonix/skills/ thin wrappers referencing .ai/skills/ (avoids duplication)
 
 Usage:
-    python sync-skills.py              # sync all skills to both targets
+    python sync-skills.py              # sync all skills to all targets
     python sync-skills.py --from-hook  # hook mode: reads tool JSON from stdin,
                                        # only acts on .ai/skills/ writes
     python sync-skills.py --dry-run    # show what would change without writing
@@ -20,9 +21,11 @@ from pathlib import Path
 
 
 SCRIPT_DIR   = Path(__file__).parent.parent.parent  # .ai/scripts/ -> .ai/ -> repo root
-AI_SKILLS    = SCRIPT_DIR / ".ai"     / "skills"
-CLAUDE_SKILLS = SCRIPT_DIR / ".claude" / "skills"
-GITHUB_SKILLS = SCRIPT_DIR / ".github" / "skills"
+AI_SKILLS     = SCRIPT_DIR / ".ai"      / "skills"
+AI_AGENTS     = SCRIPT_DIR / ".ai"      / "agents"
+CLAUDE_SKILLS  = SCRIPT_DIR / ".claude"  / "skills"
+GITHUB_SKILLS  = SCRIPT_DIR / ".github"  / "skills"
+REASONIX_SKILLS = SCRIPT_DIR / ".reasonix" / "skills"
 
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 FIELD_RE       = re.compile(r"^(\w[\w-]*):\s*(.+)$", re.MULTILINE)
@@ -107,6 +110,23 @@ def sync_skill(skill_dir: Path, dry_run: bool = False) -> list[str]:
     if action != "OK":
         msgs.append(f"  {action} .github/skills/{skill_dir.name}/SKILL.md")
 
+    # .reasonix/skills/ — thin wrapper referencing .ai/skills/ (avoids duplication)
+    # Skip if skill name collides with an agent — sync-agents.py handles those
+    if AI_AGENTS.exists() and (AI_AGENTS / f"{skill_dir.name}.md").exists():
+        msgs.append(f"  SKIP .reasonix/skills/{skill_dir.name}/SKILL.md (agent-owned)")
+    else:
+        reasonix_wrapper = (
+            f"---\n"
+            f"name: {name}\n"
+            f"description: {description}\n"
+            f"---\n\n"
+            f"Load and follow the instructions in `.ai/skills/{skill_dir.name}/SKILL.md`.\n"
+        )
+        reasonix_path = REASONIX_SKILLS / skill_dir.name / "SKILL.md"
+        action = _write_if_changed(reasonix_path, reasonix_wrapper, dry_run)
+        if action != "OK":
+            msgs.append(f"  {action} .reasonix/skills/{skill_dir.name}/SKILL.md")
+
     if not msgs:
         msgs.append(f"  OK   {skill_dir.name}")
 
@@ -121,7 +141,7 @@ def sync_all(dry_run: bool = False) -> int:
         return 1
 
     prefix = "[DRY RUN] " if dry_run else ""
-    print(f"{prefix}Syncing .ai/skills/ -> .claude/skills/ + .github/skills/")
+    print(f"{prefix}Syncing .ai/skills/ -> .claude/skills/ + .github/skills/ + .reasonix/skills/")
 
     results = []
     valid_names = set()
@@ -133,6 +153,12 @@ def sync_all(dry_run: bool = False) -> int:
 
     results.extend(_remove_stale(CLAUDE_SKILLS, valid_names, ".claude/skills", dry_run))
     results.extend(_remove_stale(GITHUB_SKILLS, valid_names, ".github/skills", dry_run))
+
+    # For .reasonix/skills/ stale check, also include agent names (synced by sync-agents.py)
+    if AI_AGENTS.exists():
+        agent_names = {f.stem for f in AI_AGENTS.iterdir() if f.is_file() and f.suffix == ".md"}
+        valid_names |= agent_names
+    results.extend(_remove_stale(REASONIX_SKILLS, valid_names, ".reasonix/skills", dry_run))
 
     for r in results:
         print(r)
@@ -172,7 +198,7 @@ def sync_from_hook() -> int:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Sync .claude/skills/ and .github/skills/ from .ai/skills/"
+        description="Sync .claude/skills/ + .github/skills/ + .reasonix/skills/ from .ai/skills/"
     )
     parser.add_argument("--from-hook", action="store_true",
                         help="Hook mode: read tool JSON from stdin")

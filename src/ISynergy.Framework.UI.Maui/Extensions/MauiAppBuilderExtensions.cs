@@ -1,9 +1,12 @@
-using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -17,7 +20,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
 
@@ -181,14 +184,17 @@ public static class MauiAppBuilderExtensions
         }
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-        var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+        var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
 #pragma warning restore IL2026
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
+
+        // Fallback: English-only if ConfigureSupportedCultures was not called
+        appBuilder.Services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
+
         appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
         appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
@@ -202,6 +208,9 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
         appBuilder.Services.TryAddSingleton<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        appBuilder.Services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        appBuilder.Services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
         appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
@@ -218,23 +227,59 @@ public static class MauiAppBuilderExtensions
 
         action.Invoke(appBuilder);
 
-        appBuilder
-            .UseMauiCommunityToolkitMediaElement(false)
-            .ConfigureFonts(fonts =>
-            {
-                fonts.AddFont("segoeui.ttf", "SegoeUI");
-                fonts.AddFont("segoesb.ttf", "SegoeSemiBold");
-                fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
-                fonts.AddFont("segoeuil.ttf", "SegoeUILight");
-                fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");
-                fonts.AddFont("segoeuisb.ttf", "SegoeUISemiBold");
-                fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
-                fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
-                fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
-                fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
-                fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
-            });
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Registers the framework's default fonts with the app builder, then invokes an optional
+    /// delegate for the consumer's own fonts. Framework fonts are registered first, so consumer
+    /// fonts passed via <paramref name="configureFonts"/> take priority when aliases overlap.
+    /// </summary>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configureFonts">Optional delegate to register additional consumer fonts.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder UseFonts(
+        this MauiAppBuilder appBuilder,
+        Action<IFontCollection>? configureFonts = null)
+    {
+        appBuilder.ConfigureFonts(fonts =>
+        {
+            fonts.AddFont("segoeui.ttf", "SegoeUI");
+            fonts.AddFont("segoeuisb.ttf", "SegoeSemiBold");
+            fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
+            fonts.AddFont("segoeuil.ttf", "SegoeUILight");
+            fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");
+            fonts.AddFont("segoeuisb.ttf", "SegoeUISemiBold");
+            fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
+            fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
+            fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
+            fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
+            fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
+            fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
+        });
+
+        if (configureFonts is not null)
+            appBuilder.ConfigureFonts(configureFonts);
+
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder ConfigureSupportedCultures(
+        this MauiAppBuilder appBuilder,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        var builder = new SupportedCulturesBuilder();
+        configure(builder);
+
+        appBuilder.Services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+            s => new SupportedCulturesService(builder.Build())));
 
         return appBuilder;
     }

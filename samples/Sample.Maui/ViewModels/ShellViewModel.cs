@@ -3,8 +3,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-
-#pragma warning disable S2583 // FluentUI icon constants may be null at runtime; null-coalescing guard is intentional
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -13,18 +11,13 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
 using Sample.Extensions;
-using Timer = System.Timers.Timer;
 
 namespace Sample.ViewModels;
 
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
-    private readonly Timer _clockTimer; // NOSONAR - field is needed to prevent the timer from being garbage collected
-
     /// <summary>
     /// Gets or sets the Version property value.
     /// </summary>
@@ -37,7 +30,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     public AsyncRelayCommand SlideshowCommand { get; private set; }
     public AsyncRelayCommand InfoCommand { get; private set; }
-    public AsyncRelayCommand ControlsCommand { get; private set; }
+    public AsyncRelayCommand CustomControlsCommand { get; private set; }
+    public AsyncRelayCommand MauiControlsCommand { get; private set; }
     public AsyncRelayCommand SyncCommand { get; private set; }
 
     /// <summary>
@@ -58,17 +52,12 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         ILogger<ShellViewModel> logger)
         : base(commonServices, dialogService, navigationService, settingsService, scopeFactory, logger)
     {
-        SetClock();
-
-        _clockTimer = new Timer(TimeSpan.FromSeconds(30));
-        _clockTimer.Elapsed += ClockTimerCallBack;
-        _clockTimer.Start();
-
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
 
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
-        ControlsCommand = new AsyncRelayCommand(OpenControlsAsync);
+        CustomControlsCommand = new AsyncRelayCommand(OpenCustomControlsAsync);
+        MauiControlsCommand = new AsyncRelayCommand(OpenMauiControlsAsync);
         SlideshowCommand = new AsyncRelayCommand(OpenSlideshowAsync);
         SyncCommand = new AsyncRelayCommand(OpenSyncAsync);
 
@@ -99,7 +88,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             PrimaryItems?.Clear();
 
             PrimaryItems?.Add(new NavigationItem("Info", FluentUI.info_20_regular ?? string.Empty, primaryColor, InfoCommand)); // NOSONAR
-            PrimaryItems?.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, ControlsCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("CustomControls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, CustomControlsCommand)); // NOSONAR
+            PrimaryItems?.Add(new NavigationItem("MAUI Controls", FluentUI.app_generic_20_regular ?? string.Empty, primaryColor, MauiControlsCommand)); // NOSONAR
             PrimaryItems?.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular ?? string.Empty, primaryColor, SlideshowCommand)); // NOSONAR
             PrimaryItems?.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular ?? string.Empty, primaryColor, SyncCommand)); // NOSONAR
 
@@ -129,7 +119,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
                 languageVM.Submitted += (s, e) =>
                 {
-                    _settingsService.LocalSettings.Language = e.Result;
+                    _settingsService.LocalSettings.Language = e.Result.Name;
                     _settingsService.SaveLocalSettings();
                     e.Result.SetLocalizationLanguage();
                     _commonServices.RestartApplication();
@@ -152,14 +142,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
-    private void ClockTimerCallBack(object? sender, System.Timers.ElapsedEventArgs e) => SetClock();
-
-    private void SetClock()
-    {
-        if (ServiceLocator.Default.GetRequiredService<IContext>() is not null)
-            base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
-    }
-
     /// <summary>
     /// Opens the information asynchronous.
     /// </summary>
@@ -168,11 +150,16 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         _navigationService.NavigateAsync<InfoViewModel>();
 
     /// <summary>
-    /// Opens the controls page asynchronous.
+    /// Opens the custom controls page.
     /// </summary>
-    /// <returns></returns>
-    private Task OpenControlsAsync() =>
-        _navigationService.NavigateAsync<ControlsViewModel>();
+    private Task OpenCustomControlsAsync() =>
+        _navigationService.NavigateAsync<CustomControlsViewModel>();
+
+    /// <summary>
+    /// Opens the MAUI controls showcase page.
+    /// </summary>
+    private Task OpenMauiControlsAsync() =>
+        _navigationService.NavigateAsync<MauiControlsViewModel>();
 
     /// <summary>
     /// Opens the display asynchronous.

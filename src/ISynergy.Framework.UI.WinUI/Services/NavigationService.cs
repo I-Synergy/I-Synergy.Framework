@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using View = ISynergy.Framework.UI.Controls.View;
 
 namespace ISynergy.Framework.UI.Services;
@@ -25,9 +26,10 @@ public class NavigationService : BaseNavigationService
     public NavigationService(
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
+        ILocalSettings localSettings,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
-        : base(exceptionHandlerService, commonServices, serviceScopeFactory, logger)
+        : base(exceptionHandlerService, commonServices, localSettings, serviceScopeFactory, logger)
     {
     }
 
@@ -76,9 +78,6 @@ public class NavigationService : BaseNavigationService
     /// <summary>
     /// Creates an <see cref="IView"/> from a ViewModel type using WinUI-specific view resolution.
     /// </summary>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
     protected override IView CreateView(IServiceProvider serviceProvider, Type viewModelType, IViewModel? viewModel, object? parameter)
     {
         if (viewModel is null)
@@ -97,6 +96,9 @@ public class NavigationService : BaseNavigationService
 
             if (parameter is not null && resolvedPage.ViewModel is not null)
                 resolvedPage.ViewModel.Parameter = parameter;
+
+            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                resolvedPage.FlowDirection = FlowDirection.RightToLeft;
 
             return resolvedPage;
         }
@@ -142,19 +144,24 @@ public class NavigationService : BaseNavigationService
 
     /// <summary>
     /// Gets a navigation blade for the specified ViewModel.
-    /// WinUI-specific: checks for <see cref="ISelectionViewModel"/> and resolves a <see cref="SelectionView"/> when applicable.
+    /// WinUI-specific: checks for selection ViewModel interfaces and resolves the matching view.
     /// </summary>
     protected override async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
     {
         var viewType = default(Type);
-        var view = viewModel.GetRelatedView();
 
-        if (viewModel is ISelectionViewModel)
-            viewType = typeof(SelectionView);
+        if (viewModel is ISingleSelectionViewModel)
+            viewType = typeof(SingleSelectionView);
+        else if (viewModel is IMultipleSelectionViewModel)
+            viewType = typeof(MultipleSelectionView);
         else
+        {
+            var view = viewModel.GetRelatedView();
             viewType = view.GetRelatedViewType();
+        }
 
         using var scope = _serviceScopeFactory.CreateScope();
+
         if (viewType is not null && scope.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
         {
             resolvedPage.ViewModel = viewModel;
@@ -175,6 +182,6 @@ public class NavigationService : BaseNavigationService
             return resolvedPage;
         }
 
-        throw new InvalidOperationException($"Instance create or navigate to page: {view}.");
+        throw new InvalidOperationException($"Instance create or navigate to page: {viewModel.GetRelatedView()}.");
     }
 }

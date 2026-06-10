@@ -5,7 +5,6 @@ using ISynergy.Framework.EventSourcing.EntityFramework.Abstractions;
 using ISynergy.Framework.EventSourcing.EntityFramework.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.EventSourcing.EntityFramework.Extensions;
@@ -44,8 +43,6 @@ public static class ServiceCollectionExtensions
     /// <c>ISynergy.Framework.AspNetCore.MultiTenancy</c>).
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("Uses DefaultEventTypeResolver which scans AppDomain assemblies, and JsonReflectionEventSerializer which uses reflection-based JSON. Use the AOT-safe overload for trim/AOT scenarios.")]
-    [RequiresDynamicCode("Uses JsonReflectionEventSerializer which requires dynamic code generation. Use the AOT-safe overload for trim/AOT scenarios.")]
     public static IServiceCollection AddEventSourcingEntityFramework(
         this IServiceCollection services,
         Action<DbContextOptionsBuilder> optionsAction)
@@ -101,8 +98,6 @@ public static class ServiceCollectionExtensions
     /// See <see href="https://aka.ms/efcore-docs-trimming"/> for details.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("EF Core model building requires unreferenced code unless a compiled model is used. See https://aka.ms/efcore-docs-trimming.")]
-    [RequiresDynamicCode("EF Core model building requires dynamic code unless a compiled model is used.")]
     public static IServiceCollection AddEventSourcingEntityFramework(
         this IServiceCollection services,
         Action<DbContextOptionsBuilder> optionsAction,

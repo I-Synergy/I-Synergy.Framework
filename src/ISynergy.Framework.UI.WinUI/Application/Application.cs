@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -127,8 +128,12 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
                 _commonServices.BusyService.StartBusy();
 
-                if (_settingsService.LocalSettings is not null)
-                    _settingsService.LocalSettings.Language.SetLocalizationLanguage();
+                // Always initialize the culture so DefaultThreadCurrentCulture is never null.
+                // Falls back to the OS culture when no language is persisted yet.
+                var initialCulture = !string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
+                    ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings.Language)
+                    : CultureInfo.CurrentCulture;
+                ApplyApplicationCulture(initialCulture);
 
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
 
@@ -246,6 +251,36 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     }
 
     /// <summary>
+    /// Applies a <see cref="CultureInfo"/> as the application-wide culture.
+    /// Sets both <see cref="CultureInfo.DefaultThreadCurrentCulture"/> (process-wide)
+    /// and <see cref="CultureInfo.CurrentCulture"/> on the UI thread.
+    /// </summary>
+    protected void ApplyApplicationCulture(CultureInfo culture)
+    {
+        ISynergy.Framework.Globalization.CultureManager.Apply(culture, ConfigureNumberFormat);
+
+        // Per-thread culture for the UI dispatcher thread.
+        var dq = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+        if (dq is not null)
+        {
+            dq.TryEnqueue(() =>
+            {
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
+            });
+        }
+    }
+
+    /// <summary>
+    /// Override to customize the <see cref="NumberFormatInfo"/> of the application
+    /// culture (currency symbol, decimal places, negative patterns, etc.).
+    /// Called automatically by <see cref="ApplyApplicationCulture"/>.
+    /// </summary>
+    protected virtual void ConfigureNumberFormat(CultureInfo culture)
+    {
+    }
+
+    /// <summary>
     /// Normalizes environment value to proper casing (e.g., "development" -> "Development").
     /// </summary>
     private static string NormalizeEnvironmentValue(string value)
@@ -339,15 +374,17 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     {
         try
         {
+            var theme = _settingsService?.LocalSettings?.Theme ?? ISynergy.Framework.Core.Enumerations.Themes.Default;
+            var language = _settingsService?.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
+
             try
             {
-                var theme = _settingsService?.LocalSettings?.Theme ?? ISynergy.Framework.Core.Enumerations.Themes.Default;
-                _mainWindow = WindowHelper.CreateWindow(theme);
+                _mainWindow = WindowHelper.CreateWindow(theme, language);
             }
             catch (Exception ex)
             {
                 _logger?.LogWarning(ex, "Error creating main window; falling back to default theme");
-                _mainWindow = WindowHelper.CreateWindow(ISynergy.Framework.Core.Enumerations.Themes.Default);
+                _mainWindow = WindowHelper.CreateWindow(ISynergy.Framework.Core.Enumerations.Themes.Default, language);
             }
 
             _logger?.LogTrace("Loading custom resource dictionaries");
@@ -371,21 +408,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             }
 
             _logger?.LogTrace("Setting up theming.");
-
-            try
-            {
-                var colorStr = _settingsService?.LocalSettings?.Color;
-                var hexColor = !string.IsNullOrEmpty(colorStr)
-                    ? ColorHelper.GetColorFromHexString(colorStr)
-                    : ColorHelper.GetColorFromHexString("#ffb900");
-                this.SetApplicationColor(hexColor);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogWarning(ex, "Error setting application color; applying default theme");
-                try { this.SetApplicationColor(ColorHelper.GetColorFromHexString("#ffb900")); }
-                catch { /* best-effort */ }
-            }
+            _themeService.ApplyTheme();
 
             // LoadingView shows the spinner for all splash screen types, including None.
             // Its Loaded event fires SignalApplicationUIReady(); InitializeApplicationAsync
@@ -393,6 +416,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             // ApplicationLifecycleService raises ApplicationLoaded and navigation begins.
             _mainWindow.Content = CreateLoadingView();
             _mainWindow.Activate();
+
             InitializeApplication();
         }
         catch (Exception ex)

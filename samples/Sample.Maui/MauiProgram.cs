@@ -54,7 +54,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkitMediaElement(false)
-            .ConfigureFonts(fonts =>
+            .UseFonts(fonts =>
             {
                 fonts.AddFont("FontAwesomeRegular.otf", "fontawesome");
                 fonts.AddFont("FluentSystemIconsRegular.ttf", FluentUI.FontFamily);
@@ -69,7 +69,8 @@ public static class MauiProgram
                 f => f.Name!.StartsWith(typeof(App).Namespace!))
 #if WINDOWS
             //.ConfigureStoreUpdateIntegration()
-            .ConfigureSingleInstanceApp(async e =>
+            .ConfigureSingleInstance()
+            .ConfigureActivationHandlers(async e =>
             {
                 foreach (var arg in e.EnsureNotNull())
                 {
@@ -86,6 +87,13 @@ public static class MauiProgram
                     await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
             })
 #endif
+            .ConfigureSupportedCultures(cultures =>
+            {
+                cultures.AddCulture("nl");
+                cultures.AddCulture("de");
+                cultures.AddCulture("fr");
+                cultures.AddCulture("ar");
+            })
             .ConfigureOfflineSynchronization(builder =>
             {
                 Debug.WriteLine("Configuring offline synchronization");

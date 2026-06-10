@@ -128,6 +128,25 @@ public partial class App : Application
     }
 
     /// <summary>
+    /// Customizes the <see cref="NumberFormatInfo"/> after the culture is applied.
+    /// Called automatically by <see cref="Application.ApplyApplicationCulture"/>.
+    /// </summary>
+    protected override void ConfigureNumberFormat(CultureInfo culture)
+    {
+        base.ConfigureNumberFormat(culture);
+
+        if (_settingsService?.GlobalSettings is not null)
+        {
+            culture.NumberFormat.CurrencySymbol = _settingsService.GlobalSettings.CurrencySymbol;
+            culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
+            culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
+            culture.NumberFormat.CurrencyNegativePattern = 1;
+            culture.NumberFormat.NumberNegativePattern = 1;
+            culture.NumberFormat.PercentNegativePattern = 1;
+        }
+    }
+
+    /// <summary>
     /// Called when a user signs in.
     /// The profile has already been set in the context by the AuthenticationService.
     /// </summary>
@@ -135,23 +154,13 @@ public partial class App : Application
     {
         try
         {
-            if (CultureInfo.DefaultThreadCurrentCulture != null &&
-                    CultureInfo.DefaultThreadCurrentCulture.Clone() is CultureInfo culture)
-            {
-                culture.NumberFormat.CurrencySymbol = "€";
-
-                culture.NumberFormat.CurrencyDecimalDigits = _settingsService.GlobalSettings.Decimals;
-                culture.NumberFormat.NumberDecimalDigits = _settingsService.GlobalSettings.Decimals;
-
-                culture.NumberFormat.CurrencyNegativePattern = 1;
-                culture.NumberFormat.NumberNegativePattern = 1;
-                culture.NumberFormat.PercentNegativePattern = 1;
-
-                CultureInfo.DefaultThreadCurrentCulture = culture;
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
-            }
-
             _logger?.LogTrace("Authentication succeeded event received");
+
+            // Re-apply the culture so ConfigureNumberFormat picks up the
+            // latest GlobalSettings (decimals, etc.). The framework handles
+            // both DefaultThreadCurrentCulture and UI-thread CurrentCulture.
+            var culture = CultureInfo.DefaultThreadCurrentCulture ?? CultureInfo.CurrentCulture;
+            ApplyApplicationCulture(culture);
 
             // Profile should already be set in context by AuthenticationService
             // Navigate to Shell to show authenticated UI

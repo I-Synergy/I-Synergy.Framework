@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <StackPanel Margin="2,10" VerticalAlignment="Center">
+        <StackPanel Margin="2,10" VerticalAlignment="Center" >
             <TextBlock
                 Margin="5"
                 FontSize="24"

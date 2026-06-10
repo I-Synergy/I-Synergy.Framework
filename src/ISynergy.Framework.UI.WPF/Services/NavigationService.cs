@@ -1,14 +1,12 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using View = ISynergy.Framework.UI.Controls.View;
@@ -28,9 +26,10 @@ public class NavigationService : BaseNavigationService
     public NavigationService(
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
+        ILocalSettings localSettings,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
-        : base(exceptionHandlerService, commonServices, serviceScopeFactory, logger)
+        : base(exceptionHandlerService, commonServices, localSettings, serviceScopeFactory, logger)
     {
     }
 
@@ -84,9 +83,6 @@ public class NavigationService : BaseNavigationService
     /// <summary>
     /// Creates an <see cref="IView"/> from a ViewModel type using WPF-specific view resolution.
     /// </summary>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
     protected override IView CreateView(IServiceProvider serviceProvider, Type viewModelType, IViewModel? viewModel, object? parameter)
     {
         if (viewModel is null)

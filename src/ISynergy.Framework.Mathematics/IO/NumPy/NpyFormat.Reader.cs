@@ -1,6 +1,5 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
@@ -12,17 +11,10 @@ using System.Text;
 
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
-#if !NET35 && !NET40
 /// <summary>
 ///     Provides static methods to save and load files saved in NumPy's .npy format.
 /// </summary>
 /// <seealso cref="NpzFormat" />
-#else
-/// <summary>
-///   Provides static methods to save and load files saved in NumPy's .npy format. 
-/// </summary>
-/// 
-#endif
 public static partial class NpyFormat
 {
     /// <summary>
@@ -31,17 +23,10 @@ public static partial class NpyFormat
     /// <typeparam name="T">The type to be loaded from the npy-formatted file.</typeparam>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(byte[] bytes)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
-        IList, ICollection, IEnumerable
-#if !NET35
-        , IStructuralComparable, IStructuralEquatable
-#endif
+        IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
     {
         if (typeof(T).IsJagged())
             return LoadJagged(bytes).To<T>();
@@ -58,17 +43,11 @@ public static partial class NpyFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(byte[] bytes, out T value)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable
-#if !NET35
         , IStructuralComparable, IStructuralEquatable
-#endif
     {
         return value = Load<T>(bytes);
     }
@@ -83,17 +62,11 @@ public static partial class NpyFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(string path, out T value)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable
-#if !NET35
         , IStructuralComparable, IStructuralEquatable
-#endif
     {
         return value = Load<T>(path);
     }
@@ -108,17 +81,11 @@ public static partial class NpyFormat
     ///     need of specifying a generic argument to this function.
     /// </param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(Stream stream, out T value)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable
-#if !NET35
         , IStructuralComparable, IStructuralEquatable
-#endif
     {
         return value = Load<T>(stream);
     }
@@ -128,17 +95,11 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(string path)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable
-#if !NET35
         , IStructuralComparable, IStructuralEquatable
-#endif
     {
         using (var stream = new FileStream(path, FileMode.Open))
         {
@@ -152,17 +113,11 @@ public static partial class NpyFormat
     /// <typeparam name="T">The type to be loaded from the npy-formatted file.</typeparam>
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <returns>The array to be returned.</returns>
-    [RequiresUnreferencedCode("Calls Matrix.To<T> which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Matrix.To<T> which requires dynamic code generation.")]
     public static T Load<T>(Stream stream)
         where T : class,
-#if !NETSTANDARD1_4
         ICloneable,
-#endif
         IList, ICollection, IEnumerable
-#if !NET35
         , IStructuralComparable, IStructuralEquatable
-#endif
     {
         if (typeof(T).IsJagged())
             return LoadJagged(stream).To<T>();
@@ -173,7 +128,6 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
-    [RequiresDynamicCode("Calls LoadMatrix(Stream) which requires dynamic code generation.")]
     public static Array LoadMatrix(byte[] bytes)
     {
         using (var stream = new MemoryStream(bytes))
@@ -187,7 +141,6 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
-    [RequiresDynamicCode("Calls LoadMatrix(Stream) which requires dynamic code generation.")]
     public static Array LoadMatrix(string path)
     {
         using (var stream = new FileStream(path, FileMode.Open))
@@ -201,8 +154,6 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
     /// <returns>A jagged array containing the values available in the given stream.</returns>
-    [RequiresUnreferencedCode("Calls LoadJagged(Stream) which is not AOT-safe.")]
-    [RequiresDynamicCode("Calls LoadJagged(Stream) which requires dynamic code generation.")]
     public static Array LoadJagged(byte[] bytes)
     {
         using (var stream = new MemoryStream(bytes))
@@ -216,8 +167,6 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="path">The path to the file containing the matrix to be loaded.</param>
     /// <returns>A jagged array containing the values available in the given stream.</returns>
-    [RequiresUnreferencedCode("Calls LoadJagged(Stream) which is not AOT-safe.")]
-    [RequiresDynamicCode("Calls LoadJagged(Stream) which requires dynamic code generation.")]
     public static Array LoadJagged(string path)
     {
         using (var stream = new FileStream(path, FileMode.Open))
@@ -230,13 +179,10 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
-    [RequiresDynamicCode("Calls Matrix.Zeros(Type, ...) and Matrix.SetValue which require dynamic code generation.")]
     public static Array LoadMatrix(Stream stream)
     {
         using (var reader = new BinaryReader(stream, Encoding.ASCII
-#if !NET35 && !NET40
             , true
-#endif
         ))
         {
             int bytes;
@@ -259,14 +205,10 @@ public static partial class NpyFormat
     /// <param name="stream">The stream containing the matrix to be loaded.</param>
     /// <param name="trim">Pass true to remove null or empty elements from the loaded array.</param>
     /// <returns>A jagged array containing the values available in the given stream.</returns>
-    [RequiresUnreferencedCode("Calls Jagged.Zeros(Type, ...) which is not AOT-safe.")]
-    [RequiresDynamicCode("Calls Jagged.Zeros(Type, ...) and Matrix.Trim which require dynamic code generation.")]
     public static Array LoadJagged(Stream stream, bool trim = true)
     {
         using (var reader = new BinaryReader(stream, Encoding.ASCII
-#if !NET35 && !NET40
             , true
-#endif
         ))
         {
             int bytes;
@@ -333,7 +275,6 @@ public static partial class NpyFormat
         return matrix;
     }
 
-    [RequiresDynamicCode("Calls Matrix.SetValue which requires dynamic code generation.")]
     private static Array readStringMatrix(BinaryReader reader, Array matrix, int bytes, Type type, int[] shape)
     {
         if (bytes <= 0)

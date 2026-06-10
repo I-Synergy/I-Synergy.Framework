@@ -5,7 +5,6 @@ using ISynergy.Framework.OpenTelemetry.Models;
 using ISynergy.Framework.OpenTelemetry.Sentry.Processors;
 using OpenTelemetry.Logs;
 using Sentry.OpenTelemetry;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.OpenTelemetry.Sentry.Extensions;
 
@@ -29,8 +28,6 @@ public static class SentryTelemetryExtensions
     /// warnings at the call site if required.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("SentrySdk.Init may use reflection internally. Verify AOT compatibility with the Sentry SDK version in use.")]
-    [RequiresDynamicCode("Sentry SDK may require dynamic code generation.")]
     public static TelemetryBuilder AddSentryExporter(
         this TelemetryBuilder telemetryBuilder,
         Action<SentryOptions>? telemetryExporterOptions = null)

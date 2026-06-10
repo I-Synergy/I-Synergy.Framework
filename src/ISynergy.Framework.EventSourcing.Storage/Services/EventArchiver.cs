@@ -8,7 +8,6 @@ using ISynergy.Framework.EventSourcing.Storage.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.EventSourcing.Storage.Services;
 
@@ -23,8 +22,6 @@ namespace ISynergy.Framework.EventSourcing.Storage.Services;
 /// <item>Deletes the archived event rows from PostgreSQL.</item>
 /// </list>
 /// </summary>
-[RequiresUnreferencedCode("Uses reflection to instantiate aggregate types by name.")]
-[RequiresDynamicCode("Uses Activator.CreateInstance to construct aggregate instances at runtime.")]
 public sealed class EventArchiver : IEventArchiver
 {
     private readonly EventSourcingDbContext _context;
@@ -131,7 +128,7 @@ public sealed class EventArchiver : IEventArchiver
             return 0;
 
         var versionFrom = toArchive[0].AggregateVersion;   // list is already sorted ascending
-        var versionTo   = toArchive[^1].AggregateVersion;
+        var versionTo = toArchive[^1].AggregateVersion;
 
         // Ensure a snapshot exists at or above versionTo before deleting events.
         // If the snapshot cannot be guaranteed (e.g., aggregate type unresolvable or
@@ -159,14 +156,14 @@ public sealed class EventArchiver : IEventArchiver
         // Record the archive index entry.
         _context.ArchiveIndexes.Add(new EventArchiveIndex
         {
-            TenantId    = tenantId,
-            StreamId    = aggregateId,
-            StreamType  = aggregateType,
+            TenantId = tenantId,
+            StreamId = aggregateId,
+            StreamType = aggregateType,
             VersionFrom = versionFrom,
-            VersionTo   = versionTo,
-            EventCount  = toArchive.Count,
-            BlobPath    = blobPath,
-            ArchivedAt  = DateTimeOffset.UtcNow
+            VersionTo = versionTo,
+            EventCount = toArchive.Count,
+            BlobPath = blobPath,
+            ArchivedAt = DateTimeOffset.UtcNow
         });
 
         // Delete the archived hot-tier event rows.
@@ -259,12 +256,12 @@ public sealed class EventArchiver : IEventArchiver
 
         var snapshotData = aggregate.GetSnapshotData();
         var snapshot = new Snapshot(
-            AggregateId:   aggregateId,
-            TenantId:      tenantId,
+            AggregateId: aggregateId,
+            TenantId: tenantId,
             AggregateType: aggregateType,
-            Version:       requiredVersion,
-            Data:          snapshotData,
-            Timestamp:     DateTimeOffset.UtcNow);
+            Version: requiredVersion,
+            Data: snapshotData,
+            Timestamp: DateTimeOffset.UtcNow);
 
         if (existing is not null)
             _context.Snapshots.Remove(existing);
@@ -274,8 +271,6 @@ public sealed class EventArchiver : IEventArchiver
         return true;
     }
 
-    [RequiresUnreferencedCode("Uses Type.GetType to resolve aggregate type by short name.")]
-    [RequiresDynamicCode("Uses Activator.CreateInstance to instantiate aggregate type.")]
     private static AggregateRoot<Guid>? CreateAggregate(string aggregateTypeName)
     {
         // Try to resolve the aggregate type from all loaded assemblies by short class name.

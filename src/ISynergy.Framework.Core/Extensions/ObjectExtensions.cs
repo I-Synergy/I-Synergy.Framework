@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -27,8 +26,6 @@ public static class ObjectExtensions
     /// This overload uses reflection-based JSON serialization and is not AOT-safe.
     /// For AOT-compatible code, use <see cref="Clone{T}(T, JsonSerializerContext)"/> instead.
     /// </remarks>
-    [RequiresUnreferencedCode("JSON serialization without a JsonSerializerContext is not trim-safe.")]
-    [RequiresDynamicCode("JSON serialization without a JsonSerializerContext requires dynamic code.")]
     public static T Clone<T>(this T source)
     {
         if (source is null)
@@ -80,8 +77,6 @@ public static class ObjectExtensions
     /// <typeparam name="T">The destination type.</typeparam>
     /// <param name="value">The value to be converted.</param>
     /// <returns>The result of the conversion or null if conversion fails.</returns>
-    [RequiresUnreferencedCode("Type conversion using reflection is not AOT-safe.")]
-    [RequiresDynamicCode("Activator.CreateInstance on an unknown type requires dynamic code.")]
     public static T? To<T>(this object? value) =>
         (T?)To(value, typeof(T));
 
@@ -92,8 +87,6 @@ public static class ObjectExtensions
     /// <param name="value">The value to be converted.</param>
     /// <param name="type">The type that the value should be converted to.</param>
     /// <returns>The result of the conversion or null if conversion fails.</returns>
-    [RequiresUnreferencedCode("Type conversion using reflection is not AOT-safe.")]
-    [RequiresDynamicCode("Activator.CreateInstance on an unknown type requires dynamic code.")]
     public static object? To(this object? value, Type type)
     {
         if (value is null)
@@ -134,7 +127,6 @@ public static class ObjectExtensions
     /// <param name="obj">The object to check.</param>
     /// <param name="methodName">The name of the method.</param>
     /// <returns><c>true</c> if the method exists; otherwise, <c>false</c>.</returns>
-    [RequiresUnreferencedCode("Method lookup by name using reflection is not AOT-safe.")]
     public static bool HasMethod(this object? obj, string methodName)
     {
         if (obj is null)
@@ -157,7 +149,6 @@ public static class ObjectExtensions
     /// <param name="obj">The object.</param>
     /// <param name="propertyName">Name of the property.</param>
     /// <returns><c>true</c> if the property exists; otherwise, <c>false</c>.</returns>
-    [RequiresUnreferencedCode("Property lookup by name using reflection is not AOT-safe.")]
     public static bool HasProperty(this object? obj, string propertyName)
     {
         if (obj is null)
@@ -240,7 +231,6 @@ public static class ObjectExtensions
     /// <summary>
     /// Finds an explicit or implicit conversion method between types.
     /// </summary>
-    [RequiresUnreferencedCode("Dynamic method lookup on unknown types is not AOT-safe.")]
     private static MethodInfo? FindConversionMethod(Type inputType, Type outputType, object value)
     {
         var methods = new List<MethodInfo>();

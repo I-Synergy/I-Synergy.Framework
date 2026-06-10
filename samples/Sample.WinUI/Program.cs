@@ -1,3 +1,5 @@
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
@@ -47,24 +49,31 @@ public static class Program
                 services.TryAddSingleton<ICameraService, CameraService>();
             },
                 mainAssembly,
-                f => f.Name!.StartsWith(typeof(App).Namespace!));
-        //.ConfigureStoreUpdateIntegration()
-        //.ConfigureSingleInstanceApp(async e =>
-        //{
-        //    foreach (var arg in e.EnsureNotNull())
-        //    {
-        //        if (!string.IsNullOrEmpty(arg))
-        //            await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync(arg, "Environment");
-        //    }
-        //}, async p =>
-        //{
-        //    if (!string.IsNullOrEmpty(p.Uri?.Query))
-        //        await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{p.Uri.Query}", "ProtocolActivatedEventArgs");
-        //}, async l =>
-        //{
-        //    if (!string.IsNullOrEmpty(l.Arguments))
-        //        await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
-        //})
+                f => f.Name!.StartsWith(typeof(App).Namespace!))
+            .ConfigureSupportedCultures(cultures =>
+            {
+                cultures.AddCulture("nl");
+                cultures.AddCulture("de");
+                cultures.AddCulture("fr");
+                cultures.AddCulture("ar");
+            })
+            .ConfigureSingleInstance()
+            .ConfigureActivationHandlers(async e =>
+            {
+                foreach (var arg in e.EnsureNotNull())
+                {
+                    if (!string.IsNullOrEmpty(arg))
+                        await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync(arg, "Environment");
+                }
+            }, async p =>
+            {
+                if (!string.IsNullOrEmpty(p.Uri?.Query))
+                    await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{p.Uri.Query}", "ProtocolActivatedEventArgs");
+            }, async l =>
+            {
+                if (!string.IsNullOrEmpty(l.Arguments))
+                    await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
+            });
         //.ConfigureOfflineSynchronization(builder =>
         //{
         //    Debug.WriteLine("Configuring offline synchronization");

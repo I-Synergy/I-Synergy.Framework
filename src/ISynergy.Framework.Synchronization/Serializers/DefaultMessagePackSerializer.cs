@@ -1,7 +1,6 @@
 using Dotmim.Sync.Serialization;
 using MessagePack;
 using MessagePack.Resolvers;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace ISynergy.Framework.Synchronization.Serializers;
@@ -29,11 +28,6 @@ namespace ISynergy.Framework.Synchronization.Serializers;
 /// This class is suitable for use in non-AOT (JIT) scenarios only.
 /// </para>
 /// </remarks>
-[RequiresUnreferencedCode(
-    "DefaultMessagePackSerializer uses ContractlessStandardResolver which requires runtime reflection " +
-    "on serialized types. Use MessagePackObject-attributed types with StaticCompositeResolver for AOT compatibility.")]
-[RequiresDynamicCode(
-    "DefaultMessagePackSerializer uses ContractlessStandardResolver which generates dynamic code at runtime.")]
 public class DefaultMessagePackSerializer : ISerializer
 {
     private readonly MessagePackSerializerOptions options = MessagePackSerializerOptions.Standard.WithResolver(ContractlessStandardResolver.Instance);

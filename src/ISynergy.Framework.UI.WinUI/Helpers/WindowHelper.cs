@@ -21,20 +21,19 @@ public static class WindowHelper
 
     static private List<Microsoft.UI.Xaml.Window> _activeWindows = new List<Microsoft.UI.Xaml.Window>();
 
-    static public Microsoft.UI.Xaml.Window CreateWindow(Themes theme)
+    static public Microsoft.UI.Xaml.Window CreateWindow(Themes theme, string language)
     {
         var newWindow = new Microsoft.UI.Xaml.Window
         {
-#if WINDOWS
             SystemBackdrop = new MicaBackdrop()
-#endif
         };
 
-        newWindow.SetTheme(theme);
+        newWindow.ApplyNativeFlowDirection(language);
+
         TrackWindow(newWindow);
+
         return newWindow;
     }
-
 
     static public void TrackWindow(Microsoft.UI.Xaml.Window window)
     {
@@ -46,14 +45,12 @@ public static class WindowHelper
         _activeWindows.Add(window);
     }
 
-#if WINDOWS
     static public AppWindow GetAppWindow(Microsoft.UI.Xaml.Window window)
     {
         IntPtr hWnd = WindowNative.GetWindowHandle(window);
         WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
         return AppWindow.GetFromWindowId(wndId);
     }
-#endif
 
     static public Microsoft.UI.Xaml.Window? GetWindowForElement(UIElement element)
     {

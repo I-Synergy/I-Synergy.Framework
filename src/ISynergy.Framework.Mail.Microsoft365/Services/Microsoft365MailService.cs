@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mail.Microsoft365.Services;
 
@@ -27,7 +26,6 @@ namespace ISynergy.Framework.Mail.Microsoft365.Services;
 /// installed Microsoft.Graph version ships with full AOT annotations.
 /// </para>
 /// </remarks>
-[RequiresUnreferencedCode("Microsoft.Graph SDK uses reflection-based JSON serialization. Not compatible with AOT publishing in this configuration.")]
 internal class Microsoft365MailService : IMailService
 {
     /// <summary>

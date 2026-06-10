@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
 #pragma warning disable S2368 // object overloads are part of the library API
@@ -28,8 +26,6 @@ public interface ISolverMatrixDecomposition<T> where T : struct
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = I</c>.
     /// </summary>
-    [RequiresUnreferencedCode("Implementations may use reflection-based type conversion.")]
-    [RequiresDynamicCode("Implementations may require dynamic code generation.")]
     T[,] Inverse();
 
     /// <summary>

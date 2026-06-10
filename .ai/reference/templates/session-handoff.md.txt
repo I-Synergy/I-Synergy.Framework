@@ -5,8 +5,8 @@ Use this template when ending a session and handing off to a new session.
 ```markdown
 # Session Handoff - [Date/Time]
 
-**Written By:** [Claude Code | GitHub Copilot]
-**Next Session May Use:** [Claude Code | GitHub Copilot | Either]
+**Written By:** [Claude Code | Copilot | Reasonix Code]
+**Next Session May Use:** [Claude Code | Copilot | Reasonix Code | Any]
 
 ## Task Summary
 [What was accomplished - be specific with numbers and metrics]

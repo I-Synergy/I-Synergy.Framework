@@ -1,7 +1,6 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
@@ -570,8 +569,6 @@ public abstract class OctaveEnvironment
     ///   relying on this automatic initialisation.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("OctaveEnvironment uses reflection to initialise mat fields on derived types. Subclasses may not be AOT-compatible. Initialise mat fields explicitly for AOT-safe scenarios.")]
-    [RequiresDynamicCode("OctaveEnvironment uses reflection to set field values at runtime. This is not compatible with Native AOT.")]
     protected OctaveEnvironment()
     {
         var type = this.GetType();

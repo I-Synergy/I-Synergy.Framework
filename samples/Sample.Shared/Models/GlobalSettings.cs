@@ -22,5 +22,26 @@ public class GlobalSettings : BaseModel, IGlobalSettings
         get { return GetValue<int>(); }
         set { SetValue(value); }
     }
+
+    public string CurrencyName
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public string CurrencySymbol
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public GlobalSettings()
+    {
+        IsFirstRun = true;
+        Decimals = 2;
+        CurrencyId = 1;
+        CurrencyName = "Euro";
+        CurrencySymbol = "€";
+    }
 }
 

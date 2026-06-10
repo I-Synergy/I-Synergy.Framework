@@ -33,7 +33,6 @@
 - 🌍 **Globalization** - Multi-language and localization support
 - 📄 **Document Processing** - PDF, Excel with Syncfusion support
 - 🧮 **Scientific Computing** - Financial, Geography, Physics, Mathematics libraries
-- ⚡ **AOT / Trim Ready** - All libraries annotated for Native AOT and trimmed deployments; source generators for zero-reflection registration
 
 ---
 

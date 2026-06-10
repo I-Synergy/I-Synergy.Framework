@@ -34,6 +34,8 @@ from pathlib import Path
 # Template owns these — new files are copied, changed files are diffed.
 # Entries can be files or directories (directories are walked recursively).
 TEMPLATE_OWNED = [
+    "REASONIX.md",
+    ".reasonix",
     ".ai/agents",
     ".ai/skills",
     ".ai/patterns",

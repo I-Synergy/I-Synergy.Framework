@@ -55,7 +55,7 @@
             <Image
                 Width="18"
                 Height="18"
-                Source="ms-appx:///Sample/Assets/icon.png" />
+                Source="/Assets/icon.png" />
             <TextBlock
                 Margin="18,0"
                 VerticalAlignment="Center"

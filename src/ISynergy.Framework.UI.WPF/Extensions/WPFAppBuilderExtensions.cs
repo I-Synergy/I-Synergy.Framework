@@ -1,9 +1,13 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -15,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Windows;
 
@@ -36,7 +41,6 @@ public static class WpfAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    [RequiresUnreferencedCode("Assembly scanning via RegisterAssemblies and configuration binding via BindWithReload are not trim-safe.")]
     public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>( // NOSONAR
         this IHostBuilder wpfAppBuilder,
         IInfoService infoService,
@@ -56,14 +60,17 @@ public static class WpfAppBuilderExtensions
             services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-            var languageService = new LanguageService();
-            languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-            languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+            var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(TResource));
 #pragma warning restore IL2026
 
             services.TryAddSingleton<IInfoService>(s => infoService);
             services.TryAddSingleton<ILanguageService>(s => languageService);
+
+            // Fallback: English-only if ConfigureSupportedCultures was not called
+            services.TryAddSingleton<ISupportedCulturesService>(s =>
+                new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
+
             services.TryAddSingleton<IMessengerService, MessengerService>();
 
             services.TryAddSingleton<TContext>();
@@ -75,6 +82,9 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
             services.TryAddSingleton<ISettingsService, TSettingsService>();
+            services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+            services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+            services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
             services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
             services.TryAddSingleton<IBusyService, BusyService>();
@@ -101,7 +111,6 @@ public static class WpfAppBuilderExtensions
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     /// <returns></returns>
-    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not trim-safe.")]
     public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).BindWithReload);
@@ -123,5 +132,26 @@ public static class WpfAppBuilderExtensions
             resources.Add(key, serviceProvider.GetService(typeof(T)));
 
         return resources;
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="hostBuilder">The host builder.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="IHostBuilder"/>.</returns>
+    public static IHostBuilder ConfigureSupportedCultures(
+        this IHostBuilder hostBuilder,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        hostBuilder.ConfigureServices((_, services) =>
+        {
+            var builder = new SupportedCulturesBuilder();
+            configure(builder);
+            services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+                s => new SupportedCulturesService(builder.Build())));
+        });
+        return hostBuilder;
     }
 }

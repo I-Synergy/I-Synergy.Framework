@@ -1,5 +1,7 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Services;
@@ -18,6 +20,7 @@ public class DialogServiceExceptionHandlingTests
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
     private Mock<ILanguageService> _mockLanguageService;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
+    private Mock<ILocalSettings> _mockLocalSettings;
     private Mock<ILogger<DialogService>> _mockLogger;
     private DialogService _dialogService;
 
@@ -26,6 +29,7 @@ public class DialogServiceExceptionHandlingTests
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockLanguageService = new Mock<ILanguageService>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        _mockLocalSettings = new Mock<ILocalSettings>();
         _mockLogger = new Mock<ILogger<DialogService>>();
 
         _mockLanguageService
@@ -49,6 +53,7 @@ public class DialogServiceExceptionHandlingTests
 
         _dialogService = new DialogService(
             _mockServiceScopeFactory.Object,
+            _mockLocalSettings.Object,
             _mockExceptionHandler.Object,
             _mockLanguageService.Object,
             _mockLogger.Object);

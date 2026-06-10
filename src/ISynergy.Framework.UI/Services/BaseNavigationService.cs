@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
@@ -30,6 +31,11 @@ public abstract class BaseNavigationService : INavigationService
     /// The common services for accessing shared application services.
     /// </summary>
     protected readonly ICommonServices _commonServices;
+
+    /// <summary>
+    /// The local settings for accessing application-specific settings.
+    /// </summary>
+    protected readonly ILocalSettings _localSettings;
 
     /// <summary>
     /// The logger for diagnostic output.
@@ -160,12 +166,14 @@ public abstract class BaseNavigationService : INavigationService
     /// </summary>
     /// <param name="exceptionHandlerService">The exception handler service.</param>
     /// <param name="commonServices">The common services.</param>
+    /// <param name="localSettings"></param>
     /// <param name="serviceScopeFactory">The service scope factory for creating child scopes.</param>
     /// <param name="logger">The logger.</param>
     /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
     protected BaseNavigationService(
         IExceptionHandlerService exceptionHandlerService,
         ICommonServices commonServices,
+        ILocalSettings localSettings,
         IServiceScopeFactory serviceScopeFactory,
         ILogger logger)
     {
@@ -174,6 +182,7 @@ public abstract class BaseNavigationService : INavigationService
 
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
         _commonServices = commonServices ?? throw new ArgumentNullException(nameof(commonServices));
+        _localSettings = localSettings ?? throw new ArgumentNullException(nameof(localSettings));
         _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
     }
 
