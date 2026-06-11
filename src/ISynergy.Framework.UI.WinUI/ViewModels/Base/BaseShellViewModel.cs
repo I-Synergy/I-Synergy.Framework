@@ -33,7 +33,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         public AsyncRelayCommand RestartUpdateCommand { get; private set; }
         public AsyncRelayCommand SignInCommand { get; private set; }
         public AsyncRelayCommand LanguageCommand { get; private set; }
-        public AsyncRelayCommand ColorCommand { get; private set; }
+        public AsyncRelayCommand ThemeCommand { get; private set; }
         public AsyncRelayCommand HelpCommand { get; private set; }
         public AsyncRelayCommand SettingsCommand { get; private set; }
         public AsyncRelayCommand BackgroundCommand { get; private set; }
@@ -69,7 +69,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
             SignInCommand = new AsyncRelayCommand(SignOutAsync);
             LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
-            ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
+            ThemeCommand = new AsyncRelayCommand(OpenThemesAsync);
             HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
             FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
             SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -170,7 +170,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             }
         }
 
-        protected virtual Task OpenColorsAsync()
+        protected virtual Task OpenThemesAsync()
         {
             var scope = _scopeFactory.CreateScope();
             var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
@@ -297,7 +297,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
                 RestartUpdateCommand?.Dispose();
                 SignInCommand?.Dispose();
                 LanguageCommand?.Dispose();
-                ColorCommand?.Dispose();
+                ThemeCommand?.Dispose();
                 HelpCommand?.Dispose();
                 SettingsCommand?.Dispose();
                 BackgroundCommand?.Dispose();

@@ -111,7 +111,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             SecondaryItems?.Clear();
             SecondaryItems?.Add(new NavigationItem("Help", Application.Current.Resources["help"], _settingsService.LocalSettings.Color, HelpCommand));
             SecondaryItems?.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _settingsService.LocalSettings.Color, LanguageCommand));
-            SecondaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _settingsService.LocalSettings.Color, ColorCommand));
+            SecondaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _settingsService.LocalSettings.Color, ThemeCommand));
 
             if (ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated && ServiceLocator.Default.GetRequiredService<IContext>().Profile is Profile)
                 SecondaryItems?.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _settingsService.LocalSettings.Color, SettingsCommand));

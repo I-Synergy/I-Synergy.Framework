@@ -61,7 +61,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the color command.
     /// </summary>
     /// <value>The color command.</value>
-    public AsyncRelayCommand ColorCommand { get; private set; }
+    public AsyncRelayCommand ThemeCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the help command.
@@ -135,7 +135,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
-        ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
+        ThemeCommand = new AsyncRelayCommand(OpenThemesAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -283,7 +283,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Opens the colors asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    protected virtual Task OpenColorsAsync()
+    protected virtual Task OpenThemesAsync()
     {
         var scope = _scopeFactory.CreateScope();
         var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
@@ -374,7 +374,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
             RestartUpdateCommand?.Dispose();
             SignInCommand?.Dispose();
             LanguageCommand?.Dispose();
-            ColorCommand?.Dispose();
+            ThemeCommand?.Dispose();
             HelpCommand?.Dispose();
             SettingsCommand?.Dispose();
             BackgroundCommand?.Dispose();

@@ -35,11 +35,11 @@
 
     <Shell.FlyoutFooter>
         <VerticalStackLayout Padding="4">
-            <c:NavigationItem Text="Help" Icon="{DynamicResource IconHelp}"/>
-            <c:NavigationItem Text="Language" Icon="{DynamicResource IconLanguage}"/>
-            <c:NavigationItem Text="Theme" Icon="{DynamicResource IconTheme}"/>
-            <c:NavigationItem Text="Settings" Icon="{DynamicResource IconSettings}"/>
-            <c:NavigationItem Text="Signin" Icon="{DynamicResource IconSignin}"/>
+            <c:NavigationItem Text="Help" Icon="{DynamicResource IconHelp}" Command="{Binding HelpCommand}"/>
+            <c:NavigationItem Text="Language" Icon="{DynamicResource IconLanguage}" Command="{Binding LanguageCommand}"/>
+            <c:NavigationItem Text="Theme" Icon="{DynamicResource IconTheme}" Command="{Binding ThemeCommand}"/>
+            <c:NavigationItem Text="Settings" Icon="{DynamicResource IconSettings}" Command="{Binding SettingsCommand}"/>
+            <!--<c:NavigationItem Text="Signin" Icon="{DynamicResource IconSignin}" Command="{Binding SigninCommand}"/>-->
         </VerticalStackLayout>
     </Shell.FlyoutFooter>
 </Shell>

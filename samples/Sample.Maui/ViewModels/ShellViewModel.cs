@@ -96,7 +96,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             SecondaryItems?.Clear();
             SecondaryItems?.Add(new NavigationItem("Help", FluentUI.chat_help_20_regular ?? string.Empty, primaryColor, HelpCommand)); // NOSONAR
             SecondaryItems?.Add(new NavigationItem("Language", FluentUI.local_language_20_regular ?? string.Empty, primaryColor, LanguageCommand)); // NOSONAR
-            SecondaryItems?.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular ?? string.Empty, primaryColor, ColorCommand)); // NOSONAR
+            SecondaryItems?.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular ?? string.Empty, primaryColor, ThemeCommand)); // NOSONAR
             SecondaryItems?.Add(new NavigationItem("Settings", FluentUI.settings_20_regular ?? string.Empty, primaryColor, SettingsCommand)); // NOSONAR
         }
 

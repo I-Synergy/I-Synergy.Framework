@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
-using System.Globalization;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -10,9 +9,9 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
 
@@ -42,7 +41,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public AsyncRelayCommand RestartUpdateCommand { get; private set; }
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand LanguageCommand { get; private set; }
-    public AsyncRelayCommand ColorCommand { get; private set; }
+    public AsyncRelayCommand ThemeCommand { get; private set; }
     public AsyncRelayCommand HelpCommand { get; private set; }
     public AsyncRelayCommand SettingsCommand { get; private set; }
     public AsyncRelayCommand BackgroundCommand { get; private set; }
@@ -96,7 +95,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
-        ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
+        ThemeCommand = new AsyncRelayCommand(OpenThemesAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -236,7 +235,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// Opens the colors asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    protected virtual Task OpenColorsAsync()
+    protected virtual Task OpenThemesAsync()
     {
         var scope = _scopeFactory.CreateScope();
         var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
@@ -373,7 +372,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             RestartUpdateCommand?.Dispose();
             SignInCommand?.Dispose();
             LanguageCommand?.Dispose();
-            ColorCommand?.Dispose();
+            ThemeCommand?.Dispose();
             HelpCommand?.Dispose();
             SettingsCommand?.Dispose();
             BackgroundCommand?.Dispose();
