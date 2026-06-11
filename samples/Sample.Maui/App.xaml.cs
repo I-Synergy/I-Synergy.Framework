@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Globalization;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using Sample.ViewModels;
@@ -163,7 +164,7 @@ public partial class App : Application
             // latest GlobalSettings (decimals, etc.). The framework handles
             // both DefaultThreadCurrentCulture and UI-thread CurrentCulture.
             var culture = CultureInfo.DefaultThreadCurrentCulture ?? CultureInfo.CurrentCulture;
-            ApplyApplicationCulture(culture);
+            culture.ApplyCulture(ConfigureNumberFormat);
 
             // Profile should already be set in context by AuthenticationService
             // Navigate to Shell to show authenticated UI

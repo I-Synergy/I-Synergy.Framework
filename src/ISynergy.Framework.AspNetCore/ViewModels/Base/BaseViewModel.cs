@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
-using System.Globalization;
 
 namespace ISynergy.Framework.AspNetCore.ViewModels.Base;
 
@@ -14,11 +13,6 @@ namespace ISynergy.Framework.AspNetCore.ViewModels.Base;
 /// <seealso cref="IBaseViewModel" />
 public abstract class BaseViewModel : PageModel, IBaseViewModel
 {
-    /// <summary>
-    /// Gets the culture.
-    /// </summary>
-    /// <value>The culture.</value>
-    public CultureInfo Culture { get; }
     /// <summary>
     /// Gets the cache.
     /// </summary>
@@ -53,16 +47,7 @@ public abstract class BaseViewModel : PageModel, IBaseViewModel
     {
         Environment = environment;
         Cache = cache;
-
-        Culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
-        Culture.NumberFormat.CurrencySymbol = $"{currencySymbol} ";
-        Culture.NumberFormat.CurrencyNegativePattern = 1;
-
-        CultureInfo.CurrentCulture = Culture;
-        CultureInfo.CurrentUICulture = Culture;
-
         Title = title;
-
         IsInitialized = false;
     }
 

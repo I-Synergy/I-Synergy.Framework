@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Globalization;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
@@ -157,7 +158,7 @@ public sealed partial class App : Application
             // latest GlobalSettings. The framework handles both
             // DefaultThreadCurrentCulture and UI-thread CurrentCulture.
             var culture = CultureInfo.DefaultThreadCurrentCulture ?? CultureInfo.CurrentCulture;
-            ApplyApplicationCulture(culture);
+            culture.ApplyCulture(ConfigureNumberFormat);
 
             _logger?.LogTrace("Navigate to Shell");
             if (_navigationService != null)
