@@ -10,12 +10,11 @@
     xmlns:views="clr-namespace:Sample.Views"
     x:DataType="viewmodels:ShellViewModel"
     FlyoutBehavior="Flyout"
-    FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
-    BackgroundColor="{DynamicResource Primary}">
+    FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
 
     <ShellContent
         Title="Dashboard"
-        Icon="{StaticResource IconDashboard}"
+        Icon="{DynamicResource IconDashboard}"
         ContentTemplate="{DataTemplate views:InfoView}"
         Route="dashboard" />
 
@@ -36,11 +35,11 @@
 
     <Shell.FlyoutFooter>
         <VerticalStackLayout Padding="4">
-            <c:NavigationItem Text="Help" Icon="{StaticResource IconHelp}"/>
-            <c:NavigationItem Text="Language" Icon="{StaticResource IconLanguage}"/>
-            <c:NavigationItem Text="Theme" Icon="{StaticResource IconTheme}"/>
-            <c:NavigationItem Text="Settings" Icon="{StaticResource IconSettings}"/>
-            <c:NavigationItem Text="Signin" Icon="{StaticResource IconSignin}"/>
+            <c:NavigationItem Text="Help" Icon="{DynamicResource IconHelp}"/>
+            <c:NavigationItem Text="Language" Icon="{DynamicResource IconLanguage}"/>
+            <c:NavigationItem Text="Theme" Icon="{DynamicResource IconTheme}"/>
+            <c:NavigationItem Text="Settings" Icon="{DynamicResource IconSettings}"/>
+            <c:NavigationItem Text="Signin" Icon="{DynamicResource IconSignin}"/>
         </VerticalStackLayout>
     </Shell.FlyoutFooter>
 </Shell>
