@@ -25,7 +25,7 @@
     <OnIdiom x:Key="IconSize"
           x:TypeArguments="x:Double"
           Default="20">
-        <OnIdiom.Desktop>32</OnIdiom.Desktop>
+        <OnIdiom.Desktop>14</OnIdiom.Desktop>
     </OnIdiom>
 
     <OnIdiom x:Key="IconSizeSmall"

@@ -1,5 +1,5 @@
 using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Globalization;
+using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;

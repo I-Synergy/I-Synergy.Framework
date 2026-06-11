@@ -43,8 +43,8 @@
 
     <x:Int32 x:Key="DefaultCornerRadius">8</x:Int32>
 
-    <x:Double x:Key="DefaultFontSize">10</x:Double>
-    <x:Double x:Key="CaptionFontSize">12</x:Double>
+    <x:Double x:Key="DefaultFontSize">12</x:Double>
+    <x:Double x:Key="CaptionFontSize">14</x:Double>
     <x:Double x:Key="DefaultMinimumHeightRequest">40</x:Double>
     <x:Double x:Key="DefaultMinimumWidthRequest">125</x:Double>
     <x:Double x:Key="DialogTitleFontSize">18</x:Double>

@@ -53,9 +53,6 @@
     <converters:SelectionModeConverter x:Key="SelectionModeConverter" />
     <converters:ListToStringConverter x:Key="ListToStringConverter" />
 
-    <x:Double x:Key="DefaultFontSize">12</x:Double>
-    <x:Double x:Key="DefaultMinimumWidthRequest">130</x:Double>
-
     <Shadow
         x:Key="DefaultButtonShadow"
         Brush="{DynamicResource Tertiary}"
@@ -710,7 +707,7 @@
     </Style>
 
     <Style ApplyToDerivedTypes="True" TargetType="Shell">
-        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
+        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
         <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={DynamicResource Primary}, Default={DynamicResource White}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
         <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray950}}" />
@@ -720,9 +717,8 @@
         <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
         <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
         <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
-        <Setter Property="Shell.NavBarIsVisible" Value="False" />
     </Style>
-
+    
     <Style TargetType="NavigationPage">
         <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />

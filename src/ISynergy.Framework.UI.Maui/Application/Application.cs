@@ -17,7 +17,7 @@ using System.Diagnostics;
 using System.Globalization;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Globalization;
+using ISynergy.Framework.Globalization.Extensions;
 
 
 #if WINDOWS

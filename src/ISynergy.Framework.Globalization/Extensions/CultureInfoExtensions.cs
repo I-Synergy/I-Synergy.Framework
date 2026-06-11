@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace ISynergy.Framework.Globalization;
+namespace ISynergy.Framework.Globalization.Extensions;
 
 /// <summary>
 /// Centralized culture management. Applies a <see cref="CultureInfo"/> as the
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Globalization;
 /// and <see cref="CultureInfo.CurrentUICulture"/> on their dispatcher thread — those
 /// are per-thread and must be applied on the already-running UI thread.
 /// </remarks>
-public static class CultureManager
+public static class CultureInfoExtensions
 {
     /// <summary>
     /// Applies <paramref name="culture"/> as the process-wide default culture.
