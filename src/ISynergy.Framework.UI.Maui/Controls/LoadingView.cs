@@ -167,14 +167,15 @@ public class LoadingView : ContentPage
             BackgroundColor = Color.FromArgb("#00000040")
         };
 
-        // Create sign-in/skip button
+        // Create sign-in/skip button (only for Video splash — no skip needed for Image/None)
         _signInButton = new Button
         {
             Text = "Skip",
             Margin = new Thickness(20),
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.End,
-            IsEnabled = false
+            IsEnabled = false,
+            IsVisible = splashScreenOptions.SplashScreenType == SplashScreenTypes.Video
         };
         _signInButton.SetDynamicResource(Button.BackgroundColorProperty, "Primary");
 
