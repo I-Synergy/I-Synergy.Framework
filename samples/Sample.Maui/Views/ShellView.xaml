@@ -14,22 +14,25 @@
 
     <ShellContent
         Title="Dashboard"
-        Icon="{DynamicResource IconDashboard}"
+        Icon="{DynamicResource IconInformation}"
         ContentTemplate="{DataTemplate views:InfoView}"
         Route="dashboard" />
 
     <ShellContent
         Title="Custom Controls"
+        Icon="{DynamicResource IconCustomControls}"
         ContentTemplate="{DataTemplate views:CustomControlsView}"
         Route="customcontrols" />
 
     <ShellContent
         Title="Maui Controls"
+        Icon="{DynamicResource IconMauiControls}"
         ContentTemplate="{DataTemplate views:MauiControlsView}"
         Route="mauicontrols" />
 
     <ShellContent
         Title="Slide Show"
+        Icon="{DynamicResource IconSlideShow}"
         ContentTemplate="{DataTemplate views:SlideShowView}"
         Route="slideshow" />
 

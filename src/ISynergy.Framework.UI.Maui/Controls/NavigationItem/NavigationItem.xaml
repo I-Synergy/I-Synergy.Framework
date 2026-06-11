@@ -31,7 +31,7 @@
     </ContentView.Resources>
 
     <Border 
-        Padding="15,14"
+        Padding="15"
         Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}" 
         StrokeThickness="0.1" 
         StrokeShape="RoundRectangle 2">
@@ -53,6 +53,7 @@
             <Image
                 Grid.Column="0"
                 VerticalOptions="Center"
+                Aspect="Center"
                 Source="{Binding Icon, Source={x:Reference NavigationItemControl}}"/>
 
             <Label

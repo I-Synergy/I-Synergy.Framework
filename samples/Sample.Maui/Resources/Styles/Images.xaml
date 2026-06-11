@@ -58,7 +58,25 @@
     <x:String x:Key="delete">&#xf1f8;</x:String>
     <x:String x:Key="menu">&#xf0c9;</x:String>
 
-    <FontImageSource x:Key="IconDashboard"
+    <FontImageSource x:Key="IconInformation"
+        Glyph="&#xf685;"
+        FontFamily="fontawesome"
+        Color="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
+        Size="{StaticResource IconSize}" />
+
+    <FontImageSource x:Key="IconCustomControls"
+        Glyph="&#xf685;"
+        FontFamily="fontawesome"
+        Color="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
+        Size="{StaticResource IconSize}" />
+
+    <FontImageSource x:Key="IconMauiControls"
+        Glyph="&#xf685;"
+        FontFamily="fontawesome"
+        Color="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
+        Size="{StaticResource IconSize}" />
+
+    <FontImageSource x:Key="IconSlideShow"
         Glyph="&#xf685;"
         FontFamily="fontawesome"
         Color="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
