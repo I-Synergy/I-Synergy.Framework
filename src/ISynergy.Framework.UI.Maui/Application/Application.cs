@@ -111,7 +111,8 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 var initialCulture = !string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
                     ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings.Language)
                     : CultureInfo.CurrentCulture;
-                ApplyApplicationCulture(initialCulture);
+
+                initialCulture.ApplyCulture(ConfigureNumberFormat);
 
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional
 
@@ -213,16 +214,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
         Microsoft.Maui.Controls.Page mainPage;
 
-        switch (_splashScreenOptions.SplashScreenType)
-        {
-            case SplashScreenTypes.Video:
-            case SplashScreenTypes.Image:
-                mainPage = CreateLoadingView();
-                break;
-            default:
-                mainPage = new EmptyView(_commonServices);
-                break;
-        }
+        // Always use LoadingView — it provides the default splash.svg background
+        // when no custom image or video is configured
+        mainPage = CreateLoadingView();
 
         mainPage.ApplyFlowDirection(language);
 
@@ -255,10 +249,13 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _mainWindow.HandlerChanged -= OnMainWindowHandlerChanged;
                 var appWindow = win.GetAppWindow();
                 appWindow?.ApplyFlowDirectionToTitleBar(language);
+                // Theme was already applied in the constructor for accent/style.
+                // Re-apply here to update title bar colors now that the window exists.
                 _themeService.ApplyTheme();
             }
         }
 #else
+        // For non-Windows platforms, apply theme immediately since title bar styling isn't a concern.
         _themeService.ApplyTheme();
 #endif
 
@@ -274,31 +271,8 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     }
 
     /// <summary>
-    /// Applies a <see cref="CultureInfo"/> as the application-wide culture.
-    /// Sets both <see cref="CultureInfo.DefaultThreadCurrentCulture"/> (process-wide,
-    /// inherited by new threads) and <see cref="CultureInfo.CurrentCulture"/> on the
-    /// UI thread (affects the already-running dispatcher thread).
-    /// </summary>
-    /// <remarks>
-    /// Delegates to <see cref="CultureManager"/> for
-    /// the process-wide defaults, then dispatches the per-thread culture to the UI thread.
-    /// </remarks>
-    protected void ApplyApplicationCulture(CultureInfo culture)
-    {
-        CultureManager.Apply(culture, ConfigureNumberFormat);
-
-        // Per-thread culture for the UI dispatcher thread.
-        Dispatcher.Dispatch(() =>
-        {
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-        });
-    }
-
-    /// <summary>
     /// Override to customize the <see cref="NumberFormatInfo"/> of the application
     /// culture (currency symbol, decimal places, negative patterns, etc.).
-    /// Called automatically by <see cref="ApplyApplicationCulture"/>.
     /// </summary>
     /// <param name="culture">A mutable clone of the culture to customize.</param>
     protected virtual void ConfigureNumberFormat(CultureInfo culture)
