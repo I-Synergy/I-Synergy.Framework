@@ -720,17 +720,9 @@
         <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
         <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
         <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
-        <Setter Property="Shell.TitleView">
-            <Setter.Value>
-                <Grid RowDefinitions="*" ColumnDefinitions="Auto,*">
-                    <ImageButton Grid.Column="0" Source="refresh.png" />
-                    <Label Grid.Column="1" Text="MyTitle"/>
-                </Grid>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Shell.NavBarIsVisible" Value="False" />
     </Style>
 
-    <!-- Default NavigationPage style: Primary accent color for app-level navigation -->
     <Style TargetType="NavigationPage">
         <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />

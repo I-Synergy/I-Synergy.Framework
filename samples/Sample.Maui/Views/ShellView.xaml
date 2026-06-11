@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<FlyoutPage
+<Shell
     x:Class="Sample.Views.ShellView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -9,14 +9,38 @@
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:views="clr-namespace:Sample.Views"
     x:DataType="viewmodels:ShellViewModel"
-    FlyoutLayoutBehavior="Popover"
+    FlyoutBehavior="Flyout"
+    FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
     BackgroundColor="{DynamicResource Primary}">
 
-    <FlyoutPage.Flyout>
-        <c:NavigationMenu x:Name="MenuFlyout">
-            <c:NavigationMenu.IconImageSource>
-                <FontImageSource Glyph="&#xe700;" FontFamily="SegoeMdl2" Size="18" Color="{AppThemeBinding Dark=White, Light=Black}"/>
-            </c:NavigationMenu.IconImageSource>
-        </c:NavigationMenu>
-    </FlyoutPage.Flyout>
-</FlyoutPage>
+    <ShellContent
+        Title="Dashboard"
+        Icon="{StaticResource IconDashboard}"
+        ContentTemplate="{DataTemplate views:InfoView}"
+        Route="dashboard" />
+
+    <ShellContent
+        Title="Custom Controls"
+        ContentTemplate="{DataTemplate views:CustomControlsView}"
+        Route="customcontrols" />
+
+    <ShellContent
+        Title="Maui Controls"
+        ContentTemplate="{DataTemplate views:MauiControlsView}"
+        Route="mauicontrols" />
+
+    <ShellContent
+        Title="Slide Show"
+        ContentTemplate="{DataTemplate views:SlideShowView}"
+        Route="slideshow" />
+
+    <Shell.FlyoutFooter>
+        <VerticalStackLayout Padding="4">
+            <c:NavigationItem Text="Help" Icon="{StaticResource IconHelp}"/>
+            <c:NavigationItem Text="Language" Icon="{StaticResource IconLanguage}"/>
+            <c:NavigationItem Text="Theme" Icon="{StaticResource IconTheme}"/>
+            <c:NavigationItem Text="Settings" Icon="{StaticResource IconSettings}"/>
+            <c:NavigationItem Text="Signin" Icon="{StaticResource IconSignin}"/>
+        </VerticalStackLayout>
+    </Shell.FlyoutFooter>
+</Shell>

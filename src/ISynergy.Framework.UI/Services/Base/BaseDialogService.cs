@@ -1,6 +1,6 @@
 using ISynergy.Framework.Globalization.Abstractions.Services;
 
-namespace ISynergy.Framework.UI.Services;
+namespace ISynergy.Framework.UI.Services.Base;
 
 /// <summary>
 /// Provides shared time-of-day greeting resolution for dialog services.

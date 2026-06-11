@@ -115,7 +115,10 @@ public partial class App : Application
             _logger.LogInformation("Application loaded event: checking for auto-login");
 
             _logger.LogInformation("Navigate to SignIn page");
-            await _navigationService.NavigateModalAsync<SignInViewModel>();
+
+            //await _navigationService.NavigateModalAsync<SignInViewModel>();
+
+            await _navigationService.NavigateModalAsync<ShellViewModel>();
         }
         catch (Exception ex)
         {

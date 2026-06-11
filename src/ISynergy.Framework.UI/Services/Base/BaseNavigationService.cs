@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace ISynergy.Framework.UI.Services;
+namespace ISynergy.Framework.UI.Services.Base;
 
 /// <summary>
 /// Abstract base class for platform-specific NavigationService implementations.
