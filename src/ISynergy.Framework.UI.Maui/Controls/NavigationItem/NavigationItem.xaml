@@ -31,26 +31,43 @@
     </ContentView.Resources>
 
     <Border 
-        Padding="18,15"
+        Padding="15,14"
         Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}" 
         StrokeThickness="0.1" 
         StrokeShape="RoundRectangle 2">
         <Grid
-            ColumnDefinitions="20,*"
             ColumnSpacing="10"
             behaviors:CursorBehavior.Cursor="Hand">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition>
+                    <ColumnDefinition.Width>
+                        <OnPlatform x:TypeArguments="GridLength">
+                            <On Platform="iOS" Value="24" />
+                            <On Platform="Android" Value="20" />
+                            <On Platform="WinUI" Value="20" />
+                        </OnPlatform>
+                    </ColumnDefinition.Width>
+                </ColumnDefinition>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Image
                 Grid.Column="0"
                 VerticalOptions="Center"
-                WidthRequest="16"
                 Source="{Binding Icon, Source={x:Reference NavigationItemControl}}"/>
 
             <Label
                 Grid.Column="1"
-                FontSize="12"
                 Text="{Binding Text, Source={x:Reference NavigationItemControl}}"
-                VerticalOptions="Center" />
-        
+                VerticalOptions="Center">
+                <Label.FontSize>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="iOS" Value="14" />
+                        <On Platform="Android" Value="12" />
+                        <On Platform="WinUI" Value="12" />
+                    </OnPlatform>
+                </Label.FontSize>
+            </Label>
+
             <Grid.GestureRecognizers>
                 <TapGestureRecognizer
                     Command="{Binding Command, Source={x:Reference NavigationItemControl}}"

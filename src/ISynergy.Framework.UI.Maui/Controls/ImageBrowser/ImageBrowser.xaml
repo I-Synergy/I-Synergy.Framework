@@ -13,7 +13,7 @@
         <converters:BytesToImageSourceConverter x:Key="BytesToImageSourceConverter" />
     </ContentView.Resources>
 
-    <Grid>
+    <Grid RowSpacing="8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
@@ -29,15 +29,17 @@
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
                 HeightRequest="50"
                 MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
+                MaximumHeightRequest="50"
                 ToolTipProperties.Text="{m:GetString Browse}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                MaximumWidthRequest="50"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe721;"
-                        Size="14" />
+                        Glyph="&#xe721;"/>
                 </ImageButton.Source>
             </ImageButton>
 
@@ -47,15 +49,17 @@
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
                 HeightRequest="50"
                 MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
+                MaximumHeightRequest="50"
                 ToolTipProperties.Text="{m:GetString TakePhoto}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                MaximumWidthRequest="50"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe722;"
-                        Size="14" />
+                        Glyph="&#xe722;"/>
                 </ImageButton.Source>
             </ImageButton>
 
@@ -64,18 +68,20 @@
                 Clicked="PasteButton_Clicked"
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
                 HeightRequest="50"
+                MinimumHeightRequest="50"
+                MaximumHeightRequest="50"
                 IsVisible="{OnPlatform Default=False,
                                        WinUI=True}"
-                MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
                 ToolTipProperties.Text="{m:GetString Paste}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                MaximumWidthRequest="50"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe77f;"
-                        Size="14" />
+                        Glyph="&#xe77f;"/>
                 </ImageButton.Source>
             </ImageButton>
 
@@ -85,15 +91,17 @@
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
                 HeightRequest="50"
                 MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
+                MaximumHeightRequest="50"
                 ToolTipProperties.Text="{m:GetString Delete}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="50"
+                MinimumWidthRequest="50"
+                MaximumWidthRequest="50"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe74d;"
-                        Size="14" />
+                        Glyph="&#xe74d;"/>
                 </ImageButton.Source>
             </ImageButton>
         </VerticalStackLayout>
