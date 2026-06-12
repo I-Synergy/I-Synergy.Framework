@@ -68,11 +68,11 @@ public abstract partial class View : Page, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // The ViewModel lifecycle is managed by the DI scope that created it.
+            // Do NOT dispose it here — the scope handles that. Do NOT set
+            // ViewModel/DataContext to null — it propagates through the visual tree
+            // and can trigger operations on elements whose services are already disposed.
         }
-
-        // free native resources if there are any.
     }
     #endregion
 }
