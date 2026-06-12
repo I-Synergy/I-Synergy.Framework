@@ -24,6 +24,8 @@ public class LanguageViewModel : ViewModelDialog<CultureInfo>, ILanguageViewMode
     /// </summary>
     public IReadOnlyList<LanguageOption> SupportedCultures { get; }
 
+    private List<LanguageOption>? _subscribedOptions;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageViewModel"/> class.
     /// </summary>
@@ -57,14 +59,13 @@ public class LanguageViewModel : ViewModelDialog<CultureInfo>, ILanguageViewMode
 
         SetSelectedItem(selectedCulture);
 
-        // Wire up selection events for WinUI/WPF compatibility
+        // Wire up selection events for WinUI/WPF compatibility; store options so
+        // we can unsubscribe in Cleanup to avoid the memory leak (P4.1).
+        _subscribedOptions = new List<LanguageOption>(SupportedCultures.Count);
         foreach (var option in SupportedCultures)
         {
-            option.Selected += (s, _) =>
-            {
-                if (s is LanguageOption selected)
-                    SetSelectedItem(selected.CultureInfo);
-            };
+            option.Selected += OnLanguageOptionSelected;
+            _subscribedOptions.Add(option);
         }
 
         // Mark the initially selected option
@@ -74,5 +75,32 @@ public class LanguageViewModel : ViewModelDialog<CultureInfo>, ILanguageViewMode
                 StringComparison.OrdinalIgnoreCase));
         if (current is not null)
             current.IsSelected = true;
+    }
+
+    private void OnLanguageOptionSelected(object? s, EventArgs _)
+    {
+        if (s is LanguageOption selected)
+            SetSelectedItem(selected.CultureInfo);
+    }
+
+    public override void Cleanup(bool isClosing = true)
+    {
+        try
+        {
+            IsInCleanup = true;
+
+            if (_subscribedOptions is not null)
+            {
+                foreach (var option in _subscribedOptions)
+                    option.Selected -= OnLanguageOptionSelected;
+                _subscribedOptions = null;
+            }
+
+            base.Cleanup(isClosing);
+        }
+        finally
+        {
+            IsInCleanup = false;
+        }
     }
 }

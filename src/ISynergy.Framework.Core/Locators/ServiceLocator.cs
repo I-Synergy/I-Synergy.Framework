@@ -88,6 +88,12 @@ public class ServiceLocator : IDisposable
         if (_disposed)
             return;
 
+        if (_serviceProvider is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
+        _serviceProvider = null;
         _disposed = true;
         GC.SuppressFinalize(this);
     }

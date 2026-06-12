@@ -420,6 +420,12 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (disposing)
         {
+            if (_clockTimer is not null)
+            {
+                _clockTimer.Stop();
+                _clockTimer.Tick -= ClockTimerCallback;
+            }
+
             _messengerService.Unregister<ShowInformationMessage>(this);
             _messengerService.Unregister<ShowWarningMessage>(this);
             _messengerService.Unregister<ShowErrorMessage>(this);
