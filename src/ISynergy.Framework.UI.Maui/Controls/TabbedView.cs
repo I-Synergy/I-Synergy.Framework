@@ -3,12 +3,15 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Singleton)]
 public abstract class TabbedView : TabbedPage, IView
 {
+    private IServiceScope? _viewModelScope;
+
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
@@ -44,7 +47,8 @@ public abstract class TabbedView : TabbedPage, IView
     : this()
     {
         Argument.IsNotNull(viewModelType);
-        ViewModel = (ServiceLocator.Default.GetRequiredService(viewModelType) as IViewModel)!;
+        _viewModelScope = ServiceLocator.Default.ServiceProvider.CreateScope();
+        ViewModel = (_viewModelScope.ServiceProvider.GetRequiredService(viewModelType) as IViewModel)!;
     }
 
     /// <summary>
@@ -78,8 +82,13 @@ public abstract class TabbedView : TabbedPage, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            _viewModelScope?.Dispose();
+            _viewModelScope = null;
+
+            // The ViewModel lifecycle is managed by its own DI scope.
+            // Views are Singletons — only disposed at app shutdown.
+            // Do NOT dispose the ViewModel here; the DI container owns
+            // its lifetime.
         }
 
         // free native resources if there are any.

@@ -92,6 +92,9 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     {
         // Create a timer to clean up the token cache every minute
         _cacheCleanupTimer = new Timer(_ => CleanupTokenCache(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+
+        // Ensure static resources are cleaned up when the process exits
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => CleanupStaticResources();
     }
 
     /// <summary>

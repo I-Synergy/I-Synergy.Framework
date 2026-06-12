@@ -308,7 +308,7 @@ public abstract class ObservableClass : IObservableClass
     {
         await DisposeAsyncCore().ConfigureAwait(false);
 
-        Dispose(disposing: false);
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 

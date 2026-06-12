@@ -3,12 +3,15 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Singleton)]
 public abstract class View : ContentPage, IView
 {
+    private IServiceScope? _viewModelScope;
+
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
@@ -43,7 +46,8 @@ public abstract class View : ContentPage, IView
     : this()
     {
         Argument.IsNotNull(viewModelType);
-        ViewModel = (ServiceLocator.Default.GetRequiredService(viewModelType) as IViewModel)!;
+        _viewModelScope = ServiceLocator.Default.ServiceProvider.CreateScope();
+        ViewModel = (_viewModelScope.ServiceProvider.GetRequiredService(viewModelType) as IViewModel)!;
     }
 
     /// <summary>
@@ -97,6 +101,9 @@ public abstract class View : ContentPage, IView
     {
         if (disposing)
         {
+            _viewModelScope?.Dispose();
+            _viewModelScope = null;
+
             // Views are Singletons — only disposed at app shutdown.
             // Do NOT clear BindingContext or Content here. Setting
             // BindingContext to null propagates through the entire visual
