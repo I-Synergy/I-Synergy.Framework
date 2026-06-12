@@ -34,10 +34,9 @@
         Padding="15"
         Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}" 
         StrokeThickness="0.1" 
-        StrokeShape="RoundRectangle 2">
-        <Grid
-            ColumnSpacing="10"
-            behaviors:CursorBehavior.Cursor="Hand">
+        StrokeShape="RoundRectangle 2"
+        behaviors:CursorBehavior.Cursor="Hand">
+        <Grid ColumnSpacing="10" behaviors:CursorBehavior.Cursor="Hand">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition>
                     <ColumnDefinition.Width>
@@ -68,13 +67,13 @@
                     </OnPlatform>
                 </Label.FontSize>
             </Label>
-
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer
-                    Command="{Binding Command, Source={x:Reference NavigationItemControl}}"
-                    CommandParameter="{Binding CommandParameter, Source={x:Reference NavigationItemControl}}"
-                    NumberOfTapsRequired="1" />
-            </Grid.GestureRecognizers>
         </Grid>
+
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer
+                Command="{Binding Command, Source={x:Reference NavigationItemControl}}"
+                CommandParameter="{Binding CommandParameter, Source={x:Reference NavigationItemControl}}"
+                NumberOfTapsRequired="1" />
+        </Border.GestureRecognizers>
     </Border>
 </ContentView>
