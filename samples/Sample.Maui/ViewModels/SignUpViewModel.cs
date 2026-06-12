@@ -205,12 +205,9 @@ public class SignUpViewModel : ViewModel
 
     private Task SelectModulesAsync() =>
         _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<Module>, List<Module>>(
+            SelectedModules,
             selectedItems => { SelectedModules = selectedItems.ToList(); return Task.CompletedTask; },
-            initialization: vm =>
-            {
-                vm.SetItems(Modules);
-                vm.SetSelectedItems(SelectedModules);
-            });
+            initialization: vm => vm.SetItems(Modules));
 
     private Task ValidateMailAsync()
     {

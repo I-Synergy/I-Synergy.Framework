@@ -112,6 +112,7 @@ public class CustomControlsViewModel : ViewModelNavigation<object>
 
     private Task SelectMultipleAsync() =>
         _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<TestItem>, List<TestItem>>(
+            SelectedTestItems.ToList(),
             async items =>
             {
                 SelectedTestItems = new ObservableCollection<TestItem>();

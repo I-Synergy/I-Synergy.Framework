@@ -130,17 +130,14 @@ public class ShellViewModel : BaseShellViewModel
 
     private Task SelectMultipleAsync() =>
         _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<TestItem>, List<TestItem>>(
+            SelectedTestItems.ToList(),
             async items =>
             {
                 SelectedTestItems = new ObservableCollection<TestItem>();
                 SelectedTestItems.AddRange(items);
                 await _dialogService.ShowInformationAsync($"{string.Join(", ", items.Select(s => s.Description))} selected.");
             },
-            initialization: vm =>
-            {
-                vm.SetItems(Items);
-                vm.SetSelectedItems(SelectedTestItems);
-            });
+            initialization: vm => vm.SetItems(Items));
 
     private Task UnlistNugetAsync() =>
         _navigationService.NavigateAsync<NugetViewModel>();

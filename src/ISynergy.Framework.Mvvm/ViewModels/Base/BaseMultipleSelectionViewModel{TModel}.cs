@@ -44,22 +44,15 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
         }
     }
 
-    /// <summary>
-    /// Gets or sets the selected items.
-    /// </summary>
-    public List<object>? SelectedItems
-    {
-        get => GetValue<List<object>?>();
-        set => SetValue(value);
-    }
+    List<object>? IMultipleSelectionViewModel.SelectedItem => SelectedItem?.Cast<object>().ToList();
 
     /// <inheritdoc />
-    public virtual void SetSelectedItems(IEnumerable<object> e)
+    public virtual void SetSelectedItem(IEnumerable<object>? e)
     {
-        SelectedItems = new List<object>();
+        SelectedItem = new List<TModel>();
 
         foreach (var item in e.EnsureNotNull())
-            SelectedItems.Add(item!);
+            SelectedItem.Add((TModel)item!);
     }
 
     public AsyncRelayCommand<string> RefreshCommand { get; private set; }
@@ -76,12 +69,12 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
     {
         RawItems = new List<TModel>();
         Items = new ObservableCollection<TModel>();
-        SelectedItems = new List<object>();
+        SelectedItem = new List<TModel>();
 
         Validator = new Action<IObservableValidatedClass>(_ =>
         {
-            if (SelectedItems is null || SelectedItems.Count < 1)
-                AddValidationError(nameof(SelectedItems), _commonServices.LanguageService.GetString("WarningSelectItem"));
+            if (SelectedItem is null || SelectedItem.Count < 1)
+                AddValidationError(nameof(SelectedItem), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
         RefreshCommand = new AsyncRelayCommand<string>(e => QueryItemsAsync(e));
@@ -125,7 +118,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
         {
             var result = new List<TModel>();
 
-            foreach (TModel item in SelectedItems.EnsureNotNull())
+            foreach (TModel item in SelectedItem.EnsureNotNull())
                 result.Add(item);
 
             OnSubmitted(new SubmitEventArgs<List<TModel>>(result));
@@ -140,7 +133,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
         {
             IsInCleanup = true;
             Items = null;
-            SelectedItems = null;
+            SelectedItem = null;
             base.Cleanup(isClosing);
         }
         finally
