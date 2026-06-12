@@ -36,15 +36,14 @@ public class Window : ContentPage, IWindow
     {
         _isViewModelClosed = true;
 
-        // Break the BindingContext reference immediately to allow the ViewModel
-        // to be GC'd. Only detach Content when the handler is still connected —
-        // during app shutdown MAUI handles cleanup natively, and setting Content
-        // to null can trigger FireAndForget tasks that fail because the DI
-        // container is already disposed.
+        // Clear BindingContext FIRST so all child bindings resolve to null
+        // before we detach the visual tree. Otherwise detaching Content can
+        // trigger binding evaluations that schedule FireAndForget tasks —
+        // those complete after the DI container is disposed during app shutdown.
+        BindingContext = null;
+
         if (Handler is not null)
             Content = null;
-
-        BindingContext = null;
     }
 
     public Window()
@@ -119,10 +118,10 @@ public class Window : ContentPage, IWindow
             // MAUI handles cleanup natively. Setting Content to null during shutdown
             // can trigger FireAndForget tasks that fail when the DI container has
             // already been disposed.
+            BindingContext = null;
+
             if (Handler is not null)
                 Content = null;
-
-            BindingContext = null;
         }
     }
 

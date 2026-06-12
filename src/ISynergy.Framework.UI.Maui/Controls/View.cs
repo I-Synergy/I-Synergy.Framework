@@ -101,10 +101,10 @@ public abstract class View : ContentPage, IView
             // During app shutdown MAUI handles cleanup natively and setting
             // Content to null can trigger FireAndForget tasks that fail when
             // the DI container has already been disposed.
+            BindingContext = null;
+
             if (Handler is not null)
                 Content = null;
-
-            BindingContext = null;
         }
     }
     #endregion
