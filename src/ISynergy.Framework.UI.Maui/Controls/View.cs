@@ -98,11 +98,15 @@ public abstract class View : ContentPage, IView
         if (disposing)
         {
             // Views are Singletons — only disposed at app shutdown.
-            // Clear the BindingContext to release the ViewModel reference.
-            // Do NOT set Content to null: the visual tree is managed by MAUI,
-            // and detaching it during shutdown triggers FireAndForget tasks
-            // that fail when the DI container is already disposed.
-            BindingContext = null;
+            // Do NOT clear BindingContext or Content here. Setting
+            // BindingContext to null propagates through the entire visual
+            // tree, triggering bindings (e.g. Image.Source) that try to
+            // load resources asynchronously. Those async operations use
+            // MauiContext.WrappedServiceProvider, which is already disposed
+            // at shutdown, causing ObjectDisposedException.
+            //
+            // MAUI handles all native cleanup during teardown. The ViewModel
+            // lifecycle is managed by its own DI scope. We just let go.
         }
     }
     #endregion
