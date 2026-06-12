@@ -36,14 +36,16 @@ public class Window : ContentPage, IWindow
     {
         _isViewModelClosed = true;
 
-        // Clear BindingContext FIRST so all child bindings resolve to null
-        // before we detach the visual tree. Otherwise detaching Content can
-        // trigger binding evaluations that schedule FireAndForget tasks —
-        // those complete after the DI container is disposed during app shutdown.
+        // Break the BindingContext reference immediately to allow the ViewModel
+        // to be GC'd. Setting BindingContext to null causes all child bindings
+        // to resolve to null, which is safe.
+        //
+        // Do NOT detach Content here — it runs synchronously while MAUI's
+        // PopModalAsync is still in-flight, and the visual tree detach can
+        // trigger FireAndForget tasks that complete after the DI scope (which
+        // holds this page's ViewModel) is disposed by the Closed handler.
+        // Content detach is handled later in Dispose() as a safety net.
         BindingContext = null;
-
-        if (Handler is not null)
-            Content = null;
     }
 
     public Window()
