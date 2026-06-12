@@ -42,33 +42,40 @@ public class DeferredNavigation
     /// <param name="e">The <see cref="NavigatingCancelEventArgs"/> instance containing the event data.</param>
     private async void OnFrameNavigating(object? sender, NavigatingCancelEventArgs e)
     {
-        e.Cancel = true;
-        if (!_isBusy)
+        try
         {
-            _isBusy = true;
-
-            if (OnNavigating is not null)
+            e.Cancel = true;
+            if (!_isBusy)
             {
-                await OnNavigating(e);
+                _isBusy = true;
 
-                if (!e.Cancel)
+                if (OnNavigating is not null)
                 {
-                    switch (e.NavigationMode)
+                    await OnNavigating(e);
+
+                    if (!e.Cancel)
                     {
-                        case NavigationMode.New:
-                        case NavigationMode.Refresh:
-                            Frame.Navigating -= OnFrameNavigating;
-                            Frame.Navigate(e.SourcePageType, e.Parameter);
-                            break;
-                        case NavigationMode.Back:
-                            Frame.Navigating -= OnFrameNavigating;
-                            Frame.GoBack();
-                            break;
+                        switch (e.NavigationMode)
+                        {
+                            case NavigationMode.New:
+                            case NavigationMode.Refresh:
+                                Frame.Navigating -= OnFrameNavigating;
+                                Frame.Navigate(e.SourcePageType, e.Parameter);
+                                break;
+                            case NavigationMode.Back:
+                                Frame.Navigating -= OnFrameNavigating;
+                                Frame.GoBack();
+                                break;
+                        }
                     }
                 }
-            }
 
-            _isBusy = false;
+                _isBusy = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"DeferredNavigation error: {ex.Message}");
         }
     }
 }
