@@ -100,16 +100,9 @@ public class CustomControlsViewModel : ViewModelNavigation<object>
         ];
     }
 
-    private async Task ShowErrorWindowAsync()
-    {
-        var testVm = ServiceLocator.Default.GetRequiredService<TestExceptionViewModel>();
-        testVm.Submitted += TestVm_Submitted;
-        await _dialogService.ShowDialogAsync(typeof(ITestExceptionWindow), testVm);
-    }
-
-    private void TestVm_Submitted(object? sender, SubmitEventArgs<TestItem> e)
-    {
-    }
+    private Task ShowErrorWindowAsync() =>
+        _dialogService.ShowDialogAsync<ITestExceptionWindow, TestExceptionViewModel, TestItem>(
+            _ => Task.CompletedTask);
 
     private async Task NavigateToDetailAsync()
     {
@@ -117,55 +110,24 @@ public class CustomControlsViewModel : ViewModelNavigation<object>
         await _navigationService.NavigateAsync(detailsVm);
     }
 
-    private Task SelectMultipleAsync()
-    {
-        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelMultipleSelectionDialog<TestItem>>();
-        selectionVm.SetItems(Items);
-        selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        return _dialogService.ShowDialogAsync(typeof(IMultipleSelectionWindow), selectionVm);
-    }
+    private Task SelectMultipleAsync() =>
+        _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<TestItem>, List<TestItem>>(
+            async items =>
+            {
+                SelectedTestItems = new ObservableCollection<TestItem>();
+                SelectedTestItems.AddRange(items);
+                await _dialogService.ShowInformationAsync($"{string.Join(", ", items.Select(s => s.Description))} selected.");
+            },
+            initialization: vm => vm.SetItems(Items));
 
-    private Task SelectSingleAsync()
-    {
-        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSingleSelectionDialog<TestItem>>();
-        selectionVm.SetItems(Items);
-        selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        return _dialogService.ShowDialogAsync(typeof(ISingleSelectionWindow), selectionVm);
-    }
+    private Task SelectSingleAsync() =>
+        _dialogService.ShowDialogAsync<ISingleSelectionWindow, ViewModelSingleSelectionDialog<TestItem>, TestItem>(
+            async item => await _dialogService.ShowInformationAsync($"{item.Description} selected."),
+            initialization: vm => vm.SetItems(Items));
 
-    private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
-    {
-        if (sender is ViewModelMultipleSelectionDialog<TestItem> vm)
-            vm.Submitted -= SelectionVm_MultipleSubmitted;
-
-        SelectedTestItems = new ObservableCollection<TestItem>();
-        SelectedTestItems.AddRange(e.Result);
-
-        await _dialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
-    }
-
-    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<TestItem> e)
-    {
-        if (sender is ViewModelSingleSelectionDialog<TestItem> vm)
-            vm.Submitted -= SelectionVm_SingleSubmitted;
-
-        await _dialogService.ShowInformationAsync($"{e.Result.Description} selected.");
-    }
-
-    private async Task ShowMemoAsync()
-    {
-        var noteVM = ServiceLocator.Default.GetRequiredService<NoteViewModel>();
-        noteVM.Submitted += NoteVM_Submitted;
-        await _dialogService.ShowDialogAsync(typeof(INoteWindow), noteVM);
-    }
-
-    private async void NoteVM_Submitted(object? sender, SubmitEventArgs<string> e)
-    {
-        if (sender is NoteViewModel vm)
-            vm.Submitted -= NoteVM_Submitted;
-
-        await _dialogService.ShowInformationAsync(e.Result);
-    }
+    private Task ShowMemoAsync() =>
+        _dialogService.ShowDialogAsync<INoteWindow, NoteViewModel, string>(
+            async result => await _dialogService.ShowInformationAsync(result));
 
     private void StartTimer()
     {

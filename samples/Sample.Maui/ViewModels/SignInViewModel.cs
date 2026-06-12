@@ -73,32 +73,19 @@ public class SignInViewModel : ViewModel
     /// Forgots the password asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public Task ForgotPasswordAsync()
-    {
-        var forgotPasswordVM = ServiceLocator.Default.GetRequiredService<ForgotPasswordViewModel>();
-        forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
-        return _dialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
-    }
+    public Task ForgotPasswordAsync() =>
+        _dialogService.ShowDialogAsync<IForgotPasswordWindow, ForgotPasswordViewModel, bool>(
+            async result =>
+            {
+                if (result)
+                {
+                    await _dialogService
+                            .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
 
-    /// <summary>
-    /// Forgots the password vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void ForgotPasswordVM_Submitted(object? sender, SubmitEventArgs<bool> e)
-    {
-        if (sender is ForgotPasswordViewModel vm)
-            vm.Submitted -= ForgotPasswordVM_Submitted;
-
-        if (e.Result)
-        {
-            await _dialogService
-                    .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
-
-            if (_navigationService.CanGoBack)
-                await _navigationService.GoBackAsync();
-        }
-    }
+                    if (_navigationService.CanGoBack)
+                        await _navigationService.GoBackAsync();
+                }
+            });
 
     private async Task SignInAsync()
     {

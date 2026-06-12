@@ -76,22 +76,13 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     }
 
 
-    private async Task ShowUnitsAsync()
-    {
-        TestViewModel vm = ServiceLocator.Default.GetRequiredService<TestViewModel>();
-        vm.Submitted += Vm_Submitted;
-        await _dialogService.ShowDialogAsync(typeof(TestWindow), vm);
-    }
-
-    private async void Vm_Submitted(object? sender, SubmitEventArgs<object> e)
-    {
-        if (sender is TestViewModel vm)
-            vm.Submitted -= Vm_Submitted;
-
-        CanExecuteTest = !CanExecuteTest;
-
-        await _dialogService.ShowInformationAsync($"{e.Result} selected.");
-    }
+    private Task ShowUnitsAsync() =>
+        _dialogService.ShowDialogAsync<TestWindow, TestViewModel, object>(
+            async result =>
+            {
+                CanExecuteTest = !CanExecuteTest;
+                await _dialogService.ShowInformationAsync($"{result} selected.");
+            });
 
     public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {

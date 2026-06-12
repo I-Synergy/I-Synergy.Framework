@@ -5,7 +5,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
@@ -27,7 +26,6 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     protected readonly INavigationService _navigationService;
     protected readonly IDialogService _dialogService;
     protected readonly ISettingsService _settingsService;
-    protected readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
@@ -74,15 +72,13 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
-    /// <param name="scopeFactory"></param>
     /// <param name="logger">The logger factory.</param>
-    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IServiceScopeFactory scopeFactory, ILogger<BaseShellViewModel> logger)
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
         _settingsService = settingsService;
-        _scopeFactory = scopeFactory;
 
         _navigationService.BackStackChanged += NavigationService_BackStackChanged;
 

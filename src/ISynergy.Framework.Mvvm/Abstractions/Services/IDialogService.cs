@@ -59,24 +59,6 @@ public interface IDialogService
     Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default);
 
     /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="window">The window.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel);
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="type">The type.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel);
-
-    /// <summary>
     /// Shows a dialog with an initial entity and lifecycle callbacks.
     /// The DialogService manages scope creation, ViewModel/Window resolution,
     /// event subscription, callback error handling, and scope disposal.
@@ -88,11 +70,13 @@ public interface IDialogService
     /// <param name="submittedEventHandler">Invoked when the user submits, with the resulting entity. Runs before scope disposal.</param>
     /// <param name="cancelledEventHandler">Optional. Invoked when the user cancels (CancelCommand / tap-outside). Runs before scope disposal.</param>
     /// <param name="closedEventHandler">Optional. Invoked when the dialog closes on ANY path (submit, cancel, back button, platform dismiss). Runs before scope disposal.</param>
+    /// <param name="initialization">Optional. Invoked after ViewModel resolution but before the dialog is shown. Use to call SetItems, SetSelectedItems, or other ViewModel configuration.</param>
     Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
         TEntity e,
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler = null,
-        Func<Task>? closedEventHandler = null)
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>;
 
@@ -108,10 +92,12 @@ public interface IDialogService
     /// <param name="submittedEventHandler">Invoked when the user submits, with the resulting entity. Runs before scope disposal.</param>
     /// <param name="cancelledEventHandler">Optional. Invoked when the user cancels (CancelCommand / tap-outside). Runs before scope disposal.</param>
     /// <param name="closedEventHandler">Optional. Invoked when the dialog closes on ANY path (submit, cancel, back button, platform dismiss). Runs before scope disposal.</param>
+    /// <param name="initialization">Optional. Invoked after ViewModel resolution but before the dialog is shown. Use to call SetItems, SetSelectedItems, or other ViewModel configuration.</param>
     Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler = null,
-        Func<Task>? closedEventHandler = null)
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>;
 }

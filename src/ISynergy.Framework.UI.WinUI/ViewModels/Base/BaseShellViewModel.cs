@@ -1,16 +1,13 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -22,7 +19,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         protected readonly INavigationService _navigationService;
         protected readonly IDialogService _dialogService;
         protected readonly ISettingsService _settingsService;
-        protected readonly IServiceScopeFactory _scopeFactory;
 
         public bool IsBackEnabled
         {
@@ -52,13 +48,12 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             set => SetValue(value);
         }
 
-        protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IServiceScopeFactory scopeFactory, ILogger<BaseShellViewModel> logger)
+        protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
         {
             _dialogService = dialogService;
             _navigationService = navigationService;
             _settingsService = settingsService;
-            _scopeFactory = scopeFactory;
 
             _navigationService.BackStackChanged += NavigationService_BackStackChanged;
             IsBackEnabled = _navigationService.CanGoBack;
@@ -81,9 +76,8 @@ namespace ISynergy.Framework.UI.ViewModels.Base
 
         public abstract Task InitializeFirstRunAsync();
 
-
         private void NavigationService_BackStackChanged(object? sender, EventArgs e) =>
-        IsBackEnabled = _navigationService.CanGoBack;
+            IsBackEnabled = _navigationService.CanGoBack;
 
         protected abstract Task OpenSettingsAsync();
 
@@ -92,7 +86,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         protected abstract Task SignOutAsync();
 
         protected Task ShowDialogRestartAfterUpdateAsync() =>
-        _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
+            _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
 
         public NavigationItem LastSelectedItem
         {

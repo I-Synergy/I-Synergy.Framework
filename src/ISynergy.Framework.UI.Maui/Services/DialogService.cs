@@ -506,14 +506,15 @@ public class DialogService : IDialogService, IDisposable
         TEntity e,
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler = null,
-        Func<Task>? closedEventHandler = null)
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
         await _dialogSemaphore.WaitAsync();
         try
         {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e, submittedEventHandler, cancelledEventHandler, closedEventHandler);
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
         }
         finally
         {
@@ -525,14 +526,15 @@ public class DialogService : IDialogService, IDisposable
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler = null,
-        Func<Task>? closedEventHandler = null)
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
         await _dialogSemaphore.WaitAsync();
         try
         {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(submittedEventHandler, cancelledEventHandler, closedEventHandler);
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
         }
         finally
         {
@@ -544,7 +546,8 @@ public class DialogService : IDialogService, IDisposable
         TEntity e,
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler = null,
-        Func<Task>? closedEventHandler = null)
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -554,6 +557,8 @@ public class DialogService : IDialogService, IDisposable
             if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
                 scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             {
+                initialization?.Invoke((TViewModel)viewmodel);
+
                 viewmodel.SetSelectedItem(e);
 
                 async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
@@ -627,7 +632,8 @@ public class DialogService : IDialogService, IDisposable
     private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler = null,
-        Func<Task>? closedEventHandler = null)
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -637,6 +643,8 @@ public class DialogService : IDialogService, IDisposable
             if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
                 scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             {
+                initialization?.Invoke((TViewModel)viewmodel);
+
                 async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
                 {
                     try { await submittedEventHandler(args.Result); }

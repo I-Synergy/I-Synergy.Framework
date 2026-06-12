@@ -1,16 +1,13 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -29,7 +26,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     protected readonly IDialogService _dialogService;
     protected readonly INavigationService _navigationService;
     protected readonly ISettingsService _settingsService;
-    protected readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
@@ -115,15 +111,13 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
-    /// <param name="scopeFactory"></param>
     /// <param name="logger"></param>
-    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IServiceScopeFactory scopeFactory, ILogger<BaseShellViewModel> logger)
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
         _settingsService = settingsService;
-        _scopeFactory = scopeFactory;
 
         _navigationService.BackStackChanged += NavigationService_BackStackChanged;
 

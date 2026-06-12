@@ -11,11 +11,11 @@ using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
 using Sample.Models;
+using System.Globalization;
 
 namespace Sample.ViewModels;
 
@@ -44,7 +44,6 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
-    /// <param name="scopeFactory"></param>
     /// <param name="fileService"></param>
     /// <param name="logger"></param>
     public ShellViewModel(
@@ -52,10 +51,9 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IDialogService dialogService,
         INavigationService navigationService,
         ISettingsService settingsService,
-        IServiceScopeFactory scopeFactory,
         IFileService<FileResult> fileService,
         ILogger<ShellViewModel> logger)
-        : base(commonServices, dialogService, navigationService, settingsService, scopeFactory, logger)
+        : base(commonServices, dialogService, navigationService, settingsService, logger)
     {
         SetClock();
 
@@ -132,24 +130,23 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _commonServices.LanguageService.GetString("Language"),
                 MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
             {
-                using var scope = _scopeFactory.CreateScope();
-                var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
-                languageVM.Submitted += (s, e) =>
-                {
-                    _settingsService.LocalSettings.Language = e.Result.Name;
-                    _settingsService.SaveLocalSettings();
-                    e.Result.SetLocalizationLanguage();
-                    _commonServices.RestartApplication();
-                };
-                await _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+                await _dialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, CultureInfo>(
+                    async culture =>
+                    {
+                        _settingsService.LocalSettings.Language = culture.Name;
+                        _settingsService.SaveLocalSettings();
+                        culture.SetLocalizationLanguage();
+                        _commonServices.RestartApplication();
+                    });
             }
 
-            using var settingsScope = _scopeFactory.CreateScope();
-            var wizardVM = settingsScope.ServiceProvider.GetRequiredService<SettingsViewModel>();
+            var wizardVM = ServiceLocator.Default.GetRequiredService<SettingsViewModel>();
+
             wizardVM.Submitted += (s, e) =>
             {
                 _commonServices.RestartApplication();
             };
+
             wizardVM.Cancelled += (s, e) =>
             {
                 _commonServices.RestartApplication();
