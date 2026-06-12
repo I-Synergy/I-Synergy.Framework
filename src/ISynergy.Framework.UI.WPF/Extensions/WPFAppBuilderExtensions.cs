@@ -90,6 +90,7 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<IBusyService, BusyService>();
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
+            services.TryAddSingleton<IBladeService, BladeService>();
             services.TryAddSingleton<IDialogService, DialogService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
             services.TryAddSingleton<IDispatcherService, DispatcherService>();

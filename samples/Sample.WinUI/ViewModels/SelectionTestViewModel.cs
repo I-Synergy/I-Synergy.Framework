@@ -21,6 +21,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     /// <summary>
     /// Gets the title.
@@ -50,11 +51,12 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="logger"></param>
-    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<SelectionTestViewModel> logger)
+    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<SelectionTestViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
 
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
@@ -106,58 +108,26 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// Selects the multiple asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    private Task SelectMultipleAsync()
-    {
-        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelMultipleSelectionBlade<TestItem>>();
-        selectionVm.SetItems(Items!);
-        selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        return _navigationService.OpenBladeAsync(this, selectionVm);
-    }
+    private Task SelectMultipleAsync() =>
+        _bladeService.OpenBladeAsync<ViewModelMultipleSelectionBlade<TestItem>, List<TestItem>>(
+            this,
+            async items =>
+            {
+                SelectedTestItems = new ObservableCollection<TestItem>();
+                SelectedTestItems.AddRange(items);
+                await _dialogService.ShowInformationAsync($"{string.Join(", ", items.Select(s => s.Description))} selected.");
+            },
+            initialization: vm => vm.SetItems(Items!));
 
-    /// <summary>
-    /// Selects the single asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    private Task SelectSingleAsync()
-    {
-        var selectionVm = ServiceLocator.Default.GetRequiredService<ViewModelSingleSelectionBlade<TestItem>>();
-        selectionVm.SetItems(Items!);
-        // Single-select should not inherit multi-select pre-selections
-        selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        return _navigationService.OpenBladeAsync(this, selectionVm);
-    }
-
-    /// <summary>
-    /// Selections the vm multiple submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
-    {
-        if (sender is ViewModelMultipleSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVm_MultipleSubmitted;
-
-        SelectedTestItems = new ObservableCollection<TestItem>();
-        SelectedTestItems.AddRange(e.Result);
-
-        await _dialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
-    }
-
-    /// <summary>
-    /// Selections the vm single submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<TestItem> e)
-    {
-        if (sender is ViewModelSingleSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVm_SingleSubmitted;
-
-        var item = e.Result;
-        SelectedTestItems = new ObservableCollection<TestItem> { item };
-
-        await _dialogService.ShowInformationAsync($"{item.Description} selected.");
-    }
+    private Task SelectSingleAsync() =>
+        _bladeService.OpenBladeAsync<ViewModelSingleSelectionBlade<TestItem>, TestItem>(
+            this,
+            async item =>
+            {
+                SelectedTestItems = new ObservableCollection<TestItem> { item };
+                await _dialogService.ShowInformationAsync($"{item.Description} selected.");
+            },
+            initialization: vm => vm.SetItems(Items!));
 
     /// <summary>
     /// Adds the asynchronous.

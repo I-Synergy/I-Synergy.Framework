@@ -22,6 +22,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     /// <summary>
     /// Gets the title.
@@ -102,11 +103,12 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="logger"></param>
-    public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<TestItemsListViewModel> logger)
+    public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<TestItemsListViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
 
         ClearCommand = new RelayCommand(ClearItems);
     }
@@ -202,24 +204,11 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelSingleSelectionBlade<TestItem>>();
-        selectionVM.SetItems(Items!);
-        selectionVM.SetSelectedItem(SelectedItems.FirstOrDefault());
-        selectionVM.Submitted += SelectionVM_Submitted;
-        return _navigationService.OpenBladeAsync<ISingleSelectionView>(this, selectionVM);
-    }
-
-    /// <summary>
-    /// Selections the vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<TestItem> e)
-    {
-        if (sender is ViewModelSingleSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVM_Submitted;
-
-        SelectedItems = new List<TestItem> { e.Result };
+        return _bladeService.OpenBladeAsync<ViewModelSingleSelectionBlade<TestItem>, TestItem>(
+            this,
+            SelectedItems.FirstOrDefault()!,
+            item => { SelectedItems = new List<TestItem> { item }; return Task.CompletedTask; },
+            initialization: vm => vm.SetItems(Items!));
     }
 }
 

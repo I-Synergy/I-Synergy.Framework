@@ -13,16 +13,19 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     public DetailsViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
+        IBladeService bladeService,
         ILogger<DetailsViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
     }
 
     public override Task AddAsync()
@@ -64,7 +67,7 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
 
         var detailsVm = ServiceLocator.Default.GetRequiredService<DetailViewModel>();
         detailsVm.SetSelectedItem(e);
-        await _navigationService.OpenBladeAsync(this, detailsVm);
+        await _bladeService.OpenBladeAsync(this, detailsVm);
     }
 }
 

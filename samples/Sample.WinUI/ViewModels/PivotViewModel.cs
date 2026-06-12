@@ -13,16 +13,19 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     public PivotViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
+        IBladeService bladeService,
         ILogger<PivotViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
     }
 
     public override Task AddAsync()
@@ -62,9 +65,7 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailViewModel>();
-        detailsVm.SetSelectedItem(e);
-        await _navigationService.OpenBladeAsync(this, detailsVm);
+        await _bladeService.OpenBladeAsync<DetailViewModel, TestItem>(this, e);
     }
 }
 

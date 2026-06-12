@@ -26,6 +26,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
     private readonly IFileService<FileResult> _fileService;
+    private readonly IBladeService _bladeService;
 
     public AsyncRelayCommand DisplayCommand { get; private set; }
     public AsyncRelayCommand InfoCommand { get; private set; }
@@ -52,12 +53,14 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         INavigationService navigationService,
         ISettingsService settingsService,
         IFileService<FileResult> fileService,
+        IBladeService bladeService,
         ILogger<ShellViewModel> logger)
         : base(commonServices, dialogService, navigationService, settingsService, logger)
     {
         SetClock();
 
         _fileService = fileService;
+        _bladeService = bladeService;
 
         _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _clockTimer.Tick += ClockTimerCallBack;
@@ -152,7 +155,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                 _commonServices.RestartApplication();
             };
 
-            await _navigationService.OpenBladeAsync(this, wizardVM);
+            await _bladeService.OpenBladeAsync(this, wizardVM);
         }
     }
 
