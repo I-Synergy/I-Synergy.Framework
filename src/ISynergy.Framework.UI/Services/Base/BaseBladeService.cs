@@ -137,33 +137,6 @@ public abstract class BaseBladeService : IBladeService
     /// </summary>
     protected abstract Task SetupAndOpenBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, IServiceProvider serviceProvider);
 
-    /// <inheritdoc />
-    public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
-    {
-        if (viewmodel is not IViewModelBlade bladeVm)
-            return;
-
-        using var scope = _scopeFactory.CreateScope();
-
-        var viewName = bladeVm.GetRelatedView();
-        var viewType = viewName.GetRelatedViewType();
-
-        if (viewType is null || scope.ServiceProvider.GetRequiredService(viewType) is not IView view)
-            throw new InvalidOperationException($"Cannot resolve view for blade: {bladeVm.GetType().Name}");
-
-        view.ViewModel = bladeVm;
-
-        PrepareOwnerForBlade(owner, bladeVm);
-
-        if (!bladeVm.IsInitialized)
-            await bladeVm.InitializeAsync();
-
-        await MonitorViewLoadAsync(view);
-
-        SafeOnNavigatedTo(bladeVm);
-        AddBladeToOwner(owner, view);
-    }
-
     /// <summary>
     /// Platform-specific view load monitoring. Default implementation waits for
     /// the view's Loaded event with a timeout.

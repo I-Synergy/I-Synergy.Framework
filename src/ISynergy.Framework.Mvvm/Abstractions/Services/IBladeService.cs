@@ -48,16 +48,6 @@ public interface IBladeService
         where TBladeViewModel : IViewModelBlade<TEntity>;
 
     /// <summary>
-    /// Opens a blade with a pre-resolved ViewModel (legacy overload for ViewModels
-    /// that do not implement <see cref="IViewModelBlade{TEntity}"/>).
-    /// The caller manages the ViewModel lifecycle; no callbacks or scope are provided.
-    /// Prefer the generic overloads when the ViewModel implements <see cref="IViewModelBlade{TEntity}"/>.
-    /// </summary>
-    /// <param name="owner">The blade view owner.</param>
-    /// <param name="viewmodel">The pre-resolved blade ViewModel.</param>
-    Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel);
-
-    /// <summary>
     /// Removes a blade from the owner.
     /// </summary>
     /// <param name="owner">The blade view owner.</param>
