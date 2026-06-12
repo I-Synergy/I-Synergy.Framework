@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,10 +16,7 @@ namespace ISynergy.Framework.UI.Services.Base;
 /// </summary>
 public abstract class BaseBladeService : IBladeService
 {
-    /// <summary>
-    /// The DI scope factory, available to derived classes for view resolution.
-    /// </summary>
-    protected readonly IServiceScopeFactory _scopeFactory;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILogger _logger;
@@ -156,12 +152,14 @@ public abstract class BaseBladeService : IBladeService
             throw new InvalidOperationException($"Cannot resolve view for blade: {bladeVm.GetType().Name}");
 
         view.ViewModel = bladeVm;
+
         PrepareOwnerForBlade(owner, bladeVm);
 
         if (!bladeVm.IsInitialized)
             await bladeVm.InitializeAsync();
 
         await MonitorViewLoadAsync(view);
+
         SafeOnNavigatedTo(bladeVm);
         AddBladeToOwner(owner, view);
     }

@@ -1,9 +1,10 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Services.Base;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 
@@ -28,13 +29,17 @@ public class BladeService : BaseBladeService
 
     /// <inheritdoc />
     protected override async Task SetupAndOpenBladeAsync(
-        IViewModelBladeView owner, IViewModelBlade bladeVm, IServiceProvider serviceProvider)
+        IViewModelBladeView owner,
+        IViewModelBlade bladeVm,
+        IServiceProvider serviceProvider)
     {
         var viewType = ResolveViewType(bladeVm);
+
         if (viewType is null || serviceProvider.GetRequiredService(viewType) is not IView view)
             throw new InvalidOperationException($"Cannot resolve view for blade: {bladeVm.GetType().Name}");
 
         view.ViewModel = bladeVm;
+
         PrepareOwnerForBlade(owner, bladeVm);
 
         // Wait for the view to finish loading
@@ -44,6 +49,7 @@ public class BladeService : BaseBladeService
             await bladeVm.InitializeAsync();
 
         await loadTask;
+
         SafeOnNavigatedTo(bladeVm);
         AddBladeToOwner(owner, view);
     }
@@ -56,6 +62,7 @@ public class BladeService : BaseBladeService
     {
         if (bladeVm is ISingleSelectionViewModel)
             return typeof(SingleSelectionView);
+
         if (bladeVm is IMultipleSelectionViewModel)
             return typeof(MultipleSelectionView);
 
@@ -77,6 +84,7 @@ public class BladeService : BaseBladeService
             }
 
             element.Loaded += OnLoaded;
+
             await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
         }
     }
