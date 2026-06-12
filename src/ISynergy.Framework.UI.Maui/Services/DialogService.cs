@@ -417,143 +417,6 @@ public class DialogService : IDialogService, IDisposable
     /// <summary>
     /// Shows the dialog asynchronous.
     /// </summary>
-    /// <typeparam name="TWindow"></typeparam>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <returns></returns>
-    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>() // NOSONAR
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        await _dialogSemaphore.WaitAsync();
-        try
-        {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>();
-        }
-        finally
-        {
-            _dialogSemaphore.Release();
-        }
-    }
-
-    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>()
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        var scope = _scopeFactory.CreateScope();
-        try
-        {
-            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-            {
-                viewmodel.Closed += (_, _) => scope.Dispose();
-                await CreateDialogAsync(dialog, viewmodel);
-            }
-            else
-            {
-                scope.Dispose();
-            }
-        }
-        catch (Exception ex)
-        {
-            scope.Dispose();
-            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name);
-
-            bool handled = false;
-
-            try
-            {
-                _exceptionHandlerService.HandleException(ex);
-                handled = true;
-            }
-            catch (Exception handlerEx)
-            {
-                // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
-            }
-
-            // Suppress exception if it was successfully handled or if handler is not available
-            // This prevents app crashes while still allowing the handler to show user-friendly messages
-            if (!handled)
-            {
-                _logger?.LogWarning(ExceptionHandlerNotAvailable);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TWindow">The type of the t window.</typeparam>
-    /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="e">The selected item.</param>
-    /// <returns>Task{TEntity}.</returns>
-    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(TEntity e)
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        await _dialogSemaphore.WaitAsync();
-        try
-        {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e);
-        }
-        finally
-        {
-            _dialogSemaphore.Release();
-        }
-    }
-
-    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(TEntity e)
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        var scope = _scopeFactory.CreateScope();
-        try
-        {
-            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-            {
-                viewmodel.SetSelectedItem(e);
-                viewmodel.Closed += (_, _) => scope.Dispose();
-                await CreateDialogAsync(dialog, viewmodel);
-            }
-            else
-            {
-                scope.Dispose();
-            }
-        }
-        catch (Exception ex)
-        {
-            scope.Dispose();
-            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
-                typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name);
-
-            bool handled = false;
-
-            try
-            {
-                _exceptionHandlerService.HandleException(ex);
-                handled = true;
-            }
-            catch (Exception handlerEx)
-            {
-                // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
-            }
-
-            // Suppress exception if it was successfully handled or if handler is not available
-            // This prevents app crashes while still allowing the handler to show user-friendly messages
-            if (!handled)
-            {
-                _logger?.LogWarning(ExceptionHandlerNotAvailable);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <param name="window">The window.</param>
     /// <param name="viewmodel">The viewmodel.</param>
@@ -641,16 +504,16 @@ public class DialogService : IDialogService, IDisposable
     /// <inheritdoc />
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
         TEntity e,
-        Func<TEntity, Task> submitCallback,
-        Func<Task>? cancelCallback = null,
-        Func<Task>? closedCallback = null)
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
         await _dialogSemaphore.WaitAsync();
         try
         {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e, submitCallback, cancelCallback, closedCallback);
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e, submittedEventHandler, cancelledEventHandler, closedEventHandler);
         }
         finally
         {
@@ -660,16 +523,16 @@ public class DialogService : IDialogService, IDisposable
 
     /// <inheritdoc />
     public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
-        Func<TEntity, Task> submitCallback,
-        Func<Task>? cancelCallback = null,
-        Func<Task>? closedCallback = null)
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
         await _dialogSemaphore.WaitAsync();
         try
         {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(submitCallback, cancelCallback, closedCallback);
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(submittedEventHandler, cancelledEventHandler, closedEventHandler);
         }
         finally
         {
@@ -679,9 +542,9 @@ public class DialogService : IDialogService, IDisposable
 
     private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(
         TEntity e,
-        Func<TEntity, Task> submitCallback,
-        Func<Task>? cancelCallback = null,
-        Func<Task>? closedCallback = null)
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -695,7 +558,7 @@ public class DialogService : IDialogService, IDisposable
 
                 async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
                 {
-                    try { await submitCallback(args.Result); }
+                    try { await submittedEventHandler(args.Result); }
                     catch (Exception ex)
                     {
                         _logger?.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}",
@@ -706,11 +569,11 @@ public class DialogService : IDialogService, IDisposable
                 viewmodel.Submitted += OnSubmitted;
 
                 EventHandler? onCancelledHandler = null;
-                if (cancelCallback is not null)
+                if (cancelledEventHandler is not null)
                 {
                     onCancelledHandler = async (_, _) =>
                     {
-                        try { await cancelCallback(); }
+                        try { await cancelledEventHandler(); }
                         catch (Exception ex)
                         {
                             _logger?.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}",
@@ -724,12 +587,13 @@ public class DialogService : IDialogService, IDisposable
                 viewmodel.Closed += async (_, _) =>
                 {
                     viewmodel.Submitted -= OnSubmitted;
+
                     if (onCancelledHandler is not null)
                         viewmodel.Cancelled -= onCancelledHandler;
 
-                    if (closedCallback is not null)
+                    if (closedEventHandler is not null)
                     {
-                        try { await closedCallback(); }
+                        try { await closedEventHandler(); }
                         catch (Exception ex)
                         {
                             _logger?.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}",
@@ -761,9 +625,9 @@ public class DialogService : IDialogService, IDisposable
     }
 
     private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(
-        Func<TEntity, Task> submitCallback,
-        Func<Task>? cancelCallback = null,
-        Func<Task>? closedCallback = null)
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -775,7 +639,7 @@ public class DialogService : IDialogService, IDisposable
             {
                 async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
                 {
-                    try { await submitCallback(args.Result); }
+                    try { await submittedEventHandler(args.Result); }
                     catch (Exception ex)
                     {
                         _logger?.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}",
@@ -786,11 +650,11 @@ public class DialogService : IDialogService, IDisposable
                 viewmodel.Submitted += OnSubmitted;
 
                 EventHandler? onCancelledHandler = null;
-                if (cancelCallback is not null)
+                if (cancelledEventHandler is not null)
                 {
                     onCancelledHandler = async (_, _) =>
                     {
-                        try { await cancelCallback(); }
+                        try { await cancelledEventHandler(); }
                         catch (Exception ex)
                         {
                             _logger?.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}",
@@ -804,12 +668,13 @@ public class DialogService : IDialogService, IDisposable
                 viewmodel.Closed += async (_, _) =>
                 {
                     viewmodel.Submitted -= OnSubmitted;
+
                     if (onCancelledHandler is not null)
                         viewmodel.Cancelled -= onCancelledHandler;
 
-                    if (closedCallback is not null)
+                    if (closedEventHandler is not null)
                     {
-                        try { await closedCallback(); }
+                        try { await closedEventHandler(); }
                         catch (Exception ex)
                         {
                             _logger?.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}",
