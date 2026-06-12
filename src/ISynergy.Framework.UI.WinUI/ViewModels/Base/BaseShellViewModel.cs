@@ -124,91 +124,37 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             set => SetValue(value);
         }
 
-        protected virtual Task OpenLanguageAsync()
-        {
-            var scope = _scopeFactory.CreateScope();
-            var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
-            var languageWindow = (IWindow)scope.ServiceProvider.GetRequiredService(typeof(ILanguageWindow));
-
-            // Both ViewModel and Window are resolved from the same scope.
-            // When the dialog closes, the scope is disposed, which disposes both
-            // the ViewModel and the Window in a single, ordered cleanup step.
-            languageVM.Submitted += LanguageVM_Submitted;
-            languageVM.Closed += (_, _) =>
-            {
-                scope.Dispose();
-            };
-            return _dialogService.ShowDialogAsync(languageWindow, languageVM);
-        }
-
-        private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<CultureInfo> e)
-        {
-            try
-            {
-                if (sender is LanguageViewModel vm)
+        protected virtual Task OpenLanguageAsync() =>
+            _dialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, CultureInfo>(
+                async culture =>
                 {
-                    vm.Submitted -= LanguageVM_Submitted;
-                }
+                    _settingsService.LocalSettings.Language = culture.Name;
+                    _settingsService.SaveLocalSettings();
 
-                _settingsService.LocalSettings.Language = e.Result.Name;
-                _settingsService.SaveLocalSettings();
+                    culture.SetLocalizationLanguage();
 
-                e.Result.SetLocalizationLanguage();
+                    if (await _dialogService.ShowMessageAsync(
+                    _commonServices.LanguageService.GetString("WarningLanguageChange") +
+                    Environment.NewLine +
+                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                    _commonServices.LanguageService.GetString("TitleQuestion"),
+                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+                    {
+                        _commonServices.RestartApplication();
+                    }
+                });
 
-                if (await _dialogService.ShowMessageAsync(
-                _commonServices.LanguageService.GetString("WarningLanguageChange") +
-                Environment.NewLine +
-                _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                _commonServices.LanguageService.GetString("TitleQuestion"),
-                MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+        protected virtual Task OpenThemesAsync() =>
+            _dialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeStyle>(
+                new ThemeStyle
                 {
-                    _commonServices.RestartApplication();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log exception to prevent it from being swallowed in async void method
-                _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
-                var exceptionHandlerService = _commonServices?.ExceptionHandlerService;
-                exceptionHandlerService?.HandleException(ex);
-                // Re-throw to crash the application if unhandled exception handler is configured
-                throw;
-            }
-        }
-
-        protected virtual Task OpenThemesAsync()
-        {
-            var scope = _scopeFactory.CreateScope();
-            var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
-            var themeWindow = (IWindow)scope.ServiceProvider.GetRequiredService(typeof(IThemeWindow));
-            var style = new ThemeStyle
-            {
-                Theme = _settingsService.LocalSettings.Theme,
-                Color = _settingsService.LocalSettings.Color
-            };
-
-            // Both ViewModel and Window are resolved from the same scope.
-            // When the dialog closes, the scope is disposed, which disposes both
-            // the ViewModel and the Window in a single, ordered cleanup step.
-            themeVM.Submitted += ThemeVM_Submitted;
-            themeVM.SetSelectedItem(style);
-            themeVM.Closed += (_, _) =>
-            {
-                scope.Dispose();
-            };
-            return _dialogService.ShowDialogAsync(themeWindow, themeVM);
-        }
-
-        private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
-        {
-            try
-            {
-                if (sender is ThemeViewModel vm)
+                    Theme = _settingsService.LocalSettings.Theme,
+                    Color = _settingsService.LocalSettings.Color
+                },
+                async themeStyle =>
                 {
-                    vm.Submitted -= ThemeVM_Submitted;
-
-                    _settingsService.LocalSettings.Theme = e.Result.Theme;
-                    _settingsService.LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
+                    _settingsService.LocalSettings.Theme = themeStyle.Theme;
+                    _settingsService.LocalSettings.Color = (themeStyle.Color ?? string.Empty).ToLowerInvariant();
 
                     if (_settingsService.SaveLocalSettings() &&
                     await _dialogService.ShowMessageAsync(
@@ -220,18 +166,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
                     {
                         _commonServices.RestartApplication();
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log exception to prevent it from being swallowed in async void method
-                _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler");
-                var exceptionHandlerService = _commonServices?.ExceptionHandlerService;
-                exceptionHandlerService?.HandleException(ex);
-                // Re-throw to crash the application if unhandled exception handler is configured
-                throw;
-            }
-        }
+                });
 
         /// <summary>
         /// Opens the help asynchronously.

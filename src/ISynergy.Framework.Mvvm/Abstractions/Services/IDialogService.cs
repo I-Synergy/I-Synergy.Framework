@@ -98,4 +98,43 @@ public interface IDialogService
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel);
+
+    /// <summary>
+    /// Shows a dialog with an initial entity and lifecycle callbacks.
+    /// The DialogService manages scope creation, ViewModel/Window resolution,
+    /// event subscription, callback error handling, and scope disposal.
+    /// </summary>
+    /// <typeparam name="TWindow">The window type.</typeparam>
+    /// <typeparam name="TViewModel">The view model type.</typeparam>
+    /// <typeparam name="TEntity">The entity type.</typeparam>
+    /// <param name="e">The entity to edit or pre-populate.</param>
+    /// <param name="submitCallback">Invoked when the user submits, with the resulting entity. Runs before scope disposal.</param>
+    /// <param name="cancelCallback">Optional. Invoked when the user cancels (CancelCommand / tap-outside). Runs before scope disposal.</param>
+    /// <param name="closedCallback">Optional. Invoked when the dialog closes on ANY path (submit, cancel, back button, platform dismiss). Runs before scope disposal.</param>
+    Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        TEntity e,
+        Func<TEntity, Task> submitCallback,
+        Func<Task>? cancelCallback = null,
+        Func<Task>? closedCallback = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>;
+
+    /// <summary>
+    /// Shows a dialog with lifecycle callbacks (no initial entity — the ViewModel
+    /// sets its own initial state via its constructor).
+    /// The DialogService manages scope creation, ViewModel/Window resolution,
+    /// event subscription, callback error handling, and scope disposal.
+    /// </summary>
+    /// <typeparam name="TWindow">The window type.</typeparam>
+    /// <typeparam name="TViewModel">The view model type.</typeparam>
+    /// <typeparam name="TEntity">The entity type.</typeparam>
+    /// <param name="submitCallback">Invoked when the user submits, with the resulting entity. Runs before scope disposal.</param>
+    /// <param name="cancelCallback">Optional. Invoked when the user cancels (CancelCommand / tap-outside). Runs before scope disposal.</param>
+    /// <param name="closedCallback">Optional. Invoked when the dialog closes on ANY path (submit, cancel, back button, platform dismiss). Runs before scope disposal.</param>
+    Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        Func<TEntity, Task> submitCallback,
+        Func<Task>? cancelCallback = null,
+        Func<Task>? closedCallback = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>;
 }
