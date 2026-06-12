@@ -36,6 +36,23 @@ public class WeakEventSource<TEventArgs>
     }
 
     /// <summary>
+    /// Proactively removes dead (collected) handlers without having to raise the event.
+    /// </summary>
+    public void Cleanup()
+    {
+        lock (_handlers)
+        {
+            // Iterate in reverse to avoid index shift during removal
+            for (int i = _handlers.Count - 1; i >= 0; i--)
+            {
+                // Invoke returns false when the weak target is collected
+                if (!_handlers[i].Invoke(null, default!))
+                    _handlers.RemoveAt(i);
+            }
+        }
+    }
+
+    /// <summary>
     /// Subscribes the specified handler.
     /// </summary>
     /// <param name="handler">The handler.</param>

@@ -210,21 +210,32 @@ public abstract class BaseNavigationService : INavigationService
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     public virtual void OnBackStackChanged(EventArgs e)
     {
-        // Create a copy to avoid modification during iteration
         var handlers = _backStackChanged?.GetInvocationList();
-        if (handlers is not null)
+        if (handlers is null)
+            return;
+
+        // Collect all dead handlers first so we don't modify
+        // the delegate while iterating over its invocation list.
+        EventHandler? deadHandlers = null;
+
+        foreach (EventHandler handler in handlers)
         {
-            foreach (EventHandler handler in handlers)
+            try
             {
-                try
-                {
-                    handler(this, e);
-                }
-                catch (ObjectDisposedException)
-                {
-                    // Remove disposed subscribers
-                    _backStackChanged -= handler;
-                }
+                handler(this, e);
+            }
+            catch (ObjectDisposedException)
+            {
+                deadHandlers += handler;
+            }
+        }
+
+        // Remove any dead subscribers in batch after iteration
+        if (deadHandlers is not null)
+        {
+            foreach (EventHandler dead in deadHandlers.GetInvocationList())
+            {
+                _backStackChanged -= dead;
             }
         }
     }

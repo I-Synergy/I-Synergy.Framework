@@ -85,7 +85,14 @@ public class BladeService : BaseBladeService
 
             element.Loaded += OnLoaded;
 
-            await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+            try
+            {
+                await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+            }
+            finally
+            {
+                element.Loaded -= OnLoaded;
+            }
         }
     }
 }
