@@ -7,11 +7,12 @@ namespace ISynergy.Framework.UI.OpenTelemetry;
 /// <summary>
 /// Monitors WPF rendering performance and reports metrics.
 /// </summary>
-public class RenderingPerformanceMonitor
+public class RenderingPerformanceMonitor : IDisposable
 {
     private readonly ILogger<RenderingPerformanceMonitor> _logger;
     private readonly ApplicationMonitor _applicationMonitor;
     private readonly Stopwatch _stopwatch = new Stopwatch();
+    private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the RenderingPerformanceMonitor class.
@@ -53,6 +54,19 @@ public class RenderingPerformanceMonitor
         // Reset for next frame
         _stopwatch.Reset();
         _stopwatch.Start();
+    }
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+
+        CompositionTarget.Rendering -= OnRendering;
+        _disposed = true;
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>

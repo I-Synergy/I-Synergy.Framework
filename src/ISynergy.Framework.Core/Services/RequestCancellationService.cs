@@ -15,7 +15,19 @@ public class RequestCancellationService
     // Used by BaseRestService to remove completed requests
     public void RemoveRequest(string requestId)
     {
-        _activeRequests.TryRemove(requestId, out _);
+        if (_activeRequests.TryRemove(requestId, out var cts))
+        {
+            try
+            {
+                cts.Cancel();
+            }
+            catch
+            {
+                // Ignore errors during cancellation
+            }
+
+            cts.Dispose();
+        }
     }
 
     // Called during sign-out to cancel all pending requests
@@ -31,6 +43,10 @@ public class RequestCancellationService
             {
                 // Ignore errors during cleanup
             }
+
+            kvp.Value.Dispose();
         }
+
+        _activeRequests.Clear();
     }
 }

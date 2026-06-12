@@ -61,6 +61,11 @@ public sealed partial class ImageView : UserControl
     }
 
     /// <summary>
+    /// Tracks the current BitmapImage being loaded to avoid leaks from anonymous lambda subscriptions.
+    /// </summary>
+    private BitmapImage? _currentLoadingImage;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ImageView" /> class.
     /// </summary>
     public ImageView()
@@ -86,6 +91,23 @@ public sealed partial class ImageView : UserControl
     }
 
     /// <summary>
+    /// Handles the ImageOpened event for externally-sourced BitmapImages.
+    /// Unsubscribes itself after firing to prevent leaks from repeated subscriptions.
+    /// </summary>
+    /// <param name="sender">The source of the event, expected to be a BitmapImage.</param>
+    /// <param name="e">The event data.</param>
+    private void OnImageOpened(object? sender, object e)
+    {
+        if (sender is BitmapImage image)
+        {
+            image.ImageOpened -= OnImageOpened;
+        }
+
+        _currentLoadingImage = null;
+        LoadImage((ImageSource)sender!);
+    }
+
+    /// <summary>
     /// Sources the changed.
     /// </summary>
     /// <param name="dependencyObject">The dependency object.</param>
@@ -104,7 +126,11 @@ public sealed partial class ImageView : UserControl
                 image.UriSource.Scheme != "ms-resource" &&
                 (image.PixelHeight * image.PixelWidth == 0))
             {
-                image.ImageOpened += (sender, args) => control.LoadImage(image);
+                if (control._currentLoadingImage != null)
+                    control._currentLoadingImage.ImageOpened -= control.OnImageOpened;
+
+                control._currentLoadingImage = image;
+                control._currentLoadingImage.ImageOpened += control.OnImageOpened;
                 control.StagingImage.Source = image;
             }
             else
