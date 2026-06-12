@@ -88,13 +88,22 @@ public class ServiceLocator : IDisposable
         if (_disposed)
             return;
 
-        if (_serviceProvider is IDisposable disposable)
+        _disposed = true;
+
+        // Only clean up shared static state when this instance is the current default.
+        // Non-default instances share the same static provider — disposing them must
+        // not destroy state still in use by the default locator or other callers.
+        if (ReferenceEquals(this, _default))
         {
-            disposable.Dispose();
+            if (_serviceProvider is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+
+            _serviceProvider = null;
+            _default = null;
         }
 
-        _serviceProvider = null;
-        _disposed = true;
         GC.SuppressFinalize(this);
     }
 }
