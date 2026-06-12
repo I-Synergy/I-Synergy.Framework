@@ -97,10 +97,13 @@ public abstract class View : ContentPage, IView
     {
         if (disposing)
         {
-            // Detach the visual tree and clear BindingContext to break all reference
-            // chains to the ViewModel. The ViewModel lifecycle is managed by the DI scope
-            // that created it — we do NOT dispose it here.
-            Content = null;
+            // Only detach Content when the handler is still connected.
+            // During app shutdown MAUI handles cleanup natively and setting
+            // Content to null can trigger FireAndForget tasks that fail when
+            // the DI container has already been disposed.
+            if (Handler is not null)
+                Content = null;
+
             BindingContext = null;
         }
     }

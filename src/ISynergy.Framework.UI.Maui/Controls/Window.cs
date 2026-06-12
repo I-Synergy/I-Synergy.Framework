@@ -36,12 +36,14 @@ public class Window : ContentPage, IWindow
     {
         _isViewModelClosed = true;
 
-        // Detach the visual tree and break the BindingContext reference to allow
-        // the ViewModel to be GC'd even if MAUI retains the ContentPage after
-        // PopModalAsync. Setting Content to null releases all child bindings,
-        // including runtime bindings (from x:DataType="{x:Null}") that may cache
-        // intermediate path objects like SelectedItem.
-        Content = null;
+        // Break the BindingContext reference immediately to allow the ViewModel
+        // to be GC'd. Only detach Content when the handler is still connected —
+        // during app shutdown MAUI handles cleanup natively, and setting Content
+        // to null can trigger FireAndForget tasks that fail because the DI
+        // container is already disposed.
+        if (Handler is not null)
+            Content = null;
+
         BindingContext = null;
     }
 
@@ -112,11 +114,14 @@ public class Window : ContentPage, IWindow
         if (disposing)
         {
             // Detach the visual tree and clear BindingContext to break all reference
-            // chains to the ViewModel. This allows the ViewModel to be GC'd even if
-            // MAUI retains the ContentPage after PopModalAsync. The ViewModel itself
-            // is disposed by the DI scope that created it — we only remove our strong
-            // references here.
-            Content = null;
+            // chains to the ViewModel. Only detach Content when the handler is still
+            // connected — during app shutdown the handler is already disconnected and
+            // MAUI handles cleanup natively. Setting Content to null during shutdown
+            // can trigger FireAndForget tasks that fail when the DI container has
+            // already been disposed.
+            if (Handler is not null)
+                Content = null;
+
             BindingContext = null;
         }
     }

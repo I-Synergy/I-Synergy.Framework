@@ -46,6 +46,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
     /// <param name="fileService"></param>
+    /// <param name="bladeService"></param>
     /// <param name="logger"></param>
     public ShellViewModel(
         ICommonServices commonServices,
