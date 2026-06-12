@@ -97,14 +97,12 @@ public abstract class View : ContentPage, IView
     {
         if (disposing)
         {
-            // Only detach Content when the handler is still connected.
-            // During app shutdown MAUI handles cleanup natively and setting
-            // Content to null can trigger FireAndForget tasks that fail when
-            // the DI container has already been disposed.
+            // Views are Singletons — only disposed at app shutdown.
+            // Clear the BindingContext to release the ViewModel reference.
+            // Do NOT set Content to null: the visual tree is managed by MAUI,
+            // and detaching it during shutdown triggers FireAndForget tasks
+            // that fail when the DI container is already disposed.
             BindingContext = null;
-
-            if (Handler is not null)
-                Content = null;
         }
     }
     #endregion
