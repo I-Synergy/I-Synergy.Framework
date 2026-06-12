@@ -134,6 +134,7 @@ public abstract class BaseNavigationService : INavigationService
     /// Creates an <see cref="IView"/> instance for the specified ViewModel type,
     /// optionally associating an existing ViewModel instance and navigation parameter.
     /// </summary>
+    /// <param name="serviceProvider"></param>
     /// <param name="viewModelType">The type of the ViewModel to create a view for.</param>
     /// <param name="viewModel">An existing ViewModel instance, or null to resolve from DI.</param>
     /// <param name="parameter">An optional navigation parameter.</param>

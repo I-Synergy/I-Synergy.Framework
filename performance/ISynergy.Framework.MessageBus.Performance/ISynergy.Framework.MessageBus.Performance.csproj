@@ -13,7 +13,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" />
-		<PackageReference Include="MessagePack" />
 	</ItemGroup>
 
 	<ItemGroup>

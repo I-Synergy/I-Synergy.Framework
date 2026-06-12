@@ -1,10 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
@@ -50,6 +48,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="bladeService"></param>
     /// <param name="logger"></param>
     public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<SelectionTestViewModel> logger)
         : base(commonServices, logger)

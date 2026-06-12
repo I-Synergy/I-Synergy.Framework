@@ -2,7 +2,6 @@ using Dotmim.Sync;
 using Dotmim.Sync.PostgreSql;
 using Dotmim.Sync.Web.Server;
 using ISynergy.Framework.AspNetCore.Extensions;
-using ISynergy.Framework.Synchronization.Factories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +46,6 @@ var setup = new SyncSetup(tables);
 
 // To add a converter, create an instance and add it to the special WebServerOptions
 var webServerOptions = new WebServerOptions();
-webServerOptions.SerializerFactories.Add(new MessagePackSerializerFactory());
 
 var npgsqlProvider = new NpgsqlSyncProvider(connectionString);
 

@@ -102,6 +102,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <param name="commonServices">The common service.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="bladeService"></param>
     /// <param name="logger"></param>
     public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<TestItemsListViewModel> logger)
         : base(commonServices, logger)
