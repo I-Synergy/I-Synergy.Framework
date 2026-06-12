@@ -143,19 +143,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
                     });
             }
 
-            var wizardVM = ServiceLocator.Default.GetRequiredService<SettingsViewModel>();
-
-            wizardVM.Submitted += (s, e) =>
-            {
-                _commonServices.RestartApplication();
-            };
-
-            wizardVM.Cancelled += (s, e) =>
-            {
-                _commonServices.RestartApplication();
-            };
-
-            await _bladeService.OpenBladeAsync(this, wizardVM);
+            await _bladeService.OpenBladeAsync<SettingsViewModel, object>(
+                this,
+                _ => { _commonServices.RestartApplication(); return Task.CompletedTask; },
+                () => { _commonServices.RestartApplication(); return Task.CompletedTask; });
         }
     }
 

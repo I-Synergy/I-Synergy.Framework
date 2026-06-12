@@ -18,8 +18,26 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TModel">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelBladeView" />
-public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, IViewModelBladeView<TModel>
+public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, IViewModelBladeView<TModel>, IViewModelBlade<TModel>
 {
+    /// <summary>
+    /// Gets or sets the Owner property value.
+    /// </summary>
+    public IViewModelBladeView Owner
+    {
+        get => GetValue<IViewModelBladeView>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the IsDisabled property value.
+    /// </summary>
+    public bool IsDisabled
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
     /// <summary>
     /// Gets or sets the Blades property value.
     /// </summary>

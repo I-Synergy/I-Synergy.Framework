@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
 
-public class SettingsViewModel : ViewModelNavigation<object>
+public class SettingsViewModel : ViewModelBlade<object>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

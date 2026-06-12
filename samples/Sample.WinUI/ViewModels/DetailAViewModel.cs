@@ -36,9 +36,7 @@ public class DetailAViewModel : ViewModelBlade<TestItem>
         if (SelectedItem is null)
             return;
 
-        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailBViewModel>();
-        detailsVm.SetSelectedItem(SelectedItem);
-        await _bladeService.OpenBladeAsync(Owner, detailsVm);
+        await _bladeService.OpenBladeAsync<DetailBViewModel, TestItem>(Owner, SelectedItem);
     }
 
     public override async Task InitializeAsync()

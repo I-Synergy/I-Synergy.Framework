@@ -65,9 +65,7 @@ public class DetailsViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = ServiceLocator.Default.GetRequiredService<DetailViewModel>();
-        detailsVm.SetSelectedItem(e);
-        await _bladeService.OpenBladeAsync(this, detailsVm);
+        await _bladeService.OpenBladeAsync<DetailViewModel, TestItem>(this, e);
     }
 }
 
