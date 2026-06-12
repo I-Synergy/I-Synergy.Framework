@@ -48,7 +48,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     {
         _logger.LogInformation("Starting scheduled action queuing service.");
         await _service.RefreshTasksAsync();
-        _backgroundTimer = new Timer(RefreshQueue, null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
+        _backgroundTimer = new Timer(_ => _ = RefreshQueueAsync(), null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
     }
 
     /// <summary>
@@ -69,8 +69,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// <summary>
     /// Refreshes the queue and sets the execution timer to the first available tasks.
     /// </summary>
-    /// <param name="state"></param>
-    private async void RefreshQueue(object? state)
+    private async Task RefreshQueueAsync()
     {
         try
         {
@@ -79,34 +78,30 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
             var result = await _service.CalculateTimespanAsync();
 
             if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
-                _executionTimer = new Timer(ExecuteTask, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration);
+                _executionTimer = new Timer(state => _ = ExecuteTaskAsync(state as IAction), result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration);
             else
                 _executionTimer?.Change(Timeout.Infinite, 0);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error refreshing automation queue");
-            // Re-throw to crash the application if unhandled exception handler is configured
-            throw;
         }
     }
 
     /// <summary>
     /// Executes task when task delay has elapsed.
     /// </summary>
-    /// <param name="state"></param>
-    private async void ExecuteTask(object? state)
+    /// <param name="action"></param>
+    private async Task ExecuteTaskAsync(IAction? action)
     {
         try
         {
-            if (state is IAction action)
+            if (action is not null)
                 await _service.ExcecuteActionAsync(action);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error executing automation action");
-            // Re-throw to crash the application if unhandled exception handler is configured
-            throw;
         }
     }
 

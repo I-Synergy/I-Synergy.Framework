@@ -561,49 +561,34 @@ public class DialogService : IDialogService, IDisposable
 
                 viewmodel.SetSelectedItem(e);
 
-                async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
+                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
+                onSubmittedHandler = (_, args) =>
                 {
-                    try { await submittedEventHandler(args.Result); }
-                    catch (Exception ex)
-                    {
-                        _logger?.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}",
-                            typeof(TWindow).Name, typeof(TViewModel).Name);
-                    }
-                }
-
-                viewmodel.Submitted += OnSubmitted;
+                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                };
+                viewmodel.Submitted += onSubmittedHandler;
 
                 EventHandler? onCancelledHandler = null;
                 if (cancelledEventHandler is not null)
                 {
-                    onCancelledHandler = async (_, _) =>
+                    onCancelledHandler = (_, _) =>
                     {
-                        try { await cancelledEventHandler(); }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}",
-                                typeof(TWindow).Name, typeof(TViewModel).Name);
-                        }
+                        _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     };
-
                     viewmodel.Cancelled += onCancelledHandler;
                 }
 
-                viewmodel.Closed += async (_, _) =>
+                viewmodel.Closed += (_, _) =>
                 {
-                    viewmodel.Submitted -= OnSubmitted;
+                    if (onSubmittedHandler is not null)
+                        viewmodel.Submitted -= onSubmittedHandler;
 
                     if (onCancelledHandler is not null)
                         viewmodel.Cancelled -= onCancelledHandler;
 
                     if (closedEventHandler is not null)
                     {
-                        try { await closedEventHandler(); }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}",
-                                typeof(TWindow).Name, typeof(TViewModel).Name);
-                        }
+                        _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     }
 
                     scope.Dispose();
@@ -645,49 +630,34 @@ public class DialogService : IDialogService, IDisposable
             {
                 initialization?.Invoke((TViewModel)viewmodel);
 
-                async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
+                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
+                onSubmittedHandler = (_, args) =>
                 {
-                    try { await submittedEventHandler(args.Result); }
-                    catch (Exception ex)
-                    {
-                        _logger?.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}",
-                            typeof(TWindow).Name, typeof(TViewModel).Name);
-                    }
-                }
-
-                viewmodel.Submitted += OnSubmitted;
+                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                };
+                viewmodel.Submitted += onSubmittedHandler;
 
                 EventHandler? onCancelledHandler = null;
                 if (cancelledEventHandler is not null)
                 {
-                    onCancelledHandler = async (_, _) =>
+                    onCancelledHandler = (_, _) =>
                     {
-                        try { await cancelledEventHandler(); }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}",
-                                typeof(TWindow).Name, typeof(TViewModel).Name);
-                        }
+                        _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     };
-
                     viewmodel.Cancelled += onCancelledHandler;
                 }
 
-                viewmodel.Closed += async (_, _) =>
+                viewmodel.Closed += (_, _) =>
                 {
-                    viewmodel.Submitted -= OnSubmitted;
+                    if (onSubmittedHandler is not null)
+                        viewmodel.Submitted -= onSubmittedHandler;
 
                     if (onCancelledHandler is not null)
                         viewmodel.Cancelled -= onCancelledHandler;
 
                     if (closedEventHandler is not null)
                     {
-                        try { await closedEventHandler(); }
-                        catch (Exception ex)
-                        {
-                            _logger?.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}",
-                                typeof(TWindow).Name, typeof(TViewModel).Name);
-                        }
+                        _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     }
 
                     scope.Dispose();
@@ -721,7 +691,7 @@ public class DialogService : IDialogService, IDisposable
             // scope. The ViewModel was resolved from the caller's scope (or the root)
             // and must not be paired with a Window from a second scope. The Window
             // lifecycle is managed explicitly by CreateDialogAsync (disposed in
-            // ViewModelClosedHandler via windowRef?.Dispose()).
+            // viewModelClosedHandler via windowRef?.Dispose()).
             using var tempScope = _scopeFactory.CreateScope();
             var dialog = ActivatorUtilities.CreateInstance(tempScope.ServiceProvider, type) as Window;
 
@@ -812,78 +782,11 @@ public class DialogService : IDialogService, IDisposable
         Window? windowRef = null;
         IViewModelDialog<TEntity>? viewModelRef = null;
 
-        // Define the handler in the method scope so it is accessible for both += and -=
-        async void ViewModelClosedHandler(object? sender, EventArgs e)
+        EventHandler? viewModelClosedHandler = null;
+        viewModelClosedHandler = (_, _) =>
         {
-            // Unsubscribe first to prevent re-entrant calls
-            try
-            {
-                if (viewModelRef != null)
-                    viewModelRef.Closed -= ViewModelClosedHandler;
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Error unsubscribing from Closed handler");
-            }
-
-            // Pop the modal. Try without animation first to avoid MAUI rendering issues
-            // (e.g. ShadowExtensions.GetAlphaMaskAsync ArgumentException on Windows).
-            // Fall back to animated pop if the first attempt fails.
-            var popped = false;
-
-            if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
-            {
-                // First attempt: no animation (avoids layout-triggered shadow computation)
-                try
-                {
-                    await navigation.PopModalAsync(false);
-                    popped = true;
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogDebug(ex, "PopModalAsync(false) failed, will try animated pop as fallback");
-                }
-
-                // Second attempt: with animation (works when the layout is in a different state)
-                if (!popped)
-                {
-                    try
-                    {
-                        await navigation.PopModalAsync(true);
-                        popped = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger?.LogError(ex, "PopModalAsync(true) also failed; modal may remain visible");
-                    }
-                }
-            }
-            else
-            {
-                _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
-            }
-
-            if (!popped && Application.Current?.Windows[0]?.Page?.Navigation is not null)
-            {
-                // Last resort: try to go back via the navigation service pattern
-                _logger?.LogWarning("Modal pop failed; the page may still be visible on the navigation stack");
-            }
-
-            // Always clean up window resources, even if PopModalAsync failed.
-            // The ViewModel lifecycle is managed by the DI scope (strongly-typed overloads)
-            // or the caller (Type/IWindow overloads) — do NOT dispose it here.
-            viewModelRef = null;
-
-            try
-            {
-                windowRef?.Dispose();
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Error disposing window during dialog close");
-            }
-            windowRef = null;
-        }
+            _ = HandleViewModelClosedAsync(viewModelRef, windowRef, viewModelClosedHandler).SafeFireAndForget();
+        };
 
         try
         {
@@ -895,7 +798,7 @@ public class DialogService : IDialogService, IDisposable
 
             window.ViewModel = viewmodel;
 
-            viewmodel.Closed += ViewModelClosedHandler;
+            viewmodel.Closed += viewModelClosedHandler;
 
             try
             {
@@ -904,7 +807,7 @@ public class DialogService : IDialogService, IDisposable
             catch (Exception initEx)
             {
                 _logger?.LogError(initEx, "Error initializing viewmodel");
-                viewmodel.Closed -= ViewModelClosedHandler;
+                viewmodel.Closed -= viewModelClosedHandler;
 
                 // Call the exception handler service
                 bool handled = false;
@@ -936,7 +839,7 @@ public class DialogService : IDialogService, IDisposable
             }
             else
             {
-                viewmodel.Closed -= ViewModelClosedHandler;
+                viewmodel.Closed -= viewModelClosedHandler;
                 throw new InvalidOperationException("Cannot show modal dialog - Navigation is not available");
             }
         }
@@ -949,7 +852,7 @@ public class DialogService : IDialogService, IDisposable
             {
                 if (viewModelRef != null)
                 {
-                    viewModelRef.Closed -= ViewModelClosedHandler;
+                    viewModelRef.Closed -= viewModelClosedHandler;
                     viewModelRef.Dispose();
                 }
                 windowRef?.Dispose();
@@ -980,6 +883,132 @@ public class DialogService : IDialogService, IDisposable
             }
         }
     }
+
+    #region Event Handlers
+
+    private async Task HandleDialogSubmittedAsync<TEntity>(
+        TEntity result,
+        Func<TEntity, Task> submittedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await submittedEventHandler(result);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}",
+                windowTypeName, viewModelTypeName);
+        }
+    }
+
+    private async Task HandleDialogCancelledAsync(
+        Func<Task> cancelledEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await cancelledEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}",
+                windowTypeName, viewModelTypeName);
+        }
+    }
+
+    private async Task HandleDialogClosedAsync(
+        Func<Task> closedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await closedEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}",
+                windowTypeName, viewModelTypeName);
+        }
+    }
+
+    private async Task HandleViewModelClosedAsync<TEntity>(
+        IViewModelDialog<TEntity>? viewModel,
+        Window? window,
+        EventHandler? selfHandler)
+    {
+        // Unsubscribe first to prevent re-entrant calls
+        try
+        {
+            if (viewModel is not null && selfHandler is not null)
+                viewModel.Closed -= selfHandler;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error unsubscribing from Closed handler");
+        }
+
+        // Pop the modal. Try without animation first to avoid MAUI rendering issues
+        // (e.g. ShadowExtensions.GetAlphaMaskAsync ArgumentException on Windows).
+        // Fall back to animated pop if the first attempt fails.
+        var popped = false;
+
+        if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
+        {
+            // First attempt: no animation (avoids layout-triggered shadow computation)
+            try
+            {
+                await navigation.PopModalAsync(false);
+                popped = true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogDebug(ex, "PopModalAsync(false) failed, will try animated pop as fallback");
+            }
+
+            // Second attempt: with animation (works when the layout is in a different state)
+            if (!popped)
+            {
+                try
+                {
+                    await navigation.PopModalAsync(true);
+                    popped = true;
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "PopModalAsync(true) also failed; modal may remain visible");
+                }
+            }
+        }
+        else
+        {
+            _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
+        }
+
+        if (!popped && Application.Current?.Windows[0]?.Page?.Navigation is not null)
+        {
+            // Last resort: try to go back via the navigation service pattern
+            _logger?.LogWarning("Modal pop failed; the page may still be visible on the navigation stack");
+        }
+
+        // Always clean up window resources, even if PopModalAsync failed.
+        // The ViewModel lifecycle is managed by the DI scope (strongly-typed overloads)
+        // or the caller (Type/IWindow overloads) — do NOT dispose it here.
+
+        try
+        {
+            window?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error disposing window during dialog close");
+        }
+    }
+
+    #endregion
 
     #region IDisposable
     public void Dispose()

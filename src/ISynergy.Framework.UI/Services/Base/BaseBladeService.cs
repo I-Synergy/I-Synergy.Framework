@@ -85,25 +85,18 @@ public abstract class BaseBladeService : IBladeService
                 bladeVm.SetSelectedItem(entity);
 
             // Wire up callbacks
-            var wasSubmitted = false;
-
             if (submittedEventHandler is not null)
             {
-                bladeVm.Submitted += async (_, args) =>
-                {
-                    wasSubmitted = true;
-                    try { await submittedEventHandler(args.Result); }
-                    catch (Exception ex) { _logger.LogError(ex, "Blade submit callback failed for {ViewModelType}", typeof(TBladeViewModel).Name); }
-                };
+                var submittedVmTypeName = typeof(TBladeViewModel).Name;
+                bladeVm.Submitted += (_, args) =>
+                    _ = HandleBladeSubmittedAsync(args.Result, submittedEventHandler, submittedVmTypeName).SafeFireAndForget();
             }
 
             if (cancelledEventHandler is not null)
             {
-                bladeVm.Cancelled += async (_, _) =>
-                {
-                    try { await cancelledEventHandler(); }
-                    catch (Exception ex) { _logger.LogError(ex, "Blade cancel callback failed for {ViewModelType}", typeof(TBladeViewModel).Name); }
-                };
+                var cancelledVmTypeName = typeof(TBladeViewModel).Name;
+                bladeVm.Cancelled += (_, _) =>
+                    _ = HandleBladeCancelledAsync(cancelledEventHandler, cancelledVmTypeName).SafeFireAndForget();
             }
 
             // Scope cleanup when blade closes
@@ -111,8 +104,8 @@ public abstract class BaseBladeService : IBladeService
             {
                 if (closedEventHandler is not null)
                 {
-                    try { closedEventHandler(); } // fire-and-forget — scope is about to be disposed
-                    catch (Exception ex) { _logger.LogError(ex, "Blade close callback failed for {ViewModelType}", typeof(TBladeViewModel).Name); }
+                    var closedVmTypeName = typeof(TBladeViewModel).Name;
+                    _ = HandleBladeClosedAsync(closedEventHandler, closedVmTypeName).SafeFireAndForget();
                 }
 
                 scope.Dispose();
@@ -167,6 +160,62 @@ public abstract class BaseBladeService : IBladeService
                         SafeOnNavigatedTo(activeVm);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Handles the blade Submitted event. Invokes the caller's submitted callback
+    /// and logs any exception.
+    /// </summary>
+    private async Task HandleBladeSubmittedAsync<TEntity>(
+        TEntity result,
+        Func<TEntity, Task> submittedEventHandler,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await submittedEventHandler(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Blade submit callback failed for {ViewModelType}", viewModelTypeName);
+        }
+    }
+
+    /// <summary>
+    /// Handles the blade Cancelled event. Invokes the caller's cancelled callback
+    /// and logs any exception.
+    /// </summary>
+    private async Task HandleBladeCancelledAsync(
+        Func<Task> cancelledEventHandler,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await cancelledEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Blade cancel callback failed for {ViewModelType}", viewModelTypeName);
+        }
+    }
+
+    /// <summary>
+    /// Handles the blade Closed event. Invokes the caller's closed callback
+    /// and logs any exception. The scope has already been disposed by the
+    /// synchronous <see cref="OpenBladeInternalAsync"/> handler.
+    /// </summary>
+    private async Task HandleBladeClosedAsync(
+        Func<Task> closedEventHandler,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await closedEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Blade close callback failed for {ViewModelType}", viewModelTypeName);
         }
     }
 

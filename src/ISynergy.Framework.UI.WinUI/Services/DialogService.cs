@@ -224,6 +224,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
             }
 
             var result = await OpenDialogAsync(dialog);
+            dialog?.Dispose();
 
             switch (buttons)
             {
@@ -350,26 +351,20 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     initialization?.Invoke((TViewModel)viewmodel);
                     viewmodel.SetSelectedItem(e);
 
-                    async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
-                    {
-                        try { await submittedEventHandler(args.Result); }
-                        catch (Exception ex) { _logger.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name); }
-                    }
-
+                    EventHandler<SubmitEventArgs<TEntity>>? OnSubmitted = null;
+                    OnSubmitted = (_, args) =>
+                        _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     viewmodel.Submitted += OnSubmitted;
 
                     EventHandler? onCancelledHandler = null;
                     if (cancelledEventHandler is not null)
                     {
-                        onCancelledHandler = async (_, _) =>
-                        {
-                            try { await cancelledEventHandler(); }
-                            catch (Exception ex) { _logger.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name); }
-                        };
+                        onCancelledHandler = (_, _) =>
+                            _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                         viewmodel.Cancelled += onCancelledHandler;
                     }
 
-                    viewmodel.Closed += async (_, _) =>
+                    viewmodel.Closed += (_, _) =>
                     {
                         viewmodel.Submitted -= OnSubmitted;
 
@@ -377,10 +372,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                             viewmodel.Cancelled -= onCancelledHandler;
 
                         if (closedEventHandler is not null)
-                        {
-                            try { await closedEventHandler(); }
-                            catch (Exception ex) { _logger.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name); }
-                        }
+                            _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
 
                         scope.Dispose();
                     };
@@ -426,26 +418,20 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                 {
                     initialization?.Invoke((TViewModel)viewmodel);
 
-                    async void OnSubmitted(object? sender, SubmitEventArgs<TEntity> args)
-                    {
-                        try { await submittedEventHandler(args.Result); }
-                        catch (Exception ex) { _logger.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name); }
-                    }
-
+                    EventHandler<SubmitEventArgs<TEntity>>? OnSubmitted = null;
+                    OnSubmitted = (_, args) =>
+                        _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     viewmodel.Submitted += OnSubmitted;
 
                     EventHandler? onCancelledHandler = null;
                     if (cancelledEventHandler is not null)
                     {
-                        onCancelledHandler = async (_, _) =>
-                        {
-                            try { await cancelledEventHandler(); }
-                            catch (Exception ex) { _logger.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name); }
-                        };
+                        onCancelledHandler = (_, _) =>
+                            _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                         viewmodel.Cancelled += onCancelledHandler;
                     }
 
-                    viewmodel.Closed += async (_, _) =>
+                    viewmodel.Closed += (_, _) =>
                     {
                         viewmodel.Submitted -= OnSubmitted;
 
@@ -453,10 +439,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                             viewmodel.Cancelled -= onCancelledHandler;
 
                         if (closedEventHandler is not null)
-                        {
-                            try { await closedEventHandler(); }
-                            catch (Exception ex) { _logger.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name); }
-                        }
+                            _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
 
                         scope.Dispose();
                     };
@@ -530,19 +513,12 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                 }
 
                 EventHandler? viewModelClosedHandler = null;
-                viewModelClosedHandler = async (sender, e) =>
+                viewModelClosedHandler = (sender, e) =>
                 {
-                    try
-                    {
-                        if (sender is IViewModelDialog<TEntity> vm)
-                            vm.Closed -= viewModelClosedHandler;
+                    if (sender is IViewModelDialog<TEntity> vm)
+                        vm.Closed -= viewModelClosedHandler;
 
-                        await window.CloseAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Error in viewmodel closed handler");
-                    }
+                    _ = HandleViewModelClosedAsync(window).SafeFireAndForget();
                 };
 
                 viewmodel.Closed += viewModelClosedHandler;
@@ -691,6 +667,80 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     _logger.LogError(ex, "Error releasing dialog semaphore");
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Handles the dialog Submitted event. Invokes the caller's submitted callback
+    /// and logs any exception.
+    /// </summary>
+    private async Task HandleDialogSubmittedAsync<TEntity>(
+        TEntity result,
+        Func<TEntity, Task> submittedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await submittedEventHandler(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}", windowTypeName, viewModelTypeName);
+        }
+    }
+
+    /// <summary>
+    /// Handles the dialog Cancelled event. Invokes the caller's cancelled callback
+    /// and logs any exception.
+    /// </summary>
+    private async Task HandleDialogCancelledAsync(
+        Func<Task> cancelledEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await cancelledEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}", windowTypeName, viewModelTypeName);
+        }
+    }
+
+    /// <summary>
+    /// Handles the dialog Closed event. Invokes the caller's closed callback
+    /// and logs any exception. The scope has already been disposed by the
+    /// synchronous Closed handler.
+    /// </summary>
+    private async Task HandleDialogClosedAsync(
+        Func<Task> closedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await closedEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}", windowTypeName, viewModelTypeName);
+        }
+    }
+
+    /// <summary>
+    /// Handles the ViewModel Closed event by closing the dialog window.
+    /// </summary>
+    private async Task HandleViewModelClosedAsync(Window window)
+    {
+        try
+        {
+            await window.CloseAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in viewmodel closed handler");
         }
     }
 
