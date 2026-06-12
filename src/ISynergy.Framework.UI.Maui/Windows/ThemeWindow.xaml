@@ -14,7 +14,10 @@
         <converters:StringToColorBrushConverter x:Key="StringToColorBrushConverter" />
     </c:Window.Resources>
 
-    <Grid>
+    <Grid Background="Transparent">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
+        </Grid.GestureRecognizers>
         <ContentView
             ControlTemplate="{DynamicResource DefaultDialogTemplate}"
             HeightRequest="600"

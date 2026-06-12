@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -127,12 +128,17 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         {
             var scope = _scopeFactory.CreateScope();
             var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
+            var languageWindow = (IWindow)scope.ServiceProvider.GetRequiredService(typeof(ILanguageWindow));
+
+            // Both ViewModel and Window are resolved from the same scope.
+            // When the dialog closes, the scope is disposed, which disposes both
+            // the ViewModel and the Window in a single, ordered cleanup step.
             languageVM.Submitted += LanguageVM_Submitted;
             languageVM.Closed += (_, _) =>
             {
                 scope.Dispose();
             };
-            return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+            return _dialogService.ShowDialogAsync(languageWindow, languageVM);
         }
 
         private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<CultureInfo> e)
@@ -174,18 +180,23 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         {
             var scope = _scopeFactory.CreateScope();
             var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
+            var themeWindow = (IWindow)scope.ServiceProvider.GetRequiredService(typeof(IThemeWindow));
             var style = new ThemeStyle
             {
                 Theme = _settingsService.LocalSettings.Theme,
                 Color = _settingsService.LocalSettings.Color
             };
+
+            // Both ViewModel and Window are resolved from the same scope.
+            // When the dialog closes, the scope is disposed, which disposes both
+            // the ViewModel and the Window in a single, ordered cleanup step.
             themeVM.Submitted += ThemeVM_Submitted;
             themeVM.SetSelectedItem(style);
             themeVM.Closed += (_, _) =>
             {
                 scope.Dispose();
             };
-            return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+            return _dialogService.ShowDialogAsync(themeWindow, themeVM);
         }
 
         private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)

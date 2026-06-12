@@ -42,9 +42,9 @@ public partial class App : Application
             if (_commonServices?.BusyService != null)
             {
                 _commonServices.BusyService.UpdateMessage("Start doing important stuff");
-                await Task.Delay(2000);
+                await Task.Delay(100);
                 _commonServices.BusyService.UpdateMessage("Done doing important stuff");
-                await Task.Delay(2000);
+                await Task.Delay(100);
             }
         }
         catch (Exception ex)
@@ -69,9 +69,9 @@ public partial class App : Application
             if (_commonServices?.BusyService != null)
             {
                 _commonServices.BusyService.UpdateMessage("Applying migrations");
-                await Task.Delay(2000);
+                await Task.Delay(100);
                 _commonServices.BusyService.UpdateMessage("Done applying migrations");
-                await Task.Delay(2000);
+                await Task.Delay(100);
             }
         }
         catch (Exception ex)

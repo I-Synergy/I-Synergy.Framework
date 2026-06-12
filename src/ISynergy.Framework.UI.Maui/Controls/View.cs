@@ -97,11 +97,12 @@ public abstract class View : ContentPage, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // Detach the visual tree and clear BindingContext to break all reference
+            // chains to the ViewModel. The ViewModel lifecycle is managed by the DI scope
+            // that created it — we do NOT dispose it here.
+            Content = null;
+            BindingContext = null;
         }
-
-        // free native resources if there are any.
     }
     #endregion
 }

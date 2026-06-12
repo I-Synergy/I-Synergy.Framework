@@ -8,7 +8,7 @@
     xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
     Title="{Binding Title}"
     x:DataType="viewmodels:LanguageViewModel">
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.GestureRecognizers>
             <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
         </Grid.GestureRecognizers>

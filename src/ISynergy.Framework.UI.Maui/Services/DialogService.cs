@@ -5,6 +5,7 @@ using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 
@@ -571,23 +572,24 @@ public class DialogService : IDialogService, IDisposable
     }
 
     /// <remarks>
-    /// This overload resolves the dialog window using <c>window.GetType()</c> which is not AOT-safe.
-    /// Prefer the strongly-typed overload <c>ShowDialogAsync&lt;TWindow, TViewModel, TEntity&gt;()</c>
-    /// when the concrete window type is known at compile time.
+    /// The <paramref name="window"/> must already be resolved from the caller's DI scope together
+    /// with the <paramref name="viewmodel"/>. Both share the same scope so they are disposed
+    /// together when the dialog closes — no additional scope is created here.
     /// </remarks>
     private async Task ShowDialogAsyncInternal<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
         try
         {
-            var scope = _scopeFactory.CreateScope();
-            if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
+            if (window is Window dialog)
             {
-                viewmodel.Closed += (_, _) => scope.Dispose();
+                // Window was already resolved from the caller's scope (same scope as the ViewModel).
+                // No additional scope or Closed handler is needed — the caller manages the scope
+                // lifecycle and disposes both the ViewModel and the Window when Closed fires.
                 await CreateDialogAsync(dialog, viewmodel);
             }
             else
             {
-                scope.Dispose();
+                _logger?.LogError("Dialog is not of type Window: {DialogType}", window?.GetType().Name ?? "null");
             }
         }
         catch (Exception ex)
@@ -640,15 +642,21 @@ public class DialogService : IDialogService, IDisposable
     {
         try
         {
-            var scope = _scopeFactory.CreateScope();
-            if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
+            // Create the Window via ActivatorUtilities so it is NOT tracked by a DI
+            // scope. The ViewModel was resolved from the caller's scope (or the root)
+            // and must not be paired with a Window from a second scope. The Window
+            // lifecycle is managed explicitly by CreateDialogAsync (disposed in
+            // ViewModelClosedHandler via windowRef?.Dispose()).
+            using var tempScope = _scopeFactory.CreateScope();
+            var dialog = ActivatorUtilities.CreateInstance(tempScope.ServiceProvider, type) as Window;
+
+            if (dialog is not null)
             {
-                viewmodel.Closed += (_, _) => scope.Dispose();
                 await CreateDialogAsync(dialog, viewmodel);
             }
             else
             {
-                scope.Dispose();
+                _logger?.LogError("Failed to create dialog of type {DialogType}", type.Name);
             }
         }
         catch (Exception ex)

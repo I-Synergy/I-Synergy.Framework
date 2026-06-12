@@ -186,13 +186,14 @@ public class DialogService : BaseDialogService, IDialogService
     /// Shows the dialog asynchronous.
     /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="window">The window.</param>
+    /// <param name="window">The window, already resolved from the caller's DI scope together
+    /// with the <paramref name="viewmodel"/>. Both share the same scope so they are disposed
+    /// together when the dialog closes — no additional scope is created here.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
-        using var scope = _scopeFactory.CreateScope();
-        if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
+        if (window is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -205,8 +206,14 @@ public class DialogService : BaseDialogService, IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
-        using var scope = _scopeFactory.CreateScope();
-        if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
+        // Create the Window via ActivatorUtilities so it is NOT tracked by a DI
+        // scope. The ViewModel was resolved from the caller's scope and must not
+        // be paired with a Window from a second scope. The Window lifecycle is
+        // managed explicitly by CreateDialogAsync.
+        using var tempScope = _scopeFactory.CreateScope();
+        var dialog = ActivatorUtilities.CreateInstance(tempScope.ServiceProvider, type) as Window;
+
+        if (dialog is not null)
             await CreateDialogAsync(dialog, viewmodel);
     }
 

@@ -187,12 +187,18 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     {
         var scope = _scopeFactory.CreateScope();
         var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
+        var languageWindow = (IWindow)scope.ServiceProvider.GetRequiredService(typeof(ILanguageWindow));
+
+        // Both ViewModel and Window are resolved from the same scope.
+        // When the dialog closes, the scope is disposed, which disposes both
+        // the ViewModel and the Window in a single, ordered cleanup step.
         languageVM.Submitted += LanguageVM_Submitted;
         languageVM.Closed += (_, _) =>
         {
             scope.Dispose();
         };
-        return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
+
+        return _dialogService.ShowDialogAsync(languageWindow, languageVM);
     }
 
     /// <summary>
@@ -239,24 +245,24 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     {
         var scope = _scopeFactory.CreateScope();
         var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
+        var themeWindow = (IWindow)scope.ServiceProvider.GetRequiredService(typeof(IThemeWindow));
         var style = new ThemeStyle
         {
             Theme = _settingsService.LocalSettings.Theme,
             Color = _settingsService.LocalSettings.Color
         };
-        themeVM.Submitted += ThemeVM_Submitted;
 
-        // Dispose the scope when the dialog closes, not when this method returns.
-        // The ViewModel lives on the Closed event; disposing the scope prematurely
-        // would call ViewModel.Dispose(), which clears Closed and prevents the
-        // DialogService's close handler from firing.
+        // Both ViewModel and Window are resolved from the same scope.
+        // When the dialog closes, the scope is disposed, which disposes both
+        // the ViewModel and the Window in a single, ordered cleanup step.
+        themeVM.Submitted += ThemeVM_Submitted;
         themeVM.Closed += (_, _) =>
         {
             scope.Dispose();
         };
 
         themeVM.SetSelectedItem(style);
-        return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
+        return _dialogService.ShowDialogAsync(themeWindow, themeVM);
     }
 
     /// <summary>

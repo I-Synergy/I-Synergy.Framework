@@ -9,7 +9,7 @@
     Title="{Binding Title}"
     x:DataType="viewmodels:NoteViewModel">
 
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.GestureRecognizers>
             <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
         </Grid.GestureRecognizers>
