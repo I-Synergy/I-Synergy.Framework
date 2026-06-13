@@ -52,6 +52,13 @@ builder.AddProject<Projects.Sample_Synchronization>("synchronization")
 
 // ── Token Service sample ──────────────────────────────────────────────────────
 // Demonstrates JWT and WOPI token generation via ISynergy.Framework.AspNetCore.Authentication.
-builder.AddProject<Projects.Sample_TokenService>("token-service");
+//builder.AddProject<Projects.Sample_TokenService>("token-service");
+
+var sample_app = builder.AddMauiProject("sample-app", @"../../Samples/Sample.Maui/Sample.Maui.csproj");
+
+sample_app.AddWindowsDevice("sample-app-windows")
+    .WithEnvironment("Environment", "Staging")
+    .WithArgs("-p:WindowsPackageType=None")
+    .WithExplicitStart();
 
 await builder.Build().RunAsync();

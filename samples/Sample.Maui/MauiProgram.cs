@@ -7,6 +7,7 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Extensions;
@@ -29,6 +30,17 @@ public static class MauiProgram
         var configBuilder = new ConfigurationBuilder();
         var stream = mainAssembly.GetManifestResourceStream("Sample.appsettings.json") ?? throw new InvalidOperationException("Unable to load appsettings resource");
         configBuilder.AddJsonStream(stream);
+
+        var environment = Environment.GetEnvironmentVariable("Environment") ?? Environments.Production;
+
+        var environment_stream = mainAssembly.GetManifestResourceStream($"Sample.appsettings.{environment}.json") ?? throw new InvalidOperationException("Unable to load appsettings resource");
+        configBuilder.AddJsonStream(environment_stream);
+
+        Debug.WriteLine($"Current environment: {environment}");
+        Debug.WriteLine($"Development: {environment.IsDevelopment().ToString()}");
+        Debug.WriteLine($"Staging: {environment.IsStaging().ToString()}");
+        Debug.WriteLine($"Production: {environment.IsProduction().ToString()}");
+
         var config = configBuilder.Build();
 
         builder

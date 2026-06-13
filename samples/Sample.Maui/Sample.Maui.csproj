@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
@@ -35,8 +35,14 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">16.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">35.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+
+    <!-- Workaround: multi-targeted MAUI projects don't expose GetTargetPath in the outer build,
+         which breaks VS Build Acceleration and Aspire AppHost project reference resolution. -->
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn)</GetTargetPathDependsOn>
 	</PropertyGroup>
 
+  <Target Name="GetTargetPath" />
+  
 	<!-- This allows breakpoints to be hit when debugging!-->
 	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' And '$(Configuration)' == 'Debug'">
 		<MtouchDebug>true</MtouchDebug>
@@ -57,15 +63,18 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Compile Remove="Resources\Fonts\FluentUI.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="appsettings.json" />
-	</ItemGroup>
-	<ItemGroup>
-		<MauiFont Include="Extensions\FluentUI.cs" />
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="appsettings.Staging.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.Development.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.json" />
+    <EmbeddedResource Include="appsettings.Production.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
@@ -98,11 +107,22 @@
 			<Alias>IWindow</Alias>
 		</Using>
 	</ItemGroup>
-	<ItemGroup>
-		<Compile Update="Views\SyncView.xaml.cs">
-			<DependentUpon>SyncView.xaml</DependentUpon>
-		</Compile>
-	</ItemGroup>
+
+  <ItemGroup>
+    <MauiFont Update="Resources\Fonts\FluentSystemIconsRegular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+    <MauiFont Update="Resources\Fonts\FontAwesomeRegular.otf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+    <MauiFont Update="Resources\Fonts\OpenSans-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+    <MauiFont Update="Resources\Fonts\OpenSans-Semibold.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+  </ItemGroup>
+  
 	<ItemGroup>
 		<MauiXaml Update="Views\ControlsView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
