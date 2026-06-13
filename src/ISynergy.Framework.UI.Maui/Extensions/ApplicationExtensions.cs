@@ -1,5 +1,11 @@
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Resources.Styles.Themes;
 using Microsoft.Extensions.Logging;
+
+#if WINDOWS
+using Microsoft.Windows.AppLifecycle;
+using Windows.ApplicationModel.Activation;
+#endif
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -132,4 +138,35 @@ public static class ApplicationExtensions
             _ => null
         };
     }
+
+#if WINDOWS
+    /// <summary>
+    /// Attempts to read the environment name from the process launch arguments.
+    /// Parses <c>--environment &lt;name&gt;</c> or <c>-e &lt;name&gt;</c>.
+    /// </summary>
+    /// <returns>The environment name if found in launch args; otherwise <see langword="null"/>.</returns>
+    public static string? TryGetEnvironmentFromLaunchArgs()
+    {
+        try
+        {
+            var activationArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            if (activationArgs.Kind == ExtendedActivationKind.Launch
+                && activationArgs.Data is LaunchActivatedEventArgs launchArgs
+                && !string.IsNullOrEmpty(launchArgs.Arguments))
+            {
+                var parsed = launchArgs.Arguments.ParseCommandLineArgs();
+                return parsed.TryGetValue("environment", out var env) ? env
+                    : parsed.TryGetValue("e", out var e) ? e
+                    : null;
+            }
+        }
+        catch
+        {
+            // AppInstance may not be available this early in the lifecycle
+        }
+        return null;
+    }
+#else
+    public static string? TryGetEnvironmentFromLaunchArgs() => null;
+#endif
 }

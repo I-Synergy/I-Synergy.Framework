@@ -16,6 +16,8 @@ using Syncfusion.Maui.Core.Hosting;
 using System.Diagnostics;
 using System.Reflection;
 
+
+
 namespace Sample;
 
 public static class MauiProgram
@@ -31,15 +33,13 @@ public static class MauiProgram
         var stream = mainAssembly.GetManifestResourceStream("Sample.appsettings.json") ?? throw new InvalidOperationException("Unable to load appsettings resource");
         configBuilder.AddJsonStream(stream);
 
-        var environment = Environment.GetEnvironmentVariable("Environment") ?? Environments.Production;
+        // Priority: command-line args > env var > Production default
+        var environment = ApplicationExtensions.TryGetEnvironmentFromLaunchArgs()
+            ?? Environment.GetEnvironmentVariable("Environment")
+            ?? Environments.Production;
 
         var environment_stream = mainAssembly.GetManifestResourceStream($"Sample.appsettings.{environment}.json") ?? throw new InvalidOperationException("Unable to load appsettings resource");
         configBuilder.AddJsonStream(environment_stream);
-
-        Debug.WriteLine($"Current environment: {environment}");
-        Debug.WriteLine($"Development: {environment.IsDevelopment().ToString()}");
-        Debug.WriteLine($"Staging: {environment.IsStaging().ToString()}");
-        Debug.WriteLine($"Production: {environment.IsProduction().ToString()}");
 
         var config = configBuilder.Build();
 
@@ -91,12 +91,51 @@ public static class MauiProgram
                 }
             }, async p =>
             {
-                if (!string.IsNullOrEmpty(p.Uri?.Query))
-                    await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{p.Uri.Query}", "ProtocolActivatedEventArgs");
+                if (p.Uri is null)
+                    return;
+
+                var queryArgs = p.Uri.Query.ParseQueryString();
+
+                // Skip --environment / -e equivalents — already consumed at startup
+                queryArgs.Remove("environment");
+                queryArgs.Remove("e");
+
+                var parts = new List<string>();
+
+                if (!string.IsNullOrEmpty(p.Uri.Host))
+                    parts.Add($"Host: {p.Uri.Host}");
+
+                if (!string.IsNullOrEmpty(p.Uri.AbsolutePath) && p.Uri.AbsolutePath != "/")
+                    parts.Add($"Path: {p.Uri.AbsolutePath}");
+
+                if (queryArgs.Count > 0)
+                    parts.AddRange(queryArgs.Select(kvp => $"  {kvp.Key} = {kvp.Value}"));
+
+                if (parts.Count == 0)
+                    return;
+
+                await ServiceLocator.Default.GetRequiredService<IDialogService>()
+                    .ShowMessageAsync(string.Join(Environment.NewLine, parts), "Protocol Activation");
             }, async l =>
             {
-                if (!string.IsNullOrEmpty(l.Arguments))
-                    await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
+                if (string.IsNullOrEmpty(l.Arguments))
+                    return;
+
+                var args = l.Arguments.ParseCommandLineArgs();
+
+                // Skip --environment / -e — already consumed at startup by TryGetEnvironmentFromLaunchArgs()
+                args.Remove("environment");
+                args.Remove("e");
+
+                if (args.Count == 0)
+                    return;
+
+                // Dispatch recognized commands to their handlers; show remaining as structured summary
+                var message = string.Join(Environment.NewLine,
+                    args.Select(kvp => $"--{kvp.Key} {kvp.Value}"));
+
+                await ServiceLocator.Default.GetRequiredService<IDialogService>()
+                    .ShowMessageAsync(message, "Launch Arguments");
             })
 #endif
             .ConfigureSupportedCultures(cultures =>
@@ -114,4 +153,10 @@ public static class MauiProgram
 
         return builder.Build();
     }
+
+
+
+
+
+
 }

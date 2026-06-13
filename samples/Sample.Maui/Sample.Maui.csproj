@@ -17,7 +17,7 @@
 		<RootNamespace>Sample</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 		<IsPackable>false</IsPackable>
 
 		<!-- Display name -->

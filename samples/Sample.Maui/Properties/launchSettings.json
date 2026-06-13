@@ -1,8 +1,14 @@
 {
   "profiles": {
-    "Sample.Maui": {
+    "Sample.Maui (packaged)": {
       "commandName": "MsixPackage",
-      "commandLineArgs": "?environment=development&country=nl"
+      "commandLineArgs": "--environment Development --country nl"
+    },
+    "Sample.Maui (unpackaged)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Environment": "Staging"
+      }
     }
   }
 }
