@@ -1,27 +1,25 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Sample.OpenTelemetry;
 
-namespace Sample.Extensions;
+namespace ISynergy.Framework.UI.Extensions;
+
 /// <summary>
-/// Extension methods for adding OpenTelemetry to a WinUI application.
+/// Extension methods for adding OpenTelemetry to a MAUI application.
 /// </summary>
 public static class TelemetryExtensions
 {
     /// <summary>
-    /// Adds OpenTelemetry to the service collection with WinUI specific defaults.
+    /// Adds OpenTelemetry to the service collection with MAUI specific defaults.
     /// </summary>
     /// <param name="loggingBuilder"></param>
-    /// <param name="hostBuilderContext"></param>
+    /// <param name="builder"></param>
     /// <param name="infoService"></param>
     /// <param name="tracerProviderBuilderAction"></param>
     /// <param name="meterProviderBuilderAction"></param>
@@ -29,7 +27,7 @@ public static class TelemetryExtensions
     /// <returns>The service collection for chaining.</returns>
     public static TelemetryBuilder AddTelemetry(
         this ILoggingBuilder loggingBuilder,
-        HostBuilderContext hostBuilderContext,
+        MauiAppBuilder builder,
         IInfoService infoService,
         Action<TracerProviderBuilder>? tracerProviderBuilderAction = null,
         Action<MeterProviderBuilder>? meterProviderBuilderAction = null,
@@ -51,12 +49,12 @@ public static class TelemetryExtensions
         // Configure OpenTelemetry Logging
         telemetryBuilder.Services.AddLogging(loggingBuilder =>
         {
-            loggingBuilder.SetMinimumLevel(hostBuilderContext.Configuration.GetDefaultLogLevel());
+            loggingBuilder.SetMinimumLevel(builder.Configuration.GetDefaultLogLevel());
 
             loggingBuilder.AddOpenTelemetry(loggerOptions =>
             {
                 // Add default console exporter in development
-                if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+                if (builder.Environment.IsDevelopment())
                     loggerOptions.AddConsoleExporter();
 
             });
@@ -69,7 +67,7 @@ public static class TelemetryExtensions
                 .AddHttpClientInstrumentation();
 
             // Add default console exporter in development
-            if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+            if (builder.Environment.IsDevelopment())
                 tracerProviderBuilder.AddConsoleExporter();
 
             tracerProviderBuilderAction?.Invoke(tracerProviderBuilder);
@@ -83,7 +81,7 @@ public static class TelemetryExtensions
                 .AddRuntimeInstrumentation();
 
             // Add default console exporter in development
-            if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+            if (builder.Environment.IsDevelopment())
                 meterProviderBuilder.AddConsoleExporter();
 
             meterProviderBuilderAction?.Invoke(meterProviderBuilder);
@@ -94,9 +92,6 @@ public static class TelemetryExtensions
             loggerProviderBuilderAction?.Invoke(loggerProviderBuilder);
         });
 
-        // Register application monitor as a singleton
-        loggingBuilder.Services.TryAddSingleton<ApplicationMonitor>();
-
-        return new TelemetryBuilder(telemetryBuilder, hostBuilderContext.Configuration, infoService);
+        return new TelemetryBuilder(telemetryBuilder, builder.Configuration, infoService);
     }
 }

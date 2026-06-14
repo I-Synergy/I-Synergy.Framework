@@ -1,9 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Models;
-using ISynergy.Framework.UI.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
@@ -94,9 +92,6 @@ public static class TelemetryExtensions
         {
             loggerProviderBuilderAction?.Invoke(loggerProviderBuilder);
         });
-
-        // Register application monitor
-        loggingBuilder.Services.TryAddSingleton<ApplicationMonitor>();
 
         return new TelemetryBuilder(telemetryBuilder, hostBuilderContext.Configuration, infoService);
     }

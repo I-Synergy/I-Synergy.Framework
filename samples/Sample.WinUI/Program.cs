@@ -2,13 +2,14 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Hosting;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Sample.Abstractions.Services;
+using Sample.OpenTelemetry;
 using Sample.Services;
 using System.Reflection;
 
@@ -28,8 +29,9 @@ public static class Program
             ?? throw new InvalidOperationException("Unable to load appsettings resource");
         builder.Configuration.AddJsonStream(resourceStream);
 
-        builder
-            .ConfigureLogging(
+        builder.Logging
+            .AddTelemetry(
+                builder,
                 infoService,
                 tracerProviderBuilderAction: (tracing) =>
                 {
@@ -43,10 +45,14 @@ public static class Program
                 {
                     // Additional custom logger provider configuration can be added here
                 })
-            .ConfigureServices<App, Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(services =>
+            .AddOtlpExporter();
+
+        builder
+            .ConfigureServices<App, Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(appBuilder =>
             {
-                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-                services.TryAddSingleton<ICameraService, CameraService>();
+                appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
+                appBuilder.Services.TryAddSingleton<ApplicationMonitor>();
             },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(App).Namespace!))

@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.Extensions;
+using Sample.OpenTelemetry;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
@@ -61,6 +62,7 @@ public partial class App : Application
             })
             .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
+                services.TryAddSingleton<ApplicationMonitor>();
                 services.TryAddSingleton<Sample.Abstractions.Services.IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IFileService<FileResult>, FileService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
