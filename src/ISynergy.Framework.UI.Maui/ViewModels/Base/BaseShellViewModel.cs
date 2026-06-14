@@ -1,18 +1,16 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Models;
-using System.Globalization;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Windows;
 using ISynergy.Framework.UI.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
 
@@ -28,7 +26,6 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     protected readonly INavigationService _navigationService;
     protected readonly IDialogService _dialogService;
     protected readonly ISettingsService _settingsService;
-    protected readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
@@ -42,7 +39,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     public AsyncRelayCommand RestartUpdateCommand { get; private set; }
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand LanguageCommand { get; private set; }
-    public AsyncRelayCommand ColorCommand { get; private set; }
+    public AsyncRelayCommand ThemeCommand { get; private set; }
     public AsyncRelayCommand HelpCommand { get; private set; }
     public AsyncRelayCommand SettingsCommand { get; private set; }
     public AsyncRelayCommand BackgroundCommand { get; private set; }
@@ -75,15 +72,13 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
-    /// <param name="scopeFactory"></param>
     /// <param name="logger">The logger factory.</param>
-    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IServiceScopeFactory scopeFactory, ILogger<BaseShellViewModel> logger)
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
         _settingsService = settingsService;
-        _scopeFactory = scopeFactory;
 
         _navigationService.BackStackChanged += NavigationService_BackStackChanged;
 
@@ -96,7 +91,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
         LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
-        ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
+        ThemeCommand = new AsyncRelayCommand(OpenThemesAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -183,122 +178,59 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
     /// <summary>
     /// Opens the language asynchronous.
     /// </summary>
+    /// <summary>
+    /// Opens the language selection dialog.
+    /// The LanguageViewModel sets its own initial selection in its constructor,
+    /// so no entity is passed — only the submit callback is provided.
+    /// </summary>
     /// <returns>Task.</returns>
-    protected virtual Task OpenLanguageAsync()
-    {
-        var scope = _scopeFactory.CreateScope();
-        var languageVM = scope.ServiceProvider.GetRequiredService<LanguageViewModel>();
-        languageVM.Submitted += LanguageVM_Submitted;
-        languageVM.Closed += (_, _) =>
-        {
-            scope.Dispose();
-        };
-        return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
-    }
+    protected virtual Task OpenLanguageAsync() =>
+        _dialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, CultureInfo>(
+            async culture =>
+            {
+                _settingsService.LocalSettings.Language = culture.Name;
+                _settingsService.SaveLocalSettings();
+
+                culture.SetLocalizationLanguage();
+
+                if (await _dialogService.ShowMessageAsync(
+                            _commonServices.LanguageService.GetString("WarningLanguageChange") +
+                            Environment.NewLine +
+                            _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                            _commonServices.LanguageService.GetString("WarningInfo"),
+                            MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+                {
+                    _commonServices.RestartApplication();
+                }
+            });
 
     /// <summary>
-    /// Languages the vm submitted.
+    /// Opens the theme/color selection dialog.
     /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<CultureInfo> e)
-    {
-        try
-        {
-            if (sender is LanguageViewModel vm)
-                vm.Submitted -= LanguageVM_Submitted;
+    /// <returns>Task.</returns>
+    protected virtual Task OpenThemesAsync() =>
+        _dialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeStyle>(
+            new ThemeStyle
+            {
+                Theme = _settingsService.LocalSettings.Theme,
+                Color = _settingsService.LocalSettings.Color
+            },
+            async themeStyle =>
+            {
+                _settingsService.LocalSettings.Theme = themeStyle.Theme;
+                _settingsService.LocalSettings.Color = (themeStyle.Color ?? string.Empty).ToLowerInvariant();
 
-            _settingsService.LocalSettings.Language = e.Result.Name;
-            _settingsService.SaveLocalSettings();
-
-            e.Result.SetLocalizationLanguage();
-
-            if (await _dialogService.ShowMessageAsync(
-                        _commonServices.LanguageService.GetString("WarningLanguageChange") +
+                if (_settingsService.SaveLocalSettings() &&
+                    await _dialogService.ShowMessageAsync(
+                        _commonServices.LanguageService.GetString("WarningColorChange") +
                         Environment.NewLine +
                         _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                        _commonServices.LanguageService.GetString("WarningInfo"),
+                        _commonServices.LanguageService.GetString("TitleQuestion"),
                         MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-            {
-                _commonServices.RestartApplication();
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
-            var exceptionHandlerService = _commonServices?.ExceptionHandlerService;
-            exceptionHandlerService?.HandleException(ex);
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Opens the colors asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    protected virtual Task OpenColorsAsync()
-    {
-        var scope = _scopeFactory.CreateScope();
-        var themeVM = scope.ServiceProvider.GetRequiredService<ThemeViewModel>();
-        var style = new ThemeStyle
-        {
-            Theme = _settingsService.LocalSettings.Theme,
-            Color = _settingsService.LocalSettings.Color
-        };
-        themeVM.Submitted += ThemeVM_Submitted;
-
-        // Dispose the scope when the dialog closes, not when this method returns.
-        // The ViewModel lives on the Closed event; disposing the scope prematurely
-        // would call ViewModel.Dispose(), which clears Closed and prevents the
-        // DialogService's close handler from firing.
-        themeVM.Closed += (_, _) =>
-        {
-            scope.Dispose();
-        };
-
-        themeVM.SetSelectedItem(style);
-        return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
-    }
-
-    /// <summary>
-    /// Themes the vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
-    {
-        try
-        {
-            if (sender is ThemeViewModel vm)
-                vm.Submitted -= ThemeVM_Submitted;
-
-            if (e.Result is ThemeStyle style)
-            {
-                _settingsService.LocalSettings.Theme = style.Theme;
-                _settingsService.LocalSettings.Color = (style.Color ?? string.Empty).ToLowerInvariant();
-            }
-
-            if (_settingsService.SaveLocalSettings() &&
-                await _dialogService.ShowMessageAsync(
-                    _commonServices.LanguageService.GetString("WarningColorChange") +
-                    Environment.NewLine +
-                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                    _commonServices.LanguageService.GetString("TitleQuestion"),
-                    MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-            {
-                _commonServices.RestartApplication();
-            }
-        }
-        catch (Exception ex)
-        {
-            // Log exception to prevent it from being swallowed in async void method
-            _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler"); // NOSONAR
-            var exceptionHandlerService = _commonServices?.ExceptionHandlerService;
-            exceptionHandlerService?.HandleException(ex);
-            // Re-throw to crash the application if unhandled exception handler is configured
-            throw;
-        }
-    }
+                {
+                    _commonServices.RestartApplication();
+                }
+            });
 
     /// <summary>
     /// Opens the help asynchronously.
@@ -373,7 +305,7 @@ public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, I
             RestartUpdateCommand?.Dispose();
             SignInCommand?.Dispose();
             LanguageCommand?.Dispose();
-            ColorCommand?.Dispose();
+            ThemeCommand?.Dispose();
             HelpCommand?.Dispose();
             SettingsCommand?.Dispose();
             BackgroundCommand?.Dispose();

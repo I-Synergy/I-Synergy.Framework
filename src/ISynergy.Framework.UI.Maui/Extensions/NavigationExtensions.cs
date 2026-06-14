@@ -124,6 +124,18 @@ public static class NavigationExtensions
         }
         else if (page is NavigationPage navigationPage)
             return (navigationPage.Navigation, navigationPage);
+        else if (page is Shell shell)
+        {
+            // Shell wraps each ShellContent in a NavigationPage internally.
+            // shell.CurrentPage returns the visible content page of the active section,
+            // and its Navigation property is the same INavigation that PushAsync
+            // operates on. Shell's renderer keeps the hamburger visible independently
+            // of the navigation stack depth.
+            if (shell.CurrentPage is not null)
+                return (shell.CurrentPage.Navigation, shell.CurrentPage as NavigationPage);
+
+            return (shell.Navigation, null);
+        }
         else
         {
             var currentApp = Application.Current;

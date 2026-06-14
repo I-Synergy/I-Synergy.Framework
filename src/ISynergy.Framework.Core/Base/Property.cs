@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Validation;
+using System;
 using System.Text.Json.Serialization;
 
 namespace ISynergy.Framework.Core.Base;
@@ -10,7 +11,7 @@ namespace ISynergy.Framework.Core.Base;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <seealso cref="IProperty{T}" />
-public class Property<T> : IProperty<T>
+public class Property<T> : IProperty<T>, IDisposable
 {
     /// <summary>
     /// Occurs when [value changed].
@@ -150,4 +151,13 @@ public class Property<T> : IProperty<T>
     /// </summary>
     /// <returns>A <see cref="string" /> that represents this instance.</returns>
     public override string ToString() => Value?.ToString() ?? string.Empty;
+
+    /// <summary>
+    /// Releases all resources used by the <see cref="Property{T}"/> and clears the ValueChanged event subscribers.
+    /// </summary>
+    public void Dispose()
+    {
+        ValueChanged = null;
+        GC.SuppressFinalize(this);
+    }
 }

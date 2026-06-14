@@ -59,43 +59,45 @@ public interface IDialogService
     Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default);
 
     /// <summary>
-    /// Shows the dialog asynchronous.
+    /// Shows a dialog with an initial entity and lifecycle callbacks.
+    /// The DialogService manages scope creation, ViewModel/Window resolution,
+    /// event subscription, callback error handling, and scope disposal.
     /// </summary>
-    /// <typeparam name="TWindow">The type of the t window.</typeparam>
-    /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <returns>Task{TEntity}.</returns>
-    Task ShowDialogAsync<TWindow, TViewModel, TEntity>()
+    /// <typeparam name="TWindow">The window type.</typeparam>
+    /// <typeparam name="TViewModel">The view model type.</typeparam>
+    /// <typeparam name="TEntity">The entity type.</typeparam>
+    /// <param name="e">The entity to edit or pre-populate.</param>
+    /// <param name="submittedEventHandler">Invoked when the user submits, with the resulting entity. Runs before scope disposal.</param>
+    /// <param name="cancelledEventHandler">Optional. Invoked when the user cancels (CancelCommand / tap-outside). Runs before scope disposal.</param>
+    /// <param name="closedEventHandler">Optional. Invoked when the dialog closes on ANY path (submit, cancel, back button, platform dismiss). Runs before scope disposal.</param>
+    /// <param name="initialization">Optional. Invoked after ViewModel resolution but before the dialog is shown. Use to call SetItems, SetSelectedItems, or other ViewModel configuration.</param>
+    Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        TEntity e,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>;
 
     /// <summary>
-    /// Shows the dialog asynchronous.
+    /// Shows a dialog with lifecycle callbacks (no initial entity — the ViewModel
+    /// sets its own initial state via its constructor).
+    /// The DialogService manages scope creation, ViewModel/Window resolution,
+    /// event subscription, callback error handling, and scope disposal.
     /// </summary>
-    /// <typeparam name="TWindow">The type of the t window.</typeparam>
-    /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="e">The selected item.</param>
-    /// <returns>Task{TEntity}.</returns>
-    Task ShowDialogAsync<TWindow, TViewModel, TEntity>(TEntity e)
+    /// <typeparam name="TWindow">The window type.</typeparam>
+    /// <typeparam name="TViewModel">The view model type.</typeparam>
+    /// <typeparam name="TEntity">The entity type.</typeparam>
+    /// <param name="submittedEventHandler">Invoked when the user submits, with the resulting entity. Runs before scope disposal.</param>
+    /// <param name="cancelledEventHandler">Optional. Invoked when the user cancels (CancelCommand / tap-outside). Runs before scope disposal.</param>
+    /// <param name="closedEventHandler">Optional. Invoked when the dialog closes on ANY path (submit, cancel, back button, platform dismiss). Runs before scope disposal.</param>
+    /// <param name="initialization">Optional. Invoked after ViewModel resolution but before the dialog is shown. Use to call SetItems, SetSelectedItems, or other ViewModel configuration.</param>
+    Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>;
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="window">The window.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel);
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="type">The type.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel);
 }

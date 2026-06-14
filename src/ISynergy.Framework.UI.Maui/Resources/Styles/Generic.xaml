@@ -24,6 +24,8 @@
     <Color x:Key="Gray400">#919191</Color>
     <Color x:Key="Gray500">#6E6E6E</Color>
     <Color x:Key="Gray600">#404040</Color>
+    <Color x:Key="Gray700">#363636</Color>
+    <Color x:Key="Gray800">#2B2B2B</Color>
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
@@ -41,8 +43,8 @@
 
     <x:Int32 x:Key="DefaultCornerRadius">8</x:Int32>
 
-    <x:Double x:Key="DefaultFontSize">10</x:Double>
-    <x:Double x:Key="CaptionFontSize">12</x:Double>
+    <x:Double x:Key="DefaultFontSize">12</x:Double>
+    <x:Double x:Key="CaptionFontSize">14</x:Double>
     <x:Double x:Key="DefaultMinimumHeightRequest">40</x:Double>
     <x:Double x:Key="DefaultMinimumWidthRequest">125</x:Double>
     <x:Double x:Key="DialogTitleFontSize">18</x:Double>

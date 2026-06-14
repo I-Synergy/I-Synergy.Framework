@@ -17,6 +17,8 @@
     <Color x:Key="TintedGray400">#A59988</Color>
     <Color x:Key="TintedGray500">#847966</Color>
     <Color x:Key="TintedGray600">#5A4D3A</Color>
+    <Color x:Key="TintedGray700">#4E4331</Color>
+    <Color x:Key="TintedGray800">#413A28</Color>
     <Color x:Key="TintedGray900">#35301F</Color>
     <Color x:Key="TintedGray950">#272314</Color>
 </ResourceDictionary>

@@ -51,10 +51,7 @@ public class ApplicationMonitor : IDisposable
         // Monitor dispatcher operations
         if (System.Windows.Application.Current?.Dispatcher != null)
         {
-            System.Windows.Application.Current.Dispatcher.Hooks.OperationCompleted += (_, _) =>
-            {
-                _dispatcherOperationCounter.Add(1);
-            };
+            System.Windows.Application.Current.Dispatcher.Hooks.OperationCompleted += OnOperationCompleted;
         }
 
         // Setup periodic performance monitoring
@@ -88,6 +85,11 @@ public class ApplicationMonitor : IDisposable
         }
     }
 
+    private void OnOperationCompleted(object? sender, EventArgs e)
+    {
+        _dispatcherOperationCounter.Add(1);
+    }
+
     /// <summary>
     /// Records the time spent in a render operation.
     /// </summary>
@@ -113,7 +115,9 @@ public class ApplicationMonitor : IDisposable
     {
         if (!_isDisposed)
         {
+            System.Windows.Application.Current?.Dispatcher?.Hooks.OperationCompleted -= OnOperationCompleted;
             _performanceTimer?.Dispose();
+            _currentProcess?.Dispose();
             _meter?.Dispose();
             _isDisposed = true;
         }

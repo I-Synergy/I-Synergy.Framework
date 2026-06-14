@@ -123,6 +123,7 @@
 | **I-Synergy.Framework.Documents.Syncfusion** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents.Syncfusion?label=) |
 | **I-Synergy.Framework.Financial** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Financial?label=) |
 | **I-Synergy.Framework.Geography** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Geography?label=) |
+| **I-Synergy.Framework.Globalization** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Globalization?label=) |
 | **I-Synergy.Framework.IO** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.IO?label=) |
 | **I-Synergy.Framework.Mathematics** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mathematics?label=) |
 | **I-Synergy.Framework.Physics** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Physics?label=) |

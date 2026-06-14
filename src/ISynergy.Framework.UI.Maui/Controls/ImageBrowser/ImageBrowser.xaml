@@ -13,7 +13,7 @@
         <converters:BytesToImageSourceConverter x:Key="BytesToImageSourceConverter" />
     </ContentView.Resources>
 
-    <Grid>
+    <Grid RowSpacing="8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
@@ -27,17 +27,20 @@
                 x:Name="BrowseButton"
                 Clicked="BrowseButton_Clicked"
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
-                HeightRequest="50"
-                MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
+                HeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumHeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumHeightRequest="{OnPlatform WinUI=32, Default=50}"
                 ToolTipProperties.Text="{m:GetString Browse}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe721;"
-                        Size="14" />
+                        Size="{OnPlatform WinUI=18, Default=32}"
+                        Glyph="&#xe721;"/>
                 </ImageButton.Source>
             </ImageButton>
 
@@ -45,17 +48,20 @@
                 x:Name="CameraButton"
                 Clicked="CameraButton_Clicked"
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
-                HeightRequest="50"
-                MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
+                HeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumHeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumHeightRequest="{OnPlatform WinUI=32, Default=50}"
                 ToolTipProperties.Text="{m:GetString TakePhoto}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe722;"
-                        Size="14" />
+                        Size="{OnPlatform WinUI=18, Default=32}"
+                        Glyph="&#xe722;"/>
                 </ImageButton.Source>
             </ImageButton>
 
@@ -63,19 +69,22 @@
                 x:Name="PasteButton"
                 Clicked="PasteButton_Clicked"
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
-                HeightRequest="50"
+                HeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumHeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumHeightRequest="{OnPlatform WinUI=32, Default=50}"
                 IsVisible="{OnPlatform Default=False,
                                        WinUI=True}"
-                MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
                 ToolTipProperties.Text="{m:GetString Paste}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe77f;"
-                        Size="14" />
+                        Size="{OnPlatform WinUI=18, Default=32}"
+                        Glyph="&#xe77f;"/>
                 </ImageButton.Source>
             </ImageButton>
 
@@ -83,17 +92,20 @@
                 x:Name="ClearButton"
                 Clicked="ClearButton_Clicked"
                 CornerRadius="{DynamicResource DefaultCornerRadius}"
-                HeightRequest="50"
-                MinimumHeightRequest="50"
-                MinimumWidthRequest="50"
+                HeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumHeightRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumHeightRequest="{OnPlatform WinUI=32, Default=50}"
                 ToolTipProperties.Text="{m:GetString Delete}"
                 VerticalOptions="End"
-                WidthRequest="50">
+                WidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MinimumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                MaximumWidthRequest="{OnPlatform WinUI=32, Default=50}"
+                Aspect="Center">
                 <ImageButton.Source>
                     <FontImageSource
                         FontFamily="SegoeMdl2"
-                        Glyph="&#xe74d;"
-                        Size="14" />
+                        Size="{OnPlatform WinUI=18, Default=32}"
+                        Glyph="&#xe74d;"/>
                 </ImageButton.Source>
             </ImageButton>
         </VerticalStackLayout>

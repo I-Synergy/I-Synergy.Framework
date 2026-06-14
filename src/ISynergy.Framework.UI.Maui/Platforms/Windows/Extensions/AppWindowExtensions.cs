@@ -140,7 +140,10 @@ public static class AppWindowExtensions
     /// <param name="defaultAction">Called with command-line arguments (fallback).</param>
     /// <param name="protocolAction">Called for protocol URI activations (myapp://...).</param>
     /// <param name="launchAction">Called for standard launch activations.</param>
-    public static MauiAppBuilder ConfigureActivationHandlers(this MauiAppBuilder builder, Action<string[]> defaultAction, Action<ProtocolActivatedEventArgs> protocolAction, Action<LaunchActivatedEventArgs> launchAction) // NOSONAR
+    public static MauiAppBuilder ConfigureActivationHandlers(this MauiAppBuilder builder,
+        Action<string[]> defaultAction,
+        Action<ProtocolActivatedEventArgs> protocolAction,
+        Action<LaunchActivatedEventArgs> launchAction) // NOSONAR
     {
         // Store callbacks — invoked directly by OnAppInstanceActivated when a
         // redirected activation arrives at the first instance.

@@ -216,17 +216,6 @@ public class NavigationService : INavigationService
 
     #region NotImplemented
     [Obsolete("Not supported!", true)] // NOSONAR
-    public Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException(); // NOSONAR
-
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
-        where TView : IView =>
-        throw new NotImplementedException();
-
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException(); // NOSONAR
-
-    [Obsolete("Not supported!", true)] // NOSONAR
     public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
         where TViewModel : class, IViewModel
         where TView : IView => throw new NotImplementedException();

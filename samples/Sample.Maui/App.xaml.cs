@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using Sample.ViewModels;
@@ -41,9 +42,9 @@ public partial class App : Application
             if (_commonServices?.BusyService != null)
             {
                 _commonServices.BusyService.UpdateMessage("Start doing important stuff");
-                await Task.Delay(2000);
+                await Task.Delay(100);
                 _commonServices.BusyService.UpdateMessage("Done doing important stuff");
-                await Task.Delay(2000);
+                await Task.Delay(100);
             }
         }
         catch (Exception ex)
@@ -68,9 +69,9 @@ public partial class App : Application
             if (_commonServices?.BusyService != null)
             {
                 _commonServices.BusyService.UpdateMessage("Applying migrations");
-                await Task.Delay(2000);
+                await Task.Delay(100);
                 _commonServices.BusyService.UpdateMessage("Done applying migrations");
-                await Task.Delay(2000);
+                await Task.Delay(100);
             }
         }
         catch (Exception ex)
@@ -113,9 +114,11 @@ public partial class App : Application
             await WaitForLoadingViewAsync();
 
             _logger.LogInformation("Application loaded event: checking for auto-login");
-
             _logger.LogInformation("Navigate to SignIn page");
-            await _navigationService.NavigateModalAsync<SignInViewModel>();
+
+            //await _navigationService.NavigateModalAsync<SignInViewModel>();
+
+            await _navigationService.NavigateModalAsync<ShellViewModel>();
         }
         catch (Exception ex)
         {
@@ -129,7 +132,6 @@ public partial class App : Application
 
     /// <summary>
     /// Customizes the <see cref="NumberFormatInfo"/> after the culture is applied.
-    /// Called automatically by <see cref="Application.ApplyApplicationCulture"/>.
     /// </summary>
     protected override void ConfigureNumberFormat(CultureInfo culture)
     {
@@ -160,7 +162,7 @@ public partial class App : Application
             // latest GlobalSettings (decimals, etc.). The framework handles
             // both DefaultThreadCurrentCulture and UI-thread CurrentCulture.
             var culture = CultureInfo.DefaultThreadCurrentCulture ?? CultureInfo.CurrentCulture;
-            ApplyApplicationCulture(culture);
+            culture.ApplyCulture(ConfigureNumberFormat);
 
             // Profile should already be set in context by AuthenticationService
             // Navigate to Shell to show authenticated UI

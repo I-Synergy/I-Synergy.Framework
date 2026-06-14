@@ -79,8 +79,8 @@
 		<MauiXaml Update="Controls\ImageBrowser\ImageBrowser.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Controls\NavigationMenu\NavigationMenu.xaml">
-			<Generator>MSBuild:Compile</Generator>
+		<MauiXaml Update="Controls\NavigationItem\NavigationItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Resources\Styles\Generic.xaml">
 			<Generator>MSBuild:Compile</Generator>

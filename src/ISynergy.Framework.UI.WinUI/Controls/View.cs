@@ -125,7 +125,8 @@ public abstract partial class View : Page, IView
     {
         if (disposing)
         {
-            _viewModel?.Dispose();
+            // Release the ViewModel reference without disposing — its lifecycle
+            // is managed by the DI scope that created it.
             _viewModel = null;
         }
 
@@ -138,9 +139,10 @@ public abstract partial class View : Page, IView
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing && _viewModel is not null)
+        if (disposing)
         {
-            _viewModel.Dispose();
+            // Release the ViewModel reference without disposing — its lifecycle
+            // is managed by the DI scope that created it.
             _viewModel = null;
         }
     }

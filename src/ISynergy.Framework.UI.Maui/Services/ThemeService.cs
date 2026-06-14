@@ -119,6 +119,16 @@ public class ThemeService : IThemeService
             UpdateOrAddResource(application, "colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
 #endif
 
+#if IOS
+            _logger.LogTrace("Updating iOS-specific colors");
+
+            UIKit.UIView.Appearance.TintColor = new UIKit.UIColor(
+                (nfloat)Application.AccentColor.Red,
+                (nfloat)Application.AccentColor.Green,
+                (nfloat)Application.AccentColor.Blue,
+                1.0f);
+#endif
+
 #if WINDOWS
             _logger.LogTrace("Updating Windows-specific colors");
 

@@ -105,7 +105,7 @@ public class DialogServiceExceptionHandlingTests
         // Act
         try
         {
-            await _dialogService.ShowDialogAsync<TestWindow, TestViewModelDialog, string>();
+            await _dialogService.ShowDialogAsync<TestWindow, TestViewModelDialog, string>(_ => Task.CompletedTask);
         }
         catch
         {

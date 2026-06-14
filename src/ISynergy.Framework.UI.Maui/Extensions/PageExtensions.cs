@@ -1,5 +1,3 @@
-using ISynergy.Framework.Globalization.Constants;
-
 namespace ISynergy.Framework.UI.Extensions;
 
 /// <summary>
@@ -32,6 +30,16 @@ public static class PageExtensions
                 flyoutPage.ApplyFlowDirection(cultureName);
             if (flyout.Detail is Page detailPage)
                 detailPage.ApplyFlowDirection(cultureName);
+        }
+
+        // Shell: propagate RTL to flyout content and current page
+        if (page is Shell shell)
+        {
+            if (shell.FlyoutContent is VisualElement flyoutElement)
+                flyoutElement.ApplyFlowDirection(cultureName);
+
+            if (shell.CurrentPage is Page shellCurrentPage)
+                shellCurrentPage.ApplyFlowDirection(cultureName);
         }
 
         // Also propagate to any child pages in a NavigationPage stack

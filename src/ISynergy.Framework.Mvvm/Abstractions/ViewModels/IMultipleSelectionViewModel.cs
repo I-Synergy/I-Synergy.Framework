@@ -8,8 +8,8 @@ namespace ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 /// </summary>
 public interface IMultipleSelectionViewModel
 {
-    List<object>? SelectedItems { get; }
+    List<object>? SelectedItem { get; }
     void SetItems(IEnumerable<object> items);
-    void SetSelectedItems(IEnumerable<object> items);
+    void SetSelectedItem(IEnumerable<object>? items);
     AsyncRelayCommand<List<object>> SelectCommand { get; }
 }

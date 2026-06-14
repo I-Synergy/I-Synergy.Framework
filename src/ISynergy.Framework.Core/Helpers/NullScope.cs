@@ -17,6 +17,5 @@ public class NullScope : IDisposable
     /// </summary>
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
     }
 }

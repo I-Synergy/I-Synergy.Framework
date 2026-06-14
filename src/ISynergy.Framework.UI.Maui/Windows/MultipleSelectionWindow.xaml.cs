@@ -21,8 +21,8 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
         if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
             // Multiple mode: pre-select all items
-            if (viewModel.SelectedItems is not null && viewModel.SelectedItems.Count > 0)
-                DataSummary.SelectedItems = viewModel.SelectedItems.EnsureNotNull().ToList<object>();
+            if (viewModel.SelectedItem is not null && viewModel.SelectedItem.Count > 0)
+                DataSummary.SelectedItems = viewModel.SelectedItem.EnsureNotNull().ToList<object>();
         }
     }
 
@@ -30,11 +30,11 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
     {
         if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
-            viewModel.SelectedItems?.Clear();
+            viewModel.SelectedItem?.Clear();
 
             foreach (var item in DataSummary.SelectedItems.EnsureNotNull().Where(item => item is not null)) // NOSONAR
             {
-                viewModel.SelectedItems?.Add(item);
+                viewModel.SelectedItem?.Add(item);
             }
 
             // Force UI refresh by triggering NotifyCanExecuteChanged

@@ -1,11 +1,10 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
-using ISynergy.Framework.UI.Extensions;
 using Sample.ViewModels;
 
 namespace Sample.Views;
 
-public partial class ShellView : IShellView
+public partial class ShellView : Shell, IShellView
 {
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
@@ -23,7 +22,7 @@ public partial class ShellView : IShellView
         set
         {
             BindingContext = value;
-            SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
+            SetBinding(Shell.TitleProperty, new Binding(nameof(value.Title)));
         }
     }
 
@@ -32,9 +31,6 @@ public partial class ShellView : IShellView
         InitializeComponent();
 
         ViewModel = viewModel;
-
-        if (NavigationExtensions.CreatePage<InfoViewModel>(null) is Page page)
-            Detail = new NavigationPage(page);
     }
 
     #region IDisposable

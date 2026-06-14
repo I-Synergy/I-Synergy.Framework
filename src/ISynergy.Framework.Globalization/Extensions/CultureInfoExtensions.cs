@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace ISynergy.Framework.Globalization;
+namespace ISynergy.Framework.Globalization.Extensions;
 
 /// <summary>
 /// Centralized culture management. Applies a <see cref="CultureInfo"/> as the
@@ -12,7 +12,7 @@ namespace ISynergy.Framework.Globalization;
 /// and <see cref="CultureInfo.CurrentUICulture"/> on their dispatcher thread — those
 /// are per-thread and must be applied on the already-running UI thread.
 /// </remarks>
-public static class CultureManager
+public static class CultureInfoExtensions
 {
     /// <summary>
     /// Applies <paramref name="culture"/> as the process-wide default culture.
@@ -22,7 +22,7 @@ public static class CultureManager
     /// Optional callback to customize the cloned <see cref="CultureInfo"/> before it is applied
     /// (e.g. override <see cref="NumberFormatInfo.CurrencySymbol"/>).
     /// </param>
-    public static void Apply(CultureInfo culture, Action<CultureInfo>? configure = null)
+    public static CultureInfo ApplyCulture(this CultureInfo culture, Action<CultureInfo>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(culture);
 
@@ -33,5 +33,7 @@ public static class CultureManager
 
         CultureInfo.DefaultThreadCurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+        return culture;
     }
 }

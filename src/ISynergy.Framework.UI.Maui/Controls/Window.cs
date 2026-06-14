@@ -18,9 +18,34 @@ public class Window : ContentPage, IWindow
         }
         set
         {
+            if (BindingContext is IViewModel oldVm)
+                oldVm.Closed -= OnViewModelClosed;
+
             BindingContext = value;
+
+            if (value is not null)
+                value.Closed += OnViewModelClosed;
+
             SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
         }
+    }
+
+    private bool _isViewModelClosed;
+
+    private void OnViewModelClosed(object? sender, EventArgs e)
+    {
+        _isViewModelClosed = true;
+
+        // Break the BindingContext reference immediately to allow the ViewModel
+        // to be GC'd. Setting BindingContext to null causes all child bindings
+        // to resolve to null, which is safe.
+        //
+        // Do NOT detach Content here — it runs synchronously while MAUI's
+        // PopModalAsync is still in-flight, and the visual tree detach can
+        // trigger FireAndForget tasks that complete after the DI scope (which
+        // holds this page's ViewModel) is disposed by the Closed handler.
+        // Content detach is handled later in Dispose() as a safety net.
+        BindingContext = null;
     }
 
     public Window()
@@ -46,6 +71,29 @@ public class Window : ContentPage, IWindow
         }
     }
 
+    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+    {
+        base.OnNavigatedFrom(args);
+        if (!_isViewModelClosed && ViewModel is { IsDisposed: false } vm)
+            _ = vm.CloseAsync();
+
+        // Always clear BindingContext when navigating away — releases the
+        // ViewModel reference even if CloseAsync was already called through
+        // another path (e.g. platform-initiated dismissal).
+        if (BindingContext is not null)
+            BindingContext = null;
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (ViewModel is { IsDisposed: false } vm)
+        {
+            _ = vm.CloseAsync();
+            return true;
+        }
+        return base.OnBackButtonPressed();
+    }
+
     #region IDisposable
     // Dispose() calls Dispose(true)
     /// <summary>
@@ -66,12 +114,16 @@ public class Window : ContentPage, IWindow
     {
         if (disposing)
         {
-            // DO NOT dispose ViewModel here.
-            // The Window is resolved from a DI scope that is disposed after the dialog
-            // is shown but before it is closed. Disposing the ViewModel prematurely clears
-            // its Closed event, preventing the DialogService's close handler from firing.
-            // The ViewModel lifecycle is managed by the scope that created it (e.g. in
-            // OpenColorsAsync) and by the DialogService's close handler.
+            // Detach the visual tree and clear BindingContext to break all reference
+            // chains to the ViewModel. Only detach Content when the handler is still
+            // connected — during app shutdown the handler is already disconnected and
+            // MAUI handles cleanup natively. Setting Content to null during shutdown
+            // can trigger FireAndForget tasks that fail when the DI container has
+            // already been disposed.
+            BindingContext = null;
+
+            if (Handler is not null)
+                Content = null;
         }
     }
 

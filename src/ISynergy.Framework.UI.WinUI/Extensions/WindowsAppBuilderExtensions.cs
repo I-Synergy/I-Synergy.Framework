@@ -186,6 +186,7 @@ public static class WindowsAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
+        appBuilder.Services.TryAddSingleton<IBladeService, BladeService>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
         appBuilder.Services.TryAddSingleton<DialogService>();
         appBuilder.Services.TryAddSingleton<IDialogService>(sp => sp.GetRequiredService<DialogService>());

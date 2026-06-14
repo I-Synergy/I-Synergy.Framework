@@ -276,12 +276,12 @@ public class ViewModelSelectionBladeTests
 
         // Act
         var selectedItems = new List<TestEntity> { items[0], items[1] };
-        viewModel.SetSelectedItems(selectedItems);
+        viewModel.SetSelectedItem(selectedItems);
 
         // Assert
-        Assert.AreEqual(2, viewModel.SelectedItems?.Count);
-        Assert.IsTrue(viewModel.SelectedItems?.Contains(items[0]));
-        Assert.IsTrue(viewModel.SelectedItems?.Contains(items[1]));
+        Assert.AreEqual(2, viewModel.SelectedItem?.Count);
+        Assert.IsTrue(viewModel.SelectedItem?.Contains(items[0]));
+        Assert.IsTrue(viewModel.SelectedItem?.Contains(items[1]));
     }
 }
 

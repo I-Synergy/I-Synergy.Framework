@@ -1,8 +1,11 @@
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
+using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Windows;
@@ -134,64 +137,15 @@ public class DialogService : BaseDialogService, IDialogService
     /// <summary>
     /// Shows the dialog asynchronous.
     /// </summary>
-    /// <typeparam name="TWindow"></typeparam>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <returns></returns>
-    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>()
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        var scope = _scopeFactory.CreateScope();
-        if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-        {
-            viewmodel.Closed += (_, _) => scope.Dispose();
-            await CreateDialogAsync(dialog, viewmodel);
-        }
-        else
-        {
-            scope.Dispose();
-        }
-    }
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TWindow">The type of the t window.</typeparam>
-    /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="e">The selected item.</param>
-    /// <returns>Task{TEntity}.</returns>
-    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(TEntity e)
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        var scope = _scopeFactory.CreateScope();
-        if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-            scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-        {
-            viewmodel.SetSelectedItem(e);
-            viewmodel.Closed += (_, _) => scope.Dispose();
-            await CreateDialogAsync(dialog, viewmodel);
-        }
-        else
-        {
-            scope.Dispose();
-        }
-    }
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="window">The window.</param>
+    /// <param name="window">The window, already resolved from the caller's DI scope together
+    /// with the <paramref name="viewmodel"/>. Both share the same scope so they are disposed
+    /// together when the dialog closes — no additional scope is created here.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
-        using var scope = _scopeFactory.CreateScope();
-        if (scope.ServiceProvider.GetRequiredService(window.GetType()) is Window dialog)
+        if (window is Window dialog)
             await CreateDialogAsync(dialog, viewmodel);
     }
 
@@ -204,9 +158,139 @@ public class DialogService : BaseDialogService, IDialogService
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
     public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
     {
-        using var scope = _scopeFactory.CreateScope();
-        if (scope.ServiceProvider.GetRequiredService(type) is Window dialog)
+        // Create the Window via ActivatorUtilities so it is NOT tracked by a DI
+        // scope. The ViewModel was resolved from the caller's scope and must not
+        // be paired with a Window from a second scope. The Window lifecycle is
+        // managed explicitly by CreateDialogAsync.
+        using var tempScope = _scopeFactory.CreateScope();
+        var dialog = ActivatorUtilities.CreateInstance(tempScope.ServiceProvider, type) as Window;
+
+        if (dialog is not null)
             await CreateDialogAsync(dialog, viewmodel);
+    }
+
+    /// <inheritdoc />
+    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        TEntity e,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        var scope = _scopeFactory.CreateScope();
+        try
+        {
+            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                initialization?.Invoke((TViewModel)viewmodel);
+                viewmodel.SetSelectedItem(e);
+
+                var windowTypeName = typeof(TWindow).Name;
+                var viewModelTypeName = typeof(TViewModel).Name;
+
+                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
+                onSubmittedHandler = (_, args) =>
+                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, windowTypeName, viewModelTypeName)
+                        .SafeFireAndForget();
+                viewmodel.Submitted += onSubmittedHandler;
+
+                EventHandler? onCancelledHandler = null;
+                if (cancelledEventHandler is not null)
+                {
+                    onCancelledHandler = (_, _) =>
+                        _ = HandleDialogCancelledAsync(cancelledEventHandler, windowTypeName, viewModelTypeName)
+                            .SafeFireAndForget();
+                    viewmodel.Cancelled += onCancelledHandler;
+                }
+
+                viewmodel.Closed += (_, _) =>
+                {
+                    viewmodel.Submitted -= onSubmittedHandler;
+                    if (onCancelledHandler is not null) viewmodel.Cancelled -= onCancelledHandler;
+
+                    if (closedEventHandler is not null)
+                        _ = HandleDialogClosedAsync(closedEventHandler, windowTypeName, viewModelTypeName)
+                            .SafeFireAndForget();
+
+                    scope.Dispose();
+                };
+
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
+            }
+        }
+        catch
+        {
+            scope.Dispose();
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        var scope = _scopeFactory.CreateScope();
+        try
+        {
+            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                initialization?.Invoke((TViewModel)viewmodel);
+
+                var windowTypeName = typeof(TWindow).Name;
+                var viewModelTypeName = typeof(TViewModel).Name;
+
+                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
+                onSubmittedHandler = (_, args) =>
+                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, windowTypeName, viewModelTypeName)
+                        .SafeFireAndForget();
+                viewmodel.Submitted += onSubmittedHandler;
+
+                EventHandler? onCancelledHandler = null;
+                if (cancelledEventHandler is not null)
+                {
+                    onCancelledHandler = (_, _) =>
+                        _ = HandleDialogCancelledAsync(cancelledEventHandler, windowTypeName, viewModelTypeName)
+                            .SafeFireAndForget();
+                    viewmodel.Cancelled += onCancelledHandler;
+                }
+
+                viewmodel.Closed += (_, _) =>
+                {
+                    viewmodel.Submitted -= onSubmittedHandler;
+                    if (onCancelledHandler is not null) viewmodel.Cancelled -= onCancelledHandler;
+
+                    if (closedEventHandler is not null)
+                        _ = HandleDialogClosedAsync(closedEventHandler, windowTypeName, viewModelTypeName)
+                            .SafeFireAndForget();
+
+                    scope.Dispose();
+                };
+
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
+            }
+        }
+        catch
+        {
+            scope.Dispose();
+            throw;
+        }
     }
 
     public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
@@ -238,6 +322,65 @@ public class DialogService : BaseDialogService, IDialogService
             }
 
             await window.ShowAsync<TEntity>();
+        }
+    }
+
+    /// <summary>
+    /// Handles the dialog Submitted event. Invokes the caller's submit callback
+    /// and logs any exception.
+    /// </summary>
+    private async Task HandleDialogSubmittedAsync<TEntity>(
+        TEntity result,
+        Func<TEntity, Task> submittedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await submittedEventHandler(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}", windowTypeName, viewModelTypeName);
+        }
+    }
+
+    /// <summary>
+    /// Handles the dialog Cancelled event. Invokes the caller's cancelled callback
+    /// and logs any exception.
+    /// </summary>
+    private async Task HandleDialogCancelledAsync(
+        Func<Task> cancelledEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await cancelledEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}", windowTypeName, viewModelTypeName);
+        }
+    }
+
+    /// <summary>
+    /// Handles the dialog Closed event. Invokes the caller's closed callback
+    /// and logs any exception. The scope has already been disposed by the
+    /// synchronous <see cref="ShowDialogAsync{TWindow,TViewModel,TEntity}(TEntity, Func{TEntity,Task}, Func{Task}?, Func{Task}?, Action{TViewModel}?)"/> handler.
+    /// </summary>
+    private async Task HandleDialogClosedAsync(
+        Func<Task> closedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await closedEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}", windowTypeName, viewModelTypeName);
         }
     }
 }

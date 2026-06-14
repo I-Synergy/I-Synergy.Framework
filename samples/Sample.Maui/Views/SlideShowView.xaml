@@ -7,9 +7,7 @@
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:SlideShowViewModel"
-    NavigationPage.HasNavigationBar="False"
-    ShowTitle="False"
-    Scrollable="False">
+    NavigationPage.HasNavigationBar="False">
 
     <c:View.Resources>
         <converters:UriToImageSourceConverter x:Key="UriToImageSourceConverter"/>

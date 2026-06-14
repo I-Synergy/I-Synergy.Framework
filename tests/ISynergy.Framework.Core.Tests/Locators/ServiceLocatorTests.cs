@@ -98,7 +98,13 @@ public class ServiceLocatorTests
         {
             tasks.Add(Task.Run(() =>
             {
-                var taskLocator = new ServiceLocator(_serviceProvider);
+                // Each task builds its own provider to avoid cross-task disposal races
+                // on the shared underlying IServiceProvider.
+                var taskServices = new ServiceCollection();
+                taskServices.AddTransient<ITestTransientService, TestTransientService>();
+                var taskProvider = taskServices.BuildServiceProvider();
+
+                var taskLocator = new ServiceLocator(taskProvider);
                 var service = taskLocator.GetRequiredService<ITestTransientService>();
                 var id = service.GetHashCode().ToString();
                 instanceIds.Add(id);
@@ -142,7 +148,13 @@ public class ServiceLocatorTests
         var service = localLocator.GetRequiredService<ITestSingletonService>();
         localLocator.Dispose();
 
-        var newLocator = new ServiceLocator(_serviceProvider);
+        // After disposing the default locator, the static provider is cleaned up.
+        // A new locator requires a fresh (non-disposed) service provider.
+        var freshServices = new ServiceCollection();
+        freshServices.AddSingleton<ITestSingletonService, TestSingletonService>();
+        var freshProvider = freshServices.BuildServiceProvider();
+
+        var newLocator = new ServiceLocator(freshProvider);
         var newService = newLocator.GetRequiredService<ITestSingletonService>();
 
         Assert.IsNotNull(newService);

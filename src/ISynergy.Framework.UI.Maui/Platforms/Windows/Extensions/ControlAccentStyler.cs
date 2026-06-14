@@ -28,6 +28,9 @@ public static class ControlAccentStyler
         "GridViewItemCheckBoxSelectedBrush",
         "GridViewItemCheckBoxSelectedPointerOverBrush",
         "GridViewItemCheckBoxSelectedPressedBrush",
+
+        // Shell flyout / NavigationView selection indicator
+        "NavigationViewSelectionIndicatorForeground",
     ];
 
     public static void Register()

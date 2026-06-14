@@ -26,9 +26,9 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
         if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
             // Multiple mode: pre-select all items in the ListBox
-            if (viewModel.SelectedItems is not null)
+            if (viewModel.SelectedItem is not null)
             {
-                foreach (var item in viewModel.SelectedItems)
+                foreach (var item in viewModel.SelectedItem)
                 {
                     var index = DataSummary.Items.IndexOf(item);
                     if (index >= 0)
@@ -42,11 +42,11 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
     {
         if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
-            viewModel.SetSelectedItems(new List<object>());
+            viewModel.SetSelectedItem(new List<object>());
 
             foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
             {
-                viewModel.SelectedItems?.Add(item);
+                viewModel.SelectedItem?.Add(item);
             }
 
             viewModel.SelectCommand.NotifyCanExecuteChanged();

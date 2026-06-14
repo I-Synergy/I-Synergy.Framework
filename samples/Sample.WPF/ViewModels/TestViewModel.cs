@@ -15,17 +15,8 @@ public class TestViewModel(
 {
     public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
     {
-        var testVm = ServiceLocator.Default.GetRequiredService<Test2ViewModel>();
-        testVm.Submitted += TestVm_Submitted;
-        await dialogService.ShowDialogAsync(typeof(Test2Window), testVm);
-    }
-
-    private void TestVm_Submitted(object? sender, SubmitEventArgs<object> e)
-    {
-        if (sender is Test2ViewModel vm)
-            vm.Submitted -= TestVm_Submitted;
-
-        return;
+        await dialogService.ShowDialogAsync<Test2Window, Test2ViewModel, object>(
+            _ => Task.CompletedTask);
     }
 
     protected override void Dispose(bool disposing)

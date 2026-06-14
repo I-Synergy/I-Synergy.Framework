@@ -5,8 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:InfoViewModel"
-    x:Class="Sample.Views.InfoView"
-    NavigationPage.HasNavigationBar="False">
+    x:Class="Sample.Views.InfoView">
 
     <VerticalStackLayout Margin="12" Spacing="12">
         <Label Text="Company name" />

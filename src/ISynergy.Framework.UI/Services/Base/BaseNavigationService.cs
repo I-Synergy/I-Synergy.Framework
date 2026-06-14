@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace ISynergy.Framework.UI.Services;
+namespace ISynergy.Framework.UI.Services.Base;
 
 /// <summary>
 /// Abstract base class for platform-specific NavigationService implementations.
@@ -134,6 +134,7 @@ public abstract class BaseNavigationService : INavigationService
     /// Creates an <see cref="IView"/> instance for the specified ViewModel type,
     /// optionally associating an existing ViewModel instance and navigation parameter.
     /// </summary>
+    /// <param name="serviceProvider"></param>
     /// <param name="viewModelType">The type of the ViewModel to create a view for.</param>
     /// <param name="viewModel">An existing ViewModel instance, or null to resolve from DI.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
@@ -210,21 +211,32 @@ public abstract class BaseNavigationService : INavigationService
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     public virtual void OnBackStackChanged(EventArgs e)
     {
-        // Create a copy to avoid modification during iteration
         var handlers = _backStackChanged?.GetInvocationList();
-        if (handlers is not null)
+        if (handlers is null)
+            return;
+
+        // Collect all dead handlers first so we don't modify
+        // the delegate while iterating over its invocation list.
+        EventHandler? deadHandlers = null;
+
+        foreach (EventHandler handler in handlers)
         {
-            foreach (EventHandler handler in handlers)
+            try
             {
-                try
-                {
-                    handler(this, e);
-                }
-                catch (ObjectDisposedException)
-                {
-                    // Remove disposed subscribers
-                    _backStackChanged -= handler;
-                }
+                handler(this, e);
+            }
+            catch (ObjectDisposedException)
+            {
+                deadHandlers += handler;
+            }
+        }
+
+        // Remove any dead subscribers in batch after iteration
+        if (deadHandlers is not null)
+        {
+            foreach (EventHandler dead in deadHandlers.GetInvocationList())
+            {
+                _backStackChanged -= dead;
             }
         }
     }
@@ -409,204 +421,6 @@ public abstract class BaseNavigationService : INavigationService
             {
                 // ViewModel already initialized, still notify it's being navigated to
                 SafeOnNavigatedTo(page.ViewModel);
-            }
-        }
-    }
-
-    #endregion
-
-    #region Blade Navigation
-
-    /// <summary>
-    /// Gets a navigation blade for the specified ViewModel.
-    /// Platform-specific subclasses can override to customize view type resolution.
-    /// </summary>
-    protected virtual async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
-    {
-        var view = viewModel.GetRelatedView();
-        var viewType = view.GetRelatedViewType();
-
-        using var scope = _serviceScopeFactory.CreateScope();
-        if (viewType is not null && scope.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
-        {
-            resolvedPage.ViewModel = viewModel;
-
-            // Subscribe to Loaded event BEFORE initialization (preserves original order)
-            var loadTask = MonitorViewLoadAsync(resolvedPage);
-
-            // Initialize the ViewModel first
-            if (!viewModel.IsInitialized)
-                await viewModel.InitializeAsync();
-
-            // Wait for the view to finish loading (with timeout)
-            await loadTask;
-
-            // Call OnNavigatedTo for the blade ViewModel
-            SafeOnNavigatedTo(viewModel);
-
-            return resolvedPage;
-        }
-
-        throw new InvalidOperationException($"Instance create or navigate to page: {view}.");
-    }
-
-    /// <summary>
-    /// Common blade setup logic.
-    /// </summary>
-    private async Task<IView?> SetupBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, Func<Task<IView?>> getViewFunc)
-    {
-        // Check if owner ViewModel can navigate away (if it has running commands)
-        if (owner is IViewModel ownerVm && HasRunningCommands(ownerVm))
-        {
-            ownerVm.CancelAllCommands();
-            SafeOnNavigatedFrom(ownerVm);
-        }
-
-        bladeVm.Owner = owner;
-
-        void Viewmodel_Closed(object? sender, EventArgs e)
-        {
-            if (sender is IViewModelBlade viewModel)
-            {
-                viewModel.Closed -= Viewmodel_Closed;
-                RemoveBlade(viewModel.Owner, viewModel);
-            }
-        }
-
-        bladeVm.Closed += Viewmodel_Closed;
-
-        try
-        {
-            // Get the view
-            var view = await getViewFunc();
-
-            // If view creation failed (returned null), cleanup the handler
-            if (view == null)
-            {
-                bladeVm.Closed -= Viewmodel_Closed;
-            }
-
-            return view;
-        }
-        catch
-        {
-            // If view creation threw an exception, cleanup the handler
-            bladeVm.Closed -= Viewmodel_Closed;
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Common logic for adding a blade to the owner.
-    /// </summary>
-    private void AddBladeToOwner(IViewModelBladeView owner, IView view)
-    {
-        if (owner.Blades is not null && !owner.Blades.Any(a => a.GetType().FullName!.Equals(view.GetType().FullName)))
-        {
-            foreach (var blade in owner.Blades.EnsureNotNull())
-            {
-                // Notify existing blades they're being backgrounded
-                if (blade.ViewModel is IViewModel existingVm)
-                    SafeOnNavigatedFrom(existingVm);
-
-                blade.IsEnabled = false;
-            }
-
-            owner.Blades.Add(view);
-        }
-
-        owner.IsPaneVisible = true;
-    }
-
-    /// <summary>
-    /// Opens a blade as an asynchronous operation.
-    /// </summary>
-    public async Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel)
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            var view = await SetupBladeAsync(owner, bladeVm, async () => await GetNavigationBladeAsync(bladeVm));
-
-            if (view != null)
-                AddBladeToOwner(owner, view);
-        }
-    }
-
-    /// <summary>
-    /// Opens a blade with a custom defined view.
-    /// </summary>
-    public async Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
-        where TView : IView
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            var view = await SetupBladeAsync(owner, bladeVm, async () =>
-            {
-                using var scope = _serviceScopeFactory.CreateScope();
-                if (scope.ServiceProvider.GetRequiredService(typeof(TView)) is IView view)
-                {
-                    view.ViewModel = viewmodel;
-
-                    // Subscribe to Loaded event BEFORE initialization (preserves original order)
-                    var loadTask = MonitorViewLoadAsync(view);
-
-                    // Initialize the ViewModel
-                    if (!viewmodel.IsInitialized)
-                        await viewmodel.InitializeAsync();
-
-                    // Wait for the view to finish loading (with timeout)
-                    await loadTask;
-
-                    // Call OnNavigatedTo for the blade ViewModel
-                    SafeOnNavigatedTo(viewmodel);
-
-                    return view;
-                }
-
-                throw new KeyNotFoundException($"Page not found: {typeof(TView)}.");
-            });
-
-            if (view != null)
-                AddBladeToOwner(owner, view);
-        }
-    }
-
-    /// <summary>
-    /// Removes a blade.
-    /// </summary>
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
-    {
-        Argument.IsNotNull(owner);
-
-        if (viewmodel is IViewModelBlade bladeVm)
-        {
-            // Notify the blade ViewModel it's being navigated from
-            SafeOnNavigatedFrom(viewmodel);
-
-            if (owner.Blades is not null)
-            {
-                var bladeToRemove = owner.Blades
-                    .FirstOrDefault(q =>
-                        q.ViewModel == bladeVm &&
-                        ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
-
-                if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
-                {
-                    if (owner.Blades.Count < 1)
-                        owner.IsPaneVisible = false;
-                    else if (owner.Blades[owner.Blades.Count - 1] is { } blade)
-                    {
-                        blade.IsEnabled = true;
-
-                        // Notify the now-active blade it's being navigated to
-                        if (blade.ViewModel is IViewModel activeVm)
-                            SafeOnNavigatedTo(activeVm);
-                    }
-                }
             }
         }
     }

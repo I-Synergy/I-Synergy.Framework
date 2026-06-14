@@ -7,7 +7,11 @@
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     Title="{Binding Title}">
 
-    <ContentView ControlTemplate="{StaticResource DefaultSingleSelectionDialogTemplate}" WidthRequest="{OnPlatform WinUI=600, Default=400}">
+    <Grid Background="Transparent">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
+        </Grid.GestureRecognizers>
+        <ContentView ControlTemplate="{StaticResource DefaultSingleSelectionDialogTemplate}" WidthRequest="{OnPlatform WinUI=600, Default=400}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -60,4 +64,5 @@
                 VerticalOptions="Start" />
         </Grid>
     </ContentView>
+</Grid>
 </c:Window>

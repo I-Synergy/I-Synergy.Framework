@@ -7,10 +7,8 @@ using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
 using Sample.Models;
@@ -69,7 +67,6 @@ public class ShellViewModel : BaseShellViewModel
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
-    /// <param name="scopeFactory"></param>
     /// <param name="logger"></param>
     /// <param name="fileService"></param>
     public ShellViewModel(
@@ -77,10 +74,9 @@ public class ShellViewModel : BaseShellViewModel
         IDialogService dialogService,
         INavigationService navigationService,
         ISettingsService settingsService,
-        IServiceScopeFactory scopeFactory,
         ILogger<ShellViewModel> logger,
         IFileService<FileResult> fileService)
-        : base(commonServices, dialogService, navigationService, settingsService, scopeFactory, logger)
+        : base(commonServices, dialogService, navigationService, settingsService, logger)
     {
         _fileService = fileService;
 
@@ -127,43 +123,21 @@ public class ShellViewModel : BaseShellViewModel
         PrimaryItems?.Add(new NavigationItem(ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
     }
 
-    private Task SelectSingleAsync()
-    {
-        using var scope = _scopeFactory.CreateScope();
-        var selectionVm = scope.ServiceProvider.GetRequiredService<ViewModelSingleSelectionDialog<TestItem>>();
-        selectionVm.SetItems(Items);
-        selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        return _dialogService.ShowDialogAsync(typeof(ISingleSelectionWindow), selectionVm);
-    }
+    private Task SelectSingleAsync() =>
+        _dialogService.ShowDialogAsync<ISingleSelectionWindow, ViewModelSingleSelectionDialog<TestItem>, TestItem>(
+            async item => await _dialogService.ShowInformationAsync($"{item.Description} selected."),
+            initialization: vm => vm.SetItems(Items));
 
-    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<TestItem> e)
-    {
-        if (sender is ViewModelSingleSelectionDialog<TestItem> vm)
-            vm.Submitted -= SelectionVm_SingleSubmitted;
-
-        await _dialogService.ShowInformationAsync($"{e.Result.Description} selected.");
-    }
-
-    private Task SelectMultipleAsync()
-    {
-        using var scope = _scopeFactory.CreateScope();
-        var selectionVm = scope.ServiceProvider.GetRequiredService<ViewModelMultipleSelectionDialog<TestItem>>();
-        selectionVm.SetItems(Items);
-        selectionVm.SetSelectedItems(SelectedTestItems);
-        selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        return _dialogService.ShowDialogAsync(typeof(ISingleSelectionWindow), selectionVm);
-    }
-
-    private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
-    {
-        if (sender is ViewModelMultipleSelectionDialog<TestItem> vm)
-            vm.Submitted -= SelectionVm_MultipleSubmitted;
-
-        SelectedTestItems = new ObservableCollection<TestItem>();
-        SelectedTestItems.AddRange(e.Result);
-
-        await _dialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
-    }
+    private Task SelectMultipleAsync() =>
+        _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<TestItem>, List<TestItem>>(
+            SelectedTestItems.ToList(),
+            async items =>
+            {
+                SelectedTestItems = new ObservableCollection<TestItem>();
+                SelectedTestItems.AddRange(items);
+                await _dialogService.ShowInformationAsync($"{string.Join(", ", items.Select(s => s.Description))} selected.");
+            },
+            initialization: vm => vm.SetItems(Items));
 
     private Task UnlistNugetAsync() =>
         _navigationService.NavigateAsync<NugetViewModel>();

@@ -2,8 +2,8 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Options;
@@ -47,15 +47,19 @@ public class LoadingView : ContentPage
         Loaded += OnSignalUIReady;
 
         // Configure background based on splash screen type
+        // Always set the default splash as the background image
+        if (_backgroundImage is not null)
+            _backgroundImage.Source = ImageSource.FromFile("splashscreen.png");
+
+        // Override with custom image if explicitly specified
         if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
         {
-            // Use Image for image resources
             if (_backgroundImage is not null)
                 _backgroundImage.Source = ImageSource.FromResource(splashScreenOptions.Resource);
         }
+        // Override with custom video if explicitly specified
         else if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
         {
-            // Use MediaElement for video resources
             if (_backgroundMediaElement is not null)
                 _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
         }
@@ -136,19 +140,19 @@ public class LoadingView : ContentPage
     /// </summary>
     private void InitializeContent(ICommonServices _, SplashScreenOptions splashScreenOptions)
     {
-        // Create background element based on splash screen type
-        if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
+        // Always create background image for the default splash
+        _backgroundImage = new Image
         {
-            // Create image for image-based splash screens
-            _backgroundImage = new Image
-            {
-                Aspect = Aspect.AspectFill,
-                IsOpaque = true
-            };
-        }
-        else
+            Aspect = splashScreenOptions.SplashScreenType == SplashScreenTypes.Image ? Aspect.Fill : Aspect.Center,
+            IsOpaque = true
+        };
+
+        if (splashScreenOptions.SplashScreenType == SplashScreenTypes.None)
+            _backgroundImage.VerticalOptions = LayoutOptions.Start;
+
+        // Create media element only for Video splash screens
+        if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
         {
-            // Create media element for video-based splash screens
             _backgroundMediaElement = new MediaElement
             {
                 Aspect = Aspect.AspectFill,
@@ -163,26 +167,29 @@ public class LoadingView : ContentPage
             BackgroundColor = Color.FromArgb("#00000040")
         };
 
-        // Create sign-in/skip button
+        // Create sign-in/skip button (only for Video splash — no skip needed for Image/None)
         _signInButton = new Button
         {
             Text = "Skip",
             Margin = new Thickness(20),
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.End,
-            IsEnabled = false
+            IsEnabled = false,
+            IsVisible = splashScreenOptions.SplashScreenType == SplashScreenTypes.Video
         };
         _signInButton.SetDynamicResource(Button.BackgroundColorProperty, "Primary");
 
         // Create main grid
         var mainGrid = new Grid();
 
-        // Add background element based on type
+        // Always add the background image (default splash or custom image)
         if (_backgroundImage is not null) // NOSONAR
         {
             mainGrid.Add(_backgroundImage);
         }
-        else if (_backgroundMediaElement is not null)
+
+        // Add media element on top if present (video overlays the default splash background)
+        if (_backgroundMediaElement is not null)
         {
             mainGrid.Add(_backgroundMediaElement);
         }

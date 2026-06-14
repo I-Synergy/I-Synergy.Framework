@@ -203,35 +203,11 @@ public class SignUpViewModel : ViewModel
         ArePickersAvailable = false;
     }
 
-    private Task SelectModulesAsync()
-    {
-        var selectionVM = ServiceLocator.Default.GetRequiredService<ViewModelMultipleSelectionDialog<Module>>();
-        selectionVM.SetItems(Modules);
-        selectionVM.SetSelectedItems(SelectedModules);
-        selectionVM.Submitted += SelectionVM_Submitted;
-        return _dialogService.ShowDialogAsync(typeof(IMultipleSelectionWindow), selectionVM);
-    }
-
-    /// <summary>
-    /// Editors the vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<Module>> e)
-    {
-        if (sender is ViewModelMultipleSelectionDialog<Module> vm)
-            vm.Submitted -= SelectionVM_Submitted;
-
-        List<Module> selectedItems = [];
-
-        foreach (object item in e.Result.EnsureNotNull())
-        {
-            if (item is Module module)
-                selectedItems.Add(module);
-        }
-
-        SelectedModules = selectedItems;
-    }
+    private Task SelectModulesAsync() =>
+        _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<Module>, List<Module>>(
+            SelectedModules,
+            selectedItems => { SelectedModules = selectedItems.ToList(); return Task.CompletedTask; },
+            initialization: vm => vm.SetItems(Modules));
 
     private Task ValidateMailAsync()
     {

@@ -12,7 +12,6 @@ using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Synchronization.Abstractions.Services;
 using ISynergy.Framework.Synchronization.Abstractions.Settings;
-using ISynergy.Framework.Synchronization.Factories;
 using ISynergy.Framework.Synchronization.Messages;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
@@ -83,7 +82,7 @@ internal class SynchronizationService : ISynchronizationService
                 Directory.CreateDirectory(SnapshotsFolder);
 
             if (string.IsNullOrEmpty(_synchronizationSettings.BatchesFolder))
-                _synchronizationSettings.BatchesFolder = Path.Combine(FileSystem.AppDataDirectory, "Snapshots");
+                _synchronizationSettings.BatchesFolder = Path.Combine(FileSystem.AppDataDirectory, "Batches");
 
             BatchesFolder = Path.Combine(_synchronizationSettings.BatchesFolder, tenantId);
 
@@ -131,10 +130,7 @@ internal class SynchronizationService : ISynchronizationService
 
             httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
-            var webRemoteOrchestrator = new WebRemoteOrchestrator(synchronizationEndpoint.AbsoluteUri, client: httpClient, maxDownladingDegreeOfParallelism: 1)
-            {
-                SerializerFactory = new MessagePackSerializerFactory()
-            };
+            var webRemoteOrchestrator = new WebRemoteOrchestrator(synchronizationEndpoint.AbsoluteUri, client: httpClient, maxDownladingDegreeOfParallelism: 1);
 
             var connectionStringBuilder = new SqliteConnectionStringBuilder
             {

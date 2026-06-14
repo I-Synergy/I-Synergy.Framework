@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
@@ -142,46 +143,4 @@ public class NavigationService : BaseNavigationService
             new Microsoft.UI.Dispatching.DispatcherQueueHandler(action));
     }
 
-    /// <summary>
-    /// Gets a navigation blade for the specified ViewModel.
-    /// WinUI-specific: checks for selection ViewModel interfaces and resolves the matching view.
-    /// </summary>
-    protected override async Task<IView> GetNavigationBladeAsync(IViewModel viewModel)
-    {
-        var viewType = default(Type);
-
-        if (viewModel is ISingleSelectionViewModel)
-            viewType = typeof(SingleSelectionView);
-        else if (viewModel is IMultipleSelectionViewModel)
-            viewType = typeof(MultipleSelectionView);
-        else
-        {
-            var view = viewModel.GetRelatedView();
-            viewType = view.GetRelatedViewType();
-        }
-
-        using var scope = _serviceScopeFactory.CreateScope();
-
-        if (viewType is not null && scope.ServiceProvider.GetRequiredService(viewType) is IView resolvedPage)
-        {
-            resolvedPage.ViewModel = viewModel;
-
-            // Subscribe to Loaded event BEFORE initialization (preserves original order)
-            var loadTask = MonitorViewLoadAsync(resolvedPage);
-
-            // Initialize the ViewModel first
-            if (!viewModel.IsInitialized)
-                await viewModel.InitializeAsync();
-
-            // Wait for the view to finish loading (with timeout)
-            await loadTask;
-
-            // Call OnNavigatedTo for the blade ViewModel
-            SafeOnNavigatedTo(viewModel);
-
-            return resolvedPage;
-        }
-
-        throw new InvalidOperationException($"Instance create or navigate to page: {viewModel.GetRelatedView()}.");
-    }
 }

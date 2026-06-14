@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<FlyoutPage
+<Shell
     x:Class="Sample.Views.ShellView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -9,14 +9,40 @@
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:views="clr-namespace:Sample.Views"
     x:DataType="viewmodels:ShellViewModel"
-    FlyoutLayoutBehavior="Popover"
-    BackgroundColor="{DynamicResource Primary}">
+    FlyoutBehavior="Flyout"
+    FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
 
-    <FlyoutPage.Flyout>
-        <c:NavigationMenu x:Name="MenuFlyout">
-            <c:NavigationMenu.IconImageSource>
-                <FontImageSource Glyph="&#xe700;" FontFamily="SegoeMdl2" Size="18" Color="{AppThemeBinding Dark=White, Light=Black}"/>
-            </c:NavigationMenu.IconImageSource>
-        </c:NavigationMenu>
-    </FlyoutPage.Flyout>
-</FlyoutPage>
+    <ShellContent
+        Title="Dashboard"
+        Icon="{DynamicResource IconInformation}"
+        ContentTemplate="{DataTemplate views:InfoView}"
+        Route="dashboard" />
+
+    <ShellContent
+        Title="Custom Controls"
+        Icon="{DynamicResource IconCustomControls}"
+        ContentTemplate="{DataTemplate views:CustomControlsView}"
+        Route="customcontrols" />
+
+    <ShellContent
+        Title="Maui Controls"
+        Icon="{DynamicResource IconMauiControls}"
+        ContentTemplate="{DataTemplate views:MauiControlsView}"
+        Route="mauicontrols" />
+
+    <ShellContent
+        Title="Slide Show"
+        Icon="{DynamicResource IconSlideShow}"
+        ContentTemplate="{DataTemplate views:SlideShowView}"
+        Route="slideshow" />
+
+    <Shell.FlyoutFooter>
+        <VerticalStackLayout Padding="4">
+            <c:NavigationItem Text="Help" Icon="{DynamicResource IconHelp}" Command="{Binding HelpCommand}"/>
+            <c:NavigationItem Text="Language" Icon="{DynamicResource IconLanguage}" Command="{Binding LanguageCommand}"/>
+            <c:NavigationItem Text="Theme" Icon="{DynamicResource IconTheme}" Command="{Binding ThemeCommand}"/>
+            <c:NavigationItem Text="Settings" Icon="{DynamicResource IconSettings}" Command="{Binding SettingsCommand}"/>
+            <!--<c:NavigationItem Text="Signin" Icon="{DynamicResource IconSignin}" Command="{Binding SigninCommand}"/>-->
+        </VerticalStackLayout>
+    </Shell.FlyoutFooter>
+</Shell>
