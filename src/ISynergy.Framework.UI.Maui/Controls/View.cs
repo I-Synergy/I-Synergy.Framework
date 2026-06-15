@@ -81,6 +81,37 @@ public abstract class View : ContentPage, IView
         }
     }
 
+    /// <summary>
+    /// Called when navigation to this page completes. Ensures the ViewModel's
+    /// <see cref="IViewModel.InitializeAsync"/> is called before
+    /// <see cref="IViewModel.OnNavigatedTo"/> — matching the lifecycle used
+    /// by the shared navigation infrastructure.
+    /// This covers Shell tab pages created via <c>DataTemplate</c> where the
+    /// programmatic navigation service is not involved.
+    /// </summary>
+    /// <param name="args">Navigation event arguments.</param>
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        if (ViewModel is { IsDisposed: false } vm)
+        {
+            try
+            {
+                if (!vm.IsInitialized)
+                    await vm.InitializeAsync();
+
+                vm.OnNavigatedTo();
+            }
+            catch (Exception)
+            {
+                // Suppress — the exception handler service is not available
+                // from within the View. The NavigationService path calls
+                // InitializeAsync with its own exception handling.
+            }
+        }
+    }
+
     #region IDisposable
     // Dispose() calls Dispose(true)
     /// <summary>

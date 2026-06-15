@@ -17,11 +17,6 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using System.Globalization;
 using System.Reflection;
 
@@ -31,88 +26,6 @@ namespace ISynergy.Framework.UI.Extensions;
 
 public static class WindowsAppBuilderExtensions
 {
-    /// <summary>
-    /// Adds logging with OpenTelemetry support to an <see cref="IHostApplicationBuilder"/>.
-    /// </summary>
-    /// <param name="appBuilder"></param>
-    /// <param name="infoService"></param>
-    /// <param name="tracerProviderBuilderAction"></param>
-    /// <param name="meterProviderBuilderAction"></param>
-    /// <param name="loggerProviderBuilderAction"></param>
-    /// <returns></returns>
-    public static IHostApplicationBuilder ConfigureLogging(
-        this IHostApplicationBuilder appBuilder,
-        IInfoService infoService,
-        Action<TracerProviderBuilder>? tracerProviderBuilderAction = null,
-        Action<MeterProviderBuilder>? meterProviderBuilderAction = null,
-        Action<LoggerProviderBuilder>? loggerProviderBuilderAction = null)
-    {
-        appBuilder.Logging.SetMinimumLevel(LogLevel.Trace);
-
-#if DEBUG
-        appBuilder.Logging.AddDebug();
-#endif
-
-        appBuilder.Services.AddOpenTelemetry()
-            .WithLogging(loggerProviderBuilder =>
-            {
-                loggerProviderBuilder.SetResourceBuilder(
-                    ResourceBuilder.CreateDefault()
-                        .AddService(
-                            serviceName: infoService.ProductName,
-                            serviceVersion: infoService.ProductVersion.ToString())
-                        .AddTelemetrySdk()
-                        .AddEnvironmentVariableDetector());
-
-#if DEBUG
-                loggerProviderBuilder.AddConsoleExporter();
-#endif
-
-                loggerProviderBuilderAction?.Invoke(loggerProviderBuilder);
-            })
-            .WithTracing(tracerProviderBuilder =>
-            {
-                tracerProviderBuilder
-                    .SetResourceBuilder(
-                        ResourceBuilder.CreateDefault()
-                            .AddService(
-                                serviceName: infoService.ProductName,
-                                serviceVersion: infoService.ProductVersion.ToString())
-                            .AddTelemetrySdk()
-                            .AddEnvironmentVariableDetector());
-
-                tracerProviderBuilder.AddHttpClientInstrumentation();
-
-#if DEBUG
-                tracerProviderBuilder.AddConsoleExporter();
-#endif
-
-                tracerProviderBuilderAction?.Invoke(tracerProviderBuilder);
-            })
-            .WithMetrics(meterProviderBuilder =>
-            {
-                meterProviderBuilder
-                    .SetResourceBuilder(
-                        ResourceBuilder.CreateDefault()
-                            .AddService(
-                                serviceName: infoService.ProductName,
-                                serviceVersion: infoService.ProductVersion.ToString())
-                            .AddTelemetrySdk()
-                            .AddEnvironmentVariableDetector());
-
-                meterProviderBuilder.AddHttpClientInstrumentation();
-                meterProviderBuilder.AddRuntimeInstrumentation();
-
-#if DEBUG
-                meterProviderBuilder.AddConsoleExporter();
-#endif
-
-                meterProviderBuilderAction?.Invoke(meterProviderBuilder);
-            });
-
-        return appBuilder;
-    }
-
     /// <summary>
     /// Returns an instance of the <see cref="IServiceCollection"/> and configures all appBuilder.
     /// </summary>
@@ -129,7 +42,7 @@ public static class WindowsAppBuilderExtensions
     /// <returns></returns>
     public static IHostApplicationBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IHostApplicationBuilder appBuilder,
-        Action<IServiceCollection> action,
+        Action<IHostApplicationBuilder> action,
         Assembly assembly,
         Func<AssemblyName, bool> assemblyFilter)
         where TApplication : Application
@@ -195,7 +108,7 @@ public static class WindowsAppBuilderExtensions
 
         appBuilder.Services.RegisterAssemblies(assembly, assemblyFilter);
 
-        action.Invoke(appBuilder.Services);
+        action.Invoke(appBuilder);
 
         return appBuilder;
     }

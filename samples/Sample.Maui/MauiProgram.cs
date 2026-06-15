@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.OpenTelemetry.Extensions;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sample.Abstractions.Services;
 using Sample.Extensions;
+using Sample.OpenTelemetry;
 using Sample.Services;
 using Syncfusion.Maui.Core.Hosting;
 using System.Diagnostics;
@@ -47,8 +49,9 @@ public static class MauiProgram
             .Configuration
             .AddConfiguration(config);
 
-        builder
-            .ConfigureLogging(
+        builder.Logging
+            .AddTelemetry(
+                builder,
                 infoService,
                 tracerProviderBuilderAction: (tracing) =>
                 {
@@ -61,7 +64,8 @@ public static class MauiProgram
                 loggerProviderBuilderAction: (logger) =>
                 {
                     // Additional custom logger provider configuration can be added here
-                });
+                })
+            .AddOtlpExporter();
 
         builder
             .UseMauiApp<App>()
@@ -74,8 +78,8 @@ public static class MauiProgram
             .ConfigureServices<App, Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(appBuilder =>
             {
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
-
                 appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
+                appBuilder.Services.TryAddSingleton<ApplicationMonitor>();
             },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(App).Namespace!))

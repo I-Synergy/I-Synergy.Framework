@@ -1,5 +1,6 @@
 {
-    "appHost": {
-        "path": "samples\\Sample.AppHost\\Sample.AppHost.csproj"
-    }
+  "$schema": "https://aspire.dev/reference/cli/configuration/schema.json",
+  "appHost": {
+    "path": "samples\\Sample.AppHost\\Sample.AppHost.csproj"
+  }
 }

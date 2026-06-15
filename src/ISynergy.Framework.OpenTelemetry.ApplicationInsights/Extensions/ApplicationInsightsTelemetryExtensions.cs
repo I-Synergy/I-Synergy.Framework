@@ -27,6 +27,9 @@ public static class ApplicationInsightsTelemetryExtensions
 
         telemetryExporterOptions?.Invoke(options);
 
+        if (string.IsNullOrWhiteSpace(options.ConnectionString))
+            return telemetryBuilder;
+
         // Configure all telemetry types with the same options
         telemetryBuilder
             .OpenTelemetryBuilder
