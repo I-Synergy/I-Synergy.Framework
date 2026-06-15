@@ -19,7 +19,6 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Globalization.Extensions;
 
-
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
 using ISynergy.Framework.UI.Helpers;

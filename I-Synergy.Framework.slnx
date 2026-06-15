@@ -121,6 +121,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
+    <File Path="aspire.config.json" />
     <File Path="azure-pipelines.yml" />
     <File Path="codecoverage.runsettings" />
     <File Path="Directory.Build.props" />
