@@ -508,6 +508,9 @@
   <data name="Save" xml:space="preserve">
     <value>Sauvegarder</value>
   </data>
+  <data name="SaveRestart" xml:space="preserve">
+    <value>Enregistrer et Redémarrer</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>rechercher</value>
   </data>
@@ -738,6 +741,9 @@
   </data>
   <data name="WarningSelectItem" xml:space="preserve">
     <value>Vous devez sélectionner un élément.</value>
+  </data>
+  <data name="WarningSettingsChange" xml:space="preserve">
+    <value>Vous devez redémarrer l'application pour appliquer les paramètres.</value>
   </data>
   <data name="WarningSynchronizationRestart" xml:space="preserve">
     <value>Pour pouvoir effectuer la synchronisation, vous devez redémarrer l'application afin d'appliquer les paramètres de synchronisation</value>

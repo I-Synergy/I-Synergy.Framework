@@ -1229,7 +1229,16 @@ namespace ISynergy.Framework.Globalization.Properties {
                 return ResourceManager.GetString("Save", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Save and Restart.
+        /// </summary>
+        internal static string SaveRestart {
+            get {
+                return ResourceManager.GetString("SaveRestart", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
@@ -1913,7 +1922,16 @@ namespace ISynergy.Framework.Globalization.Properties {
                 return ResourceManager.GetString("WarningSelectItem", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to You need to restart the application to apply the settings..
+        /// </summary>
+        internal static string WarningSettingsChange {
+            get {
+                return ResourceManager.GetString("WarningSettingsChange", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to WarningSynchronizationRestart.
         /// </summary>

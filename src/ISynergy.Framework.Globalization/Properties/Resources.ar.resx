@@ -508,6 +508,9 @@
   <data name="Save" xml:space="preserve">
     <value>حفظ</value>
   </data>
+  <data name="SaveRestart" xml:space="preserve">
+    <value>حفظ وإعادة التشغيل</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>بحث</value>
   </data>
@@ -738,6 +741,9 @@
   </data>
   <data name="WarningSelectItem" xml:space="preserve">
     <value>يجب عليك تحديد عنصر.</value>
+  </data>
+  <data name="WarningSettingsChange" xml:space="preserve">
+    <value>تحتاج إلى إعادة تشغيل التطبيق لتطبيق الإعدادات.</value>
   </data>
   <data name="WarningSynchronizationRestart" xml:space="preserve">
     <value>لتتمكن من المزامنة، يجب عليك إعادة تشغيل التطبيق لتطبيق إعدادات المزامنة.</value>

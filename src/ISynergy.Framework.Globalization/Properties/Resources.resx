@@ -508,6 +508,9 @@
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="SaveRestart" xml:space="preserve">
+    <value>Save and Restart</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
@@ -738,6 +741,9 @@
   </data>
   <data name="WarningSelectItem" xml:space="preserve">
     <value>You have to select an item.</value>
+  </data>
+  <data name="WarningSettingsChange" xml:space="preserve">
+    <value>You need to restart the application to apply the settings.</value>
   </data>
   <data name="WarningSynchronizationRestart" xml:space="preserve">
     <value>WarningSynchronizationRestart</value>
