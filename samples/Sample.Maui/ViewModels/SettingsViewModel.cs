@@ -1,9 +1,9 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
@@ -12,13 +12,13 @@ using System.Collections.ObjectModel;
 namespace Sample.ViewModels;
 
 [Lifetime(Lifetimes.Scoped)]
-public class SettingsViewModel : ViewModelNavigation<object>
+public class SettingsViewModel : ViewModelNavigation<bool>
 {
     private readonly INavigationService _navigationService;
+    private readonly IDialogService _dialogService;
+    private readonly ISettingsService _settingsService;
 
     public override string Title { get => _commonServices.LanguageService.GetString("Settings"); }
-
-    private readonly ISettingsService _settingsService;
 
     /// <summary>
     /// Gets or sets the LocalSettings property value.
@@ -50,11 +50,13 @@ public class SettingsViewModel : ViewModelNavigation<object>
     public SettingsViewModel(
         ICommonServices commonServices,
         INavigationService navigationService,
+        IDialogService dialogService,
         ISettingsService settingsService,
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _settingsService = settingsService;
 
         LocalSettings = new LocalSettings();
@@ -93,6 +95,7 @@ public class SettingsViewModel : ViewModelNavigation<object>
                 if (_settingsService.GlobalSettings is GlobalSettings globalSetting)
                     GlobalSettings = globalSetting;
 
+                SelectedItem = true;
                 IsInitialized = true;
             }
         }
@@ -108,14 +111,25 @@ public class SettingsViewModel : ViewModelNavigation<object>
         await _navigationService.NavigateModalAsync<IShellViewModel>();
     }
 
-    public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
+    public override async Task SubmitAsync(bool e, bool validateUnderlayingProperties = true)
     {
         try
         {
             _commonServices.BusyService.StartBusy();
 
             if (_settingsService.LocalSettings is LocalSettings)
-                _settingsService.SaveLocalSettings();
+            {
+                if (_settingsService.SaveLocalSettings() &&
+                    await _dialogService.ShowMessageAsync(
+                        _commonServices.LanguageService.GetString("WarningSettingsChange") +
+                        Environment.NewLine +
+                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                        _commonServices.LanguageService.GetString("TitleQuestion"),
+                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+                {
+                    _commonServices.RestartApplication();
+                }
+            }
 
             if (_settingsService.GlobalSettings is GlobalSettings globalSetting)
                 await _settingsService.AddOrUpdateGlobalSettingsAsync(globalSetting);

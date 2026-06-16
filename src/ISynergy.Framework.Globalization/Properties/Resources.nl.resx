@@ -508,6 +508,9 @@
   <data name="Save" xml:space="preserve">
     <value>Opslaan</value>
   </data>
+  <data name="SaveRestart" xml:space="preserve">
+    <value>Opslaan en Herstarten</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Zoeken</value>
   </data>
@@ -738,6 +741,9 @@
   </data>
   <data name="WarningSelectItem" xml:space="preserve">
     <value>U moet een item selecteren.</value>
+  </data>
+  <data name="WarningSettingsChange" xml:space="preserve">
+    <value>U moet de applicatie opnieuw starten om de instellingen toe te passen.</value>
   </data>
   <data name="WarningSynchronizationRestart" xml:space="preserve">
     <value>Om te kunnen synchroniseren, moet u de applicatie opnieuw opstarten om de synchronisatie-instellingen toe te passen</value>

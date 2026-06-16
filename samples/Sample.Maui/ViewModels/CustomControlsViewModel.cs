@@ -48,6 +48,12 @@ public class CustomControlsViewModel : ViewModelNavigation<object>
         set => SetValue(value);
     }
 
+    public Themes SelectedTheme
+    {
+        get => GetValue<Themes>();
+        set => SetValue(value);
+    }
+
     public ObservableCollection<TestItem> Items { get; set; } = new();
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = new();
 
@@ -86,6 +92,7 @@ public class CustomControlsViewModel : ViewModelNavigation<object>
         ShowErrorWindowCommand = new AsyncRelayCommand(ShowErrorWindowAsync);
 
         SearchText = string.Empty;
+        SelectedTheme = Themes.Dark;
         Quantity = 19;
         Weight = 91.19m;
         Price = 19.19m;
