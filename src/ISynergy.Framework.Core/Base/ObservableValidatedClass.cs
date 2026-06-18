@@ -72,34 +72,12 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         if (obj is IObservableValidatedClass observable && observable.HasIdentityProperty())
             return observable.GetIdentityValue()!.Equals(this.GetIdentityValue());
 
-        var currentPropertiesToCheck = this.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals(nameof(IObservableValidatedClass.AutomaticValidationTrigger)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Error)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Errors)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.HasErrors)) &&
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsValid)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Properties)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Validator)));
+        var currentPropertiesToCheck = this.GetProperties(includeMemo: true, includeAudit: true);
 
         if (obj is null)
             return false;
 
-        var propertiesToCheck = obj.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals(nameof(IObservableValidatedClass.AutomaticValidationTrigger)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Error)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Errors)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.HasErrors)) &&
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsValid)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Properties)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Validator)));
+        var propertiesToCheck = obj.GetProperties(includeMemo: true, includeAudit: true);
 
         foreach (var property in currentPropertiesToCheck.EnsureNotNull())
         {

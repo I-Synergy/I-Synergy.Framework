@@ -1,4 +1,5 @@
 namespace ISynergy.Framework.Core.Abstractions.Base;
+
 public interface IObservableClass : IBindable, IDisposable, IAsyncDisposable
 {
     /// <summary>
