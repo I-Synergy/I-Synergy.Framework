@@ -68,22 +68,12 @@ public abstract class ObservableClass : IObservableClass
         if (ReferenceEquals(this, obj))
             return true;
 
-        var currentPropertiesToCheck = this.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableClass.Properties)));
+        var currentPropertiesToCheck = this.GetProperties(includeMemo: true, includeAudit: true);
 
         if (obj is null)
             return false;
 
-        var propertiesToCheck = obj.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableClass.Properties)));
+        var propertiesToCheck = obj.GetProperties(includeMemo: true, includeAudit: true);
 
         foreach (var property in currentPropertiesToCheck.EnsureNotNull())
         {

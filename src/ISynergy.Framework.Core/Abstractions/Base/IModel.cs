@@ -15,6 +15,10 @@ public interface IModel : IObservableValidatedClass
     /// <value>The version.</value>
     int Version { get; set; }
     /// <summary>
+    /// Gets or sets the memo.
+    /// </summary>
+    string Memo { get; set; }
+    /// <summary>
     /// Gets or sets the created date.
     /// </summary>
     /// <value>The created date.</value>
