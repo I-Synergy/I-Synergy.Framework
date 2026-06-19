@@ -21,7 +21,7 @@ public static class ColorHelper
 
         if (hc.Length != 6)
         {
-            return Colors.Transparent;
+            return Windows.UI.Color.FromArgb(0, 0, 0, 0);
         }
 
         var r = hc.Substring(0, 2);
@@ -38,7 +38,7 @@ public static class ColorHelper
         }
         catch
         {
-            return Colors.Transparent;
+            return Windows.UI.Color.FromArgb(0, 0, 0, 0);
         }
     }
 
