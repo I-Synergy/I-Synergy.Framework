@@ -171,6 +171,24 @@ public static class MauiAppBuilderExtensions
     }
 
     /// <summary>
+    /// Registers the available theme colors. Each color is an option for the application's
+    /// color picker or theme switcher. The full palette (secondary, tertiary, tinted grays)
+    /// is always calculated dynamically from the color stored in <c>ILocalSettings.Color</c>,
+    /// regardless of whether it appears in this list.
+    /// </summary>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configure">A delegate that adds hex color strings (e.g. "#0078D7") to the available list.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder UseThemeColors(
+        this MauiAppBuilder appBuilder,
+        Action<IList<string>>? configure = null)
+    {
+        appBuilder.Services.Configure<ThemeColorOptions>(options =>
+            configure?.Invoke(options.AvailableColors));
+        return appBuilder;
+    }
+
+    /// <summary>
     /// Configures the list of cultures the application supports.
     /// English ("en") is always included automatically and serves as the default.
     /// </summary>

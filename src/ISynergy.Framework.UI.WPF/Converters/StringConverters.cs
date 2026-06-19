@@ -6,6 +6,30 @@ using System.Windows.Media;
 namespace ISynergy.Framework.UI.Converters;
 
 /// <summary>
+/// Converts a hex color string (e.g. "#0078D7") to a <see cref="SolidColorBrush"/>.
+/// Falls back to the default accent color when the string is invalid.
+/// </summary>
+public sealed class StringToColorBrushConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string hex && !string.IsNullOrEmpty(hex))
+        {
+            try
+            {
+                var color = (Color)ColorConverter.ConvertFromString(hex);
+                return new SolidColorBrush(color);
+            }
+            catch { }
+        }
+        return new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD7));
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
+/// <summary>
 /// Converts string to boolean.
 /// If string returns null or empty, result is false.
 /// Otherwise returns true.

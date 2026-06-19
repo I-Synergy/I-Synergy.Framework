@@ -35,6 +35,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected readonly ISettingsService _settingsService;
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly ILogger<Application> _logger;
+    protected readonly IThemeService? _themeService;
 
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
@@ -66,6 +67,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
         _settingsService = serviceProvider.GetRequiredService<ISettingsService>();
         _lifecycleService = serviceProvider.GetRequiredService<IApplicationLifecycleService>();
+        _themeService = serviceProvider.GetService<IThemeService>();
         var messengerService = serviceProvider.GetRequiredService<IMessengerService>();
 
         _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
@@ -311,6 +313,9 @@ public abstract class Application : System.Windows.Application, IDisposable
                         Current.Resources.MergedDictionaries.Add(item);
                 }
             }
+
+            // Apply theme colors to merged resource dictionaries
+            _themeService?.ApplyTheme();
 
             // Place the frame in the current Window
             MainWindow.Content = rootFrame;

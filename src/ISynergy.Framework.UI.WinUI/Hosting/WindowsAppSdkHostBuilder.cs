@@ -51,7 +51,7 @@ public sealed class WindowsAppSdkHostBuilder<TApp> : IHostApplicationBuilder
     {
         _hostingEnvironment = new HostingEnvironment
         {
-            ApplicationName = Assembly.GetEntryAssembly()?.GetName().Name,
+            ApplicationName = Assembly.GetEntryAssembly()?.GetName().Name ?? string.Empty,
             EnvironmentName = System.Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? Environments.Production,
             ContentRootPath = AppContext.BaseDirectory,
         };
@@ -79,6 +79,7 @@ public sealed class WindowsAppSdkHostBuilder<TApp> : IHostApplicationBuilder
     public void ConfigureContainer<TContainerBuilder>(
         IServiceProviderFactory<TContainerBuilder> factory,
         Action<TContainerBuilder>? configure = null)
+        where TContainerBuilder : notnull
     {
         if (factory is IServiceProviderFactory<IServiceCollection> spf)
         {

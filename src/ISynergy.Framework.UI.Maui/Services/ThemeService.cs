@@ -1,10 +1,11 @@
-using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Utilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -26,7 +27,7 @@ public class ThemeService : IThemeService
 
     private Themes _theme;
     private string _color;
-    private readonly ILocalSettings _localSettings;
+    private readonly ISettingsService _settingsService;
     private readonly ILogger<ThemeService> _logger;
 
     /// <summary>
@@ -38,17 +39,36 @@ public class ThemeService : IThemeService
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeService"/> class.
     /// </summary>
-    /// <param name="localSettings">An application settings service that provides persisted theme and color values.</param>
+    /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
     /// <param name="logger">A logger used for diagnostics and structured logging.</param>
+    /// <param name="themeColorOptions">Theme color options providing available colors and defaults.</param>
     public ThemeService(
-        ILocalSettings localSettings,
+        ISettingsService settingsService,
+        IOptions<ThemeColorOptions> themeColorOptions,
         ILogger<ThemeService> logger)
     {
-        _localSettings = localSettings;
+        _settingsService = settingsService;
         _logger = logger;
 
-        _theme = localSettings.Theme;
-        _color = localSettings.Color;
+        _theme = settingsService.LocalSettings.Theme;
+        _color = settingsService.LocalSettings.Color;
+
+        var opts = themeColorOptions.Value;
+
+        if (opts.AvailableColors.Count == 1)
+        {
+            _color = opts.AvailableColors[0];
+
+            settingsService.LocalSettings.Color = _color;
+            settingsService.SaveLocalSettings();
+        }
+        else if (string.IsNullOrEmpty(_color))
+        {
+            _color = opts.AvailableColors.Count > 0 ? opts.AvailableColors[0] : ThemeColors.Default;
+
+            settingsService.LocalSettings.Color = _color;
+            settingsService.SaveLocalSettings();
+        }
     }
 
     /// <summary>

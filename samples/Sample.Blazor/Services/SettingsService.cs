@@ -1,0 +1,164 @@
+using ISynergy.Framework.Core.Abstractions.Base;
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Core.Messages;
+using ISynergy.Framework.Core.Validation;
+using Microsoft.Extensions.Logging;
+using Sample.Models;
+using System.Text.Json;
+
+namespace Sample.Services;
+
+public class SettingsService : ISettingsService, IReloadable
+{
+    private const string _fileName = "settings.json";
+    private readonly string _settingsFolder;
+    private readonly IMessengerService _messengerService;
+    private readonly ILogger _logger;
+
+    private LocalSettings? _localSettings;
+    private RoamingSettings? _roamingSettings;
+    private GlobalSettings? _globalSettings;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SettingsService"/> class.
+    /// </summary>
+    public SettingsService(IMessengerService messengerService, ILogger<SettingsService> logger)
+    {
+        _messengerService = messengerService;
+        _logger = logger;
+        _logger.LogTrace("SettingsService instance created with ID: {InstanceId}", Guid.NewGuid());
+
+        _localSettings = new LocalSettings();
+        _roamingSettings = new RoamingSettings();
+        _globalSettings = new GlobalSettings();
+
+        _settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "I-Synergy Framework Sample", "Settings");
+
+        if (!Directory.Exists(_settingsFolder))
+            Directory.CreateDirectory(_settingsFolder);
+
+        var oldPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "I-Synergy", "I-Synergy Framework Sample");
+        var oldSettings = Path.Combine(oldPath, "Settings", _fileName);
+
+        if (File.Exists(oldSettings))
+        {
+            File.Move(oldSettings, Path.Combine(_settingsFolder, _fileName), true);
+            Directory.Delete(oldPath, true);
+        }
+
+        LoadLocalSettings();
+
+        _messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+    }
+
+    private async void OnUserSignedIn(UserSignedInMessage message) => await ReloadAsync();
+
+    public async Task ReloadAsync(CancellationToken cancellationToken = default)
+    {
+        LoadLocalSettings();
+        await LoadGlobalSettingsAsync(cancellationToken);
+    }
+
+    public void LoadLocalSettings()
+    {
+        try
+        {
+            string file = Path.Combine(_settingsFolder, _fileName);
+
+            if (!File.Exists(file))
+                SaveLocalSettings();
+
+            string json = File.ReadAllText(file);
+            _localSettings = JsonSerializer.Deserialize<LocalSettings>(json);
+        }
+        catch (JsonException)
+        {
+            SaveLocalSettings();
+        }
+        catch (FileNotFoundException)
+        {
+            _localSettings = new LocalSettings();
+        }
+    }
+
+    public bool SaveLocalSettings()
+    {
+        try
+        {
+            if (!Directory.Exists(_settingsFolder))
+                Directory.CreateDirectory(_settingsFolder);
+
+            string file = Path.Combine(_settingsFolder, _fileName);
+            string json = JsonSerializer.Serialize(_localSettings);
+            File.WriteAllText(file, json);
+
+            return true;
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogError(ex, "Access denied when saving settings to {SettingsFile}. Check file permissions.", Path.Combine(_settingsFolder, _fileName));
+            return false;
+        }
+        catch (DirectoryNotFoundException ex)
+        {
+            _logger.LogError(ex, "Settings directory not found: {SettingsFolder}", _settingsFolder);
+            return false;
+        }
+        catch (IOException ex)
+        {
+            _logger.LogError(ex, "I/O error when saving settings to {SettingsFile}. The file may be in use by another process.", Path.Combine(_settingsFolder, _fileName));
+            return false;
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "JSON serialization error when saving settings. Settings data may be invalid.");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error when saving settings to {SettingsFile}", Path.Combine(_settingsFolder, _fileName));
+            return false;
+        }
+    }
+
+    public Task LoadRoamingSettingsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> SaveRoamingSettingsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<int> AddOrUpdateGlobalSettingsAsync(IGlobalSettings e, CancellationToken cancellationToken = default)
+    {
+        // Update settings
+        return Task.FromResult(1);
+    }
+
+    public Task LoadGlobalSettingsAsync(CancellationToken cancellationToken = default)
+    {
+        // Load settings from database
+        return Task.CompletedTask;
+    }
+
+    public T GetGlobalSetting<T>(string name, T defaultvalue) where T : IComparable<T> =>
+        _globalSettings!.GetPropertyValue(name, defaultvalue);
+
+
+    public void ClearSettings()
+    {
+        _globalSettings = null;
+        _roamingSettings = null;
+    }
+
+    public LocalSettings LocalSettings => Argument.IsNotNull(_localSettings);
+    public RoamingSettings RoamingSettings => Argument.IsNotNull(_roamingSettings);
+    public GlobalSettings GlobalSettings => Argument.IsNotNull(_globalSettings);
+
+    ILocalSettings ISettingsService.LocalSettings => Argument.IsNotNull(_localSettings);
+    IRoamingSettings ISettingsService.RoamingSettings => Argument.IsNotNull(_roamingSettings);
+    IGlobalSettings ISettingsService.GlobalSettings => Argument.IsNotNull(_globalSettings);
+}

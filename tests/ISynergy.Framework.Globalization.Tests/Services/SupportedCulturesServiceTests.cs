@@ -132,7 +132,7 @@ public class SupportedCulturesServiceTests
         var service = new SupportedCulturesService([]);
         // Act
         // Assert
-        Assert.IsFalse(service.IsCultureSupported(null));
+        Assert.IsFalse(service.IsCultureSupported(null!));
         Assert.IsFalse(service.IsCultureSupported(""));
         Assert.IsFalse(service.IsCultureSupported("  "));
     }

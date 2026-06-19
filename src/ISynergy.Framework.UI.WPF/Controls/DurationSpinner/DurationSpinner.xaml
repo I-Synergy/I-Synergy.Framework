@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Theme/Generic.xaml" />
+                <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Styles/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />

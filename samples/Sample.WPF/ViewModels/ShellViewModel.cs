@@ -120,6 +120,7 @@ public class ShellViewModel : BaseShellViewModel
             PrimaryItems?.Add(new NavigationItem("Nuget Unlister", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, NugetUnlisterCommand));
         }
 
+        PrimaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _settingsService.LocalSettings.Color, ThemeCommand));
         PrimaryItems?.Add(new NavigationItem(ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
     }
 

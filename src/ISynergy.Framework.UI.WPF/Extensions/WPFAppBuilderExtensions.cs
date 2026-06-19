@@ -97,6 +97,7 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
             services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
             services.TryAddSingleton<IMigrationService, MigrationService>();
+            services.TryAddSingleton<IThemeService, ThemeService>();
 
             services.RegisterAssemblies(assembly, assemblyFilter);
 
@@ -117,6 +118,16 @@ public static class WpfAppBuilderExtensions
         services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).BindWithReload);
         services.TryAddSingleton<IUpdateService, UpdateService>();
         return services;
+    }
+
+    public static IHostBuilder UseThemeColors(
+        this IHostBuilder hostBuilder,
+        Action<IList<string>>? configure = null)
+    {
+        hostBuilder.ConfigureServices((_, services) =>
+            services.Configure<ThemeColorOptions>(options =>
+                configure?.Invoke(options.AvailableColors)));
+        return hostBuilder;
     }
 
     public static ResourceDictionary AddToResourceDictionary<T>(this ResourceDictionary resources, IServiceProvider serviceProvider, string? key = null, Func<T>? implementation = null)

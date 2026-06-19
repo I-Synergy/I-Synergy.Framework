@@ -36,21 +36,21 @@
         </StackPanel>
         <GridView
             HorizontalAlignment="Center"
-            ItemsSource="{Binding ThemeColors.Colors}"
-            SelectedItem="{Binding SelectedItem.Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            ItemsSource="{Binding ColorOptions}"
+            SelectedItem="{Binding SelectedColorOption, Mode=TwoWay}">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Vertical" />
+                    <ItemsWrapGrid MaximumRowsOrColumns="7" Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Border
-                        Width="28"
-                        Height="28"
-                        Background="{Binding Converter={StaticResource StringToColorBrushConverter}}"
-                        CornerRadius="14"
-                        ToolTipService.ToolTip="{Binding}" />
+                        Width="32"
+                        Height="32"
+                        Background="{Binding Color, Converter={StaticResource StringToColorBrushConverter}}"
+                        CornerRadius="6"
+                        ToolTipService.ToolTip="{Binding Color}" />
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

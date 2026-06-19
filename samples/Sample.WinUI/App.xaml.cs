@@ -128,7 +128,6 @@ public sealed partial class App : Application
 
     /// <summary>
     /// Customizes the <see cref="NumberFormatInfo"/> after the culture is applied.
-    /// Called automatically by <see cref="Application.ApplyApplicationCulture"/>.
     /// </summary>
     protected override void ConfigureNumberFormat(CultureInfo culture)
     {

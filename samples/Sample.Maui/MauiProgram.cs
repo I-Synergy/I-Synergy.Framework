@@ -75,6 +75,10 @@ public static class MauiProgram
                 fonts.AddFont("FontAwesomeRegular.otf", "fontawesome");
                 fonts.AddFont("FluentSystemIconsRegular.ttf", FluentUI.FontFamily);
             })
+            //.UseThemeColors(colors =>
+            //{
+            //    colors.Add("#0078D4");
+            //})
             .ConfigureServices<App, Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(appBuilder =>
             {
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();

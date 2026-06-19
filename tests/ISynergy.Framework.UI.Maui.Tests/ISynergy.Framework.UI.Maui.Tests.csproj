@@ -65,5 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
+    <ProjectReference Include="..\ISynergy.Framework.UI.Tests\ISynergy.Framework.UI.Tests.csproj" />
   </ItemGroup>
 </Project>

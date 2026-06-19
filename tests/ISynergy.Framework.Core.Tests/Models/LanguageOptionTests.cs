@@ -26,7 +26,7 @@ public class LanguageOptionTests
         // Arrange
         // Act
         // Assert
-        Assert.Throws<ArgumentNullException>(() => new LanguageOption(null));
+        Assert.Throws<ArgumentNullException>(() => new LanguageOption(null!));
     }
 
     [TestMethod]

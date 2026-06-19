@@ -11,7 +11,7 @@
     Height="100"
     Margin="4"
     win:IsDoubleTapEnabled="False"
-    Background="{StaticResource SystemAccentBrush}"
+    Background="{ThemeResource SystemAccentBrush}"
     FocusVisualPrimaryBrush="Transparent"
     FocusVisualSecondaryBrush="Transparent"
     Foreground="White"

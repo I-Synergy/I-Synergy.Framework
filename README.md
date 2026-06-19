@@ -115,6 +115,17 @@
 | **I-Synergy.Framework.UI.WinUI** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WinUI?label=) |
 | **I-Synergy.Framework.UI.WPF** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WPF?label=) |
 
+#### 🎨 Theme Color Palette
+
+All UI packages share a common accent color palette (`ThemeColors.Colors`) — 42 colors across 6 hue families (Red → Orange → Yellow → Green → Blue → Violet), each with 7 shades from mid-light to deep.
+
+> **[Open color preview →](theme-color-preview.html)**
+>
+> Regenerate at any time by running:
+> ```
+> dotnet test tests/ISynergy.Framework.UI.Tests --filter GenerateColorPreviewHtml
+> ```
+
 ### 🧮 Specialized Libraries
 
 | Package | Latest Version |

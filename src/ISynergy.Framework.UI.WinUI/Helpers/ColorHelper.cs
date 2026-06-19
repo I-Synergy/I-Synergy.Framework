@@ -54,12 +54,11 @@ public static class ColorHelper
 
         if (hex.Length == 6)
         {
-            var a = byte.Parse("1");
             var r = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
             var g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
             var b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
-            return new SolidColorBrush(Windows.UI.Color.FromArgb(a, r, g, b));
+            return new SolidColorBrush(Windows.UI.Color.FromArgb(255, r, g, b));
         }
 
         if (hex.Length == 8)
@@ -86,12 +85,11 @@ public static class ColorHelper
 
         if (hex.Length == 6)
         {
-            var a = byte.Parse("1");
             var r = byte.Parse(hex.Substring(0, 2), NumberStyles.HexNumber);
             var g = byte.Parse(hex.Substring(2, 2), NumberStyles.HexNumber);
             var b = byte.Parse(hex.Substring(4, 2), NumberStyles.HexNumber);
 
-            return Windows.UI.Color.FromArgb(a, r, g, b);
+            return Windows.UI.Color.FromArgb(255, r, g, b);
         }
 
         if (hex.Length == 8)

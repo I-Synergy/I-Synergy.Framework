@@ -14,7 +14,7 @@
                 Margin="5"
                 FontSize="24"
                 FontWeight="SemiBold"
-                Foreground="{StaticResource SystemAccentBrush}"
+                Foreground="{ThemeResource SystemAccentBrush}"
                 Text="{m:LanguageResource Key=SignIn}" />
 
             <TextBox
@@ -22,6 +22,7 @@
                 Header="{m:LanguageResource Key=Username}"
                 Text="{Binding Username, Mode=TwoWay}"
                 ToolTipService.ToolTip="{m:LanguageResource Key=Email}" />
+            
             <PasswordBox
                 x:Name="TextBox_Password"
                 x:Uid="TextBox_Password"

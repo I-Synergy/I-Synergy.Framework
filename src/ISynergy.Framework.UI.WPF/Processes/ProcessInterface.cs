@@ -323,11 +323,6 @@ public class ProcessInterface : IDisposable
     public event ProcessEventHanlder? OnProcessError;
 
     /// <summary>
-    /// Occurs when process input is produced.
-    /// </summary>
-    public event ProcessEventHanlder? OnProcessInput;
-
-    /// <summary>
     /// Occurs when the process ends.
     /// </summary>
     public event ProcessEventHanlder? OnProcessExit;

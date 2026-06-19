@@ -63,7 +63,7 @@ public partial class App : Application
             .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
                 services.TryAddSingleton<ApplicationMonitor>();
-                services.TryAddSingleton<Sample.Abstractions.Services.IAuthenticationService, AuthenticationService>();
+                services.TryAddSingleton<Abstractions.Services.IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IFileService<FileResult>, FileService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
 
@@ -77,7 +77,8 @@ public partial class App : Application
                 cultures.AddCulture("de");
                 cultures.AddCulture("fr");
                 cultures.AddCulture("ar");
-            });
+            })
+            .UseThemeColors(colors => colors.Add("#0078D4"));
 
         return hostBuilder;
     }
