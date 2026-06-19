@@ -5,10 +5,11 @@ namespace ISynergy.Framework.Core.Extensions;
 
 public static class ObservableClassExtensions
 {
-    public static IEnumerable<PropertyInfo> GetProperties(this object observableClass, bool includeMemo = false, bool includeAudit = false)
+    public static IEnumerable<PropertyInfo> GetProperties(this object observableClass, bool includeMemo = false, bool includeAudit = false, bool includeReadOnly = false)
     {
         return observableClass.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(q =>
 
+            (includeReadOnly || q.CanWrite) &&
             !q.Name.Equals(nameof(IObservableClass.IsDisposed)) &&
             !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
             !q.Name.Equals(nameof(IObservableClass.Properties)) &&

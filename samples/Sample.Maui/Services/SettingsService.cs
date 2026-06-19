@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Messages;
-using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Text.Json;
@@ -206,11 +205,11 @@ public class SettingsService : ISettingsService, IReloadable
         _roamingSettings = null;
     }
 
-    public LocalSettings LocalSettings => Argument.IsNotNull(_localSettings);
-    public RoamingSettings RoamingSettings => Argument.IsNotNull(_roamingSettings);
-    public GlobalSettings GlobalSettings => Argument.IsNotNull(_globalSettings);
+    public LocalSettings LocalSettings => _localSettings!;
+    public RoamingSettings RoamingSettings => _roamingSettings!;
+    public GlobalSettings GlobalSettings => _globalSettings!;
 
-    ILocalSettings ISettingsService.LocalSettings => Argument.IsNotNull(_localSettings);
-    IRoamingSettings ISettingsService.RoamingSettings => Argument.IsNotNull(_roamingSettings);
-    IGlobalSettings ISettingsService.GlobalSettings => Argument.IsNotNull(_globalSettings);
+    ILocalSettings ISettingsService.LocalSettings => _localSettings!;
+    IRoamingSettings ISettingsService.RoamingSettings => _roamingSettings!;
+    IGlobalSettings ISettingsService.GlobalSettings => _globalSettings!;
 }
