@@ -1,9 +1,27 @@
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Globalization.Services;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace ISynergy.Framework.UI.Converters;
+
+/// <summary>
+/// Converts an enum value to a boolean for use with radio buttons.
+/// The <c>ConverterParameter</c> is the enum member name to compare against.
+/// </summary>
+public sealed class EnumToBooleanConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value?.ToString() == parameter?.ToString();
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is true && parameter is string name)
+            return Enum.Parse(targetType, name);
+        return DependencyProperty.UnsetValue;
+    }
+}
 
 /// <summary>
 /// Class EnumToArrayConverter.

@@ -221,7 +221,6 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     }
 
     /// <summary>
-    /// <summary>
     /// Opens the language selection dialog.
     /// </summary>
     /// <returns>Task.</returns>

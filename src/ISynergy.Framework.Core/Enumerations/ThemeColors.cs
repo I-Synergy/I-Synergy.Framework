@@ -10,65 +10,29 @@ namespace ISynergy.Framework.Core.Enumerations;
 public class ThemeColors
 {
     /// <summary>
-    /// Get list of all available colors.
+    /// 42 accent colors arranged as 6 hue families × 7 shades (light → dark).
+    /// Families: Red → Orange → Yellow → Green → Blue → Violet.
+    /// Shades correspond to Tailwind CSS 300–900 — the mid-range that works as
+    /// accent colors (excludes the too-light 50/100/200 and near-black 950).
     /// </summary>
-    public ReadOnlyCollection<string> Colors { get; } = new List<string>
-        {
-            "#ffb900",
-            "#ff8c00",
-            "#f7630c",
-            "#ca5010",
-            "#da3b01",
-            "#ef6950",
-            "#d13438",
-            "#ff4343",
-            "#e74856",
-            "#e81123",
-            "#ea005e",
-            "#c30052",
-            "#e3008c",
-            "#bf0077",
-            "#c239b3",
-            "#9a0089",
-            "#0078d7",
-            "#0063b1",
-            "#8e8cd8",
-            "#6b69d6",
-            "#8764b8",
-            "#744da9",
-            "#b146c2",
-            "#881798",
-            "#0099bc",
-            "#2d7d9a",
-            "#00b7c3",
-            "#038387",
-            "#00b294",
-            "#018574",
-            "#00cc6a",
-            "#10893e",
-            "#7a7574",
-            "#5d5a58",
-            "#68768a",
-            "#515c6b",
-            "#567c73",
-            "#486860",
-            "#498205",
-            "#107c10",
-            "#767676",
-            "#4c4a48",
-            "#69797e",
-            "#4a5459",
-            "#647c64",
-            "#525e54",
-            "#847545",
-            "#7e735f"
-        }.AsReadOnly();
+    public static readonly ReadOnlyCollection<string> Colors = new List<string>
+    {
+        // Red
+        "#fca5a5", "#f87171", "#ef4444", "#dc2626", "#b91c1c", "#991b1b", "#7f1d1d",
+        // Orange
+        "#fdba74", "#fb923c", "#f97316", "#ea580c", "#c2410c", "#9a3412", "#7c2d12",
+        // Yellow
+        "#fde047", "#facc15", "#eab308", "#ca8a04", "#a16207", "#854d0e", "#713f12",
+        // Green
+        "#86efac", "#4ade80", "#22c55e", "#16a34a", "#15803d", "#166534", "#14532d",
+        // Blue
+        "#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8", "#1e40af", "#1e3a8a",
+        // Violet
+        "#c4b5fd", "#a78bfa", "#8b5cf6", "#7c3aed", "#6d28d9", "#5b21b6", "#4c1d95",
+    }.AsReadOnly();
 
     /// <summary>
     /// Gets or sets the Default property value.
     /// </summary>
-    public static string Default
-    {
-        get => "#0078d7";
-    }
+    public static string Default => "#2563eb";
 }

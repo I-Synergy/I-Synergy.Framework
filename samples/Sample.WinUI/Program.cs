@@ -63,6 +63,7 @@ public static class Program
                 cultures.AddCulture("fr");
                 cultures.AddCulture("ar");
             })
+            //.UseThemeColors(colors => colors.Add("#0078D4"))
             .ConfigureSingleInstance()
             .ConfigureActivationHandlers(async e =>
             {

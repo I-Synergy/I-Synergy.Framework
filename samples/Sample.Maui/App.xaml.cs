@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using Sample.ViewModels;
 using System.Globalization;
+using System.Runtime.ExceptionServices;
 using Application = ISynergy.Framework.UI.Application;
 
 namespace Sample;
@@ -216,6 +217,16 @@ public partial class App : Application
                 }
             }
         }
+    }
+
+    public override void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
+    {
+        base.CurrentDomain_FirstChanceException(sender, e);
+    }
+
+    public override void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
+    {
+        base.CurrentDomain_UnhandledException(sender, e);
     }
 
     protected override void Dispose(bool disposing)

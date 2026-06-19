@@ -1,49 +1,104 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Base;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.ViewModels;
 
-/// <summary>
-/// Represents the view model that manages application theme and accent color selection.
-/// </summary>
-/// <remarks>
-/// Initializes its state from <see cref="ISettingsService"/> obtained through the scoped context service.
-/// The selected color name is normalized to lowercase to match entries in <see cref="ThemeColors.Colors"/>.
-/// Logging is used to trace initialization and to warn if a stored color is not available.
-/// </remarks>
-public class ThemeViewModel : ViewModelDialog<ThemeStyle>
+public class ColorOption : ObservableClass
 {
-    /// <inheritdoc/>
-    public override string Title => _commonServices.LanguageService.GetString("Theme");
+    public string Color { get; }
 
-    /// <summary>
-    /// Gets or sets the available theme colors.
-    /// </summary>
-    /// <value>
-    /// A palette of accent colors available to the application. The default is a new instance of <see cref="ThemeColors"/>.
-    /// </value>
-    public ThemeColors ThemeColors
+    public bool IsSelected
     {
-        get => GetValue<ThemeColors>();
+        get => GetValue<bool>();
         set => SetValue(value);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ThemeViewModel"/> class.
-    /// </summary>
-    /// <param name="commonServices">An application-wide services container that provides access to shared services.</param>
-    /// <param name="logger">A logger used for diagnostics and structured logging.</param>
-    /// <remarks>
-    /// The constructor loads the persisted theme and color from <see cref="ISettingsService"/>, validates that the color exists
-    /// in <see cref="ThemeColors.Colors"/>, and falls back to <see cref="ThemeColors.Default"/> when necessary.
-    /// </remarks>
-    public ThemeViewModel(ICommonServices commonServices, ILogger<ThemeViewModel> logger)
+    public ColorOption(string color) => Color = color;
+}
+
+public class ThemeViewModel : ViewModelDialog<ThemeStyle>
+{
+    public override string Title => _commonServices.LanguageService.GetString("Theme");
+
+    public ObservableCollection<ColorOption> ColorOptions
+    {
+        get => GetValue<ObservableCollection<ColorOption>>();
+        private set => SetValue(value);
+    }
+
+    public ColorOption? SelectedColorOption
+    {
+        get => GetValue<ColorOption?>();
+        set
+        {
+            if (value is null) return;
+            foreach (var opt in ColorOptions)
+                opt.IsSelected = false;
+            value.IsSelected = true;
+            if (SelectedItem is not null)
+                SelectedItem.Color = value.Color;
+            SetValue(value);
+        }
+    }
+
+    public RelayCommand<ColorOption> SelectColorCommand { get; }
+
+    public ThemeViewModel(
+        ICommonServices commonServices,
+        ISettingsService settingsService,
+        IOptions<ThemeColorOptions> themeColorOptions,
+        ILogger<ThemeViewModel> logger)
         : base(commonServices, logger)
     {
-        ThemeColors = new ThemeColors();
+        SelectedItem = new ThemeStyle
+        {
+            Theme = settingsService.LocalSettings.Theme,
+            Color = settingsService.LocalSettings.Color
+        };
+
+        var availableColors = themeColorOptions.Value.AvailableColors;
+        var colorStrings = availableColors.Count > 0
+            ? (IEnumerable<string>)availableColors
+            : ThemeColors.Colors;
+
+        ColorOptions = new ObservableCollection<ColorOption>(
+            colorStrings.Select(c => new ColorOption(c)));
+
+        SelectColorCommand = new RelayCommand<ColorOption>(item =>
+        {
+            SelectedColorOption = item;
+        });
+
+        ApplySelection(SelectedItem.Color);
+    }
+
+    private void ApplySelection(string? color)
+    {
+        var matched = ColorOptions.FirstOrDefault(
+            o => string.Equals(o.Color, color, StringComparison.OrdinalIgnoreCase));
+
+        SelectedColorOption = matched ?? (ColorOptions.Count > 0 ? ColorOptions[0] : null);
+    }
+
+    public override void SetSelectedItem(ThemeStyle? e, bool isUpdate = true)
+    {
+        if (e is not null && ColorOptions.Count > 0)
+        {
+            var matched = ColorOptions.FirstOrDefault(
+                o => string.Equals(o.Color, e.Color, StringComparison.OrdinalIgnoreCase));
+            if (matched is null)
+                e.Color = ColorOptions[0].Color;
+        }
+
+        base.SetSelectedItem(e, isUpdate);
+        ApplySelection(e?.Color);
     }
 }

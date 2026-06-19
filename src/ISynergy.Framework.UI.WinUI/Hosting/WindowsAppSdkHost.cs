@@ -40,14 +40,12 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     {
         Services = services ?? throw new ArgumentNullException(nameof(services));
 
-        _applicationLifetime = (applicationLifetime ?? throw new ArgumentNullException(nameof(applicationLifetime))) as ApplicationLifetime;
+        if (applicationLifetime is null)
+            throw new ArgumentNullException(nameof(applicationLifetime));
+        _applicationLifetime = applicationLifetime as ApplicationLifetime
+            ?? throw new ArgumentException(LanguageService.Default.GetString("WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported"), nameof(applicationLifetime));
         _hostEnvironment = hostEnvironment;
         _defaultProvider = defaultProvider;
-
-        if (_applicationLifetime is null)
-        {
-            throw new ArgumentException(LanguageService.Default.GetString("WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported"), nameof(applicationLifetime));
-        }
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _hostLifetime = hostLifetime ?? throw new ArgumentNullException(nameof(hostLifetime));
         _options = options?.Value ?? throw new ArgumentNullException(nameof(options));

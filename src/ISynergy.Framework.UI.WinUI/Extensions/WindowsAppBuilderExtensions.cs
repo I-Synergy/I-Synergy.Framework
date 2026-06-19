@@ -14,6 +14,7 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -163,6 +164,21 @@ public static class WindowsAppBuilderExtensions
         configure(builder);
         appBuilder.Services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
             s => new SupportedCulturesService(builder.Build())));
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Registers the available theme colors that users can select in the application.
+    /// </summary>
+    /// <param name="appBuilder">The host application builder.</param>
+    /// <param name="configure">A delegate to populate the list of available color hex strings.</param>
+    /// <returns>The configured <see cref="IHostApplicationBuilder"/>.</returns>
+    public static IHostApplicationBuilder UseThemeColors(
+        this IHostApplicationBuilder appBuilder,
+        Action<IList<string>>? configure = null)
+    {
+        appBuilder.Services.Configure<ThemeColorOptions>(options =>
+            configure?.Invoke(options.AvailableColors));
         return appBuilder;
     }
 }

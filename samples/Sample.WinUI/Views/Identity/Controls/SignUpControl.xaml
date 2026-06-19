@@ -18,7 +18,7 @@
                 Margin="5"
                 FontSize="24"
                 FontWeight="SemiBold"
-                Foreground="{StaticResource SystemAccentBrush}"
+                Foreground="{ThemeResource SystemAccentBrush}"
                 Text="{m:LanguageResource Key=Register}"
                 TextWrapping="Wrap" />
 

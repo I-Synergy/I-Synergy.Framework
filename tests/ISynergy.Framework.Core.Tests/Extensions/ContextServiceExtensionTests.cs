@@ -26,7 +26,7 @@ public class ContextServiceExtensionTests
         serviceProvider.ExecuteInContext(
             context =>
             {
-                var service = context.GetService<ITestService>();
+                var service = context.GetRequiredService<ITestService>();
                 service.DoSomething();
                 wasExecuted = true;
             });
@@ -46,7 +46,7 @@ public class ContextServiceExtensionTests
         await serviceProvider.ExecuteInContextAsync(
             async context =>
             {
-                var service = context.GetService<ITestService>();
+                var service = context.GetRequiredService<ITestService>();
                 await service.DoSomethingAsync();
                 wasExecuted = true;
             });
