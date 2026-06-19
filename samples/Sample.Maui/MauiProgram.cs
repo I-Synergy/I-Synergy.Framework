@@ -78,6 +78,8 @@ public static class MauiProgram
             //.UseThemeColors(colors =>
             //{
             //    colors.Add("#0078D4");
+            //    colors.Add("#800000");
+            //    colors.Add("#5B92E5");
             //})
             .ConfigureServices<App, Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(appBuilder =>
             {
