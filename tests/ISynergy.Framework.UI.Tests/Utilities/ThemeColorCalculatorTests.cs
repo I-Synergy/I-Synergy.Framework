@@ -261,14 +261,14 @@ public class ThemeColorCalculatorTests
     {
         var grays = ThemeColorCalculator.CalculateTintedGrays(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
 
-        Assert.AreEqual(11, grays.Count);
+        Assert.AreEqual(20, grays.Count);
     }
 
     [TestMethod]
     public void CalculateTintedGrays_ContainsAllExpectedKeys()
     {
         var grays = ThemeColorCalculator.CalculateTintedGrays(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
-        var expectedKeys = new[] { "000", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950" };
+        var expectedKeys = new[] { "000", "050", "100", "150", "200", "250", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "850", "900", "950" };
 
         foreach (var key in expectedKeys)
             Assert.IsTrue(grays.ContainsKey(key), $"Missing key: {key}");
@@ -288,7 +288,7 @@ public class ThemeColorCalculatorTests
     public void CalculateTintedGrays_ShadesAreMonotonicallyDarkening()
     {
         var grays = ThemeColorCalculator.CalculateTintedGrays(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
-        var keys = new[] { "000", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950" };
+        var keys = new[] { "000", "050", "100", "150", "200", "250", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "850", "900", "950" };
         float previousLuminosity = float.MaxValue;
 
         foreach (var key in keys)

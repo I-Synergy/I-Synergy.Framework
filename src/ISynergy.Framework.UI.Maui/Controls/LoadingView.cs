@@ -164,7 +164,7 @@ public class LoadingView : ContentPage
         // Create semi-transparent overlay
         var overlay = new Grid
         {
-            BackgroundColor = Color.FromArgb("#00000040")
+            BackgroundColor = Color.FromArgb("#40000000")
         };
 
         // Create sign-in/skip button (only for Video splash — no skip needed for Image/None)

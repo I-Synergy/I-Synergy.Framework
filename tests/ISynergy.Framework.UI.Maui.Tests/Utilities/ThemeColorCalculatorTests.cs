@@ -196,14 +196,14 @@ public class ThemeColorCalculatorTests
 
         var grays = ThemeColorCalculator.CalculateTintedGrays(primary.Red, primary.Green, primary.Blue);
 
-        Assert.AreEqual(11, grays.Count, "Should have exactly 11 gray shades");
+        Assert.AreEqual(20, grays.Count, "Should have exactly 20 gray shades");
     }
 
     [TestMethod]
     public void TintedGrays_HasAllExpectedKeys()
     {
         var primary = Color.FromArgb("#0000FF");
-        var expectedKeys = new[] { "000", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950" };
+        var expectedKeys = new[] { "000", "050", "100", "150", "200", "250", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "850", "900", "950" };
 
         var grays = ThemeColorCalculator.CalculateTintedGrays(primary.Red, primary.Green, primary.Blue);
 
@@ -312,8 +312,9 @@ public class ThemeColorCalculatorTests
         var grays = ThemeColorCalculator.CalculateTintedGrays(primary.Red, primary.Green, primary.Blue);
 
         Assert.IsNotNull(grays);
-        Assert.AreEqual(11, grays.Count);
+        Assert.AreEqual(20, grays.Count);
         Assert.IsTrue(grays.ContainsKey("000"));
+        Assert.IsTrue(grays.ContainsKey("500"));
         Assert.IsTrue(grays.ContainsKey("950"));
     }
 }
