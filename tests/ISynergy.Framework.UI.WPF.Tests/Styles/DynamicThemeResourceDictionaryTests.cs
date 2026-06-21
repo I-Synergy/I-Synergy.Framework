@@ -10,7 +10,7 @@ public class DynamicThemeResourceDictionaryTests
         System.Windows.Media.Color.FromArgb(255, 0, 0x78, 0xD7);
 
     private static readonly string[] TintedGrayKeys =
-        ["000", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"];
+        ["000", "050", "100", "150", "200", "250", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "850", "900", "950"];
 
     private static readonly string[] SemanticBrushKeys =
         ["TintedBackgroundBrush", "TintedSurfaceBrush", "TintedControlBrush",

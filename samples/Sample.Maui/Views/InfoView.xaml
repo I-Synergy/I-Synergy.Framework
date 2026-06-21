@@ -24,6 +24,6 @@
         <Entry Text="{Binding Startup}" IsReadOnly="True"/>
 
         <Label Text="Memo"/>
-        <Editor />
+        <Editor HeightRequest="100" />
     </VerticalStackLayout>
 </c:View>

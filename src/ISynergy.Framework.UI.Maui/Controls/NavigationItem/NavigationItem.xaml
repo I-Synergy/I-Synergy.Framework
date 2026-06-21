@@ -6,12 +6,18 @@
              x:Class="ISynergy.Framework.UI.Controls.NavigationItem"
              x:Name="NavigationItemControl"
              x:DataType="controls:NavigationItem">
+    
     <ContentView.Resources>
         <Style TargetType="Border">
             <Setter Property="VisualStateManager.VisualStateGroups">
                 <VisualStateGroupList>
                     <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="Opacity" Value="1" />
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
+                            </VisualState.Setters>
+                        </VisualState>
                         <VisualState x:Name="Disabled">
                             <VisualState.Setters>
                                 <Setter Property="Opacity" Value="0.5" />
@@ -21,7 +27,7 @@
                         <VisualState x:Name="PointerOver">
                             <VisualState.Setters>
                                 <Setter Property="Opacity" Value="1" />
-                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource TintedGray800}}" />
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray150}, Dark={DynamicResource TintedGray800}}" />
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>
