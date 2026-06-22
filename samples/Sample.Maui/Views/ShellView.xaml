@@ -11,7 +11,7 @@
     x:DataType="viewmodels:ShellViewModel"
     FlyoutBehavior="Flyout"
     FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
-
+    
     <ShellContent
         Title="Dashboard"
         Icon="{DynamicResource IconInformation}"

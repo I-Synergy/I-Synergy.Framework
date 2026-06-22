@@ -2,35 +2,20 @@ namespace ISynergy.Framework.UI.Utilities;
 
 public static class ThemeColorCalculator
 {
-    private static readonly (string Key, float Lightness)[] GrayStops =
+    private static readonly string[] GrayKeys =
     [
-        ("000",  240f / 255f),
-        ("050",  228f / 255f),
-        ("100",  216f / 255f),
-        ("150",  204f / 255f),
-        ("200",  192f / 255f),
-        ("250",  180f / 255f),
-        ("300",  168f / 255f),
-        ("350",  156f / 255f),
-        ("400",  144f / 255f),
-        ("450",  132f / 255f),
-        ("500",  120f / 255f),
-        ("550",  108f / 255f),
-        ("600",   96f / 255f),
-        ("650",   84f / 255f),
-        ("700",   72f / 255f),
-        ("750",   60f / 255f),
-        ("800",   48f / 255f),
-        ("850",   36f / 255f),
-        ("900",   24f / 255f),
-        ("950",   12f / 255f)
+        "000", "050", "100", "150", "200", "250", "300", "350",
+        "400", "450", "500", "550", "600", "650", "700", "750",
+        "800", "850", "900", "950"
     ];
 
-    // Blend red/green/blue toward white by factor (0–1)
+    private const float TintedSaturationFactor = 0.10f;
+    private const float LightestL = 245f / 255f; // "000"
+    private const float DarkestL  =  10f / 255f; // "950"
+
     public static (float Red, float Green, float Blue) WhiteBlend(float red, float green, float blue, float factor) =>
         (red + (1f - red) * factor, green + (1f - green) * factor, blue + (1f - blue) * factor);
 
-    // Blend red/green/blue toward black by factor (0–1)
     public static (float Red, float Green, float Blue) BlackBlend(float red, float green, float blue, float factor) =>
         (red * (1f - factor), green * (1f - factor), blue * (1f - factor));
 
@@ -43,10 +28,12 @@ public static class ThemeColorCalculator
     public static IReadOnlyDictionary<string, (float Red, float Green, float Blue)> CalculateTintedGrays(float red, float green, float blue)
     {
         var (hue, saturation, _) = RgbToHsl(red, green, blue);
-        float tintedSaturation = saturation * 0.20f;
-        var result = new Dictionary<string, (float Red, float Green, float Blue)>(GrayStops.Length);
-        foreach (var (key, lightness) in GrayStops)
-            result[key] = HslToRgb(hue, tintedSaturation, lightness);
+        float tintedSaturation = saturation * TintedSaturationFactor;
+        float stepL = (LightestL - DarkestL) / (GrayKeys.Length - 1);
+
+        var result = new Dictionary<string, (float Red, float Green, float Blue)>(GrayKeys.Length);
+        for (int i = 0; i < GrayKeys.Length; i++)
+            result[GrayKeys[i]] = HslToRgb(hue, tintedSaturation, LightestL - i * stepL);
         return result;
     }
 
@@ -72,12 +59,12 @@ public static class ThemeColorCalculator
         float intermediateChroma = chroma * (1f - MathF.Abs((hue / 60f) % 2f - 1f));
         float match = lightness - chroma / 2f;
         float redComponent, greenComponent, blueComponent;
-        if (hue < 60f) { redComponent = chroma; greenComponent = intermediateChroma; blueComponent = 0f; }
-        else if (hue < 120f) { redComponent = intermediateChroma; greenComponent = chroma; blueComponent = 0f; }
-        else if (hue < 180f) { redComponent = 0f; greenComponent = chroma; blueComponent = intermediateChroma; }
-        else if (hue < 240f) { redComponent = 0f; greenComponent = intermediateChroma; blueComponent = chroma; }
-        else if (hue < 300f) { redComponent = intermediateChroma; greenComponent = 0f; blueComponent = chroma; }
-        else { redComponent = chroma; greenComponent = 0f; blueComponent = intermediateChroma; }
+        if (hue < 60f)       { redComponent = chroma;             greenComponent = intermediateChroma; blueComponent = 0f; }
+        else if (hue < 120f) { redComponent = intermediateChroma; greenComponent = chroma;             blueComponent = 0f; }
+        else if (hue < 180f) { redComponent = 0f;                 greenComponent = chroma;             blueComponent = intermediateChroma; }
+        else if (hue < 240f) { redComponent = 0f;                 greenComponent = intermediateChroma; blueComponent = chroma; }
+        else if (hue < 300f) { redComponent = intermediateChroma; greenComponent = 0f;                 blueComponent = chroma; }
+        else                 { redComponent = chroma;             greenComponent = 0f;                 blueComponent = intermediateChroma; }
         return (redComponent + match, greenComponent + match, blueComponent + match);
     }
 }

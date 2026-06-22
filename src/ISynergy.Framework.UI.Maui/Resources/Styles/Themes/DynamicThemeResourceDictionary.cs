@@ -27,5 +27,9 @@ public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeR
             this[$"TintedGray{key}"]      = color;
             this[$"TintedGray{key}Brush"] = new SolidColorBrush(color);
         }
+
+        Color GrayColor(string key) { var (r, g, b) = grays[key]; return Color.FromRgba(r, g, b, 1f); }
+
+        this["TintedHoverBrush"] = new SolidColorBrush(GrayColor("850"));
     }
 }

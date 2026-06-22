@@ -85,6 +85,7 @@ public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeR
         inner["TintedBackgroundBrush"] = new SolidColorBrush(isDark ? GrayColor("950") : GrayColor("000"));
         inner["TintedSurfaceBrush"] = new SolidColorBrush(isDark ? GrayColor("900") : GrayColor("100"));
         inner["TintedControlBrush"] = new SolidColorBrush(isDark ? GrayColor("900") : GrayColor("100"));
+        inner["TintedHoverBrush"] = new SolidColorBrush(isDark ? GrayColor("850") : GrayColor("150"));
         inner["TintedDisabledBrush"] = new SolidColorBrush(isDark ? GrayColor("600") : GrayColor("200"));
         inner["TintedBorderBrush"] = new SolidColorBrush(isDark ? GrayColor("600") : GrayColor("200"));
         inner["TintedSecondaryBrush"] = new SolidColorBrush(isDark ? GrayColor("500") : GrayColor("300"));
