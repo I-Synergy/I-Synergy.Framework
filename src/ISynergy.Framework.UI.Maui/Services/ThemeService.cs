@@ -22,8 +22,8 @@ public class ThemeService : IThemeService
     private const string Primary = nameof(Primary);
     private const string Secondary = nameof(Secondary);
     private const string Tertiary = nameof(Tertiary);
-    private const string TintedGray000 = nameof(TintedGray000);
-    private const string TintedGray950 = nameof(TintedGray950);
+    private const string TintedGray050 = nameof(TintedGray050);
+    private const string TintedGray900 = nameof(TintedGray900);
 
     private Themes _theme;
     private string _color;
@@ -189,7 +189,7 @@ public class ThemeService : IThemeService
 
             // Use the page background color (TintedGray000 light / TintedGray950 dark)
             // so the title bar blends seamlessly with the page content.
-            var backgroundResourceKey = IsLightThemeEnabled ? TintedGray000 : TintedGray950;
+            var backgroundResourceKey = IsLightThemeEnabled ? TintedGray050 : TintedGray900;
             var pageBackgroundColor = ResourceUtility.FindResource<Color>(backgroundResourceKey);
 
             if (pageBackgroundColor is not null)

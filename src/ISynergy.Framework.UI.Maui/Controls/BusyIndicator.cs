@@ -34,7 +34,7 @@ public class BusyIndicator : ContentView
             nameof(OverlayOpacity),
             typeof(double),
             typeof(BusyIndicator),
-            defaultValue: 0.5,
+            defaultValue: 0d,
             propertyChanged: OnOverlayOpacityChanged);
 
     /// <summary>
@@ -133,7 +133,7 @@ public class BusyIndicator : ContentView
         };
 
         // Use dynamic resource "Tertiary" for overlay background color
-        _overlayBackground.SetDynamicResource(Grid.BackgroundColorProperty, "TintedGray950");
+        _overlayBackground.SetDynamicResource(Grid.BackgroundColorProperty, "Tertiary");
 
         // Create root grid with overlay and indicator
         _rootGrid = new Grid();

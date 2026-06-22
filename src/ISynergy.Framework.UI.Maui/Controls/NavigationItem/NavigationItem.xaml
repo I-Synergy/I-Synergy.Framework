@@ -27,7 +27,7 @@
                         <VisualState x:Name="PointerOver">
                             <VisualState.Setters>
                                 <Setter Property="Opacity" Value="1" />
-                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray150}, Dark={DynamicResource TintedGray800}}" />
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray150}, Dark={DynamicResource TintedGray850}}" />
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>

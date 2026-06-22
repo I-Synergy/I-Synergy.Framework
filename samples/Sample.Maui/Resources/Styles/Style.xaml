@@ -85,7 +85,7 @@
 
     <Style TargetType="Border">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray600}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
         <Setter Property="StrokeShape" Value="Rectangle" />
         <Setter Property="StrokeThickness" Value="1" />
     </Style>
@@ -97,7 +97,7 @@
 
     <Style x:Key="DefaultButtonStyle" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource TintedGray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource Secondary}}" />
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
@@ -121,7 +121,7 @@
                     <VisualState x:Name="PointerOver">
                         <VisualState.Setters>
                             <Setter Property="Opacity" Value="1" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Secondary}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
                             <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
                         </VisualState.Setters>
                     </VisualState>
@@ -398,7 +398,7 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -408,7 +408,7 @@
 
     <Style TargetType="Editor">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
@@ -420,7 +420,7 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -430,7 +430,7 @@
 
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
@@ -511,7 +511,7 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
                             <Setter Property="TitleColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -577,10 +577,10 @@
 
     <Style TargetType="SearchBar">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="CancelButtonColor" Value="{DynamicResource Primary}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="12" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -591,7 +591,7 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
                             <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -600,10 +600,10 @@
     </Style>
 
     <Style TargetType="SearchHandler">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
-        <Setter Property="PlaceholderColor" Value="{DynamicResource Gray500}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
         <Setter Property="FontSize" Value="12" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -703,11 +703,11 @@
 
     <Style ApplyToDerivedTypes="True" TargetType="Page">
         <Setter Property="Padding" Value="0" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
     </Style>
 
     <Style ApplyToDerivedTypes="True" TargetType="Shell">
-        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
         <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={DynamicResource Primary}, Default={DynamicResource White}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
         <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray950}}" />
@@ -720,7 +720,7 @@
     </Style>
     
     <Style TargetType="NavigationPage">
-        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
         <Setter Property="IconColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
     </Style>
@@ -954,4 +954,6 @@
                 Color="{DynamicResource White}" />
         </Setter>
     </Style>
+
+    
 </ResourceDictionary>
