@@ -1,7 +1,10 @@
+using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -15,9 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Globalization;
-using ISynergy.Framework.Core.Services;
-using ISynergy.Framework.Core.Abstractions;
-using ISynergy.Framework.Globalization.Extensions;
+using System.Net.Sockets;
 
 #if WINDOWS
 using Microsoft.UI.Xaml.Media;
@@ -365,6 +366,17 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <param name="e"></param>
     public virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
+        // MAUI probes for missing image density variants and missing local settings files at
+        // startup; these exceptions are caught internally and are not fatal. Skip them here so
+        // they are not forwarded to Sentry as errors.
+        // Also skip IOException wrapping SocketException with OperationAborted/ConnectionAborted,
+        // which occurs when the OS suspends in-flight socket reads while the app is backgrounded.
+        if (e.Exception is FileNotFoundException { Message: null or "" }
+            || e.Exception is InvalidOperationException { Message: "Unable to load image file." }
+            || (e.Exception is IOException ioEx && ioEx.InnerException is SocketException socketEx
+                && (socketEx.SocketErrorCode == SocketError.OperationAborted || socketEx.SocketErrorCode == SocketError.ConnectionAborted)))
+            return;
+
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
