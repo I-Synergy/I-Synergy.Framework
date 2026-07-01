@@ -1,21 +1,22 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -44,6 +45,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected bool _isShuttingDown = false;
 
     private Task? Initialize { get; set; }
+    private int lastErrorMessage = 0;
 
     /// <summary>
     /// Default constructor.
@@ -213,16 +215,18 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <param name="e"></param>
     public virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
-        // Ignore task cancellation exceptions during shutdown
-        if (e.Exception is OperationCanceledException || e.Exception is TaskCanceledException)
+        // Skip IOException wrapping SocketException with OperationAborted/ConnectionAborted,
+        // which occurs when the OS suspends in-flight socket reads while the app is backgrounded.
+        // Skip TaskCanceledException and OperationCanceledException; task/operation cancellation is routine, not an error.
+        if (e.Exception is IOException ioEx && ioEx.InnerException is SocketException socketEx
+                && (socketEx.SocketErrorCode == SocketError.OperationAborted || socketEx.SocketErrorCode == SocketError.ConnectionAborted)
+            || e.Exception is OperationCanceledException)
+            return;
+
+        if (e.Exception.HResult != lastErrorMessage)
         {
-            // Check if we're in the process of shutting down
-            if (_isShuttingDown)
-                return; // Ignore the exception
-        }
-        else
-        {
-            Debug.WriteLine(e.Exception.ToMessage(Environment.StackTrace));
+            lastErrorMessage = e.Exception.HResult;
+            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 

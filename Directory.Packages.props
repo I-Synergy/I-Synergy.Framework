@@ -8,7 +8,7 @@
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.4.6" />
     <PackageVersion Include="Aspire.Hosting.Maui" Version="13.4.6-preview.1.26319.6" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.100" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.100.1" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.8.2" />

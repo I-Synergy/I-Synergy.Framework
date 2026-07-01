@@ -371,10 +371,12 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         // they are not forwarded to Sentry as errors.
         // Also skip IOException wrapping SocketException with OperationAborted/ConnectionAborted,
         // which occurs when the OS suspends in-flight socket reads while the app is backgrounded.
+        // Skip TaskCanceledException and OperationCanceledException; task/operation cancellation is routine, not an error.
         if (e.Exception is FileNotFoundException { Message: null or "" }
             || e.Exception is InvalidOperationException { Message: "Unable to load image file." }
             || (e.Exception is IOException ioEx && ioEx.InnerException is SocketException socketEx
-                && (socketEx.SocketErrorCode == SocketError.OperationAborted || socketEx.SocketErrorCode == SocketError.ConnectionAborted)))
+                && (socketEx.SocketErrorCode == SocketError.OperationAborted || socketEx.SocketErrorCode == SocketError.ConnectionAborted))
+            || e.Exception is OperationCanceledException)
             return;
 
         if (e.Exception.HResult != lastErrorMessage)
