@@ -22,6 +22,18 @@ public static class CursorExtensions
         view.AddInteraction(new UIPointerInteraction(new PointerInteractionDelegate(visualElement, cursor)));
     }
 
+    public static void RemoveCustomCursor(this VisualElement visualElement, IMauiContext? mauiContext)
+    {
+        if (mauiContext is null) return;
+        try
+        {
+            var view = visualElement.ToPlatform(mauiContext);
+            foreach (var interaction in view.Interactions.OfType<UIPointerInteraction>())
+                view.RemoveInteraction(interaction);
+        }
+        catch { /* best-effort cleanup */ }
+    }
+
     class PointerInteractionDelegate : UIPointerInteractionDelegate
     {
         private readonly VisualElement _visualElement;

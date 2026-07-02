@@ -41,7 +41,29 @@ public static class NavigationExtensions
     /// The view-type lookup calls <c>GetRelatedViewType()</c> which performs an assembly scan.
     /// This is not compatible with MAUI iOS/Android linker trimming without a source-generated view map.
     /// </remarks>
+    /// <summary>
+    /// Creates or gets a view from a ViewModel instance using the root <see cref="ServiceLocator"/>.
+    /// Prefer the overload that accepts an <see cref="IServiceProvider"/>
+    /// when a scoped provider is available.
+    /// </summary>
     public static IView CreatePage<TViewModel>(TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
+        => CreatePage<TViewModel>(ServiceLocator.Default.ServiceProvider, viewModel, parameter);
+
+    /// <summary>
+    /// Creates or gets a view from a ViewModel instance using the specified
+    /// <paramref name="serviceProvider"/> for all service resolution.
+    /// Resolving from a scoped provider (created via <see cref="IServiceScopeFactory"/>)
+    /// ensures ViewModels are properly released when the scope is disposed,
+    /// rather than being permanently tracked by the root container.
+    /// </summary>
+    /// <typeparam name="TViewModel">The ViewModel type to resolve a view for.</typeparam>
+    /// <param name="serviceProvider">The service provider to resolve services from (scoped or root).</param>
+    /// <param name="viewModel">
+    /// An existing ViewModel instance, or <see langword="null"/> to resolve from the provider.
+    /// </param>
+    /// <param name="parameter">An optional navigation parameter.</param>
+    /// <returns>The resolved <see cref="IView"/> instance.</returns>
+    public static IView CreatePage<TViewModel>(IServiceProvider serviceProvider, TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var view = typeof(TViewModel).GetRelatedView();
         var viewType = view.GetRelatedViewType();
@@ -49,7 +71,7 @@ public static class NavigationExtensions
         if (viewType is null)
             throw new InvalidNavigationException($"Cannot determine view type for ViewModel: {typeof(TViewModel).Name}.");
 
-        var resolvedService = ServiceLocator.Default.GetRequiredService(viewType);
+        var resolvedService = serviceProvider.GetRequiredService(viewType);
 
         if (resolvedService is IView resolvedView)
         {
@@ -57,12 +79,12 @@ public static class NavigationExtensions
                 resolvedView.ViewModel = viewModel;
 
             if (resolvedView.ViewModel is null)
-                resolvedView.ViewModel = ServiceLocator.Default.GetRequiredService<TViewModel>();
+                resolvedView.ViewModel = (IViewModel)serviceProvider.GetRequiredService<TViewModel>();
 
             if (parameter is not null && resolvedView.ViewModel is not null)
                 resolvedView.ViewModel.Parameter = parameter;
 
-            var language = ServiceLocator.Default.GetRequiredService<ILocalSettings>().Language;
+            var language = serviceProvider.GetRequiredService<ILocalSettings>().Language;
 
             if (resolvedView is VisualElement visualElement && CultureInfo.GetCultureInfo(language).TextInfo.IsRightToLeft)
                 visualElement.FlowDirection = FlowDirection.RightToLeft;

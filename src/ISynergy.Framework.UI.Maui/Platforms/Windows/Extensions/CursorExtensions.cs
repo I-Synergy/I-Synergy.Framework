@@ -4,6 +4,7 @@ using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Windows.UI.Core;
 
 #pragma warning disable IDE0130, S1200
@@ -11,6 +12,14 @@ using Windows.UI.Core;
 namespace ISynergy.Framework.UI.Extensions;
 public static class CursorExtensions
 {
+    private static readonly ConditionalWeakTable<UIElement, CursorHandlers> _cursorStates = new();
+
+    private sealed class CursorHandlers
+    {
+        public PointerEventHandler? EnteredHandler;
+        public PointerEventHandler? ExitedHandler;
+    }
+
     public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext) // NOSONAR
     {
         if (mauiContext is null)
@@ -41,9 +50,13 @@ public static class CursorExtensions
                     return;
                 }
 
-                // Remove existing event handlers to prevent duplicates
-                view.PointerEntered -= ViewOnPointerEntered;
-                view.PointerExited -= ViewOnPointerExited;
+                // Remove existing event handlers using stored exact delegates to prevent accumulation
+                if (_cursorStates.TryGetValue(view, out var existingHandlers))
+                {
+                    view.PointerEntered -= existingHandlers.EnteredHandler;
+                    view.PointerExited -= existingHandlers.ExitedHandler;
+                    _cursorStates.Remove(view);
+                }
 
                 void ViewOnPointerExited(object? sender, PointerRoutedEventArgs e)
                 {
@@ -71,9 +84,17 @@ public static class CursorExtensions
                     }
                 }
 
-                // Attach event handlers
-                view.PointerEntered += ViewOnPointerEntered;
-                view.PointerExited += ViewOnPointerExited;
+                // Store exact delegate instances for later cleanup
+                var handlers = new CursorHandlers
+                {
+                    EnteredHandler = ViewOnPointerEntered,
+                    ExitedHandler = ViewOnPointerExited
+                };
+                _cursorStates.Add(view, handlers);
+
+                // Attach event handlers using stored instances (guarantees correct -= on next call)
+                view.PointerEntered += handlers.EnteredHandler;
+                view.PointerExited += handlers.ExitedHandler;
             }
             catch (Exception ex)
             {
@@ -102,6 +123,22 @@ public static class CursorExtensions
             
             visualElement.HandlerChanged += HandleHandlerChanged;
         }
+    }
+
+    public static void RemoveCustomCursor(this VisualElement visualElement, IMauiContext? mauiContext)
+    {
+        if (mauiContext is null) return;
+        try
+        {
+            var view = visualElement.ToPlatform(mauiContext);
+            if (view is not null && _cursorStates.TryGetValue(view, out var handlers))
+            {
+                view.PointerEntered -= handlers.EnteredHandler;
+                view.PointerExited -= handlers.ExitedHandler;
+                _cursorStates.Remove(view);
+            }
+        }
+        catch { /* best-effort cleanup */ }
     }
 
     static void ChangeCursor(this UIElement uiElement, InputCursor cursor) // NOSONAR

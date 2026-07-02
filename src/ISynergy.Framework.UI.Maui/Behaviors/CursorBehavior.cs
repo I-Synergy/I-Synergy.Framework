@@ -23,6 +23,10 @@ public static class CursorBehavior
         visualElement.PropertyChanged -= OnVisualElementPropertyChanged;
         visualElement.PropertyChanged += OnVisualElementPropertyChanged;
 
+        // Clean up when element is unloaded to prevent leaks
+        visualElement.Unloaded -= OnVisualElementUnloaded;
+        visualElement.Unloaded += OnVisualElementUnloaded;
+
         // Apply cursor based on current enabled state
         ApplyCursorBasedOnState(visualElement, cursor);
     }
@@ -33,6 +37,33 @@ public static class CursorBehavior
         {
             var cursor = GetCursor(visualElement);
             ApplyCursorBasedOnState(visualElement, cursor);
+        }
+    }
+
+    private static void OnVisualElementUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement visualElement)
+        {
+            // Unsubscribe from element events
+            visualElement.PropertyChanged -= OnVisualElementPropertyChanged;
+            visualElement.Unloaded -= OnVisualElementUnloaded;
+
+            // Get MauiContext for platform cleanup
+            var mauiContext = visualElement.Handler?.MauiContext
+                ?? FindMauiContextFromParent(visualElement)
+                ?? Application.Current?.Windows.LastOrDefault()?.Page?.Handler?.MauiContext;
+
+            if (mauiContext is not null)
+            {
+                try
+                {
+                    visualElement.RemoveCustomCursor(mauiContext);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to remove custom cursor on unload: {ex.Message}");
+                }
+            }
         }
     }
 
