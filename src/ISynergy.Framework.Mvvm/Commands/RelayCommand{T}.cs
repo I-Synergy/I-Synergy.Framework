@@ -109,8 +109,11 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool TryGetCommandArgument(object? parameter, out T? result)
     {
-        // Fast path for null parameter and nullable T
-        if (parameter is null && default(T) is null)
+        // Fast path for null parameter — convert to default(T) for all types.
+        // Value types get their default (false, 0, etc.), reference types get null.
+        // This is required because MAUI Buttons pass null when no CommandParameter is set,
+        // and the command's typed Execute(T?) already accepts nullable parameters.
+        if (parameter is null)
         {
             result = default;
             return true;

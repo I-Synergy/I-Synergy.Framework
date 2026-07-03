@@ -20,7 +20,10 @@ public partial class ShellView : Shell, IShellView
             if (BindingContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing — BindingContext can be null after
+            // CleanupPage clears it during modal navigation. As a Singleton, this
+            // ShellView is reused, and callers handle null gracefully.
+            return null!;
         }
         set
         {

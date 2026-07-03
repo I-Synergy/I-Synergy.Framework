@@ -23,7 +23,11 @@ public abstract class View : ContentPage, IView
             if (BindingContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing. BindingContext can legitimately be null
+            // or non-IViewModel when a Singleton page is reused after CleanupPage cleared
+            // its BindingContext during a prior modal navigation. Callers (e.g.
+            // CreatePage, CleanupPage) handle null gracefully via null checks.
+            return null!;
         }
         set
         {

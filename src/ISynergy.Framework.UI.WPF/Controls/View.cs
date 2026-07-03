@@ -27,7 +27,9 @@ public abstract partial class View : Page, IView
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing — DataContext can be null after cleanup.
+            // Callers handle null gracefully via null checks.
+            return null!;
         }
         set
         {
