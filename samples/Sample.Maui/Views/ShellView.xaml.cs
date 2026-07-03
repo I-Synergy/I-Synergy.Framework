@@ -1,9 +1,12 @@
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
 using Sample.ViewModels;
 
 namespace Sample.Views;
 
+[Lifetime(Lifetimes.Singleton)]
 public partial class ShellView : Shell, IShellView
 {
     /// <summary>

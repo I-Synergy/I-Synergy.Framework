@@ -46,6 +46,7 @@ public class NavigationServiceExceptionHandlingTests
         _navigationService = new NavigationService(
             _mockLocalSettings.Object,
             _mockExceptionHandler.Object,
+            mockServiceScopeFactory.Object,
             _mockLogger.Object);
     }
 

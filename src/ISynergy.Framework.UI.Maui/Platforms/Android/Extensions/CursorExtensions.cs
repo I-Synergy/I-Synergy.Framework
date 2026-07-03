@@ -14,7 +14,7 @@ public static class CursorExtensions
         {
             ArgumentNullException.ThrowIfNull(mauiContext);
             var view = visualElement.ToPlatform(mauiContext);
-            
+
             // Only apply custom cursor if the element is enabled, otherwise use default
             var cursorToApply = visualElement.IsEnabled ? cursor : CursorIcons.Arrow;
             view.PointerIcon = PointerIcon.GetSystemIcon(Android.App.Application.Context, GetCursor(cursorToApply));
@@ -33,6 +33,16 @@ public static class CursorExtensions
                 };
             }
         }
+    }
+
+    /// <summary>
+    /// No-op on Android — <see cref="SetCustomCursor"/> only sets a property
+    /// (<see cref="Android.Views.View.PointerIcon"/>) on the native view.
+    /// No event handlers, interactions, or gesture recognizers to clean up.
+    /// </summary>
+    public static void RemoveCustomCursor(this VisualElement visualElement, IMauiContext? mauiContext)
+    {
+        // No-op: Android cursor is a simple property set, not a retained reference
     }
 
 }
