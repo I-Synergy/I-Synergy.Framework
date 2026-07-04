@@ -190,9 +190,12 @@ public class NavigationService : INavigationService
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                // Dispose previous modal scope and create a fresh one.
-                // This mirrors the BaseNavigationService pattern used by WinUI/WPF.
-                _modalScope?.Dispose();
+                // Save the old scope so we can dispose it AFTER navigation completes.
+                // Disposing it before would destroy the current ViewModel while it is
+                // still executing the command that triggered this navigation (e.g.
+                // SettingsCommand calling NavigateModalAsync, which would dispose
+                // the ShellViewModel mid-execution via _modalScope.Dispose).
+                var oldScope = _modalScope;
                 _modalScope = _serviceScopeFactory.CreateScope();
                 var scopedProvider = _modalScope.ServiceProvider;
 
@@ -220,6 +223,11 @@ public class NavigationService : INavigationService
                     // Clean up the old page graph to release event subscriptions and native resources
                     CleanupPage(oldPage);
 
+                    // Now dispose the old scope — after the old page is cleaned up and
+                    // the new page is active. This prevents disposing the current
+                    // ViewModel while its command is still executing.
+                    oldScope?.Dispose();
+
                     if (view is not null && view.ViewModel is not null) // NOSONAR
                     {
                         try
@@ -246,6 +254,7 @@ public class NavigationService : INavigationService
                     // Page creation failed — dispose the unused scope
                     _modalScope?.Dispose();
                     _modalScope = null;
+                    oldScope?.Dispose();
                 }
             });
         }
@@ -320,13 +329,17 @@ public class NavigationService : INavigationService
         if (page is null)
             return;
 
-        // Check if this page is a Singleton — handler preservation needed for reuse.
+        // Check if this page is a Singleton — special handling needed for reuse.
         bool isSingleton = page.GetType().GetCustomAttribute<LifetimeAttribute>()?.Lifetime == Lifetimes.Singleton;
 
-        // 1. Dispose the ViewModel first — this unsubscribes from singleton service
-        //    events like NavigationService.BackStackChanged (BaseShellViewModel.Dispose)
-        //    and MessengerService (ViewModel.Dispose).
-        if (page is IView view && view.ViewModel is IDisposable disposableViewModel)
+        // 1. Dispose the ViewModel to unsubscribe from singleton service events
+        //    (NavigationService.BackStackChanged, MessengerService). Skip for
+        //    Singletons — their ViewModel is owned by a DI scope that is disposed
+        //    after navigation completes (see NavigateModalAsync). Disposing here
+        //    would destroy the ViewModel while its own command is still executing
+        //    (e.g. SettingsCommand → NavigateModalAsync → CleanupPage disposes
+        //    ShellViewModel mid-execution).
+        if (!isSingleton && page is IView view && view.ViewModel is IDisposable disposableViewModel)
         {
             disposableViewModel.Dispose();
         }
