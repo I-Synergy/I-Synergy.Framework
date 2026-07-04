@@ -1,5 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -7,6 +9,7 @@ using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.UI.Services;
@@ -118,14 +121,25 @@ public class NavigationService : INavigationService
 
             if (result.Navigation.NavigationStack.Contains(page))
             {
+                var poppedPages = new List<Page>();
                 for (int i = result.Navigation.NavigationStack.Count - 1; i >= 0; i--)
                 {
                     if (result.Navigation.NavigationStack[i].Equals(page))
                         break;
 
                     if (!backNavigation)
+                    {
+                        var poppedPage = result.Navigation.NavigationStack[i];
                         await result.Navigation.PopAsync(Animated);
+                        poppedPages.Add(poppedPage);
+                    }
                 }
+
+                // Clean up popped pages to release ViewModel event subscriptions
+                // and native resources, matching the CleanupPage pattern used by
+                // NavigateModalAsync for root page replacement.
+                foreach (var poppedPage in poppedPages)
+                    CleanupPage(poppedPage);
             }
             else
             {
@@ -176,9 +190,12 @@ public class NavigationService : INavigationService
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                // Dispose previous modal scope and create a fresh one.
-                // This mirrors the BaseNavigationService pattern used by WinUI/WPF.
-                _modalScope?.Dispose();
+                // Save the old scope so we can dispose it AFTER navigation completes.
+                // Disposing it before would destroy the current ViewModel while it is
+                // still executing the command that triggered this navigation (e.g.
+                // SettingsCommand calling NavigateModalAsync, which would dispose
+                // the ShellViewModel mid-execution via _modalScope.Dispose).
+                var oldScope = _modalScope;
                 _modalScope = _serviceScopeFactory.CreateScope();
                 var scopedProvider = _modalScope.ServiceProvider;
 
@@ -186,7 +203,11 @@ public class NavigationService : INavigationService
                 {
                     // Added this nullification of handler because of some issues with TabbedPage.
                     // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
-                    page.Handler = null;
+                    // Scoped to TabbedPage only — unnecessary handler teardown on non-TabbedPage
+                    // types (e.g. Shell) breaks VisualStateManager state, CursorBehavior, and
+                    // other platform-handler-dependent behaviors on Singleton pages.
+                    if (page is TabbedPage)
+                        page.Handler = null;
 
                     var mainPage = GetMainPage();
 
@@ -201,6 +222,11 @@ public class NavigationService : INavigationService
 
                     // Clean up the old page graph to release event subscriptions and native resources
                     CleanupPage(oldPage);
+
+                    // Now dispose the old scope — after the old page is cleaned up and
+                    // the new page is active. This prevents disposing the current
+                    // ViewModel while its command is still executing.
+                    oldScope?.Dispose();
 
                     if (view is not null && view.ViewModel is not null) // NOSONAR
                     {
@@ -228,6 +254,7 @@ public class NavigationService : INavigationService
                     // Page creation failed — dispose the unused scope
                     _modalScope?.Dispose();
                     _modalScope = null;
+                    oldScope?.Dispose();
                 }
             });
         }
@@ -257,10 +284,26 @@ public class NavigationService : INavigationService
 
         if (CanGoBack)
         {
+            Page? poppedPage = null;
+
             if (mainPage.Navigation.ModalStack.Count > 0)
+            {
+                poppedPage = mainPage.Navigation.ModalStack[^1];
                 await mainPage.Navigation.PopModalAsync(Animated);
+            }
             else
-                await mainPage.GetNavigation().Navigation.PopAsync(Animated);
+            {
+                var navigation = mainPage.GetNavigation().Navigation;
+                if (navigation.NavigationStack.Count > 0)
+                {
+                    poppedPage = navigation.NavigationStack[^1];
+                    await navigation.PopAsync(Animated);
+                }
+            }
+
+            // Clean up the popped page to release ViewModel event subscriptions
+            // and native resources, matching the NavigateModalAsync pattern.
+            CleanupPage(poppedPage);
         }
 
         OnBackStackChanged(EventArgs.Empty);
@@ -271,15 +314,32 @@ public class NavigationService : INavigationService
     /// release event subscriptions and native resources when the root page
     /// is replaced.
     /// </summary>
+    /// <remarks>
+    /// Pages marked with <see cref="Lifetimes.Singleton"/> are reused across navigations.
+    /// For these pages the ViewModel and DI scope are still disposed (to release
+    /// service event subscriptions), and BindingContext is cleared (so CreatePage
+    /// correctly detects a new ViewModel is needed). The Handler is preserved —
+    /// tearing it down and recreating it destroys child element visual states
+    /// (VisualStateManager), behaviors (CursorBehavior), and platform resources
+    /// that are not fully restored on reconnection. Since Singleton pages are never
+    /// garbage-collected, keeping the native handler alive does not constitute a leak.
+    /// </remarks>
     private static void CleanupPage(Page? page)
     {
         if (page is null)
             return;
 
-        // 1. Dispose the ViewModel first — this unsubscribes from singleton service
-        //    events like NavigationService.BackStackChanged (BaseShellViewModel.Dispose)
-        //    and MessengerService (ViewModel.Dispose).
-        if (page is IView view && view.ViewModel is IDisposable disposableViewModel)
+        // Check if this page is a Singleton — special handling needed for reuse.
+        bool isSingleton = page.GetType().GetCustomAttribute<LifetimeAttribute>()?.Lifetime == Lifetimes.Singleton;
+
+        // 1. Dispose the ViewModel to unsubscribe from singleton service events
+        //    (NavigationService.BackStackChanged, MessengerService). Skip for
+        //    Singletons — their ViewModel is owned by a DI scope that is disposed
+        //    after navigation completes (see NavigateModalAsync). Disposing here
+        //    would destroy the ViewModel while its own command is still executing
+        //    (e.g. SettingsCommand → NavigateModalAsync → CleanupPage disposes
+        //    ShellViewModel mid-execution).
+        if (!isSingleton && page is IView view && view.ViewModel is IDisposable disposableViewModel)
         {
             disposableViewModel.Dispose();
         }
@@ -291,9 +351,13 @@ public class NavigationService : INavigationService
         page.BindingContext = null;
 
         // 3. Disconnect the handler to release native platform views.
-        //    Mirrors the existing pattern at the TabbedPage workaround above
-        //    and LoadingView.cs cleanup.
-        page.Handler = null;
+        //    Skip for Singleton pages — they are reused and need their native
+        //    visual tree intact. Tearing down and recreating the handler destroys
+        //    child element state (VisualStateManager, CursorBehavior) that is not
+        //    fully restored on reconnection. Singleton pages are never GC'd, so
+        //    keeping the handler alive is not a leak.
+        if (!isSingleton)
+            page.Handler = null;
 
         // 4. Dispose the page's DI scope if one was created during navigation.
         //    This releases scoped services (ViewModel, etc.) that were resolved
