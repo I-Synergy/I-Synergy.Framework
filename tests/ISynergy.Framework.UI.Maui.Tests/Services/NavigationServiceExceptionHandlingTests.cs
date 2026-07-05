@@ -16,6 +16,7 @@ public class NavigationServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
+    private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILocalSettings> _mockLocalSettings;
     private Mock<ILogger<NavigationService>> _mockLogger;
     private NavigationService _navigationService;
@@ -23,8 +24,9 @@ public class NavigationServiceExceptionHandlingTests
     public NavigationServiceExceptionHandlingTests()
     {
         _mockServiceProvider = new Mock<IServiceProvider>();
-        _mockLocalSettings = new Mock<ILocalSettings>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        _mockCommonServices = new Mock<ICommonServices>();
+        _mockLocalSettings = new Mock<ILocalSettings>();
         _mockLogger = new Mock<ILogger<NavigationService>>();
 
         _mockServiceProvider
@@ -44,8 +46,9 @@ public class NavigationServiceExceptionHandlingTests
         ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
 
         _navigationService = new NavigationService(
-            _mockLocalSettings.Object,
             _mockExceptionHandler.Object,
+            _mockCommonServices.Object,
+            _mockLocalSettings.Object,
             mockServiceScopeFactory.Object,
             _mockLogger.Object);
     }
