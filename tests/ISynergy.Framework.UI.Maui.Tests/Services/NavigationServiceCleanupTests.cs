@@ -49,7 +49,7 @@ public class NavigationServiceCleanupTests
         ServiceLocator.SetLocatorProvider(mockServiceProvider.Object);
 
         _cleanupMethod = typeof(NavigationService)
-            .GetMethod("CleanupPage", BindingFlags.NonPublic | BindingFlags.Static)!;
+            .GetMethod("CleanupPageResources", BindingFlags.NonPublic | BindingFlags.Static)!;
     }
 
     [TestCleanup]
@@ -62,7 +62,7 @@ public class NavigationServiceCleanupTests
     /// Verifies that CleanupPage is safe to call with a null page (no-op).
     /// </summary>
     [TestMethod]
-    public void CleanupPage_WithNullPage_DoesNotThrow()
+    public void CleanupPageResources_WithNullPage_DoesNotThrow()
     {
         // Act & Assert — should not throw
         _cleanupMethod.Invoke(null, new object?[] { null });
@@ -73,9 +73,9 @@ public class NavigationServiceCleanupTests
     /// has the expected signature (private static void CleanupPage(Page? page)).
     /// </summary>
     [TestMethod]
-    public void CleanupPage_HasExpectedSignature()
+    public void CleanupPageResources_HasExpectedSignature()
     {
-        Assert.IsNotNull(_cleanupMethod, "CleanupPage method should exist");
+        Assert.IsNotNull(_cleanupMethod, "CleanupPageResources method should exist");
         Assert.IsTrue(_cleanupMethod.IsPrivate, "Should be private");
         Assert.IsTrue(_cleanupMethod.IsStatic, "Should be static");
 

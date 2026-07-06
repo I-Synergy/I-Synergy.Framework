@@ -10,11 +10,9 @@ public class DetailViewModel : ViewModelNavigation<TestItem>
     public DetailViewModel(
         ICommonServices commonServices,
         ILogger<DetailViewModel> logger,
-        TestItem item,
         bool automaticValidation = false)
         : base(commonServices, logger)
     {
-        SelectedItem = item;
     }
 
     public override async Task InitializeAsync()

@@ -47,7 +47,7 @@ public class NavigationServiceRetentionCycleTests
         ServiceLocator.SetLocatorProvider(mockServiceProvider.Object);
 
         _cleanupMethod = typeof(NavigationService)
-            .GetMethod("CleanupPage", BindingFlags.NonPublic | BindingFlags.Static)!;
+            .GetMethod("CleanupPageResources", BindingFlags.NonPublic | BindingFlags.Static)!;
     }
 
     [TestCleanup]
@@ -57,14 +57,14 @@ public class NavigationServiceRetentionCycleTests
     }
 
     [TestMethod]
-    public void CleanupPage_WithNullPage_IsNoOp()
+    public void CleanupPageResources_WithNullPage_IsNoOp()
     {
         // Act & Assert — should not throw for null input
         _cleanupMethod.Invoke(null, new object?[] { null });
     }
 
     [TestMethod]
-    public void CleanupPage_HasExpectedSignature()
+    public void CleanupPageResources_HasExpectedSignature()
     {
         Assert.IsNotNull(_cleanupMethod);
         Assert.IsTrue(_cleanupMethod.IsPrivate);

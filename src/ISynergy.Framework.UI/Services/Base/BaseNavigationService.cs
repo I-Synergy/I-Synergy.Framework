@@ -58,7 +58,7 @@ public abstract class BaseNavigationService : INavigationService
     /// When the frame is evicted, the scope is disposed, which cascades
     /// to the ViewModel and all scoped dependencies resolved within that frame.
     /// </summary>
-    private sealed class NavigationFrame : IDisposable
+    protected class NavigationFrame : IDisposable
     {
         public IServiceScope Scope { get; init; } = null!;
         public Type ViewModelType { get; init; } = null!;
@@ -71,12 +71,12 @@ public abstract class BaseNavigationService : INavigationService
     /// Navigation backstack. Each entry holds a child scope that owns
     /// exactly one ViewModel instance (registered as scoped).
     /// </summary>
-    private Stack<NavigationFrame> _backStack = new Stack<NavigationFrame>();
+    protected Stack<NavigationFrame> _backStack = new Stack<NavigationFrame>();
 
     /// <summary>
     /// The frame currently displayed in the navigation host.
     /// </summary>
-    private NavigationFrame? _currentFrame;
+    protected NavigationFrame? _currentFrame;
 
     /// <summary>
     /// Maximum size for the backstack before disposing oldest entries.
@@ -88,13 +88,13 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Scope that owns the current modal ViewModel. Replaced on each modal navigation, disposed on service disposal.
     /// </summary>
-    private IServiceScope? _modalScope;
+    protected IServiceScope? _modalScope;
 
     /// <summary>
     /// Gets a value indicating whether this instance can go back.
     /// </summary>
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-    public bool CanGoBack => _backStack.Count > 0;
+    public virtual bool CanGoBack => _backStack.Count > 0;
 
     #region Abstract Platform-Specific Methods
 
@@ -331,7 +331,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <item><description>Back navigation: disposes the current frame (scope + ViewModel + scoped dependencies).</description></item>
     /// </list>
     /// </summary>
-    private void HandleCurrentFrame(bool backNavigation)
+    protected virtual void HandleCurrentFrame(bool backNavigation)
     {
         if (_currentFrame is null)
             return;
@@ -376,7 +376,7 @@ public abstract class BaseNavigationService : INavigationService
     /// When the ViewModel is already initialized, still calls SafeOnNavigatedTo
     /// to preserve the original behavior of notifying the ViewModel on every navigation.
     /// </summary>
-    private async Task InitializeViewAndViewModel(IView page, bool backNavigation)
+    protected virtual async Task InitializeViewAndViewModel(IView page, bool backNavigation)
     {
         if (page.ViewModel is not null)
         {
@@ -432,7 +432,7 @@ public abstract class BaseNavigationService : INavigationService
     /// If found, the frame is removed from the backstack and returned.
     /// The ViewModel is already cached in the frame's scope (scoped registration).
     /// </summary>
-    private bool TryRemoveFromBackStack<TViewModel>([NotNullWhen(true)] out NavigationFrame? frame)
+    protected virtual bool TryRemoveFromBackStack<TViewModel>([NotNullWhen(true)] out NavigationFrame? frame)
         where TViewModel : class, IViewModel
     {
         var match = _backStack.FirstOrDefault(f => f.ViewModelType == typeof(TViewModel));
@@ -452,7 +452,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Goes back to the previous ViewModel in the navigation stack.
     /// </summary>
-    public async Task GoBackAsync()
+    public virtual async Task GoBackAsync()
     {
         if (!CanGoBack)
             return;
@@ -484,7 +484,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Cleans up ViewModels in the backstack.
     /// </summary>
-    public Task CleanBackStackAsync(bool suppressEvent = false)
+    public virtual Task CleanBackStackAsync(bool suppressEvent = false)
     {
         foreach (var frame in _backStack)
         {
@@ -516,14 +516,14 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates to a specified ViewModel as an asynchronous operation.
     /// </summary>
-    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
+    public virtual Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel =>
         NavigateAsync(default(TViewModel)!, parameter, backNavigation);
 
     /// <summary>
     /// Navigates to a specified ViewModel as an asynchronous operation.
     /// </summary>
-    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    public virtual async Task NavigateAsync<TViewModel>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
     {
         var hostFrame = GetNavigationFrame();
@@ -585,7 +585,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates to a specified ViewModel with a specified view type.
     /// </summary>
-    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
+    public virtual Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView =>
         NavigateAsync<TViewModel, TView>(default!, parameter, backNavigation);
@@ -593,7 +593,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates to a specified ViewModel with a specified view type.
     /// </summary>
-    public async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    public virtual async Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
         where TViewModel : class, IViewModel
         where TView : IView
     {
@@ -654,7 +654,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Navigates modally to a specified ViewModel.
     /// </summary>
-    public async Task NavigateModalAsync<TViewModel>(object? parameter = null)
+    public virtual async Task NavigateModalAsync<TViewModel>(object? parameter = null)
         where TViewModel : class, IViewModel
     {
         // WPF clears backstack handlers before modal navigation
@@ -706,7 +706,7 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
-    public void Dispose()
+    public virtual void Dispose()
     {
         if (_isDisposed)
             return;
