@@ -4,7 +4,7 @@ namespace ISynergy.Framework.Core.Collections;
 ///   Possible node colors for <see cref="RedBlackTree{T}"/>s.
 /// </summary>
 ///
-public enum RedBlackTreeNodeType
+public enum RedBlackTreeNodeTypes
 {
     /// <summary>
     ///   Red node.
