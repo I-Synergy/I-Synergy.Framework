@@ -336,3 +336,6 @@ ASALocalRun/
 _site/
 .claude/settings.local.json
 .claude/worktrees/
+
+# DeepSeek session swap backup (crash recovery)
+CLAUDE.md.deepseek-backup
