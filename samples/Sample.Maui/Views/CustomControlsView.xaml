@@ -16,6 +16,7 @@
         <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>
         <converters:DecimalToStringConverter x:Key="DecimalToStringConverter"/>
         <converters:CurrencyToStringConverter x:Key="CurrencyToStringConverter"/>
+        <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
     </c:View.Resources>
 
     <Grid>
@@ -65,6 +66,7 @@
                     <Label Text="Theme:" />
                     <Picker ItemsSource="{m:EnumCollection EnumType={x:Type core_enums:Themes}}"
                             SelectedItem="{Binding SelectedTheme}"
+                            ItemDisplayBinding="{Binding ., Converter={StaticResource EnumToDescriptionConverter}}"
                             FontSize="14" />
                 </VerticalStackLayout>
 

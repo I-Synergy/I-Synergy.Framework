@@ -19,12 +19,13 @@ public static class EnumExtensions
     public static string GetDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicNestedTypes | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicEvents)] T>(this T enumerationValue)
         where T : Enum
     {
-        if (!typeof(T).IsEnum)
-            throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
+        // Use the concrete runtime type (e.g. Themes) rather than typeof(T)
+        // which resolves to System.Enum when called on an Enum-typed variable.
+        Type concreteType = enumerationValue.GetType();
 
         //Tries to find a DescriptionAttribute for a potential friendly name
         //for the enum
-        MemberInfo[] memberInfo = typeof(T).GetMember(enumerationValue.ToString());
+        MemberInfo[] memberInfo = concreteType.GetMember(enumerationValue.ToString());
         if (memberInfo is not null && memberInfo.Length > 0)
         {
             object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
@@ -47,12 +48,13 @@ public static class EnumExtensions
     public static string GetLocalizedDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicNestedTypes | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicEvents)] T>(this T enumerationValue)
         where T : Enum
     {
-        if (!typeof(T).IsEnum)
-            throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
+        // Use the concrete runtime type (e.g. Themes) rather than typeof(T)
+        // which resolves to System.Enum when called on an Enum-typed variable.
+        Type concreteType = enumerationValue.GetType();
 
-        //Tries to find a DescriptionAttribute for a potential friendly name
+        //Tries to find a LocalizedDescriptionAttribute for a potential friendly name
         //for the enum
-        MemberInfo[] memberInfo = typeof(T).GetMember(enumerationValue.ToString());
+        MemberInfo[] memberInfo = concreteType.GetMember(enumerationValue.ToString());
         if (memberInfo is not null && memberInfo.Length > 0)
         {
             object[] attrs = memberInfo[0].GetCustomAttributes(typeof(LocalizedDescriptionAttribute), false);

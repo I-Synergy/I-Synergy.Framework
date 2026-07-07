@@ -92,17 +92,17 @@
     <PackageVersion Include="Sentry" Version="6.6.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.6.0" />
     <PackageVersion Include="SkiaSharp" Version="4.148.0" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="33.2.15" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="33.2.15" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="34.1.29" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="34.1.29" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
   </ItemGroup>
 </Project>
