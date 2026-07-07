@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Maui"
              xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls"
              x:Class="ISynergy.Framework.UI.Controls.NavigationItem"
              x:Name="NavigationItemControl"
@@ -16,6 +15,11 @@
                             <VisualState.Setters>
                                 <Setter Property="Opacity" Value="1" />
                                 <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray150}, Dark={DynamicResource TintedGray850}}" />
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState x:Name="Disabled">
@@ -34,9 +38,8 @@
         BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
         Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}"
         StrokeThickness="0.1"
-        StrokeShape="RoundRectangle 2"
-        behaviors:CursorBehavior.Cursor="Hand">
-        <Grid ColumnSpacing="10" behaviors:CursorBehavior.Cursor="Hand">
+        StrokeShape="RoundRectangle 2">
+        <Grid ColumnSpacing="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition>
                     <ColumnDefinition.Width>
