@@ -36,7 +36,7 @@ public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     ///   Gets or sets this node's color.
     /// </summary>
     ///
-    public RedBlackTreeNodeType Color { get; set; }
+    public RedBlackTreeNodeTypes Color { get; set; }
 
     /// <summary>
     ///   Gets or sets the value associated with this node.
@@ -52,7 +52,7 @@ public class RedBlackTreeNode<T> : BinaryNode<RedBlackTreeNode<T>>
     /// </returns>
     public override string ToString()
     {
-        if (Color == RedBlackTreeNodeType.Black)
+        if (Color == RedBlackTreeNodeTypes.Black)
             return $"Black: {Value}";
         return $"Red: {Value}";
     }
