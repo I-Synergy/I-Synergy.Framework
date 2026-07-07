@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -108,7 +107,7 @@ public class SettingsViewModel : ViewModelNavigation<bool>
     public override async Task CancelAsync()
     {
         await base.CancelAsync();
-        await _navigationService.NavigateModalAsync<IShellViewModel>();
+        await _navigationService.GoBackAsync();
     }
 
     public override async Task SubmitAsync(bool e, bool validateUnderlayingProperties = true)
