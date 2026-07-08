@@ -65,9 +65,6 @@
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
       <PropertyGroup>
         <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
-
-        <CodesignKey>Apple Development: Created via API (Y4Q66R3GZS)</CodesignKey>
-        <CodesignProvision>VS: WildCard Development</CodesignProvision>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
