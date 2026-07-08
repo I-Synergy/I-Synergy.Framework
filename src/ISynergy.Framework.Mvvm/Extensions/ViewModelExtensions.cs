@@ -41,6 +41,7 @@ public static class ViewModelExtensions
 {
     private static Func<Assembly, bool> assemblyFilter => // NOSONAR
         (x =>
+        !x.IsDynamic &&
         !x.FullName!.StartsWith("System", StringComparison.Ordinal) &&
         !x.FullName!.StartsWith("WinRT", StringComparison.Ordinal) &&
         !x.FullName!.StartsWith("Microsoft", StringComparison.Ordinal) &&
