@@ -31,6 +31,12 @@ public static class OtlpTelemetryExtensions
 
         telemetryExporterOptions?.Invoke(options);
 
+        if (string.IsNullOrWhiteSpace(options.Endpoint?.ToString()))
+        {
+            System.Diagnostics.Debug.WriteLine("OTLP endpoint is not configured. Skipping OTLP exporter registration.");
+            return telemetryBuilder;
+        }
+
         telemetryBuilder
             .OpenTelemetryBuilder
                 .WithTracing(builder => builder
