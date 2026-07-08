@@ -90,5 +90,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
         _navigationService.NavigateModalAsync<SettingsViewModel>();
+
+    /// <summary>
+    /// Opens the help page as a modal.
+    /// </summary>
+    protected override Task OpenHelpAsync() =>
+        _navigationService.NavigateModalAsync<HelpViewModel>();
 }
 

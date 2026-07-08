@@ -17,7 +17,7 @@ public static class ExceptionExtensions
     /// <summary>
     /// Defines the verbosity level for exception messages
     /// </summary>
-    public enum ExceptionVerbosityLevel
+    public enum ExceptionVerbosityLevels
     {
         /// <summary>
         /// Minimal information (type and message only)
@@ -111,7 +111,7 @@ public static class ExceptionExtensions
     public static string ToMessage( // NOSONAR
         this Exception exception,
         string environmentStackTrace,
-        ExceptionVerbosityLevel verbosity = ExceptionVerbosityLevel.Full,
+        ExceptionVerbosityLevels verbosity = ExceptionVerbosityLevels.Full,
         bool includeEnvironmentStack = true,
         bool sanitizeSensitiveData = true)
     {
@@ -126,7 +126,7 @@ public static class ExceptionExtensions
             sb.AppendLine($"Exception type: {exception.GetType().FullName}");
             sb.AppendLine($"Message: {exceptionMessage}");
 
-            if (verbosity >= ExceptionVerbosityLevel.Standard)
+            if (verbosity >= ExceptionVerbosityLevels.Standard)
             {
                 // Add exception data if available
                 if (exception.Data.Count > 0)
@@ -156,7 +156,7 @@ public static class ExceptionExtensions
                 }
             }
 
-            if (verbosity == ExceptionVerbosityLevel.Full)
+            if (verbosity == ExceptionVerbosityLevels.Full)
             {
                 // Add stack trace information
                 var stackTrace = exception.StackTrace ?? string.Empty;
@@ -199,7 +199,7 @@ public static class ExceptionExtensions
     /// <returns>Formatted exception message with stack trace</returns>
     public static string ToMessage(this Exception exception, string environmentStackTrace)
     {
-        return ToMessage(exception, environmentStackTrace, ExceptionVerbosityLevel.Full, true, true);
+        return ToMessage(exception, environmentStackTrace, ExceptionVerbosityLevels.Full, true, true);
     }
 
     /// <summary>
@@ -237,7 +237,7 @@ public static class ExceptionExtensions
     private static void AppendInnerExceptions( // NOSONAR
         StringBuilder sb,
         Exception innerException,
-        ExceptionVerbosityLevel verbosity,
+        ExceptionVerbosityLevels verbosity,
         bool sanitizeSensitiveData = true,
         int currentDepth = 0,
         int maxDepth = 10)
@@ -255,7 +255,7 @@ public static class ExceptionExtensions
         sb.AppendLine($"Inner exception: {innerException.GetType().FullName}");
         sb.AppendLine($"Message: {innerMessage}");
 
-        if (verbosity == ExceptionVerbosityLevel.Full && innerException.Data.Count > 0)
+        if (verbosity == ExceptionVerbosityLevels.Full && innerException.Data.Count > 0)
         {
             sb.AppendLine("Exception Data:");
             foreach (DictionaryEntry entry in innerException.Data)
@@ -300,7 +300,7 @@ public static class ExceptionExtensions
     private static void AppendAggregateException(
         StringBuilder sb,
         AggregateException aggregateException,
-        ExceptionVerbosityLevel verbosity,
+        ExceptionVerbosityLevels verbosity,
         bool sanitizeSensitiveData = true)
     {
         sb.AppendLine($"AggregateException with {aggregateException.InnerExceptions.Count} inner exceptions:");
@@ -313,7 +313,7 @@ public static class ExceptionExtensions
             sb.AppendLine($"Type: {innerEx.GetType().FullName}");
             sb.AppendLine($"Message: {innerMessage}");
 
-            if (verbosity == ExceptionVerbosityLevel.Full && !string.IsNullOrEmpty(innerEx.StackTrace))
+            if (verbosity == ExceptionVerbosityLevels.Full && !string.IsNullOrEmpty(innerEx.StackTrace))
             {
                 var stackTrace = sanitizeSensitiveData ? SanitizeSensitiveData(innerEx.StackTrace) : innerEx.StackTrace;
                 sb.AppendLine("Stack trace:");

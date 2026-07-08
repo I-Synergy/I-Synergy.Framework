@@ -6,7 +6,8 @@
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     x:Class="Sample.Views.SettingsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
-    x:DataType="viewmodels:SettingsViewModel">
+    x:DataType="viewmodels:SettingsViewModel"
+    BarBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
 
     <ContentPage Title="A">
         <Grid>

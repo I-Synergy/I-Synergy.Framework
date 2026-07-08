@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+             x:Class="Sample.Views.HelpView"
+             x:DataType="viewmodels:HelpViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
+
+    <Grid RowDefinitions="*, Auto" Padding="20">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="20"
+                                MaximumWidthRequest="600"
+                                HorizontalOptions="Center">
+
+                <!-- Header -->
+                <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                    <Label Text="&#xf05a;"
+                           FontFamily="fontawesome"
+                           FontSize="48"
+                           HorizontalOptions="Center"
+                           TextColor="{DynamicResource Primary}" />
+                    <Label Text="{Binding ProductName}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
+                    <Label HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={DynamicResource Gray600}, Dark={DynamicResource Gray300}}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Version " />
+                                <Span Text="{Binding Version}" FontAttributes="Bold" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+
+                <BoxView HeightRequest="1"
+                         Margin="40,0"
+                         Color="{AppThemeBinding Light={DynamicResource TintedGray300}, Dark={DynamicResource TintedGray700}}" />
+
+                <!-- Getting Started -->
+                <Frame Padding="16"
+                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                       BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
+                       CornerRadius="8">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Getting Started"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource Primary}" />
+                        <Label Text="Navigate using the bottom tabs to explore different sections of the application. Use the flyout menu (hamburger icon) to access Settings, change the theme, switch the language, or find help."
+                               FontSize="13"
+                               LineHeight="1.4"
+                               TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Key Features -->
+                <Frame Padding="16"
+                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                       BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
+                       CornerRadius="8">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Key Features"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource Primary}" />
+                        <VerticalStackLayout Spacing="6">
+                            <Label FontSize="13" LineHeight="1.4"
+                                   TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="&#xf00c;  " FontFamily="fontawesome" TextColor="{DynamicResource Primary}" />
+                                        <Span Text="Dashboard — view key metrics and information at a glance" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label FontSize="13" LineHeight="1.4"
+                                   TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="&#xf00c;  " FontFamily="fontawesome" TextColor="{DynamicResource Primary}" />
+                                        <Span Text="Custom Controls — explore reusable UI components" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label FontSize="13" LineHeight="1.4"
+                                   TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="&#xf00c;  " FontFamily="fontawesome" TextColor="{DynamicResource Primary}" />
+                                        <Span Text="MAUI Controls — browse native .NET MAUI controls" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label FontSize="13" LineHeight="1.4"
+                                   TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="&#xf00c;  " FontFamily="fontawesome" TextColor="{DynamicResource Primary}" />
+                                        <Span Text="Slide Show — view presentations and media content" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Tips -->
+                <Frame Padding="16"
+                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                       BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
+                       CornerRadius="8">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Quick Tips"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource Primary}" />
+                        <Label FontSize="13" LineHeight="1.4"
+                               TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="&#xf05a;  " FontFamily="fontawesome" TextColor="{DynamicResource Primary}" />
+                                    <Span Text="Open the flyout menu to change the theme (Light/Dark) or switch the application language at any time." />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label FontSize="13" LineHeight="1.4"
+                               TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="&#xf05a;  " FontFamily="fontawesome" TextColor="{DynamicResource Primary}" />
+                                    <Span Text="Use the Settings page to configure local preferences and global application options." />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Publisher Info -->
+                <Frame Padding="16"
+                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                       BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
+                       CornerRadius="8">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="About"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource Primary}" />
+                        <VerticalStackLayout Spacing="4">
+                            <Label FontSize="13"
+                                   TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Published by: " />
+                                        <Span Text="{Binding CompanyName}" FontAttributes="Bold" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="{Binding Copyrights}"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light={DynamicResource Gray500}, Dark={DynamicResource Gray400}}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Close button -->
+        <Button Grid.Row="1"
+                Text="Close"
+                Style="{DynamicResource DefaultButtonStyle}"
+                Margin="0,16,0,0"
+                Command="{Binding CancelCommand}" />
+
+    </Grid>
+</ContentPage>

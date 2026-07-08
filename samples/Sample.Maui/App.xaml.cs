@@ -165,9 +165,11 @@ public partial class App : Application
             var culture = CultureInfo.DefaultThreadCurrentCulture ?? CultureInfo.CurrentCulture;
             culture.ApplyCulture(ConfigureNumberFormat);
 
-            // Profile should already be set in context by AuthenticationService
-            // Navigate to Shell to show authenticated UI
-            await _navigationService.NavigateModalAsync<ShellViewModel>();
+            // Pop all modals back to the Shell. Since Shell is now never
+            // replaced (modals are pushed on top via PushModalAsync),
+            // we just dismiss every modal to reveal the original Shell.
+            while (_navigationService.CanGoBack)
+                await _navigationService.GoBackAsync();
         }
         catch (Exception ex)
         {

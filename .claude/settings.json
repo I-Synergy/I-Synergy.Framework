@@ -62,6 +62,19 @@
             "statusMessage": "Syncing agent to .claude/, .github/, and .reasonix/skills/..."
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "agent",
+            "if": "Write(.ai/reference/critical-rules.md)|Edit(.ai/reference/critical-rules.md)|Write(.ai/reference/task-execution.md)|Edit(.ai/reference/task-execution.md)|Write(.ai/agents/**)|Edit(.ai/agents/**)|Write(CLAUDE.md)|Edit(CLAUDE.md)",
+            "prompt": "A file that DEEPSEEK.md depends on was just changed. Read the changed file(s) and compare against DEEPSEEK.md to determine if it needs updating. DEEPSEEK.md is a flattened, self-contained version of CLAUDE.md + critical-rules.md + task-execution.md optimized for DeepSeek models (flatter structure, fewer cross-references, inline critical rules). Key rules for DEEPSEEK.md: (1) It must stay self-contained — inline the most important rules rather than referencing them. (2) It should be ~180-220 lines. (3) The subagent delegation table must match .ai/agents/. (4) The critical coding rules section must reflect the current critical-rules.md. (5) The task execution protocol must reflect task-execution.md. (6) It must remain a flat, direct instruction set — DeepSeek struggles with deeply nested cross-references. If DEEPSEEK.md is already accurate, do nothing. If changes are needed, edit it. Do NOT commit.",
+            "timeout": 120,
+            "statusMessage": "Syncing DEEPSEEK.md with .ai/ changes...",
+            "async": true
+          }
+        ]
       }
     ]
   },

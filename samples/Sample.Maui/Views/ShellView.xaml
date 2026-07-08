@@ -3,6 +3,9 @@
     x:Class="Sample.Views.ShellView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:views="clr-namespace:Sample.Views"
     x:DataType="viewmodels:ShellViewModel"
@@ -34,29 +37,12 @@
         Route="slideshow" />
 
     <Shell.FlyoutFooter>
-        <Grid Margin="20" HorizontalOptions="Center">
-            <HorizontalStackLayout Spacing="20">
-                <Button Text="{StaticResource help}"
-                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
-                        ToolTipProperties.Text="Help"
-                        Style="{DynamicResource IconOnlyButton}"
-                        Command="{Binding HelpCommand}" />
-                <Button Text="{StaticResource language}"
-                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
-                        ToolTipProperties.Text="Language"
-                        Style="{DynamicResource IconOnlyButton}"
-                        Command="{Binding LanguageCommand}" />
-                <Button Text="{StaticResource theme}"
-                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
-                        ToolTipProperties.Text="Theme"
-                        Style="{DynamicResource IconOnlyButton}"
-                        Command="{Binding ThemeCommand}" />
-                <Button Text="{StaticResource settings}"
-                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
-                        ToolTipProperties.Text="Settings"
-                        Style="{DynamicResource IconOnlyButton}"
-                        Command="{Binding SettingsCommand}" />
-            </HorizontalStackLayout>
-        </Grid>
+        <VerticalStackLayout Padding="4">
+            <c:NavigationItem Text="Help" Icon="{DynamicResource IconHelp}" Command="{Binding HelpCommand}"/>
+            <c:NavigationItem Text="Language" Icon="{DynamicResource IconLanguage}" Command="{Binding LanguageCommand}"/>
+            <c:NavigationItem Text="Theme" Icon="{DynamicResource IconTheme}" Command="{Binding ThemeCommand}"/>
+            <c:NavigationItem Text="Settings" Icon="{DynamicResource IconSettings}" Command="{Binding SettingsCommand}"/>
+            <!--<c:NavigationItem Text="Signin" Icon="{DynamicResource IconSignin}" Command="{Binding SigninCommand}"/>-->
+        </VerticalStackLayout>
     </Shell.FlyoutFooter>
 </Shell>

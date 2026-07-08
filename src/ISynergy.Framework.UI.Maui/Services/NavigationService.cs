@@ -347,18 +347,50 @@ public class NavigationService : BaseNavigationService
 
                 if (NavigationExtensions.CreatePage<TViewModel>(scopedProvider, parameter: parameter) is { } view && view is Page page)
                 {
-                    if (page is TabbedPage)
-                        page.Handler = null;
+                    // Detach any existing handler so MAUI reinitializes the
+                    // native view tree for recycled singleton pages.
+                    page.Handler = null;
 
                     var mainPage = GetMainPage();
-                    if (mainPage is null)
-                        throw new InvalidOperationException(DefaultPageNotAvailable);
 
-                    var oldPage = Application.Current.Windows[0].Page;
-                    Application.Current.Windows[0].Page = page;
+                    if (mainPage is null || mainPage is not Shell)
+                    {
+                        // Initial setup or non-Shell root (e.g., LoadingView):
+                        // replace the window root page entirely.
+                        if (mainPage is null)
+                            throw new InvalidOperationException(DefaultPageNotAvailable);
 
-                    CleanupPageResources(oldPage);
-                    oldScope?.Dispose();
+                        var oldPage = Application.Current.Windows[0].Page;
+                        Application.Current.Windows[0].Page = page;
+
+                        CleanupPageResources(oldPage);
+                        oldScope?.Dispose();
+                    }
+                    else
+                    {
+                        // Shell is the root — push as a native MAUI modal so
+                        // the Shell (and its tab bar) stays attached as
+                        // Window.Page. Frame/scope lifecycle is managed via
+                        // HandleCurrentFrame and the _backStack so GoBackAsync
+                        // can pop and dispose correctly.
+                        var newFrame = new NavigationFrame
+                        {
+                            Scope = _modalScope,
+                            ViewModelType = typeof(TViewModel),
+                            Parameter = parameter
+                        };
+
+                        HandleCurrentFrame(backNavigation: false);
+                        _currentFrame = newFrame;
+
+                        _pageFrames.Remove(page);
+                        _pageFrames.Add(page, newFrame);
+
+                        await mainPage.Navigation.PushModalAsync(page, Animated);
+
+                        // oldScope belongs to the page underneath (Shell or
+                        // a previous modal) — do NOT dispose it.
+                    }
 
                     if (view is not null && view.ViewModel is not null)
                     {

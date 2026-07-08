@@ -175,7 +175,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         var k = item.Value;
         var p = this._root;
 
-        item.Color = RedBlackTreeNodeType.Red;
+        item.Color = RedBlackTreeNodeTypes.Red;
         item.Parent = null;
         item.Left = null;
         item.Right = null;
@@ -183,7 +183,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         if (p is null)
         {
             _root = item;
-            item.Color = RedBlackTreeNodeType.Black;
+            item.Color = RedBlackTreeNodeTypes.Black;
             this._count++;
             return;
         }
@@ -226,19 +226,19 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
 
     fixtree:
 
-        if (item.Parent!.Color == RedBlackTreeNodeType.Red)
+        if (item.Parent!.Color == RedBlackTreeNodeTypes.Red)
         {
             // red cannot have red child
             var u = p == p.Parent!.Left ? p.Parent.Right : p.Parent.Left;
 
-            if (u is not null && u.Color == RedBlackTreeNodeType.Red)
+            if (u is not null && u.Color == RedBlackTreeNodeTypes.Red)
             {
-                p.Color = u.Color = RedBlackTreeNodeType.Black;
+                p.Color = u.Color = RedBlackTreeNodeTypes.Black;
                 item = p.Parent;
 
                 if ((p = item.Parent) is not null)
                 {
-                    item.Color = RedBlackTreeNodeType.Red;
+                    item.Color = RedBlackTreeNodeTypes.Red;
                     goto fixtree;
                 }
             }
@@ -256,8 +256,8 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                     item = item.Right!;
                 }
 
-                p.Color = RedBlackTreeNodeType.Black;
-                p.Parent.Color = RedBlackTreeNodeType.Red;
+                p.Color = RedBlackTreeNodeTypes.Black;
+                p.Parent.Color = RedBlackTreeNodeTypes.Red;
 
                 if (item == p.Left && p == p.Parent.Left)
                     rotate_right(p.Parent);
@@ -369,11 +369,11 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         if (m is not null)
             m.Parent = mp;
 
-        if (node.Color == RedBlackTreeNodeType.Black)
+        if (node.Color == RedBlackTreeNodeTypes.Black)
         {
-            if (m is not null && m.Color == RedBlackTreeNodeType.Red)
+            if (m is not null && m.Color == RedBlackTreeNodeTypes.Red)
             {
-                m.Color = RedBlackTreeNodeType.Black;
+                m.Color = RedBlackTreeNodeTypes.Black;
             }
             else
             {
@@ -383,10 +383,10 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                 {
                     var s = m == mp.Left ? mp.Right : mp.Left;
 
-                    if (s!.Color == RedBlackTreeNodeType.Red)
+                    if (s!.Color == RedBlackTreeNodeTypes.Red)
                     {
-                        mp.Color = RedBlackTreeNodeType.Red;
-                        s.Color = RedBlackTreeNodeType.Black;
+                        mp.Color = RedBlackTreeNodeTypes.Red;
+                        s.Color = RedBlackTreeNodeTypes.Black;
 
                         if (m == mp.Left)
                             rotate_left(mp);
@@ -395,13 +395,13 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                         s = m == mp.Left ? mp.Right : mp.Left;
                     }
 
-                    if (mp.Color == RedBlackTreeNodeType.Black
-                      && s!.Color == RedBlackTreeNodeType.Black
-                      && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
-                      && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
+                    if (mp.Color == RedBlackTreeNodeTypes.Black
+                      && s!.Color == RedBlackTreeNodeTypes.Black
+                      && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black)
+                      && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
                     {
                         if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
-                            s.Color = RedBlackTreeNodeType.Red;
+                            s.Color = RedBlackTreeNodeTypes.Red;
 
                         m = mp;
                         mp = m.Parent;
@@ -409,50 +409,50 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
                         goto deleteblack;
                     }
 
-                    if (mp.Color == RedBlackTreeNodeType.Red
-                        && s!.Color == RedBlackTreeNodeType.Black
-                        && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black)
-                        && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
+                    if (mp.Color == RedBlackTreeNodeTypes.Red
+                        && s!.Color == RedBlackTreeNodeTypes.Black
+                        && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black)
+                        && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
                     {
                         if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
-                            s.Color = RedBlackTreeNodeType.Red;
+                            s.Color = RedBlackTreeNodeTypes.Red;
 
-                        mp.Color = RedBlackTreeNodeType.Black;
+                        mp.Color = RedBlackTreeNodeTypes.Black;
                     }
                     else
                     {
-                        if (m == mp.Left && s!.Color == RedBlackTreeNodeType.Black
-                                         && (s.Left is not null && s.Left.Color == RedBlackTreeNodeType.Red)
-                                         && (s.Right is null || s.Right.Color == RedBlackTreeNodeType.Black))
+                        if (m == mp.Left && s!.Color == RedBlackTreeNodeTypes.Black
+                                         && (s.Left is not null && s.Left.Color == RedBlackTreeNodeTypes.Red)
+                                         && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
                         {
-                            s.Color = RedBlackTreeNodeType.Red;
-                            s.Left.Color = RedBlackTreeNodeType.Black;
+                            s.Color = RedBlackTreeNodeTypes.Red;
+                            s.Left.Color = RedBlackTreeNodeTypes.Black;
 
                             rotate_right(s);
 
                             s = m == mp.Left ? mp.Right : mp.Left;
                         }
-                        else if (m == mp.Right && s!.Color == RedBlackTreeNodeType.Black
-                                               && (s.Right is not null && s.Right.Color == RedBlackTreeNodeType.Red)
-                                               && (s.Left is null || s.Left.Color == RedBlackTreeNodeType.Black))
+                        else if (m == mp.Right && s!.Color == RedBlackTreeNodeTypes.Black
+                                               && (s.Right is not null && s.Right.Color == RedBlackTreeNodeTypes.Red)
+                                               && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black))
                         {
-                            s.Color = RedBlackTreeNodeType.Red;
-                            s.Right.Color = RedBlackTreeNodeType.Black;
+                            s.Color = RedBlackTreeNodeTypes.Red;
+                            s.Right.Color = RedBlackTreeNodeTypes.Black;
                             rotate_left(s);
                             s = m == mp.Left ? mp.Right : mp.Left;
                         }
 
                         s!.Color = mp.Color;
-                        mp.Color = RedBlackTreeNodeType.Black;
+                        mp.Color = RedBlackTreeNodeTypes.Black;
 
                         if (m == mp.Left)
                         {
-                            s.Right!.Color = RedBlackTreeNodeType.Black;
+                            s.Right!.Color = RedBlackTreeNodeTypes.Black;
                             rotate_left(mp);
                         }
                         else
                         {
-                            s.Left!.Color = RedBlackTreeNodeType.Black;
+                            s.Left!.Color = RedBlackTreeNodeTypes.Black;
                             rotate_right(mp);
                         }
                     }
@@ -1005,12 +1005,12 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         if (n.Left is not null && _compare.Compare(n.Left.Value, n.Value) > 0)
             return false;
 
-        if (n.Color == RedBlackTreeNodeType.Red)
+        if (n.Color == RedBlackTreeNodeTypes.Red)
         {
-            if (n.Right is not null && n.Right.Color == RedBlackTreeNodeType.Red)
+            if (n.Right is not null && n.Right.Color == RedBlackTreeNodeTypes.Red)
                 return false;
 
-            if (n.Left is not null && n.Left.Color == RedBlackTreeNodeType.Red)
+            if (n.Left is not null && n.Left.Color == RedBlackTreeNodeTypes.Red)
                 return false;
         }
 
@@ -1020,7 +1020,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         if (nbl != nbr)
             return false;
 
-        nblack = nbl + (n.Color == RedBlackTreeNodeType.Black ? 1 : 0);
+        nblack = nbl + (n.Color == RedBlackTreeNodeTypes.Black ? 1 : 0);
 
         return true;
     }
@@ -1032,7 +1032,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         if (_root is null)
             return true;
 
-        if (_root.Color != RedBlackTreeNodeType.Black)
+        if (_root.Color != RedBlackTreeNodeTypes.Black)
             return false;
 
         return check_node(_root, ref nblack);

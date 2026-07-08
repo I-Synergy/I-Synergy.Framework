@@ -234,7 +234,7 @@ public class SignUpViewModel : ViewModel
     }
 
     private Task SignInAsync() =>
-        _navigationService.NavigateModalAsync<SignInViewModel>();
+        _navigationService.GoBackAsync();
 
     public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {

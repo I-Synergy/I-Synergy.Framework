@@ -48,6 +48,9 @@
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
       <PropertyGroup>
         <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
+
+        <CodesignKey>Apple Development: Created via API (Y4Q66R3GZS)</CodesignKey>
+        <CodesignProvision>VS: WildCard Development</CodesignProvision>
       </PropertyGroup>
 
       <!-- This allows breakpoints to be hit when debugging!-->
@@ -57,9 +60,6 @@
 
       <PropertyGroup>
         <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
-        <ProvisioningType>manual</ProvisioningType>
-        <CodesignKey>Apple Development: Ismail Hassani (ANJW676PZ3)</CodesignKey>
-        <CodesignProvision>ISynergy</CodesignProvision>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
