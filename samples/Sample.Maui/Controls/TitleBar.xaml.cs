@@ -21,6 +21,18 @@ public partial class TitleBar
         else
             FlowDirection = FlowDirection.LeftToRight;
 
+#if MACCATALYST
+        SearchField.HandlerChanged += (s, e) =>
+        {
+            if (SearchField.Handler?.PlatformView is UIKit.UISearchBar native)
+            {
+                native.BackgroundColor = UIKit.UIColor.Clear;
+                if (native.SearchTextField is { } field)
+                    field.BackgroundColor = UIKit.UIColor.Clear;
+            }
+        };
+#endif
+
         Loaded += TitleBarLoaded;
         Unloaded += TitleBarUnloaded;
 

@@ -6,7 +6,8 @@
           Icon="icon.png"
           BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
     <TitleBar.Content>
-        <SearchBar Placeholder="Search"
+        <SearchBar x:Name="SearchField"
+                   Placeholder="Search"
                    MinimumWidthRequest="300"
                    MaximumHeightRequest="36"
                    MinimumHeightRequest="36"
