@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -48,7 +47,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         InitializeFirstRunAsync();
 
     protected override Task SignOutAsync() =>
-        ServiceLocator.Default.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
+        IPlatformApplication.Current!.Services.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {

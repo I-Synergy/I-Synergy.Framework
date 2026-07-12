@@ -1,9 +1,7 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ISynergy.Framework.UI.Controls;
 
@@ -47,7 +45,7 @@ public abstract class TabbedView : TabbedPage, IView
     : this()
     {
         Argument.IsNotNull(viewModelType);
-        _viewModelScope = ServiceLocator.Default.ServiceProvider.CreateScope();
+        _viewModelScope = IPlatformApplication.Current!.Services.CreateScope();
         ViewModel = (_viewModelScope.ServiceProvider.GetRequiredService(viewModelType) as IViewModel)!;
     }
 

@@ -1,7 +1,6 @@
 using Dotmim.Sync;
 using Dotmim.Sync.Enumerations;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -67,11 +66,11 @@ public class SyncViewModel : ViewModelNavigation<object>
         SyncProgressionText = "Ready...";
         SyncCommandButtonEnabled = true;
 
-        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => ServiceLocator.Default.GetService<ISynchronizationService>()?.IsActive == true);
-        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => ServiceLocator.Default.GetService<ISynchronizationService>()?.IsActive == true);
-        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync, () => ServiceLocator.Default.GetService<ISynchronizationService>()?.IsActive == true);
-        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => ServiceLocator.Default.GetService<ISynchronizationService>()?.IsActive == true);
-        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => ServiceLocator.Default.GetService<ISynchronizationService>()?.IsActive == true);
+        SyncCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Normal), () => IPlatformApplication.Current!.Services.GetService<ISynchronizationService>()?.IsActive == true);
+        SyncReinitializeCommand = new AsyncRelayCommand(async () => await ExecuteSyncCommand(SyncType.Reinitialize), () => IPlatformApplication.Current!.Services.GetService<ISynchronizationService>()?.IsActive == true);
+        CustomActionCommand = new AsyncRelayCommand(CustomActionCommandExecuteAsync, () => IPlatformApplication.Current!.Services.GetService<ISynchronizationService>()?.IsActive == true);
+        DeprovisionClientCommand = new AsyncRelayCommand(DeprovisionClientAsync, () => IPlatformApplication.Current!.Services.GetService<ISynchronizationService>()?.IsActive == true);
+        ProvisionClientCommand = new AsyncRelayCommand(ProvisionClientAsync, () => IPlatformApplication.Current!.Services.GetService<ISynchronizationService>()?.IsActive == true);
 
         _commonServices.MessengerService.Register<SyncMessage>(this, m => SyncProgressionText = m.Content);
         _commonServices.MessengerService.Register<SyncProgressMessage>(this, m => SyncProgress = m.Content);
@@ -103,7 +102,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
         try
         {
-            var syncService = ServiceLocator.Default.GetService<ISynchronizationService>();
+            var syncService = IPlatformApplication.Current!.Services.GetService<ISynchronizationService>();
             if (syncService?.IsActive == true)
                 await syncService.SynchronizeAsync(syncType);
         }
@@ -119,7 +118,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private void CustomActionInsertProductRow()
     {
-        var syncService = ServiceLocator.Default.GetService<ISynchronizationService>();
+        var syncService = IPlatformApplication.Current!.Services.GetService<ISynchronizationService>();
         if (syncService?.IsActive == true)
         {
             var connectionstringbuilder = new SqliteConnectionStringBuilder();
@@ -196,7 +195,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task ProvisionClientAsync()
     {
-        var syncService = ServiceLocator.Default.GetService<ISynchronizationService>();
+        var syncService = IPlatformApplication.Current!.Services.GetService<ISynchronizationService>();
         if (syncService?.IsActive == true &&
             syncService.SynchronizationAgent is SyncAgent agent)
         {
@@ -207,7 +206,7 @@ public class SyncViewModel : ViewModelNavigation<object>
 
     private async Task DeprovisionClientAsync()
     {
-        var syncService = ServiceLocator.Default.GetService<ISynchronizationService>();
+        var syncService = IPlatformApplication.Current!.Services.GetService<ISynchronizationService>();
         if (syncService?.IsActive == true &&
             syncService.SynchronizationAgent is SyncAgent agent)
             await agent.LocalOrchestrator.DeprovisionAsync();

@@ -30,6 +30,11 @@ public partial class App : Application
     }
 
     /// <summary>
+    /// Provides the custom XAML-based title bar with search and settings.
+    /// </summary>
+    protected override Microsoft.Maui.Controls.TitleBar SetTitleBar() => new Sample.Controls.TitleBar();
+
+    /// <summary>
     /// Called during framework initialization. Override to perform backend initialization,
     /// load data, apply migrations, etc. Must call SignalApplicationInitialized at the end.
     /// </summary>

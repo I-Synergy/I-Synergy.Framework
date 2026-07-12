@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Locators;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Windows.AppLifecycle;
 using System.Diagnostics;
@@ -190,7 +189,7 @@ public static partial class MauiWinUIApplicationExtensions
         // externally via windows.OnAppInstanceActivated (outside of ConfigureActivationHandlers).
         try
         {
-            var lifecycleService = ServiceLocator.Default.GetRequiredService<ILifecycleEventService>();
+            var lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<ILifecycleEventService>();
             lifecycleService.OnAppInstanceActivated(sender, e);
             Debug.WriteLine("[SingleInstance] MAUI lifecycle dispatch completed.");
         }

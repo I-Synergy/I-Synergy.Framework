@@ -159,6 +159,9 @@
   </ItemGroup>
   
 	<ItemGroup>
+		<MauiXaml Update="Controls\TitleBar.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\ControlsView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

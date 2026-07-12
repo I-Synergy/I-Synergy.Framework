@@ -1,6 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Constants;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
@@ -62,7 +60,7 @@ public partial class ImageBrowser : ContentView
     {
         try
         {
-            if (ServiceLocator.Default.GetRequiredService<IClipboardService>() is { } clipboardService &&
+            if (IPlatformApplication.Current!.Services.GetRequiredService<IClipboardService>() is { } clipboardService &&
                 await clipboardService.GetImageFromClipboardAsync() is { } imageResult &&
                 imageResult is not null) // NOSONAR
             {
@@ -88,7 +86,7 @@ public partial class ImageBrowser : ContentView
     {
         try
         {
-            if (ServiceLocator.Default.GetRequiredService<ICameraService>() is { } cameraService)
+            if (IPlatformApplication.Current!.Services.GetRequiredService<ICameraService>() is { } cameraService)
             {
                 var result = await cameraService.TakePictureAsync();
 
@@ -111,7 +109,7 @@ public partial class ImageBrowser : ContentView
     {
         try
         {
-            if (ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
+            if (IPlatformApplication.Current!.Services.GetRequiredService<IFileService<FileResult>>() is { } fileService)
             {
                 var result = await fileService.BrowseFileAsync(FileTypeConstants.FileTypesImages);
 

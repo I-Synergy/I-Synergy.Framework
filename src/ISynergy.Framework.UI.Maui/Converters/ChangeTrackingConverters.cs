@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using System.Globalization;
 using System.Text;
@@ -27,7 +26,7 @@ public class ChangeTrackingConverters : IValueConverter
         {
             var result = new StringBuilder();
             // Cache service lookup for performance - converters are XAML-bound and cannot use constructor injection
-            var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
+            var languageService = IPlatformApplication.Current!.Services.GetRequiredService<ILanguageService>();
 
             var userCreated = languageService.GetString("Unknown");
             var userChanged = languageService.GetString("Unknown");

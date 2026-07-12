@@ -1,7 +1,5 @@
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Globalization.Extensions;
@@ -20,11 +18,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 
-#if WINDOWS
-using Microsoft.UI.Xaml.Media;
-using ISynergy.Framework.UI.Helpers;
-#endif
-
 #pragma warning disable IDE0130, S1200
 
 namespace ISynergy.Framework.UI;
@@ -41,15 +34,40 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly ILogger<Application> _logger;
     protected readonly IMessengerService _messengerService;
 
-
+    protected readonly string _language;
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
     protected LoadingView? _loadingView;
     protected Microsoft.Maui.Controls.Window? _mainWindow;
 
+    /// <summary>
+    /// Gets the icon to display in the title bar. Override to provide a custom icon.
+    /// Return null or empty to omit the icon.
+    /// </summary>
+    protected virtual ImageSource? Icon => null;
 
-    private readonly IDispatcherTimer _clockTimer;
-    private readonly TitleBar _titleBar = new TitleBar();
+    /// <summary>
+    /// Creates the title bar for the main window. Override to provide a custom title bar.
+    /// </summary>
+    protected virtual TitleBar SetTitleBar()
+    {
+        var titleBar = new TitleBar();
+
+        if (Icon != null)
+            titleBar.Icon = Icon;
+
+        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
+            titleBar.Title = InfoService.Default.ProductName;
+
+        var isRightToLeft = CultureInfo.GetCultureInfo(_language).TextInfo.IsRightToLeft;
+
+        if (isRightToLeft)
+            titleBar.FlowDirection = FlowDirection.RightToLeft;
+        else
+            titleBar.FlowDirection = FlowDirection.LeftToRight;
+
+        return titleBar;
+    }
 
     private Task? Initialize { get; set; }
     private int lastErrorMessage = 0;
@@ -64,15 +82,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
 
-            _clockTimer = Dispatcher.CreateTimer();
-            _clockTimer.Interval = TimeSpan.FromSeconds(1);
-            _clockTimer.Tick += ClockTimerCallback;
-            _clockTimer.Start();
-
             // Get logger first for proper error tracking
             try
             {
-                _logger = ServiceLocator.Default.GetRequiredService<ILogger<Application>>();
+                _logger = IPlatformApplication.Current!.Services.GetRequiredService<ILogger<Application>>();
                 _logger.LogTrace("Application constructor started");
             }
             catch (Exception ex)
@@ -89,16 +102,16 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-                _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
-                _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
-                _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
-                _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-                _settingsService = ServiceLocator.Default.GetRequiredService<ISettingsService>();
-                _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
-                _lifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
-                _messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
+                _commonServices = IPlatformApplication.Current!.Services.GetRequiredService<ICommonServices>();
+                _dialogService = IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>();
+                _navigationService = IPlatformApplication.Current!.Services.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = IPlatformApplication.Current!.Services.GetRequiredService<IExceptionHandlerService>();
+                _settingsService = IPlatformApplication.Current!.Services.GetRequiredService<ISettingsService>();
+                _themeService = IPlatformApplication.Current!.Services.GetRequiredService<IThemeService>();
+                _lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = IPlatformApplication.Current!.Services.GetRequiredService<IMessengerService>();
 
-                _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+                _features = IPlatformApplication.Current!.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
                 // Pass a timeout to limit the execution time.
                 // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -108,8 +121,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
                 // Always initialize the culture so DefaultThreadCurrentCulture is never null.
                 // Falls back to the OS culture when no language is persisted yet.
-                var initialCulture = !string.IsNullOrEmpty(_settingsService.LocalSettings?.Language)
-                    ? CultureInfo.GetCultureInfo(_settingsService.LocalSettings.Language)
+                _language = _settingsService.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
+
+                var initialCulture = !string.IsNullOrEmpty(_language)
+                    ? CultureInfo.GetCultureInfo(_language)
                     : CultureInfo.CurrentCulture;
 
                 initialCulture.ApplyCulture(ConfigureNumberFormat);
@@ -208,66 +223,18 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState? activationState)
     {
-        // Apply RTL flow direction from saved settings so every MAUI app
-        // gets correct layout from the very first frame — no per-app code needed.
-        var language = _settingsService?.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
-
-        Microsoft.Maui.Controls.Page mainPage;
-
         // Always use LoadingView — it provides the default splash.svg background
         // when no custom image or video is configured
-        mainPage = CreateLoadingView();
-
-        mainPage.ApplyFlowDirection(language);
+        var mainPage = CreateLoadingView();
+        mainPage.ApplyFlowDirection(_language);
 
         _mainWindow = new Microsoft.Maui.Controls.Window(mainPage);
-        _mainWindow.ApplyFlowDirection(language);
+        _mainWindow.ApplyFlowDirection(_language);
+        _mainWindow.TitleBar = SetTitleBar();
 
-        var isRightToLeft = CultureInfo.GetCultureInfo(language).TextInfo.IsRightToLeft;
-
-        if (isRightToLeft)
-            _titleBar.FlowDirection = FlowDirection.RightToLeft;
-        else
-            _titleBar.FlowDirection = FlowDirection.LeftToRight;
-
-        _titleBar.Icon = "icon.png";
-
-        SetClock();
-
-        _mainWindow.TitleBar = _titleBar;
-        _mainWindow.Title = InfoService.Default.ProductName ?? string.Empty;
-
-#if WINDOWS
-        // Defer theme application until the native WinUI window handler is
-        // attached, so title bar colors can be set from the very first frame.
-        _mainWindow.HandlerChanged += OnMainWindowHandlerChanged;
-
-        void OnMainWindowHandlerChanged(object? s, EventArgs e)
-        {
-            if (_mainWindow?.Handler?.PlatformView is Microsoft.UI.Xaml.Window win)
-            {
-                _mainWindow.HandlerChanged -= OnMainWindowHandlerChanged;
-                var appWindow = win.GetAppWindow();
-                appWindow?.ApplyFlowDirectionToTitleBar(language);
-                // Theme was already applied in the constructor for accent/style.
-                // Re-apply here to update title bar colors now that the window exists.
-                _themeService.ApplyTheme();
-            }
-        }
-#else
-        // For non-Windows platforms, apply theme immediately since title bar styling isn't a concern.
         _themeService.ApplyTheme();
-#endif
 
         return _mainWindow;
-    }
-
-    private void ClockTimerCallback(object? sender, object e) => SetClock();
-
-    private void SetClock()
-    {
-        if (ServiceLocator.Default.GetRequiredService<IContext>() is not null)
-            _titleBar.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
     }
 
     /// <summary>
@@ -289,7 +256,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+            var configuration = IPlatformApplication.Current!.Services.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
@@ -436,11 +403,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (disposing)
         {
-            if (_clockTimer is not null)
-            {
-                _clockTimer.Stop();
-                _clockTimer.Tick -= ClockTimerCallback;
-            }
+
 
             _messengerService.Unregister<ShowInformationMessage>(this);
             _messengerService.Unregister<ShowWarningMessage>(this);
