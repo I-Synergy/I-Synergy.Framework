@@ -27,6 +27,7 @@ public partial class TitleBar
             if (SearchField.Handler?.PlatformView is UIKit.UISearchBar native)
             {
                 native.BackgroundColor = UIKit.UIColor.Clear;
+                native.BackgroundImage = new UIKit.UIImage();
                 if (native.SearchTextField is { } field)
                     field.BackgroundColor = UIKit.UIColor.Clear;
             }

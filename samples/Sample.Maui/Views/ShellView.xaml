@@ -12,6 +12,22 @@
     FlyoutBehavior="Flyout"
     FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
 
+    <Shell.MenuBarItems>
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="Settings" Command="{Binding SettingsCommand}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem Text="Sign Out" Command="{Binding SignInCommand}"/>
+        </MenuBarItem>
+        <MenuBarItem Text="View">
+            <MenuFlyoutItem Text="Language" Command="{Binding LanguageCommand}"/>
+            <MenuFlyoutItem Text="Theme" Command="{Binding ThemeCommand}"/>
+        </MenuBarItem>
+        <MenuBarItem Text="Help">
+            <MenuFlyoutItem Text="Help" Command="{Binding HelpCommand}"/>
+            <MenuFlyoutItem Text="Feedback" Command="{Binding FeedbackCommand}"/>
+        </MenuBarItem>
+    </Shell.MenuBarItems>
+
     <ShellContent
         Title="Dashboard"
         Icon="{DynamicResource IconInformation}"

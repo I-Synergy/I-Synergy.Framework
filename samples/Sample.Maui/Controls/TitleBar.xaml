@@ -6,20 +6,31 @@
           Icon="icon.png"
           BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
     <TitleBar.Content>
-        <SearchBar x:Name="SearchField"
-                   Placeholder="Search"
-                   MinimumWidthRequest="300"
-                   MaximumHeightRequest="36"
-                   MinimumHeightRequest="36"
-                   HorizontalOptions="End"
-                   VerticalOptions="Center"/>
+        <HorizontalStackLayout Spacing="8"
+                               HorizontalOptions="End">
+            <SearchBar x:Name="SearchField"
+                       Placeholder="Search"
+                       MinimumWidthRequest="300"
+                       VerticalOptions="End"/>
+        </HorizontalStackLayout>
     </TitleBar.Content>
     <TitleBar.TrailingContent>
-        <Button HeightRequest="36"
-                WidthRequest="36"
-                BorderWidth="0"
-                Background="Transparent"
-                Text="&#xf013;"
-                Style="{DynamicResource IconOnlyButton}"/>
+        <HorizontalStackLayout Spacing="8">
+            <Button HeightRequest="36"
+                    WidthRequest="36"
+                    BorderWidth="0"
+                    Background="Transparent"
+                    Text="&#xf013;"
+                    VerticalOptions="Center"
+                    Style="{DynamicResource IconOnlyButton}"/>
+
+            <Button HeightRequest="36"
+                    WidthRequest="36"
+                    BorderWidth="0"
+                    Background="Transparent"
+                    Text="&#xf013;"
+                    VerticalOptions="Center"
+                    Style="{DynamicResource IconOnlyButton}"/>
+        </HorizontalStackLayout>
     </TitleBar.TrailingContent>
 </TitleBar>
