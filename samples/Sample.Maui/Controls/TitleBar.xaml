@@ -11,7 +11,7 @@
             <SearchBar x:Name="SearchField"
                        Placeholder="Search"
                        MinimumWidthRequest="300"
-                       VerticalOptions="End"/>
+                       VerticalOptions="{OnPlatform MacCatalyst=End, Default=Center}"/>
         </HorizontalStackLayout>
     </TitleBar.Content>
     <TitleBar.TrailingContent>

@@ -37,6 +37,24 @@ public partial class ShellView : Shell, IShellView
         InitializeComponent();
 
         ViewModel = viewModel;
+
+#if MACCATALYST
+        var fileMenu = new MenuBarItem { Text = "File" };
+        fileMenu.Add(new MenuFlyoutItem { Text = "Settings", Command = viewModel.SettingsCommand });
+        fileMenu.Add(new MenuFlyoutSeparator());
+        fileMenu.Add(new MenuFlyoutItem { Text = "Sign Out", Command = viewModel.SignInCommand });
+        MenuBarItems.Add(fileMenu);
+
+        var viewMenu = new MenuBarItem { Text = "View" };
+        viewMenu.Add(new MenuFlyoutItem { Text = "Language", Command = viewModel.LanguageCommand });
+        viewMenu.Add(new MenuFlyoutItem { Text = "Theme", Command = viewModel.ThemeCommand });
+        MenuBarItems.Add(viewMenu);
+
+        var helpMenu = new MenuBarItem { Text = "Help" };
+        helpMenu.Add(new MenuFlyoutItem { Text = "Help", Command = viewModel.HelpCommand });
+        helpMenu.Add(new MenuFlyoutItem { Text = "Feedback", Command = viewModel.FeedbackCommand });
+        MenuBarItems.Add(helpMenu);
+#endif
     }
 
     #region IDisposable
