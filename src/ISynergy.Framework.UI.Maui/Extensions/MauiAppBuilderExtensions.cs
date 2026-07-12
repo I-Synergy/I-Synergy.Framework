@@ -77,8 +77,6 @@ public static class MauiAppBuilderExtensions
         where TResource : class
     {
         appBuilder.Services.AddOptions();
-        appBuilder.Services.AddPageResolver();
-
         appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
         appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
 
@@ -206,14 +204,5 @@ public static class MauiAppBuilderExtensions
             s => new SupportedCulturesService(builder.Build())));
 
         return appBuilder;
-    }
-
-    /// <summary>
-    /// Registers the action in the service collection with the page resolver
-    /// </summary>
-    /// <param name="services"></param>
-    public static void AddPageResolver(this IServiceCollection services)
-    {
-        services.TryAddEnumerable(ServiceDescriptor.Transient<IMauiInitializeService, MauiInitializerService>());
     }
 }

@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 
 namespace ISynergy.Framework.UI.Controls;
 
@@ -150,7 +149,7 @@ public class BusyIndicator : ContentView
     /// </summary>
     public void BindToBusyService()
     {
-        IBusyService busyService = ServiceLocator.Default.GetRequiredService<IBusyService>();
+        IBusyService busyService = IPlatformApplication.Current!.Services.GetRequiredService<IBusyService>();
 
         _messageLabel.BindingContext = busyService;
         _messageLabel.SetBinding(Label.TextProperty, new Binding(nameof(IBusyService.BusyMessage), BindingMode.OneWay));

@@ -1,6 +1,5 @@
 using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.OpenTelemetry.Extensions;
@@ -97,7 +96,7 @@ public static class MauiProgram
                 foreach (var arg in e.EnsureNotNull())
                 {
                     if (!string.IsNullOrEmpty(arg))
-                        await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync(arg, "Environment");
+                        await IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>().ShowMessageAsync(arg, "Environment");
                 }
             }, async p =>
             {
@@ -124,7 +123,7 @@ public static class MauiProgram
                 if (parts.Count == 0)
                     return;
 
-                await ServiceLocator.Default.GetRequiredService<IDialogService>()
+                await IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>()
                     .ShowMessageAsync(string.Join(Environment.NewLine, parts), "Protocol Activation");
             }, async l =>
             {
@@ -144,7 +143,7 @@ public static class MauiProgram
                 var message = string.Join(Environment.NewLine,
                     args.Select(kvp => $"--{kvp.Key} {kvp.Value}"));
 
-                await ServiceLocator.Default.GetRequiredService<IDialogService>()
+                await IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>()
                     .ShowMessageAsync(message, "Launch Arguments");
             })
 #endif

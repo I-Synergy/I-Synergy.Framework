@@ -47,7 +47,7 @@ public static class NavigationExtensions
     /// when a scoped provider is available.
     /// </summary>
     public static IView CreatePage<TViewModel>(TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
-        => CreatePage<TViewModel>(ServiceLocator.Default.ServiceProvider, viewModel, parameter);
+        => CreatePage<TViewModel>(IPlatformApplication.Current!.Services, viewModel, parameter);
 
     /// <summary>
     /// Creates or gets a view from a ViewModel instance using the specified

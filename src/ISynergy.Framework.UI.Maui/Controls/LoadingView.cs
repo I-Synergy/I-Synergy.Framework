@@ -3,7 +3,6 @@ using CommunityToolkit.Maui.Views;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Options;
@@ -35,7 +34,7 @@ public class LoadingView : ContentPage
         ArgumentNullException.ThrowIfNull(commonServices);
         ArgumentNullException.ThrowIfNull(splashScreenOptions);
 
-        _applicationLifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
+        _applicationLifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
 
         InitializeContent(commonServices, splashScreenOptions);
 
@@ -250,7 +249,15 @@ public class LoadingView : ContentPage
     /// <summary>
     /// Handles the view loaded event to signal the UI is ready.
     /// </summary>
-    private void OnSignalUIReady(object? sender, EventArgs e)
+    private void OnSignalUIReady(object? sender, EventArgs e) => SignalUIReady();
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        SignalUIReady();
+    }
+
+    private void SignalUIReady()
     {
         try
         {
