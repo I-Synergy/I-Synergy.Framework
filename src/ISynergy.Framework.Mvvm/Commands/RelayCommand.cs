@@ -1,5 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Commands.Base;
 using System.Runtime.CompilerServices;
@@ -45,36 +43,7 @@ public sealed class RelayCommand : BaseRelayCommand
 
         lock (_syncLock)
         {
-            try
-            {
-                _execute?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                // Try to handle exception via service
-                bool handled = false;
-                try
-                {
-                    var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-                    if (exceptionHandlerService is not null)
-                    {
-                        exceptionHandlerService.HandleException(ex); // NOSONAR
-                        handled = true;
-                    }
-                }
-                catch
-                {
-                    // If exception handler fails, re-throw the original exception
-                    throw;
-                }
-
-                // If exception was successfully handled, suppress it to prevent app crash
-                // Otherwise, re-throw to maintain original behavior when no handler is available
-                if (!handled)
-                {
-                    throw;
-                }
-            }
+            _execute?.Invoke();
         }
     }
 }

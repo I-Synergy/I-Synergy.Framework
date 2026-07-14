@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -27,7 +26,7 @@ public abstract class Application : ComponentBase
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly ILogger<Application> _logger;
     protected readonly IMessengerService _messengerService;
-    protected readonly IConfiguration? _configuration;
+    protected readonly IConfiguration _configuration;
 
     protected readonly ApplicationFeatures? _features;
 
@@ -45,34 +44,30 @@ public abstract class Application : ComponentBase
     protected Application(
         ICommonServices commonServices,
         ISettingsService settingsService,
-        ILogger<Application> logger,
-        IDialogService? dialogService = null,
-        INavigationService? navigationService = null,
-        IExceptionHandlerService? exceptionHandlerService = null,
-        IApplicationLifecycleService? lifecycleService = null,
-        IMessengerService? messengerService = null,
-        IOptions<ApplicationFeatures>? features = null,
-        IConfiguration? configuration = null)
+        IDialogService dialogService,
+        INavigationService navigationService,
+        IExceptionHandlerService exceptionHandlerService,
+        IApplicationLifecycleService lifecycleService,
+        IMessengerService messengerService,
+        IOptions<ApplicationFeatures> features,
+        IConfiguration configuration,
+        ILogger<Application> logger)
         : base()
     {
         _commonServices = commonServices;
         _settingsService = settingsService;
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+        _exceptionHandlerService = exceptionHandlerService;
+        _lifecycleService = lifecycleService;
+        _messengerService = messengerService;
+        _features = features?.Value;
+        _configuration = configuration;
         _logger = logger;
 
         try
         {
             _logger.LogTrace("Setting up services and global exception handler.");
-
-            // Prefer constructor-injected services (DIP compliance)
-            // Fall back to ServiceLocator only if not provided via constructor
-            _dialogService = dialogService ?? ServiceLocator.Default.GetRequiredService<IDialogService>();
-            _navigationService = navigationService ?? ServiceLocator.Default.GetRequiredService<INavigationService>();
-            _exceptionHandlerService = exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-            _lifecycleService = lifecycleService ?? ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
-            _messengerService = messengerService ?? ServiceLocator.Default.GetRequiredService<IMessengerService>();
-
-            _features = features?.Value ?? ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
-            _configuration = configuration;
 
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -135,9 +130,7 @@ public abstract class Application : ComponentBase
 
             // Prefer constructor-injected configuration (DIP compliance)
             // Fall back to ServiceLocator only if not provided via constructor
-            var configuration = _configuration ?? ServiceLocator.Default.GetRequiredService<IConfiguration>();
-
-            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+            var environmentFromConfig = _configuration.GetValue<string?>(nameof(Environment), null);
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {

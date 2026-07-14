@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
         where TClientMonitorService : BaseClientMonitorService, IClientMonitorService
     {
         services.AddOptions();
-        services.Configure<ClientMonitorOptions>(configuration.GetSection($"{prefix}{nameof(ClientMonitorOptions)}").BindWithReload);
+        services.Configure<ClientMonitorOptions>(configuration.GetSection($"{prefix}{nameof(ClientMonitorOptions)}").Bind);
         services.TryAddSingleton<TClientMonitorService>();
         services.TryAddSingleton<IClientMonitorService>(s => s.GetRequiredService<TClientMonitorService>());
         return services;

@@ -1,5 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -32,15 +30,11 @@ public class RelayCommandGenericTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Initialize ServiceLocator with mock service provider
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     [TestMethod]
@@ -111,43 +105,19 @@ public class RelayCommandGenericTests
     }
 
     [TestMethod]
-    public void Execute_WithException_CallsExceptionHandlerService()
+    public void Execute_WithException()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-        var mockExceptionHandler = new Mock<IExceptionHandlerService>();
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(mockExceptionHandler.Object);
-
         var command = new RelayCommand<string>(_ => throw expectedException);
-
-        // Act
-        try
-        {
-            command.Execute("test");
-            //Assert.Fail("Expected exception was not thrown");
-        }
-        catch (InvalidOperationException)
-        {
-            // Expected
-        }
-
-        // Assert
-        mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+        Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
     }
 
     [TestMethod]
-    public void Execute_WithException_WhenExceptionHandlerServiceNotAvailable_RethrowsException()
+    public void Execute_WithException_RethrowsException()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns((IExceptionHandlerService?)null);
-
         var command = new RelayCommand<string>(_ => throw expectedException);
 
         // Act & Assert

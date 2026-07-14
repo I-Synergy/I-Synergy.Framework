@@ -57,7 +57,7 @@ public static class WpfAppBuilderExtensions
         {
             services.AddOptions();
 
-            services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+            services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
             var languageService = LanguageService.Default;
@@ -115,7 +115,7 @@ public static class WpfAppBuilderExtensions
     /// <returns></returns>
     public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).BindWithReload);
+        services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).Bind);
         services.TryAddSingleton<IUpdateService, UpdateService>();
         return services;
     }

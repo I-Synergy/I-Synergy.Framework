@@ -182,7 +182,7 @@ public static partial class MauiWinUIApplicationExtensions
 
         // Primary route: invoke the stored callbacks directly.
         // This is the reliable path — MAUI's InvokeEvents may silently find
-        // zero handlers even when ServiceLocator resolution succeeds.
+        // zero handlers even when service resolution succeeds.
         InvokeActivationCallbacksDirectly(e);
 
         // Also dispatch through MAUI lifecycle for any handlers registered

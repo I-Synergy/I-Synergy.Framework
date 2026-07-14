@@ -1,7 +1,6 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.Mvvm.Commands.Tests;
 
@@ -14,7 +13,6 @@ public class ExceptionHandlingTests
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
-    private Mock<IExceptionHandlerService> _mockExceptionHandler;
 
     public ExceptionHandlingTests()
     {
@@ -22,7 +20,6 @@ public class ExceptionHandlingTests
         _mockServiceProvider = new Mock<IServiceProvider>();
         _mockServiceScope = new Mock<IServiceScope>();
         _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
-        _mockExceptionHandler = new Mock<IExceptionHandlerService>();
 
         // Setup service scope factory
         _mockServiceProvider
@@ -37,44 +34,25 @@ public class ExceptionHandlingTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Initialize ServiceLocator with mock service provider
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     #region RelayCommand Exception Handling Tests
 
     [TestMethod]
-    public void RelayCommand_Execute_WithException_CallsExceptionHandlerService()
+    public void RelayCommand_Execute_WithException()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
-
         var command = new RelayCommand(() => throw expectedException);
 
-        // Act
-        try
-        {
-            command.Execute(null);
-            //Assert.Fail("Expected exception was not thrown");
-        }
-        catch (InvalidOperationException)
-        {
-            // Expected - exception is rethrown after handling
-        }
-
-        // Assert
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+        // Act & Assert
+        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
+        Assert.AreEqual(expectedException, thrownException);
     }
 
     [TestMethod]
@@ -82,11 +60,6 @@ public class ExceptionHandlingTests
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns((IExceptionHandlerService?)null);
-
         var command = new RelayCommand(() => throw expectedException);
 
         // Act & Assert
@@ -99,30 +72,15 @@ public class ExceptionHandlingTests
     #region RelayCommand<T> Exception Handling Tests
 
     [TestMethod]
-    public void RelayCommandGeneric_Execute_WithException_CallsExceptionHandlerService()
+    public void RelayCommandGeneric_Execute_WithException()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
-
         var command = new RelayCommand<string>(_ => throw expectedException);
 
-        // Act
-        try
-        {
-            command.Execute("test");
-            //Assert.Fail("Expected exception was not thrown");
-        }
-        catch (InvalidOperationException)
-        {
-            // Expected
-        }
-
-        // Assert
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
+        // Act & Assert
+        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
+        Assert.AreEqual(expectedException, thrownException);
     }
 
     #endregion
@@ -134,12 +92,6 @@ public class ExceptionHandlingTests
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
-
-        // Lambda throws synchronously
         var command = new AsyncRelayCommand(() => throw expectedException);
 
         // Act
@@ -148,20 +100,15 @@ public class ExceptionHandlingTests
 
         // Assert - exception handler should be called
         await Task.Delay(100); // Give time for async handling
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e =>
-        e == expectedException || e.InnerException == expectedException)), Times.Once);
+        Assert.IsTrue(task.IsFaulted);
+        Assert.AreEqual(expectedException, task.Exception?.InnerException);
     }
 
     [TestMethod]
-    public async Task AsyncRelayCommand_ExecuteAsync_WithAsynchronousException_CallsExceptionHandlerService()
+    public async Task AsyncRelayCommand_ExecuteAsync_WithAsynchronousException()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
-
         var command = new AsyncRelayCommand(async () =>
         {
             await Task.Delay(10);
@@ -169,33 +116,28 @@ public class ExceptionHandlingTests
         });
 
         // Act
-        //await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync(null));
-
-        // Assert
-        await Task.Delay(100); // Give time for async handling
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e =>
-            e == expectedException || e.InnerException == expectedException)), Times.Never);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync(null));
     }
 
     [TestMethod]
-    public async Task AsyncRelayCommand_Execute_WithSynchronousException_CallsExceptionHandlerService()
+    public void AsyncRelayCommand_Execute_WithSynchronousException_Rethrows()
     {
-        // Arrange
+        // Default FlowExceptionsToTaskScheduler -> exception propagates
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
- .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-      .Returns(_mockExceptionHandler.Object);
-
         var command = new AsyncRelayCommand(() => throw expectedException);
 
-        // Act
-        command.Execute(null); // This calls ExecuteAsync and AwaitAndThrowIfFailed
+        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
+        Assert.AreEqual(expectedException, thrownException);
+    }
 
-        // Assert - exception handler should be called via AwaitAndThrowIfFailed
-        await Task.Delay(100); // Give time for async handling
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e =>
-       e == expectedException || e.InnerException == expectedException)), Times.Once);
+    [TestMethod]
+    public void AsyncRelayCommand_Execute_WithSynchronousException_AndNoneOption_DoesNotThrow()
+    {
+        // None -> exception logged but not propagated
+        var command = new AsyncRelayCommand(() => throw new InvalidOperationException("Test exception"), AsyncRelayCommandOptions.None);
+
+        // Should not throw - exception is logged via Debug.WriteLine
+        command.Execute(null);
     }
 
     #endregion
@@ -207,20 +149,10 @@ public class ExceptionHandlingTests
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
-
         var command = new AsyncRelayCommand<string>(_ => throw expectedException);
 
         // Act
-        //await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync("test"));
-
-        // Assert
-        await Task.Delay(100);
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e =>
-    e == expectedException || e.InnerException == expectedException)), Times.Never);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync("test"));
     }
 
     #endregion

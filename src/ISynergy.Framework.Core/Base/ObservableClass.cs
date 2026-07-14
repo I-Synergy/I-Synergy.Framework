@@ -1,8 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 
 #pragma warning disable S3776 // cognitive complexity is inherent in reflection-based property equality comparison
 using System.Collections.Concurrent;
@@ -227,24 +225,7 @@ public abstract class ObservableClass : IObservableClass
             var handlers = handler.GetInvocationList().OfType<PropertyChangedEventHandler>();
             foreach (var h in handlers)
             {
-                try
-                {
-                    h.Invoke(this, new PropertyChangedEventArgs(propertyName));
-                }
-                catch (Exception ex)
-                {
-                    // Try to use exception handler service if available
-                    try
-                    {
-                        var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-                        exceptionHandlerService?.HandleException(ex);
-                    }
-                    catch
-                    {
-                        // If exception handler service is not available, log to debug
-                        System.Diagnostics.Debug.WriteLine($"Exception in PropertyChanged handler for {propertyName}: {ex.Message}");
-                    }
-                }
+                h.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

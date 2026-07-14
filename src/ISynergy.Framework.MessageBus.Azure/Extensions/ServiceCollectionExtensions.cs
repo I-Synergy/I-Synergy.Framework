@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
         where TQueuePublishMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<AzurePublisherOptions>(configuration.GetSection($"{prefix}{nameof(AzurePublisherOptions)}").BindWithReload);
+        services.Configure<AzurePublisherOptions>(configuration.GetSection($"{prefix}{nameof(AzurePublisherOptions)}").Bind);
         services.AddPublishingQueueMessageBus<TQueuePublishMessage, PublisherServiceBus<TQueuePublishMessage, AzurePublisherOptions>>(
             sp => new PublisherServiceBus<TQueuePublishMessage, AzurePublisherOptions>(
                 sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<AzurePublisherOptions>>(),
@@ -64,7 +64,7 @@ public static class ServiceCollectionExtensions
         where TQueuePublishMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<AzurePublisherOptions>(configuration.GetSection($"{prefix}{nameof(AzurePublisherOptions)}").BindWithReload);
+        services.Configure<AzurePublisherOptions>(configuration.GetSection($"{prefix}{nameof(AzurePublisherOptions)}").Bind);
         services.AddPublishingQueueMessageBus<TQueuePublishMessage, PublisherServiceBus<TQueuePublishMessage, AzurePublisherOptions>>();
         return services;
     }
@@ -90,7 +90,7 @@ public static class ServiceCollectionExtensions
         where TQueueSubscribeMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<AzureSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(AzureSubscriberOptions)}").BindWithReload);
+        services.Configure<AzureSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(AzureSubscriberOptions)}").Bind);
         services.AddSubscribingQueueMessageBus<TQueueSubscribeMessage, SubscriberServiceBus<TQueueSubscribeMessage, AzureSubscriberOptions>>();
         return services;
     }
@@ -115,7 +115,7 @@ public static class ServiceCollectionExtensions
         where TQueueSubscribeMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<AzureSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(AzureSubscriberOptions)}").BindWithReload);
+        services.Configure<AzureSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(AzureSubscriberOptions)}").Bind);
         services.AddSubscribingQueueMessageBus<TQueueSubscribeMessage, SubscriberServiceBus<TQueueSubscribeMessage, AzureSubscriberOptions>>();
         return services;
     }

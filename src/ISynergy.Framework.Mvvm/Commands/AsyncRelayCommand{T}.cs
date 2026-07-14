@@ -1,5 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Commands.Base;
@@ -28,7 +26,7 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     /// </summary>
     /// <param name="execute">The execution function.</param>
     public AsyncRelayCommand(Func<T, Task> execute)
-        : base(AsyncRelayCommandOptions.None)
+        : base(AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler)
     {
         _execute = Argument.IsNotNull(execute);
     }
@@ -49,7 +47,7 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     /// </summary>
     /// <param name="cancelableExecute">The cancelable execution function.</param>
     public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute)
-        : base(AsyncRelayCommandOptions.None)
+        : base(AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler)
     {
         _cancelableExecute = Argument.IsNotNull(cancelableExecute);
     }
@@ -117,7 +115,7 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     /// <param name="execute">The execution function.</param>
     /// <param name="timeout">The timeout for command execution.</param>
     public AsyncRelayCommand(Func<T, Task> execute, TimeSpan timeout)
-        : base(AsyncRelayCommandOptions.None)
+        : base(AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler)
     {
         _execute = Argument.IsNotNull(execute);
         _defaultTimeout = timeout;
@@ -172,8 +170,10 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
     {
         Task executionTask = ExecuteAsync(parameter);
 
-        if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
-            AwaitAndThrowIfFailed(executionTask);
+        if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
+            AwaitAndThrowIfFailed(executionTask);   // Default: propagate
+        else
+            LogIfFailed(executionTask);             // None: log only
     }
 
     /// <summary>
@@ -222,169 +222,48 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
         try
         {
             Task executionTask;
-            bool exceptionAlreadyHandled = false;
 
-            try
+            // Handle null parameter safely
+            if (parameter == null)
             {
-                // Handle null parameter safely
-                if (parameter == null)
+                // If parameter is null and we can't handle it, return early
+                if (typeof(T).IsValueType && !typeof(T).IsGenericType)
                 {
-                    // If parameter is null and we can't handle it, return early
-                    if (typeof(T).IsValueType && !typeof(T).IsGenericType)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Cannot execute command with null parameter for non-nullable value type {typeof(T).Name}");
-                        return;
-                    }
-                }
-
-                if (_execute is not null)
-                {
-                    executionTask = _execute(parameter!);
-                }
-                else
-                {
-                    lock (_syncLock)
-                    {
-                        // Cancel any existing operation
-                        if (_cancellationTokenSource != null)
-                            _cancellationTokenSource.Cancel();
-
-                        // Create a new cancellation token source for this execution
-                        _cancellationTokenSource = new CancellationTokenSource();
-
-                        linkedCts = CreateTimeoutTokenSource();
-
-                        // Add to tracking collection for cleanup
-                        _cancellationTokenSources.Add(_cancellationTokenSource);
-                    }
-
-                    executionTask = _cancelableExecute!(parameter!, linkedCts.Token);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                // Handle cancellation gracefully
-                System.Diagnostics.Debug.WriteLine("Command execution was canceled.");
-
-                // Re-throw if configured to flow exceptions
-                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
-                    throw;
-                return;
-            }
-            catch (TimeoutException ex)
-            {
-                // Only handle exceptions if not configured to flow them to the task scheduler
-                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
-                {
-                    var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-
-                    if (ex.InnerException is not null)
-                        exceptionHandlerService.HandleException(ex.InnerException);
-                    else
-                        exceptionHandlerService.HandleException(ex);
-
-                    System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
-                    // Suppress exception to prevent app crash when handled
+                    System.Diagnostics.Debug.WriteLine($"Cannot execute command with null parameter for non-nullable value type {typeof(T).Name}");
                     return;
                 }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
-                }
-
-                // Re-throw if configured to flow exceptions to task scheduler
-                throw;
             }
-            catch (Exception ex)
+
+            if (_execute is not null)
             {
-                // Only handle exceptions if not configured to flow them to the task scheduler
-                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
+                executionTask = _execute(parameter!);
+            }
+            else
+            {
+                lock (_syncLock)
                 {
-                    var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
+                    // Cancel any existing operation
+                    if (_cancellationTokenSource != null)
+                        _cancellationTokenSource.Cancel();
 
-                    if (ex.InnerException is not null)
-                        exceptionHandlerService.HandleException(ex.InnerException);
-                    else
-                        exceptionHandlerService.HandleException(ex);
+                    // Create a new cancellation token source for this execution
+                    _cancellationTokenSource = new CancellationTokenSource();
 
-                    System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-                    // Suppress exception to prevent app crash when handled
-                    return;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
+                    linkedCts = CreateTimeoutTokenSource();
+
+                    // Add to tracking collection for cleanup
+                    _cancellationTokenSources.Add(_cancellationTokenSource);
                 }
 
-                // Re-throw if configured to flow exceptions to task scheduler
-                throw;
+                executionTask = _cancelableExecute!(parameter!, linkedCts.Token);
             }
 
             // Setting this flag before ExecutionTask to ensure we reset state even if property setter throws
             hasStarted = true;
+
             ExecutionTask = executionTask;
 
-            try
-            {
-                await executionTask;
-            }
-            catch (OperationCanceledException) when (!exceptionAlreadyHandled)
-            {
-                // Handle cancellation gracefully
-                System.Diagnostics.Debug.WriteLine("Command execution was canceled.");
-
-                // Re-throw if configured to flow exceptions
-                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
-                    throw;
-            }
-            catch (TimeoutException ex) when (!exceptionAlreadyHandled)
-            {
-                // Only handle exceptions if not configured to flow them to the task scheduler
-                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
-                {
-                    var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-
-                    if (ex.InnerException is not null)
-                        exceptionHandlerService.HandleException(ex.InnerException);
-                    else
-                        exceptionHandlerService.HandleException(ex);
-
-                    System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
-                    // Suppress exception to prevent app crash when handled
-                    return;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Command execution timed out: {ex.Message}");
-                }
-
-                // Re-throw if configured to flow exceptions to task scheduler
-                throw;
-            }
-            catch (Exception ex) when (!exceptionAlreadyHandled)
-            {
-                // Only handle exceptions if not configured to flow them to the task scheduler
-                if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) == 0)
-                {
-                    var exceptionHandlerService = _exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-
-                    if (ex.InnerException is not null)
-                        exceptionHandlerService.HandleException(ex.InnerException);
-                    else
-                        exceptionHandlerService.HandleException(ex);
-
-                    System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-                    // Suppress exception to prevent app crash when handled
-                    return;
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
-                }
-
-                // Re-throw if configured to flow exceptions to task scheduler
-                throw;
-            }
+            await executionTask;
         }
         finally
         {

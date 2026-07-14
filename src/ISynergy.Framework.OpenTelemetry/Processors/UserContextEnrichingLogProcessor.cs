@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.OpenTelemetry.Serialization;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
@@ -13,42 +12,49 @@ namespace ISynergy.Framework.OpenTelemetry.Processors;
 /// </summary>
 public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
 {
+    private readonly IContext _context;
+    private readonly IInfoService _infoService;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserContextEnrichingLogProcessor"/> class.
+    /// </summary>
+    /// <param name="context">The user context.</param>
+    /// <param name="infoService">The application info service.</param>
+    public UserContextEnrichingLogProcessor(IContext context, IInfoService infoService)
+    {
+        _context = context;
+        _infoService = infoService;
+    }
+
     /// <inheritdoc />
     public override void OnEnd(LogRecord data)
     {
         var attributes = new List<KeyValuePair<string, object?>>();
 
         // Add user context information to all log entries
-        var context = ServiceLocator.Default.GetRequiredService<IContext>();
-
-        if (context is not null && context.Profile is not null)
+        if (_context.Profile is not null)
         {
-            attributes.Add(new KeyValuePair<string, object?>("UserId", context.Profile.UserId));
-            attributes.Add(new KeyValuePair<string, object?>("TenantId", context.Profile.TenantId));
-            attributes.Add(new KeyValuePair<string, object?>("Name", context.Profile.Name));
-            attributes.Add(new KeyValuePair<string, object?>("Email", context.Profile.Email));
+            attributes.Add(new KeyValuePair<string, object?>("UserId", _context.Profile.UserId));
+            attributes.Add(new KeyValuePair<string, object?>("TenantId", _context.Profile.TenantId));
+            attributes.Add(new KeyValuePair<string, object?>("Name", _context.Profile.Name));
+            attributes.Add(new KeyValuePair<string, object?>("Email", _context.Profile.Email));
 
-            foreach (var organization in context.Profile.Organizations)
+            foreach (var organization in _context.Profile.Organizations)
             {
                 attributes.Add(new KeyValuePair<string, object?>($"Organization_{organization.OrganizationId}", organization.Name));
             }
 
-            attributes.Add(new KeyValuePair<string, object?>("CountryCode", context.Profile.CountryCode));
-            attributes.Add(new KeyValuePair<string, object?>("CultureCode", context.Profile.CultureCode));
-            attributes.Add(new KeyValuePair<string, object?>("TimeZoneId", context.Profile.TimeZoneId));
-            attributes.Add(new KeyValuePair<string, object?>("Expiration", context.Profile.Expiration));
-            attributes.Add(new KeyValuePair<string, object?>("Features", JsonSerializer.Serialize(context.Profile.Features, TelemetryJsonContext.Default.ListString)));
-            attributes.Add(new KeyValuePair<string, object?>("Roles", JsonSerializer.Serialize(context.Profile.Roles, TelemetryJsonContext.Default.ListString)));
+            attributes.Add(new KeyValuePair<string, object?>("CountryCode", _context.Profile.CountryCode));
+            attributes.Add(new KeyValuePair<string, object?>("CultureCode", _context.Profile.CultureCode));
+            attributes.Add(new KeyValuePair<string, object?>("TimeZoneId", _context.Profile.TimeZoneId));
+            attributes.Add(new KeyValuePair<string, object?>("Expiration", _context.Profile.Expiration));
+            attributes.Add(new KeyValuePair<string, object?>("Features", JsonSerializer.Serialize(_context.Profile.Features, TelemetryJsonContext.Default.ListString)));
+            attributes.Add(new KeyValuePair<string, object?>("Roles", JsonSerializer.Serialize(_context.Profile.Roles, TelemetryJsonContext.Default.ListString)));
         }
 
         // Add application context info
-        var infoService = ServiceLocator.Default.GetRequiredService<IInfoService>();
-
-        if (infoService is not null)
-        {
-            attributes.Add(new KeyValuePair<string, object?>("ProductName", infoService.ProductName));
-            attributes.Add(new KeyValuePair<string, object?>("ProductVersion", infoService.ProductVersion));
-        }
+        attributes.Add(new KeyValuePair<string, object?>("ProductName", _infoService.ProductName));
+        attributes.Add(new KeyValuePair<string, object?>("ProductVersion", _infoService.ProductVersion));
 
         data.Attributes = attributes;
 

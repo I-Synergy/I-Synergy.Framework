@@ -1,6 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using System.Collections.Concurrent;
@@ -98,17 +96,6 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     }
 
     /// <summary>
-    /// Error handling strategy for command execution.
-    /// </summary>
-    public ErrorHandlingStrategy ErrorHandlingStrategy { get; set; } = ErrorHandlingStrategy.ReThrow;
-
-    /// <summary>
-    /// Optional exception handler service. If provided, will be used instead of ServiceLocator.
-    /// This allows commands to be created with dependency injection when possible.
-    /// </summary>
-    protected readonly IExceptionHandlerService? _exceptionHandlerService;
-
-    /// <summary>
     /// Occurs when changes occur that affect whether or not the command should execute.
     /// </summary>
     public event EventHandler? CanExecuteChanged
@@ -163,11 +150,9 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Initializes a new instance of the <see cref="BaseAsyncRelayCommand"/> class.
     /// </summary>
     /// <param name="options">Command options.</param>
-    /// <param name="exceptionHandlerService">Optional exception handler service. If not provided, will use ServiceLocator when needed.</param>
-    protected BaseAsyncRelayCommand(AsyncRelayCommandOptions options, IExceptionHandlerService? exceptionHandlerService = null)
+    protected BaseAsyncRelayCommand(AsyncRelayCommandOptions options)
     {
         _options = options;
-        _exceptionHandlerService = exceptionHandlerService;
     }
 
     /// <summary>
@@ -561,17 +546,29 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// handled in ExecuteAsync, so this method only re-throws for FlowExceptionsToTaskScheduler scenarios.
     /// </summary>
     /// <param name="executionTask">The task to await.</param>
-    internal static async void AwaitAndThrowIfFailed(Task executionTask)
+    internal static void AwaitAndThrowIfFailed(Task executionTask)
+    {
+        if (executionTask.IsFaulted)
+        {
+            var exception = executionTask.Exception!.InnerException!;
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
+        }
+    }
+
+    /// <summary>
+    /// Logs the exception from a failed task without propagating it.
+    /// Used with AsyncRelayCommandOptions.None.
+    /// </summary>
+    /// <param name="executionTask">The task that may have faulted.</param>
+    internal static async void LogIfFailed(Task executionTask)
     {
         try
         {
             await executionTask;
         }
-        catch
+        catch (Exception ex)
         {
-            // Do NOT re-throw - exceptions are already handled in ExecuteAsync
-            // This method is only called from synchronous Execute() which can't properly
-            // handle async exceptions anyway. Re-throwing here would cause double handling.
+            System.Diagnostics.Debug.WriteLine($"Command execution failed: {ex.Message}");
         }
     }
 
@@ -925,20 +922,4 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             cts.Dispose();
         }
     }
-}
-
-/// <summary>
-/// Defines error handling strategies for command execution.
-/// </summary>
-public enum ErrorHandlingStrategy
-{
-    /// <summary>
-    /// Re-throw exceptions that occur during command execution.
-    /// </summary>
-    ReThrow,
-
-    /// <summary>
-    /// Swallow exceptions that occur during command execution.
-    /// </summary>
-    Swallow
 }

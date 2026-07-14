@@ -54,8 +54,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions();
 
-        services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
-        services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
+        services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+        services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).Bind);
 
         var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));

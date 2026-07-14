@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Globalization.Abstractions.Services;
@@ -77,8 +76,8 @@ public static class MauiAppBuilderExtensions
         where TResource : class
     {
         appBuilder.Services.AddOptions();
-        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
-        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).Bind);
+        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
 
         var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
         if (mainAssembly is not null)

@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddMicrosoft365MailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<Microsoft365MailOptions>(configuration.GetSection($"{prefix}MailOptions").BindWithReload);
+        services.Configure<Microsoft365MailOptions>(configuration.GetSection($"{prefix}MailOptions").Bind);
         services.TryAddSingleton<IMailService, Microsoft365MailService>();
         return services;
     }

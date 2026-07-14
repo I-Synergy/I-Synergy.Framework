@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
         where TQueuePublishMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<RabbitMQPublisherOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQPublisherOptions)}").BindWithReload);
+        services.Configure<RabbitMQPublisherOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQPublisherOptions)}").Bind);
         services.AddPublishingQueueMessageBus<TQueuePublishMessage, PublisherServiceBus<TQueuePublishMessage, RabbitMQPublisherOptions>>(
             sp => new PublisherServiceBus<TQueuePublishMessage, RabbitMQPublisherOptions>(
                 sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<RabbitMQPublisherOptions>>(),
@@ -64,7 +64,7 @@ public static class ServiceCollectionExtensions
         where TQueuePublishMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<RabbitMQPublisherOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQPublisherOptions)}").BindWithReload);
+        services.Configure<RabbitMQPublisherOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQPublisherOptions)}").Bind);
         services.AddPublishingQueueMessageBus<TQueuePublishMessage, PublisherServiceBus<TQueuePublishMessage, RabbitMQPublisherOptions>>();
         return services;
     }
@@ -90,7 +90,7 @@ public static class ServiceCollectionExtensions
         where TQueueSubscribeMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<RabbitMQSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQSubscriberOptions)}").BindWithReload);
+        services.Configure<RabbitMQSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQSubscriberOptions)}").Bind);
         services.AddSubscribingQueueMessageBus<TQueueSubscribeMessage, SubscriberServiceBus<TQueueSubscribeMessage, RabbitMQSubscriberOptions>>();
         return services;
     }
@@ -115,7 +115,7 @@ public static class ServiceCollectionExtensions
         where TQueueSubscribeMessage : class, IBaseMessage
     {
         services.AddOptions();
-        services.Configure<RabbitMQSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQSubscriberOptions)}").BindWithReload);
+        services.Configure<RabbitMQSubscriberOptions>(configuration.GetSection($"{prefix}{nameof(RabbitMQSubscriberOptions)}").Bind);
         services.AddSubscribingQueueMessageBus<TQueueSubscribeMessage, SubscriberServiceBus<TQueueSubscribeMessage, RabbitMQSubscriberOptions>>();
         return services;
     }

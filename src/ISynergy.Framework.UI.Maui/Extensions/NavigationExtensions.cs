@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using System.Globalization;
@@ -42,7 +41,7 @@ public static class NavigationExtensions
     /// This is not compatible with MAUI iOS/Android linker trimming without a source-generated view map.
     /// </remarks>
     /// <summary>
-    /// Creates or gets a view from a ViewModel instance using the root <see cref="ServiceLocator"/>.
+    /// Creates or gets a view from a ViewModel instance using the root/>.
     /// Prefer the overload that accepts an <see cref="IServiceProvider"/>
     /// when a scoped provider is available.
     /// </summary>

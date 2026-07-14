@@ -1,8 +1,8 @@
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
 using ISynergy.Framework.OpenTelemetry.Sentry.Processors;
+using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Logs;
 using Sentry.OpenTelemetry;
 
@@ -35,7 +35,7 @@ public static class SentryTelemetryExtensions
         Argument.IsNotNull(telemetryBuilder);
 
         var options = new SentryOptions();
-        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
         telemetryExporterOptions?.Invoke(options);
 

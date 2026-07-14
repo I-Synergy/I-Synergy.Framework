@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
@@ -14,7 +13,7 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -55,8 +54,8 @@ public static class WindowsAppBuilderExtensions
     {
         appBuilder.Services.AddOptions();
 
-        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
-        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).Bind);
+        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
 
         var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
         if (mainAssembly is not null)
