@@ -11,6 +11,7 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.UI.Xaml;
@@ -29,6 +30,7 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 {
+
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
@@ -44,6 +46,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected LoadingView? _loadingView;
 
     protected Color? _accentColor;
+    protected IServiceProvider? _services;
     protected Microsoft.UI.Xaml.Window? _mainWindow;
 
     private Task? Initialize { get; set; }
@@ -52,15 +55,36 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Gets the current main window from the running application instance
     /// </summary>
-    public static Microsoft.UI.Xaml.Window? MainWindow
+    public static Microsoft.UI.Xaml.Window MainWindow
     {
         get
         {
             if (Application.Current is Application app)
-                return app._mainWindow;
+                return app._mainWindow!;
 
-            return null;
+            throw new InvalidOperationException("Main window not available.");
         }
+    }
+
+    public static IServiceProvider Services
+    {
+        get
+        {
+            if (Application.Current is Application app)
+                return app._services!;
+
+            throw new InvalidOperationException("Services not available.");
+        }
+        internal set
+        {
+            if (Application.Current is Application app)
+                app._services = value;
+        }
+    }
+
+    public static CancellationToken CancellationToken
+    {
+        get; internal set;
     }
 
     public static Color? AccentColor
@@ -69,9 +93,10 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         {
             if (Application.Current is Application app)
                 return app._accentColor;
+
             return null;
         }
-        set
+        internal set
         {
             if (Application.Current is Application app && value is Color color)
             {
@@ -505,11 +530,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
     protected virtual Task HandleApplicationInitializedAsync() =>
         Task.CompletedTask;
-
-    public CancellationToken Token
-    {
-        get; internal set;
-    }
 
     public bool _isClosing = false;
 

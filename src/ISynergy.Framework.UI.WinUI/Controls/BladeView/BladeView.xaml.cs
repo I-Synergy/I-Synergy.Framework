@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -112,7 +112,7 @@ public partial class BladeView : UserControl, IDisposable
     #endregion
 
     private readonly Dictionary<IView, BladeState> _bladeStates = new();
-    private readonly ILogger _logger = ServiceLocator.Default.GetRequiredService<ILogger<BladeView>>();
+    private readonly ILogger _logger = Application.Services.GetRequiredService<ILogger<BladeView>>();
     private bool _isInternalUpdate;
     private bool _isDisposed;
 

@@ -38,7 +38,7 @@ public abstract class ViewModelSelectable<TModel> : ViewModel
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDebug(ex, "Exception in Submitted handler for {ViewModelName}", GetType().Name);
+                    System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler for {GetType().Name}: {ex.Message}");
                     capturedException = ex;
                 }
             }

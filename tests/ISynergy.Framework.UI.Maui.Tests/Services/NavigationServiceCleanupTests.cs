@@ -1,8 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Mvvm.Abstractions;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -46,8 +43,6 @@ public class NavigationServiceCleanupTests
             .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
             .Returns(mockServiceScopeFactory.Object);
 
-        ServiceLocator.SetLocatorProvider(mockServiceProvider.Object);
-
         _cleanupMethod = typeof(NavigationService)
             .GetMethod("CleanupPageResources", BindingFlags.NonPublic | BindingFlags.Static)!;
     }
@@ -55,7 +50,6 @@ public class NavigationServiceCleanupTests
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     /// <summary>

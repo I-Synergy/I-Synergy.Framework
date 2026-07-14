@@ -1,5 +1,5 @@
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Abstractions.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Data;
 using System.Text;
 
@@ -26,7 +26,7 @@ public class TimeSpanToStringConverter : IValueConverter
         {
             var result = new StringBuilder();
 
-            var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
+            var languageService = Application.Services.GetRequiredService<ILanguageService>();
 
             if (timeSpan.Days > 0)
             {

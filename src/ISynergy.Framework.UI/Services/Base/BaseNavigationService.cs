@@ -1,7 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -372,7 +370,6 @@ public abstract class BaseNavigationService : INavigationService
     /// <summary>
     /// Common logic for initializing a view and its ViewModel.
     /// Resolves M-02: actually called from navigation paths instead of being dead code.
-    /// Resolves M-03: uses _exceptionHandlerService field instead of ServiceLocator.
     /// When the ViewModel is already initialized, still calls SafeOnNavigatedTo
     /// to preserve the original behavior of notifying the ViewModel on every navigation.
     /// </summary>
@@ -382,40 +379,14 @@ public abstract class BaseNavigationService : INavigationService
         {
             if (!page.ViewModel.IsInitialized)
             {
-                try
-                {
-                    // Wait for the view to finish loading before initializing the ViewModel.
-                    // This ensures InitializeAsync runs on the UI thread, avoiding
-                    // COMExceptions from data-bound ObservableCollection changes.
-                    await MonitorViewLoadAsync(page);
+                // Wait for the view to finish loading before initializing the ViewModel.
+                // This ensures InitializeAsync runs on the UI thread, avoiding
+                // COMExceptions from data-bound ObservableCollection changes.
+                await MonitorViewLoadAsync(page);
 
-                    await page.ViewModel.InitializeAsync();
+                await page.ViewModel.InitializeAsync();
 
-                    page.ViewModel.OnNavigatedTo();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error initializing ViewModel for {ViewModelType}", page.ViewModel.GetType().Name);
-
-                    bool handled = false;
-                    try
-                    {
-                        _exceptionHandlerService.HandleException(ex);
-                        handled = true;
-                    }
-                    catch (Exception handlerEx)
-                    {
-                        // Log failure of exception handler but suppress original exception to prevent app crash
-                        _logger.LogError(handlerEx, "Exception handler failed while processing navigation initialization error");
-                    }
-
-                    // Suppress exception if it was successfully handled or if handler is not available
-                    // This prevents app crashes while still allowing the handler to show user-friendly messages
-                    if (!handled)
-                    {
-                        _logger.LogWarning("Exception handler service not available for navigation initialization error");
-                    }
-                }
+                page.ViewModel.OnNavigatedTo();
             }
             else
             {

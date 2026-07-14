@@ -23,7 +23,7 @@ public sealed class WindowsAppSdkHostBuilder<TApp> : IHostApplicationBuilder
     private readonly HostingEnvironment _hostingEnvironment;
     private IServiceProviderFactory<IServiceCollection> _serviceProviderFactory = new DefaultServiceProviderFactory();
     private bool _hostBuilt;
-    private IServiceProvider _appServices = null!;
+    private IServiceProvider _serviceProvider = null!;
     private readonly PhysicalFileProvider _defaultProvider;
 
     /// <inheritdoc />
@@ -94,6 +94,7 @@ public sealed class WindowsAppSdkHostBuilder<TApp> : IHostApplicationBuilder
     {
         if (_hostBuilt)
             throw new InvalidOperationException("Build can only be called once.");
+
         _hostBuilt = true;
 
         using var diagnosticListener = new DiagnosticListener("Microsoft.Extensions.Hosting");
@@ -103,22 +104,25 @@ public sealed class WindowsAppSdkHostBuilder<TApp> : IHostApplicationBuilder
         if (diagnosticListener.IsEnabled() && diagnosticListener.IsEnabled(hostBuildingEventName))
             Write(diagnosticListener, hostBuildingEventName, this);
 
-        _services.AddSingleton<IHost>(_ => new WindowsAppSdkHost<TApp>(
-            _appServices,
+        var windowsAppSdkHost = new WindowsAppSdkHost<TApp>(
+            _serviceProvider,
             _hostingEnvironment,
             _defaultProvider,
-            _appServices.GetRequiredService<IHostApplicationLifetime>(),
-            _appServices.GetRequiredService<ILogger<WindowsAppSdkHost<TApp>>>(),
-            _appServices.GetRequiredService<IHostLifetime>(),
-            _appServices.GetRequiredService<IOptions<HostOptions>>()));
+            _serviceProvider.GetRequiredService<IHostApplicationLifetime>(),
+            _serviceProvider.GetRequiredService<ILogger<WindowsAppSdkHost<TApp>>>(),
+            _serviceProvider.GetRequiredService<IHostLifetime>(),
+            _serviceProvider.GetRequiredService<IOptions<HostOptions>>());
+
+        _services.AddSingleton<IHost, WindowsAppSdkHost<TApp>>(_ => windowsAppSdkHost);
 
         var containerBuilder = _serviceProviderFactory.CreateBuilder(_services);
-        _appServices = _serviceProviderFactory.CreateServiceProvider(containerBuilder)
+
+        _serviceProvider = _serviceProviderFactory.CreateServiceProvider(containerBuilder)
             ?? throw new InvalidOperationException("Service provider factory returned null.");
 
-        _ = _appServices.GetService<IConfiguration>();
+        _ = _serviceProvider.GetService<IConfiguration>();
 
-        var host = _appServices.GetRequiredService<IHost>();
+        var host = _serviceProvider.GetRequiredService<IHost>();
 
         if (diagnosticListener.IsEnabled() && diagnosticListener.IsEnabled(hostBuiltEventName))
             Write(diagnosticListener, hostBuiltEventName, host);

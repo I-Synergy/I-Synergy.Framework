@@ -1,13 +1,10 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;

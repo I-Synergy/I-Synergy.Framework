@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;

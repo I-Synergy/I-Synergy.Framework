@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.OpenTelemetry.Extensions;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.Abstractions.Services;
 using Sample.OpenTelemetry;
 using Sample.Services;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Sample;
@@ -65,21 +65,21 @@ public static class Program
             })
             //.UseThemeColors(colors => colors.Add("#0078D4"))
             .ConfigureSingleInstance()
-            .ConfigureActivationHandlers(async e =>
+            .ConfigureActivationHandlers(e =>
             {
                 foreach (var arg in e.EnsureNotNull())
                 {
                     if (!string.IsNullOrEmpty(arg))
-                        await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync(arg, "Environment");
+                        Debug.WriteLine(string.Format("Environment: {0}", arg));
                 }
             }, async p =>
             {
                 if (!string.IsNullOrEmpty(p.Uri?.Query))
-                    await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{p.Uri.Query}", "ProtocolActivatedEventArgs");
+                    Debug.WriteLine(string.Format("Protocol: {0}", p.Uri.Query));
             }, async l =>
             {
                 if (!string.IsNullOrEmpty(l.Arguments))
-                    await ServiceLocator.Default.GetRequiredService<IDialogService>().ShowMessageAsync($"{l.Arguments}", "LaunchActivatedEventArgs");
+                    Debug.WriteLine(string.Format("Launch: {0}", l.Arguments));
             });
         //.ConfigureOfflineSynchronization(builder =>
         //{

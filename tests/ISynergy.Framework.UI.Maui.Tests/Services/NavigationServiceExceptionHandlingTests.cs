@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Logging;
@@ -43,8 +42,6 @@ public class NavigationServiceExceptionHandlingTests
             .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
             .Returns(mockServiceScopeFactory.Object);
 
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
-
         _navigationService = new NavigationService(
             _mockExceptionHandler.Object,
             _mockCommonServices.Object,
@@ -56,7 +53,6 @@ public class NavigationServiceExceptionHandlingTests
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     [TestMethod]

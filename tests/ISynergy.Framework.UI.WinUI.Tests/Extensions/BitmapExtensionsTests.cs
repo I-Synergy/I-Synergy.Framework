@@ -1,10 +1,8 @@
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
@@ -20,13 +18,11 @@ public class BitmapExtensionsTests
         var services = new ServiceCollection();
         services.AddSingleton<ILanguageService, LanguageService>();
         var serviceProvider = services.BuildServiceProvider();
-        ServiceLocator.SetLocatorProvider(serviceProvider);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default?.Dispose();
     }
 
     [TestMethod]

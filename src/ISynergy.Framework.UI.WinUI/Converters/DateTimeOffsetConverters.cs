@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Data;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -242,7 +242,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
             if (!string.IsNullOrEmpty(language))
                 culture = new CultureInfo(language);
 
-            var offset = ServiceLocator.Default.GetRequiredService<IContext>().TimeZone!.BaseUtcOffset;
+            var offset = Application.Services.GetRequiredService<IContext>().TimeZone!.BaseUtcOffset;
 
             if (parameter is not null)
                 return datetime.ToLocalDateString(parameter.ToString()!, offset, culture);

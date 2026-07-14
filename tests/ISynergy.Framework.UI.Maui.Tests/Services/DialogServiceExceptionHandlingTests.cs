@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
@@ -49,8 +48,6 @@ public class DialogServiceExceptionHandlingTests
             .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
             .Returns(_mockServiceScopeFactory.Object);
 
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
-
         _dialogService = new DialogService(
             _mockServiceScopeFactory.Object,
             _mockLocalSettings.Object,
@@ -62,7 +59,6 @@ public class DialogServiceExceptionHandlingTests
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     [TestMethod]
