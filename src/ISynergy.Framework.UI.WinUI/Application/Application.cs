@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -12,7 +11,6 @@ using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.UI.Xaml;
@@ -232,7 +230,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+            var configuration = Services.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
@@ -507,14 +505,6 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
     protected virtual Task HandleApplicationInitializedAsync() =>
         Task.CompletedTask;
-
-    private IServiceProvider? _services;
-
-    public IServiceProvider Services
-    {
-        get => _services ?? ServiceLocator.Default.ServiceProvider;
-        internal set => _services = value;
-    }
 
     public CancellationToken Token
     {
