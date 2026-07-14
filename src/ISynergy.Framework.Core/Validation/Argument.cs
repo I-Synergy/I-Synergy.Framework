@@ -24,7 +24,7 @@ public static class Argument
         }
         catch
         {
-            // ServiceLocator may not be initialized (e.g., during early initialization or unit tests)
+            // DI may not be initialized (e.g., during early initialization or unit tests)
             return defaultMessage;
         }
     }
