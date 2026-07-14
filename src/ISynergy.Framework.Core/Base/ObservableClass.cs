@@ -1,8 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-
-#pragma warning disable S3776 // cognitive complexity is inherent in reflection-based property equality comparison
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -222,11 +220,23 @@ public abstract class ObservableClass : IObservableClass
         if (handler != null)
         {
             // Invoke each handler individually to prevent one exception from stopping others
+            Exception? capturedException = null;
             var handlers = handler.GetInvocationList().OfType<PropertyChangedEventHandler>();
             foreach (var h in handlers)
             {
-                h.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                try
+                {
+                    h.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Exception in PropertyChanged handler for {GetType().Name}: {ex.Message}");
+                    capturedException = ex;
+                }
             }
+
+            if (capturedException is not null)
+                throw capturedException;
         }
     }
     #endregion

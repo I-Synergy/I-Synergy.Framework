@@ -1,8 +1,6 @@
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Abstractions.Options;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
 {
@@ -102,7 +100,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
         }
 
         [TestMethod]
-        public void ConfigureOptions_WithInvalidValue_SkipsProperty()
+        public void ConfigureOptions_WithInvalidEnumValue_ThrowsException()
         {
             // Arrange
             var configValues = new Dictionary<string, string>
@@ -115,13 +113,10 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
                 .Build();
 
             var options = new TestTelemetryOptions();
-            options.EnumProperty = TestEnum.Value1; // Set default value
 
-            //Act
-            configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
-
-            // Assert - value should remain unchanged
-            Assert.AreEqual(TestEnum.Value1, options.EnumProperty);
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() =>
+                configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options));
         }
 
         [TestMethod]
