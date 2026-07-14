@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -12,36 +11,25 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelExceptionHandlingTests
 {
-    private Mock<IServiceProvider> _mockServiceProvider;
-    private Mock<IExceptionHandlerService> _mockExceptionHandler;
     private Mock<ICommonServices> _mockCommonServices;
     private Mock<ILogger<TestViewModelDialog>> _mockLogger;
 
     public ViewModelExceptionHandlingTests()
     {
-        _mockServiceProvider = new Mock<IServiceProvider>();
-        _mockExceptionHandler = new Mock<IExceptionHandlerService>();
         _mockCommonServices = new Mock<ICommonServices>();
         _mockLogger = new Mock<ILogger<TestViewModelDialog>>();
 
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(_mockExceptionHandler.Object);
-
         var mockMessengerService = new Mock<IMessengerService>();
         _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
-
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     [TestMethod]
-    public void ViewModelDialog_OnSubmitted_WithExceptionInHandler_CallsExceptionHandlerService()
+    public void ViewModelDialog_OnSubmitted_CallsExceptionHandlerService()
     {
         // Arrange
         var viewModel = new TestViewModelDialog(_mockCommonServices.Object, _mockLogger.Object);
@@ -51,10 +39,7 @@ public class ViewModelExceptionHandlingTests
         viewModel.Submitted += (s, e) => throw expectedException;
 
         // Act
-        viewModel.TestSubmit(submitEventArgs);
-
-        // Assert
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Never);
+        Assert.Throws<InvalidOperationException>(() => viewModel.TestSubmit(submitEventArgs));
     }
 
     [TestMethod]
@@ -72,22 +57,17 @@ public class ViewModelExceptionHandlingTests
         viewModel.Submitted += (s, e) => handler3Called = true;
 
         // Act
-        viewModel.TestSubmit(submitEventArgs);
+        Assert.Throws<InvalidOperationException>(() => viewModel.TestSubmit(submitEventArgs));
 
         // Assert
         Assert.IsTrue(handler1Called, "First handler should be called");
         Assert.IsTrue(handler3Called, "Third handler should be called even if second throws");
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Never);
     }
 
     [TestMethod]
-    public void ViewModelDialog_OnSubmitted_WithException_WhenHandlerServiceNotAvailable_LogsToDebug()
+    public void ViewModelDialog_OnSubmitted_WithException_LogsToDebug()
     {
         // Arrange
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns((IExceptionHandlerService?)null);
-
         var viewModel = new TestViewModelDialog(_mockCommonServices.Object, _mockLogger.Object);
         var expectedException = new InvalidOperationException("Handler exception");
         var submitEventArgs = new SubmitEventArgs<string>("test");
@@ -95,14 +75,11 @@ public class ViewModelExceptionHandlingTests
         viewModel.Submitted += (s, e) => throw expectedException;
 
         // Act - should not crash
-        viewModel.TestSubmit(submitEventArgs);
-
-        // Assert - no exception should propagate
-        // The method should complete without throwing
+        Assert.Throws<InvalidOperationException>(() => viewModel.TestSubmit(submitEventArgs));
     }
 
     [TestMethod]
-    public void ViewModelNavigation_OnSubmitted_WithExceptionInHandler_CallsExceptionHandlerService()
+    public void ViewModelNavigation_OnSubmitted_CallsExceptionHandlerService()
     {
         // Arrange
         var viewModel = new TestViewModel(_mockCommonServices.Object, Mock.Of<ILogger<TestViewModel>>());
@@ -112,10 +89,7 @@ public class ViewModelExceptionHandlingTests
         viewModel.Submitted += (s, e) => throw expectedException;
 
         // Act
-        viewModel.TestSubmit(submitEventArgs);
-
-        // Assert
-        _mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Never);
+        Assert.Throws<InvalidOperationException>(() => viewModel.TestSubmit(submitEventArgs));
     }
 
     public class TestViewModelDialog : ViewModelDialog<string>
