@@ -104,16 +104,14 @@ public sealed class WindowsAppSdkHostBuilder<TApp> : IHostApplicationBuilder
         if (diagnosticListener.IsEnabled() && diagnosticListener.IsEnabled(hostBuildingEventName))
             Write(diagnosticListener, hostBuildingEventName, this);
 
-        var windowsAppSdkHost = new WindowsAppSdkHost<TApp>(
-            _serviceProvider,
+        _services.AddSingleton<IHost>(sp => new WindowsAppSdkHost<TApp>(
+            sp,
             _hostingEnvironment,
             _defaultProvider,
-            _serviceProvider.GetRequiredService<IHostApplicationLifetime>(),
-            _serviceProvider.GetRequiredService<ILogger<WindowsAppSdkHost<TApp>>>(),
-            _serviceProvider.GetRequiredService<IHostLifetime>(),
-            _serviceProvider.GetRequiredService<IOptions<HostOptions>>());
-
-        _services.AddSingleton<IHost, WindowsAppSdkHost<TApp>>(_ => windowsAppSdkHost);
+            sp.GetRequiredService<IHostApplicationLifetime>(),
+            sp.GetRequiredService<ILogger<WindowsAppSdkHost<TApp>>>(),
+            sp.GetRequiredService<IHostLifetime>(),
+            sp.GetRequiredService<IOptions<HostOptions>>()));
 
         var containerBuilder = _serviceProviderFactory.CreateBuilder(_services);
 

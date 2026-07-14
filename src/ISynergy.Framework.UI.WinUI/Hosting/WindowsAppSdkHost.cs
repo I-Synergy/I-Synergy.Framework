@@ -136,6 +136,9 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
             await RequestExit(combinedCancellationTokenSource);
         }
 
+        Application.Services = Services;
+        Application.CancellationToken = combinedCancellationToken;
+
         Application.Start(
             _ =>
             {
@@ -148,9 +151,6 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
                     var app = Services.GetRequiredService<TApp>();
 
                     app.UnhandledException += OnAppOnUnhandledException;
-
-                    Application.Services = Services;
-                    Application.CancellationToken = combinedCancellationToken;
 
                     // Fire IHostApplicationLifetime.Started
                     _applicationLifetime.NotifyStarted();

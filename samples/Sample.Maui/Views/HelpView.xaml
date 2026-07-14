@@ -42,10 +42,10 @@
                          Color="{AppThemeBinding Light={DynamicResource TintedGray300}, Dark={DynamicResource TintedGray700}}" />
 
                 <!-- Getting Started -->
-                <Frame Padding="16"
-                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                <Border Padding="16"
+                       Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
                        BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
-                       CornerRadius="8">
+                       StrokeShape="RoundRectangle 8">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Getting Started"
                                FontSize="16"
@@ -56,13 +56,13 @@
                                LineHeight="1.4"
                                TextColor="{AppThemeBinding Light={DynamicResource Gray700}, Dark={DynamicResource Gray300}}" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <!-- Key Features -->
-                <Frame Padding="16"
-                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                <Border Padding="16"
+                       Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
                        BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
-                       CornerRadius="8">
+                       StrokeShape="RoundRectangle 8">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Key Features"
                                FontSize="16"
@@ -107,13 +107,13 @@
                             </Label>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <!-- Tips -->
-                <Frame Padding="16"
-                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                <Border Padding="16"
+                       Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
                        BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
-                       CornerRadius="8">
+                       StrokeShape="RoundRectangle 8">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Quick Tips"
                                FontSize="16"
@@ -138,13 +138,13 @@
                             </Label.FormattedText>
                         </Label>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <!-- Publisher Info -->
-                <Frame Padding="16"
-                       BorderColor="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
+                <Border Padding="16"
+                       Stroke="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray800}}"
                        BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray850}}"
-                       CornerRadius="8">
+                       StrokeShape="RoundRectangle 8">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="About"
                                FontSize="16"
@@ -165,7 +165,7 @@
                                    TextColor="{AppThemeBinding Light={DynamicResource Gray500}, Dark={DynamicResource Gray400}}" />
                         </VerticalStackLayout>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
             </VerticalStackLayout>
         </ScrollView>

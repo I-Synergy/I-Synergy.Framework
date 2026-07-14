@@ -47,6 +47,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
     protected Color? _accentColor;
     protected IServiceProvider? _services;
+    private static IServiceProvider? _staticServices;
     protected Microsoft.UI.Xaml.Window? _mainWindow;
 
     private Task? Initialize { get; set; }
@@ -70,13 +71,19 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     {
         get
         {
-            if (Application.Current is Application app)
-                return app._services!;
+            // Prefer the instance field when Application.Current is available and has a value
+            if (Application.Current is Application app && app._services is not null)
+                return app._services;
+
+            // Fall back to the static field, set before the Application is constructed
+            if (_staticServices is not null)
+                return _staticServices;
 
             throw new InvalidOperationException("Services not available.");
         }
         internal set
         {
+            _staticServices = value;
             if (Application.Current is Application app)
                 app._services = value;
         }
