@@ -65,7 +65,7 @@ public class NavigationServiceRetentionCycleTests
         Assert.IsNotNull(_cleanupMethod);
         Assert.IsTrue(_cleanupMethod.IsPrivate);
         Assert.IsTrue(_cleanupMethod.IsStatic);
-        Assert.IsTrue(_cleanupMethod.ToString().Contains("CleanupPage"),
+        Assert.IsTrue(_cleanupMethod.ToString()!.Contains("CleanupPage"),
             $"Unexpected method name: {_cleanupMethod}");
     }
 

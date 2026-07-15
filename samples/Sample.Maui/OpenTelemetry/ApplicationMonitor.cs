@@ -64,8 +64,12 @@ public class ApplicationMonitor : IDisposable
             // Monitor memory usage
             _meter.CreateObservableGauge("maui.memory.usage.mb", () => memoryMegabytes, "MB", "Memory usage");
 
-            // Monitor CPU usage
-            _meter.CreateObservableGauge("maui.cpu.usage.percent", () => _currentProcess.TotalProcessorTime.TotalMilliseconds, "%", "CPU usage");
+            // Monitor CPU usage — Process.TotalProcessorTime is unsupported on iOS/tvOS (CA1416).
+            if (!OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS())
+            {
+                var cpuMilliseconds = _currentProcess.TotalProcessorTime.TotalMilliseconds;
+                _meter.CreateObservableGauge("maui.cpu.usage.percent", () => cpuMilliseconds, "%", "CPU usage");
+            }
 
             // Monitor thread count
             _meter.CreateObservableGauge("maui.threads.count", () => _currentProcess.Threads.Count, "Threads", "Thread count");

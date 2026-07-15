@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.UI.Xaml.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Converters;
 
@@ -35,6 +36,8 @@ public class EnumToBooleanConverter : IValueConverter
     /// change XAML usages from <c>EnumType="Namespace.MyEnum"</c> to pass the type via a
     /// strongly-typed binding or use a generic alternative.
     /// </remarks>
+    [UnconditionalSuppressMessage("Trimming", "IL2057:TypeGetType",
+        Justification = "The enum type name is a fully-qualified string set in XAML; the consuming application must preserve the enum type. Documented in XML remarks.")]
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (parameter is string enumString)
@@ -70,6 +73,8 @@ public class EnumToBooleanConverter : IValueConverter
     /// This method uses <see cref="Type.GetType(string)"/> to resolve the enum type at runtime.
     /// Not trim-safe — see <see cref="Convert"/> remarks.
     /// </remarks>
+    [UnconditionalSuppressMessage("Trimming", "IL2057:TypeGetType",
+        Justification = "The enum type name is a fully-qualified string set in XAML; the consuming application must preserve the enum type. Documented in XML remarks.")]
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
         if (parameter is string enumString)
@@ -170,6 +175,8 @@ public class EnumToStringConverter : IValueConverter
     /// trim-unsafe. Prefer passing the enum value directly (without a string parameter) to avoid
     /// the trim-unsafe code path.
     /// </remarks>
+    [UnconditionalSuppressMessage("Trimming", "IL2057:TypeGetType",
+        Justification = "The enum type name is a fully-qualified string set in XAML; the consuming application must preserve the enum type. Documented in XML remarks.")]
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (!string.IsNullOrEmpty(parameter.ToString()) && Type.GetType(parameter.ToString()!) is { } type && type.IsEnum)

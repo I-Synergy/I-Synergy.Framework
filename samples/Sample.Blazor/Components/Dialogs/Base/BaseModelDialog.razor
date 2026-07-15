@@ -50,7 +50,7 @@
 </FluentDialogFooter>
 
 	@code {
-	private TViewModel _viewModel = default!;
+	private TViewModel? _previousViewModel;
 
 	/// <summary>
 	/// Collection of commands that have been subscribed to for CanExecuteChanged events.
@@ -62,30 +62,29 @@
 	[Parameter] public RenderFragment? DialogContent { get; set; } = default!;
 	[Parameter] public string? DialogSubtitle { get; set; }
 
-	[Parameter]
-	public TViewModel Content
+	[Parameter] public TViewModel Content { get; set; } = default!;
+
+	protected override void OnParametersSet()
 	{
-		get => _viewModel;
-		set
+		base.OnParametersSet();
+
+		if (ReferenceEquals(_previousViewModel, Content))
+			return;
+
+		if (_previousViewModel is not null)
 		{
-			if (_viewModel != value)
-			{
-				// Unsubscribe from old ViewModel if it exists
-				if (_viewModel != null)
-				{
-					_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
-					_viewModel.Closed -= OnViewModelClosed;
-				}
+			_previousViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+			_previousViewModel.Closed -= OnViewModelClosed;
+			UnsubscribeFromViewModelCommands();
+		}
 
-				_viewModel = value;
+		_previousViewModel = Content;
 
-				// Subscribe to new ViewModel if it exists
-				if (_viewModel != null)
-				{
-					_viewModel.PropertyChanged += OnViewModelPropertyChanged;
-					_viewModel.Closed += OnViewModelClosed;
-				}
-			}
+		if (Content is not null)
+		{
+			Content.PropertyChanged += OnViewModelPropertyChanged;
+			Content.Closed += OnViewModelClosed;
+			SubscribeToViewModelCommands();
 		}
 	}
 
@@ -96,15 +95,8 @@
 	{
 		await base.OnInitializedAsync();
 
-		if (_viewModel is not null)
-		{
-			if (!_viewModel.IsInitialized)
-				await _viewModel.InitializeAsync();
-
-			_viewModel.PropertyChanged += OnViewModelPropertyChanged;
-
-			SubscribeToViewModelCommands();
-		}
+		if (Content is not null && !Content.IsInitialized)
+			await Content.InitializeAsync();
 	}
 
 	/// <summary>
@@ -112,17 +104,17 @@
 	/// </summary>
 	private void SubscribeToViewModelCommands()
 	{
-		if (_viewModel is null)
+		if (Content is null)
 			return;
 
-		var commandProperties = _viewModel.GetType()
+		var commandProperties = Content.GetType()
 			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 			.Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType))
 			.ToList();
 
 		foreach (var property in commandProperties)
 		{
-			if (property.GetValue(_viewModel) is ICommand command)
+			if (property.GetValue(Content) is ICommand command)
 			{
 				command.CanExecuteChanged += OnCommandCanExecuteChanged;
 				_subscribedCommands.Add(command);
@@ -180,12 +172,12 @@
 	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
 	protected virtual void Dispose(bool disposing)
 	{
-		if (disposing && _viewModel is not null)
+		if (disposing && Content is not null)
 		{
-			_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
-			_viewModel.Closed -= OnViewModelClosed;
+			Content.PropertyChanged -= OnViewModelPropertyChanged;
+			Content.Closed -= OnViewModelClosed;
 			UnsubscribeFromViewModelCommands();
-			_viewModel.Dispose();
+			Content.Dispose();
 		}
 
 		// free native resources if there are any.

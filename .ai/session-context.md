@@ -1,68 +1,40 @@
-# Session Handoff - 2026-05-20
+# Session Handoff - 2026-07-15
 
 ## Task Summary
-Implemented the cross-platform quality plan (`.ai/plans/cross-platform-quality-plan.md`) — 41 issues across Core, Mvvm, UI, WinUI, WPF, and MAUI projects. All Critical, High, and Medium issues resolved.
+Eliminated all fixable warnings across the solution in two passes (both plans in `.ai/plans/steady-cooking-storm.md` history):
+1. **Build-analyzer trim warnings** in UI.WinUI/WPF/Maui (IL2026/IL2057/IL2067/IL2072/IL2091) — commit f297f51
+2. **All remaining 85 solution warnings**: publish-time ILLink trim chain (commit 694c131d), MSTest analyzer cleanup in tests (4566e947), sample BL0007/CA1416 (c4e80453)
+
+Final state: full Release solution build = **7 warnings, 0 errors** — all IL2104 from third-party assemblies (Syncfusion ×5, WinRT.Runtime, Microsoft.Windows.SDK.NET), not fixable in this repo. Trimmed Sample.WinUI publish equally clean.
 
 ## Decisions Made
-- **ConcurrentDictionary for Properties**: Changed from `Dictionary<string, IProperty>` to `ConcurrentDictionary<string, IProperty>` with `GetOrAdd` for atomic operations. Required explicit `IObservableClass.Properties` interface implementation since `ConcurrentDictionary` doesn't extend `Dictionary`.
-- **UpdateService left platform-specific**: WinUI uses StoreContext API, WPF uses HttpClient-based version checking. These are genuinely different update mechanisms — cannot be unified.
-- **ViewModelSelectable base class**: Extracted shared Submitted event, SelectedItem subscribe/unsubscribe, IsUpdate, SetSelectedItem, Cleanup, and Dispose into new intermediate base class between ViewModel and the 5 selection ViewModels.
-- **WizardViewModelBase**: Extracted shared wizard pagination state into intermediate class. Both BladeWizard and DialogWizard now inherit from it directly instead of their respective Blade/Dialog bases (SubmitAsync behavior is identical — both call CloseAsync).
-- **BaseNavigationService**: Extracted 7 abstract methods for platform-specific operations. WinUI subclass is 184 lines (from 751), WPF is 151 lines (from 775). M-02 (dead InitializeViewAndViewModel) and M-03 (ServiceLocator) resolved.
+- **ILLink vs analyzer suppression**: ILLink (publish) ignores `#pragma`/`.editorconfig` — only attributes work. All publish-relevant suppressions are attribute-based; `.editorconfig [**/obj/**.g.cs]` section KEPT (verified still needed for WPF generated code at build-analyzer level).
+- **Honest RUC contract**: `[RequiresUnreferencedCode]` on fundamentally trim-unsafe APIs (assembly walkers, To*Types discovery, plural Register*s, RegisterAssemblies, SettingsStorageExtensions JSON methods). Suppression only at the `ConfigureServices` boundary (justification: scanned types are rooted by app XAML compilation). NuGet consumers calling scanning APIs directly now see honest IL2026 — needs release-notes mention.
+- **Manual config binding**: all `ConfigurationBinder.Bind` on small option types replaced with trim-safe `IConfigurationSection` indexer binding (ApplicationFeatures, ClientApplicationOptions, UpdateOptions, AnalyticOptions, OTLP exporter options). New config keys on those types must be bound explicitly.
+- **DAM relaxation**: removed unneeded `DAM(All)` from Core `IsSingleton`/`IsScoped`/`IsFreeApplication` (only call `Attribute.GetCustomAttribute` — no DAM requirement).
+- **Sample.WinUI JSON source-gen**: `LocalSettingsJsonContext` fixes a live startup crash — `PublishTrimmed=true` disables reflection STJ, so the old code threw `NotSupportedException` in published Release.
+- **MSTest reference-identity tests**: in-place-contract assertions rewritten to `AreSame`/`AreNotSame` (NOT CollectionAssert, which would silently weaken them).
+- **MailServiceTests**: `[TestClass]` + class-level `[Ignore]` — it sends real email via Graph; was previously silently undiscovered, now shows 4 skipped in CI.
+- **Module-level trimmer suppressions** for generated XamlTypeInfo EventTriggerBehavior members (`Properties/GlobalSuppressions.Trimming.cs` in UI.WinUI and Sample.WinUI) — fragile to XAML index shifts (Activate_49_/_120_) but fails safe (warning reappears).
 
 ## Open Questions
-- UpdateService duplication remains — WinUI (Store) vs WPF (HTTP) are genuinely different
+- Local branch `development/main` has no upstream (remote only has `main`) — commits f297f51..latest are LOCAL ONLY; push not yet requested/performed.
+- Sample.WinUI plain `dotnet build -c Release` fails with pre-existing NETSDK1102 (PublishTrimmed without RID); use `-r win-x64 --self-contained true`.
+- Runtime smoke test of published Sample.WinUI settings round-trip (plan verification step 4) not performed — recommended before release.
 
 ## Files Modified
-- `src/ISynergy.Framework.Core/Base/ObservableClass.cs` — ConcurrentDictionary, GetHashCode, PropertyChanged race fix
-- `src/ISynergy.Framework.Core/Base/ObservableValidatedClass.cs` — Dispose guard, DisposeAsyncCore ordering
-- `src/ISynergy.Framework.Core/Services/BusyService.cs` — Thread-safety lock
-- `src/ISynergy.Framework.Core/Abstractions/Base/IObservableClass.cs` — Properties type → IDictionary
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelSelectable{TModel}.cs` — NEW base class
-- `src/ISynergy.Framework.Mvvm/ViewModels/WizardViewModelBase{TModel}.cs` — NEW base class
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelBlade{TModel}.cs` — Migrated to ViewModelSelectable
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelDialog{TModel}.cs` — Migrated to ViewModelSelectable
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelNavigation{TModel}.cs` — Migrated to ViewModelSelectable
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelBladeView{TModel}.cs` — Migrated to ViewModelSelectable
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelSummary{TModel}.cs` — Migrated to ViewModelSelectable
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelBladeWizard{TModel}.cs` — Now extends WizardViewModelBase
-- `src/ISynergy.Framework.Mvvm/ViewModels/ViewModelDialogWizard{TModel}.cs` — Now extends WizardViewModelBase
-- `src/ISynergy.Framework.UI/Services/BaseDialogService.cs` — NEW shared greeting helper
-- `src/ISynergy.Framework.UI/Services/DownloadFileService.cs` — NEW moved from WinUI/WPF
-- `src/ISynergy.Framework.UI/Services/BaseNavigationService.cs` — NEW shared navigation logic
-- `src/ISynergy.Framework.UI.WinUI/Services/NavigationService.cs` — Simplified to 184 lines
-- `src/ISynergy.Framework.UI.WPF/Services/NavigationService.cs` — Simplified to 151 lines
-- `src/ISynergy.Framework.UI.WinUI/Services/ThemeService.cs` — Nullable _window, TryGetValue fix
-- `src/ISynergy.Framework.UI.WinUI/Services/DialogService.cs` — BaseDialogService, self-removing handler, dual registration
-- `src/ISynergy.Framework.UI.WPF/Services/DialogService.cs` — BaseDialogService
-- `src/ISynergy.Framework.UI.WinUI/Application/Application.cs` — Exiting nullable, Dispose null
-- `src/ISynergy.Framework.UI.WPF/Application/Application.cs` — LifecycleService unsubscribe, event cleanup
-- `src/ISynergy.Framework.UI.WPF/Windows/SelectionWindow.xaml.cs` — OnClosed unsubscribe
-- `src/ISynergy.Framework.UI.WinUI/Controls/LoadingView.cs` — Named handler, _loadingCompleted flag
-- `src/ISynergy.Framework.UI.WinUI/Controls/Window.cs` — Window_Unloaded deleted
-- `src/ISynergy.Framework.UI.Maui/Controls/LoadingView.cs` — Named handler, _loadingCompleted flag
-- `src/ISynergy.Framework.UI.Maui/Services/DialogService.cs` — IDisposable, removed ValidateApplicationStateAsync
-- `src/ISynergy.Framework.UI.Maui/Services/ClipboardService.cs` — Consolidated single file
-- `src/ISynergy.Framework.UI.Maui/Services/DispatcherService.cs` — Docs added
-- `src/ISynergy.Framework.UI.Maui/Services/NavigationService.cs` — Recursion fix
-- `src/ISynergy.Framework.UI.Maui/Application/Application.cs` — ExportFont removed
-- `src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs` — MigrationService/ThemeService → Scoped
-- `src/ISynergy.Framework.UI.WPF/Extensions/WPFAppBuilderExtensions.cs` — 4 missing registrations added
-- `src/ISynergy.Framework.UI.WinUI/Extensions/WindowsAppBuilderExtensions.cs` — BuildServiceProvider removed, DialogService dual registration
-- `tests/ISynergy.Framework.Core.Tests/` — 5 new test files
-- `tests/ISynergy.Framework.Mvvm.Tests/` — 2 new test files
-- `tests/ISynergy.Framework.UI.WPF.Tests/` — NEW project
-- `.ai/plans/cross-platform-quality-plan.md` — All checkboxes updated
+See commits f297f51, 694c131d, c4e80453, 4566e947 (`git show --stat`). Completed task logs: `.ai/completed/fix-trim-warnings-winui.md`, `.ai/completed/fix-remaining-warnings.md`.
 
 ## Next Actions
-- None pending
+- Push `development/main` when user asks (recreates remote branch; CI currently builds pre-fix code).
+- Release notes: mention new RUC on SettingsStorageExtensions + scanning APIs; MailServiceTests now visible-as-skipped.
+- Optional: runtime settings round-trip test of trimmed Sample.WinUI publish.
 
 ## Files to Load Next Session
 - `.ai/session-context.md` — this file
 - `.ai/reference/critical-rules.md` — always
-- `.ai/reference/task-execution.md` — for progress file protocol
+- `.ai/completed/fix-remaining-warnings.md` — if warning work continues
 
 ## Session Notes
-- Progress tracking protocol violated — used built-in TaskCreate/TaskUpdate instead of `.ai/progress/` files. Fixed post-completion. Future work must create `.ai/progress/{slug}.md` files.
-- Linter/formatter automatically fixes files after writes — system-reminders about modifications are expected.
-- `IObservableClass.Properties` changed to `IDictionary<string, IProperty>` to accommodate `ConcurrentDictionary`.
+- ILLink warning counts in MSBuild logs appear doubled (inline + summary block) — divide by 2.
+- WPF `_wpftmp` XAML markup-compile pass runs analyzers on clean builds only — local incremental builds can hide generated-code warnings that CI surfaces.

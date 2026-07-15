@@ -97,10 +97,10 @@ public class JaggedCholeskyDecompositionTest
 
         double[][] actual = chol.Solve(B);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
-        Assert.AreNotEqual(actual, B);
+        Assert.AreNotSame(B, actual);
 
         actual = chol.Solve(B, true);
-        Assert.AreEqual(actual, B);
+        Assert.AreSame(B, actual);
         Assert.IsTrue(Matrix.IsEqual(expected, B, 1e-10));
 
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
@@ -127,7 +127,7 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
 
         actual = chol.Solve(B, true);
-        Assert.AreEqual(actual, B);
+        Assert.AreSame(B, actual);
         Assert.IsTrue(Matrix.IsEqual(expected, B, 1e-10));
 
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));

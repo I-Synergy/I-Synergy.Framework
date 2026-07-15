@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
@@ -40,7 +41,15 @@ public static class WindowsAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostApplicationBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+    [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+        Justification = "View, ViewModel and Window types are rooted by the application XAML compilation (XamlTypeInfo) and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
+    public static IHostApplicationBuilder ConfigureServices<
+        TApplication,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>(
         this IHostApplicationBuilder appBuilder,
         Action<IHostApplicationBuilder> action,
         Assembly assembly,
@@ -54,8 +63,21 @@ public static class WindowsAppBuilderExtensions
     {
         appBuilder.Services.AddOptions();
 
-        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).Bind);
-        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+        // Manual, trim-safe binding via the IConfigurationSection string indexer (case-insensitive,
+        // same as ConfigurationBinder.Bind). NOTE: any property added to these option types later
+        // must be bound explicitly here.
+        var featuresSection = appBuilder.Configuration.GetSection(nameof(ApplicationFeatures));
+        appBuilder.Services.Configure<ApplicationFeatures>(options =>
+            options.CheckForUpdatesInMicrosoftStore =
+                bool.TryParse(featuresSection[nameof(ApplicationFeatures.CheckForUpdatesInMicrosoftStore)], out var check) && check);
+
+        var clientSection = appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions));
+        appBuilder.Services.Configure<ClientApplicationOptions>(options =>
+        {
+            options.ClientId = clientSection[nameof(ClientApplicationOptions.ClientId)];
+            options.ClientSecret = clientSection[nameof(ClientApplicationOptions.ClientSecret)];
+            options.Endpoint = clientSection[nameof(ClientApplicationOptions.Endpoint)];
+        });
 
         var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
         if (mainAssembly is not null)
@@ -64,10 +86,8 @@ public static class WindowsAppBuilderExtensions
             infoService.LoadAssembly(mainAssembly);
         }
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
         var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);

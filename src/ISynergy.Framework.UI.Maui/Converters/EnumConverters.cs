@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.UI.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
@@ -115,6 +116,8 @@ public class EnumToStringConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture.</param>
     /// <returns>System.Object.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2057:TypeGetType",
+        Justification = "The enum type name is a fully-qualified string set in XAML; the consuming application must preserve the enum type. Documented in XML remarks.")]
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var paramString = parameter?.ToString();

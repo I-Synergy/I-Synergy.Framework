@@ -40,7 +40,14 @@ public static class WpfAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>( // NOSONAR
+    [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+        Justification = "View, ViewModel and Window types are rooted by the application XAML compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
+    public static IHostBuilder ConfigureServices<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>( // NOSONAR
         this IHostBuilder wpfAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
@@ -56,12 +63,19 @@ public static class WpfAppBuilderExtensions
         {
             services.AddOptions();
 
-            services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+            // Manual, trim-safe binding via the IConfigurationSection string indexer (case-insensitive,
+            // same as ConfigurationBinder.Bind). NOTE: any property added to this option type later
+            // must be bound explicitly here.
+            var clientSection = context.Configuration.GetSection(nameof(ClientApplicationOptions));
+            services.Configure<ClientApplicationOptions>(options =>
+            {
+                options.ClientId = clientSection[nameof(ClientApplicationOptions.ClientId)];
+                options.ClientSecret = clientSection[nameof(ClientApplicationOptions.ClientSecret)];
+                options.Endpoint = clientSection[nameof(ClientApplicationOptions.Endpoint)];
+            });
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
             var languageService = LanguageService.Default;
             languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
             services.TryAddSingleton<IInfoService>(s => infoService);
             services.TryAddSingleton<ILanguageService>(s => languageService);
@@ -114,7 +128,18 @@ public static class WpfAppBuilderExtensions
     /// <returns></returns>
     public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).Bind);
+        // Manual, trim-safe binding via the IConfigurationSection string indexer (case-insensitive,
+        // same as ConfigurationBinder.Bind). NOTE: any property added to UpdateOptions later
+        // must be bound explicitly here.
+        var updateSection = configuration.GetSection(nameof(UpdateOptions));
+        services.Configure<UpdateOptions>(options =>
+        {
+            options.Filename = updateSection[nameof(UpdateOptions.Filename)];
+            options.VersionEndpoint = updateSection[nameof(UpdateOptions.VersionEndpoint)];
+            options.DownloadEndpoint = updateSection[nameof(UpdateOptions.DownloadEndpoint)];
+            if (int.TryParse(updateSection[nameof(UpdateOptions.ApplicationId)], out var applicationId))
+                options.ApplicationId = applicationId;
+        });
         services.TryAddSingleton<IUpdateService, UpdateService>();
         return services;
     }

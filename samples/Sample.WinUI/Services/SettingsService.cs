@@ -5,6 +5,7 @@ using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
+using Sample.Serialization;
 using System.Text.Json;
 
 namespace Sample.Services;
@@ -70,7 +71,7 @@ public class SettingsService : ISettingsService, IReloadable
                 SaveLocalSettings();
 
             string json = File.ReadAllText(file);
-            _localSettings = JsonSerializer.Deserialize<LocalSettings>(json);
+            _localSettings = JsonSerializer.Deserialize(json, LocalSettingsJsonContext.Default.LocalSettings);
         }
         catch (JsonException)
         {
@@ -90,7 +91,7 @@ public class SettingsService : ISettingsService, IReloadable
                 Directory.CreateDirectory(_settingsFolder);
 
             string file = Path.Combine(_settingsFolder, _fileName);
-            string json = JsonSerializer.Serialize(_localSettings);
+            string json = JsonSerializer.Serialize(_localSettings, typeof(LocalSettings), LocalSettingsJsonContext.Default);
             File.WriteAllText(file, json);
 
             return true;

@@ -70,7 +70,6 @@ public class UtmGridTests
     {
         GlobalCoordinates loc = new(utm.MaxLatitude, 0);
         UtmGrid g = new(utm, loc);
-        Assert.IsTrue(true);
         ValidateCorners(g);
     }
 

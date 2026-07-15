@@ -15,6 +15,7 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
@@ -63,7 +64,15 @@ public static class MauiAppBuilderExtensions
     /// <param name="assembly">The assembly to scan for ViewModels and Views.</param>
     /// <param name="assemblyFilter">A filter function for assembly names.</param>
     /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
+    [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+        Justification = "View, ViewModel and Window types are rooted by the application XAML compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
+    public static MauiAppBuilder ConfigureServices<
+        TApplication,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>( // NOSONAR
         this MauiAppBuilder appBuilder,
         Action<MauiAppBuilder> action,
         Assembly assembly,
@@ -76,8 +85,22 @@ public static class MauiAppBuilderExtensions
         where TResource : class
     {
         appBuilder.Services.AddOptions();
-        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).Bind);
-        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+
+        // Manual, trim-safe binding via the IConfigurationSection string indexer (case-insensitive,
+        // same as ConfigurationBinder.Bind). NOTE: any property added to these option types later
+        // must be bound explicitly here.
+        var featuresSection = appBuilder.Configuration.GetSection(nameof(ApplicationFeatures));
+        appBuilder.Services.Configure<ApplicationFeatures>(options =>
+            options.CheckForUpdatesInMicrosoftStore =
+                bool.TryParse(featuresSection[nameof(ApplicationFeatures.CheckForUpdatesInMicrosoftStore)], out var check) && check);
+
+        var clientSection = appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions));
+        appBuilder.Services.Configure<ClientApplicationOptions>(options =>
+        {
+            options.ClientId = clientSection[nameof(ClientApplicationOptions.ClientId)];
+            options.ClientSecret = clientSection[nameof(ClientApplicationOptions.ClientSecret)];
+            options.Endpoint = clientSection[nameof(ClientApplicationOptions.Endpoint)];
+        });
 
         var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
         if (mainAssembly is not null)
@@ -86,10 +109,8 @@ public static class MauiAppBuilderExtensions
             infoService.LoadAssembly(mainAssembly);
         }
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
         var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);

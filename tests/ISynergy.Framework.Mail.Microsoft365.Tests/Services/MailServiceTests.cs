@@ -7,6 +7,8 @@ using OptionsX = Microsoft.Extensions.Options.Options;
 
 namespace ISynergy.Framework.Mail.Microsoft365.Services;
 
+[TestClass]
+[Ignore("Integration test — requires live Microsoft 365 credentials and sends real email via Graph API. Run manually with valid Microsoft365MailOptions.")]
 public class MailServiceTests
 {
     private readonly Microsoft365MailOptions _mailOptions;

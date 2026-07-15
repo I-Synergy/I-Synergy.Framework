@@ -16,6 +16,7 @@ using ISynergy.Framework.Globalization.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
@@ -41,7 +42,14 @@ public static class ServiceCollectionExtensions
     /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
     /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
     /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
+    [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+        Justification = "View, ViewModel and Window types are rooted by the application's Razor compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
+    public static IServiceCollection ConfigureServices<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>( // NOSONAR
         this IServiceCollection services,
         IConfiguration configuration,
         IInfoService infoService,
@@ -56,8 +64,23 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions();
 
-        services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
-        services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).Bind);
+        // Manual, trim-safe binding via the IConfigurationSection string indexer (case-insensitive,
+        // same as ConfigurationBinder.Bind). NOTE: any property added to these option types later
+        // must be bound explicitly here.
+        var clientSection = configuration.GetSection(nameof(ClientApplicationOptions));
+        services.Configure<ClientApplicationOptions>(options =>
+        {
+            options.ClientId = clientSection[nameof(ClientApplicationOptions.ClientId)];
+            options.ClientSecret = clientSection[nameof(ClientApplicationOptions.ClientSecret)];
+            options.Endpoint = clientSection[nameof(ClientApplicationOptions.Endpoint)];
+        });
+
+        var analyticSection = configuration.GetSection(nameof(AnalyticOptions));
+        services.Configure<AnalyticOptions>(options =>
+        {
+            options.GoogleAnalyticsMeasurementId = analyticSection[nameof(AnalyticOptions.GoogleAnalyticsMeasurementId)];
+            options.MicrosoftClarityProjectId = analyticSection[nameof(AnalyticOptions.MicrosoftClarityProjectId)];
+        });
 
         var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
@@ -106,6 +129,7 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
     /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
+    [RequiresUnreferencedCode("Discovers and loads referenced assemblies at runtime and scans them for IView/IWindow/IViewModel implementors; not trim-compatible. Types are only found if the application still references them.")]
     public static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
         var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
@@ -129,6 +153,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="assemblies">The assemblies to scan.</param>
+    [RequiresUnreferencedCode("Scans the supplied assemblies for IView/IWindow/IViewModel implementors; not trim-compatible.")]
     public static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
         var viewTypes = assemblies.ToViewTypes();

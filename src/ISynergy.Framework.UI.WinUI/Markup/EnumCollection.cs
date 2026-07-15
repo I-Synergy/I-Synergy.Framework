@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Markup;
 
@@ -32,6 +33,8 @@ public class EnumCollection : MarkupExtension
     /// preserved by the IL trimmer. For AOT-safe scenarios, populate enum collections using
     /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code.
     /// </remarks>
+    [UnconditionalSuppressMessage("Trimming", "IL2072",
+        Justification = "EnumType is set from XAML; the consuming application must preserve the enum type's fields.")]
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsEnumType(EnumType);

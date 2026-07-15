@@ -264,7 +264,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 
             var configuration = Services.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+            var environmentFromConfig = configuration[nameof(Environment)];
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {
