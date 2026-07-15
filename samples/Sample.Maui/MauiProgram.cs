@@ -14,7 +14,6 @@ using Sample.Extensions;
 using Sample.OpenTelemetry;
 using Sample.Services;
 using Syncfusion.Maui.Core.Hosting;
-using System.Diagnostics;
 using System.Reflection;
 
 
@@ -154,11 +153,7 @@ public static class MauiProgram
                 cultures.AddCulture("fr");
                 cultures.AddCulture("ar");
             })
-            .ConfigureOfflineSynchronization(builder =>
-            {
-                Debug.WriteLine("Configuring offline synchronization");
-            })
-        .ConfigureSyncfusionCore();
+            .ConfigureSyncfusionCore();
 
         return builder.Build();
     }

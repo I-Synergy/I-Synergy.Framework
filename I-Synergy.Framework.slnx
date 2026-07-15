@@ -58,7 +58,6 @@
     <Project Path="src/ISynergy.Framework.Storage.Azure/ISynergy.Framework.Storage.Azure.csproj" />
     <Project Path="src/ISynergy.Framework.Storage.S3/ISynergy.Framework.Storage.S3.csproj" />
     <Project Path="src/ISynergy.Framework.Storage/ISynergy.Framework.Storage.csproj" />
-    <Project Path="src/ISynergy.Framework.Synchronization/ISynergy.Framework.Synchronization.csproj" />
     <Project Path="src/ISynergy.Framework.UI.Blazor/ISynergy.Framework.UI.Blazor.csproj" Id="2533bd51-a65b-483e-9d9e-d9abf12f97ca" />
     <Project Path="src/ISynergy.Framework.UI.Maui/ISynergy.Framework.UI.Maui.csproj">
       <Deploy />
@@ -89,7 +88,6 @@
   <Folder Name="/Samples/Services/AspNetCore/">
     <Project Path="samples/Sample.Api/Sample.Api.csproj" />
     <Project Path="samples/Sample.Automation/Sample.Automation.csproj" />
-    <Project Path="samples/Sample.Synchronization/Sample.Synchronization.csproj" />
   </Folder>
   <Folder Name="/Samples/Services/EventSourcing/">
     <Project Path="samples/Sample.EventSourcing.Api/Sample.EventSourcing.Api.csproj" />
