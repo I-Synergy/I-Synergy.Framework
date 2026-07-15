@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<PackageReference Include="Dotmim.Sync.Web.Client" />
 		<PackageReference Include="Dotmim.Sync.Sqlite" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3"/>
 	</ItemGroup>
 
 	<ItemGroup>

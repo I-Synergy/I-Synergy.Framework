@@ -7,7 +7,7 @@ using Sample.TokenService.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtOptions>(
-    builder.Configuration.GetSection(nameof(JwtOptions)).BindWithReload);
+    builder.Configuration.GetSection(nameof(JwtOptions)).Bind);
 
 builder.Services.AddTransient<ITokenManager, TokenManager>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();

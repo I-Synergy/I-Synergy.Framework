@@ -92,6 +92,7 @@
     <PackageVersion Include="Sentry" Version="6.6.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.6.0" />
     <PackageVersion Include="SkiaSharp" Version="4.150.1" />
+    <PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="34.1.31" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="34.1.31" />
     <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="34.1.31" />

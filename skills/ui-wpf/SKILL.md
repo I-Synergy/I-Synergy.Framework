@@ -24,7 +24,7 @@ The following sections are derived from the concrete classes in [src/ISynergy.Fr
 
 ```csharp
 services.AddOptions();
-services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
 
 services.TryAddSingleton<IInfoService>(s => infoService);
 services.TryAddSingleton<ILanguageService>(s => languageService);
