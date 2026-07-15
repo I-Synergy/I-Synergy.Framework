@@ -40,7 +40,7 @@ public static class ServiceCollectionExtensions
     /// </remarks>
     public static void AddAutomationServices(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
-        services.Configure<AutomationOptions>(configuration.GetSection($"{prefix}{nameof(AutomationOptions)}").BindWithReload);
+        services.Configure<AutomationOptions>(configuration.GetSection($"{prefix}{nameof(AutomationOptions)}").Bind);
 
         // Register compile-time action executor dispatch table (AOT-safe alternative to MakeGenericType).
         services.TryAddSingleton(sp =>

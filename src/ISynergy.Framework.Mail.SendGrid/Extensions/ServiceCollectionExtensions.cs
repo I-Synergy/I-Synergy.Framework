@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSendGridMailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<SendGridMailOptions>(configuration.GetSection($"{prefix}{nameof(SendGridMailOptions)}").BindWithReload);
+        services.Configure<SendGridMailOptions>(configuration.GetSection($"{prefix}{nameof(SendGridMailOptions)}").Bind);
         services.TryAddSingleton<IMailService, SendGridMailService>();
         return services;
     }

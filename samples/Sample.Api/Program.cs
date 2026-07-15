@@ -91,8 +91,7 @@ public class Program
 
 
         var app = builder
-            .Build()
-            .SetLocatorProvider();
+            .Build();
 
         app.UseHttpsRedirection();
         app.UseAuthorization();

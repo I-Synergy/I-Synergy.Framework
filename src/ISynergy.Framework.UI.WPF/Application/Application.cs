@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
@@ -40,12 +39,29 @@ public abstract class Application : System.Windows.Application, IDisposable
 
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
-    protected LoadingView? _loadingView;
 
+    protected IServiceProvider? _services;
+    protected LoadingView? _loadingView;
     protected bool _isShuttingDown = false;
 
     private Task? Initialize { get; set; }
     private int lastErrorMessage = 0;
+
+    public static IServiceProvider Services
+    {
+        get
+        {
+            if (Application.Current is Application app)
+                return app._services!;
+
+            throw new InvalidOperationException("Services not available.");
+        }
+        internal set
+        {
+            if (Application.Current is Application app)
+                app._services = value;
+        }
+    }
 
     /// <summary>
     /// Default constructor.
@@ -55,24 +71,23 @@ public abstract class Application : System.Windows.Application, IDisposable
     {
         _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
         var host = CreateHostBuilder() // NOSONAR
-           .Build()
-           .SetLocatorProvider();
+           .Build();
 
-        var serviceProvider = host.Services;
-        _logger = serviceProvider.GetRequiredService<ILogger<Application>>();
+        Services = host.Services;
+        _logger = Services.GetRequiredService<ILogger<Application>>();
 
         _logger.LogTrace("Setting up services and global exception handler.");
 
-        _commonServices = serviceProvider.GetRequiredService<ICommonServices>();
-        _dialogService = serviceProvider.GetRequiredService<IDialogService>();
-        _navigationService = serviceProvider.GetRequiredService<INavigationService>();
-        _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
-        _settingsService = serviceProvider.GetRequiredService<ISettingsService>();
-        _lifecycleService = serviceProvider.GetRequiredService<IApplicationLifecycleService>();
-        _themeService = serviceProvider.GetService<IThemeService>();
-        var messengerService = serviceProvider.GetRequiredService<IMessengerService>();
+        _commonServices = Services.GetRequiredService<ICommonServices>();
+        _dialogService = Services.GetRequiredService<IDialogService>();
+        _navigationService = Services.GetRequiredService<INavigationService>();
+        _exceptionHandlerService = Services.GetRequiredService<IExceptionHandlerService>();
+        _settingsService = Services.GetRequiredService<ISettingsService>();
+        _lifecycleService = Services.GetRequiredService<IApplicationLifecycleService>();
+        _themeService = Services.GetService<IThemeService>();
+        var messengerService = Services.GetRequiredService<IMessengerService>();
 
-        _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+        _features = Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -129,7 +144,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+            var configuration = Services.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
@@ -375,7 +390,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     {
         if (disposing)
         {
-            var messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
+            var messengerService = Services.GetRequiredService<IMessengerService>();
             messengerService.Unregister<ShowInformationMessage>(this);
             messengerService.Unregister<ShowWarningMessage>(this);
             messengerService.Unregister<ShowErrorMessage>(this);

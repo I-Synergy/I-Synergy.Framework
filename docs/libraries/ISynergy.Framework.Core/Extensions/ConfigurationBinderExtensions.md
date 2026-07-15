@@ -2,7 +2,7 @@
 
 This code defines a static class called ConfigurationBinderExtensions, which adds a new method to the IConfiguration interface in .NET. The purpose of this code is to provide a way to bind configuration values to an object and automatically update that object when the configuration changes.
 
-The main functionality is provided by the BindWithReload method. This method takes two inputs: an IConfiguration object (which represents the application's configuration) and an instance of any object that should receive the configuration values.
+The main functionality is provided by the Bind method. This method takes two inputs: an IConfiguration object (which represents the application's configuration) and an instance of any object that should receive the configuration values.
 
 The method doesn't produce a direct output. Instead, it modifies the input object by populating it with values from the configuration. The key feature is that it sets up a mechanism to automatically update the object whenever the configuration changes.
 

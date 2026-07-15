@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 namespace ISynergy.Framework.Core.Exceptions;
 
 /// <summary>
-/// The standard exception thrown when a ServiceLocator has an error in resolving an object.
+/// The standard exception thrown when DI has an error in resolving an object.
 /// </summary>
 [Serializable]
 public class ActivationException : Exception

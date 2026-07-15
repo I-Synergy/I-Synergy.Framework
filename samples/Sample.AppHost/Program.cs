@@ -44,16 +44,6 @@ builder.AddProject<Projects.Sample_Blazor>("blazor");
 // Demonstrates the ISynergy.Framework.AspNetCore.Monitoring SignalR integration.
 builder.AddProject<Projects.Sample_Monitor_SignalR>("monitor-signalr");
 
-// ── Synchronization sample ────────────────────────────────────────────────────
-// Demonstrates the ISynergy.Framework.Synchronization library with PostgreSQL.
-builder.AddProject<Projects.Sample_Synchronization>("synchronization")
-    .WithReference(synchronizationDb)
-    .WaitFor(synchronizationDb);
-
-// ── Token Service sample ──────────────────────────────────────────────────────
-// Demonstrates JWT and WOPI token generation via ISynergy.Framework.AspNetCore.Authentication.
-//builder.AddProject<Projects.Sample_TokenService>("token-service");
-
 var sample_app = builder.AddMauiProject("sample-app", @"../../Samples/Sample.Maui/Sample.Maui.csproj");
 
 sample_app.AddWindowsDevice("sample-app-windows")

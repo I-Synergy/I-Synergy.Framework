@@ -1,7 +1,6 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -9,6 +8,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
 using Sample.Models;
@@ -108,7 +108,7 @@ public class ShellViewModel : BaseShellViewModel
     {
         PrimaryItems?.Clear();
 
-        if (ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated)
+        if (Application.Services.GetRequiredService<IContext>().IsAuthenticated)
         {
             PrimaryItems?.Add(new NavigationItem("Info", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, InfoCommand));
             PrimaryItems?.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _settingsService.LocalSettings.Color, BrowseCommand));
@@ -121,7 +121,7 @@ public class ShellViewModel : BaseShellViewModel
         }
 
         PrimaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _settingsService.LocalSettings.Color, ThemeCommand));
-        PrimaryItems?.Add(new NavigationItem(ServiceLocator.Default.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
+        PrimaryItems?.Add(new NavigationItem(Application.Services.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
     }
 
     private Task SelectSingleAsync() =>

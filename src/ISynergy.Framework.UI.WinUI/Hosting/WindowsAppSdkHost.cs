@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +29,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     private volatile bool _stopCalled;
 
     public WindowsAppSdkHost(
-        IServiceProvider services,
+        IServiceProvider serviceProvider,
         IHostEnvironment hostEnvironment,
         PhysicalFileProvider defaultProvider,
         IHostApplicationLifetime applicationLifetime,
@@ -38,7 +37,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         IHostLifetime hostLifetime,
         IOptions<HostOptions> options)
     {
-        Services = services ?? throw new ArgumentNullException(nameof(services));
+        Services = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
         if (applicationLifetime is null)
             throw new ArgumentNullException(nameof(applicationLifetime));
@@ -66,7 +65,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         await _hostLifetime.WaitForStartAsync(combinedCancellationToken).ConfigureAwait(false);
 
         combinedCancellationToken.ThrowIfCancellationRequested();
-        _hostedServices = Services.GetService<IEnumerable<IHostedService>>()!;
+        _hostedServices = Services.GetRequiredService<IEnumerable<IHostedService>>()!;
 
         foreach (var hostedService in _hostedServices.EnsureNotNull())
         {
@@ -130,16 +129,15 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         }
         // ── End single-instance enforcement ─────────────────────
 
-        // Make the final service provider available via ServiceLocator before TApp is constructed,
-        // so the Application base constructor can resolve services before Services is injected.
-        ServiceLocator.SetLocatorProvider(Services);
-
         async void OnAppOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             _logger.LogCritical(args.Exception, "Unhandled exception.  Terminating.");
             args.Handled = false;
             await RequestExit(combinedCancellationTokenSource);
         }
+
+        Application.Services = Services;
+        Application.CancellationToken = combinedCancellationToken;
 
         Application.Start(
             _ =>
@@ -153,12 +151,6 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
                     var app = Services.GetRequiredService<TApp>();
 
                     app.UnhandledException += OnAppOnUnhandledException;
-
-                    if (app is Application ca)
-                    {
-                        ca.Services = Services;
-                        ca.Token = combinedCancellationToken;
-                    }
 
                     // Fire IHostApplicationLifetime.Started
                     _applicationLifetime.NotifyStarted();

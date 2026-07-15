@@ -23,8 +23,8 @@ Everything here points at the actual code under [src/ISynergy.Framework.UI.Maui]
 `ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>` in [src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs](src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs) is the single entry point for DI:
 
 ```csharp
-appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
-appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).Bind);
+appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
 
 appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
 appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);

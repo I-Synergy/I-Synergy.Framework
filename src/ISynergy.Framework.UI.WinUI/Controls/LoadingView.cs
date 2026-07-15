@@ -1,9 +1,9 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Helpers;
 using ISynergy.Framework.UI.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -36,7 +36,7 @@ public class LoadingView : Page
         ArgumentNullException.ThrowIfNull(splashScreenOptions);
 
         _commonServices = commonServices;
-        _applicationLifecycleService = ServiceLocator.Default.GetRequiredService<IApplicationLifecycleService>();
+        _applicationLifecycleService = Application.Services.GetRequiredService<IApplicationLifecycleService>();
 
         InitializeContent(commonServices, splashScreenOptions);
 

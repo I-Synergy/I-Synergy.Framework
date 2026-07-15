@@ -1,8 +1,8 @@
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -71,9 +71,9 @@ public sealed partial class ImageBrowser : UserControl
     {
         try
         {
-            if (ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
+            if (Application.Services.GetRequiredService<IFileService<FileResult>>() is { } fileService)
             {
-                var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
+                var languageService = Application.Services.GetRequiredService<ILanguageService>();
                 var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
 
                 if (result is not null && result.Count > 0)
@@ -99,7 +99,7 @@ public sealed partial class ImageBrowser : UserControl
     {
         try
         {
-            if (ServiceLocator.Default.GetRequiredService<ICameraService>() is { } cameraService)
+            if (Application.Services.GetRequiredService<ICameraService>() is { } cameraService)
             {
                 var result = await cameraService.TakePictureAsync();
 
@@ -135,7 +135,7 @@ public sealed partial class ImageBrowser : UserControl
     {
         try
         {
-            if (ServiceLocator.Default.GetRequiredService<IClipboardService>() is { } clipboardService &&
+            if (Application.Services.GetRequiredService<IClipboardService>() is { } clipboardService &&
                 await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
             {
                 FileBytes = imageResult.FileBytes;

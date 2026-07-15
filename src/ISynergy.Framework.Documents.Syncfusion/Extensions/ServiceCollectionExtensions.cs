@@ -34,7 +34,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDocumentsIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<SyncfusionLicenseOptions>(configuration.GetSection($"{prefix}{nameof(SyncfusionLicenseOptions)}").BindWithReload);
+        services.Configure<SyncfusionLicenseOptions>(configuration.GetSection($"{prefix}{nameof(SyncfusionLicenseOptions)}").Bind);
         services.TryAddSingleton<ILanguageService, LanguageService>();
         services.TryAddSingleton<IDocumentService, DocumentService>();
 

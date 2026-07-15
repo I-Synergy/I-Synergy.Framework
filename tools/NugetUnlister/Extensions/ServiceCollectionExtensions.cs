@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -12,7 +11,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddNugetServiceIntegrations(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<NugetOptions>(configuration.GetSection(nameof(NugetOptions)).BindWithReload);
+        services.Configure<NugetOptions>(configuration.GetSection(nameof(NugetOptions)).Bind);
         services.TryAddScoped<INugetService, NugetService>();
         return services;
     }

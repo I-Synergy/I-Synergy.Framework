@@ -1,7 +1,5 @@
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.Commands.Tests;
@@ -33,16 +31,11 @@ public class AsyncRelayCommandGenericsTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Initialize ServiceLocator with mock service provider
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
-        // Reset ServiceLocator state after each test
-        ServiceLocator.Default.Dispose();
     }
 
     [TestMethod]

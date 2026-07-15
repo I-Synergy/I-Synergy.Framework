@@ -20,7 +20,5 @@
     <ProjectReference Include="..\Sample.Automation\Sample.Automation.csproj" />
     <ProjectReference Include="..\Sample.Blazor\Sample.Blazor.csproj" />
     <ProjectReference Include="..\Sample.Monitor.SignalR\Sample.Monitor.SignalR.csproj" />
-    <ProjectReference Include="..\Sample.Synchronization\Sample.Synchronization.csproj" />
-    <ProjectReference Include="..\Sample.TokenService\Sample.TokenService.csproj" />
   </ItemGroup>
 </Project>

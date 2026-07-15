@@ -1,8 +1,8 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace ISynergy.Framework.OpenTelemetry.ApplicationInsights.Extensions;
 /// <summary>
@@ -23,7 +23,7 @@ public static class ApplicationInsightsTelemetryExtensions
         Argument.IsNotNull(telemetryBuilder);
 
         var options = new AzureMonitorExporterOptions();
-        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
         telemetryExporterOptions?.Invoke(options);
 

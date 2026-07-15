@@ -1,18 +1,13 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Constants;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
-
-#pragma warning disable S3776 // cognitive complexity is inherent in sign-up constructor
-#pragma warning disable S1066 // nested if is intentional for readability of multi-step validation
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -50,8 +49,6 @@ public static class TelemetryExtensions
         // Configure OpenTelemetry Logging
         telemetryBuilder.Services.AddLogging(loggingBuilder =>
         {
-            loggingBuilder.SetMinimumLevel(hostBuilderContext.Configuration.GetDefaultLogLevel());
-
             loggingBuilder.AddOpenTelemetry(loggerOptions =>
             {
                 // Add default console exporter in development

@@ -51,8 +51,7 @@ public static class Program
         });
 
         var app = builder
-            .Build()
-            .SetLocatorProvider();
+            .Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

@@ -28,8 +28,9 @@ public abstract class ViewModelSelectable<TModel> : ViewModel
     {
         if (Submitted != null)
         {
-            var handlers = Submitted.GetInvocationList();
-            foreach (EventHandler<SubmitEventArgs<TModel>> handler in handlers)
+            Exception? capturedException = null;
+
+            foreach (EventHandler<SubmitEventArgs<TModel>> handler in Submitted.GetInvocationList())
             {
                 try
                 {
@@ -37,16 +38,13 @@ public abstract class ViewModelSelectable<TModel> : ViewModel
                 }
                 catch (Exception ex)
                 {
-                    try
-                    {
-                        _commonServices.ExceptionHandlerService?.HandleException(ex);
-                    }
-                    catch
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler: {ex.Message}");
-                    }
+                    System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler for {GetType().Name}: {ex.Message}");
+                    capturedException = ex;
                 }
             }
+
+            if (capturedException is not null)
+                throw capturedException;
         }
     }
 

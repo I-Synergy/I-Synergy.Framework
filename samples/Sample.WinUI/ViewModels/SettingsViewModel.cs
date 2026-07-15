@@ -1,9 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
@@ -80,14 +79,14 @@ public class SettingsViewModel : ViewModelBlade<object>
 
             if (!IsInitialized)
             {
-                ServiceLocator.Default.GetRequiredService<ISettingsService>().LoadLocalSettings();
+                Application.Services.GetRequiredService<ISettingsService>().LoadLocalSettings();
 
-                if (ServiceLocator.Default.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings localSetting)
+                if (Application.Services.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings localSetting)
                     LocalSettings = localSetting;
 
-                await ServiceLocator.Default.GetRequiredService<ISettingsService>().LoadGlobalSettingsAsync();
+                await Application.Services.GetRequiredService<ISettingsService>().LoadGlobalSettingsAsync();
 
-                if (ServiceLocator.Default.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
+                if (Application.Services.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
                     GlobalSettings = globalSetting;
 
                 IsInitialized = true;
@@ -111,11 +110,11 @@ public class SettingsViewModel : ViewModelBlade<object>
         {
             _commonServices.BusyService.StartBusy();
 
-            if (ServiceLocator.Default.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings)
-                ServiceLocator.Default.GetRequiredService<ISettingsService>().SaveLocalSettings();
+            if (Application.Services.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings)
+                Application.Services.GetRequiredService<ISettingsService>().SaveLocalSettings();
 
-            if (ServiceLocator.Default.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
-                await ServiceLocator.Default.GetRequiredService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
+            if (Application.Services.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
+                await Application.Services.GetRequiredService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
         }
         finally
         {

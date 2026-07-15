@@ -1,7 +1,7 @@
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
+using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -27,7 +27,7 @@ public static class OtlpTelemetryExtensions
         Argument.IsNotNull(telemetryBuilder);
 
         var options = new OtlpExporterOptions();
-        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
         telemetryExporterOptions?.Invoke(options);
 

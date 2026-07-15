@@ -26,7 +26,7 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="7989261080" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="7954743795" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="autoTranslateForm.prefixTextBox.Text">####</globalSetting>
     <globalSetting name="autoTranslateForm.prefixCheckBox.Checked">True</globalSetting>
     <globalSetting name="autoTranslateForm.useExistingTranslationsCheckBox.Checked">False</globalSetting>
@@ -91,12 +91,12 @@
   </configuration>
   <fileGroups>
     <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="b3fcf1ea-2d73-42bc-a7ae-62b6f76b06e4">
-      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.ar.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.ar.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.de.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.de.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.es.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.es.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.fr.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.fr.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
-      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.nl.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.nl.resx" uniqueID="00000000-0000-0000-0000-000000000000" />
+      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.resx" uniqueID="f06728bd-0cfa-4d06-9fea-0e6abef40bc7" />
+      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.ar.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.ar.resx" uniqueID="aca6b42a-c346-4d8d-a433-ddb033a24626" />
+      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.de.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.de.resx" uniqueID="e9823898-acf7-4fb4-85d8-1b7eefd8301b" />
+      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.es.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.es.resx" uniqueID="234427eb-b6af-44fc-ac07-a7483131ee2a" />
+      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.fr.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.fr.resx" uniqueID="885bba48-8e5d-48ff-ac80-bd0eaf8f92c6" />
+      <file filePath="..\src\ISynergy.Framework.Globalization\Properties\Resources.nl.resx" absoluteFilePath="D:\Projects\I-Synergy\I-Synergy.Framework\src\ISynergy.Framework.Globalization\Properties\Resources.nl.resx" uniqueID="fea569cf-827d-411a-bfab-93296df937bb" />
       <remarks>
       </remarks>
     </fileGroup>

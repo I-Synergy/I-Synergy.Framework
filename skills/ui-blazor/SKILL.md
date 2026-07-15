@@ -23,8 +23,8 @@ Focus on the actual implementation under [src/ISynergy.Framework.UI.Blazor](src/
 `ServiceCollectionExtensions.ConfigureServices` in [src/ISynergy.Framework.UI.Blazor/Extensions/ServiceCollectionExtensions.cs](src/ISynergy.Framework.UI.Blazor/Extensions/ServiceCollectionExtensions.cs) wires the entire Blazor stack:
 
 ```csharp
-services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
-services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
+services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).Bind);
 
 var languageService = new LanguageService();
 languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
