@@ -273,10 +273,11 @@ indent_style = space
 tab_width = 2
 end_of_line = crlf
 insert_final_newline = true
-# XAML compiler generated code (WinUI XamlTypeInfo, WPF InitializeComponent/GeneratedInternalTypeHelper)
-# cannot be annotated in source. Trim warnings here originate from XAML-driven reflection patterns
-# (e.g. Microsoft.Xaml.Interactivity.EventTriggerBehavior, System.Windows.Application.LoadComponent);
-# the consuming application must preserve the types instantiated from XAML.
+# WPF compiler generated code (InitializeComponent Delegate.CreateDelegate sites, GeneratedInternalTypeHelper)
+# cannot be annotated in source; this silences the BUILD-TIME Roslyn analyzer only (verified still needed
+# 2026-07-15: removing it surfaces IL2026/IL2067/IL2075 in ISynergy.Framework.UI.WPF *.g.cs on every TFM).
+# WinUI XamlTypeInfo.g.cs IL2026 is handled separately by module-level UnconditionalSuppressMessage
+# (Properties/GlobalSuppressions.Trimming.cs) because ILLink at trimmed publish ignores .editorconfig.
 [**/obj/**.g.cs]
 dotnet_diagnostic.IL2026.severity = none
 dotnet_diagnostic.IL2067.severity = none

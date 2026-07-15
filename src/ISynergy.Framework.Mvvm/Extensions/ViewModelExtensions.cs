@@ -185,6 +185,8 @@ public static class ViewModelExtensions
     /// In AOT-compiled applications, call <see cref="RegisterViewTypes"/> at startup to populate the registry.
     /// The assembly-scan fallback will be trimmed away by the linker and will not work under AOT.
     /// </remarks>
+    [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+        Justification = "Registry-first resolution: RegisterViewTypes provides the AOT/trim-safe path and is checked before any reflection. The reflection fallback can only locate view types the application still references; a type removed by the trimmer could never be a valid navigation target.")]
     public static Type? GetRelatedViewType(this string name)
     {
         // Fast AOT-safe path: use the registered map.

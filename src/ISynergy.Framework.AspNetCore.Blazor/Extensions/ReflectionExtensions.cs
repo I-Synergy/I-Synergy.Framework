@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -19,6 +20,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="assemblies">The assemblies to scan.</param>
     /// <returns>All discovered ViewModel types.</returns>
+    [RequiresUnreferencedCode("Scans assemblies with GetExportedTypes()/GetInterfaces(); types not statically referenced by the application may already have been removed by the trimmer.")]
     public static IEnumerable<Type> ToViewModelTypes(this IEnumerable<Assembly> assemblies)
     {
         foreach (var assembly in assemblies)
@@ -35,6 +37,7 @@ public static class ReflectionExtensions
     /// Get viewmodel types from all loaded assemblies.
     /// </summary>
     /// <returns>All discovered ViewModel types across the application domain.</returns>
+    [RequiresUnreferencedCode("Scans assemblies with GetExportedTypes()/GetInterfaces(); types not statically referenced by the application may already have been removed by the trimmer.")]
     public static IEnumerable<Type> GetViewModelTypes() =>
     AppDomain.CurrentDomain.GetAssemblies()
         .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
@@ -50,6 +53,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="assemblies">The assemblies to scan.</param>
     /// <returns>All discovered View types.</returns>
+    [RequiresUnreferencedCode("Scans assemblies with GetExportedTypes()/GetInterfaces(); types not statically referenced by the application may already have been removed by the trimmer.")]
     public static IEnumerable<Type> ToViewTypes(this IEnumerable<Assembly> assemblies)
     {
         foreach (var assembly in assemblies)
@@ -67,6 +71,7 @@ public static class ReflectionExtensions
     /// Get view types from all loaded assemblies.
     /// </summary>
     /// <returns>All discovered View types across the application domain.</returns>
+    [RequiresUnreferencedCode("Scans assemblies with GetExportedTypes()/GetInterfaces(); types not statically referenced by the application may already have been removed by the trimmer.")]
     public static IEnumerable<Type> GetViewTypes() =>
         AppDomain.CurrentDomain.GetAssemblies()
             .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
@@ -84,6 +89,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="assemblies">The assemblies to scan.</param>
     /// <returns>All discovered Window types.</returns>
+    [RequiresUnreferencedCode("Scans assemblies with GetExportedTypes()/GetInterfaces(); types not statically referenced by the application may already have been removed by the trimmer.")]
     public static IEnumerable<Type> ToWindowTypes(this IEnumerable<Assembly> assemblies)
     {
         foreach (var assembly in assemblies)
@@ -100,6 +106,7 @@ public static class ReflectionExtensions
     /// Get window types from all loaded assemblies.
     /// </summary>
     /// <returns>All discovered Window types across the application domain.</returns>
+    [RequiresUnreferencedCode("Scans assemblies with GetExportedTypes()/GetInterfaces(); types not statically referenced by the application may already have been removed by the trimmer.")]
     public static IEnumerable<Type> GetWindowTypes() =>
         AppDomain.CurrentDomain.GetAssemblies()
             .Where(e => !e.FullName!.Contains("Microsoft") && !e.IsDynamic)
@@ -115,6 +122,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="windows">The window types to register.</param>
+    [RequiresUnreferencedCode("Registers types produced by runtime assembly scanning. For trim-safe registration, call RegisterWindow/RegisterView/RegisterViewModel with statically-known (typeof) types instead.")]
     public static void RegisterWindows(this IServiceCollection services, IEnumerable<Type> windows)
     {
         foreach (var window in windows.Distinct().EnsureNotNull())
@@ -126,11 +134,10 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="window">The window type to register.</param>
-    public static void RegisterWindow(this IServiceCollection services, Type window)
+    public static void RegisterWindow(this IServiceCollection services,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicConstructors)] Type window)
     {
-        var abstraction = Array.Find(
-            window.GetInterfaces(),
-            q => q.GetInterfaces().Contains(typeof(IWindow)) && !q.Name.StartsWith(nameof(IWindow)));
+        var abstraction = FindAbstraction(window, typeof(IWindow), nameof(IWindow));
 
         services.Register(window, abstraction);
     }
@@ -140,6 +147,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="views">The view types to register.</param>
+    [RequiresUnreferencedCode("Registers types produced by runtime assembly scanning. For trim-safe registration, call RegisterWindow/RegisterView/RegisterViewModel with statically-known (typeof) types instead.")]
     public static void RegisterViews(this IServiceCollection services, IEnumerable<Type> views)
     {
         foreach (var view in views.Distinct().EnsureNotNull())
@@ -151,11 +159,10 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="view">The view type to register.</param>
-    public static void RegisterView(this IServiceCollection services, Type view)
+    public static void RegisterView(this IServiceCollection services,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicConstructors)] Type view)
     {
-        var abstraction = Array.Find(
-            view.GetInterfaces(),
-            q => q.GetInterfaces().Contains(typeof(IView)) && !q.Name.StartsWith(nameof(IView)));
+        var abstraction = FindAbstraction(view, typeof(IView), nameof(IView));
 
         services.Register(view, abstraction);
     }
@@ -165,6 +172,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="viewmodels">The viewmodel types to register.</param>
+    [RequiresUnreferencedCode("Registers types produced by runtime assembly scanning. For trim-safe registration, call RegisterWindow/RegisterView/RegisterViewModel with statically-known (typeof) types instead.")]
     public static void RegisterViewModels(this IServiceCollection services, IEnumerable<Type> viewmodels)
     {
         foreach (var viewmodel in viewmodels.Distinct().EnsureNotNull())
@@ -176,18 +184,25 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="viewmodel">The viewmodel type to register.</param>
-    public static void RegisterViewModel(this IServiceCollection services, Type viewmodel)
+    public static void RegisterViewModel(this IServiceCollection services,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicConstructors)] Type viewmodel)
     {
-        var abstraction = Array.Find(
-            viewmodel.GetInterfaces(),
-            q => q.GetInterfaces().Contains(typeof(IViewModel)) && !q.Name.StartsWith(nameof(IViewModel)));
+        var abstraction = FindAbstraction(viewmodel, typeof(IViewModel), nameof(IViewModel));
 
         services.Register(viewmodel, abstraction);
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2070:UnrecognizedReflectionPattern",
+        Justification = "Interface types returned by GetInterfaces() are preserved together with the implementing type, and the marker interfaces (IView/IWindow/IViewModel) are statically referenced here, so their interface hierarchies survive trimming.")]
+    private static Type? FindAbstraction(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)] Type type,
+        Type marker,
+        string markerName) =>
+        Array.Find(type.GetInterfaces(), q => q.GetInterfaces().Contains(marker) && !q.Name.StartsWith(markerName));
+
     private static void Register(
         this IServiceCollection services,
-        Type type,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type,
         Type? abstraction)
     {
         if (type.IsSingleton())

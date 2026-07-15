@@ -16,6 +16,8 @@ public static class EnumExtensions
     /// <param name="enumerationValue">The enumeration value.</param>
     /// <returns>System.String.</returns>
     /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
+    [UnconditionalSuppressMessage("Trimming", "IL2075:UnrecognizedReflectionPattern",
+        Justification = "GetType() is deliberate: typeof(T) resolves to System.Enum when called on an Enum-typed variable. The trimmer preserves an enum type together with its fields and their attributes whenever the enum is preserved, so GetMember on the value runtime type is safe.")]
     public static string GetDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicNestedTypes | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicEvents)] T>(this T enumerationValue)
         where T : Enum
     {
@@ -45,6 +47,8 @@ public static class EnumExtensions
     /// <param name="enumerationValue">The enumeration value.</param>
     /// <returns>System.String.</returns>
     /// <exception cref="ArgumentException">EnumerationValue must be of Enum type - enumerationValue</exception>
+    [UnconditionalSuppressMessage("Trimming", "IL2075:UnrecognizedReflectionPattern",
+        Justification = "GetType() is deliberate: typeof(T) resolves to System.Enum when called on an Enum-typed variable. The trimmer preserves an enum type together with its fields and their attributes whenever the enum is preserved, so GetMember on the value runtime type is safe.")]
     public static string GetLocalizedDescription<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicNestedTypes | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicEvents)] T>(this T enumerationValue)
         where T : Enum
     {
