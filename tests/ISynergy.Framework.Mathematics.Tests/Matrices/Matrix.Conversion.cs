@@ -200,7 +200,7 @@ public partial class MatrixTest
         Array values = jagged.DeepFlatten();
 
         // As a result, the resulting array is a simple int[] vector:
-        Assert.AreEqual(values.GetType(), typeof(int[]));
+        Assert.AreEqual(typeof(int[]), values.GetType());
 
         // Some more checks
         int[] innerValues = values as int[];
@@ -213,7 +213,7 @@ public partial class MatrixTest
         Array matrix = jagged.DeepToMatrix();
 
         // As a result, the resulting array is a multidimensional int[,,] array:
-        Assert.AreEqual(matrix.GetType(), typeof(int[,,]));
+        Assert.AreEqual(typeof(int[,,]), matrix.GetType());
 
         // Some more checks
         int[,,] innerMatrix = matrix as int[,,];

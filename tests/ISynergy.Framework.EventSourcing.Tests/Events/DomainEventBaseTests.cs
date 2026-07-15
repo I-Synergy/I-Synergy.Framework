@@ -47,7 +47,9 @@ public class DomainEventBaseTests
     {
         var @event = new OrderCreated(Guid.NewGuid(), "Alice", 99.99m);
 
-        Assert.AreEqual(@event.EventId, @event.EventId);
+        var firstRead = @event.EventId;
+        var secondRead = @event.EventId;
+        Assert.AreEqual(firstRead, secondRead);
     }
 
     [TestMethod]
@@ -55,6 +57,8 @@ public class DomainEventBaseTests
     {
         var @event = new OrderCreated(Guid.NewGuid(), "Alice", 99.99m);
 
-        Assert.AreEqual(@event.OccurredAt, @event.OccurredAt);
+        var firstRead = @event.OccurredAt;
+        var secondRead = @event.OccurredAt;
+        Assert.AreEqual(firstRead, secondRead);
     }
 }

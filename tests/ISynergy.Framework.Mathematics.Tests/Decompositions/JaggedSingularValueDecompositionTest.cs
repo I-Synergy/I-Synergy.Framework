@@ -385,7 +385,10 @@ public class JaggedSingularValueDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(value1, target1.Reverse(), 1e-2));
         Assert.IsTrue(Matrix.IsEqual(value2, target2.Reverse(), 1e-2));
 
-        Assert.AreSame(target1.DiagonalMatrix, target1.DiagonalMatrix);
+        // The decomposition caches DiagonalMatrix: repeated access must return the same instance.
+        var firstAccess = target1.DiagonalMatrix;
+        var secondAccess = target1.DiagonalMatrix;
+        Assert.AreSame(firstAccess, secondAccess);
     }
 
     [TestMethod]

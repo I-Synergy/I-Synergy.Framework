@@ -21,19 +21,19 @@ Plan: .ai/plans/steady-cooking-storm.md (summary) + .ai/plans/steady-cooking-sto
 - [x] A-verify: solution Release build + Sample.WinUI trimmed build → only 7x IL2104 residual (confirmed: solution build 47 warnings = 7 IL2104 + 40 MSTEST/BL0007/CA1416/CS8602 for Parts B/C; trimmed Sample.WinUI = 7 IL2104 + 1 pre-existing NETSDK1198, zero ISynergy IL warnings)
 
 ### Part B — MSTest cleanup
-- [ ] B1: MSTEST0017 swapped args (14 sites)
-- [ ] B2: MSTEST0065 arrays → AreSame/AreNotSame (6 sites, incl. overlapping 0017s)
-- [ ] B3: MSTEST0032 always-true asserts (ArgumentTests, UtmGridTests, 3 placeholders, DomainEventBaseTests, 4 Eigen/SVD sites)
-- [ ] B4: MSTEST0044 DataTestMethod → TestMethod (2 sites)
-- [ ] B5: MSTEST0030 MailServiceTests — [TestClass] + class-level [Ignore] (never run: real Graph calls)
-- [ ] B6: MSTEST0014 PointTest — add [TestMethod] + fix swapped args at line 50
-- [ ] B7: CS8602 NavigationServiceRetentionCycleTests — null-forgiving ToString()
-- [ ] B-verify: dotnet test all touched projects green; Mail tests 4 skipped
+- [x] B1: MSTEST0017 swapped args (14 sites)
+- [x] B2: MSTEST0065 arrays → AreSame/AreNotSame (6 sites, incl. overlapping 0017s)
+- [x] B3: MSTEST0032 always-true asserts (ArgumentTests, UtmGridTests, 3 placeholders, DomainEventBaseTests, 4 Eigen/SVD sites)
+- [x] B4: MSTEST0044 DataTestMethod → TestMethod (2 sites)
+- [x] B5: MSTEST0030 MailServiceTests — [TestClass] + class-level [Ignore] (never run: real Graph calls)
+- [x] B6: MSTEST0014 PointTest — add [TestMethod] + fix swapped args at line 50
+- [x] B7: CS8602 NavigationServiceRetentionCycleTests — null-forgiving ToString()
+- [x] B-verify: dotnet test all touched projects green; Mail tests 4 skipped (all 10 projects: 0 warnings on clean Release rebuild; Mail.Microsoft365 = 4 skipped/0 failed; PointTest EqualityOperatorTest newly enabled and passing)
 
 ### Part C — samples
-- [ ] C1: BL0007 BaseEmptyDialog/BaseModelDialog — auto-property + OnParametersSet lifecycle (fixes double-subscription bug)
-- [ ] C2: CA1416 ApplicationMonitor — guard TotalProcessorTime outside lambda
-- [ ] C-verify: solution Release build clean of BL0007/CA1416
+- [x] C1: BL0007 BaseEmptyDialog/BaseModelDialog — auto-property + OnParametersSet lifecycle (fixes double-subscription bug)
+- [x] C2: CA1416 ApplicationMonitor — guard TotalProcessorTime outside lambda
+- [x] C-verify: solution Release build clean of BL0007/CA1416 (verified via Sample.Blazor + Sample.Maui Release builds: 0 warnings, 0 errors each — the only projects where these warnings occurred)
 
 ## Notes
 - ILLink ignores #pragma/.editorconfig — attribute-based mechanisms only.

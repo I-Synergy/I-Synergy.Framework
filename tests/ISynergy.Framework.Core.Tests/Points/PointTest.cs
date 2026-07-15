@@ -38,6 +38,7 @@ public class PointTest
         Assert.AreEqual(point2, point1);
     }
 
+    [TestMethod]
     [DataRow(1.1f, 2.2f, 1.1f, 2.2f, true)]
     [DataRow(1.1f, 2.2f, 3.3f, 2.2f, false)]
     [DataRow(1.1f, 2.2f, 1.1f, 4.4f, false)]
@@ -47,7 +48,7 @@ public class PointTest
         Point point1 = new(x1, y1);
         Point point2 = new(x2, y2);
 
-        Assert.AreEqual(point1 == point2, areEqual);
+        Assert.AreEqual(areEqual, point1 == point2);
     }
 
     [TestMethod]

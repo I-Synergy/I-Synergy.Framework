@@ -2323,7 +2323,7 @@ public partial class MatrixTest
 
         double[][] actual = Matrix.Transpose(matrix, inPlace);
 
-        Assert.AreEqual(matrix, actual);
+        Assert.AreSame(matrix, actual);
         Assert.IsTrue(actual.IsEqual(expected));
     }
 
