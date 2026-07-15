@@ -7,6 +7,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Services;
@@ -488,7 +489,7 @@ public class DialogService : IDialogService, IDisposable
     /// <param name="type">The type.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+    public async Task ShowDialogAsync<TEntity>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type, IViewModelDialog<TEntity> viewmodel)
     {
         await _dialogSemaphore.WaitAsync();
         try
@@ -683,7 +684,7 @@ public class DialogService : IDialogService, IDisposable
         }
     }
 
-    private async Task ShowDialogAsyncInternal<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+    private async Task ShowDialogAsyncInternal<TEntity>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type, IViewModelDialog<TEntity> viewmodel)
     {
         try
         {

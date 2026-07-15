@@ -8,6 +8,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using MessageBoxButtons = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButtons;
 using MessageBoxImage = System.Windows.MessageBoxImage;
@@ -156,7 +157,7 @@ public class DialogService : BaseDialogService, IDialogService
     /// <param name="type">The type.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+    public async Task ShowDialogAsync<TEntity>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type, IViewModelDialog<TEntity> viewmodel)
     {
         // Create the Window via ActivatorUtilities so it is NOT tracked by a DI
         // scope. The ViewModel was resolved from the caller's scope and must not

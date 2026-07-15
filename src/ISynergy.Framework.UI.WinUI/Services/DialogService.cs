@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Windows.Foundation;
 
@@ -305,7 +306,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// <param name="type">The type.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+    public async Task ShowDialogAsync<TEntity>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type, IViewModelDialog<TEntity> viewmodel)
     {
         Argument.IsNotNull(type);
         Argument.IsNotNull(viewmodel);

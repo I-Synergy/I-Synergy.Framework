@@ -146,7 +146,7 @@ public abstract class Application : System.Windows.Application, IDisposable
 
             var configuration = Services.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+            var environmentFromConfig = configuration[nameof(Environment)];
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {

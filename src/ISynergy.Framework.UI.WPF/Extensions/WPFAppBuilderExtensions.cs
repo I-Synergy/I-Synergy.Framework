@@ -40,7 +40,12 @@ public static class WpfAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostBuilder ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService, TResource>( // NOSONAR
+    public static IHostBuilder ConfigureServices<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>( // NOSONAR
         this IHostBuilder wpfAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
@@ -56,7 +61,9 @@ public static class WpfAppBuilderExtensions
         {
             services.AddOptions();
 
+#pragma warning disable IL2026 // ClientApplicationOptions is a framework option type whose members are referenced by the framework itself and therefore preserved
             services.Configure<ClientApplicationOptions>(context.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+#pragma warning restore IL2026
 
 #pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
             var languageService = LanguageService.Default;
@@ -114,7 +121,9 @@ public static class WpfAppBuilderExtensions
     /// <returns></returns>
     public static IServiceCollection AddUpdatesIntegration(this IServiceCollection services, IConfiguration configuration)
     {
+#pragma warning disable IL2026 // UpdateOptions is a framework option type whose members are referenced by the framework itself and therefore preserved
         services.Configure<UpdateOptions>(configuration.GetSection(nameof(UpdateOptions)).Bind);
+#pragma warning restore IL2026
         services.TryAddSingleton<IUpdateService, UpdateService>();
         return services;
     }

@@ -273,3 +273,11 @@ indent_style = space
 tab_width = 2
 end_of_line = crlf
 insert_final_newline = true
+# XAML compiler generated code (WinUI XamlTypeInfo, WPF InitializeComponent/GeneratedInternalTypeHelper)
+# cannot be annotated in source. Trim warnings here originate from XAML-driven reflection patterns
+# (e.g. Microsoft.Xaml.Interactivity.EventTriggerBehavior, System.Windows.Application.LoadComponent);
+# the consuming application must preserve the types instantiated from XAML.
+[**/obj/**.g.cs]
+dotnet_diagnostic.IL2026.severity = none
+dotnet_diagnostic.IL2067.severity = none
+dotnet_diagnostic.IL2075.severity = none

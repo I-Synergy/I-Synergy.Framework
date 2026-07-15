@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Markup;
 
@@ -8,6 +9,7 @@ namespace ISynergy.Framework.UI.Markup;
 [ContentProperty(nameof(EnumType))]
 public class EnumCollectionExtension : IMarkupExtension<List<Enum>>
 {
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)]
     public required Type EnumType { get; set; }
 
     public EnumCollectionExtension()
@@ -15,7 +17,7 @@ public class EnumCollectionExtension : IMarkupExtension<List<Enum>>
     {
     }
 
-    public EnumCollectionExtension(Type enumType)
+    public EnumCollectionExtension([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] Type enumType)
         : this()
     {
         EnumType = enumType;

@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
@@ -40,7 +41,13 @@ public static class WindowsAppBuilderExtensions
     /// <param name="assembly"></param>
     /// <param name="assemblyFilter"></param>
     /// <returns></returns>
-    public static IHostApplicationBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
+    public static IHostApplicationBuilder ConfigureServices<
+        TApplication,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>(
         this IHostApplicationBuilder appBuilder,
         Action<IHostApplicationBuilder> action,
         Assembly assembly,
@@ -54,8 +61,10 @@ public static class WindowsAppBuilderExtensions
     {
         appBuilder.Services.AddOptions();
 
+#pragma warning disable IL2026 // ApplicationFeatures and ClientApplicationOptions are framework option types whose members are referenced by the framework itself and therefore preserved
         appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).Bind);
         appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+#pragma warning restore IL2026
 
         var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
         if (mainAssembly is not null)
