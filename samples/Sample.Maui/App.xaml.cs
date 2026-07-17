@@ -30,9 +30,15 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Provides the custom XAML-based title bar with search and settings.
+    /// Icon shown in the title bar.
     /// </summary>
-    protected override Microsoft.Maui.Controls.TitleBar SetTitleBar() => new Sample.Controls.TitleBar();
+    protected override ImageSource? Icon => ImageSource.FromFile("icon.png");
+
+    /// <summary>
+    /// Enables the live clock in the title bar subtitle for this app.
+    /// </summary>
+    protected override TitleBar SetTitleBar(bool withClock = false) =>
+        base.SetTitleBar(withClock: true);
 
     /// <summary>
     /// Called during framework initialization. Override to perform backend initialization,

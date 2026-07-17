@@ -37,6 +37,8 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly string _language;
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
+
+    protected IDispatcherTimer? _clockTimer;
     protected LoadingView? _loadingView;
     protected Microsoft.Maui.Controls.Window? _mainWindow;
 
@@ -49,22 +51,32 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <summary>
     /// Creates the title bar for the main window. Override to provide a custom title bar.
     /// </summary>
-    protected virtual TitleBar SetTitleBar()
+    protected virtual TitleBar SetTitleBar(bool withClock = false)
     {
         var titleBar = new TitleBar();
 
         if (Icon != null)
             titleBar.Icon = Icon;
 
-        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
-            titleBar.Title = InfoService.Default.ProductName;
-
-        var isRightToLeft = CultureInfo.GetCultureInfo(_language).TextInfo.IsRightToLeft;
-
-        if (isRightToLeft)
+        if (CultureInfo.GetCultureInfo(_language).TextInfo.IsRightToLeft)
             titleBar.FlowDirection = FlowDirection.RightToLeft;
         else
             titleBar.FlowDirection = FlowDirection.LeftToRight;
+
+        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
+            titleBar.Title = InfoService.Default.ProductName;
+
+        if (withClock)
+        {
+            _clockTimer = Dispatcher.CreateTimer();
+            _clockTimer.Interval = TimeSpan.FromSeconds(1);
+            _clockTimer.Tick += (s, e) =>
+            {
+                titleBar.Subtitle = $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+            };
+
+            _clockTimer.Start();
+        }
 
         return titleBar;
     }
@@ -223,13 +235,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState? activationState)
     {
-        // Always use LoadingView — it provides the default splash.svg background
-        // when no custom image or video is configured
-        var mainPage = CreateLoadingView();
-        mainPage.ApplyFlowDirection(_language);
-
-        _mainWindow = new Microsoft.Maui.Controls.Window(mainPage);
+        _mainWindow = new Microsoft.Maui.Controls.Window();
         _mainWindow.ApplyFlowDirection(_language);
+        _mainWindow.Page = CreateLoadingView();
         _mainWindow.TitleBar = SetTitleBar();
 
         _themeService.ApplyTheme();

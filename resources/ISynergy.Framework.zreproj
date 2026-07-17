@@ -26,7 +26,7 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="7954743795" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="7450320887" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="autoTranslateForm.prefixTextBox.Text">####</globalSetting>
     <globalSetting name="autoTranslateForm.prefixCheckBox.Checked">True</globalSetting>
     <globalSetting name="autoTranslateForm.useExistingTranslationsCheckBox.Checked">False</globalSetting>
