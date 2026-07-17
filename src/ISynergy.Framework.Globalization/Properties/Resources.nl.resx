@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,717 +59,723 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="Add" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Add" xml:space="preserve">
     <value>Toevoegen</value>
   </data>
-  <data name="AmountOfSubstance" xml:space="preserve">
+	<data name="AmountOfSubstance" xml:space="preserve">
     <value>Hoeveelheid stof</value>
   </data>
-  <data name="ampere" xml:space="preserve">
+	<data name="ampere" xml:space="preserve">
     <value>ampère</value>
   </data>
-  <data name="And" xml:space="preserve">
+	<data name="And" xml:space="preserve">
     <value>en</value>
   </data>
-  <data name="AnglePlane" xml:space="preserve">
+	<data name="AnglePlane" xml:space="preserve">
     <value>Vlakke hoek</value>
   </data>
-  <data name="AngleSolid" xml:space="preserve">
+	<data name="AngleSolid" xml:space="preserve">
     <value>Ruimtehoek</value>
   </data>
-  <data name="astronomical_unit" xml:space="preserve">
+	<data name="astronomical_unit" xml:space="preserve">
     <value>astronomische eenheid</value>
   </data>
-  <data name="Between" xml:space="preserve">
+	<data name="Between" xml:space="preserve">
     <value>tussen</value>
   </data>
-  <data name="Browse" xml:space="preserve">
+	<data name="Browse" xml:space="preserve">
     <value>Bladeren</value>
   </data>
-  <data name="By" xml:space="preserve">
+	<data name="By" xml:space="preserve">
     <value>door</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
+	<data name="Cancel" xml:space="preserve">
     <value>Annuleren</value>
   </data>
-  <data name="candela" xml:space="preserve">
+	<data name="candela" xml:space="preserve">
     <value>candela</value>
   </data>
-  <data name="CannotAttachBehaviorMultipleTimesExceptionMessage" xml:space="preserve">
+	<data name="CannotAttachBehaviorMultipleTimesExceptionMessage" xml:space="preserve">
     <value>Een instantie van een gedrag kan niet aan meer dan één object tegelijk worden gekoppeld.</value>
   </data>
-  <data name="CannotFindUpdateFile" xml:space="preserve">
+	<data name="CannotFindUpdateFile" xml:space="preserve">
     <value>Kan het updatebestand niet vinden.</value>
   </data>
-  <data name="CannotInstallUpdate" xml:space="preserve">
+	<data name="CannotInstallUpdate" xml:space="preserve">
     <value>Kan update niet installeren.</value>
   </data>
-  <data name="centimetre" xml:space="preserve">
+	<data name="centimetre" xml:space="preserve">
     <value>centimeter</value>
   </data>
-  <data name="Close" xml:space="preserve">
+	<data name="Close" xml:space="preserve">
     <value>Sluiten</value>
   </data>
-  <data name="Collapsed" xml:space="preserve">
+	<data name="Collapsed" xml:space="preserve">
     <value>Samengevouwen</value>
   </data>
-  <data name="COORD_ARRAY_MUST_BE_2DIM" xml:space="preserve">
+	<data name="COORD_ARRAY_MUST_BE_2DIM" xml:space="preserve">
     <value>De coördinatenarray moet twee dimensies hebben.</value>
   </data>
-  <data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
+	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
     <value>Kan geen versiegegevens ophalen.</value>
   </data>
-  <data name="Country" xml:space="preserve">
+	<data name="Country" xml:space="preserve">
     <value>Land</value>
   </data>
-  <data name="CreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+	<data name="CreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
     <value>CreateBuilder moet worden aangeroepen vóór CreateServiceProvider</value>
   </data>
-  <data name="cubic_metre" xml:space="preserve">
+	<data name="cubic_metre" xml:space="preserve">
     <value>kubieke meter</value>
   </data>
-  <data name="Dark" xml:space="preserve">
+	<data name="Dark" xml:space="preserve">
     <value>Donker</value>
   </data>
-  <data name="day" xml:space="preserve">
+	<data name="day" xml:space="preserve">
     <value>dag</value>
   </data>
-  <data name="Day_s" xml:space="preserve">
+	<data name="Day_s" xml:space="preserve">
     <value>Dag(en)</value>
   </data>
-  <data name="decimetre" xml:space="preserve">
+	<data name="decimetre" xml:space="preserve">
     <value>decimeter</value>
   </data>
-  <data name="Default" xml:space="preserve">
+	<data name="Default" xml:space="preserve">
     <value>Standaard</value>
   </data>
-  <data name="DefaultException" xml:space="preserve">
+	<data name="DefaultException" xml:space="preserve">
     <value>Er ging iets mis.</value>
     <value>Neem contact op met ondersteuning.</value>
   </data>
-  <data name="degree_Celcius" xml:space="preserve">
+	<data name="degree_Celcius" xml:space="preserve">
     <value>graden Celsius</value>
   </data>
-  <data name="degree_Farenheit" xml:space="preserve">
+	<data name="degree_Farenheit" xml:space="preserve">
     <value>graden Fahrenheit</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+	<data name="Delete" xml:space="preserve">
     <value>Verwijderen</value>
   </data>
-  <data name="DuplicateBehaviorInCollectionExceptionMessage" xml:space="preserve">
+	<data name="DuplicateBehaviorInCollectionExceptionMessage" xml:space="preserve">
     <value>Kan een exemplaar van een gedrag niet meer dan één keer toevoegen aan een BehaviorCollection.</value>
   </data>
-  <data name="Edit" xml:space="preserve">
+	<data name="Edit" xml:space="preserve">
     <value>Bewerken</value>
   </data>
-  <data name="ElectricCurrent" xml:space="preserve">
+	<data name="ElectricCurrent" xml:space="preserve">
     <value>Elektrische stroom</value>
   </data>
-  <data name="EmailAddress" xml:space="preserve">
+	<data name="EmailAddress" xml:space="preserve">
     <value>E-mailadres</value>
   </data>
-  <data name="Energy" xml:space="preserve">
+	<data name="Energy" xml:space="preserve">
     <value>Energie</value>
   </data>
-  <data name="EnterNote" xml:space="preserve">
+	<data name="EnterNote" xml:space="preserve">
     <value>Vul hier een notitie in...</value>
   </data>
-  <data name="Expanded" xml:space="preserve">
+	<data name="Expanded" xml:space="preserve">
     <value>Uitgebreid</value>
   </data>
-  <data name="foot" xml:space="preserve">
+	<data name="foot" xml:space="preserve">
     <value>voet</value>
   </data>
-  <data name="Force" xml:space="preserve">
+	<data name="Force" xml:space="preserve">
     <value>Kracht</value>
   </data>
-  <data name="Frequency" xml:space="preserve">
+	<data name="Frequency" xml:space="preserve">
     <value>Frequentie</value>
   </data>
-  <data name="Fullname" xml:space="preserve">
+	<data name="Fullname" xml:space="preserve">
     <value>Volledige naam</value>
   </data>
-  <data name="GEODETIC_PATH_MIN_2" xml:space="preserve">
+	<data name="GEODETIC_PATH_MIN_2" xml:space="preserve">
     <value>Een geodetisch pad moet minstens twee punten bevatten.</value>
   </data>
-  <data name="gram_force" xml:space="preserve">
+	<data name="gram_force" xml:space="preserve">
     <value>gramkracht</value>
   </data>
-  <data name="Greeting_Afternoon" xml:space="preserve">
+	<data name="Greeting_Afternoon" xml:space="preserve">
     <value>Goedemiddag {0}</value>
   </data>
-  <data name="Greeting_Evening" xml:space="preserve">
+	<data name="Greeting_Evening" xml:space="preserve">
     <value>Goedenavond {0}</value>
   </data>
-  <data name="Greeting_Morning" xml:space="preserve">
+	<data name="Greeting_Morning" xml:space="preserve">
     <value>Goedemorgen {0}</value>
   </data>
-  <data name="Greeting_Night" xml:space="preserve">
+	<data name="Greeting_Night" xml:space="preserve">
     <value>Welterusten {0}</value>
   </data>
-  <data name="GRID_EXCEPTION" xml:space="preserve">
+	<data name="GRID_EXCEPTION" xml:space="preserve">
     <value>De UTM-grids 32X, 34X en 36X zijn niet toegewezen.</value>
   </data>
-  <data name="Heat" xml:space="preserve">
+	<data name="Heat" xml:space="preserve">
     <value>Warmte</value>
   </data>
-  <data name="hertz" xml:space="preserve">
+	<data name="hertz" xml:space="preserve">
     <value>hertz</value>
   </data>
-  <data name="hour" xml:space="preserve">
+	<data name="hour" xml:space="preserve">
     <value>uur</value>
   </data>
-  <data name="Hour_s" xml:space="preserve">
+	<data name="Hour_s" xml:space="preserve">
     <value>Uur(en)</value>
   </data>
-  <data name="inch" xml:space="preserve">
+	<data name="inch" xml:space="preserve">
     <value>inch</value>
   </data>
-  <data name="InputFirst" xml:space="preserve">
+	<data name="InputFirst" xml:space="preserve">
     <value>Aangemaakt</value>
   </data>
-  <data name="InputLast" xml:space="preserve">
+	<data name="InputLast" xml:space="preserve">
     <value>Laatste wijziging</value>
   </data>
-  <data name="INVALID_BAND" xml:space="preserve">
+	<data name="INVALID_BAND" xml:space="preserve">
     <value>Ongeldige UTMBand opgegeven.</value>
   </data>
-  <data name="INVALID_DISTANCE" xml:space="preserve">
+	<data name="INVALID_DISTANCE" xml:space="preserve">
     <value>Ongeldige afstand</value>
   </data>
-  <data name="INVALID_LATITUDE" xml:space="preserve">
+	<data name="INVALID_LATITUDE" xml:space="preserve">
     <value>De UTM-projectie staat alleen breedtegraden toe van -80° tot +84°.</value>
   </data>
-  <data name="INVALID_MESH_NUMBER" xml:space="preserve">
+	<data name="INVALID_MESH_NUMBER" xml:space="preserve">
     <value>Het mesh-nummer is ongeldig.</value>
   </data>
-  <data name="INVALID_ORDINAL" xml:space="preserve">
+	<data name="INVALID_ORDINAL" xml:space="preserve">
     <value>Het ordinale nummer van het raster is ongeldig.</value>
   </data>
-  <data name="INVALID_ZONE" xml:space="preserve">
+	<data name="INVALID_ZONE" xml:space="preserve">
     <value>Ongeldige UTM-zone opgegeven.</value>
   </data>
-  <data name="InvalidAssociatedObjectExceptionMessage" xml:space="preserve">
+	<data name="InvalidAssociatedObjectExceptionMessage" xml:space="preserve">
     <value>AssociatedObject heeft het type {0}, maar moet van het type {1} zijn.</value>
   </data>
-  <data name="joule" xml:space="preserve">
+	<data name="joule" xml:space="preserve">
     <value>joule</value>
   </data>
-  <data name="kelvin" xml:space="preserve">
+	<data name="kelvin" xml:space="preserve">
     <value>kelvin</value>
   </data>
-  <data name="kilogram" xml:space="preserve">
+	<data name="kilogram" xml:space="preserve">
     <value>kilogram</value>
   </data>
-  <data name="kilogram_force" xml:space="preserve">
+	<data name="kilogram_force" xml:space="preserve">
     <value>kilogramkracht</value>
   </data>
-  <data name="kilogram_per_cubic_metre" xml:space="preserve">
+	<data name="kilogram_per_cubic_metre" xml:space="preserve">
     <value>kilogram per kubieke meter</value>
   </data>
-  <data name="Language" xml:space="preserve">
+	<data name="Language" xml:space="preserve">
     <value>Taal</value>
   </data>
-  <data name="Language_Arabic" xml:space="preserve">
+	<data name="Language_Arabic" xml:space="preserve">
     <value>Arabisch</value>
   </data>
-  <data name="Language_Dutch" xml:space="preserve">
+	<data name="Language_Dutch" xml:space="preserve">
     <value>Nederlands</value>
   </data>
-  <data name="Language_English" xml:space="preserve">
+	<data name="Language_English" xml:space="preserve">
     <value>Engels</value>
   </data>
-  <data name="Language_French" xml:space="preserve">
+	<data name="Language_French" xml:space="preserve">
     <value>Frans</value>
   </data>
-  <data name="Language_German" xml:space="preserve">
+	<data name="Language_German" xml:space="preserve">
     <value>Duits</value>
   </data>
-  <data name="Language_Spanish" xml:space="preserve">
+	<data name="Language_Spanish" xml:space="preserve">
     <value>Spaans</value>
   </data>
-  <data name="Length" xml:space="preserve">
+	<data name="Length" xml:space="preserve">
     <value>Lengte</value>
   </data>
-  <data name="Light" xml:space="preserve">
+	<data name="Light" xml:space="preserve">
     <value>Licht</value>
   </data>
-  <data name="litre" xml:space="preserve">
+	<data name="litre" xml:space="preserve">
     <value>liter</value>
   </data>
-  <data name="LoginAccount" xml:space="preserve">
+	<data name="LoginAccount" xml:space="preserve">
     <value>Heb je al een account?</value>
   </data>
-  <data name="LoginNoAccount" xml:space="preserve">
+	<data name="LoginNoAccount" xml:space="preserve">
     <value>Heb je nog geen account?</value>
   </data>
-  <data name="LoginText" xml:space="preserve">
+	<data name="LoginText" xml:space="preserve">
     <value>Als u al een account hebt, kunt u uw e-mailadres en wachtwoord gebruiken om in te loggen.</value>
   </data>
-  <data name="LoginTitle" xml:space="preserve">
+	<data name="LoginTitle" xml:space="preserve">
     <value>Heb je een account?</value>
   </data>
-  <data name="LuminousIntensity" xml:space="preserve">
+	<data name="LuminousIntensity" xml:space="preserve">
     <value>Lichtsterkte</value>
   </data>
-  <data name="MandatoryUpdateFailed" xml:space="preserve">
+	<data name="MandatoryUpdateFailed" xml:space="preserve">
     <value>Verplichte update is mislukt!</value>
   </data>
-  <data name="Mass" xml:space="preserve">
+	<data name="Mass" xml:space="preserve">
     <value>Massa</value>
   </data>
-  <data name="MESHSIZE_MIN_VIOLATION" xml:space="preserve">
+	<data name="MESHSIZE_MIN_VIOLATION" xml:space="preserve">
     <value>De mesh-grootte moet minstens 1 meter zijn.</value>
   </data>
-  <data name="MESHSIZE_TOO_BIG" xml:space="preserve">
+	<data name="MESHSIZE_TOO_BIG" xml:space="preserve">
     <value>De mesh-grootte is te groot, deze verdeelt niet alle UTMGrids in meerdere cellen.</value>
   </data>
-  <data name="metre" xml:space="preserve">
+	<data name="metre" xml:space="preserve">
     <value>meter</value>
   </data>
-  <data name="metre_per_second" xml:space="preserve">
+	<data name="metre_per_second" xml:space="preserve">
     <value>meter per seconde</value>
   </data>
-  <data name="metre_per_second_squared" xml:space="preserve">
+	<data name="metre_per_second_squared" xml:space="preserve">
     <value>meter per seconde kwadraat</value>
   </data>
-  <data name="micrometre" xml:space="preserve">
+	<data name="micrometre" xml:space="preserve">
     <value>micrometer</value>
   </data>
-  <data name="millimetre" xml:space="preserve">
+	<data name="millimetre" xml:space="preserve">
     <value>millimeter</value>
   </data>
-  <data name="MINSEC_0_TO_60" xml:space="preserve">
+	<data name="MINSEC_0_TO_60" xml:space="preserve">
     <value>Minuten of seconden moeten een waarde hebben tussen 0 en 60.</value>
   </data>
-  <data name="minute" xml:space="preserve">
+	<data name="minute" xml:space="preserve">
     <value>minuut</value>
   </data>
-  <data name="Minute_s" xml:space="preserve">
+	<data name="Minute_s" xml:space="preserve">
     <value>Minuut(en)</value>
   </data>
-  <data name="Modules" xml:space="preserve">
+	<data name="Modules" xml:space="preserve">
     <value>Modules</value>
   </data>
-  <data name="mole" xml:space="preserve">
+	<data name="mole" xml:space="preserve">
     <value>mol</value>
   </data>
-  <data name="nanometre" xml:space="preserve">
+	<data name="nanometre" xml:space="preserve">
     <value>nanometer</value>
   </data>
-  <data name="NEGATIVE_DISTANCE" xml:space="preserve">
+	<data name="NEGATIVE_DISTANCE" xml:space="preserve">
     <value>Afstand kan niet negatief zijn.</value>
   </data>
-  <data name="newton" xml:space="preserve">
+	<data name="newton" xml:space="preserve">
     <value>newton</value>
   </data>
-  <data name="No" xml:space="preserve">
+	<data name="No" xml:space="preserve">
     <value>Nee</value>
   </data>
-  <data name="NO_NORTH_NEIGHBOR" xml:space="preserve">
+	<data name="NO_NORTH_NEIGHBOR" xml:space="preserve">
     <value>Het raster bevindt zich in de meest noordelijke band, er is geen noordelijke buur.</value>
   </data>
-  <data name="NO_SOUTH_NEIGHBOR" xml:space="preserve">
+	<data name="NO_SOUTH_NEIGHBOR" xml:space="preserve">
     <value>Het raster bevindt zich in de meest zuidelijke band, er is geen zuidelijke buur.</value>
   </data>
-  <data name="NO_UNIQUE_NORTH_NEIGHBOR" xml:space="preserve">
+	<data name="NO_UNIQUE_NORTH_NEIGHBOR" xml:space="preserve">
     <value>Het UTM-raster heeft geen unieke noordelijke buur (uitzonderlijke rasters op het noordelijk halfrond).</value>
   </data>
-  <data name="NO_UNIQUE_SOUTH_NEIGHBOR" xml:space="preserve">
+	<data name="NO_UNIQUE_SOUTH_NEIGHBOR" xml:space="preserve">
     <value>Het UTM-raster heeft geen unieke zuidelijke buur (uitzonderlijke rasters op het noordelijk halfrond).</value>
   </data>
-  <data name="NO_UTM_COORDINATE" xml:space="preserve">
+	<data name="NO_UTM_COORDINATE" xml:space="preserve">
     <value>De coördinaat moet een _UtmCoordinate zijn.</value>
   </data>
-  <data name="NoInternetConnectionAvailable" xml:space="preserve">
+	<data name="NoInternetConnectionAvailable" xml:space="preserve">
     <value>Er is geen internetverbinding beschikbaar.</value>
   </data>
-  <data name="NoItems" xml:space="preserve">
+	<data name="NoItems" xml:space="preserve">
     <value>Geen items beschikbaar</value>
   </data>
-  <data name="NonActionAddedToActionCollectionExceptionMessage" xml:space="preserve">
+	<data name="NonActionAddedToActionCollectionExceptionMessage" xml:space="preserve">
     <value>Alleen IAction-typen worden ondersteund in een ActionCollection.</value>
   </data>
-  <data name="NonBehaviorAddedToBehaviorCollectionExceptionMessage" xml:space="preserve">
+	<data name="NonBehaviorAddedToBehaviorCollectionExceptionMessage" xml:space="preserve">
     <value>Alleen IBehavior-typen worden ondersteund in een BehaviorCollection.</value>
   </data>
-  <data name="Note" xml:space="preserve">
+	<data name="Note" xml:space="preserve">
     <value>Notitie</value>
   </data>
-  <data name="NullIServiceProvider" xml:space="preserve">
+	<data name="NullIServiceProvider" xml:space="preserve">
     <value>De IServiceProviderFactory heeft een null IServiceProvider geretourneerd</value>
   </data>
-  <data name="Ok" xml:space="preserve">
+	<data name="Ok" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="Password" xml:space="preserve">
+	<data name="Password" xml:space="preserve">
     <value>Wachtwoord</value>
   </data>
-  <data name="PasswordForgot" xml:space="preserve">
+	<data name="PasswordForgot" xml:space="preserve">
     <value>Wachtwoord vergeten?</value>
   </data>
-  <data name="PasswordRetype" xml:space="preserve">
+	<data name="PasswordRetype" xml:space="preserve">
     <value>Typ het wachtwoord opnieuw</value>
   </data>
-  <data name="Paste" xml:space="preserve">
+	<data name="Paste" xml:space="preserve">
     <value>Plakken</value>
   </data>
-  <data name="Pin" xml:space="preserve">
+	<data name="Pin" xml:space="preserve">
     <value>PIN</value>
   </data>
-  <data name="PleaseWait" xml:space="preserve">
+	<data name="PleaseWait" xml:space="preserve">
     <value>Een moment alstublieft.</value>
   </data>
-  <data name="POINT_NOT_OWNED" xml:space="preserve">
+	<data name="POINT_NOT_OWNED" xml:space="preserve">
     <value>De euclidische coördinaat behoort niet tot deze projectie.</value>
   </data>
-  <data name="POINT_NOT_SAME_PROJECTION" xml:space="preserve">
+	<data name="POINT_NOT_SAME_PROJECTION" xml:space="preserve">
     <value>De euclidische coördinaten behoren niet tot dezelfde projectie.</value>
   </data>
-  <data name="Power" xml:space="preserve">
+	<data name="Power" xml:space="preserve">
     <value>Vermogen</value>
   </data>
-  <data name="Pressure" xml:space="preserve">
+	<data name="Pressure" xml:space="preserve">
     <value>Druk</value>
   </data>
-  <data name="PROJECTION_NULL" xml:space="preserve">
+	<data name="PROJECTION_NULL" xml:space="preserve">
     <value>Het projectieargument mag niet null zijn.</value>
   </data>
-  <data name="Refresh" xml:space="preserve">
+	<data name="Refresh" xml:space="preserve">
     <value>Verversen</value>
   </data>
-  <data name="Register" xml:space="preserve">
+	<data name="Register" xml:space="preserve">
     <value>Registreren</value>
   </data>
-  <data name="Remember" xml:space="preserve">
+	<data name="Remember" xml:space="preserve">
     <value>Onthouden</value>
   </data>
-  <data name="ResolverReturnedNull" xml:space="preserve">
+	<data name="ResolverReturnedNull" xml:space="preserve">
     <value>De resolver retourneerde een null IServiceProviderFactory</value>
   </data>
-  <data name="Save" xml:space="preserve">
+	<data name="Save" xml:space="preserve">
     <value>Opslaan</value>
   </data>
-  <data name="SaveRestart" xml:space="preserve">
+	<data name="SaveRestart" xml:space="preserve">
     <value>Opslaan en Herstarten</value>
   </data>
-  <data name="Search" xml:space="preserve">
+	<data name="Search" xml:space="preserve">
     <value>Zoeken</value>
   </data>
-  <data name="second" xml:space="preserve">
+	<data name="second" xml:space="preserve">
     <value>seconde</value>
   </data>
-  <data name="Select" xml:space="preserve">
+	<data name="Select" xml:space="preserve">
     <value>Selecteren</value>
   </data>
-  <data name="SelectCountry" xml:space="preserve">
+	<data name="SelectCountry" xml:space="preserve">
     <value>Selecteer land</value>
   </data>
-  <data name="Selection" xml:space="preserve">
+	<data name="Selection" xml:space="preserve">
     <value>Selectie</value>
   </data>
-  <data name="SelectTimeZone" xml:space="preserve">
+	<data name="SelectTimeZone" xml:space="preserve">
     <value>Selecteer tijdzone</value>
   </data>
-  <data name="Settings" xml:space="preserve">
+	<data name="Settings" xml:space="preserve">
     <value>Instellingen</value>
   </data>
-  <data name="SignIn" xml:space="preserve">
+	<data name="SignIn" xml:space="preserve">
     <value>Aanmelden</value>
   </data>
-  <data name="SignInHere" xml:space="preserve">
+	<data name="SignInHere" xml:space="preserve">
     <value>Meld u hier aan</value>
   </data>
-  <data name="SignOut" xml:space="preserve">
+	<data name="SignOut" xml:space="preserve">
     <value>Afmelden</value>
   </data>
-  <data name="SignupHere" xml:space="preserve">
+	<data name="SignupHere" xml:space="preserve">
     <value>Schrijf je hier in</value>
   </data>
-  <data name="SignupText" xml:space="preserve">
+	<data name="SignupText" xml:space="preserve">
     <value>Als u geen account hebt, vult u de verplichte velden in en registreert u zich. </value>
     <value>Na bevestiging van uw registratie kunt u uw e-mailadres en wachtwoord gebruiken om in te loggen.</value>
   </data>
-  <data name="SignupTitle" xml:space="preserve">
+	<data name="SignupTitle" xml:space="preserve">
     <value>Heb je nog geen account?</value>
   </data>
-  <data name="Skip" xml:space="preserve">
+	<data name="Skip" xml:space="preserve">
     <value>Overslaan</value>
   </data>
-  <data name="sqaure_metre" xml:space="preserve">
+	<data name="sqaure_metre" xml:space="preserve">
     <value>vierkante meter</value>
   </data>
-  <data name="Stress" xml:space="preserve">
+	<data name="Stress" xml:space="preserve">
     <value>Spanning</value>
   </data>
-  <data name="System" xml:space="preserve">
+	<data name="System" xml:space="preserve">
     <value>Systeem</value>
   </data>
-  <data name="TakePhoto" xml:space="preserve">
+	<data name="TakePhoto" xml:space="preserve">
     <value>Maak een foto</value>
   </data>
-  <data name="Theme" xml:space="preserve">
+	<data name="Theme" xml:space="preserve">
     <value>Thema</value>
   </data>
-  <data name="ThermodynamicTemperature" xml:space="preserve">
+	<data name="ThermodynamicTemperature" xml:space="preserve">
     <value>Thermodynamische temperatuur</value>
   </data>
-  <data name="ThisItem" xml:space="preserve">
+	<data name="ThisItem" xml:space="preserve">
     <value>dit object</value>
   </data>
-  <data name="Time" xml:space="preserve">
+	<data name="Time" xml:space="preserve">
     <value>Tijd</value>
   </data>
-  <data name="TimeZone" xml:space="preserve">
+	<data name="TimeZone" xml:space="preserve">
     <value>Tijdzone</value>
   </data>
-  <data name="TitleCriticalError" xml:space="preserve">
+	<data name="TitleCriticalError" xml:space="preserve">
     <value>Kritieke fout</value>
   </data>
-  <data name="TitleError" xml:space="preserve">
+	<data name="TitleError" xml:space="preserve">
     <value>Fout</value>
   </data>
-  <data name="TitleInfo" xml:space="preserve">
+	<data name="TitleInfo" xml:space="preserve">
     <value>Informatie</value>
   </data>
-  <data name="TitleQuestion" xml:space="preserve">
+	<data name="TitleQuestion" xml:space="preserve">
     <value>Vraag</value>
   </data>
-  <data name="TitleWarning" xml:space="preserve">
+	<data name="TitleWarning" xml:space="preserve">
     <value>Waarschuwing</value>
   </data>
-  <data name="TitleWelcome" xml:space="preserve">
+	<data name="TitleWelcome" xml:space="preserve">
     <value>Welkom</value>
   </data>
-  <data name="tonne" xml:space="preserve">
+	<data name="tonne" xml:space="preserve">
     <value>ton</value>
   </data>
-  <data name="Unknown" xml:space="preserve">
+	<data name="Unknown" xml:space="preserve">
     <value>Onbekend</value>
   </data>
-  <data name="UpdateCheckForUpdates" xml:space="preserve">
+	<data name="UpdateCheckForUpdates" xml:space="preserve">
     <value>Controleren op updates...</value>
   </data>
-  <data name="UpdateDownloadAndInstall" xml:space="preserve">
+	<data name="UpdateDownloadAndInstall" xml:space="preserve">
     <value>Update downloaden en installeren...</value>
   </data>
-  <data name="UpdateExecuteNow" xml:space="preserve">
+	<data name="UpdateExecuteNow" xml:space="preserve">
     <value>Wil je de update nu echt installeren?</value>
   </data>
-  <data name="UpdateFoundNewUpdate" xml:space="preserve">
+	<data name="UpdateFoundNewUpdate" xml:space="preserve">
     <value>Er is een nieuwe update.</value>
   </data>
-  <data name="UpdateRestart" xml:space="preserve">
+	<data name="UpdateRestart" xml:space="preserve">
     <value>Er is een update beschikbaar.</value>
     <value>Sla uw werk op en start de toepassing opnieuw.</value>
   </data>
-  <data name="Username" xml:space="preserve">
+	<data name="Username" xml:space="preserve">
     <value>Gebruikersnaam</value>
   </data>
-  <data name="Volume" xml:space="preserve">
+	<data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
-  <data name="WarningBetween" xml:space="preserve">
+	<data name="WarningBetween" xml:space="preserve">
     <value>Waarde moet een waarde hebben tussen {0} en {1}.</value>
   </data>
-  <data name="WarningBuildCalled" xml:space="preserve">
+	<data name="WarningBuildCalled" xml:space="preserve">
     <value>Build kan maar één keer worden aangeroepen.</value>
   </data>
-  <data name="WarningColorChange" xml:space="preserve">
+	<data name="WarningColorChange" xml:space="preserve">
     <value>U moet de toepassing opnieuw starten om de kleurwijzigingen toe te passen.</value>
   </data>
-  <data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
     <value>CreateBuilder moet vóór CreateServiceProvider worden aangeroepen.</value>
   </data>
-  <data name="WarningDocumentSizeTooBig" xml:space="preserve">
+	<data name="WarningDocumentSizeTooBig" xml:space="preserve">
     <value>De documentgrootte mag niet groter zijn dan {0}.</value>
   </data>
-  <data name="WarningDoYouWantToDoItNow" xml:space="preserve">
+	<data name="WarningDoYouWantToDoItNow" xml:space="preserve">
     <value>Wil je het nu doen?</value>
   </data>
-  <data name="WarningEmailExists" xml:space="preserve">
+	<data name="WarningEmailExists" xml:space="preserve">
     <value>Ingevuld e-mailadres bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
   </data>
-  <data name="WarningEnum" xml:space="preserve">
+	<data name="WarningEnum" xml:space="preserve">
     <value>Waarde kan alleen opsommingen bevatten.</value>
   </data>
-  <data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
+	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
     <value>Bestandsnaam is null of leeg. Geef een geldige bestandsnaam op.</value>
   </data>
-  <data name="WarningFutureModule" xml:space="preserve">
+	<data name="WarningFutureModule" xml:space="preserve">
     <value>Deze functie is momenteel niet beschikbaar in deze versie.</value>
   </data>
-  <data name="WarningGuidEmpty" xml:space="preserve">
+	<data name="WarningGuidEmpty" xml:space="preserve">
     <value>Waarde kan geen emty Guid zijn.</value>
   </data>
-  <data name="WarningInvalidEmail" xml:space="preserve">
+	<data name="WarningInvalidEmail" xml:space="preserve">
     <value>Ingevoerd e-mailadres is ongeldig.</value>
   </data>
-  <data name="WarningItemRemove" xml:space="preserve">
+	<data name="WarningItemRemove" xml:space="preserve">
     <value>Weet u zeker dat u {0} wilt verwijderen?</value>
   </data>
-  <data name="WarningLanguageChange" xml:space="preserve">
+	<data name="WarningLanguageChange" xml:space="preserve">
     <value>U moet de toepassing opnieuw starten om de taalwijzigingen toe te passen.</value>
   </data>
-  <data name="WarningLicenseNameSize" xml:space="preserve">
+	<data name="WarningLicenseNameSize" xml:space="preserve">
     <value>U moet een (bedrijfs)naam invoeren die bestaat uit minimaal 3 tekens.</value>
   </data>
-  <data name="WarningMandatoryProperty" xml:space="preserve">
+	<data name="WarningMandatoryProperty" xml:space="preserve">
     <value>{0} is verplicht.</value>
   </data>
-  <data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
     <value>De verplichte pakketupdate is mislukt.</value>
     <value>Probeer het opnieuw of werk de toepassing bij via de Microsoft Store.</value>
   </data>
-  <data name="WarningMaximum" xml:space="preserve">
+	<data name="WarningMaximum" xml:space="preserve">
     <value>Waarde mag maximaal {0} zijn.</value>
   </data>
-  <data name="WarningMinumum" xml:space="preserve">
+	<data name="WarningMinumum" xml:space="preserve">
     <value>Waarde mag minimaal {0} zijn.</value>
   </data>
-  <data name="WarningNameExists" xml:space="preserve">
+	<data name="WarningNameExists" xml:space="preserve">
     <value>De ingevoerde naam bestaat al. Geef een nieuwe op en probeer het opnieuw.</value>
   </data>
-  <data name="WarningNoCountrySelected" xml:space="preserve">
+	<data name="WarningNoCountrySelected" xml:space="preserve">
     <value>Er is geen land geselecteerd.</value>
   </data>
-  <data name="WarningNoModulesSelected" xml:space="preserve">
+	<data name="WarningNoModulesSelected" xml:space="preserve">
     <value>Er zijn geen modules geselecteerd. Selecteer er ten minste één.</value>
   </data>
-  <data name="WarningNoTimeZoneSelected" xml:space="preserve">
+	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
     <value>Er is geen tijdzone geselecteerd.</value>
   </data>
-  <data name="WarningNull" xml:space="preserve">
+	<data name="WarningNull" xml:space="preserve">
     <value>Waarde kan niet null zijn.</value>
   </data>
-  <data name="WarningNullEmptyArray" xml:space="preserve">
+	<data name="WarningNullEmptyArray" xml:space="preserve">
     <value>Waarde mag geen null of een lege array zijn.</value>
   </data>
-  <data name="WarningNullEmptyList" xml:space="preserve">
+	<data name="WarningNullEmptyList" xml:space="preserve">
     <value>Waarde mag geen null of een lege lijst zijn.</value>
   </data>
-  <data name="WarningNullGuidEmpty" xml:space="preserve">
+	<data name="WarningNullGuidEmpty" xml:space="preserve">
     <value>Waarde mag geen null of een lege Guid zijn.</value>
   </data>
-  <data name="WarningNullIServiceProvider" xml:space="preserve">
+	<data name="WarningNullIServiceProvider" xml:space="preserve">
     <value>De IServiceProviderFactory retourneerde een null IServiceProvider.</value>
   </data>
-  <data name="WarningNullWhitespace" xml:space="preserve">
+	<data name="WarningNullWhitespace" xml:space="preserve">
     <value>Waarde mag niet null zijn of alleen witruimtes bevatten.</value>
   </data>
-  <data name="WarningNullOrEmpty" xml:space="preserve">
+	<data name="WarningNullOrEmpty" xml:space="preserve">
     <value>Waarde mag niet null of leeg zijn.</value>
   </data>
-  <data name="WarningPasswordMatch" xml:space="preserve">
+	<data name="WarningPasswordMatch" xml:space="preserve">
     <value>Wachtwoorden komen niet overeen!</value>
   </data>
-  <data name="WarningPasswordSize" xml:space="preserve">
+	<data name="WarningPasswordSize" xml:space="preserve">
     <value>Het wachtwoord moet ten minste 6 tekens en ten minste 1 kleine letter, 1 hoofdletter en 1 cijfer bevatten.</value>
   </data>
-  <data name="WarningRegistrationConfirmEmail" xml:space="preserve">
+	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
     <value>U ontvangt een e-mail die u eerst moet bevestigen voordat u kunt inloggen.</value>
   </data>
-  <data name="WarningRegistrationExists" xml:space="preserve">
+	<data name="WarningRegistrationExists" xml:space="preserve">
     <value>De combinatie van naam en e-mailadres bestaat al. Geef een nieuwe naam en/of e-mailadres op en probeer het opnieuw.</value>
   </data>
-  <data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
     <value>IHostApplicationLifetime vervangen wordt niet ondersteund.</value>
   </data>
-  <data name="WarningResetPassword" xml:space="preserve">
+	<data name="WarningResetPassword" xml:space="preserve">
     <value>U ontvangt een e-mail met een link om uw wachtwoord opnieuw in te stellen.</value>
   </data>
-  <data name="WarningResolverReturnedNull" xml:space="preserve">
+	<data name="WarningResolverReturnedNull" xml:space="preserve">
     <value>De resolver retourneerde een null IServiceProviderFactory.</value>
   </data>
-  <data name="WarningSelectItem" xml:space="preserve">
+	<data name="WarningSelectItem" xml:space="preserve">
     <value>U moet een item selecteren.</value>
   </data>
-  <data name="WarningSettingsChange" xml:space="preserve">
+	<data name="WarningSettingsChange" xml:space="preserve">
     <value>U moet de applicatie opnieuw starten om de instellingen toe te passen.</value>
   </data>
-  <data name="WarningSynchronizationRestart" xml:space="preserve">
+	<data name="WarningSynchronizationRestart" xml:space="preserve">
     <value>Om te kunnen synchroniseren, moet u de applicatie opnieuw opstarten om de synchronisatie-instellingen toe te passen</value>
   </data>
-  <data name="WarningUserLoggedin" xml:space="preserve">
+	<data name="WarningUserLoggedin" xml:space="preserve">
     <value>{0} is ingelogd.</value>
   </data>
-  <data name="WarningUserLoggedout" xml:space="preserve">
+	<data name="WarningUserLoggedout" xml:space="preserve">
     <value>{0} is uitgelogd.</value>
   </data>
-  <data name="WarningUsernameSize" xml:space="preserve">
+	<data name="WarningUsernameSize" xml:space="preserve">
     <value>Gebruikersnaam moet ten minste 3 tekens bevatten.</value>
   </data>
-  <data name="Weight" xml:space="preserve">
+	<data name="Weight" xml:space="preserve">
     <value>Gewicht</value>
   </data>
-  <data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+	<data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
     <value>Het vervangen van IHostApplicationLifetime wordt niet ondersteund.</value>
   </data>
-  <data name="Work" xml:space="preserve">
+	<data name="Work" xml:space="preserve">
     <value>Arbeid</value>
   </data>
-  <data name="yard" xml:space="preserve">
+	<data name="yard" xml:space="preserve">
     <value>yard</value>
   </data>
-  <data name="Yes" xml:space="preserve">
+	<data name="WarningError" xml:space="preserve">
+    <value>Fout</value>
+  </data>
+	<data name="WarningInfo" xml:space="preserve">
+    <value>Waarschuwing</value>
+  </data>
+	<data name="Yes" xml:space="preserve">
     <value>Ja</value>
   </data>
 </root>

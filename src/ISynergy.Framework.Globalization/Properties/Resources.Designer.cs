@@ -1654,6 +1654,15 @@ namespace ISynergy.Framework.Globalization.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string WarningError {
+            get {
+                return ResourceManager.GetString("WarningError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File name is null or empty. Specify a valid file name..
         /// </summary>
         internal static string WarningFilenameIsNullOrEmpty {
@@ -1677,6 +1686,15 @@ namespace ISynergy.Framework.Globalization.Properties {
         internal static string WarningGuidEmpty {
             get {
                 return ResourceManager.GetString("WarningGuidEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        internal static string WarningInfo {
+            get {
+                return ResourceManager.GetString("WarningInfo", resourceCulture);
             }
         }
         
