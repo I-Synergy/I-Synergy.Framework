@@ -42,12 +42,12 @@
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
       <PropertyGroup>
-        <SupportedOSPlatformVersion>35.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
       <PropertyGroup>
-        <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
 
         <CodesignKey>Apple Development: Created via API (Y4Q66R3GZS)</CodesignKey>
         <CodesignProvision>VS: WildCard Development</CodesignProvision>
@@ -64,13 +64,13 @@
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
       <PropertyGroup>
-        <SupportedOSPlatformVersion>16.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
       <PropertyGroup>
-        <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-        <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
 
         <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
         <SelfContained>true</SelfContained>
