@@ -1,10 +1,12 @@
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
+using ISynergy.Framework.OpenTelemetry.Sentry.Converters;
 using ISynergy.Framework.OpenTelemetry.Sentry.Processors;
 using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Logs;
 using Sentry.OpenTelemetry;
+using System.Text.Json;
 
 namespace ISynergy.Framework.OpenTelemetry.Sentry.Extensions;
 
@@ -41,6 +43,13 @@ public static class SentryTelemetryExtensions
 
         if (string.IsNullOrWhiteSpace(options.Dsn))
             return telemetryBuilder;
+
+        // Register a custom JSON converter for KeyValuePair<,> before Sentry initializes.
+        // System.Text.Json cannot serialize KeyValuePair natively (its constructor parameter
+        // names are null), and Sentry's internal JSON serializer uses the default options.
+        // On iOS, the device context collected by Sentry contains KeyValuePair<string, bool>
+        // values that would otherwise cause a NotSupportedException during serialization.
+        JsonSerializerOptions.Default.Converters.Add(new KeyValuePairJsonConverterFactory());
 
         SentrySdk.Init(sentryOptions =>
         {
