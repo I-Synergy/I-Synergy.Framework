@@ -16,22 +16,32 @@ internal class OpenTelemetryLogProcessor : BaseProcessor<LogRecord>
         // Convert log records to Sentry events
         if (data.LogLevel >= LogLevel.Error)
         {
-            // Create and capture a Sentry event from the log record
-            var sentryEvent = new SentryEvent(data.Exception)
+            try
             {
-                Level = GetSentryLevel(data.LogLevel),
-                Message = new SentryMessage { Message = data.Body },
-                Logger = data.CategoryName
-            };
+                // Create and capture a Sentry event from the log record
+                var sentryEvent = new SentryEvent(data.Exception)
+                {
+                    Level = GetSentryLevel(data.LogLevel),
+                    Message = new SentryMessage { Message = data.Body },
+                    Logger = data.CategoryName
+                };
 
-            // Add attributes as tags
-            foreach (var attr in data.Attributes.EnsureNotNull()) // NOSONAR
-            {
-                if (attr.Value is not null)
-                    sentryEvent.SetTag(attr.Key, attr.Value.ToString()!);
+                // Add attributes as tags
+                foreach (var attr in data.Attributes.EnsureNotNull()) // NOSONAR
+                {
+                    if (attr.Value is not null)
+                        sentryEvent.SetTag(attr.Key, attr.Value.ToString()!);
+                }
+
+                SentrySdk.CaptureEvent(sentryEvent);
             }
-
-            SentrySdk.CaptureEvent(sentryEvent);
+            catch (Exception ex)
+            {
+                // Sentry serialization can fail on types that System.Text.Json doesn't support
+                // (e.g. KeyValuePair<string, bool> in exception data or log attributes).
+                // Don't let a serialization failure crash the OpenTelemetry log pipeline.
+                System.Diagnostics.Debug.WriteLine($"Sentry log processor failed: {ex.Message}");
+            }
         }
 
         base.OnEnd(data);

@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
+using ISynergy.Framework.OpenTelemetry.Sentry.Converters;
 using ISynergy.Framework.OpenTelemetry.Sentry.Processors;
 using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Logs;
@@ -45,6 +46,18 @@ public static class SentryTelemetryExtensions
         SentrySdk.Init(sentryOptions =>
         {
             options.Map(sentryOptions);
+
+            // Register a custom JSON converter for KeyValuePair<,>. System.Text.Json cannot
+            // serialize KeyValuePair natively (its constructor parameter names are null).
+            // On iOS, the device context collected by Sentry contains KeyValuePair<string, bool>
+            // values that would otherwise cause a NotSupportedException during serialization.
+            //
+            // This goes through Sentry's own registration point rather than
+            // JsonSerializerOptions.Default: that instance is created read-only, so
+            // Converters.Add on it throws InvalidOperationException ("...is read-only or has
+            // already been used in serialization or deserialization") and faults every host
+            // startup that configures a DSN.
+            sentryOptions.AddJsonConverter(new KeyValuePairJsonConverterFactory());
 
             sentryOptions.UseOpenTelemetry();
         });
