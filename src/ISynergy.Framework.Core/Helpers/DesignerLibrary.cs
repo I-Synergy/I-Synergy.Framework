@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ISynergy.Framework.Core.Helpers;
 
 /// <summary>
@@ -11,6 +13,7 @@ internal static class DesignerLibrary
     /// <value>The detected designer library.</value>
     internal static DesignerPlatformLibrary DetectedDesignerLibrary
     {
+        [RequiresUnreferencedCode("Calls GetCurrentPlatform(), which probes for optional third-party assemblies via Type.GetType(string).")]
         get
         {
             if (_detectedDesignerPlatformLibrary is null)
@@ -25,6 +28,15 @@ internal static class DesignerLibrary
     /// Gets the current platform.
     /// </summary>
     /// <returns>DesignerPlatformLibrary.</returns>
+    /// <remarks>
+    /// Type.GetType(string) here is a best-effort probe for optional third-party assemblies
+    /// (WPF's PresentationFramework, WinRT's Windows.ApplicationModel) that are never part of
+    /// this app's own compiled closure. It correctly returns null rather than throwing when
+    /// they aren't present (the 1-arg overload defaults to throwOnError: false), including
+    /// under NativeAOT/trimming -- annotated for correctness per .NET's trim-analysis rules,
+    /// not because it's known to fail here.
+    /// </remarks>
+    [RequiresUnreferencedCode("Type.GetType(string) probes for optional third-party assemblies not part of this app's compiled closure.")]
     private static DesignerPlatformLibrary GetCurrentPlatform()
     {
         // We check Silverlight first because when in the VS designer, the .NET libraries will resolve

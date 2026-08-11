@@ -28,13 +28,32 @@ public sealed class KeyValuePairJsonConverterFactory : JsonConverterFactory
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// AOT-safe: MakeGenericType/Activator.CreateInstance can't construct a generic
+    /// instantiation that wasn't seen at compile time -- NativeAOT throws NotSupportedException
+    /// for any (keyType, valueType) pair not already closed somewhere in the compiled app.
+    /// Dispatches statically to the combinations Sentry is actually known to need instead.
+    /// KeyValuePair&lt;string, bool&gt; is the confirmed case (iOS device context); string/object
+    /// and string/string are included defensively for other tags/extra-data shapes Sentry may
+    /// serialize. Add a case here (not back a MakeGenericType call) if another combination
+    /// turns up.
+    /// </remarks>
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
         var keyType = typeToConvert.GetGenericArguments()[0];
         var valueType = typeToConvert.GetGenericArguments()[1];
 
-        var converterType = typeof(KeyValuePairJsonConverter<,>).MakeGenericType(keyType, valueType);
-        return (JsonConverter)Activator.CreateInstance(converterType)!;
+        if (keyType == typeof(string) && valueType == typeof(bool))
+            return new KeyValuePairJsonConverter<string, bool>();
+        if (keyType == typeof(string) && valueType == typeof(string))
+            return new KeyValuePairJsonConverter<string, string>();
+        if (keyType == typeof(string) && valueType == typeof(object))
+            return new KeyValuePairJsonConverter<string, object>();
+
+        throw new NotSupportedException(
+            $"KeyValuePairJsonConverterFactory has no statically-registered converter for " +
+            $"KeyValuePair<{keyType.Name}, {valueType.Name}>. MakeGenericType/Activator.CreateInstance " +
+            "aren't NativeAOT-safe, so this must be added as an explicit case instead of resolved dynamically.");
     }
 }
 

@@ -15,22 +15,33 @@ public static class ServiceCollectionExtensions
     /// and <c>IViewModel</c> implementors.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
-    /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
-    [RequiresUnreferencedCode("Discovers and loads referenced assemblies at runtime and scans them for IView/IWindow/IViewModel implementors; not trim-compatible. Types are only found if the application still references them.")]
+    /// <param name="assembly">Unused for discovery (kept for source compatibility); the assembly
+    /// is already part of <see cref="AppDomain.CurrentDomain"/> by the time this runs.</param>
+    /// <param name="assemblyFilter">An optional filter applied to loaded assembly names.</param>
+    /// <remarks>
+    /// Discovers candidate assemblies via <see cref="AppDomain.CurrentDomain"/>.GetAssemblies()
+    /// rather than walking the static reference graph with Assembly.GetReferencedAssemblies().
+    /// The latter throws PlatformNotSupportedException under NativeAOT (no BCL trim/AOT
+    /// analyzer warning is emitted for it, so this only surfaces as a runtime crash on
+    /// launch) -- see ISynergy.Framework.Core.Extensions.ReflectionExtensions.GetAllReferencedAssemblyNames.
+    /// Already-loaded-domain scanning is the same pattern the sibling GetViewModelTypes()/
+    /// GetViewTypes()/GetWindowTypes() helpers below use.
+    /// </remarks>
+    [RequiresUnreferencedCode("Scans loaded assemblies for IView/IWindow/IViewModel implementors; not trim-compatible. Types are only found if the application still references them.")]
     public static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
-        var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
+        var candidateAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         var assemblies = new List<Assembly>();
 
         if (assemblyFilter is not null)
-            foreach (var item in referencedAssemblies.Where(assemblyFilter).EnsureNotNull())
-                assemblies.Add(Assembly.Load(item));
+            foreach (var item in candidateAssemblies.Where(a => assemblyFilter(a.GetName())).EnsureNotNull())
+                assemblies.Add(item);
 
-        foreach (var item in referencedAssemblies.Where(x =>
-            x.Name!.StartsWith("ISynergy.Framework.UI") ||
-            x.Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
-            assemblies.Add(Assembly.Load(item));
+        foreach (var item in candidateAssemblies.Where(a =>
+            a.GetName().Name!.StartsWith("ISynergy.Framework.UI") ||
+            a.GetName().Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
+            if (!assemblies.Contains(item))
+                assemblies.Add(item);
 
         services.RegisterAssemblies(assemblies);
     }

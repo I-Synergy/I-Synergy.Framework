@@ -13,6 +13,7 @@ public static class TypeActivator
     /// <param name="assemblyQualifiedName">Name of the assembly qualified.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="ArgumentException">Unable to resolve object type: " + assemblyQualifiedName</exception>
+    [RequiresUnreferencedCode("Type.GetType(string) resolves an arbitrary type by name; that type's constructor may be removed by the trimmer if not otherwise referenced.")]
     public static object CreateInstance(string assemblyQualifiedName)
     {
         var targetType = Type.GetType(assemblyQualifiedName, false, false);
@@ -36,7 +37,7 @@ public static class TypeActivator
     /// <param name="targetType">Type of the target.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="ArgumentException">Unable to instantiate type: " + targetType.AssemblyQualifiedName + " - Unknown Error</exception>
-    public static object CreateInstance(Type targetType)
+    public static object CreateInstance([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type targetType)
     {
         object? result;
 

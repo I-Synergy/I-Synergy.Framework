@@ -3,6 +3,7 @@ using ISynergy.Framework.CQRS.Dispatch;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.CQRS.Dispatchers;
 
@@ -37,6 +38,8 @@ public class QueryDispatcher : IQueryDispatcher
     }
 
     /// <inheritdoc/>
+    [RequiresDynamicCode("Falls back to MakeGenericType-based reflection dispatch when no QueryDispatchTable entry exists for the query's runtime type; not supported under NativeAOT.")]
+    [RequiresUnreferencedCode("The reflection dispatch fallback is not trim-compatible.")]
     public async Task<TResult> DispatchAsync<TResult>(
         IQuery<TResult> query,
         CancellationToken cancellationToken = default)
@@ -82,6 +85,8 @@ public class QueryDispatcher : IQueryDispatcher
         }
     }
 
+    [RequiresDynamicCode("Uses MakeGenericType to resolve IQueryHandler<,> for a runtime-only-known query type; not supported under NativeAOT.")]
+    [RequiresUnreferencedCode("Not trim-compatible.")]
     private async Task<TResult> DispatchViaReflection<TResult>(
         IQuery<TResult> query,
         CancellationToken cancellationToken)

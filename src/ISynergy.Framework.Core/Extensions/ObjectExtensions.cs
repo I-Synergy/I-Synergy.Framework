@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -26,6 +27,8 @@ public static class ObjectExtensions
     /// This overload uses reflection-based JSON serialization and is not AOT-safe.
     /// For AOT-compatible code, use <see cref="Clone{T}(T, JsonSerializerContext)"/> instead.
     /// </remarks>
+    [RequiresDynamicCode("JsonSerializer.Serialize/Deserialize<T> without a JsonSerializerContext requires runtime code generation for types not covered by System.Text.Json's built-in fast paths; not supported under NativeAOT. Use Clone<T>(T, JsonSerializerContext) instead.")]
+    [RequiresUnreferencedCode("Reflection-based JSON serialization is not trim-compatible. Use Clone<T>(T, JsonSerializerContext) instead.")]
     public static T Clone<T>(this T source)
     {
         if (source is null)
