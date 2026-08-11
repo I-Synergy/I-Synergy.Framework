@@ -132,7 +132,9 @@ stages:
           displayName: 'Test I-Synergy Framework'
           inputs:
             command: test
-            projects: 'I-Synergy.Framework.slnx'
+            projects: |
+              tests/**/*.csproj
+              !tests/**/ISynergy.Framework.UI.Maui.Mac.Tests.csproj
             arguments: '--configuration $(BuildConfiguration) --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
 
         - task: CopyFiles@2
