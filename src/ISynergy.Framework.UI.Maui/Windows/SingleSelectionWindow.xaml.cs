@@ -3,7 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.Windows;
 
 namespace ISynergy.Framework.UI.Windows;
 
-[XamlCompilation(XamlCompilationOptions.Skip)]
 public partial class SingleSelectionWindow : ISingleSelectionWindow
 {
     private bool _isDisposed = false;

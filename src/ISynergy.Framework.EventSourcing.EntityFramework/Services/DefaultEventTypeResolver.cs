@@ -1,4 +1,5 @@
 using ISynergy.Framework.EventSourcing.EntityFramework.Abstractions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.EventSourcing.EntityFramework.Services;
 
@@ -10,12 +11,15 @@ namespace ISynergy.Framework.EventSourcing.EntityFramework.Services;
 /// <remarks>
 /// Register this as a singleton via the reflection-based overload of
 /// <c>AddEventSourcingEntityFramework(IServiceCollection, Action&lt;DbContextOptionsBuilder&gt;)</c>.
-/// For applications with many assemblies, consider supplying a custom <see cref="IEventTypeResolver"/>
-/// that maintains an explicit type map to avoid assembly scanning on the hot path.
+/// Not NativeAOT/trim-safe: under full trimming an event type not otherwise referenced by the
+/// application may be removed, and assembly scanning itself requires unreferenced-code access.
+/// Use <see cref="DictionaryEventTypeResolver"/> instead when publishing with
+/// <c>PublishAot</c> or <c>PublishTrimmed</c>.
 /// </remarks>
 public sealed class DefaultEventTypeResolver : IEventTypeResolver
 {
     /// <inheritdoc />
+    [RequiresUnreferencedCode("Scans all loaded assemblies for a type matching the stored event type name; not trim-compatible. Use DictionaryEventTypeResolver instead under NativeAOT/trimming.")]
     public Type? Resolve(string eventTypeName)
     {
         // Fast path: assembly-qualified or fully-qualified name already resolvable.

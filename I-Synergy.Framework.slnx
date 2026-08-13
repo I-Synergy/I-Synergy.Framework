@@ -161,7 +161,8 @@
     <Project Path="tests/ISynergy.Framework.Storage.Azure.Tests/ISynergy.Framework.Storage.Azure.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Storage.S3.Tests/ISynergy.Framework.Storage.S3.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Storage.Tests/ISynergy.Framework.Storage.Tests.csproj" />
-    <Project Path="tests/ISynergy.Framework.UI.Maui.Tests/ISynergy.Framework.UI.Maui.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.UI.Maui.Mac.Tests/ISynergy.Framework.UI.Maui.Mac.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.UI.Maui.Windows.Tests/ISynergy.Framework.UI.Maui.Windows.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.UI.Tests/ISynergy.Framework.UI.Tests.csproj" Id="3bb92e9d-ffb1-4adc-9a85-7ac32bb6dec6" />
     <Project Path="tests/ISynergy.Framework.UI.WinUI.Tests/ISynergy.Framework.UI.WinUI.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.UI.WPF.Tests/ISynergy.Framework.UI.WPF.Tests.csproj" />

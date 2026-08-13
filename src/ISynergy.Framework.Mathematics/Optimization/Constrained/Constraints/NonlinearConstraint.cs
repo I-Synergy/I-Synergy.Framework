@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -45,6 +46,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
     ///     The tolerance for violations of the constraint. Equality
     ///     constraints should set this to a small positive value. Default is 1e-8.
     /// </param>
+    [RequiresDynamicCode("Compiles the given Expression<Func<double>>/Expression<Func<double[]>> at runtime via LambdaExpression.Compile(), which is not supported under NativeAOT. Use the Func<double[], double> constructor overload instead.")]
     public NonlinearConstraint(IObjectiveFunction objective,
         Expression<Func<double>> function, ConstraintType shouldBe, double value,
         Expression<Func<double[]>> gradient = null, double withinTolerance = DEFAULT_TOL)
@@ -88,6 +90,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
     ///     </paramref>
     ///     .
     /// </param>
+    [RequiresDynamicCode("Compiles the parsed constraint Expression at runtime via LambdaExpression.Compile() (see the private parse method), which is not supported under NativeAOT. Use the Func<double[], double> constructor overload instead.")]
     public NonlinearConstraint(IObjectiveFunction objective,
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
@@ -116,6 +119,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
     ///     </paramref>
     ///     .
     /// </param>
+    [RequiresDynamicCode("Compiles the parsed constraint Expression at runtime via LambdaExpression.Compile() (see the private parse method), which is not supported under NativeAOT. Use the Func<double[], double> constructor overload instead.")]
     public NonlinearConstraint(int numberOfVariables,
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
@@ -298,6 +302,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
         this.gradient = gradient;
     }
 
+    [RequiresDynamicCode("Compiles the parsed constraint Expression at runtime via LambdaExpression.Compile(), which is not supported under NativeAOT.")]
     private static void parse(Expression<Func<double[], bool>> constraint,
         out Func<double[], double> function, out ConstraintType shouldBe, out double value)
     {
