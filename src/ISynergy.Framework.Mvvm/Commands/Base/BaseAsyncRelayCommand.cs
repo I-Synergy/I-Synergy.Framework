@@ -542,16 +542,33 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     public abstract Task ExecuteAsync(object? parameter);
 
     /// <summary>
-    /// Awaits a task and re-throws if not handled. Exceptions are assumed to be already
-    /// handled in ExecuteAsync, so this method only re-throws for FlowExceptionsToTaskScheduler scenarios.
+    /// Checks whether the execution task is already faulted immediately after starting it (i.e.
+    /// the execute delegate threw before its first "await") and, if so, routes the exception
+    /// through <see cref="CommandExceptionDispatcher"/> instead of rethrowing it synchronously.
     /// </summary>
-    /// <param name="executionTask">The task to await.</param>
-    internal static void AwaitAndThrowIfFailed(Task executionTask)
+    /// <remarks>
+    /// A genuinely asynchronous fault (thrown after an <c>await</c>) is not observed here: the
+    /// task is not yet faulted at this point, so it is left to complete on its own and, if never
+    /// awaited, becomes an unobserved task exception that platform <c>Application</c> classes
+    /// already handle via <see cref="TaskScheduler.UnobservedTaskException"/>. But a delegate
+    /// that throws before any <c>await</c> (or a purely synchronous delegate) makes the task
+    /// already faulted by the time control returns here, on the calling (typically UI) thread.
+    /// Rethrowing synchronously in that case would become a genuine unhandled exception on that
+    /// thread, which on some platforms (e.g. Mac Catalyst) causes the native runtime to abort the
+    /// process unconditionally, regardless of the framework's global exception handling. Routing
+    /// through the dispatcher here avoids that crash while still surfacing the exception through
+    /// the same friendly-dialog path as other command failures.
+    /// </remarks>
+    /// <param name="executionTask">The task to check.</param>
+    /// <param name="sender">The command instance that started the task.</param>
+    internal static void AwaitAndThrowIfFailed(Task executionTask, object? sender = null)
     {
         if (executionTask.IsFaulted)
         {
+            // Accessing Exception marks it observed, preventing a duplicate report via
+            // TaskScheduler.UnobservedTaskException during finalization.
             var exception = executionTask.Exception!.InnerException!;
-            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
+            CommandExceptionDispatcher.Raise(sender, exception);
         }
     }
 

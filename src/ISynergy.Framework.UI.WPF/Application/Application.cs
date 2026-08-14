@@ -2,6 +2,8 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
@@ -93,6 +95,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
+        CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -274,6 +277,21 @@ public abstract class Application : System.Windows.Application, IDisposable
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
 
+    /// <summary>
+    /// Handles an exception thrown by a synchronous relay command's execute delegate
+    /// (e.g. a plain <c>RelayCommand</c> bound to a UI control). Routing it here instead of
+    /// letting it propagate synchronously avoids an unhandled exception on the UI thread.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void CommandExceptionDispatcher_UnhandledCommandException(object? sender, CommandExceptionEventArgs e)
+    {
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleException(e.Exception);
+        else
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+    }
+
     protected override void OnExit(ExitEventArgs e)
     {
         _isShuttingDown = true;
@@ -399,6 +417,7 @@ public abstract class Application : System.Windows.Application, IDisposable
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
             DispatcherUnhandledException -= BaseApplication_DispatcherUnhandledException;
+            CommandExceptionDispatcher.UnhandledCommandException -= CommandExceptionDispatcher_UnhandledCommandException;
 
             _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
         }

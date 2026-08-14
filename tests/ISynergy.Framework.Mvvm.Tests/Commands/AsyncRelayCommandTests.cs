@@ -1,4 +1,6 @@
+using ISynergy.Framework.Mvvm.Commands.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -167,6 +169,41 @@ public class AsyncRelayCommandTests
 
         // Act
         await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync(null));
+    }
+
+    [TestMethod]
+    public void Execute_WithPreAwaitSynchronousException_DoesNotThrowAndRaisesCommandExceptionDispatcher()
+    {
+        // Arrange - the lambda throws before its first "await", so the returned task is
+        // already faulted by the time ICommand.Execute checks it. Rethrowing synchronously in
+        // that case (the old behavior) would become a genuine unhandled exception on the
+        // calling/UI thread and, on some platforms (e.g. Mac Catalyst), crash the process.
+        var expectedException = new InvalidOperationException("Test exception");
+        var command = new AsyncRelayCommand(() => throw expectedException);
+
+        CommandExceptionEventArgs? raisedArgs = null;
+        object? raisedSender = null;
+        void Handler(object? sender, CommandExceptionEventArgs e)
+        {
+            raisedSender = sender;
+            raisedArgs = e;
+        }
+
+        CommandExceptionDispatcher.UnhandledCommandException += Handler;
+        try
+        {
+            // Act
+            command.Execute(null);
+        }
+        finally
+        {
+            CommandExceptionDispatcher.UnhandledCommandException -= Handler;
+        }
+
+        // Assert
+        Assert.AreSame(command, raisedSender);
+        Assert.IsNotNull(raisedArgs);
+        Assert.AreSame(expectedException, raisedArgs!.Exception);
     }
 
     [TestMethod]

@@ -1,6 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
@@ -72,6 +74,7 @@ public abstract class Application : ComponentBase
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
             // Pass a timeout to limit the execution time.
             // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -303,6 +306,34 @@ public abstract class Application : ComponentBase
     }
 
     /// <summary>
+    /// Handles an exception thrown by a synchronous relay command's execute delegate
+    /// (e.g. a plain <c>RelayCommand</c> bound to a UI control). Routing it here instead of
+    /// letting it propagate synchronously avoids an unhandled exception on the calling thread.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void CommandExceptionDispatcher_UnhandledCommandException(object? sender, CommandExceptionEventArgs e)
+    {
+        if (_isDisposing)
+            return;
+
+        if (_exceptionHandlerService is not null)
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(e.Exception);
+            }
+            catch (Exception handlerEx)
+            {
+                // If exception handler fails, log directly
+                _logger?.LogError(handlerEx, "Error in exception handler");
+            }
+        }
+        else
+            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+    }
+
+    /// <summary>
     /// Initializing the application.
     /// </summary>
     /// <returns></returns>
@@ -368,6 +399,7 @@ public abstract class Application : ComponentBase
                 AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+                CommandExceptionDispatcher.UnhandledCommandException -= CommandExceptionDispatcher_UnhandledCommandException;
             }
             catch (Exception ex)
             {

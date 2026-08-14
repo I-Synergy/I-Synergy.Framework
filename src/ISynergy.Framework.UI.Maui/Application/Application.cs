@@ -4,6 +4,8 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
@@ -113,6 +115,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
                 MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+                CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
                 _commonServices = IPlatformApplication.Current!.Services.GetRequiredService<ICommonServices>();
                 _dialogService = IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>();
@@ -393,6 +396,22 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
 
+    /// <summary>
+    /// Handles an exception thrown by a synchronous relay command's execute delegate
+    /// (e.g. a plain <c>RelayCommand</c> bound to a UI control). Routing it here instead of
+    /// letting it propagate synchronously avoids an unhandled exception on the UI thread, which
+    /// on some platforms (e.g. Mac Catalyst) would otherwise abort the process unconditionally.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void CommandExceptionDispatcher_UnhandledCommandException(object? sender, CommandExceptionEventArgs e)
+    {
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleException(e.Exception);
+        else
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+    }
+
     #region IDisposable
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -420,6 +439,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             MauiExceptions.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            CommandExceptionDispatcher.UnhandledCommandException -= CommandExceptionDispatcher_UnhandledCommandException;
 
             if (_lifecycleService is not null)
                 _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;

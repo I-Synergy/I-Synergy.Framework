@@ -59,10 +59,29 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
     {
         ThrowIfDisposed();
 
+        // A synchronous throw here would become a genuine unhandled exception on the calling
+        // thread (typically the UI thread, when invoked via ICommand.Execute from a bound
+        // control). On some platforms (e.g. Mac Catalyst) the native runtime aborts the process
+        // unconditionally after an unhandled exception, regardless of the framework's global
+        // exception handling. Catch and route through CommandExceptionDispatcher instead, so
+        // platform Application classes can forward it to IExceptionHandlerService and show the
+        // existing friendly error dialog, matching the behavior of async command failures.
+        Exception? caughtException = null;
+
         lock (_syncLock)
         {
-            _execute(parameter);
+            try
+            {
+                _execute(parameter);
+            }
+            catch (Exception ex)
+            {
+                caughtException = ex;
+            }
         }
+
+        if (caughtException is not null)
+            CommandExceptionDispatcher.Raise(this, caughtException);
     }
 
     public override void Execute(object? parameter)
