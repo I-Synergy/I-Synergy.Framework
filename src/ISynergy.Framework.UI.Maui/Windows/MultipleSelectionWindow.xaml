@@ -23,6 +23,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="44" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -44,9 +45,19 @@
                 CommandParameter="{Binding Query}"
                 Text="{m:GetString Search}" />
 
+            <Label
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Margin="10,2"
+                FontSize="12"
+                HorizontalOptions="Start"
+                Text="⌘-click to select multiple items"
+                TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}"
+                IsVisible="{OnPlatform MacCatalyst=True, Default=False}" />
+
             <CollectionView
                 x:Name="DataSummary"
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.ColumnSpan="2"
                 ItemsSource="{Binding Items}"
                 MinimumHeightRequest="400"
@@ -54,8 +65,26 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="10">
-                            <Label Margin="10,0" Text="{Binding}" />
+                        <Grid x:Name="ItemRoot" Padding="10" Background="Transparent">
+                            <Label
+                                Margin="10,0"
+                                Text="{Binding}"
+                                VerticalOptions="Center" />
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="ItemRoot" Property="Background" Value="Transparent" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="ItemRoot" Property="Background" Value="{AppThemeBinding Light=#D6E4FF, Dark=#33415C}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
