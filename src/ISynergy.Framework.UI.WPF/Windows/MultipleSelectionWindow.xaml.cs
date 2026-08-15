@@ -42,12 +42,7 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
     {
         if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
-            viewModel.SetSelectedItem(new List<object>());
-
-            foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
-            {
-                viewModel.SelectedItem?.Add(item);
-            }
+            viewModel.SetSelectedItem(DataSummary.SelectedItems.EnsureNotNull().Cast<object>());
 
             viewModel.SelectCommand.NotifyCanExecuteChanged();
         }

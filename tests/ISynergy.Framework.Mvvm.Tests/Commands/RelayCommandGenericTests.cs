@@ -1,3 +1,5 @@
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -105,24 +107,37 @@ public class RelayCommandGenericTests
     }
 
     [TestMethod]
-    public void Execute_WithException()
-    {
-        // Arrange
-        var expectedException = new InvalidOperationException("Test exception");
-        var command = new RelayCommand<string>(_ => throw expectedException);
-        Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
-    }
-
-    [TestMethod]
-    public void Execute_WithException_RethrowsException()
+    public void Execute_WithException_DoesNotThrowAndRaisesCommandExceptionDispatcher()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
         var command = new RelayCommand<string>(_ => throw expectedException);
 
-        // Act & Assert
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
-        Assert.AreEqual(expectedException, thrownException);
+        CommandExceptionEventArgs? raisedArgs = null;
+        object? raisedSender = null;
+        void Handler(object? sender, CommandExceptionEventArgs e)
+        {
+            raisedSender = sender;
+            raisedArgs = e;
+        }
+
+        CommandExceptionDispatcher.UnhandledCommandException += Handler;
+        try
+        {
+            // Act - a synchronous throw must never escape Execute(): on some platforms (e.g.
+            // Mac Catalyst) an unhandled exception on the calling thread aborts the process
+            // unconditionally, bypassing the framework's global exception handling.
+            command.Execute("test");
+        }
+        finally
+        {
+            CommandExceptionDispatcher.UnhandledCommandException -= Handler;
+        }
+
+        // Assert
+        Assert.AreSame(command, raisedSender);
+        Assert.IsNotNull(raisedArgs);
+        Assert.AreSame(expectedException, raisedArgs!.Exception);
     }
 
     [TestMethod]

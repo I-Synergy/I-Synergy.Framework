@@ -3,6 +3,8 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
@@ -142,6 +144,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+                CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
                 _commonServices = Services.GetRequiredService<ICommonServices>();
                 _dialogService = Services.GetRequiredService<IDialogService>();
@@ -385,6 +388,21 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     }
 
     /// <summary>
+    /// Handles an exception thrown by a synchronous relay command's execute delegate
+    /// (e.g. a plain <c>RelayCommand</c> bound to a UI control). Routing it here instead of
+    /// letting it propagate synchronously avoids an unhandled exception on the UI thread.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void CommandExceptionDispatcher_UnhandledCommandException(object? sender, CommandExceptionEventArgs e)
+    {
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleException(e.Exception);
+        else
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+    }
+
+    /// <summary>
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
     /// <param name="args">Event data for the event.</param>
@@ -610,6 +628,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            CommandExceptionDispatcher.UnhandledCommandException -= CommandExceptionDispatcher_UnhandledCommandException;
 
             // Only unregister event handlers — the DI container owns the singleton's lifetime
             if (_lifecycleService is not null)

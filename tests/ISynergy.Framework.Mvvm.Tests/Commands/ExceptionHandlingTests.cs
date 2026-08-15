@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using ISynergy.Framework.Mvvm.Commands.Base;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
 
 namespace ISynergy.Framework.Mvvm.Commands.Tests;
 
@@ -41,30 +43,56 @@ public class ExceptionHandlingTests
     {
     }
 
+    /// <summary>
+    /// Runs <paramref name="action"/> while capturing the exception (if any) raised via
+    /// <see cref="CommandExceptionDispatcher.UnhandledCommandException"/>.
+    /// </summary>
+    private static Exception? CaptureDispatchedException(Action action)
+    {
+        Exception? captured = null;
+        void Handler(object? sender, CommandExceptionEventArgs e) => captured = e.Exception;
+
+        CommandExceptionDispatcher.UnhandledCommandException += Handler;
+        try
+        {
+            action();
+        }
+        finally
+        {
+            CommandExceptionDispatcher.UnhandledCommandException -= Handler;
+        }
+
+        return captured;
+    }
+
     #region RelayCommand Exception Handling Tests
 
     [TestMethod]
     public void RelayCommand_Execute_WithException()
     {
-        // Arrange
+        // Arrange - a synchronous throw must never escape Execute(): on some platforms
+        // (e.g. Mac Catalyst) an unhandled exception on the calling thread aborts the process
+        // unconditionally. It is routed through CommandExceptionDispatcher instead.
         var expectedException = new InvalidOperationException("Test exception");
         var command = new RelayCommand(() => throw expectedException);
 
-        // Act & Assert
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
-        Assert.AreEqual(expectedException, thrownException);
+        // Act
+        var dispatchedException = CaptureDispatchedException(() => command.Execute(null));
+
+        // Assert
+        Assert.AreEqual(expectedException, dispatchedException);
     }
 
     [TestMethod]
-    public void RelayCommand_Execute_WithException_WhenHandlerNotAvailable_Rethrows()
+    public void RelayCommand_Execute_WithException_WhenHandlerNotAvailable_DoesNotThrow()
     {
-        // Arrange
+        // Arrange - even with no CommandExceptionDispatcher subscribers, Execute() must not
+        // rethrow synchronously; the exception is simply not observed by anyone.
         var expectedException = new InvalidOperationException("Test exception");
         var command = new RelayCommand(() => throw expectedException);
 
-        // Act & Assert
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
-        Assert.AreEqual(expectedException, thrownException);
+        // Act & Assert - should not throw
+        command.Execute(null);
     }
 
     #endregion
@@ -78,9 +106,11 @@ public class ExceptionHandlingTests
         var expectedException = new InvalidOperationException("Test exception");
         var command = new RelayCommand<string>(_ => throw expectedException);
 
-        // Act & Assert
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
-        Assert.AreEqual(expectedException, thrownException);
+        // Act
+        var dispatchedException = CaptureDispatchedException(() => command.Execute("test"));
+
+        // Assert
+        Assert.AreEqual(expectedException, dispatchedException);
     }
 
     #endregion
@@ -120,14 +150,19 @@ public class ExceptionHandlingTests
     }
 
     [TestMethod]
-    public void AsyncRelayCommand_Execute_WithSynchronousException_Rethrows()
+    public void AsyncRelayCommand_Execute_WithSynchronousException_DoesNotThrowAndDispatchesException()
     {
-        // Default FlowExceptionsToTaskScheduler -> exception propagates
+        // Default FlowExceptionsToTaskScheduler: the execute delegate throws before its first
+        // "await", so the task is already faulted by the time Execute() checks it. Rethrowing
+        // synchronously here (the old behavior) would become a genuine unhandled exception on
+        // the calling/UI thread and, on some platforms (e.g. Mac Catalyst), crash the process.
+        // It must instead be routed through CommandExceptionDispatcher, same as RelayCommand.
         var expectedException = new InvalidOperationException("Test exception");
         var command = new AsyncRelayCommand(() => throw expectedException);
 
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
-        Assert.AreEqual(expectedException, thrownException);
+        var dispatchedException = CaptureDispatchedException(() => command.Execute(null));
+
+        Assert.AreEqual(expectedException, dispatchedException);
     }
 
     [TestMethod]

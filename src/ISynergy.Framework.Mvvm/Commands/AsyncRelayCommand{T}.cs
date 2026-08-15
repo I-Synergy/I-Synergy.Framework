@@ -171,9 +171,9 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
         Task executionTask = ExecuteAsync(parameter);
 
         if ((_options & AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler) != 0)
-            AwaitAndThrowIfFailed(executionTask);   // Default: propagate
+            AwaitAndThrowIfFailed(executionTask, this);   // Default: route pre-await faults through the dispatcher
         else
-            LogIfFailed(executionTask);             // None: log only
+            LogIfFailed(executionTask);                   // None: log only
     }
 
     /// <summary>

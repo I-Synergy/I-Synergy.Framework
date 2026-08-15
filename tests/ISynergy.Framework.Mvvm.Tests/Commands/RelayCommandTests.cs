@@ -1,3 +1,5 @@
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -69,46 +71,63 @@ public class RelayCommandTests
     }
 
     [TestMethod]
-    public void Execute_WithException_CallsExceptionHandlerService()
-    {
-        // Arrange
-        var expectedException = new InvalidOperationException("Test exception");
-        var command = new RelayCommand(() => throw expectedException);
-        Assert.Throws<InvalidOperationException>(() => command.Execute(null));
-    }
-
-    [TestMethod]
-    public void Execute_WithException_WhenExceptionHandlerServiceNotAvailable_RethrowsException()
+    public void Execute_WithException_DoesNotThrowAndRaisesCommandExceptionDispatcher()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
         var command = new RelayCommand(() => throw expectedException);
 
-        // Act & Assert
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
-        Assert.AreEqual(expectedException, thrownException);
+        CommandExceptionEventArgs? raisedArgs = null;
+        object? raisedSender = null;
+        void Handler(object? sender, CommandExceptionEventArgs e)
+        {
+            raisedSender = sender;
+            raisedArgs = e;
+        }
+
+        CommandExceptionDispatcher.UnhandledCommandException += Handler;
+        try
+        {
+            // Act - a synchronous throw must never escape Execute(): on some platforms (e.g.
+            // Mac Catalyst) an unhandled exception on the calling thread aborts the process
+            // unconditionally, bypassing the framework's global exception handling.
+            command.Execute(null);
+        }
+        finally
+        {
+            CommandExceptionDispatcher.UnhandledCommandException -= Handler;
+        }
+
+        // Assert
+        Assert.AreSame(command, raisedSender);
+        Assert.IsNotNull(raisedArgs);
+        Assert.AreSame(expectedException, raisedArgs!.Exception);
     }
 
     [TestMethod]
-    public void Execute_WithException_RethrowsOriginalException()
-    {
-        // Arrange
-        var expectedException = new InvalidOperationException("Test exception");
-        var command = new RelayCommand(() => throw expectedException);
-
-        // Act & Assert - handler exception propagates when handler itself throws
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute(null));
-        Assert.AreEqual(expectedException, thrownException);
-    }
-
-    [TestMethod]
-    public void Execute_WithNestedException_HandlesInnerExceptionCorrectly()
+    public void Execute_WithNestedException_RaisesCommandExceptionDispatcherWithOuterException()
     {
         // Arrange
         var innerException = new InvalidOperationException("Inner exception");
         var outerException = new Exception("Outer exception", innerException);
         var command = new RelayCommand(() => throw outerException);
-        Assert.Throws<Exception>(() => command.Execute(null));
+
+        Exception? raisedException = null;
+        void Handler(object? sender, CommandExceptionEventArgs e) => raisedException = e.Exception;
+
+        CommandExceptionDispatcher.UnhandledCommandException += Handler;
+        try
+        {
+            // Act
+            command.Execute(null);
+        }
+        finally
+        {
+            CommandExceptionDispatcher.UnhandledCommandException -= Handler;
+        }
+
+        // Assert
+        Assert.AreSame(outerException, raisedException);
     }
 
     [TestMethod]

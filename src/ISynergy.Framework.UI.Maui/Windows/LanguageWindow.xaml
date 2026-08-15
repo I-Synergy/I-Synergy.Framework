@@ -8,10 +8,12 @@
     xmlns:viewmodels="clr-namespace:ISynergy.Framework.UI.ViewModels;assembly=ISynergy.Framework.UI"
     Title="{Binding Title}"
     x:DataType="viewmodels:LanguageViewModel">
-    <Grid Background="Transparent">
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
-        </Grid.GestureRecognizers>
+    <Grid>
+        <Grid Background="Transparent">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
+            </Grid.GestureRecognizers>
+        </Grid>
 
         <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}" WidthRequest="{OnPlatform WinUI=400, Default=400}">
             <VerticalStackLayout Margin="10" Spacing="10"

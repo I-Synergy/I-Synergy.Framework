@@ -187,7 +187,7 @@
                     <HorizontalStackLayout HorizontalOptions="End" Spacing="8">
                         <Button
                             Command="{Binding SelectCommand}"
-                            CommandParameter="{Binding SelectedItems}"
+                            CommandParameter="{Binding SelectedItem}"
                             HeightRequest="{DynamicResource DefaultMinimumHeightRequest}"
                             Text="{m:GetString Select}"
                             WidthRequest="{DynamicResource DefaultMinimumWidthRequest}" />
