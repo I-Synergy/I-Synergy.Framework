@@ -57,7 +57,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
 
     public AsyncRelayCommand<string> RefreshCommand { get; private set; }
 
-    public AsyncRelayCommand<List<object>> SelectCommand { get; private set; }
+    public AsyncRelayCommand<object> SelectCommand { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseMultipleSelectionViewModel{TEntity}"/> class.
@@ -78,7 +78,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
         });
 
         RefreshCommand = new AsyncRelayCommand<string>(e => QueryItemsAsync(e));
-        SelectCommand = new AsyncRelayCommand<List<object>>(e => SelectAsync(e), s => s is not null && s.Count > 0);
+        SelectCommand = new AsyncRelayCommand<object>(e => SelectAsync(e), _ => SelectedItem is not null && SelectedItem.Count > 0);
 
         IsInitialized = true;
     }
@@ -112,7 +112,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
     /// <summary>
     /// Validates and submits the selected items via <see cref="SelectCommand"/>.
     /// </summary>
-    private async Task SelectAsync(List<object> e)
+    private async Task SelectAsync(object e)
     {
         if (Validate())
         {

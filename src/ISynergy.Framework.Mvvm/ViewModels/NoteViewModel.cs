@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 
@@ -45,6 +46,12 @@ public class NoteViewModel : ViewModelDialog<string>
         ILogger<NoteViewModel> logger)
         : base(commonServices, logger)
     {
+        // A note may be submitted empty. The base SubmitCommand disables submission
+        // while SelectedItem is null, so replace it with one that always allows
+        // submission and returns string.Empty when no text was entered.
+        SubmitCommand = new AsyncRelayCommand<string>(
+            execute: async e => await SubmitAsync(e ?? SelectedItem ?? string.Empty),
+            canExecute: _ => true);
     }
 
     public virtual void SetNote(string note, string? targetProperty)

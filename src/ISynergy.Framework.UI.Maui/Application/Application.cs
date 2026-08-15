@@ -241,7 +241,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _mainWindow = new Microsoft.Maui.Controls.Window();
         _mainWindow.ApplyFlowDirection(_language);
         _mainWindow.Page = CreateLoadingView();
+
+#if WINDOWS
         _mainWindow.TitleBar = SetTitleBar();
+#endif
 
         _themeService.ApplyTheme();
 

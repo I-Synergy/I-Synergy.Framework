@@ -50,7 +50,7 @@
                 SelectionMode="Multiple">
                 <i:Interaction.Behaviors>
                     <i:EventTriggerBehavior EventName="DoubleTapped">
-                        <i:InvokeCommandAction Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItems}" />
+                        <i:InvokeCommandAction Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItem}" />
                     </i:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListView>
@@ -68,7 +68,7 @@
                     Margin="{ThemeResource ContentDialogButton1HostMargin}"
                     HorizontalAlignment="Right"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{Binding SelectedItems}"
+                    CommandParameter="{Binding SelectedItem}"
                     Content="{m:LanguageResource Key=Select}" />
                 <Button
                     x:Name="Cancel_Button"

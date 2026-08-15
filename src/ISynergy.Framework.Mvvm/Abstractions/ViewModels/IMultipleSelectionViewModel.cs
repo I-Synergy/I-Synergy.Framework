@@ -11,5 +11,5 @@ public interface IMultipleSelectionViewModel
     List<object>? SelectedItem { get; }
     void SetItems(IEnumerable<object> items);
     void SetSelectedItem(IEnumerable<object>? items);
-    AsyncRelayCommand<List<object>> SelectCommand { get; }
+    AsyncRelayCommand<object> SelectCommand { get; }
 }

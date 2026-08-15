@@ -29,12 +29,7 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
     {
         if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
-            viewModel.SelectedItem?.Clear();
-
-            foreach (var item in DataSummary.SelectedItems.EnsureNotNull().Where(item => item is not null)) // NOSONAR
-            {
-                viewModel.SelectedItem?.Add(item);
-            }
+            viewModel.SetSelectedItem(DataSummary.SelectedItems.EnsureNotNull());
 
             // Force UI refresh by triggering NotifyCanExecuteChanged
             // This updates the visual state of the button

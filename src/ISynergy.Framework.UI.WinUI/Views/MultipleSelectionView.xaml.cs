@@ -25,12 +25,7 @@ public partial class MultipleSelectionView : ISynergy.Framework.UI.Controls.View
     {
         if (ViewModel is IMultipleSelectionViewModel viewModel)
         {
-            viewModel.SetSelectedItem(new List<object>());
-
-            foreach (var item in DataSummary.SelectedItems.EnsureNotNull())
-            {
-                viewModel.SelectedItem?.Add(item);
-            }
+            viewModel.SetSelectedItem(DataSummary.SelectedItems.EnsureNotNull());
 
             viewModel.SelectCommand.NotifyCanExecuteChanged();
         }
