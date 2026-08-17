@@ -83,8 +83,8 @@
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.4" />
     <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.4" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry" Version="6.8.0" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.8.0" />
+    <PackageVersion Include="Sentry" Version="6.9.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.9.0" />
     <PackageVersion Include="SkiaSharp" Version="4.151.1" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="34.2.3" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="34.2.3" />
