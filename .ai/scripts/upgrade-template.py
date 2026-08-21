@@ -37,6 +37,7 @@ TEMPLATE_OWNED = [
     "REASONIX.md",
     ".reasonix",
     ".ai/agents",
+    ".ai/chains",
     ".ai/skills",
     ".ai/patterns",
     ".ai/reference/templates",

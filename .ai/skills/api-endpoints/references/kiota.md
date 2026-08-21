@@ -148,3 +148,4 @@ public sealed class GetEntityListQueryHandler(
 - Client source files (`Api/`, `Models/`, `ApiClient.cs`, `kiota-lock.json`) are committed
 - Use Aspire service discovery URL (`https+http://api`) for the client base address
 - Never use raw `HttpClient` to call an internal API
+- .NET 10 emits `[FromQuery] int` as the union `["integer","string"]`; without an operation transformer to collapse it, Kiota falls back to `string` — see `references/openapi.md`

@@ -1,215 +1,143 @@
 #!/usr/bin/env python3
 """
-Sync skill files from .ai/skills/ (the single source of truth) to:
-  - .claude/skills/   thin wrappers using !`cat ...` (Claude Code executes these)
-  - .github/skills/   full content copies       (GitHub Copilot reads these directly)
-  - .reasonix/skills/ thin wrappers referencing .ai/skills/ (avoids duplication)
+Ensure folder-level junctions exist from .ai/skills/ and .ai/agents/ to:
+  - .claude/skills/  (junction -> .ai/skills/)
+  - .github/skills/  (junction -> .ai/skills/)
+  - .reasonix/skills/  (junction -> .ai/skills/)
+  - .claude/agents/  (junction -> .ai/agents/)
+  - .github/agents/  (junction -> .ai/agents/)
+
+All platforms read the same canonical source via junctions — no copies or wrappers.
 
 Usage:
-    python sync-skills.py              # sync all skills to all targets
-    python sync-skills.py --from-hook  # hook mode: reads tool JSON from stdin,
-                                       # only acts on .ai/skills/ writes
+    python sync-skills.py              # ensure junctions exist
     python sync-skills.py --dry-run    # show what would change without writing
 """
 
 import argparse
-import json
-import re
-import shutil
+import os
+import subprocess
 import sys
 from pathlib import Path
 
+SCRIPT_DIR = Path(__file__).parent.parent.parent  # .ai/scripts/ -> .ai/ -> repo root
 
-SCRIPT_DIR   = Path(__file__).parent.parent.parent  # .ai/scripts/ -> .ai/ -> repo root
-AI_SKILLS     = SCRIPT_DIR / ".ai"      / "skills"
-AI_AGENTS     = SCRIPT_DIR / ".ai"      / "agents"
-CLAUDE_SKILLS  = SCRIPT_DIR / ".claude"  / "skills"
-GITHUB_SKILLS  = SCRIPT_DIR / ".github"  / "skills"
-REASONIX_SKILLS = SCRIPT_DIR / ".reasonix" / "skills"
-
-FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
-FIELD_RE       = re.compile(r"^(\w[\w-]*):\s*(.+)$", re.MULTILINE)
+# Source → [target junctions]
+JUNCTIONS = {
+    ".ai/skills": [".claude/skills", ".github/skills", ".reasonix/skills", ".pi/skills"],
+    ".ai/agents": [".claude/agents", ".github/agents", ".reasonix/agents", ".pi/agents"],
+    ".ai/chains": [".pi/chains"],
+}
 
 
-# ── helpers ──────────────────────────────────────────────────────────────────
-
-def parse_frontmatter(path: Path) -> dict:
+def _is_junction(path: Path) -> bool:
+    """Check if a directory is a Windows junction (reparse point)."""
+    if sys.platform != "win32":
+        return path.is_symlink()
     try:
-        content = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
-        return {}
-    m = FRONTMATTER_RE.match(content)
-    if not m:
-        return {}
-    return dict(FIELD_RE.findall(m.group(1)))
+        import ctypes
+        FILE_ATTRIBUTE_REPARSE_POINT = 0x400
+        attrs = ctypes.windll.kernel32.GetFileAttributesW(str(path))
+        return attrs != -1 and bool(attrs & FILE_ATTRIBUTE_REPARSE_POINT)
+    except Exception:
+        return False
 
 
-def _write_if_changed(path: Path, content: str, dry_run: bool) -> str:
-    """Write content to path if it differs. Returns 'CREATE', 'UPDATE', or 'OK'."""
-    if path.exists():
-        if path.read_text(encoding="utf-8") == content:
-            return "OK"
-        action = "WOULD UPDATE" if dry_run else "UPDATE"
+def _rmdir(path: Path):
+    """Remove a directory, symlink, or junction safely.
+
+    Avoids shutil.rmtree() for symlinks — rtree follows symlinks and would
+    delete the target directory instead of just the symlink.
+    """
+    if path.is_symlink():
+        path.unlink()
+    elif sys.platform == "win32" and _is_junction(path):
+        subprocess.run(["cmd", "/c", "rmdir", str(path)], capture_output=True)
+    elif path.is_dir():
+        import shutil
+        shutil.rmtree(str(path), ignore_errors=True)
+    elif path.exists():
+        path.unlink()
+
+
+def _create_link(target: Path, source: Path) -> bool:
+    """Create a junction (Windows) or symlink (Unix). Returns True on success."""
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if sys.platform == "win32":
+        result = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(target), str(source)],
+            capture_output=True, text=True
+        )
+        return result.returncode == 0
     else:
-        action = "WOULD CREATE" if dry_run else "CREATE"
+        # Use relative symlink for portability
+        try:
+            rel_source = os.path.relpath(str(source), str(target.parent))
+        except ValueError:
+            rel_source = str(source)
+        target.symlink_to(rel_source, target_is_directory=True)
+        return True
+
+
+def sync_junction(source_rel: str, target_rel: str, dry_run: bool) -> str:
+    """Ensure target_rel is a junction/symlink pointing to source_rel. Returns status."""
+    root = SCRIPT_DIR
+    target = root / target_rel
+    source = (root / source_rel).resolve()
+
+    if target.exists():
+        if _is_junction(target):
+            # Junction/symlink exists — verify it points correctly by checking
+            # that the first file/subdir of the source is reachable through it
+            first_entry = None
+            for entry in source.iterdir():
+                first_entry = entry.name
+                break
+            if first_entry and (target / first_entry).exists():
+                return "OK"
+            # Wrong target or broken — remove and recreate
+            action = "RECREATE"
+        else:
+            action = "RECREATE"
+    else:
+        action = "CREATE"
 
     if not dry_run:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content, encoding="utf-8")
+        if target.exists():
+            _rmdir(target)
+        ok = _create_link(target, source)
+        if not ok:
+            return f"FAIL — could not create junction/symlink"
+
     return action
 
 
-def _remove_stale(target_dir: Path, valid_names: set[str], label: str, dry_run: bool) -> list[str]:
-    """Remove subdirs in target_dir whose name isn't in valid_names."""
-    msgs = []
-    if not target_dir.exists():
-        return msgs
-    for d in target_dir.iterdir():
-        if d.is_dir() and d.name not in valid_names:
-            action = "WOULD REMOVE" if dry_run else "REMOVE"
-            if not dry_run:
-                shutil.rmtree(d)
-            msgs.append(f"  {action} {label}/{d.name}/ (no .ai/ source)")
-    return msgs
-
-
-# ── per-skill sync ────────────────────────────────────────────────────────────
-
-def sync_skill(skill_dir: Path, dry_run: bool = False) -> list[str]:
-    """Sync one skill to both targets. Returns list of status lines."""
-    skill_md = skill_dir / "SKILL.md"
-    if not skill_md.exists():
-        return []
-
-    fm = parse_frontmatter(skill_md)
-    name        = fm.get("name", "").strip()
-    description = fm.get("description", "").strip()
-
-    if not name:
-        return [f"  SKIP {skill_dir.name}: no 'name' in frontmatter"]
-
-    source_content = skill_md.read_text(encoding="utf-8")
-    msgs = []
-
-    # .claude/skills/ — thin wrapper (Claude Code dynamic injection)
-    wrapper = (
-        f"---\n"
-        f"name: {name}\n"
-        f"description: {description}\n"
-        f"---\n\n"
-        f"!`cat .ai/skills/{skill_dir.name}/SKILL.md`\n"
-    )
-    claude_path = CLAUDE_SKILLS / skill_dir.name / "SKILL.md"
-    action = _write_if_changed(claude_path, wrapper, dry_run)
-    if action != "OK":
-        msgs.append(f"  {action} .claude/skills/{skill_dir.name}/SKILL.md")
-
-    # .github/skills/ — full content copy (Copilot reads directly)
-    github_path = GITHUB_SKILLS / skill_dir.name / "SKILL.md"
-    action = _write_if_changed(github_path, source_content, dry_run)
-    if action != "OK":
-        msgs.append(f"  {action} .github/skills/{skill_dir.name}/SKILL.md")
-
-    # .reasonix/skills/ — thin wrapper referencing .ai/skills/ (avoids duplication)
-    # Skip if skill name collides with an agent — sync-agents.py handles those
-    if AI_AGENTS.exists() and (AI_AGENTS / f"{skill_dir.name}.md").exists():
-        msgs.append(f"  SKIP .reasonix/skills/{skill_dir.name}/SKILL.md (agent-owned)")
-    else:
-        reasonix_wrapper = (
-            f"---\n"
-            f"name: {name}\n"
-            f"description: {description}\n"
-            f"---\n\n"
-            f"Load and follow the instructions in `.ai/skills/{skill_dir.name}/SKILL.md`.\n"
-        )
-        reasonix_path = REASONIX_SKILLS / skill_dir.name / "SKILL.md"
-        action = _write_if_changed(reasonix_path, reasonix_wrapper, dry_run)
-        if action != "OK":
-            msgs.append(f"  {action} .reasonix/skills/{skill_dir.name}/SKILL.md")
-
-    if not msgs:
-        msgs.append(f"  OK   {skill_dir.name}")
-
-    return msgs
-
-
-# ── full sync ─────────────────────────────────────────────────────────────────
-
 def sync_all(dry_run: bool = False) -> int:
-    if not AI_SKILLS.exists():
-        print("ERROR: .ai/skills/ not found")
-        return 1
-
     prefix = "[DRY RUN] " if dry_run else ""
-    print(f"{prefix}Syncing .ai/skills/ -> .claude/skills/ + .github/skills/ + .reasonix/skills/")
+    print(f"{prefix}Ensuring folder-level junctions...")
 
-    results = []
-    valid_names = set()
+    changed = 0
+    for source_rel, targets in JUNCTIONS.items():
+        for target_rel in targets:
+            result = sync_junction(source_rel, target_rel, dry_run)
+            if result == "OK":
+                print(f"  OK   {target_rel} -> {source_rel}")
+            else:
+                label = f"WOULD {result}" if dry_run else result
+                print(f"  {label} {target_rel} -> {source_rel}")
+                changed += 1
 
-    for skill_dir in sorted(AI_SKILLS.iterdir()):
-        if skill_dir.is_dir():
-            valid_names.add(skill_dir.name)
-            results.extend(sync_skill(skill_dir, dry_run))
-
-    results.extend(_remove_stale(CLAUDE_SKILLS, valid_names, ".claude/skills", dry_run))
-    results.extend(_remove_stale(GITHUB_SKILLS, valid_names, ".github/skills", dry_run))
-
-    # For .reasonix/skills/ stale check, also include agent names (synced by sync-agents.py)
-    if AI_AGENTS.exists():
-        agent_names = {f.stem for f in AI_AGENTS.iterdir() if f.is_file() and f.suffix == ".md"}
-        valid_names |= agent_names
-    results.extend(_remove_stale(REASONIX_SKILLS, valid_names, ".reasonix/skills", dry_run))
-
-    for r in results:
-        print(r)
-
-    changed = sum(1 for r in results if any(k in r for k in ("CREATE", "UPDATE", "REMOVE")))
-    print(f"\n{changed} file(s) {'would be ' if dry_run else ''}changed.")
+    print(f"\n{changed} junction(s) {'would be ' if dry_run else ''}changed.")
     return 0
 
-
-# ── hook mode ─────────────────────────────────────────────────────────────────
-
-def sync_from_hook() -> int:
-    """Read Claude Code PostToolUse JSON from stdin, sync only if .ai/skills/ file."""
-    try:
-        payload = json.loads(sys.stdin.read())
-    except (json.JSONDecodeError, OSError):
-        return 0
-
-    file_path = payload.get("tool_input", {}).get("file_path", "")
-    if not file_path:
-        return 0
-
-    path = Path(file_path).resolve()
-    try:
-        rel = path.relative_to(AI_SKILLS.resolve())
-    except ValueError:
-        return 0
-
-    skill_dir = AI_SKILLS / rel.parts[0]
-    for msg in sync_skill(skill_dir):
-        print(msg, file=sys.stderr)
-
-    return 0
-
-
-# ── entry point ───────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Sync .claude/skills/ + .github/skills/ + .reasonix/skills/ from .ai/skills/"
+        description="Ensure junctions from .ai/skills/ and .ai/agents/ to all platform targets"
     )
-    parser.add_argument("--from-hook", action="store_true",
-                        help="Hook mode: read tool JSON from stdin")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Show changes without writing")
+    parser.add_argument("--dry-run", action="store_true", help="Show changes without writing")
     args = parser.parse_args()
-
-    if args.from_hook:
-        sys.exit(sync_from_hook())
-    else:
-        sys.exit(sync_all(dry_run=args.dry_run))
+    sys.exit(sync_all(dry_run=args.dry_run))
 
 
 if __name__ == "__main__":

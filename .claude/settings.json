@@ -30,36 +30,14 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "if": "Write(.ai/skills/**)|Edit(.ai/skills/**)",
-            "command": "python3 .ai/scripts/sync-skills.py --from-hook",
-            "statusMessage": "Syncing skill to .claude/, .github/, and .reasonix/..."
-          }
-        ]
-      },
-      {
         "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "agent",
             "if": "Write(src/**/*.csproj)|Edit(src/**/*.csproj)",
-            "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* → Data & Persistence; Storage.* → Data & Persistence; KeyVault.* → Key Vault & Secrets; MessageBus.* → Communication & Messaging; Mail.* → Communication & Messaging; Monitoring.* / OpenTelemetry.* → Monitoring & Observability; UI.* → UI & Client Frameworks; AspNetCore.* → Web & API Development or Enterprise Features; CQRS / Core / Automations → Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm → Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
+            "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* \u2192 Data & Persistence; Storage.* \u2192 Data & Persistence; KeyVault.* \u2192 Key Vault & Secrets; MessageBus.* \u2192 Communication & Messaging; Mail.* \u2192 Communication & Messaging; Monitoring.* / OpenTelemetry.* \u2192 Monitoring & Observability; UI.* \u2192 UI & Client Frameworks; AspNetCore.* \u2192 Web & API Development or Enterprise Features; CQRS / Core / Automations \u2192 Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm \u2192 Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
             "timeout": 120,
             "statusMessage": "Syncing README package tables..."
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "if": "Write(.ai/agents/**)|Edit(.ai/agents/**)",
-            "command": "python3 .ai/scripts/sync-agents.py --from-hook",
-            "statusMessage": "Syncing agent to .claude/, .github/, and .reasonix/skills/..."
           }
         ]
       },
@@ -69,10 +47,54 @@
           {
             "type": "agent",
             "if": "Write(.ai/reference/critical-rules.md)|Edit(.ai/reference/critical-rules.md)|Write(.ai/reference/task-execution.md)|Edit(.ai/reference/task-execution.md)|Write(.ai/agents/**)|Edit(.ai/agents/**)|Write(CLAUDE.md)|Edit(CLAUDE.md)",
-            "prompt": "A file that DEEPSEEK.md depends on was just changed. Read the changed file(s) and compare against DEEPSEEK.md to determine if it needs updating. DEEPSEEK.md is a flattened, self-contained version of CLAUDE.md + critical-rules.md + task-execution.md optimized for DeepSeek models (flatter structure, fewer cross-references, inline critical rules). Key rules for DEEPSEEK.md: (1) It must stay self-contained — inline the most important rules rather than referencing them. (2) It should be ~180-220 lines. (3) The subagent delegation table must match .ai/agents/. (4) The critical coding rules section must reflect the current critical-rules.md. (5) The task execution protocol must reflect task-execution.md. (6) It must remain a flat, direct instruction set — DeepSeek struggles with deeply nested cross-references. If DEEPSEEK.md is already accurate, do nothing. If changes are needed, edit it. Do NOT commit.",
+            "prompt": "A file that DEEPSEEK.md depends on was just changed. Read the changed file(s) and compare against DEEPSEEK.md to determine if it needs updating. DEEPSEEK.md is a flattened, self-contained version of CLAUDE.md + critical-rules.md + task-execution.md optimized for DeepSeek models (flatter structure, fewer cross-references, inline critical rules). Key rules for DEEPSEEK.md: (1) It must stay self-contained \u2014 inline the most important rules rather than referencing them. (2) It should be ~180-220 lines. (3) The subagent delegation table must match .ai/agents/. (4) The critical coding rules section must reflect the current critical-rules.md. (5) The task execution protocol must reflect task-execution.md. (6) It must remain a flat, direct instruction set \u2014 DeepSeek struggles with deeply nested cross-references. If DEEPSEEK.md is already accurate, do nothing. If changes are needed, edit it. Do NOT commit.",
             "timeout": 120,
             "statusMessage": "Syncing DEEPSEEK.md with .ai/ changes...",
             "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(**/*.cs)|Edit(**/*.cs)|Write(**/*.csproj)|Edit(**/*.csproj)|Write(**/*.xaml)|Edit(**/*.xaml)|Write(**/*.razor)|Edit(**/*.razor)|Write(**/*.slnx)|Edit(**/*.slnx)",
+            "command": "if ls *.sln *.slnx 2>/dev/null | grep -q .; then dotnet build --nologo --verbosity minimal; fi",
+            "statusMessage": "Building solution..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(.ai/skills/**/*)|Edit(.ai/skills/**/*)",
+            "command": "python .ai/scripts/sync-skills.py",
+            "statusMessage": "Syncing skills to Claude Code, GitHub Copilot, and Reasonix..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(.ai/agents/**/*)|Edit(.ai/agents/**/*)",
+            "command": "python .ai/scripts/sync-agents.py",
+            "statusMessage": "Syncing agents to Claude Code, GitHub Copilot, and Reasonix..."
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .ai/scripts/sync-skills.py",
+            "statusMessage": "Ensuring skill/agent junctions exist..."
           }
         ]
       }

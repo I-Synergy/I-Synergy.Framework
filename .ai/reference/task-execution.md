@@ -83,37 +83,32 @@ Which approach should I take?
 
 ## Progress Tracking: Local Files Only
 
-**Do NOT use built-in task tracking tools** — some assistants store task data globally, outside the repository. Always use local `.ai/progress/` markdown files for tracking task progress. Plans are already configured to write locally via `plansDirectory` in the assistant's settings file.
+**Do NOT use the built-in `TaskCreate`/`TaskUpdate`/`TaskList` tools** — they store data globally in `~/.claude/todos/` and are not visible in the repository. Instead, always use local `.ai/progress/` markdown files for tracking task progress. Plans are already configured to write locally via `plansDirectory` in `.claude/settings.json`.
 
-## Subagent Delegation
+## Subagent Template
 
-**Code changes must be delegated.** Never write or edit code files directly in the main conversation. All code implementation, edits, and file creation must be done by a dedicated subagent (flash model for execution, pro model for reasoning). Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
+**Code changes must be delegated.** Never use Edit or Write directly in the main conversation. All code implementation, edits, and file creation must be done by the `programmer` sub-agent (Haiku model). Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
 
-**Which agent to use** (from the agent table in the root instruction file):
+**Valid `subagent_type` values** (skill names like `dotnet-engineer` are NOT valid agent types):
 
-| Task | Agent | Model |
-|-|-|-|
-| Architecture & design decisions | `architect` | deepseek-v4-pro |
-| .NET/C# implementation | `developer` | deepseek-v4-flash |
-| Unit/integration tests | `tester` | deepseek-v4-pro |
-| E2E/UI tests | `ui-tester` | deepseek-v4-flash |
-| UI components & styling | `ui-developer` | deepseek-v4-flash |
-| Code review | `reviewer` | deepseek-v4-pro |
-| Documentation | `writer` | deepseek-v4-flash |
-| Visual design | `designer` | deepseek-v4-pro |
-| Generic codebase exploration | `explore` | deepseek-v4-flash |
+| Use case | `subagent_type` |
+|-|-|
+| Code implementation, CQRS, tests | `programmer` |
+| File/codebase exploration | `Explore` |
+| Implementation planning | `Plan` |
+| Shell commands, git, build | `Bash` |
 
-When delegating to a subagent, always include in the task prompt:
+When delegating to a subagent via the Agent tool, always include in the task prompt:
 
 ```
 Progress file: .ai/progress/{task-slug}.md
-After completing each step, use Edit to mark it done:
+After completing each step, use the Edit tool to mark it done:
   old: "- [ ] {step description}"
   new: "- [x] {step description}"
 Do NOT use Write on the progress file — only Edit individual lines.
 ```
 
-Subagents do not inherit the root instruction file. All progress instructions must be explicit in the task prompt.
+Subagents do not inherit this CLAUDE.md. All progress instructions must be explicit in the task prompt.
 
 ## Task Definition Template
 
