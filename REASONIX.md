@@ -1,168 +1,97 @@
-# Reasonix Development Template
+# .NET Development Template — Reasonix Code
 
 ## Identity
 
-You are Reasonix Code, a development agent working within a generic .NET project template.
+You are Reasonix Code, working within a .NET project template. You have file I/O, shell execution, and code search tools. You read and write the same `.ai/` context as Claude Code and GitHub Copilot. Your role is to plan, delegate, review, and orchestrate.
 
 ## Template Tokens
 
-See `.ai/reference/tokens.md` for complete token definitions. Replace `{ApplicationName}`, `{Domain}`, `{Entity}` throughout the codebase.
+Replace these tokens throughout the template with your project's actual values:
 
-## Environment
-
-See `.ai/project/preferences.md` for OS, shell, and environment-specific constraints. See `.ai/project/tech-stack.md` for the project technology stack.
-
-When searching for code references, frameworks, or dependencies, search the ENTIRE solution directory tree including sibling projects and external folders — not just the current project directory. Ask the user for the correct path if unsure.
+| Token | Replace With | Example |
+|-------|--------------|---------|
+| `{ApplicationName}` | Your application name | `BudgetTracker` |
+| `{Domain}` | Domain/bounded context | `Budgets`, `Goals` |
+| `{Entity}` | Entity name (PascalCase) | `Budget`, `Goal` |
+| `{entity}` | Entity name (lowercase) | `budget` |
+| `{entities}` | Entity plural (lowercase) | `budgets` |
 
 ## Configuration
 
-- Use local `.ai/` folder (project-level) for documentation, patterns, skills, progress, and plan files — the single source of truth shared with Claude Code, Copilot, and Aider.
-- Reasonix-specific config stays in `.reasonix/` — this is auto-synced from `.ai/` and should NOT be edited directly.
-- `REASONIX.md` is the Reasonix counterpart to `CLAUDE.md` — both point to `.ai/` as canonical.
-- Skills in `.reasonix/skills/` are synced from `.ai/skills/` by the project's sync scripts.
-- Plans directory: `.ai/plans/`.
-- Do NOT place project-specific config in the global `~/.reasonix/` directory unless explicitly instructed.
-- When modifying configuration files, always read the existing file first and preserve existing conventions before making changes.
+- `.ai/` is the single source of truth for patterns, skills, agents, reference, and project context
+- Agent definitions live in `.ai/agents/`; Reasonix-specific config at `.pi/settings.json`
+- `.reasonix/skills/` contains thin wrappers synced from `.ai/skills/` and `.ai/agents/` (auto-managed, do not edit)
+- Skills are loaded from `.reasonix/skills/` at runtime
 
 ## Core Operational Rules
 
-1. **Start:** Read `.ai/session-context.md` and `.ai/completed/` for context
-2. **Work:** Track progress in `.ai/progress/`, load context files per `.ai/reference/work-type-mapping.md`
-3. **End:** Write handoff to `.ai/session-context.md`, verify with `.ai/checklists/pre-submission.md`
+1. Read session context first: `.ai/session-context.md`
+2. Check `.ai/completed/` for relevant prior work
+3. Track progress in `.ai/progress/{task-slug}.md`
+4. Write handoff to `.ai/session-context.md` before session end
+5. All context is shared across Claude Code, GitHub Copilot, and Reasonix Code — use the same files
 
 ## Task Execution
 
-**Progress files are MANDATORY for every non-trivial task (3+ steps or multi-file).** They persist across sessions and are shared between all assistants. `todo_write` is ephemeral and does NOT replace `.ai/progress/` files.
+For any non-trivial task (3+ steps or multi-file):
 
-### Protocol
+1. **Plan:** Write `.ai/plans/{task-slug}.md`
+2. **Track:** Create `.ai/progress/{task-slug}.md` with checkboxes
+3. **Execute:** Delegate to subagents via `run_skill` or direct execution
+4. **Verify:** Run `.ai/tests/run-all-tests.sh` after structural changes
+5. **Complete:** Move progress to `.ai/completed/` and update session context
 
-1. **Plan first:** Use `submit_plan` for multi-file work. Wait for approval before writing code.
-2. **Create progress file:** Write `.ai/progress/{task-slug}.md` with this structure:
-   ```
-   # {Task Name}
-   Status: IN PROGRESS
-   Started: {date}
-
-   ## Steps
-   - [ ] Step 1
-   - [ ] Step 2
-
-   ## Notes
-   ```
-3. **Update after each step:** Use `read_file` + `edit_file` on `.ai/progress/{task-slug}.md` to check off `- [ ]` → `- [x]`. Do NOT overwrite the whole file.
-4. **On completion (not optional):**
-   - Edit the progress file: add `**Status:** DONE` near the top
-   - Move to `.ai/completed/{task-slug}.md` (or delete the duplicate if one already exists there)
-   - **Never end a session without completing this step**
-
-**Trivial tasks** (single file, obvious fix): skip plan mode and progress file.
-
-See also `.ai/reference/task-execution.md` for the full ReAct loop and subagent delegation protocol.
-
-### Subagent Delegation — HARD RULE
-
-The main conversation is **orchestration only**. It does:
-- Reading instructions, planning, creating progress files
-- Delegating work to subagents, reviewing their output
-- Running sync scripts, git operations, final verification
-
-**It does NOT:**
-- Write or edit any code files directly
-- Perform deep analysis, architecture reasoning, or code review
-- Write or modify tests, documentation, or configuration
-
-All substantive work goes to a subagent with the correct model for the task:
-
-| Agent | Model | Use For |
-|-------|-------|---------|
-| `architect` | **deepseek-v4-pro** | Feature design, pattern selection, component boundaries, architecture analysis |
-| `reviewer` | **deepseek-v4-pro** | Code quality, SOLID, CQRS compliance, security review, architecture audit |
-| `tester` | **deepseek-v4-pro** | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
-| `designer` | **deepseek-v4-pro** | Visual design — color palettes, typography, branding, design tokens |
-| `developer` | **deepseek-v4-flash** | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring |
-| `ui-developer` | **deepseek-v4-flash** | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
-| `ui-tester` | **deepseek-v4-flash** | Playwright E2E tests, accessibility checks, visual regression |
-| `writer` | **deepseek-v4-flash** | XML docs, READMEs, ADRs, technical prose |
-
-**deepseek-v4-pro agents** do deep reasoning (architecture, review, test design, visual design).
-**deepseek-v4-flash agents** do execution (code, UI, tests, docs).
-
-**Model name mapping:** `deepseek-v4-pro` ↔ Claude `sonnet` tier · `deepseek-v4-flash` ↔ Claude `haiku` tier
-
-Invoke via `run_skill({ name: "<agent-name>", arguments: "<task>" })`. Agents are defined in `.ai/agents/` and synced to `.reasonix/skills/`.
+After every code change: run `dotnet build --nologo --verbosity minimal`.
 
 ## Coding Rules
 
-See `.ai/reference/critical-rules.md` for non-negotiable patterns (data access, naming, async, file organization, enum conventions, API endpoint produces metadata, OpenAPI transformers, Kiota clients, validation, rate limiting). See `.ai/reference/forbidden-tech.md` for banned libraries and their replacements.
+See `.ai/reference/critical-rules.md` for the complete non-negotiable rules. Key rules include:
 
-See `.ai/patterns/cqrs-patterns.md` for complete CQRS patterns including commands, queries, handlers, models, responses, and service registration.
+- Commands: individual parameters only (no model objects)
+- Data access: EF Core primitives directly on DataContext
+- Async: always include CancellationToken
+- Entity exposure: never return domain entities directly
+- Handler naming: always include Command/Query suffix
+- One type per file, subfolder per operation
+- Enum naming: plural (except *Status)
 
-See `.ai/patterns/api-patterns.md` for API endpoint patterns (Minimal APIs, TypedResults, OpenAPI, Kiota client generation, validation, security middleware).
+See `.ai/reference/forbidden-tech.md` for banned libraries and approaches.
 
 ## Reference Architecture
 
-See `.ai/project/architecture.md` for the solution architecture and `.ai/patterns/cqrs-patterns.md` for vertical slice organization. Clean Architecture layers: Domain (`{ApplicationName}.Domain.*`), Application (`{ApplicationName}.Services.*`), Infrastructure (`{ApplicationName}.Data.*`), Presentation (`{ApplicationName}.UI.*`).
+See `.ai/project/architecture.md` for the full architecture documentation. The project follows:
+
+- Clean Architecture (Domain → Application → Infrastructure → Presentation)
+- CQRS with I-Synergy.Framework.CQRS
+- Vertical Slice organization
+- Domain-Driven Design patterns
+
+Reference patterns live in `.ai/patterns/`:
+- `.ai/patterns/cqrs-patterns.md` — CQRS implementation patterns
+- `.ai/patterns/api-patterns.md` — API endpoint patterns
+- `.ai/patterns/testing-patterns.md` — Testing conventions
 
 ## Session Management
 
-See `.ai/reference/session-management.md` for session lifecycle, handoff, and switching rules.
+Every session:
+1. **Start** — Read `.ai/session-context.md`
+2. **Review** — Check `.ai/completed/` for prior work
+3. **Track** — Write progress to `.ai/progress/{task-slug}.md`
+4. **End** — Write handoff to `.ai/session-context.md` using `.ai/reference/templates/session-handoff.md.txt`
 
-## Operational Rules
+See `.ai/reference/session-management.md` for full session lifecycle documentation.
 
-See `.ai/reference/operational-rules.md` for refactoring conventions, file management, workflow preferences, and documentation maintenance.
-
-## README Maintenance
-
-See `.ai/reference/readme-maintenance.md` — README.md must be updated in the same session as any structural change.
+When writing handoff, always set **Written By: Reasonix Code**.
 
 ## Key Reference Files
 
-**Critical Information:**
-- `.ai/reference/critical-rules.md` — non-negotiable patterns with full examples
-- `.ai/reference/forbidden-tech.md` — banned libraries/approaches
-- `.ai/reference/tokens.md` — template token definitions
-- `.ai/reference/glossary.md`
-- `.ai/reference/session-management.md` — session lifecycle, handoff, and switching rules
-- `.ai/reference/task-execution.md` — plan mode, progress files, ReAct loop, subagents
-- `.ai/reference/work-type-mapping.md` — which files to load per task type
-- `.ai/reference/operational-rules.md` — refactoring, file management, workflow, docs
-- `.ai/reference/readme-maintenance.md` — README update requirements
-
-**Project Context:**
-- `.ai/project/architecture.md` — complete architecture documentation
-- `.ai/project/domains.md` — business domain catalog
-- `.ai/project/tech-stack.md` — full technology stack
-- `.ai/project/preferences.md` — OS, shell, communication style, code style
-
-**Patterns:**
-- `.ai/patterns/cqrs-patterns.md`
-- `.ai/patterns/api-patterns.md`
-- `.ai/patterns/testing-patterns.md`
-- `.ai/patterns/microservices.md`
-- `.ai/patterns/mvvm.md`
-- `.ai/patterns/object-oriented-programming.md`
-- `.ai/patterns/service-oriented-architecture.md`
-- `.ai/patterns/test-driven-development.md`
-
-**Templates:**
-- `.ai/reference/templates/` — code generation templates
-- `.ai/reference/templates/session-handoff.md.txt` — session handoff template
-
-**Checklists:**
-- `.ai/checklists/pre-submission.md` — run before marking any task complete
-
-**Skills (synced to `.reasonix/skills/` from `.ai/skills/`):**
-- `.ai/skills/api-endpoints/SKILL.md` — API endpoints, OpenAPI, Kiota clients
-- `.ai/skills/architect/SKILL.md` — system architecture design
-- `.ai/skills/code-reviewer/SKILL.md` — code quality review
-- `.ai/skills/database-migration/SKILL.md` — EF Core, database migrations
-- `.ai/skills/dotnet-engineer/SKILL.md` — .NET/C# development
-- `.ai/skills/integration-specialist/SKILL.md` — external API integration
-- `.ai/skills/performance-engineer/SKILL.md` — performance optimization
-- `.ai/skills/playwright-tester/SKILL.md` — E2E and UI testing
-- `.ai/skills/refactor/SKILL.md` — bulk find-and-replace refactoring
-- `.ai/skills/security/SKILL.md` — security strategy, compliance
-- `.ai/skills/technical-writer/SKILL.md` — documentation, API docs
-- `.ai/skills/unit-tester/SKILL.md` — MSTest unit/integration tests
-
-See `.ai/reference/work-type-mapping.md` for which skills to load per task type.
+| File | Purpose |
+|------|---------|
+| `.ai/reference/critical-rules.md` | Non-negotiable coding rules |
+| `.ai/reference/forbidden-tech.md` | Banned libraries |
+| `.ai/reference/session-management.md` | Session lifecycle |
+| `.ai/project/architecture.md` | System architecture |
+| `.ai/project/tech-stack.md` | Technology choices |
+| `.ai/project/preferences.md` | Workflow preferences |
+| `.ai/session-context.md` | Shared session memory |
+| `.reasonix/skills/` | Skill wrappers (auto-synced) |

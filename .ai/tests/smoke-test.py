@@ -26,13 +26,18 @@ def _parse_frontmatter(text: str) -> dict:
         key, _, rest = line.partition(':')
         key = key.strip()
         value = rest.strip()
-        if value == '>':
+        if value in ('>', '>-', '|', '|-'):
             folded = []
             i += 1
             while i < len(lines) and (lines[i].startswith(' ') or lines[i].startswith('\t')):
                 folded.append(lines[i].strip())
                 i += 1
-            result[key] = ' '.join(folded)
+            if value.startswith('|'):
+                # Literal block: preserve newlines
+                result[key] = '\n'.join(folded)
+            else:
+                # Folded block: join with spaces
+                result[key] = ' '.join(folded)
         elif value.lower() == 'true':
             result[key] = True
             i += 1

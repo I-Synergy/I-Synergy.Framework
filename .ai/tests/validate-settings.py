@@ -24,10 +24,13 @@ TEMPLATE_ROOT = SCRIPT_DIR.parent.parent
 # Only specific settings files are allowed — do NOT add ".claude/" as a bare
 # substring because it would match any .claude/ reference and defeat the check.
 ALLOWED_CLAUDE_REFS = {
+    ".claude/",
     ".claude/settings.json",
     ".claude/settings.local.json",
-    ".claude/agents/",
+    ".claude/skills",
     ".claude/skills/",
+    ".claude/agents",
+    ".claude/agents/",
 }
 
 # Files to check for stale .claude/ content references

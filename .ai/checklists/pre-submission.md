@@ -126,3 +126,4 @@ Use this checklist before considering any task complete.
 - [ ] All files created/modified documented
 - [ ] Issues/blockers documented
 - [ ] On completion, moved to `.ai/completed/`
+- [ ] Run `python .ai/scripts/hygiene-lint.py` — no stale progress files, no duplicate slugs, no committed secrets

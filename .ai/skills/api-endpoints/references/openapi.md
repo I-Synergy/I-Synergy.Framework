@@ -142,3 +142,40 @@ builder.Services.AddOpenApi("v1", ...)  // Produces v1.json, not {ProjectName}.j
 // WRONG — Transformers not registered
 builder.Services.AddOpenApi();
 ```
+
+## Union Types: `[FromQuery] int` Emits `["integer","string"]`
+
+.NET 10 emits `[FromQuery] int` as the union `["integer","string"]` (a query value can be a number or its string form). Kiota has no `(type,format)` entry for a multi-type schema, so it silently falls back to `string` and emits a build warning.
+
+**Fix 1 — operation transformer that collapses the union.** Register it in the same `AddOpenApi()` call:
+
+```csharp
+options.AddOperationTransformer((operation, context, ct) =>
+{
+    foreach (var parameter in operation.Parameters)
+    {
+        var type = parameter.Schema.Type;
+        if (type.HasFlag(JsonSchemaType.String) &&
+            (type.HasFlag(JsonSchemaType.Integer) || type.HasFlag(JsonSchemaType.Number)))
+        {
+            parameter.Schema.Type = type & ~JsonSchemaType.String;
+        }
+    }
+    return Task.CompletedTask;
+});
+```
+
+**Fix 2 — schema transformer must read `JsonTypeInfo` too.** Use `context.JsonPropertyInfo?.PropertyType ?? context.JsonTypeInfo?.Type` (not just `JsonPropertyInfo`), otherwise parameter/component schemas come through as `{}` and get no type mapping:
+
+```csharp
+options.AddSchemaTransformer((schema, context, ct) =>
+{
+    var propertyType = context.JsonPropertyInfo?.PropertyType ?? context.JsonTypeInfo?.Type;
+    if (propertyType == null)
+        return Task.CompletedTask;
+    // ... existing type mapping ...
+    return Task.CompletedTask;
+});
+```
+
+Without both fixes: Kiota generates `[FromQuery] int` parameters as `string`, and component/parameter schemas lose their concrete types.

@@ -12,6 +12,14 @@ echo ""
 echo "Running comprehensive validation tests..."
 echo ""
 
+# Pre-step: ensure folder-level junctions/symlinks exist
+# (CI checkouts have real directories; this converts them)
+echo "--- Pre-step: Syncing platform junctions ---"
+python3 "$SCRIPT_DIR/../scripts/sync-skills.py" 2>&1
+echo ""
+echo "--- Validation tests follow ---"
+echo ""
+
 # Function to run a test and track results
 run_test() {
     local test_name="$1"
@@ -46,6 +54,7 @@ run_test "7. Settings & Structure" "python3 '$SCRIPT_DIR/validate-settings.py'"
 run_test "8. Copilot Integration" "python3 '$SCRIPT_DIR/validate-copilot.py'"
 run_test "9. Integration Smoke Tests" "python3 '$SCRIPT_DIR/smoke-test.py'"
 run_test "10. Reasonix Integration" "python3 '$SCRIPT_DIR/validate-reasonix.py'"
+run_test "11. Pi Integration" "python3 '$SCRIPT_DIR/validate-pi.py'"
 
 # Final Summary
 echo "========================================="

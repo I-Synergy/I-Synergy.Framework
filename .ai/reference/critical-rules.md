@@ -601,6 +601,58 @@ var app = builder.Build();
 app.Run();
 ```
 
+## 24. Enums: Explicit Values When Persisted or Serialized
+
+Any enum that is persisted to a database or serialized (JSON, protobuf, OpenAPI) MUST declare explicit `= 0, = 1, …` values, with a comment stating the values are persisted and must never be renumbered.
+
+```csharp
+// CORRECT — explicit values; stable across inserts
+public enum PaymentStatus
+{
+    Pending = 0,   // values are persisted, never renumber
+    Succeeded = 1,
+    Failed = 2,
+}
+
+// WRONG — implicit declaration order; inserting a member relabels every row
+public enum PaymentStatus
+{
+    Pending,       // 0
+    Succeeded,     // 1
+    Failed,        // 2
+    // Inserting "Refunded" above Failed turns Failed into 3 —
+    // every stored row flips its meaning
+}
+```
+
+Inserting a member in declaration order relabels every persisted row / flips every stored setting.
+
+## 25. Bound Breaking Package Ranges
+
+Pin known-incompatible transitive packages with an upper bound so the mismatch fails at restore instead of compile:
+
+```xml
+<!-- Directory.Packages.props — upper-bound the known-incompatible package -->
+<PackageVersion Include="Microsoft.OpenApi" Version="[2.11.0,3.0.0)" />
+```
+
+Without the bound, a newer transitive version is resolved and the build fails deep inside a consuming project with a version-mismatch error — hours of debugging instead of a restore-time failure.
+
+## 26. No Secrets in the Repo or Runbooks
+
+Never commit `.p8` private keys, keystore material, or service-account JSON. Reference pipeline secret variable names and put a placeholder in the doc:
+
+```yaml
+# CORRECT — secrets referenced by name
+env:
+  GOOGLE_PLAY_SA_JSON: $(GOOGLE_PLAY_SA_JSON)
+  APP_STORE_P8: $(APP_STORE_API_KEY_P8)
+
+# WRONG — never commit the actual key material
+env:
+  GOOGLE_PLAY_SA_JSON: '{ "type": "service_account", ... }'   # LEAK
+```
+
 ## Quick Violation Checklist
 
 Before submitting code, verify you haven't violated these:
@@ -632,3 +684,6 @@ Before submitting code, verify you haven't violated these:
 - [ ] Generated client source (`Api/`, `Models/`, `ApiClient.cs`, `kiota-lock.json`) is committed
 - [ ] POST/PUT routes use `.WithValidation<T>()` with Data Annotations on request models
 - [ ] Rate limiting configured (`AddRateLimiter` + `UseRateLimiter`) and `UseHttpsRedirection` called
+- [ ] Persisted/serialized enums declare explicit `= 0, = 1, …` values with a "never renumber" comment
+- [ ] Known-incompatible transitive packages are upper-bounded in `Directory.Packages.props`
+- [ ] No `.p8` keys, keystores, or service-account JSON in the repo or runbooks (reference secret variable names)

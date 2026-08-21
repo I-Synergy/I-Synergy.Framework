@@ -1,7 +1,7 @@
 ---
 name: playwright-tester
 description: Playwright E2E and UI testing specialist. Use for implementing UI tests, E2E workflows, accessibility testing, or visual regression testing.
-allowed-tools: ["Bash", "Read", "Write", "Edit", "Glob", "Grep"]
+allowed-tools: [Bash, Read, Write, Edit, Grep, Find, Ls]
 ---
 
 # Playwright Tester Skill
