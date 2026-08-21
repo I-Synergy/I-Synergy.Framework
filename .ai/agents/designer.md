@@ -2,7 +2,7 @@
 name: designer
 description: Visual/graphical design — color palettes, typography, spacing, branding, iconography, accessibility contrast, and visual hierarchy
 runAs: subagent
-model: anthropic/claude-sonnet-4
+model: haiku
 tools: read, write, edit, bash, grep, find, ls
 skills: css-theme-generator, blazor-theme-generator, xaml-theme-generator
 ---

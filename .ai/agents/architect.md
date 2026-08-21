@@ -2,7 +2,7 @@
 name: architect
 description: Solution architecture and system design — designs features, chooses patterns, defines component boundaries, and produces implementation blueprints
 runAs: subagent
-model: anthropic/claude-sonnet-4
+model: sonnet
 tools: read, write, edit, bash, grep, find, ls
 skills: architect
 ---

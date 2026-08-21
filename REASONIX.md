@@ -20,8 +20,8 @@ Replace these tokens throughout the template with your project's actual values:
 
 - `.ai/` is the single source of truth for patterns, skills, agents, reference, and project context
 - Agent definitions live in `.ai/agents/`; Reasonix-specific config at `.pi/settings.json`
-- `.reasonix/skills/` contains thin wrappers synced from `.ai/skills/` and `.ai/agents/` (auto-managed, do not edit)
-- Skills are loaded from `.reasonix/skills/` at runtime
+- `.reasonix/skills/` and `.reasonix/agents/` are folder-level junctions to `.ai/skills/` and `.ai/agents/` respectively (auto-managed by `sync-skills.py`, do not edit)
+- Skills are loaded from `.reasonix/skills/` at runtime; subagents from `.reasonix/agents/`
 
 ## Core Operational Rules
 

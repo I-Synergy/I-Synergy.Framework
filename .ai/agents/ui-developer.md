@@ -2,7 +2,7 @@
 name: ui-developer
 description: Frontend UI development — builds Blazor components, MAUI pages, layouts, CSS/styling, and UX patterns
 runAs: subagent
-model: anthropic/claude-sonnet-4
+model: haiku
 tools: read, write, edit, bash, grep, find, ls
 skills: blazor-specialist, maui-specialist, winui-specialist
 ---

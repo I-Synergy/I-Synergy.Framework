@@ -2,7 +2,7 @@
 name: ui-tester
 description: Playwright E2E testing specialist — writes UI tests, accessibility checks, visual regression tests
 runAs: subagent
-model: anthropic/claude-haiku-4-5
+model: haiku
 tools: read, write, edit, bash, grep, find, ls
 skills: playwright-tester
 ---

@@ -53,15 +53,21 @@ Audits project documentation against actual codebase conventions and enforces ha
 
 #### 3c. Multi-assistant sync integrity
    - `DEEPSEEK.md` (if exists) exists alongside `CLAUDE.md` and `REASONIX.md`
-   - `.claude/skills/` entries are thin wrappers (contain `!`cat .ai/skills/.../SKILL.md``)
-   - `.github/skills/` entries are full content copies (do NOT contain `!`cat ...``)
-   - `.reasonix/skills/` (if exists) skill-derived entries are thin wrappers (reference `.ai/skills/`)
-   - `.reasonix/skills/` agent-derived entries have `runAs: subagent` and reference `.ai/agents/`
-   - No stale dirs in `.reasonix/skills/` (all have an `.ai/` source)
+   - Sync is folder-level junctions (Windows) / symlinks (Unix) from `.ai/skills/` and `.ai/agents/` — there is no
+     per-target file content (no thin wrappers, no full copies). All platforms read the identical files through
+     the link; content drift between platforms is structurally impossible, so do not diff file contents across
+     `.claude/`, `.github/`, `.reasonix/`, `.pi/` — verify the *links* instead:
+   - `.claude/skills/`, `.github/skills/`, `.reasonix/skills/`, `.pi/skills/` are each a junction/symlink resolving to `.ai/skills/`
+   - `.claude/agents/`, `.github/agents/`, `.reasonix/agents/`, `.pi/agents/` are each a junction/symlink resolving to `.ai/agents/`
+   - `.pi/chains/` is a junction/symlink resolving to `.ai/chains/`
+   - Agent files reached via any of these junctions have `runAs: subagent` (check the `.ai/agents/` source directly — it's the same file)
+   - No broken junctions: every target above exists and is reachable (a missing or dangling link means `sync-skills.py` hasn't been run, not "drift")
+   - `.gitignore` excludes all 9 junction target dirs (`.claude/skills/`, `.claude/agents/`, `.github/skills/`, `.github/agents/`, `.reasonix/skills/`, `.reasonix/agents/`, `.pi/skills/`, `.pi/agents/`, `.pi/chains/`) so they're never accidentally committed as real directories
    - `.claude/settings.json` has `./.reasonix` in `additionalDirectories`
-   - `.claude/settings.json` sync hooks mention `.reasonix`
-   - `.claude/settings.json` has a DEEPSEEK.md sync hook triggering on `.ai/reference/critical-rules.md`, `.ai/reference/task-execution.md`, `.ai/agents/**`, and `CLAUDE.md`
-   - Sync scripts (`sync-skills.py`, `sync-agents.py`) push to `.reasonix/skills/`
+   - `.claude/settings.json` has a `SessionStart` hook running `python .ai/scripts/sync-skills.py` — this is what bootstraps a fresh clone, since git cannot track junctions (`core.symlinks=false` is common on Windows) and a clean checkout has none of the 9 target dirs until something creates them
+   - `.claude/settings.json` also has PostToolUse hooks that re-run `python .ai/scripts/sync-skills.py` / `sync-agents.py` on changes under `.ai/skills/**` and `.ai/agents/**` (self-heal on edit, not "sync content" — the link IS the content)
+   - Copilot/Reasonix/pi have no session-start hook of their own; README's "run once after cloning" manual step is required for those tools even though Claude Code self-heals
+   - `.claude/settings.json` has a DEEPSEEK.md sync hook triggering on `.ai/reference/critical-rules.md`, `.ai/reference/task-execution.md`, `.ai/agents/**`, and `CLAUDE.md` (currently absent — flag as **Missing**, not drift, since `DEEPSEEK.md` is hand-maintained and can go stale silently)
    - `.gitignore` includes `CLAUDE.md.deepseek-backup`
 
 #### 3d. Session management
@@ -115,8 +121,8 @@ Audits project documentation against actual codebase conventions and enforces ha
 | 4 | Model names are deepseek-v4-pro/flash | PASS/FAIL | ... |
 | 5 | Model mapping documented | PASS/FAIL | ... |
 | 6 | .claude/settings.json includes ./.reasonix | PASS/FAIL | ... |
-| 7 | .reasonix/skills/ thin wrappers | PASS/FAIL | ... |
-| 8 | .reasonix/skills/ agent skills runAs: subagent | PASS/FAIL | ... |
+| 7 | .reasonix/skills/, .reasonix/agents/ resolve as junctions | PASS/FAIL | ... |
+| 8 | .ai/agents/ files have runAs: subagent | PASS/FAIL | ... |
 | 9 | Session management is assistant-agnostic | PASS/FAIL | ... |
 | 10 | Handoff template includes all assistants | PASS/FAIL | ... |
 | ... | ... | ... | ... |

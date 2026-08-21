@@ -30,17 +30,6 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "if": "Write(.ai/skills/**)|Edit(.ai/skills/**)",
-            "command": "python3 .ai/scripts/sync-skills.py --from-hook",
-            "statusMessage": "Syncing skill to .claude/, .github/, and .reasonix/..."
-          }
-        ]
-      },
-      {
         "matcher": "Write|Edit",
         "hooks": [
           {
@@ -49,17 +38,6 @@
             "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* \u2192 Data & Persistence; Storage.* \u2192 Data & Persistence; KeyVault.* \u2192 Key Vault & Secrets; MessageBus.* \u2192 Communication & Messaging; Mail.* \u2192 Communication & Messaging; Monitoring.* / OpenTelemetry.* \u2192 Monitoring & Observability; UI.* \u2192 UI & Client Frameworks; AspNetCore.* \u2192 Web & API Development or Enterprise Features; CQRS / Core / Automations \u2192 Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm \u2192 Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
             "timeout": 120,
             "statusMessage": "Syncing README package tables..."
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "if": "Write(.ai/agents/**)|Edit(.ai/agents/**)",
-            "command": "python3 .ai/scripts/sync-agents.py --from-hook",
-            "statusMessage": "Syncing agent to .claude/, .github/, and .reasonix/skills/..."
           }
         ]
       },
@@ -106,6 +84,17 @@
             "if": "Write(.ai/agents/**/*)|Edit(.ai/agents/**/*)",
             "command": "python .ai/scripts/sync-agents.py",
             "statusMessage": "Syncing agents to Claude Code, GitHub Copilot, and Reasonix..."
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .ai/scripts/sync-skills.py",
+            "statusMessage": "Ensuring skill/agent junctions exist..."
           }
         ]
       }

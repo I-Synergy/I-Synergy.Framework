@@ -2,7 +2,7 @@
 name: tester
 description: Unit and integration test specialist — writes MSTest tests, Moq mocks, Reqnroll BDD scenarios
 runAs: subagent
-model: anthropic/claude-sonnet-4
+model: sonnet
 tools: read, write, edit, bash, grep, find, ls
 skills: unit-tester
 ---
