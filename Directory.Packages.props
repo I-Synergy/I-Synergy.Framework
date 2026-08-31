@@ -4,10 +4,10 @@
     <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="13.5.2" />
-    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.5.2" />
-    <PackageVersion Include="Aspire.Hosting.Maui" Version="13.5.2-preview.1.26421.6" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.2" />
+    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="13.5.3" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.5.3" />
+    <PackageVersion Include="Aspire.Hosting.Maui" Version="13.5.3-preview.1.26425.3" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.3" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.102.4" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.2" />
@@ -59,7 +59,7 @@
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.100" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.100" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.4.0" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
     <PackageVersion Include="Moq" Version="4.20.72" />
