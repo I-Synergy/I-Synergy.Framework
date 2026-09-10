@@ -13,6 +13,9 @@ internal class OpenTelemetryLogProcessor : BaseProcessor<LogRecord>
 {
     public override void OnEnd(LogRecord data)
     {
+        if (data is null)
+            return;
+
         // Convert log records to Sentry events
         if (data.LogLevel >= LogLevel.Error)
         {
