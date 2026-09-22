@@ -69,10 +69,10 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
     <PackageVersion Include="NuGet.Commands" Version="7.9.0" />
-    <PackageVersion Include="OpenTelemetry" Version="1.19.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.19.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.19.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.19.0" />
+    <PackageVersion Include="OpenTelemetry" Version="1.19.1" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.19.1" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.19.1" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.19.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.19.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.19.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.19.0" />
@@ -83,20 +83,20 @@
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.4" />
     <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.4" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry" Version="6.11.0" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.11.0" />
+    <PackageVersion Include="Sentry" Version="6.11.1" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.11.1" />
     <PackageVersion Include="SkiaSharp" Version="4.152.1" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="34.2.8" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="34.2.8" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.Licensing" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="34.2.9" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="34.2.9" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
   </ItemGroup>
 </Project>
