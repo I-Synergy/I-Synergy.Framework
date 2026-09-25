@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Sample.Components.Dialogs;
+using Sample.Components.Dialogs.Base;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -49,18 +50,28 @@ public class CommandDemoViewModel : ViewModel
         viewModel.SetSelectedItem(new Budget(), false);
         viewModel.Submitted += HandleDialog;
 
-        _ = await _dialogService.ShowDialogAsync<SampleDialog>(viewModel, new()
+        // v5: DialogParameters was replaced by DialogOptions. TrapFocus, PreventScroll, ShowDismiss
+        // and DialogType no longer exist; DialogType.Dialog maps to DialogAlignment.Default (the
+        // v5 default) and the dismiss (X) header action is present by default. The OK/Cancel
+        // primary/secondary actions are not configured here because SampleDialog renders its own
+        // footer through the FluentDialogBody.ActionTemplate slot.
+        _ = await _dialogService.ShowDialogAsync<SampleDialog>(options =>
         {
-            Title = "Open Sample Dialog",
-            Width = "600px", // Increased width for the wizard
-            Height = "auto", // Set appropriate height
-            TrapFocus = true,
-            Modal = true,
-            PreventScroll = true,
-            DialogType = DialogType.Dialog,
-            PrimaryAction = null, // Remove OK button
-            SecondaryAction = null, // Remove Cancel button
-            ShowDismiss = true, // Keep the X button for closing
+            options.Header.Title = "Open Sample Dialog";
+            options.Width = "600px"; // Increased width for the wizard
+
+            // v5: DialogOptions.Height is NOT a height lever for a centred dialog. It is written as an
+            // inline `height` on the <fluent-dialog> *host* element, whose box is 0x0 because the panel
+            // is a shadow-DOM <dialog part="dialog">. Measured on the live DOM: inline `auto`, no
+            // height at all, `fit-content` and a concrete `320px` all leave the panel at the full
+            // viewport height (900px). The panel is sized from site.css instead - see the
+            // "Dialog panel height" section there.
+            options.Modal = true;
+
+            // The dialog component's [Parameter] must be named exactly "Content".
+            options.Parameters.Add(
+                nameof(BaseModelDialog<Budget, SampleDialogViewModel>.Content),
+                viewModel);
         });
     }
 

@@ -166,5 +166,6 @@
     <Project Path="tests/ISynergy.Framework.UI.Tests/ISynergy.Framework.UI.Tests.csproj" Id="3bb92e9d-ffb1-4adc-9a85-7ac32bb6dec6" />
     <Project Path="tests/ISynergy.Framework.UI.WinUI.Tests/ISynergy.Framework.UI.WinUI.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.UI.WPF.Tests/ISynergy.Framework.UI.WPF.Tests.csproj" />
+    <Project Path="tests/Sample.Blazor.UI.Tests/Sample.Blazor.UI.Tests.csproj" />
   </Folder>
 </Solution>
