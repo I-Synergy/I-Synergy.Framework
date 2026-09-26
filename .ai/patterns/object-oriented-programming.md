@@ -1338,12 +1338,12 @@ public sealed record CreateBudgetCommand(
 
 public sealed record CreateBudgetResponse(Guid BudgetId);
 
-public sealed class CreateBudgetHandler : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
+public sealed class CreateBudgetCommandHandler : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
 {
     private readonly DataContext _dataContext;
-    private readonly ILogger<CreateBudgetHandler> _logger;
+    private readonly ILogger<CreateBudgetCommandHandler> _logger;
 
-    public CreateBudgetHandler(DataContext dataContext, ILogger<CreateBudgetHandler> logger)
+    public CreateBudgetCommandHandler(DataContext dataContext, ILogger<CreateBudgetCommandHandler> logger)
     {
         _dataContext = dataContext;
         _logger = logger;

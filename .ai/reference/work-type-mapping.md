@@ -7,11 +7,11 @@ Load these files based on task type:
 | .NET Development | `.ai/skills/dotnet-engineer/SKILL.md`, `.ai/patterns/object-oriented-programming.md` |
 | CQRS | `.ai/skills/dotnet-engineer/SKILL.md`, `.ai/patterns/cqrs-patterns.md`, `.ai/reference/critical-rules.md`, `.ai/reference/templates/command-handler.cs.txt`, `.ai/reference/templates/query-handler.cs.txt` |
 | API Endpoints | `.ai/skills/api-endpoints/SKILL.md`, `.ai/patterns/api-patterns.md`, `.ai/reference/templates/endpoint.cs.txt`, `.ai/reference/critical-rules.md` |
-| Unit Tests | `.ai/skills/unit-tester/SKILL.md`, `.ai/patterns/testing-patterns.md`, `.ai/patterns/test-driven-development.md`, `.ai/reference/templates/test-class.cs.txt`, `.ai/reference/templates/feature-file.feature.txt` |
-| UI/E2E Tests | `.ai/skills/playwright-tester/SKILL.md`, `.ai/patterns/testing-patterns.md` |
+| Unit Tests | `.ai/skills/unit-tester/SKILL.md`, `.ai/patterns/testing-patterns.md`, `.ai/patterns/test-driven-development.md`, `.ai/reference/traceability.md`, `.ai/reference/test-documentation.md`, `.ai/reference/templates/test-class.cs.txt`, `.ai/reference/templates/feature-file.feature.txt` |
+| UI/E2E Tests | `.ai/skills/playwright-tester/SKILL.md`, `.ai/patterns/testing-patterns.md`, `.ai/reference/traceability.md`, `.ai/reference/test-documentation.md` |
 | Integration | `.ai/skills/integration-specialist/SKILL.md`, `.ai/patterns/service-oriented-architecture.md` |
 | Architecture | `.ai/skills/architect/SKILL.md`, `.ai/project/architecture.md` |
-| Code Review | `.ai/skills/code-reviewer/SKILL.md`, `.ai/checklists/pre-submission.md` |
+| Code Review | `.ai/skills/code-reviewer/SKILL.md`, `.ai/reference/quality-model.md`, `.ai/checklists/pre-submission.md` |
 | Security | `.ai/skills/security/SKILL.md`, `.ai/skills/api-security/SKILL.md`, `.ai/skills/software-security/SKILL.md` |
 | Performance | `.ai/skills/performance-engineer/SKILL.md` |
 | Microservices | `.ai/patterns/microservices.md`, `.ai/skills/integration-specialist/SKILL.md` |
@@ -21,9 +21,10 @@ Load these files based on task type:
 | DevOps | `.ai/skills/devops-engineer/SKILL.md` |
 | Documentation | `.ai/skills/technical-writer/SKILL.md` |
 | Bulk Refactoring | `.ai/skills/refactor/SKILL.md` |
-| Design Interrogation | `.ai/skills/design-interrogation/SKILL.md` |
-| Solution Scaffolding | `.ai/skills/solution-generator/SKILL.md`, `.ai/skills/vertical-slices/SKILL.md` |
+| Design Interrogation | `.ai/skills/design-interrogation/SKILL.md`, `.ai/reference/quality-model.md` |
+| Solution Scaffolding | `.ai/skills/solution-generator/SKILL.md`, `.ai/skills/vertical-slices/SKILL.md`, `.ai/reference/traceability.md` |
 | Gap Validation | `.ai/skills/gap-review/SKILL.md` |
-| Domain Modeling | `.ai/skills/ubiquitous-language/SKILL.md`, `.ai/skills/usecase-specification/SKILL.md`, `.ai/skills/user-story/SKILL.md` |
+| Domain Modeling | `.ai/skills/ubiquitous-language/SKILL.md`, `.ai/skills/usecase-specification/SKILL.md`, `.ai/skills/user-story/SKILL.md`, `.ai/reference/traceability.md` |
 | Skill Creation | `.ai/skills/skill-creator/SKILL.md` |
 | Council | `.ai/reference/council.md`, `.ai/skills/council/SKILL.md` |
+| Standards Compatibility | `.ai/skills/verify-config/SKILL.md`, `.ai/reference/standards.md` |

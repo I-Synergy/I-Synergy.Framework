@@ -54,6 +54,10 @@ TEMPLATE_OWNED = [
     ".ai/reference/operational-rules.md",
     ".ai/reference/readme-maintenance.md",
     ".ai/reference/council.md",
+    ".ai/reference/quality-model.md",
+    ".ai/reference/standards.md",
+    ".ai/reference/test-documentation.md",
+    ".ai/reference/traceability.md",
     "CLAUDE.md",
     ".ai/checklists",
     ".ai/tests",
@@ -68,6 +72,7 @@ PROJECT_OWNED = [
     ".ai/completed",
     ".ai/plans",
     ".ai/analysis",
+    "COMPLIANCE.md",
     ".github/copilot-instructions.md",
     ".claude/settings.local.json",
 ]

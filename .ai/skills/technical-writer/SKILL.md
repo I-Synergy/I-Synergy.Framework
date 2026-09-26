@@ -88,9 +88,9 @@ public sealed record Create{Entity}Command(
 /// <summary>
 /// Handles the creation of a new {entity}.
 /// </summary>
-public sealed class Create{Entity}Handler(
+public sealed class Create{Entity}CommandHandler(
     DataContext dataContext,
-    ILogger<Create{Entity}Handler> logger
+    ILogger<Create{Entity}CommandHandler> logger
 ) : ICommandHandler<Create{Entity}Command, Create{Entity}Response>
 {
     /// <summary>
@@ -158,7 +158,7 @@ sequenceDiagram
 
     Client->>Endpoint: HTTP POST /budgets
     Endpoint->>Handler: CreateBudgetCommand
-    Handler->>DataContext: AddItemAsync()
+    Handler->>DataContext: Budgets.Add() + SaveChangesAsync()
     DataContext->>Database: INSERT
     Database-->>DataContext: Success
     DataContext-->>Handler: Budget Model

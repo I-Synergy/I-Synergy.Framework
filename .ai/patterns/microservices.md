@@ -605,14 +605,14 @@ public sealed record BudgetCreatedEvent
 
 **Publishing Events (using MassTransit):**
 ```csharp
-// File: {ApplicationName}.Services.Budget/Handlers/CreateBudgetHandler.cs
+// File: {ApplicationName}.Services.Budget/Handlers/CreateBudgetCommandHandler.cs
 
 using MassTransit;
 
-public sealed class CreateBudgetHandler(
+public sealed class CreateBudgetCommandHandler(
     DataContext dataContext,
     IPublishEndpoint publishEndpoint,
-    ILogger<CreateBudgetHandler> logger
+    ILogger<CreateBudgetCommandHandler> logger
 ) : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
 {
     public async Task<CreateBudgetResponse> HandleAsync(

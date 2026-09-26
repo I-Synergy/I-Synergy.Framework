@@ -42,6 +42,15 @@ python3 .ai/tests/validate-reasonix.py
 # Pi integration
 python3 .ai/tests/validate-pi.py
 
+# Traceability
+python3 .ai/tests/validate-traceability.py
+
+# Standards
+python3 .ai/tests/validate-standards.py
+
+# DeepSeek parity
+python3 .ai/tests/validate-deepseek-parity.py
+
 # Upgrade script (pytest only — not run by run-all-tests.sh)
 python3 .ai/tests/validate-upgrade-script.py
 ```
@@ -72,6 +81,9 @@ The runner computes its own totals — `run-all-tests.sh` is the list of record.
 | **Copilot** | copilot-instructions + `.github/skills/` junction |
 | **Reasonix** | REASONIX.md + `.reasonix/` junctions |
 | **Pi** | `.pi/` junctions + settings.json |
+| **Traceability** | Identifier chain: story → criterion → scenario → slice → test |
+| **Standards** | `.ai/reference/standards.md` + the generated compatibility surfaces |
+| **DeepSeek Parity** | Level-2 sections present in both `CLAUDE.md` and `DEEPSEEK.md` |
 | **Smoke** | Integration tests |
 | **Upgrade Script** | `upgrade-template.py` (pytest only) |
 

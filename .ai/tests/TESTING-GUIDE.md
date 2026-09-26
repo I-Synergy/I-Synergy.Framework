@@ -27,6 +27,9 @@ The pytest wrapper also runs `validate-upgrade-script.py`, which the bash runner
 | Integration Smoke Tests | `smoke-test.py` | Skills loadable, names and descriptions unique, patterns and templates present |
 | Reasonix Integration | `validate-reasonix.py` | REASONIX.md, `.reasonix/` junctions, settings, sync scripts |
 | Pi Integration | `validate-pi.py` | `.pi/` junctions (`skills`, `agents`, `chains`) and `settings.json` |
+| Traceability | `validate-traceability.py` | The identifier chain: story → criterion → scenario → slice → test |
+| Standards | `validate-standards.py` | `.ai/reference/standards.md` and the generated compatibility surfaces |
+| DeepSeek Parity | `validate-deepseek-parity.py` | Level-2 section parity between `CLAUDE.md` and `DEEPSEEK.md` |
 | Upgrade Script (pytest only) | `validate-upgrade-script.py` | `upgrade-template.py` classification and integration |
 
 No dated results snapshot is kept here — results change with every run.
@@ -72,6 +75,15 @@ python3 .ai/tests/validate-reasonix.py
 
 # Pi integration validation
 python3 .ai/tests/validate-pi.py
+
+# Traceability validation
+python3 .ai/tests/validate-traceability.py
+
+# Standards manifest validation
+python3 .ai/tests/validate-standards.py
+
+# DeepSeek parity validation
+python3 .ai/tests/validate-deepseek-parity.py
 
 # Upgrade script validation (pytest only — not run by run-all-tests.sh)
 python3 .ai/tests/validate-upgrade-script.py
@@ -226,10 +238,12 @@ The template includes a GitHub Actions workflow at `.github/workflows/validate-t
 The workflow:
 1. Checks out code
 2. Sets up Python 3.11
-3. Installs PyYAML
+3. Installs PyYAML and pytest
 4. Makes scripts executable
 5. Runs every suite listed in `run-all-tests.sh`
-6. Uploads test results (if any logs generated)
+6. Runs the pytest wrapper (`python3 -m pytest .ai/tests/test_suite.py -q`), which also covers
+   `validate-upgrade-script.py`
+7. Uploads test results (if any logs generated)
 
 ## Exit Codes
 

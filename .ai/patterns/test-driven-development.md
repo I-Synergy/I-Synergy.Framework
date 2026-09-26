@@ -24,18 +24,18 @@ graph LR
 Write a test for the next bit of functionality you want to add. The test should fail because the functionality doesn't exist yet.
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/CreateBudgetHandlerTests.cs
+// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/CreateBudgetCommandHandlerTests.cs
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
-public sealed class CreateBudgetHandlerTests
+public sealed class CreateBudgetCommandHandlerTests
 {
     [TestMethod]
     public async Task HandleAsync_ValidCommand_CreatesBudget()
     {
-        // This test will FAIL because CreateBudgetHandler doesn't exist yet
-        var handler = new CreateBudgetHandler();
+        // This test will FAIL because CreateBudgetCommandHandler doesn't exist yet
+        var handler = new CreateBudgetCommandHandler();
         var command = new CreateBudgetCommand("Test Budget", 1000m, DateTimeOffset.UtcNow);
 
         var result = await handler.HandleAsync(command);
@@ -45,7 +45,7 @@ public sealed class CreateBudgetHandlerTests
     }
 }
 
-// ❌ RED: Test fails - CreateBudgetHandler doesn't exist
+// ❌ RED: Test fails - CreateBudgetCommandHandler doesn't exist
 ```
 
 ### 2. GREEN - Make the Test Pass
@@ -63,9 +63,9 @@ public sealed record CreateBudgetCommand(
 
 public sealed record CreateBudgetResponse(Guid BudgetId);
 
-// File: {ApplicationName}.Domain.{Domain}/Features/Budget/Commands/CreateBudgetHandler.cs
+// File: {ApplicationName}.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommandHandler.cs
 
-public sealed class CreateBudgetHandler : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
+public sealed class CreateBudgetCommandHandler : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
 {
     public async Task<CreateBudgetResponse> HandleAsync(
         CreateBudgetCommand command,
@@ -85,11 +85,11 @@ public sealed class CreateBudgetHandler : ICommandHandler<CreateBudgetCommand, C
 Now that the test passes, refactor the code to improve its design without changing its behavior.
 
 ```csharp
-// File: {ApplicationName}.Domain.{Domain}/Features/Budget/Commands/CreateBudgetHandler.cs
+// File: {ApplicationName}.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommandHandler.cs
 
-public sealed class CreateBudgetHandler(
+public sealed class CreateBudgetCommandHandler(
     DataContext dataContext,
-    ILogger<CreateBudgetHandler> logger
+    ILogger<CreateBudgetCommandHandler> logger
 ) : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
 {
     public async Task<CreateBudgetResponse> HandleAsync(
@@ -230,8 +230,8 @@ public async Task HandleAsync_ValidCommand_CreatesBudget()
 {
     // ARRANGE - Set up test data and mocks
     var dataContextMock = new Mock<DataContext>();
-    var loggerMock = new Mock<ILogger<CreateBudgetHandler>>();
-    var handler = new CreateBudgetHandler(
+    var loggerMock = new Mock<ILogger<CreateBudgetCommandHandler>>();
+    var handler = new CreateBudgetCommandHandler(
         dataContextMock.Object,
         loggerMock.Object);
 
@@ -288,24 +288,24 @@ public async Task CreateBudget_WhenNameIsTooShort_ThenThrowsException()
 ### Unit Test Example with Mocking
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/UpdateBudgetHandlerTests.cs
+// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/UpdateBudgetCommandHandlerTests.cs
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 [TestClass]
-public sealed class UpdateBudgetHandlerTests
+public sealed class UpdateBudgetCommandHandlerTests
 {
     private Mock<DataContext> _dataContextMock;
-    private Mock<ILogger<UpdateBudgetHandler>> _loggerMock;
-    private UpdateBudgetHandler _handler;
+    private Mock<ILogger<UpdateBudgetCommandHandler>> _loggerMock;
+    private UpdateBudgetCommandHandler _handler;
 
     [TestInitialize]
     public void Setup()
     {
         _dataContextMock = new Mock<DataContext>();
-        _loggerMock = new Mock<ILogger<UpdateBudgetHandler>>();
-        _handler = new UpdateBudgetHandler(
+        _loggerMock = new Mock<ILogger<UpdateBudgetCommandHandler>>();
+        _handler = new UpdateBudgetCommandHandler(
             _dataContextMock.Object,
             _loggerMock.Object);
     }
@@ -912,7 +912,7 @@ reportgenerator -reports:coverage.opencover.xml -targetdir:coveragereport
 public async Task TestHandler()
 {
     // This test achieves 100% code coverage but doesn't verify anything meaningful
-    var handler = new CreateBudgetHandler(null, null);
+    var handler = new CreateBudgetCommandHandler(null, null);
     try
     {
         await handler.HandleAsync(null!);
@@ -931,8 +931,8 @@ public async Task HandleAsync_ValidCommand_CreatesBudgetWithCorrectProperties()
 {
     // Arrange
     var dataContextMock = new Mock<DataContext>();
-    var loggerMock = new Mock<ILogger<CreateBudgetHandler>>();
-    var handler = new CreateBudgetHandler(
+    var loggerMock = new Mock<ILogger<CreateBudgetCommandHandler>>();
+    var handler = new CreateBudgetCommandHandler(
         dataContextMock.Object,
         loggerMock.Object);
 
@@ -971,10 +971,10 @@ public async Task HandleAsync_EmptyName_ThrowsArgumentException()
 
 ```csharp
 [TestClass]
-public sealed class BudgetHandlerTests
+public sealed class CreateBudgetCommandHandlerTests
 {
     private Mock<DataContext> _dataContextMock;
-    private CreateBudgetHandler _handler;
+    private CreateBudgetCommandHandler _handler;
 
     // Runs once before all tests in the class
     [ClassInitialize]
@@ -988,7 +988,7 @@ public sealed class BudgetHandlerTests
     public void TestSetup()
     {
         _dataContextMock = new Mock<DataContext>();
-        _handler = new CreateBudgetHandler(_dataContextMock.Object, null!);
+        _handler = new CreateBudgetCommandHandler(_dataContextMock.Object, null!);
     }
 
     // Runs after each test
@@ -1254,10 +1254,10 @@ private static void ValidateCommand(CreateBudgetCommand command)
 ### Command Handler TDD Example
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/DeleteBudgetHandlerTests.cs
+// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/DeleteBudgetCommandHandlerTests.cs
 
 [TestClass]
-public sealed class DeleteBudgetHandlerTests
+public sealed class DeleteBudgetCommandHandlerTests
 {
     [TestMethod]
     public async Task HandleAsync_ExistingBudget_DeletesSuccessfully()
@@ -1265,8 +1265,8 @@ public sealed class DeleteBudgetHandlerTests
         // Arrange
         var budgetId = Guid.NewGuid();
         var dataContextMock = new Mock<DataContext>();
-        var loggerMock = new Mock<ILogger<DeleteBudgetHandler>>();
-        var handler = new DeleteBudgetHandler(
+        var loggerMock = new Mock<ILogger<DeleteBudgetCommandHandler>>();
+        var handler = new DeleteBudgetCommandHandler(
             dataContextMock.Object,
             loggerMock.Object);
 
@@ -1307,7 +1307,7 @@ public sealed class DeleteBudgetHandlerTests
             .Setup(x => x.Budgets)
             .Returns(budgetsMock.Object);
 
-        var handler = new DeleteBudgetHandler(dataContextMock.Object, null!);
+        var handler = new DeleteBudgetCommandHandler(dataContextMock.Object, null!);
         var command = new DeleteBudgetCommand(budgetId);
 
         await handler.HandleAsync(command);
@@ -1318,10 +1318,10 @@ public sealed class DeleteBudgetHandlerTests
 ### Query Handler TDD Example
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/GetBudgetListHandlerTests.cs
+// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/GetBudgetsListQueryHandlerTests.cs
 
 [TestClass]
-public sealed class GetBudgetListHandlerTests
+public sealed class GetBudgetsListQueryHandlerTests
 {
     [TestMethod]
     public async Task HandleAsync_WithPagination_ReturnsCorrectPage()
@@ -1334,8 +1334,8 @@ public sealed class GetBudgetListHandlerTests
             .Setup(x => x.Set<Budget>())
             .Returns(budgets.AsQueryable().BuildMockDbSet().Object);
 
-        var handler = new GetBudgetListHandler(dataContextMock.Object, null!);
-        var query = new GetBudgetListQuery(PageNumber: 2, PageSize: 10);
+        var handler = new GetBudgetsListQueryHandler(dataContextMock.Object, null!);
+        var query = new GetBudgetsListQuery(PageNumber: 2, PageSize: 10);
 
         // Act
         var result = await handler.HandleAsync(query);
@@ -1361,8 +1361,8 @@ public sealed class GetBudgetListHandlerTests
             .Setup(x => x.Set<Budget>())
             .Returns(budgets.AsQueryable().BuildMockDbSet().Object);
 
-        var handler = new GetBudgetListHandler(dataContextMock.Object, null!);
-        var query = new GetBudgetListQuery(SearchTerm: "2025");
+        var handler = new GetBudgetsListQueryHandler(dataContextMock.Object, null!);
+        var query = new GetBudgetsListQuery(SearchTerm: "2025");
 
         // Act
         var result = await handler.HandleAsync(query);
@@ -1435,7 +1435,7 @@ public async Task HandleAsync_ValidCommand_PersistsBudgetWithCorrectData()
 {
     // ✅ Testing WHAT it does - the observable behavior
     var dataContextMock = new Mock<DataContext>();
-    var handler = new CreateBudgetHandler(dataContextMock.Object, null!);
+    var handler = new CreateBudgetCommandHandler(dataContextMock.Object, null!);
     var command = new CreateBudgetCommand("Test Budget", 1000m, DateTimeOffset.UtcNow);
 
     await handler.HandleAsync(command);
@@ -1453,8 +1453,8 @@ public async Task HandleAsync_ValidCommand_PersistsBudgetWithCorrectData()
 public async Task HandleAsync_LogsSpecificMessage()
 {
     // ❌ Testing exact log message - very fragile
-    var loggerMock = new Mock<ILogger<CreateBudgetHandler>>();
-    var handler = new CreateBudgetHandler(null!, loggerMock.Object);
+    var loggerMock = new Mock<ILogger<CreateBudgetCommandHandler>>();
+    var handler = new CreateBudgetCommandHandler(null!, loggerMock.Object);
 
     await handler.HandleAsync(new CreateBudgetCommand("Test", 1000m, DateTimeOffset.UtcNow));
 
@@ -1471,8 +1471,8 @@ public async Task HandleAsync_LogsSpecificMessage()
 public async Task HandleAsync_LogsInformationWhenCreatingBudget()
 {
     // ✅ Verify logging occurred, not exact message
-    var loggerMock = new Mock<ILogger<CreateBudgetHandler>>();
-    var handler = new CreateBudgetHandler(null!, loggerMock.Object);
+    var loggerMock = new Mock<ILogger<CreateBudgetCommandHandler>>();
+    var handler = new CreateBudgetCommandHandler(null!, loggerMock.Object);
 
     await handler.HandleAsync(new CreateBudgetCommand("Test", 1000m, DateTimeOffset.UtcNow));
 

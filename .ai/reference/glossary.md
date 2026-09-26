@@ -10,12 +10,12 @@
 | **DataContext** | Your EF Core `DbContext` subclass. The gateway to your database. | `public class DataContext : DbContext` |
 | **Command** | Write operation that changes state (Create, Update, Delete) | `CreateBudgetCommand` |
 | **Query** | Read operation that returns data without side effects | `GetBudgetByIdQuery` |
-| **Handler** | Class that executes a Command or Query | `CreateBudgetHandler` |
+| **Handler** | Class that executes a Command or Query | `CreateBudgetCommandHandler` |
 | **Aggregate** | Cluster of domain objects treated as a single unit | `Budget` with child `Goals` and `Debts` |
 | **Bounded Context** | Domain boundary with its own models and language | `Budgets`, `Goals`, `Authentication` |
 | **Value Object** | Immutable object defined by its attributes, not identity | `Money`, `Address`, `DateRange` |
 | **Domain Event** | Notification that something significant happened in the domain | `BudgetCreatedEvent` |
-| **Repository** | Abstraction over data access (NOTE: We don't use explicit repositories in this template) | N/A - Use DataContext extensions instead |
+| **Repository** | Abstraction over data access (NOTE: We don't use explicit repositories in this template) | N/A - Inject `DataContext` and use EF Core primitives on DbSet properties directly |
 
 ## Project Type Purposes
 

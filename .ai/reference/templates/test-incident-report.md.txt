@@ -1,0 +1,143 @@
+# Test Incident Report Template — ISO/IEC/IEEE 29119-3, 8.11 (Annex R)
+
+One report per failure — written when a test fails for a reason that is not fixed inside the same
+change. It goes to `docs/test-reports/incidents/{TIR-id}.md`, where the id is
+`TIR-{yyyy-mm-dd}-{NN}` (two-digit sequence per day; the directory is the registry, so no central
+allocation step is needed).
+
+The report exists so the failure is reproducible by someone who did not see it. If the steps in it
+cannot be followed by another person to the same result, the report is not finished.
+
+A project that tracks defects in an external system may record the tracker key in References instead
+of keeping this file — but the fields below are still what the record has to carry.
+
+```markdown
+# {TIR-id} — {one-line title naming the observed symptom}
+
+| Field | Value |
+|---|---|
+| Identifier | [{TIR-{yyyy-mm-dd}-{NN}}] |
+| Solution | `{ApplicationName}` |
+| Title / summary | [{what failed, in the words of the symptom — "CreateBudget returns 500 for a negative amount", not "validation bug"}] |
+| Date raised | [{yyyy-mm-dd}] |
+| Reporting organization | [{the project, team or release this repository belongs to}] |
+| Author, role | [{name}, {role}] |
+| Test object | [{the item under test — the slice, handler, endpoint or component}, at commit {sha}] |
+| Test environment | [{OS, .NET SDK version, database, browser and version for E2E, configuration that differs from default}] |
+| **Context** | |
+| Test case or activity | [{the test method or scenario that failed, and its `@AC-…` / `[TestCategory("AC-…")]` where it has one}] |
+| SDLC phase | [{unit / integration / system / acceptance — the level at which it was found}] |
+| Technique | [{how the failure was found: automated regression run, exploratory session, code review, performance run}] |
+| Checklist | [{the checklist in use, if any — e.g. `.ai/checklists/pre-submission.md`}] |
+| Test data | [{the exact data in play, including the values that matter to the failure}] |
+
+## Failure description
+
+[Steps someone else can follow to reach the same result. Number them; include the exact command
+where one exists.]
+
+1. [Step]
+2. [Step]
+3. [Step — the point at which the failure appears]
+
+**Evidence:** [log excerpt, stack trace, screenshot or video. Playwright: the trace and screenshot
+from the failed run. MSTest: the `.trx` path — `dotnet test --logger trx` writes it to
+`TestResults/`. Paste the failing assertion message rather than summarising it.]
+
+**Reproducibility:** [every run / intermittent (n of m attempts) / seen once. An intermittent
+failure says so here — it is not a reason to omit the report.]
+
+## Expected results
+
+[What should have happened, and where that is defined — the acceptance criterion, the blueprint, the
+API contract. An expectation with no source is a question, not an incident: say so.]
+
+## Actual results
+
+[What happened instead, observed, not inferred. Separate observation from diagnosis; the diagnosis
+goes in the description if it is confirmed, and nowhere if it is a guess.]
+
+| Field | Value |
+|---|---|
+| Severity | [{Blocker / Major / Minor}] |
+| Urgency / priority | [{when it must be fixed — and who set that}] |
+| Status | [{one of the eight values below}] |
+
+## Impact and scope
+
+[What the failure prevents or corrupts, and what else may be affected by the same cause — other
+slices sharing the handler, other callers of the endpoint, data already written. Keep it to what is
+known; label anything inferred as inferred.]
+
+## References
+
+| Reference | Value |
+|---|---|
+| Acceptance criterion | [{AC-{BC}-{NNN}.{n}}, where one is traced] |
+| Failing test | [{fully qualified test method or scenario name}] |
+| Run results | [{path to the `.trx`, or the CI job}] |
+| Commit | [{sha the failure was observed at}] |
+| Related incidents | [{TIR-id of a duplicate, a predecessor, or the fix that introduced it}] |
+| External tracker | [{key}, where the project tracks defects elsewhere] |
+
+## Status history
+
+| Date | Status | By | Note |
+|---|---|---|---|
+| {yyyy-mm-dd} | open | [{name}] | [raised] |
+| [yyyy-mm-dd] | [awaiting fix] | [{name}] | [confirmed against commit {sha}] |
+```
+
+## Severity
+
+Severity is one of the three levels defined in **`.ai/reference/quality-model.md`** — `Blocker`,
+`Major`, `Minor`. This template does not define a second severity vocabulary: a finding in a code
+review and a failure in a test are the same three words, defined once in that document.
+
+**Urgency is a separate axis** and is recorded separately. Severity is how bad the incident is;
+urgency is when it has to be fixed. A `Minor` incident on a demo path can be urgent; a `Major`
+incident on an unreleased feature can wait. Reporting both is what lets the two be triaged
+differently — collapsing them into one field loses the distinction the triage decision needs.
+
+## Status lifecycle
+
+An incident is in exactly one of these eight states. Use these values — the field is filled from a
+closed set, not free text:
+
+| Status | Means |
+|---|---|
+| `open` | Raised and not yet triaged or assigned |
+| `deferred` | Knowingly not being fixed now; the reason and the revisit point are recorded in the status history |
+| `duplicate` | The same failure as another incident; the References field names which |
+| `awaiting fix` | Triaged, assigned, and waiting on the change |
+| `awaiting confirmation testing` | A fix exists and is waiting on a re-run of the failing test |
+| `reopened` | Confirmation testing failed; the fix did not resolve it |
+| `closed` | The failing test passes and the fix is in the release under test |
+| `rejected` | Not a defect — the expectation was wrong, or the behaviour is intended. The reason is recorded, and any criterion that needs rewording is reworded rather than the incident being dropped |
+
+**An incident that is `deferred`, `reopened` or `rejected` and is not closed at release time belongs
+in the release's test completion report under Residual risks.** Closing an incident without the
+failing test passing is a status change that loses information, and the report is where it is caught.
+
+## Provenance of these fields
+
+The field list corresponds to Clause 8.11 of ISO/IEC/IEEE 29119-3:2021 (Annex R); the fields and
+the status lifecycle are as this template carries them — this template's own set, not a
+reproduction of the standard's.
+
+**The standard's internal detail for each field is not reproduced here** — over and above the field
+names, what the standard requires of each has not been copied into this repository. The prompts in
+the block above say what this repository can fill from its own artifacts: `.trx` output and
+Playwright traces for evidence, the traceability identifiers for the criterion reference, and
+`.ai/reference/quality-model.md` for the severity vocabulary.
+
+## Usage
+
+1. Copy the block to `docs/test-reports/incidents/{TIR-id}.md`. Create the directory on first use.
+2. Write it when the failure outlives the change. A failure fixed in the same edit needs no report —
+   the commit is its record and the passing test is its confirmation.
+3. Fill the environment and test data fields even when they look irrelevant: most incidents that
+   cannot be reproduced were missing exactly those two.
+4. Update the status by appending to the status history. Do not edit an earlier row — the history is
+   the point.
+5. A `closed` incident's failing test must pass in the release the report's completion report covers.

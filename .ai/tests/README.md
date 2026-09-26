@@ -200,6 +200,60 @@ Validates the Pi (claude-pi) integration.
 python3 .ai/tests/validate-pi.py
 ```
 
+### Traceability (`validate-traceability.py`)
+
+Validates the identifier chain that joins story and use-case documents to blueprints, feature files and test code.
+
+**What it checks:**
+- T1–T4 (failures) — duplicate `US-`/`UC-`/`AC-` identifiers, `@AC-…` scenario tags that resolve to no declared criterion, every identifier a blueprint's `source` names resolving — `use_cases` and `user_stories` as well as `acceptance_criteria`, with a `source` that names neither key failing as untraceable by construction — and `[TestCategory("AC-…")]` attributes that resolve
+- T5–T6 (advisories) — a declared criterion with no tagged scenario, and a declared criterion with no slice or no test-side reference
+- T7 (advisory) — a legacy or partly-labelled *story or use-case* document, reported once per document rather than once per entry; a context history, glossary or note beside them is out of scope
+- A padded child number (`AC-Budget-014.02`) resolves and is reported as an advisory — `{n}` is unpadded
+- Exit code `1` only when a reference is broken; advisory warnings do not change it
+
+This tree ships no `docs/` tree and no test sources, so the suite passes here by finding nothing to check.
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-traceability.py
+```
+
+### Standards (`validate-standards.py`)
+
+Validates `.ai/reference/standards.md` under the parsing contract that file documents, and checks that a generated compatibility surface makes no claim the manifest cannot back.
+
+**What it checks:**
+- The status table is selected by the `## Compatibility` heading and carries the eight exact headers
+- Every `Compatibility` cell holds one of `Evidence` / `Aligned` / `Organizational`, and every `Standard` key is unique
+- Every path claim resolves; `{…}` patterns name a file a project will produce and are never existence-checked
+- Every `Evidence` row's proving validator exits `0`, and the status computed from that run is the token the manifest carries
+- An `Evidence` row whose `Evidence a project produces` patterns match nothing the project produced is downgraded to `Aligned`, with a note naming what was not found — the patterns are globbed with `*` in place of each `{…}`, and only a tree holding a solution file (`*.sln` or `*.slnx`) is asked the question (manifest rule 9)
+- A generated surface (`COMPLIANCE.md`, or the marked block in `README.md`) agrees row for row, and the exit codes in its provenance line agree with a re-run
+- The `## Validators` table's declared status agrees with the file on disk (advisory)
+
+No solution file is present in this tree, so nothing is generated here, the evidence-pattern question is not asked, and the surface checks report a skip rather than a failure.
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-standards.py
+```
+
+### DeepSeek Parity (`validate-deepseek-parity.py`)
+
+Validates that `DEEPSEEK.md` carries the same level-2 section structure as `CLAUDE.md`. The PowerShell profile backs up `CLAUDE.md` and copies `DEEPSEEK.md` over it for the length of a DeepSeek session, so a section one file carries and the other does not is silently erased for that session.
+
+**What it checks:**
+- Every level-2 heading in `CLAUDE.md` is present in `DEEPSEEK.md`, and every level-2 heading in `DEEPSEEK.md` is present in `CLAUDE.md`
+- The core sections both files are built on are present in both, so a section lost from both files is still caught
+- Section order differing between the files is an advisory, not a failure
+- **Structural parity, not byte equality** — the two files differ on purpose in their title, identity sentence and model-tier paragraph, and during a profile swap the working tree's `CLAUDE.md` *is* `DEEPSEEK.md`
+- An absent file is a skip, not a defect: with no `CLAUDE.md` or no `DEEPSEEK.md` there is nothing to compare, and the suite exits `0`
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-deepseek-parity.py
+```
+
 ### Upgrade Script (`validate-upgrade-script.py`) — pytest only
 
 `run-all-tests.sh` does not run this suite; `test_suite.py` does, which makes pytest the fuller run.

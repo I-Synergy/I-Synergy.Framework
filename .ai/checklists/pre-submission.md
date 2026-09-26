@@ -81,6 +81,17 @@ If no trigger from *When to Convene* in `.ai/reference/council.md` fired, skip t
 - [ ] No secrets hard-coded
 - [ ] No internal implementation details leaked
 
+## Quality Characteristics
+
+Attribution vocabulary and severity taxonomy: `.ai/reference/quality-model.md` (ISO/IEC 25010:2023). The gate is that findings are attributed — not that every characteristic produced one.
+
+- [ ] Every review finding names one characteristic and one severity (`Blocker` / `Major` / `Minor`)
+- [ ] A change to a failure path (retry, idempotency, partial write, timeout, cancellation) was reviewed for **reliability**
+- [ ] A change to a human-facing surface (UI, API errors, validation messages) was reviewed for **interaction capability**
+- [ ] A change to a hosting, provider or configuration boundary was reviewed for **flexibility**
+- [ ] **Safety** was asked once and recorded — applicable, or explicitly not applicable
+- [ ] No finding was manufactured to fill a characteristic; a clean change reports none
+
 ## Testing
 
 - [ ] Unit tests for all handlers (MSTest)

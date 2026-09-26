@@ -1,0 +1,153 @@
+# COMPLIANCE.md Template — standards compatibility view
+
+The project-root `COMPLIANCE.md` that `verify-config` generates from
+`.ai/reference/standards.md`. It is the thorough surface: procurement and audit reviewers look for
+that filename, and a status matrix does not belong in a project's own README — which is why the
+README carries a short section pointing here instead.
+
+**The document is generated, and the status column is computed.** Every value under `Compatibility`
+is derived from a validator run and from whether the named artifacts exist; a hand-edited value is
+reverted by the next regeneration and fails `.ai/tests/validate-standards.py` before that. The
+generator copies every cell verbatim from the manifest except `Compatibility` and `Note` — it authors
+no prose about a standard, because a sentence it invents is a sentence no validator reads.
+
+**The opening statement is mandatory and is not to be softened.** It is the reason this document
+exists: a compatibility view that reads as a conformity claim is worse than no view at all, because
+it is a misrepresentation its author ships. The status column carries the three manifest tokens and
+nothing else — no abbreviation, no synonym, and no adjective asserting that this repository meets a
+standard.
+
+`{ApplicationName}` is the solution name; where no solution file names one, the repository directory
+name is used.
+
+````markdown
+# Standards Compatibility — {ApplicationName}
+
+<!-- standards-status: source=.ai/reference/standards.md generated={yyyy-mm-dd} revision={short commit or unknown} validators={filename}:{exit},… -->
+
+> **This document is not a certification, and nothing in it asserts conformity with any standard.**
+> It records which engineering artifacts this repository produces and how they relate to published
+> standards, and it computes each status from a validator run rather than asserting it. Certification
+> is issued by an accredited third-party body after auditing an organizational management system. It
+> cannot be established by a code repository, and the *Remains organizational* column names what
+> stays outside this repository's reach.
+
+## How To Read This Document
+
+| Value | Means |
+|---|---|
+| **Evidence** | This repository produces an artifact a certification auditor can sample directly — the path is named in the same row. |
+| **Aligned** | Engineering practice follows the standard's model, but no audit artifact is produced here. |
+| **Organizational** | Certifiable only at organization level; this repository supplies nothing for it. |
+
+- **The status column is computed, not written.** `verify-config` runs each row's proving validator
+  and derives the value from its exit code and from whether the artifacts exist. A status edited by
+  hand reverts at the next regeneration, and the checker fails on it.
+- **`Evidence` means the evidence chain resolves** — it does not mean the evidence is complete. A
+  criterion with no test yet leaves the chain resolving and is reported by the validator's own output
+  and in the release's test completion report, not here.
+- **A row marked `Aligned` with a note** is a row whose artifacts exist but whose validator did not
+  pass; the note says what failed. Read it as *not evidenced*, which is what it says.
+- **A `—` means none.** It is a stated absence, not an unanswered field.
+
+## Compatibility
+
+| # | Standard | Compatibility | What this repository provides to a project | Implementing artifact | Evidence a project produces | Proving validator | Remains organizational | Note |
+|---|---|---|---|---|---|---|---|---|
+| [n] | [copied verbatim] | [**computed**] | [copied verbatim] | [copied verbatim] | [copied verbatim] | [copied verbatim] | [copied verbatim] | [— or the downgrade reason] |
+
+## Validators
+
+| Validator | Command | Result at generation | Proves | Does not prove |
+|---|---|---|---|---|
+| [the validator's path] | [the command the run used] | [exit code and the date of the run] | [copied from the manifest's Validators section] | [copied from the manifest's Validators section] |
+
+## Roadmap — Wave 2 Targets (Not a Status)
+
+[Copied verbatim from the manifest's roadmap section. **These are targets, not values.** A target is
+a plan; nothing in this section is a claim about this repository, and no row here may be counted as
+evidence.]
+
+## Regenerating This Document
+
+Run `verify-config`. It computes the values from `.ai/reference/standards.md` and the validator runs,
+shows the proposed diff, and writes on approval. The short section in `README.md` between
+`<!-- BEGIN standards-status -->` and `<!-- END standards-status -->` is regenerated in the same
+pass and carries the same values.
+
+Do not edit the status column, the `Note` column or the provenance line by hand. Everything else in
+this document is prose from the template and can be extended by the project — but a project that
+edits a row's `Compatibility` cell directly is writing a claim no validator supports.
+
+## What This Document Is Not
+
+- **It is not a certification.** No accredited body has audited this repository, and none can certify
+  a repository: certification is issued against an organizational management system.
+- **It asserts no conformity with any standard**, at any level, including for the rows marked
+  `Evidence`.
+- **It is not the evidence.** Each row names where the evidence lives; this document is the index to
+  it, and an auditor samples the artifact, not the row.
+- **It is not a claim about an organization.** The *Remains organizational* column names what a
+  management system would have to hold; nothing here says any organization does or does not hold it.
+- **It does not cite any standard's conformance scheme.** Where a standard defines conformance levels
+  or per-item obligation levels, they are not repeated here, and every omission of an artifact is a
+  right-sizing decision of this project — not a statement that the standard permits it. The reasons,
+  item by item, are in `.ai/reference/test-documentation.md`.
+- **It does not measure or evaluate quality.** ISO/IEC 25023 (measurement) and ISO/IEC 25040
+  (evaluation) are out of scope and are named so that the absence is visible.
+- **It is generated from an engineering view of this repository.** It is not a legal, privacy or
+  contractual review, and it does not replace one.
+
+## Sources
+
+- `.ai/reference/standards.md` — the manifest this document is generated from; authoritative on
+  every value here.
+- `.ai/reference/traceability.md` — the identifier convention behind the generated test case
+  specification.
+- `.ai/reference/test-documentation.md` — which test-documentation items are produced, which are
+  omitted, and why.
+- `.ai/reference/quality-model.md` — the quality vocabulary and severity taxonomy.
+````
+
+## Provenance of these sections
+
+The fenced block above is the generated document; the prose in this `.txt` file — this section and
+`Usage` — is guidance for whoever implements or maintains the generator, and is not part of it.
+
+The section set is this template's own, chosen for the reader this document is aimed at — a
+procurement reviewer, an auditor, or a developer checking what a project can actually show. It is
+**not** a reproduction of any standard's outline, and no standard defines a document of this kind.
+
+- **How To Read This Document** exists because the three-value vocabulary is meaningless without its
+  definitions, and because the computed-not-authored mechanism has to be visible for a reader to
+  trust the column.
+- **Compatibility** mirrors `.ai/reference/standards.md` column for column, plus `Note`. The
+  one-to-one shape is deliberate: the checker resolves every claim here by position against the
+  manifest, so a column added here and not there — or reordered — breaks the check rather than
+  passing it quietly. One row per manifest row, in the manifest's order; two cells are computed
+  (`Compatibility` from the validator exit code and the artifacts' presence, `Note` from the same
+  run) and every other cell is copied verbatim, because a sentence this document invents about a
+  standard is a sentence no validator reads.
+- **Validators** carries one row per validator that actually ran, with the run's command and result.
+  A validator named in the manifest but not run is not given a row claiming a result it does not
+  have.
+- **Roadmap** is copied, not computed. A target value looks like a status and is not one, so it
+  carries its own heading and its own warning.
+- **What This Document Is Not** is the load-bearing section. It is the statement the document opens
+  with, expanded to the four or five misreadings a reader is most likely to make.
+
+## Usage
+
+1. `verify-config` writes this file to the project root. It does not exist in a fresh project and is
+   created on the first generation.
+2. `COMPLIANCE.md` is listed in the upgrade script's `PROJECT_OWNED` set: a template upgrade never
+   overwrites it, and a regeneration is an explicit, approved act.
+3. Regenerate after any change that moves a status — an artifact added or removed, a validator
+   result, or a manifest row. The provenance line records what the run saw, so a stale file is
+   visible rather than merely wrong.
+4. A project that edits the surrounding prose should keep the four fixed elements intact: the
+   opening statement, the provenance line, the `Compatibility` table's columns and their order, and
+   the three tokens.
+5. Every `{…}` and `[…]` placeholder is resolved before the file is written — `{ApplicationName}`
+   from the solution name, the rest from the manifest and the run. A placeholder left in a committed
+   `COMPLIANCE.md` is a generation bug, not an authoring choice.

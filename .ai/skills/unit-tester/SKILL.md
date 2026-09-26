@@ -96,12 +96,34 @@ Feature: {Entity} Management
 
 ## Templates to Use
 
-- `/d/Projects/Template/.ai/reference/templates/test-class.cs.txt`
-- `/d/Projects/Template/.ai/reference/templates/feature-file.feature.txt`
+- `.ai/reference/templates/test-class.cs.txt`
+- `.ai/reference/templates/feature-file.feature.txt`
+- `.ai/reference/templates/test-plan.md.txt`
+- `.ai/reference/templates/test-incident-report.md.txt`
 
 ## Patterns to Follow
 
-- `/d/Projects/Template/.ai/patterns/testing-patterns.md`
+- `.ai/patterns/testing-patterns.md`
+- `.ai/reference/traceability.md`
+- `.ai/reference/test-documentation.md`
+
+## Test Documentation
+
+The test artifacts this skill produces are mapped to ISO/IEC/IEEE 29119-3, right-sized, in
+`.ai/reference/test-documentation.md`. Three consequences:
+
+- **Test plan — one per vertical slice.** Written from
+  `docs/slices/{BC}/{Entity}.{Operation}/blueprint.json` to
+  `docs/slices/{BC}/{Entity}.{Operation}/test-plan.md`, using
+  `.ai/reference/templates/test-plan.md.txt`. Its entry and exit criteria are what the traceability
+  validator's checks T5/T6 measure against, so keep them concrete.
+- **Test case specification — do not write one.** The `AC-` ↔ scenario ↔ test mapping in
+  `.ai/reference/traceability.md` *is* that document. A second, hand-written copy is the one that
+  goes stale.
+- **Test incident report — one per failure that outlives the change**, using
+  `.ai/reference/templates/test-incident-report.md.txt`. A failure fixed in the same edit needs no
+  report. The completion report (Clause 7.4) is written per release, not per slice, and this skill's
+  run results feed it.
 
 ## Checklist Before Completion
 
@@ -113,3 +135,11 @@ Feature: {Entity} Management
 - [ ] BDD scenarios for complex workflows
 - [ ] All tests pass
 - [ ] Coverage meets 80%+ target
+- [ ] Test plan written for the slice from its blueprint, with entry and exit criteria
+      (`docs/slices/{BC}/{Entity}.{Operation}/test-plan.md`)
+- [ ] Every criterion in the slice's `source.acceptance_criteria` appears in that plan and is
+      referenced from a test — `validate-traceability.py` reports no unresolved reference and no
+      T5/T6 warning for it
+- [ ] No separate test case specification authored — the `AC-` ↔ scenario ↔ test trace is the document
+- [ ] Every failure that outlives the change has a test incident report with reproduce steps,
+      expected vs actual results, a severity from `.ai/reference/quality-model.md`, and a status
