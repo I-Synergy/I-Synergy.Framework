@@ -3,7 +3,7 @@ name: reviewer
 description: Code quality and architecture review specialist — reviews for SOLID principles, CQRS patterns, security issues, and architecture compliance
 runAs: subagent
 model: sonnet
-tools: read, grep, find, ls
+tools: Read, Grep, Glob
 skills: code-reviewer, security, gap-review
 completionGuard: false
 ---

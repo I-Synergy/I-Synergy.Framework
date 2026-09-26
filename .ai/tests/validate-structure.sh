@@ -86,6 +86,7 @@ echo ""
 # Check reference files
 echo "4. Checking reference files..."
 reference_files=(
+    "council.md"
     "critical-rules.md"
     "forbidden-tech.md"
     "glossary.md"

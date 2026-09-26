@@ -3,7 +3,7 @@ name: tester
 description: Unit and integration test specialist — writes MSTest tests, Moq mocks, Reqnroll BDD scenarios
 runAs: subagent
 model: sonnet
-tools: read, write, edit, bash, grep, find, ls
+tools: Read, Write, Edit, Bash, Grep, Glob
 skills: unit-tester
 ---
 

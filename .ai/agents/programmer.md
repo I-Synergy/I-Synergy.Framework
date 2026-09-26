@@ -1,6 +1,7 @@
 ---
 name: programmer
 description: Programming and code implementation — writes, edits, builds, and tests code
+runAs: subagent
 model: haiku
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---

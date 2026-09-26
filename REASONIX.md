@@ -41,6 +41,8 @@ For any non-trivial task (3+ steps or multi-file):
 4. **Verify:** Run `.ai/tests/run-all-tests.sh` after structural changes
 5. **Complete:** Move progress to `.ai/completed/` and update session context
 
+High-stakes decisions — when a trigger fires, see `.ai/reference/council.md` — go through a council: independent seat positions, chair synthesis on the merits, dissent recorded verbatim. The default is **not** to convene; routine work that applies an existing documented pattern does not.
+
 After every code change: run `dotnet build --nologo --verbosity minimal`.
 
 ## Coding Rules
@@ -88,6 +90,7 @@ When writing handoff, always set **Written By: Reasonix Code**.
 | File | Purpose |
 |------|---------|
 | `.ai/reference/critical-rules.md` | Non-negotiable coding rules |
+| `.ai/reference/council.md` | High-stakes decision process: triggers, seats, protocol, dissent |
 | `.ai/reference/forbidden-tech.md` | Banned libraries |
 | `.ai/reference/session-management.md` | Session lifecycle |
 | `.ai/project/architecture.md` | System architecture |

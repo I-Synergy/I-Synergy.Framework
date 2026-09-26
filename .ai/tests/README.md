@@ -4,33 +4,43 @@ This directory contains a comprehensive test suite for validating the Claude tem
 
 ## Quick Start
 
-Run all tests:
+Run every bash suite:
 
 ```bash
-.ai/tests/run-all-tests.sh
+bash .ai/tests/run-all-tests.sh
 ```
+
+`run-all-tests.sh` is the canonical list of suites, in run order — read it to see exactly what executes. Its pytest twin runs the same scripts as individual, clickable tests in VS Code's Test Explorer:
+
+```bash
+python -m pytest .ai/tests/test_suite.py -v
+```
+
+The pytest wrapper also runs `validate-upgrade-script.py`, which the bash runner skips.
 
 ## Test Suites
 
-### 1. Structure Validation (`validate-structure.sh`)
+Suites are listed below in the order `run-all-tests.sh` runs them.
+
+### Structure Validation (`validate-structure.sh`)
 
 Validates the directory structure and presence of all required files.
 
 **What it checks:**
 - Required directories exist (`.ai/skills`, `.ai/patterns`, etc.)
-- All 15 skill directories have `SKILL.md` files
-- All 8 pattern files exist
-- All reference files are present
+- Every directory in `.ai/skills/` has a `SKILL.md` file
+- All pattern files exist
+- Required reference files are present
 - Template files exist
-- Checklist files exist
-- Main documentation files (CLAUDE.md, README.md)
+- The checklist file exists
+- Main documentation files (`CLAUDE.md`, `README.md`, `.ai/session-context.md`)
 
 **Run individually:**
 ```bash
 bash .ai/tests/validate-structure.sh
 ```
 
-### 2. YAML Frontmatter Validation (`validate-skills.py`)
+### YAML Frontmatter Validation (`validate-skills.py`)
 
 Parses and validates YAML frontmatter in all skill files.
 
@@ -48,7 +58,7 @@ Parses and validates YAML frontmatter in all skill files.
 python3 .ai/tests/validate-skills.py
 ```
 
-### 3. Reference Validation (`validate-references.sh`)
+### Reference Validation (`validate-references.sh`)
 
 Validates file references and links throughout the documentation.
 
@@ -66,7 +76,7 @@ Validates file references and links throughout the documentation.
 bash .ai/tests/validate-references.sh
 ```
 
-### 4. Content Quality Validation (`validate-content.py`)
+### Content Quality Validation (`validate-content.py`)
 
 Validates content quality in skills and patterns.
 
@@ -82,7 +92,7 @@ Validates content quality in skills and patterns.
 python3 .ai/tests/validate-content.py
 ```
 
-### 5. Token Consistency Validation (`validate-tokens.sh`)
+### Token Consistency Validation (`validate-tokens.sh`)
 
 Validates template token usage and consistency.
 
@@ -98,7 +108,52 @@ Validates template token usage and consistency.
 bash .ai/tests/validate-tokens.sh
 ```
 
-### 6. Integration Smoke Tests (`smoke-test.py`)
+### CLAUDE.md References (`validate-claude-md.py`)
+
+Validates every `.ai/` path referenced from `CLAUDE.md`, and flags skills and patterns that exist on disk but are referenced by no task type.
+
+**What it checks:**
+- Skill references point at an existing `.ai/skills/{name}/SKILL.md`
+- Pattern and other file references resolve on disk
+- Orphaned skills and patterns (advisory warnings, not failures)
+- Skill references use the `.md` form
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-claude-md.py
+```
+
+### Settings & Structure (`validate-settings.py`)
+
+Validates Claude Code's configuration and the overall directory layout.
+
+**What it checks:**
+- `.claude/settings.json` parses and sets `plansDirectory`
+- `additionalDirectories` covers the `.ai/` subdirectories
+- No stale `.claude/` content references in tracked docs
+- `.ai/` directory structure is complete
+- `.claude/` holds config only — no AI content
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-settings.py
+```
+
+### Copilot Integration (`validate-copilot.py`)
+
+Validates the GitHub Copilot integration.
+
+**What it checks:**
+- `.github/copilot-instructions.md` exists and carries no stale `.claude/` references
+- `.github/skills/` is a folder-level junction into `.ai/skills/`
+- `.claude/skills/` is a folder-level junction into `.ai/skills/`
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-copilot.py
+```
+
+### Integration Smoke Tests (`smoke-test.py`)
 
 Integration tests that verify the template works as a whole.
 
@@ -114,6 +169,49 @@ Integration tests that verify the template works as a whole.
 **Run individually:**
 ```bash
 python3 .ai/tests/smoke-test.py
+```
+
+### Reasonix Integration (`validate-reasonix.py`)
+
+Validates the Reasonix Code integration.
+
+**What it checks:**
+- `REASONIX.md` exists and references paths that resolve
+- `.reasonix/skills/` and `.reasonix/agents/` are folder-level junctions into `.ai/`
+- `.claude/settings.json` includes Reasonix in permissions and hooks
+- The sync scripts create and repair the `.reasonix/` junctions
+- Session-management docs mention Reasonix
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-reasonix.py
+```
+
+### Pi Integration (`validate-pi.py`)
+
+Validates the Pi (claude-pi) integration.
+
+**What it checks:**
+- `.pi/skills/`, `.pi/agents/`, and `.pi/chains/` are folder-level junctions into `.ai/`
+- `.pi/settings.json` exists
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-pi.py
+```
+
+### Upgrade Script (`validate-upgrade-script.py`) — pytest only
+
+`run-all-tests.sh` does not run this suite; `test_suite.py` does, which makes pytest the fuller run.
+
+**What it checks:**
+- `PROJECT_OWNED` and `TEMPLATE_OWNED` cover the expected paths, and classification is correct
+- A dry run writes nothing; new template files are copied; project-owned files are never touched
+- Three-tier skill completeness (`.ai/skills/` through to `.claude/skills/` and `.github/skills/`)
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-upgrade-script.py
 ```
 
 ## Exit Codes
@@ -188,6 +286,8 @@ validate:
 
 ## Test Output Examples
 
+The runner counts suites at runtime, so the totals below are placeholders — this README does not restate them.
+
 ### Success
 
 ```
@@ -211,8 +311,8 @@ TEST: 1. Directory Structure
   VALIDATION SUITE SUMMARY
 =========================================
 
-Total test suites: 6
-Passed: 6
+Total test suites: <n>
+Passed: <n>
 Failed: 0
 
 ✅✅✅ ALL TESTS PASSED ✅✅✅
@@ -241,8 +341,8 @@ TEST: 2. YAML Frontmatter
   VALIDATION SUITE SUMMARY
 =========================================
 
-Total test suites: 6
-Passed: 5
+Total test suites: <n>
+Passed: <n>
 Failed: 1
 
 ❌❌❌ SOME TESTS FAILED ❌❌❌
@@ -258,14 +358,14 @@ To add a new test suite:
 1. Create a new test script in `.ai/tests/`
 2. Follow the naming convention: `validate-<feature>.sh` or `validate-<feature>.py`
 3. Ensure it returns exit code 0 on success, 1 on failure
-4. Add it to `run-all-tests.sh` with the `run_test` function
-5. Update this README with documentation
+4. Add it to `run-all-tests.sh` with the `run_test` function (and a pytest wrapper in `test_suite.py` if it should appear in Test Explorer)
+5. Document it here only when the script name doesn't tell the whole story — `run-all-tests.sh` is the list of record
 
 Example:
 
 ```bash
 # In run-all-tests.sh
-run_test "7. Custom Feature" "bash '$SCRIPT_DIR/validate-custom.sh'"
+run_test "Custom Feature" "bash '$SCRIPT_DIR/validate-custom.sh'"
 ```
 
 ## Troubleshooting

@@ -3,7 +3,7 @@ name: developer
 description: .NET/C# code implementation — writes CQRS handlers, API endpoints, Blazor components, EF Core data access. Use for all .NET code changes including refactoring, builds, and verification.
 runAs: subagent
 model: haiku
-tools: read, write, edit, bash, grep, find, ls
+tools: Read, Write, Edit, Bash, Grep, Glob
 skills: dotnet-engineer, api-endpoints, database-migration
 ---
 

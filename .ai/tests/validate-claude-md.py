@@ -215,7 +215,7 @@ def main():
         for skill_name in sorted(orphaned_skills):
             print(f"   - {skill_name}")
         print()
-        print("Consider adding them to the Work-Type Context Mapping section.")
+        print("Consider adding them to the Work-Type Context Mapping table in .ai/reference/work-type-mapping.md.")
     else:
         print("✅ No orphaned skills found - all task-type skills are referenced in CLAUDE.md")
         if UTILITY_SKILLS & existing_skill_names:
@@ -236,7 +236,7 @@ def main():
         for pattern in sorted(orphaned_patterns):
             print(f"   - {pattern}")
         print()
-        print("Consider adding them to the Work-Type Context Mapping section.")
+        print("Consider adding them to the Work-Type Context Mapping table in .ai/reference/work-type-mapping.md.")
     else:
         print("✅ No orphaned patterns found - all patterns are referenced in CLAUDE.md")
 

@@ -3,7 +3,7 @@ name: architect
 description: Solution architecture and system design — designs features, chooses patterns, defines component boundaries, and produces implementation blueprints
 runAs: subagent
 model: sonnet
-tools: read, write, edit, bash, grep, find, ls
+tools: Read, Write, Edit, Bash, Grep, Glob
 skills: architect
 ---
 

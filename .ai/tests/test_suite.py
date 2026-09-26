@@ -152,5 +152,4 @@ def test_reasonix_integration():
 # ---------------------------------------------------------------------------
 def test_pi_integration():
     code, output = _run_python("validate-pi.py")
-    assert code == 0, f"
-{output}"
+    assert code == 0, f"\n{output}"

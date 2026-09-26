@@ -18,7 +18,7 @@ label: Review implementation
 reads: {outputs.implementation}
 
 Review the implementation from the previous step. Check against:
-- .ai/reference/critical-rules.md (all 13 rules)
+- .ai/reference/critical-rules.md
 - .ai/patterns/cqrs-patterns.md
 - .ai/patterns/testing-patterns.md
 

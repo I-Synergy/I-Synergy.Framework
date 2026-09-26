@@ -3,7 +3,7 @@ name: writer
 description: Documentation specialist — writes XML documentation, API docs, README files, architecture decision records, and technical documentation
 runAs: subagent
 model: haiku
-tools: read, write, edit, bash, grep, find, ls
+tools: Read, Write, Edit, Bash, Grep, Glob
 skills: technical-writer
 ---
 

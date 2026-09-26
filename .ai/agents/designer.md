@@ -3,7 +3,7 @@ name: designer
 description: Visual/graphical design — color palettes, typography, spacing, branding, iconography, accessibility contrast, and visual hierarchy
 runAs: subagent
 model: haiku
-tools: read, write, edit, bash, grep, find, ls
+tools: Read, Write, Edit, Bash, Grep, Glob
 skills: css-theme-generator, blazor-theme-generator, xaml-theme-generator
 ---
 

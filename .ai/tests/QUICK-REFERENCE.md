@@ -3,7 +3,7 @@
 ## One Command Test
 
 ```bash
-.ai/tests/run-all-tests.sh
+bash .ai/tests/run-all-tests.sh
 ```
 
 ## Individual Tests
@@ -35,6 +35,15 @@ python3 .ai/tests/validate-copilot.py
 
 # Smoke Tests
 python3 .ai/tests/smoke-test.py
+
+# Reasonix integration
+python3 .ai/tests/validate-reasonix.py
+
+# Pi integration
+python3 .ai/tests/validate-pi.py
+
+# Upgrade script (pytest only — not run by run-all-tests.sh)
+python3 .ai/tests/validate-upgrade-script.py
 ```
 
 ## Expected Results
@@ -42,25 +51,29 @@ python3 .ai/tests/smoke-test.py
 ```
 ✅✅✅ ALL TESTS PASSED ✅✅✅
 
-Total test suites: 9
-Passed: 9
+Total test suites: <n>
+Passed: <n>
 Failed: 0
 ```
 
+The runner computes its own totals — `run-all-tests.sh` is the list of record.
+
 ## Test Coverage
 
-| Test | What It Checks | Count |
-|------|---------------|-------|
-| **Structure** | Directories + files exist | 49 |
-| **YAML** | Skill frontmatter valid | 17 |
-| **References** | File refs + links valid | 34 |
-| **Content** | Quality + examples | 23 |
-| **Tokens** | Token consistency | 19 |
-| **CLAUDE.md** | Skill/pattern paths in CLAUDE.md | 10+ |
-| **Settings** | settings.json + .ai/ layout + .claude/ config-only | 12+ |
-| **Copilot** | copilot-instructions + skills 3-tier sync | 8+ |
-| **Smoke** | Integration tests | 7 |
-| **TOTAL** | | **179+** |
+| Test | What It Checks |
+|------|---------------|
+| **Structure** | Directories + files exist, a `SKILL.md` per skill |
+| **YAML** | Skill frontmatter valid |
+| **References** | File refs + links valid |
+| **Content** | Quality + examples |
+| **Tokens** | Token definitions and usage |
+| **CLAUDE.md** | Skill/pattern paths in CLAUDE.md |
+| **Settings** | settings.json + `.ai/` layout + `.claude/` config-only |
+| **Copilot** | copilot-instructions + `.github/skills/` junction |
+| **Reasonix** | REASONIX.md + `.reasonix/` junctions |
+| **Pi** | `.pi/` junctions + settings.json |
+| **Smoke** | Integration tests |
+| **Upgrade Script** | `upgrade-template.py` (pytest only) |
 
 ## Quick Fixes
 
@@ -83,18 +96,15 @@ pip install pyyaml
 
 ## Files Validated
 
-- ✅ 17 skills (`.ai/skills/`)
-- ✅ 17 skill wrappers (`.claude/skills/`)
-- ✅ 17 skill copies (`.github/skills/`)
-- ✅ 8 patterns
-- ✅ 6 templates
-- ✅ 5 reference docs
-- ✅ 5 project files
-- ✅ 2 main docs (CLAUDE.md, README.md)
-- ✅ `.claude/settings.json`
-- ✅ `.github/copilot-instructions.md`
+Everything the suites discover on disk:
 
-**Total: 83+ files + 7 directories**
+- `.ai/skills/`, plus its `.claude/`, `.github/`, `.reasonix/`, and `.pi/` junctions
+- `.ai/patterns/`
+- `.ai/reference/` and `.ai/reference/templates/`
+- `.ai/project/`
+- `.ai/checklists/pre-submission.md`
+- `CLAUDE.md`, `README.md`, and `.ai/session-context.md`
+- `.claude/settings.json` and `.github/copilot-instructions.md`
 
 ## Success Criteria
 
@@ -106,7 +116,7 @@ All checks must pass:
 - [x] Tokens properly defined
 - [x] CLAUDE.md paths point to existing files
 - [x] settings.json paths correct, .claude/ is config-only
-- [x] Copilot skills in sync (.github/ = full copies, .claude/ = wrappers)
+- [x] Copilot, Reasonix, and Pi skills wired through junctions into `.ai/`
 - [x] Skills are loadable
 - [x] No duplicate names
 

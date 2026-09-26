@@ -47,9 +47,9 @@ Audits project documentation against actual codebase conventions and enforces ha
    - `CLAUDE.md` has a HARD RULE subagent delegation section naming what the main conversation may/may not do
    - `REASONIX.md` (if exists) has the same HARD RULE section
    - `DEEPSEEK.md` (if exists) has the same HARD RULE section
-   - Agent tables in all files include a Model column
-   - Model names use `deepseek-v4-pro`/`deepseek-v4-flash` (not sonnet/haiku)
-   - Model mapping line exists: `deepseek-v4-pro` ↔ sonnet · `deepseek-v4-flash` ↔ haiku
+   - Agent rosters in `CLAUDE.md`, `DEEPSEEK.md`, and `README.md` list every agent in `.ai/agents/` — no Model column; the tier lives in the agent's own frontmatter
+   - `model:` frontmatter in `.ai/agents/*.md` is always a tier alias (`sonnet` or `haiku`) — never a concrete model name
+   - Shared docs (`CLAUDE.md`, `REASONIX.md`, `DEEPSEEK.md`, `README.md`) hardcode no concrete DeepSeek model names — the per-slot mapping is defined only by `powershell/Microsoft.PowerShell_profile.ps1`
 
 #### 3c. Multi-assistant sync integrity
    - `DEEPSEEK.md` (if exists) exists alongside `CLAUDE.md` and `REASONIX.md`
@@ -77,7 +77,7 @@ Audits project documentation against actual codebase conventions and enforces ha
    - `.ai/session-context.md` has no stale `[Claude Code | GitHub Copilot]`-only references
 
 #### 3e. DEEPSEEK.md content integrity
-   - `DEEPSEEK.md` inlines the subagent delegation table (same 8 agent types as `CLAUDE.md`)
+   - `DEEPSEEK.md` inlines the subagent delegation table (the same agent types as `CLAUDE.md`)
    - `DEEPSEEK.md` inlines the most critical coding rules as direct content (not cross-references to `.ai/reference/critical-rules.md`)
    - `DEEPSEEK.md` inlines the task execution protocol (plan → progress file → complete cycle)
    - `DEEPSEEK.md` is self-contained — a DeepSeek model can follow it without resolving nested file references
@@ -117,9 +117,9 @@ Audits project documentation against actual codebase conventions and enforces ha
 |---|-------|--------|---------|
 | 1 | Progress files mandatory in CLAUDE.md | PASS/FAIL | ... |
 | 2 | Subagent delegation HARD RULE in REASONIX.md | PASS/FAIL | ... |
-| 3 | Agent table has Model column | PASS/FAIL | ... |
-| 4 | Model names are deepseek-v4-pro/flash | PASS/FAIL | ... |
-| 5 | Model mapping documented | PASS/FAIL | ... |
+| 3 | Agent rosters list every `.ai/agents/` agent (no Model column) | PASS/FAIL | ... |
+| 4 | Agent `model:` frontmatter uses tier aliases (`sonnet`/`haiku`) | PASS/FAIL | ... |
+| 5 | Shared docs hardcode no concrete model names | PASS/FAIL | ... |
 | 6 | .claude/settings.json includes ./.reasonix | PASS/FAIL | ... |
 | 7 | .reasonix/skills/, .reasonix/agents/ resolve as junctions | PASS/FAIL | ... |
 | 8 | .ai/agents/ files have runAs: subagent | PASS/FAIL | ... |
