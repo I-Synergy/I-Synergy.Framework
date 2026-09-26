@@ -220,9 +220,9 @@ app.MapDelete("/users/{id}", async (Guid id, ICommandHandler handler) =>
 ### 6. Unrestricted Access to Sensitive Business Flows
 ```csharp
 // ✅ CORRECT - Implement business logic checks
-public sealed class TransferFundsHandler(
+public sealed class TransferFundsCommandHandler(
     DataContext dataContext,
-    ILogger<TransferFundsHandler> logger
+    ILogger<TransferFundsCommandHandler> logger
 ) : ICommandHandler<TransferFundsCommand, TransferFundsResponse>
 {
     public async Task<TransferFundsResponse> HandleAsync(
@@ -230,8 +230,11 @@ public sealed class TransferFundsHandler(
         CancellationToken cancellationToken = default)
     {
         // Business rules
-        var sourceAccount = await dataContext.GetItemByIdAsync<Account, AccountModel, Guid>(
-            command.SourceAccountId, cancellationToken);
+        var sourceAccount = await dataContext.Accounts.FirstOrDefaultAsync(
+            account => account.AccountId == command.SourceAccountId, cancellationToken);
+
+        if (sourceAccount is null)
+            throw new AccountNotFoundException(command.SourceAccountId);
 
         if (sourceAccount.Balance < command.Amount)
             throw new InsufficientFundsException("Insufficient funds for transfer");
@@ -472,9 +475,9 @@ var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD")
 ## Audit Logging
 
 ```csharp
-public sealed class CreateBudgetHandler(
+public sealed class CreateBudgetCommandHandler(
     DataContext dataContext,
-    ILogger<CreateBudgetHandler> logger,
+    ILogger<CreateBudgetCommandHandler> logger,
     IHttpContextAccessor httpContextAccessor
 ) : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
 {

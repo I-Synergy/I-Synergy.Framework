@@ -38,7 +38,19 @@ Translates a completed architecture document into a .NET solution scaffold — p
 
 6. **Generate service registration** — `Extensions/ServiceCollectionExtensions.cs` per domain project
 
-7. **Generate test stubs** — one test class per handler, stubs traced to user story acceptance criteria
+7. **Generate test stubs** — one test class per handler, every stub traced to the acceptance
+   criterion it is evidence for:
+   - a `// Traces: US-{BC}-{NNN} / AC-{BC}-{NNN}.{n}, AC-{BC}-{NNN}.{m}` header line directly
+     below the `// File:` line
+   - exactly one `[TestCategory("AC-{BC}-{NNN}.{n}")]` per test method, with `[TestMethod]`
+     written first
+   - at least one test method per acceptance criterion the slice's `source` references — from
+     `source.acceptance_criteria`, or from the criteria of its `source.user_stories` when that
+     key is omitted; a criterion may have several methods
+   - the generated shape follows `.ai/reference/templates/test-class.cs.txt`; the identifier rules
+     are in `.ai/reference/traceability.md`
+   - a slice whose `source` is absent or unlabelled is in legacy mode — generate the stub without
+     an identifier rather than inventing one
 
 ## Solution Structure
 

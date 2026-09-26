@@ -86,11 +86,16 @@ echo ""
 # Check reference files
 echo "4. Checking reference files..."
 reference_files=(
+    "council.md"
     "critical-rules.md"
     "forbidden-tech.md"
     "glossary.md"
     "naming-conventions.md"
+    "quality-model.md"
+    "standards.md"
+    "test-documentation.md"
     "tokens.md"
+    "traceability.md"
 )
 
 for ref in "${reference_files[@]}"; do
@@ -146,6 +151,11 @@ template_files=(
     "endpoint.cs.txt"
     "test-class.cs.txt"
     "feature-file.feature.txt"
+    "test-plan.md.txt"
+    "test-completion-report.md.txt"
+    "test-incident-report.md.txt"
+    "compliance.md.txt"
+    "standards-section.md.txt"
 )
 
 for tmpl in "${template_files[@]}"; do

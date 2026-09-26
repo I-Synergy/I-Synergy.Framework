@@ -33,7 +33,7 @@ Specialized agent for .NET, C#, Blazor, and MAUI development.
    - Add OpenAPI documentation
 
 3. **Data Access**
-   - Use DataContext extension methods correctly
+   - Use EF Core primitives directly on named DbSet properties (`FirstOrDefaultAsync`, `Add`, `Remove`, `SaveChangesAsync`)
    - Write efficient LINQ queries
    - Prevent N+1 query problems
    - Implement proper async patterns
@@ -47,22 +47,22 @@ Specialized agent for .NET, C#, Blazor, and MAUI development.
 ## Key Rules to Enforce
 
 - Commands use individual parameters (NOT model objects)
-- Delete operations use `RemoveItemAsync<TEntity, TKey>()`
+- Delete operations use `FirstOrDefaultAsync` + null check + `Remove` + `SaveChangesAsync`, and check `rowsAffected > 0`
 - Queries use named parameters for optional filters
 - Never expose domain entities directly (always DTOs)
 - Always include `CancellationToken` in async methods
-- No repository interfaces (use DataContext extensions)
+- No repository interfaces or extension methods (use `DataContext` primitives directly)
 
 ## Templates to Use
 
-- `/d/Projects/Template/.ai/reference/templates/command-handler.cs.txt`
-- `/d/Projects/Template/.ai/reference/templates/query-handler.cs.txt`
-- `/d/Projects/Template/.ai/reference/templates/endpoint.cs.txt`
+- `.ai/reference/templates/command-handler.cs.txt`
+- `.ai/reference/templates/query-handler.cs.txt`
+- `.ai/reference/templates/endpoint.cs.txt`
 
 ## Patterns to Follow
 
-- `/d/Projects/Template/.ai/patterns/cqrs-patterns.md`
-- `/d/Projects/Template/.ai/patterns/api-patterns.md`
+- `.ai/patterns/cqrs-patterns.md`
+- `.ai/patterns/api-patterns.md`
 
 ## Checklist Before Completion
 

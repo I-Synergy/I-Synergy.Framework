@@ -33,7 +33,7 @@ Replace these tokens throughout the template with your project's actual values:
 
 ## Task Execution
 
-For any non-trivial task (3+ steps or multi-file):
+**Progress files are MANDATORY for every non-trivial task (3+ steps or multi-file).** Execute as follows:
 
 1. **Plan:** Write `.ai/plans/{task-slug}.md`
 2. **Track:** Create `.ai/progress/{task-slug}.md` with checkboxes
@@ -41,7 +41,33 @@ For any non-trivial task (3+ steps or multi-file):
 4. **Verify:** Run `.ai/tests/run-all-tests.sh` after structural changes
 5. **Complete:** Move progress to `.ai/completed/` and update session context
 
+High-stakes decisions — when a trigger fires, see `.ai/reference/council.md` — go through a council: independent seat positions, chair synthesis on the merits, dissent recorded verbatim. The default is **not** to convene; routine work that applies an existing documented pattern does not.
+
 After every code change: run `dotnet build --nologo --verbosity minimal`.
+
+## Subagent Delegation
+
+**HARD RULE:** The main conversation is orchestration only — it plans, reads, reviews output, and runs git/sync operations. It does NOT write or edit code directly. All substantive work is delegated to a subagent defined in `.ai/agents/`.
+
+| Agent | Use For |
+|---|---|
+| `architect` | Feature design, pattern selection, component boundaries, architecture analysis |
+| `designer` | Visual design — color palettes, typography, branding, design tokens |
+| `developer` | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring, builds |
+| `programmer` | Programming and code implementation — writes, edits, builds, and tests code |
+| `reviewer` | Code quality, SOLID, CQRS compliance, security review, architecture audit |
+| `security` | Blast-radius and exposure analysis, threat modelling, OWASP review, dependency and secret audits |
+| `tester` | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
+| `ui-developer` | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
+| `ui-tester` | Playwright E2E tests, accessibility checks, visual regression |
+| `winui-dev` | WinUI 3 desktop applications — Windows App SDK, XAML, features, conversions, bugs |
+| `writer` | XML docs, READMEs, ADRs, technical prose |
+
+When delegating via `run_skill` or direct subagent execution, include:
+```
+Progress file: .ai/progress/{task-slug}.md
+After completing each step, mark it done by editing that single line ("- [ ] ..." -> "- [x] ..."); do not overwrite the whole file.
+```
 
 ## Coding Rules
 
@@ -88,6 +114,7 @@ When writing handoff, always set **Written By: Reasonix Code**.
 | File | Purpose |
 |------|---------|
 | `.ai/reference/critical-rules.md` | Non-negotiable coding rules |
+| `.ai/reference/council.md` | High-stakes decision process: triggers, seats, protocol, dissent |
 | `.ai/reference/forbidden-tech.md` | Banned libraries |
 | `.ai/reference/session-management.md` | Session lifecycle |
 | `.ai/project/architecture.md` | System architecture |

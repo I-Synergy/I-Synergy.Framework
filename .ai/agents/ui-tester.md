@@ -3,7 +3,7 @@ name: ui-tester
 description: Playwright E2E testing specialist — writes UI tests, accessibility checks, visual regression tests
 runAs: subagent
 model: haiku
-tools: read, write, edit, bash, grep, find, ls
+tools: Read, Write, Edit, Bash, Grep, Glob
 skills: playwright-tester
 ---
 

@@ -140,6 +140,7 @@ def test_ai_directory_exists() -> bool:
     required = [
         ".ai",
         ".ai/patterns",
+        ".ai/chains",
         ".ai/skills",
         ".ai/reference",
         ".ai/reference/templates",

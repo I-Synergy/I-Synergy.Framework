@@ -1,0 +1,159 @@
+# Test Completion Report Template — ISO/IEC/IEEE 29119-3, 7.4 (Annex G)
+
+One report per release, written when the release is being cut. It goes to
+`docs/test-reports/{release}-test-completion-report.md`, where `{release}` is the tag or version the
+report covers (`v1.2.0`).
+
+The section names below are the ones this template carries. **Test measures** and **Residual risks**
+are the two sections this template treats as the ones a certification auditor would sample first —
+write them with the run's actual numbers and the things that were not verified, not with
+reassurances.
+
+```markdown
+# Test Completion Report — {release}
+
+| Field | Value |
+|---|---|
+| Report identifier | [TCR-{release}] |
+| Solution | `{ApplicationName}` |
+| Release / version | [{release} — the tag, version or commit range the report covers] |
+| Period covered | [{yyyy-mm-dd} to {yyyy-mm-dd}] |
+| Author, role | [{name}, {role}] |
+| Test plans covered | [`{BC}.{Entity}.{Operation}`, … — the slices in this release] |
+| Date | {yyyy-mm-dd} |
+
+## 1. Overview
+
+[What this release contains and what was tested to accept it. Two or three sentences: the scope, the
+levels exercised, and the run command that produced the results quoted below.]
+
+## 2. Summary of testing performed
+
+| Level | Tests planned | Executed | Passed | Failed | Skipped |
+|---|---|---|---|---|---|
+| Unit (MSTest) | [n] | [n] | [n] | [n] | [n] |
+| BDD (Reqnroll) | [n] | [n] | [n] | [n] | [n] |
+| E2E (Playwright) | [n] | [n] | [n] | [n] | [n] |
+
+[Numbers from the run's `.trx` and console output — quote them, do not estimate. Name the runs: the
+CI job or the local run identifier, and the date each was executed.]
+
+**Acceptance criteria coverage:**
+
+| In scope this release | With a scenario | With a test-side reference | Uncovered |
+|---|---|---|---|
+| [n] | [n] | [n] | [n] |
+
+[From `validate-traceability.py` — the criteria in the slices this release contains. An uncovered
+criterion is either covered by a named test elsewhere, or it is a residual risk in section 7. Do not
+leave the cell blank.]
+
+## 3. Deviations from planned testing
+
+| Plan | Deviation | Reason | Effect |
+|---|---|---|---|
+| [`{BC}.{Entity}.{Operation}`] | [section or criterion not tested as planned] | [why] | [what is now unverified — carries into section 7] |
+
+[Deviations include slices planned and not delivered, levels skipped (an E2E browser not available, a
+BDD scenario deferred), and criteria whose scope changed after the plan was approved. "None" is a
+valid entry and should be written rather than omitted.]
+
+## 4. Test completion evaluation
+
+[Does the release meet its exit criteria? Answer per criterion, from the plans in scope: which
+slices were completed, which were not, and the judgement that the testing performed is sufficient
+for the release to proceed. If the release proceeds without meeting an exit criterion, this is where
+that decision and its justification are recorded — not in a commit message.]
+
+## 5. Factors that blocked progress
+
+| Factor | Effect | Resolution |
+|---|---|---|
+| [environment outage, unavailable dependency, unclear requirement, missing test data] | [delay or scope reduction] | [what unblocked it, or that it remains open] |
+
+## 6. Test measures
+
+[What was measured, and what the numbers were. Use what the run and the validator produce —
+counts, coverage of declared criteria, incidents by severity and status, regression rate — and say
+for each measure what it was measured from (`.trx`, `validate-traceability.py` output, incident
+register).]
+
+**Quality characteristics and measures are named in `.ai/reference/quality-model.md`; do not define
+a metric here.** That document is the vocabulary source and it also records the boundary: 25010
+defines no metric, measurement is ISO/IEC 25023, and no metric is defined by either document. So a
+measure reported here is quoted from a tool or from the incident register — never invented for the
+occasion.
+
+| Measure | Value | Source |
+|---|---|---|
+| [e.g. declared criteria with a test-side reference] | [n of n] | `validate-traceability.py` |
+| [e.g. incidents by severity] | [`Blocker` n / `Major` n / `Minor` n] | `.ai/reference/templates/test-incident-report.md.txt` register |
+| [e.g. failure rate of the release run] | [n of n executed] | MSTest `.trx` |
+
+## 7. Residual risks
+
+| Risk — what is not verified | What would reveal it | Accepted by |
+|---|---|---|
+| [the behaviour that no test covers, named concretely enough to be checked later] | [the incident, metric, or user report that would show it] | [{name}, {role}, {yyyy-mm-dd}] |
+
+[This section is the point of the report. An empty Residual risks section is a claim of complete
+coverage — write it only when that is true, and write "none identified" with the evidence when it is.
+Any open incident from section 6 that is not fixed and not closed belongs here, as does any
+criterion left uncovered in section 2.]
+
+## 8. Test deliverables
+
+| Deliverable | Location |
+|---|---|
+| Test plans | [`docs/slices/{BC}/{Entity}.{Operation}/test-plan.md`, per slice] |
+| Test code | [the test projects in this release] |
+| Feature files | [the `.feature` files in this release] |
+| Incident reports | [`docs/test-reports/incidents/`] |
+| Run results | [the `.trx` and CI job links for the runs quoted above] |
+| This report | [`docs/test-reports/{release}-test-completion-report.md`] |
+
+## 9. Reusable test assets
+
+[What the next release can reuse as-is, and what it must change: fixtures and builders that survived
+the release, step definitions that stayed stable, seeded data sets, Playwright traces kept as
+regression baselines. Assets listed here are ones a later slice is expected to reuse, not everything
+in the test project.]
+
+## 10. Lessons learned
+
+[What would be done differently, addressed to the next release — a criterion that was untestable as
+written, a level that caught nothing, a level that should have caught something and did not. Keep it
+specific enough to act on; "testing went well" is not a lesson.]
+```
+
+## Provenance of these sections
+
+The section set corresponds to Clause 7.4 of ISO/IEC/IEEE 29119-3:2021 (Annex G), and the section
+names are as this template carries them — this template's own set, not a reproduction of the
+standard's. **The standard's internal detail for each section is not reproduced here** — over and
+above its name, what the standard requires of each section has not been copied into this
+repository. The prompts in the block above say what *this* repository can fill into each section,
+from the artifacts it actually produces (`.trx`, the traceability validator, incident reports).
+
+- **Test measures** deliberately does not define a metric. Quality characteristics come from
+  `.ai/reference/quality-model.md`, and its boundary — 25010 defines no metric; measurement is
+  ISO/IEC 25023, evaluation is ISO/IEC 25040 — is why this section quotes tools rather than
+  inventing measures.
+- **Residual risks** is the reason this report is adopted at all: it is the section that records
+  what the release does *not* verify.
+- No certification or conformity claim is made by this report or from it. See
+  `.ai/reference/test-documentation.md`.
+
+## Usage
+
+1. Write one report per release to `docs/test-reports/{release}-test-completion-report.md`. Create
+   the directory on first use.
+2. Fill sections 2 and 6 from the run — never from memory. Quote the `.trx` counts and the
+   `validate-traceability.py` output.
+3. A section with nothing to report gets a line saying so ("None." or "None identified — the run
+   covered every criterion in scope"), not a deleted heading: a missing section is indistinguishable
+   from an unread one.
+4. Record residual risks even when the release proceeds. A release with an empty risk section and a
+   green run is rare enough that writing one should prompt a second look.
+5. This report is release-scoped. The per-slice test plan is not repeated here — link it from
+   section 8.

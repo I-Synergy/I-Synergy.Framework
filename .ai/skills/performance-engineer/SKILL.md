@@ -375,10 +375,10 @@ public class CachedBudgetService(
 
 ### Cache Invalidation Pattern
 ```csharp
-public sealed class UpdateBudgetHandler(
+public sealed class UpdateBudgetCommandHandler(
     DataContext dataContext,
     IDistributedCache cache,
-    ILogger<UpdateBudgetHandler> logger
+    ILogger<UpdateBudgetCommandHandler> logger
 ) : ICommandHandler<UpdateBudgetCommand, UpdateBudgetResponse>
 {
     public async Task<UpdateBudgetResponse> HandleAsync(

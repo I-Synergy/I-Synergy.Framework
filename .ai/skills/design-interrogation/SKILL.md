@@ -200,8 +200,36 @@ or already resolved:
 | 4 | **Data Flow** | How do commands, queries, and events move through the system? |
 | 5 | **Integration Points** | What external systems, APIs, or services are involved? |
 | 6 | **Failure Modes** | What happens when each component fails? |
-| 7 | **Non-Functionals** | Performance, scalability, security, observability requirements |
+| 7 | **Non-Functionals** | Which quality attributes must this solution meet? — question set below |
 | 8 | **Migration & Rollout** | How is this deployed? What is the rollout strategy? |
+
+### Dimension 7 — Quality Attribute Questions
+
+Dimension 7 is where quality attributes **enter** the design — the reviewer only inspects them after
+the fact. The vocabulary is ISO/IEC 25010:2023: the nine product quality characteristics and their
+review questions are in `.ai/reference/quality-model.md`. Resolve these with the user in the standard
+question format, one at a time, and ask only the ones the design implicates. An attribute that does
+not apply is recorded as **not applicable** and is not turned into a question — most solutions resolve
+three to five of the nine, and asking all nine as a matter of course turns a design conversation into
+a questionnaire.
+
+| # | Characteristic | What to resolve |
+|---|---|---|
+| 1 | Functional suitability | Which stated business outcome has no use case yet, and which use case has no acceptance criterion behind it? |
+| 2 | Performance efficiency | What is the expected load, and what is the slowest acceptable response for the heaviest operation — as a number, not as "fast"? |
+| 3 | Compatibility | Which external systems must this exchange data with, in what shape (API version, file format, database dialect), and what must keep running unchanged alongside it? |
+| 4 | Interaction capability | Who uses it, through which surface, and how do they find out what to do and recover from a mistake? *No human surface → not applicable.* |
+| 5 | Reliability | Which failures are tolerable and which are not, and what happens to in-flight work when a dependency is down? Is running the same command twice safe? |
+| 6 | Security | Who must not be able to do or see this, where does the trust boundary sit, and what data classification applies? |
+| 7 | Maintainability | Which parts are expected to change fastest, and which bounded contexts must stay independently changeable? |
+| 8 | Flexibility | What must be replaceable without a rewrite (database, identity provider, hosting model), and what must scale on its own? |
+| 9 | Safety | Can a wrong answer or an outage here harm a person, a physical system, or data that cannot be recreated — and does the design fail safe? *Ask once; record the answer either way.* |
+
+**Where the answers land.** Each resolved attribute is logged as a Dimension 7 row in
+`session-decisions.md` and carried into the architecture document with the rest of the decisions.
+Quality attributes are **not** numbered as acceptance criteria — `.ai/reference/traceability.md`
+records that rule, and a criterion with no scenario behind it would be reported by the traceability
+validator.
 
 ### Codebase Exploration
 

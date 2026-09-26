@@ -1,22 +1,25 @@
 @using ISynergy.Framework.AspNetCore.Blazor.Models
 @using Microsoft.FluentUI.AspNetCore.Components
 
+@* v5: FluentNavGroup/FluentNavLink were removed.
+   FluentNavCategory / FluentNavItem replace them; Gap no longer exists and
+   Icon was split into IconRest / IconActive. Expanded/ExpandedChanged are retained. *@
 @switch (Value)
 {
     case NavigationGroup group:
-        <FluentNavGroup @bind-Expanded="@group.Expanded" Gap="@group.Gap" Icon="@((Icon?)group.Icon)" Title="@group.Name" >
+        <FluentNavCategory @bind-Expanded="@group.Expanded" IconRest="@((Icon?)group.Icon)" Title="@group.Name">
             <ChildContent>
                 @foreach(var item in group.Children)
                 {
                     <NavigationMenuItemControl Value="item" />
                 }
             </ChildContent>
-        </FluentNavGroup>
+        </FluentNavCategory>
         break;
     case NavigationLink:
-        <FluentNavLink Icon="@((Icon?)Value.Icon)" Href="@Value.Href" Match="@Value.Match">
+        <FluentNavItem IconRest="@((Icon?)Value.Icon)" Href="@Value.Href" Match="@Value.Match">
             @(new MarkupString(Value.Name))
-        </FluentNavLink>
+        </FluentNavItem>
         break;
 }
 

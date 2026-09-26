@@ -47,9 +47,9 @@ Audits project documentation against actual codebase conventions and enforces ha
    - `CLAUDE.md` has a HARD RULE subagent delegation section naming what the main conversation may/may not do
    - `REASONIX.md` (if exists) has the same HARD RULE section
    - `DEEPSEEK.md` (if exists) has the same HARD RULE section
-   - Agent tables in all files include a Model column
-   - Model names use `deepseek-v4-pro`/`deepseek-v4-flash` (not sonnet/haiku)
-   - Model mapping line exists: `deepseek-v4-pro` ↔ sonnet · `deepseek-v4-flash` ↔ haiku
+   - Agent rosters in `CLAUDE.md`, `DEEPSEEK.md`, and `README.md` list every agent in `.ai/agents/` — no Model column; the tier lives in the agent's own frontmatter
+   - `model:` frontmatter in `.ai/agents/*.md` is always a tier alias (`sonnet` or `haiku`) — never a concrete model name
+   - Shared docs (`CLAUDE.md`, `REASONIX.md`, `DEEPSEEK.md`, `README.md`) hardcode no concrete DeepSeek model names — the per-slot mapping is defined only by `powershell/Microsoft.PowerShell_profile.ps1`
 
 #### 3c. Multi-assistant sync integrity
    - `DEEPSEEK.md` (if exists) exists alongside `CLAUDE.md` and `REASONIX.md`
@@ -77,7 +77,7 @@ Audits project documentation against actual codebase conventions and enforces ha
    - `.ai/session-context.md` has no stale `[Claude Code | GitHub Copilot]`-only references
 
 #### 3e. DEEPSEEK.md content integrity
-   - `DEEPSEEK.md` inlines the subagent delegation table (same 8 agent types as `CLAUDE.md`)
+   - `DEEPSEEK.md` inlines the subagent delegation table (the same agent types as `CLAUDE.md`)
    - `DEEPSEEK.md` inlines the most critical coding rules as direct content (not cross-references to `.ai/reference/critical-rules.md`)
    - `DEEPSEEK.md` inlines the task execution protocol (plan → progress file → complete cycle)
    - `DEEPSEEK.md` is self-contained — a DeepSeek model can follow it without resolving nested file references
@@ -101,6 +101,45 @@ Audits project documentation against actual codebase conventions and enforces ha
      - **Drift** — content contradicts the canonical pattern
    - Wait for user approval before making changes
 
+### 6. Standards-compatibility surfaces (generated from evidence)
+   - **Applicability first:** generate only when the working tree holds a generated solution — at least
+     one solution file (`*.sln` or `*.slnx`). Where none exists (this template repository is one),
+     report the step as a no-op and write nothing.
+   - Read `.ai/reference/standards.md` and parse it by its own *How This File Is Parsed* contract: the
+     status table is the one whose header row immediately follows `## Compatibility`, and `Standard` is
+     the row key. Never select a table by its `Compatibility` column — the vocabulary table has one too.
+   - Run each `Evidence` row's proving validator and capture its exit code. Report a result only for a
+     validator that actually ran.
+   - Compute each row's status: an `Evidence` row keeps `Evidence` only when its validator exits `0`,
+     every path in its `Implementing artifact` cell exists, and at least one pattern in its `Evidence a
+     project produces` cell matches something the project produced — substitute `*` for each `{…}` and
+     glob it against the working tree, so `docs/slices/{BC}/{Entity}.{Operation}/test-plan.md` is
+     tested as `docs/slices/*/*/test-plan.md`. Where a pattern matches nothing, the row is naming a
+     file this project does not hold, and it renders one step lower — `Aligned` — with the cause in the
+     generated `Note` column, naming what was not found. One step, never a fourth value, never a silent
+     downgrade, and never a token the manifest does not carry for that row. The path and pattern tests
+     belong to a generated solution, which is the same condition as the applicability bullet above —
+     `.ai/tests/validate-standards.py` implements exactly these three causes, so a generator that
+     disagrees with it is the divergence this step exists to avoid.
+   - Regenerate both surfaces from their templates:
+     - `COMPLIANCE.md` at the project root — the whole file, from `.ai/reference/templates/compliance.md.txt`
+     - the `## Standards Compatibility` section in `README.md` — only the block between
+       `<!-- BEGIN standards-status -->` and `<!-- END standards-status -->`, from
+       `.ai/reference/templates/standards-section.md.txt`
+   - Apply the marker rules exactly as `.ai/reference/templates/standards-section.md.txt` states them:
+     - exactly one marker pair — unbalanced, duplicated or interleaved markers (`END` before its `BEGIN`)
+       **stop generation** and report the line numbers; resolve by hand, never guess
+     - markers absent — append the generated block at the end of `README.md`, markers included, and
+       report where it was placed
+     - everything outside the markers is left byte-identical
+     - the provenance line sits inside the block, directly above the closing marker — exactly one, in
+       the manifest's rule-8 shape
+     - no badge, shield, logo or image
+   - Show the proposed diff for both surfaces and **wait for approval** before writing — step 5's
+     contract governs here too; this step is never a silent mutator.
+   - After writing, `python .ai/tests/validate-standards.py` must pass; a recorded validator exit code
+     that disagrees with a re-run fails the check.
+
 ## Output Format
 
 ```
@@ -117,9 +156,9 @@ Audits project documentation against actual codebase conventions and enforces ha
 |---|-------|--------|---------|
 | 1 | Progress files mandatory in CLAUDE.md | PASS/FAIL | ... |
 | 2 | Subagent delegation HARD RULE in REASONIX.md | PASS/FAIL | ... |
-| 3 | Agent table has Model column | PASS/FAIL | ... |
-| 4 | Model names are deepseek-v4-pro/flash | PASS/FAIL | ... |
-| 5 | Model mapping documented | PASS/FAIL | ... |
+| 3 | Agent rosters list every `.ai/agents/` agent (no Model column) | PASS/FAIL | ... |
+| 4 | Agent `model:` frontmatter uses tier aliases (`sonnet`/`haiku`) | PASS/FAIL | ... |
+| 5 | Shared docs hardcode no concrete model names | PASS/FAIL | ... |
 | 6 | .claude/settings.json includes ./.reasonix | PASS/FAIL | ... |
 | 7 | .reasonix/skills/, .reasonix/agents/ resolve as junctions | PASS/FAIL | ... |
 | 8 | .ai/agents/ files have runAs: subagent | PASS/FAIL | ... |

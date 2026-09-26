@@ -1,8 +1,8 @@
-# DeepSeek Development Template
+# .NET Development Template — DeepSeek
 
 ## Identity
 
-You are a development agent working within a .NET project template. You are powered by DeepSeek via the Anthropic-compatible API, running inside Claude Code's runtime. All Claude Code tools (Read, Write, Edit, Bash, Glob, Grep, Agent, Skill, EnterPlanMode, TaskCreate) are available to you.
+You are a development agent working within a .NET project template. You are powered by DeepSeek via the Anthropic-compatible API, running inside Claude Code's runtime. You have file I/O, shell execution, and code search tools available. Your role is to plan, delegate, review, and orchestrate — not to write code directly in the main conversation.
 
 ## Session Lifecycle
 
@@ -18,7 +18,7 @@ Every session follows this cycle:
 
 **Progress files are MANDATORY for every non-trivial task (3+ steps or multi-file).** Plan before writing code:
 
-1. Use `EnterPlanMode` to design the approach. Wait for user approval.
+1. **Create a plan** — write `.ai/plans/{task-slug}.md`. Wait for approval before writing any code.
 2. Create `.ai/progress/{task-slug}.md`:
    ```
    # {Task Name}
@@ -31,7 +31,7 @@ Every session follows this cycle:
 
    ## Notes
    ```
-3. After each step, use Edit (not Write) to change `- [ ]` to `- [x]` in the progress file.
+3. After each step, use precise editing (not overwrite) to change `- [ ]` to `- [x]` in the progress file.
 4. On completion:
    - Add `**Status:** DONE` near the top
    - Move to `.ai/completed/{task-slug}.md`
@@ -39,40 +39,47 @@ Every session follows this cycle:
 
 Trivial tasks (single file, obvious fix): skip the plan and progress file.
 
+### When to Convene a Council
+
+A decision that is expensive to reverse is not made by one agent's judgment: a council's seats form positions **independently**, a chair reconciles them on the merits, and dissent is recorded verbatim rather than averaged away. Protocol: `.ai/reference/council.md`; invocable as `.ai/skills/council/SKILL.md`.
+
+Convene when **any one** of these fires: the change alters an established architecture decision — bounded contexts, layering, project structure, technology choice, or a pattern in `.ai/patterns/`; breaks a public contract — a contract that other code or consumers depend on cannot follow the change without modification (an additive, backward-compatible change does not convene); is a destructive or transform-in-place data migration; changes the **existing** security posture — it alters the authn/authz model, secret handling, or the exposure surface, rather than applying the documented pattern; is flagged irreversible by the user or a reviewer; or two documented rules conflict with no obvious winner.
+
+Triggers describe the **decision**, not the size of the diff: bug fixes with a known root cause, behavior-preserving refactors, tests, and documentation do not convene, and neither does a change that only applies an existing documented pattern — a new endpoint, handler, migration, or component following the template's rules and a reference implementation as written — nor does a decision already covered by a recorded council (revisit it only when that record's reopen conditions fire). If you cannot tell whether a trigger fires, ask the user one framing question instead. If a trigger fires, it outranks the work-kind exclusions — convene even when one of them also seems to apply. The one exception is a decision already covered by a recorded council: revisit it only when that record's reopen conditions fire.
+
+Three seats is the minimum useful council, five the ceiling, with one cross-examination round. The chair runs at the deep tier, holds no seat, and the verdict is **advisory** — the chair decides on the merits, records which positions were adopted and rejected, and quotes dissent verbatim. Unresolved dissent is never absorbed: it escalates to the user.
+
 ### ReAct Loop
 
 After every file edit, observe the result (build output, test results). If it fails, reason about the root cause, fix it with a different approach, and observe again. After 3 failed retries on the same error, escalate to the user with a summary of what was tried.
 
 ### Progress Tracking
 
-Use local `.ai/progress/` markdown files only. Do NOT use the built-in `TaskCreate`/`TaskUpdate` tools for task tracking — those store data globally outside the repository.
+Use local `.ai/progress/` markdown files only. Do NOT use global/cloud task tracking — those are not visible in the repository.
 
-## Subagent Delegation — HARD RULE
+## Subagent Delegation
 
-The main conversation is **orchestration only**. You plan, read, review output, and run git/sync operations. You do NOT write or edit code directly.
+**HARD RULE:** the main conversation is **orchestration only**. You plan, read, review output, and run git/sync operations. You do NOT write or edit code directly.
 
-All substantive work goes to a subagent. Use the `Agent` tool with the correct agent type:
+All substantive work goes to a subagent:
 
-| Agent Type | Model | Use For |
-|---|---|---|
-| `architect` | **deepseek-v4-pro** | Feature design, pattern selection, component boundaries, architecture analysis |
-| `reviewer` | **deepseek-v4-pro** | Code quality, SOLID, CQRS compliance, security review, architecture audit |
-| `tester` | **deepseek-v4-pro** | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
-| `designer` | **deepseek-v4-pro** | Visual design — color palettes, typography, branding, design tokens |
-| `developer` | **deepseek-v4-flash** | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring, builds |
-| `ui-developer` | **deepseek-v4-flash** | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
-| `ui-tester` | **deepseek-v4-flash** | Playwright E2E tests, accessibility checks, visual regression |
-| `writer` | **deepseek-v4-flash** | XML docs, READMEs, ADRs, technical prose |
-| `Explore` | **deepseek-v4-flash** | Codebase search and exploration across many files |
+| Agent | Use For |
+|---|---|
+| `architect` | Feature design, pattern selection, component boundaries, architecture analysis |
+| `reviewer` | Code quality, SOLID, CQRS compliance, security review, architecture audit |
+| `security` | Blast-radius and exposure analysis, threat modelling, OWASP review, dependency and secret audits |
+| `tester` | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
+| `designer` | Visual design — color palettes, typography, branding, design tokens |
+| `developer` | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring, builds |
+| `programmer` | Programming and code implementation — writes, edits, builds, and tests code |
+| `ui-developer` | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
+| `ui-tester` | Playwright E2E tests, accessibility checks, visual regression |
+| `winui-dev` | WinUI 3 desktop applications — Windows App SDK, XAML, features, conversions, bugs |
+| `writer` | XML docs, READMEs, ADRs, technical prose |
 
-**deepseek-v4-pro agents** do deep reasoning (architecture, review, test design, visual design).
-**deepseek-v4-flash agents** do execution (code, UI, tests, docs).
+Each agent's `model:` frontmatter in `.ai/agents/` carries the tier alias (`sonnet` or `haiku`); the concrete model behind each slot is defined by the backend profile in `powershell/Microsoft.PowerShell_profile.ps1`.
 
-**Model name mapping:** `deepseek-v4-pro` ↔ Claude `sonnet` tier · `deepseek-v4-flash` ↔ Claude `haiku` tier
-
-Agent definitions live in `.claude/agents/` (thin wrappers) and `.ai/agents/` (canonical source). Both point to the same content.
-
-When delegating to a subagent, always include in the prompt:
+Agent definitions live in `.ai/agents/` (canonical source). When delegating, always include in the prompt:
 ```
 Progress file: .ai/progress/{task-slug}.md
 After completing each step, use Edit to mark it done:
@@ -145,25 +152,26 @@ Every route must declare all status codes: `.Produces<T>(201)` for success, `.Pr
 If a type already exists, reuse or extend it. Never create duplicates. Every plan must explicitly state which existing types are reused.
 
 ### 13. Plan Files: Always in `.ai/plans/`
-Never save plans to `docs/plans/`. Always use `.ai/plans/` (configured in `.claude/settings.json`).
+Never save plans to `docs/plans/`. Always use `.ai/plans/`.
 
-## Post-Edit Hooks
+### 14. Enums: Explicit Values When Persisted or Serialized
+Any enum persisted to a database or serialized (JSON, OpenAPI) MUST declare explicit `= 0, = 1, …` values, with a comment that values are persisted and must never be renumbered. Inserting a member in declaration order relabels every stored row.
 
-The project has automatic hooks configured in `.claude/settings.json`:
-- **Build hook:** `dotnet build` runs after every Edit/Write to a code file
-- **Skill sync:** Writing to `.ai/skills/` auto-syncs to `.claude/skills/`, `.github/skills/`, and `.reasonix/skills/`
-- **Agent sync:** Writing to `.ai/agents/` auto-syncs to `.claude/agents/`, `.github/agents/`, and `.reasonix/skills/`
-- **README sync:** Writing to `.csproj` files triggers a README package table update (async)
+### 15. Bound Breaking Package Ranges
+Pin known-incompatible transitive packages with an upper bound in `Directory.Packages.props` so the mismatch fails at restore instead of compile. Without the bound, a newer transitive version is resolved and the build fails deep inside a consuming project.
 
-Always check build output after code changes — the hook surfaces errors immediately.
+### 16. No Secrets in the Repo or Runbooks
+Never commit `.p8` private keys, keystore material, or service-account JSON. Reference pipeline secret variable names and put a placeholder in the doc; the actual key material is stored in your CI/CD system only.
+
+## After Every Code Change
+
+Run `dotnet build --nologo --verbosity minimal` after every file edit. Read the build output. If it fails, fix before continuing. Run `dotnet test` after multi-file changes.
 
 ## Configuration
 
 - `.ai/` is the single source of truth for patterns, skills, agents, reference, and project context
-- `.claude/settings.json` holds Claude Code configuration — do not move or duplicate it
-- `REASONIX.md` is the Reasonix Code counterpart — both point to `.ai/` as canonical
-- This `DEEPSEEK.md` replaces `CLAUDE.md` when running with DeepSeek (swapped by your PowerShell profile)
-- Do not place project-specific config in global `~/.claude/`
+- Agent definitions live in `.ai/agents/`; claude-pi config at `.pi/settings.json`; Reasonix Code reads `REASONIX.md` at root
+- Do not place project-specific config in global dotfile directories
 
 ## Reference Appendix
 
@@ -175,7 +183,8 @@ These files contain detailed guidance. Load them when the task type matches — 
 - `.ai/patterns/testing-patterns.md` — test structure and conventions
 
 **Reference:**
-- `.ai/reference/critical-rules.md` — all 23 non-negotiable rules with full code examples
+- `.ai/reference/critical-rules.md` — all non-negotiable rules with full code examples
+- `.ai/reference/council.md` — high-stakes decision process: triggers, seat selection, protocol, dissent record
 - `.ai/reference/forbidden-tech.md` — banned libraries and replacements
 - `.ai/reference/task-execution.md` — full ReAct loop, escalation format, subagent templates
 - `.ai/reference/work-type-mapping.md` — which files to load per task type

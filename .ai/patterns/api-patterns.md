@@ -1061,7 +1061,7 @@ services.AddSingleton<IAuthenticationProvider>(
 ### Using the Generated Client from a Handler
 
 ```csharp
-// File: {ApplicationName}.Services.{CallerDomain}/Queries/Get{Entity}List/Get{Entity}ListHandler.cs
+// File: {ApplicationName}.Services.{CallerDomain}/Queries/Get{Entity}List/Get{Entity}ListQueryHandler.cs
 
 public sealed class Get{Entity}ListQueryHandler(
     ApiClient client
