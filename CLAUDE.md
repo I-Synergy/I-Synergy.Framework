@@ -16,7 +16,7 @@ Every session follows this cycle:
 
 ### When to Plan
 
-For any non-trivial task (3+ steps or multi-file), plan before writing code:
+**Progress files are MANDATORY for every non-trivial task (3+ steps or multi-file).** Plan before writing code:
 
 1. **Create a plan** — write `.ai/plans/{task-slug}.md`. Wait for approval before writing any code.
 2. Create `.ai/progress/{task-slug}.md`:
@@ -59,7 +59,7 @@ Use local `.ai/progress/` markdown files only. Do NOT use global/cloud task trac
 
 ## Subagent Delegation
 
-The main conversation is **orchestration only**. You plan, read, review output, and run git/sync operations. You do NOT write or edit code directly.
+**HARD RULE:** the main conversation is **orchestration only**. You plan, read, review output, and run git/sync operations. You do NOT write or edit code directly.
 
 All substantive work goes to a subagent:
 
@@ -71,8 +71,10 @@ All substantive work goes to a subagent:
 | `tester` | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
 | `designer` | Visual design — color palettes, typography, branding, design tokens |
 | `developer` | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring, builds |
+| `programmer` | Programming and code implementation — writes, edits, builds, and tests code |
 | `ui-developer` | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
 | `ui-tester` | Playwright E2E tests, accessibility checks, visual regression |
+| `winui-dev` | WinUI 3 desktop applications — Windows App SDK, XAML, features, conversions, bugs |
 | `writer` | XML docs, READMEs, ADRs, technical prose |
 
 Each agent's `model:` frontmatter in `.ai/agents/` carries the tier alias (`sonnet` or `haiku`); the concrete model behind each slot is defined by the backend profile in `powershell/Microsoft.PowerShell_profile.ps1`.
@@ -151,6 +153,15 @@ If a type already exists, reuse or extend it. Never create duplicates. Every pla
 
 ### 13. Plan Files: Always in `.ai/plans/`
 Never save plans to `docs/plans/`. Always use `.ai/plans/`.
+
+### 14. Enums: Explicit Values When Persisted or Serialized
+Any enum persisted to a database or serialized (JSON, OpenAPI) MUST declare explicit `= 0, = 1, …` values, with a comment that values are persisted and must never be renumbered. Inserting a member in declaration order relabels every stored row.
+
+### 15. Bound Breaking Package Ranges
+Pin known-incompatible transitive packages with an upper bound in `Directory.Packages.props` so the mismatch fails at restore instead of compile. Without the bound, a newer transitive version is resolved and the build fails deep inside a consuming project.
+
+### 16. No Secrets in the Repo or Runbooks
+Never commit `.p8` private keys, keystore material, or service-account JSON. Reference pipeline secret variable names and put a placeholder in the doc; the actual key material is stored in your CI/CD system only.
 
 ## After Every Code Change
 
