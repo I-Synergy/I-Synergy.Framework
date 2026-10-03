@@ -42,6 +42,7 @@ public static class ApplicationInsightsTelemetryExtensions
         options.EnableStandardMetrics = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnableStandardMetrics), options.EnableStandardMetrics);
         options.EnablePerformanceCounters = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnablePerformanceCounters), options.EnablePerformanceCounters);
 
+
         telemetryExporterOptions?.Invoke(options);
 
         if (string.IsNullOrWhiteSpace(options.ConnectionString))
@@ -79,6 +80,8 @@ public static class ApplicationInsightsTelemetryExtensions
         target.StorageDirectory = source.StorageDirectory;
         target.DisableOfflineStorage = source.DisableOfflineStorage;
         target.EnableLiveMetrics = source.EnableLiveMetrics;
+        target.EnableStandardMetrics = source.EnableStandardMetrics;
+        target.EnablePerformanceCounters = source.EnablePerformanceCounters;
         target.EnableTraceBasedLogsSampler = source.EnableTraceBasedLogsSampler;
         target.Transport = source.Transport;
         target.RetryPolicy = source.RetryPolicy;
