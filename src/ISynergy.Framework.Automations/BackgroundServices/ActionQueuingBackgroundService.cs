@@ -93,6 +93,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// Executes task when task delay has elapsed.
     /// </summary>
     /// <param name="action"></param>
+    /// <param name="cancellationToken"></param>
     private async Task ExecuteTaskAsync(IAction? action, CancellationToken cancellationToken = default)
     {
         try
