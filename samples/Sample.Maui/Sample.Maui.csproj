@@ -18,8 +18,7 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<IsPackable>false</IsPackable>
-
-    <WindowsPackageType>None</WindowsPackageType>
+		<WindowsPackageType>None</WindowsPackageType>
     
 		<!-- Display name -->
 		<ApplicationTitle>Sample</ApplicationTitle>
