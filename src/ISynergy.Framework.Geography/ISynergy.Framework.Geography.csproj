@@ -8,5 +8,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+        <ProjectReference Include="..\ISynergy.Framework.Globalization\ISynergy.Framework.Globalization.csproj" />
     </ItemGroup>
 </Project>

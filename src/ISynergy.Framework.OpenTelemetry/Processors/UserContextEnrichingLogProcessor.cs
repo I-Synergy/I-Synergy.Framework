@@ -26,13 +26,24 @@ public class UserContextEnrichingLogProcessor : BaseProcessor<LogRecord>
         _infoService = infoService;
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the current user's context — user id, name, email,
+    /// tenant, organizations, culture, features and roles — is attached to every log record.
+    /// </summary>
+    /// <remarks>
+    /// Defaults to <c>false</c>. That context contains personally identifiable information and,
+    /// together with <c>SendDefaultPii</c> on the exporter, would ship PII to every telemetry sink.
+    /// Set it to <c>true</c> only where emitting that data is intended and covered by policy.
+    /// </remarks>
+    public bool IncludeUserContext { get; set; }
+
     /// <inheritdoc />
     public override void OnEnd(LogRecord data)
     {
         var attributes = new List<KeyValuePair<string, object?>>();
 
-        // Add user context information to all log entries
-        if (_context.Profile is not null)
+        // Add user context information to all log entries, only when explicitly opted in (PII).
+        if (IncludeUserContext && _context.Profile is not null)
         {
             attributes.Add(new KeyValuePair<string, object?>("UserId", _context.Profile.UserId));
             attributes.Add(new KeyValuePair<string, object?>("TenantId", _context.Profile.TenantId));

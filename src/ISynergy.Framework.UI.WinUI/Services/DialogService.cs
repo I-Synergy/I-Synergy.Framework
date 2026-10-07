@@ -56,8 +56,8 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// </summary>
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "")
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(Exception error, string? title = "")
     {
         Argument.IsNotNull(error);
 
@@ -72,8 +72,8 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "")
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(string message, string? title = "")
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -88,8 +88,8 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "")
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowInformationAsync(string message, string? title = "")
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -104,8 +104,8 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "")
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowWarningAsync(string message, string? title = "")
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -135,8 +135,8 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
-    /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
+    /// <returns>MessageBoxResults.</returns>
+    public async Task<MessageBoxResults> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -233,36 +233,36 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     switch (result)
                     {
                         case ContentDialogResult.Primary:
-                            return MessageBoxResult.OK;
+                            return MessageBoxResults.OK;
                         default:
-                            return MessageBoxResult.Cancel;
+                            return MessageBoxResults.Cancel;
                     }
                 case MessageBoxButtons.YesNoCancel:
                     switch (result)
                     {
                         case ContentDialogResult.Primary:
-                            return MessageBoxResult.Yes;
+                            return MessageBoxResults.Yes;
                         case ContentDialogResult.Secondary:
-                            return MessageBoxResult.No;
+                            return MessageBoxResults.No;
                         default:
-                            return MessageBoxResult.Cancel;
+                            return MessageBoxResults.Cancel;
                     }
                 case MessageBoxButtons.YesNo:
                     switch (result)
                     {
                         case ContentDialogResult.Primary:
-                            return MessageBoxResult.Yes;
+                            return MessageBoxResults.Yes;
                         default:
-                            return MessageBoxResult.No;
+                            return MessageBoxResults.No;
                     }
                 default:
-                    return MessageBoxResult.OK;
+                    return MessageBoxResults.OK;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error showing message dialog");
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
     }
 

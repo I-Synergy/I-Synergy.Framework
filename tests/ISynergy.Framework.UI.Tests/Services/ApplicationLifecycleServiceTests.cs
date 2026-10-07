@@ -405,7 +405,7 @@ public class ApplicationLifecycleServiceTests
             x => x.Log(
              LogLevel.Trace,
               It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("disposing")),
+            It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("disposing")),
            It.IsAny<Exception>(),
        It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                  Times.Once);
@@ -435,7 +435,7 @@ public class ApplicationLifecycleServiceTests
             x => x.Log(
                 LogLevel.Trace,
     It.IsAny<EventId>(),
-       It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("UI framework is now ready")),
+       It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("UI framework is now ready")),
          It.IsAny<Exception>(),
     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
@@ -452,7 +452,7 @@ public class ApplicationLifecycleServiceTests
   x => x.Log(
      LogLevel.Trace,
             It.IsAny<EventId>(),
-   It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Application initialization is complete")),
+   It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("Application initialization is complete")),
      It.IsAny<Exception>(),
       It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
        Times.Once);
@@ -470,7 +470,7 @@ public class ApplicationLifecycleServiceTests
          x => x.Log(
      LogLevel.Trace,
      It.IsAny<EventId>(),
-      It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Both UI and initialization complete")),
+      It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("Both UI and initialization complete")),
      It.IsAny<Exception>(),
  It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
     Times.Once);
@@ -488,7 +488,7 @@ public class ApplicationLifecycleServiceTests
             x => x.Log(
  LogLevel.Warning,
   It.IsAny<EventId>(),
-      It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("called multiple times")),
+      It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("called multiple times")),
   It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
     Times.Once);

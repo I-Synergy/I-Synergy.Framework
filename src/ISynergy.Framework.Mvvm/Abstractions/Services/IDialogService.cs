@@ -14,32 +14,32 @@ public interface IDialogService
     /// </summary>
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "");
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    Task<MessageBoxResults> ShowErrorAsync(Exception error, string? title = "");
 
     /// <summary>
     /// Shows the error asynchronous.
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "");
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    Task<MessageBoxResults> ShowErrorAsync(string message, string? title = "");
 
     /// <summary>
     /// Shows the information asynchronous.
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "");
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    Task<MessageBoxResults> ShowInformationAsync(string message, string? title = "");
 
     /// <summary>
     /// Shows the warning asynchronous.
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "");
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    Task<MessageBoxResults> ShowWarningAsync(string message, string? title = "");
 
     /// <summary>
     /// Shows the greeting asynchronous.
@@ -55,8 +55,8 @@ public interface IDialogService
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default);
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    Task<MessageBoxResults> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default);
 
     /// <summary>
     /// Shows a dialog with an initial entity and lifecycle callbacks.

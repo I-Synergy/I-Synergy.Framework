@@ -1,9 +1,9 @@
-namespace ISynergy.Framework.Mvvm.Enumerations;
+namespace ISynergy.Framework.AspNetCore.Blazor.Enumerations;
 
 /// <summary>
-/// Enum MessageBoxResult
+/// Enum MessageBoxResults
 /// </summary>
-public enum MessageBoxResult
+public enum MessageBoxResults
 {
     /// <summary>
     /// The none

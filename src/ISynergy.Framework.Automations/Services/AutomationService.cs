@@ -46,9 +46,13 @@ public class AutomationService : IAutomationService
     /// <summary>
     /// Gets all automations.
     /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
-    public async Task RefreshAutomationsAsync() =>
+    public async Task RefreshAutomationsAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         _automations.AddNewRange(await _manager.GetItemsAsync());
+    }
 
     /// <summary>
     /// Validates the conditions of a given automation.

@@ -37,7 +37,7 @@ public class AutomationBackgroundService : IHostedService, IDisposable
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Starting automation service.");
-        await _service.RefreshAutomationsAsync();
+        await _service.RefreshAutomationsAsync(cancellationToken);
     }
 
     /// <summary>

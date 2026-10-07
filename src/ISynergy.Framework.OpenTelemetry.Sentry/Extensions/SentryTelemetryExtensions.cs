@@ -5,6 +5,7 @@ using ISynergy.Framework.OpenTelemetry.Sentry.Converters;
 using ISynergy.Framework.OpenTelemetry.Sentry.Processors;
 using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Logs;
+using OpenTelemetry.Trace;
 using Sentry.OpenTelemetry;
 
 namespace ISynergy.Framework.OpenTelemetry.Sentry.Extensions;
@@ -76,12 +77,12 @@ public static class SentryTelemetryExtensions
             // startup that configures a DSN.
             sentryOptions.AddJsonConverter(new KeyValuePairJsonConverterFactory());
 
-            sentryOptions.UseOpenTelemetry();
+            sentryOptions.UseOtlp();
         });
 
         telemetryBuilder.OpenTelemetryBuilder.WithTracing(tracerProviderBuilder =>
         {
-            tracerProviderBuilder.AddSentry();
+            tracerProviderBuilder.AddSentryOtlpExporter(options.Dsn!);
         });
 
         telemetryBuilder.OpenTelemetryBuilder.WithMetrics(meterProviderBuilder =>

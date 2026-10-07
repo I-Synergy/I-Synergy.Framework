@@ -8,7 +8,7 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Sentry.OpenTelemetry" />
+		<PackageReference Include="Sentry.OpenTelemetry.Exporter" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />

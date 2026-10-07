@@ -1,9 +1,9 @@
-namespace ISynergy.Framework.UI.Enumerations;
+namespace ISynergy.Framework.Mvvm.Enumerations;
 
 /// <summary>
-/// Enum MessageBoxResult
+/// Enum MessageBoxResults
 /// </summary>
-public enum MessageBoxResult
+public enum MessageBoxResults
 {
     /// <summary>
     /// The none

@@ -12,7 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using MessageBoxButtons = ISynergy.Framework.Mvvm.Enumerations.MessageBoxButtons;
 using MessageBoxImage = System.Windows.MessageBoxImage;
-using MessageBoxResult = ISynergy.Framework.Mvvm.Enumerations.MessageBoxResult;
 
 namespace ISynergy.Framework.UI.Services;
 
@@ -47,8 +46,8 @@ public class DialogService : BaseDialogService, IDialogService
     /// </summary>
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(Exception error, string? title = "") =>
         ShowMessageAsync(error.Message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -56,8 +55,8 @@ public class DialogService : BaseDialogService, IDialogService
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -65,8 +64,8 @@ public class DialogService : BaseDialogService, IDialogService
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowInformationAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -74,8 +73,8 @@ public class DialogService : BaseDialogService, IDialogService
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowWarningAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -96,8 +95,8 @@ public class DialogService : BaseDialogService, IDialogService
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
-    /// <returns>MessageBoxResult.</returns>
-    public Task<MessageBoxResult> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR - default value required by interface
+    /// <returns>MessageBoxResults.</returns>
+    public Task<MessageBoxResults> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR - default value required by interface
     {
         var button = System.Windows.MessageBoxButton.OK;
 
@@ -124,12 +123,12 @@ public class DialogService : BaseDialogService, IDialogService
 
         var result = dialog switch
         {
-            System.Windows.MessageBoxResult.None => MessageBoxResult.None,
-            System.Windows.MessageBoxResult.OK => MessageBoxResult.OK,
-            System.Windows.MessageBoxResult.Cancel => MessageBoxResult.Cancel,
-            System.Windows.MessageBoxResult.Yes => MessageBoxResult.Yes,
-            System.Windows.MessageBoxResult.No => MessageBoxResult.No,
-            _ => MessageBoxResult.None,
+            System.Windows.MessageBoxResult.None => MessageBoxResults.None,
+            System.Windows.MessageBoxResult.OK => MessageBoxResults.OK,
+            System.Windows.MessageBoxResult.Cancel => MessageBoxResults.Cancel,
+            System.Windows.MessageBoxResult.Yes => MessageBoxResults.Yes,
+            System.Windows.MessageBoxResult.No => MessageBoxResults.No,
+            _ => MessageBoxResults.None,
         };
 
         return Task.FromResult(result);

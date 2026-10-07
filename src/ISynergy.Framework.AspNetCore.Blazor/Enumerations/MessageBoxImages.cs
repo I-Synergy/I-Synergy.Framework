@@ -1,10 +1,10 @@
-namespace ISynergy.Framework.Mvvm.Enumerations;
+namespace ISynergy.Framework.AspNetCore.Blazor.Enumerations;
 
 /// <summary>
-/// Enum MessageBoxImage
+/// Enum MessageBoxImages
 /// </summary>
 [Flags]
-public enum MessageBoxImage // NOSONAR
+public enum MessageBoxImages // NOSONAR
 {
     /// <summary>
     /// The none

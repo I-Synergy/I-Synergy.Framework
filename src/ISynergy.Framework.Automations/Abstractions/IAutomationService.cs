@@ -10,8 +10,9 @@ public interface IAutomationService
     /// <summary>
     /// Gets all automations.
     /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
-    Task RefreshAutomationsAsync();
+    Task RefreshAutomationsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Validates the conditions of a given automation.

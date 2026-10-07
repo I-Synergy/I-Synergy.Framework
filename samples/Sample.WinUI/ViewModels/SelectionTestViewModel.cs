@@ -95,7 +95,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 
     private async Task ShowDialogAsync(MessageBoxButtons buttons)
     {
-        MessageBoxResult result = await _dialogService.ShowMessageAsync(
+        MessageBoxResults result = await _dialogService.ShowMessageAsync(
                             $"Testing {buttons} Dialog",
                             "Test",
                             buttons);

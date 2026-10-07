@@ -33,7 +33,7 @@ public class DelayTimer : ITimer
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"DelayTimer exception: {ex}");
+            System.Diagnostics.Trace.WriteLine($"DelayTimer exception: {ex}");
         }
     }
 }

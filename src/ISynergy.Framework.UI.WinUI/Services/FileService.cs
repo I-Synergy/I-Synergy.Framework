@@ -75,7 +75,7 @@ public class FileService : IFileService<FileResult>
 
         foreach (var file in await PickFileAsync(filters.ToArray(), multiple))
         {
-            if (file.File.Length <= maxFileSize || maxFileSize == 0)
+            if ((await file.GetFileAsync()).Length <= maxFileSize || maxFileSize == 0)
             {
                 result.Add(file);
             }
@@ -132,7 +132,7 @@ public class FileService : IFileService<FileResult>
     public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
-            return result.First().File;
+            return await result.First().GetFileAsync();
 
         return null;
     }

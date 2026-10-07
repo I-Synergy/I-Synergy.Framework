@@ -1,1 +1,1 @@
-# I-Synergy Framework Logging Application Insights
+# I-Synergy Framework OpenTelemetry for Sentry
