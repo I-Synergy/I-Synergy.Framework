@@ -1,3 +1,81 @@
+# Session Handoff - 2026-10-07
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Fixed the EF Core row-limiting warning in the upstream framework helper `ToPage`:
+- `src/ISynergy.Framework.EntityFramework/Extensions/QueryableExtensions.cs`: added an ordering-aware overload
+  `ToPage<TEntity, TKey>(query, Expression<Func<TEntity,TKey>> orderBy, pageIndex, pageSize)` that applies `OrderBy`
+  before `Skip`/`Take`; the legacy `ToPage(pageIndex, pageSize)` overload is kept but now documents that it is unordered
+  and triggers `CoreEventId.RowLimitingOperationWithoutOrderByWarning`. Shared `pageIndex`/`pageSize` validation extracted
+  to a private `ValidatePaging` helper.
+- `src/ISynergy.Framework.EntityFramework/readme.md`: pagination sample now uses the ordered overload.
+- Tests: `QueryableExtensionTests.cs` (+4 tests: ordered paging, ordering-before-paging, negative pageIndex, non-positive
+  pageSize, null orderBy) and new `ToPageRowLimitingWarningTests.cs` (asserts the ordered overload builds `Take(Skip(OrderBy(...)))`
+  and the legacy overload does not order).
+- Verified: `MSBUILDDISABLENODEREUSE=1 dotnet test tests/ISynergy.Framework.EntityFramework.Tests -nodeReuse:false` → Passed 52, Failed 0, Skipped 9.
+- **Follow-up (same session, user "fix them all")** — a repo sweep found three more instances of the same class and fixed them:
+  `EventArchiver.ArchiveOldEventsAsync` (EF `Take` without `OrderBy` → added `.OrderBy(TenantId).ThenBy(AggregateType).ThenBy(AggregateId)`);
+  `EnumerableExtensions.CountPages` (floor → ceiling division, now matches the EF overload); `EnumerableExtensions.ToPage`
+  (wrong `nameof(pageSize)` → `nameof(pageIndex)`, plus an ordered overload for parity). Verified: Core.Tests 572/572,
+  EventSourcing.EntityFramework.Tests 27/27, EventSourcing.Storage build 0 warnings/0 errors.
+  Record: `.ai/completed/ef-row-limiting-followups.md`.
+- Clean repo-wide hits confirmed not affected: sample controllers order before `Take`; `Last`/`LastOrDefault` hits are LINQ-to-objects/UI.
+
+## Decisions Made
+- **Additive fix, not a breaking change**: keep the unordered `ToPage` overload, add an ordered overload.
+  - **Rationale**: the framework cannot know a caller's intended ordering, and changing/removing the existing
+    signature would break downstream consumers.
+  - **Alternatives considered**: making the unordered overload throw when no OrderBy is present (rejected — breaks
+    existing callers and the existing `GetPageTest`); configuring `ConfigureWarnings` to ignore the warning (rejected —
+    hides a genuine non-determinism bug and is a consumer concern).
+- **Structural test instead of a runtime-warning test**: EF Core's InMemory provider does not raise
+  `RowLimitingOperationWithoutOrderByWarning` (it is produced by the relational pipeline), so the test asserts the
+  expression-tree shape (`OrderBy` precedes `Skip`/`Take`) rather than a captured log event.
+
+## Open Questions
+- **OPEN**: Two files show as modified in the working tree that are NOT part of this task and were not edited by this
+  session — `Directory.Packages.props` (Aspire `13.6.0→13.6.1`, `Azure.Monitor.OpenTelemetry.Exporter` `1.9.0→1.10.0`,
+  MSTest `4.4.1→4.5.1`) and `samples/Sample.AppHost/Sample.AppHost.csproj` (Aspire SDK `13.6.0→13.6.1`). Cause
+  unidentified; they appear to be someone else's in-flight dependency bump. Still to be confirmed/committed/reverted by the user.
+- **RESOLVED**: Repo-wide `git diff --check` was failing on `Directory.Packages.props` because the file is stored with
+  CRLF endings (no `.gitattributes`, `core.autocrlf=true`), so added lines carried a `^M` reported as trailing whitespace.
+  Per the user's choice, the file's endings were converted to LF (version content unchanged) so `git diff --check` now passes.
+  `samples/Sample.AppHost/Sample.AppHost.csproj` was left untouched.
+- **ASSUMED**: Nothing in this session has been committed.
+
+## Files Modified
+- `src/ISynergy.Framework.EntityFramework/Extensions/QueryableExtensions.cs` - ordered `ToPage` overload + validation helper, doc remarks
+- `src/ISynergy.Framework.EntityFramework/readme.md` - pagination sample uses the ordered overload
+- `tests/ISynergy.Framework.EntityFramework.Tests/Extensions/QueryableExtensionTests.cs` - ordered-overload + validation tests
+- `tests/ISynergy.Framework.EntityFramework.Tests/Extensions/ToPageRowLimitingWarningTests.cs` - created; expression-tree ordering guarantee
+- `.ai/plans/upstream-framework-ef-row-limiting-warning.md` - created; plan
+- `.ai/completed/upstream-framework-ef-row-limiting-warning.md` - created; completed progress record
+- `Directory.Packages.props` - line endings normalized CRLF→LF (content unchanged) so `git diff --check` passes — not this task's change
+- `src/ISynergy.Framework.Core/Extensions/EnumerableExtensions.cs` - CountPages ceiling fix; ToPage param-name fix + ordered overload
+- `src/ISynergy.Framework.EventSourcing.Storage/Services/EventArchiver.cs` - deterministic `OrderBy` chain before `Take`
+- `tests/ISynergy.Framework.Core.Tests/Extensions/EnumerableExtensionsTest.cs` - CountPages/ToPage/ordered-overload tests
+- `.ai/plans/ef-row-limiting-followups.md`, `.ai/completed/ef-row-limiting-followups.md` - created; follow-up plan + completed record
+
+## Next Actions (Priority Order)
+1. Decide what to do with the unrelated `Directory.Packages.props` / `Sample.AppHost.csproj` bumps, then commit the EF change.
+2. Optional: add a relational-provider (SQLite) test fixture if a true runtime assertion of the row-limiting warning
+   disappearing is wanted; the InMemory provider never raises it, so the `ToPage` and `EventArchiver` `ORDER BY`
+   guarantees are currently verified structurally / by inspection only.
+
+## Files to Load Next Session
+- `.ai/completed/upstream-framework-ef-row-limiting-warning.md` - this task's record
+- `src/ISynergy.Framework.EntityFramework/Extensions/QueryableExtensions.cs` - the changed code
+
+## Session Notes
+- Build rule honoured: node reuse disabled (`MSBUILDDISABLENODEREUSE=1`, `-nodeReuse:false`).
+- No committing was performed.
+
+---
+
+<!-- Previous handoff preserved below -->
+
 # Session Handoff - 2026-10-06
 
 **Written By:** Claude Code

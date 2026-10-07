@@ -60,6 +60,12 @@ public sealed class EventArchiver : IEventArchiver
             .Where(e => e.Timestamp < cutoff)
             .GroupBy(e => new { e.TenantId, e.AggregateType, e.AggregateId })
             .Select(g => new { g.Key.TenantId, g.Key.AggregateType, g.Key.AggregateId })
+            // A deterministic order is required before Take: without it EF Core raises
+            // RowLimitingOperationWithoutOrderByWarning and consecutive runs may re-select the
+            // same streams, so a backlog might never drain.
+            .OrderBy(s => s.TenantId)
+            .ThenBy(s => s.AggregateType)
+            .ThenBy(s => s.AggregateId)
             .Take(_settings.BatchSize)
             .ToListAsync(ct)
             .ConfigureAwait(false);

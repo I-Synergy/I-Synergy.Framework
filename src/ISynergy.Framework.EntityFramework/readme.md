@@ -316,7 +316,9 @@ public class LogEntry : BaseEntity
 
 ### Pagination
 
-Easily implement pagination in queries:
+Easily implement pagination in queries. Pass the ordering key to the ordered `ToPage`
+overload: it applies the `OrderBy` before `Skip`/`Take`, so paging is deterministic and
+EF Core does not raise `RowLimitingOperationWithoutOrderByWarning`:
 
 ```csharp
 using ISynergy.Framework.EntityFramework.Extensions;
@@ -327,14 +329,13 @@ public async Task<PagedResult<ProductDto>> GetProductsPagedAsync(
     CancellationToken cancellationToken)
 {
     var query = _context.Products
-        .Where(p => p.IsActive)
-        .OrderBy(p => p.Name);
+        .Where(p => p.IsActive);
 
     var totalPages = query.CountPages(pageSize);
     var totalItems = await query.CountAsync(cancellationToken);
 
     var items = await query
-        .ToPage(pageIndex, pageSize)
+        .ToPage(p => p.Name, pageIndex, pageSize)
         .Select(p => new ProductDto
         {
             Id = p.Id,
