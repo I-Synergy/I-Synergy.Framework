@@ -22,7 +22,13 @@
          since the platform requires a UIApplication-based entry point. Run tests via:
          bin/{Configuration}/net10.0-maccatalyst/{rid}/ISynergy.Framework.UI.Maui.Tests.Mac.app/Contents/MacOS/ISynergy.Framework.UI.Maui.Tests.Mac
          `dotnet test` does not work here: a self-contained MacCatalyst app bundle has no
-         apphost/hostpolicy layout at the output root for VSTest to launch via hostfxr. -->
+         apphost/hostpolicy layout at the output root for VSTest to launch via hostfxr.
+         On .NET 10 the SDK additionally hard-errors if `dotnet test` targets this project
+         ("Testing with VSTest target is no longer supported by Microsoft.Testing.Platform"),
+         and the documented opt-in (global.json `test.runner` = Microsoft.Testing.Platform) is
+         repo-wide and breaks every other test project, which still uses VSTest. So this project
+         is intentionally excluded from `dotnet test` runs (see azure-pipelines.yml) and is run by
+         executing the built .app bundle directly. -->
     <GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
   </PropertyGroup>
   <ItemGroup>

@@ -1,6 +1,8 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
 
+#pragma warning disable CS0618 // These tests intentionally cover the deprecated synchronous accessors.
+
 namespace ISynergy.Framework.Mvvm.Models.Tests;
 
 [TestClass]
@@ -59,6 +61,33 @@ public class FileResultTests
 
         // Assert
         CollectionAssert.AreEqual(_testData, resultData);
+    }
+
+    [TestMethod]
+    public async Task GetFileAsync_ReturnsCorrectData()
+    {
+        // Arrange
+        var fileResult = new FileResult(TestFilePath, () => Task.FromResult<Stream>(new MemoryStream(_testData)));
+
+        // Act
+        var resultData = await fileResult.GetFileAsync();
+
+        // Assert
+        CollectionAssert.AreEqual(_testData, resultData);
+    }
+
+    [TestMethod]
+    public async Task GetStreamAsync_ReturnsValidStream()
+    {
+        // Arrange
+        var fileResult = new FileResult(TestFilePath, () => Task.FromResult<Stream>(new MemoryStream(_testData)));
+
+        // Act
+        using var stream = await fileResult.GetStreamAsync();
+
+        // Assert
+        Assert.IsNotNull(stream);
+        Assert.IsTrue(stream.CanRead);
     }
 
     [TestMethod]
@@ -151,3 +180,5 @@ public class FileResultTests
         Assert.Throws<ObjectDisposedException>(() => fileResult.GetStream());
     }
 }
+
+#pragma warning restore CS0618

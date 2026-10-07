@@ -612,8 +612,9 @@ public static class StringExtensions
 
             return null;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            System.Diagnostics.Trace.WriteLine($"StringExtensions parameter extraction failed: {ex}");
             return null;
         }
     }

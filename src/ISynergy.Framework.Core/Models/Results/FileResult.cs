@@ -77,13 +77,26 @@ public sealed class FileResult : IDisposable
     /// Gets or sets the file.
     /// </summary>
     /// <value>The file.</value>
+    [Obsolete("Use GetFileAsync() instead. Synchronous access to a file supplied through an async getter blocks the calling thread and can deadlock.")]
     public byte[] File
     {
         get
         {
-            using var stream = GetStream();
+            using var stream = GetStreamCore();
             return stream.ToByteArray();
         }
+    }
+
+    /// <summary>
+    /// Gets the picked file's contents asynchronously. This is the preferred accessor and
+    /// never blocks the calling thread.
+    /// </summary>
+    /// <returns>The file contents as a byte array.</returns>
+    /// <exception cref="ObjectDisposedException">The instance has been disposed.</exception>
+    public async Task<byte[]> GetFileAsync()
+    {
+        using var stream = await GetStreamAsync().ConfigureAwait(false);
+        return stream.ToByteArray();
     }
 
     /// <summary>
@@ -93,11 +106,22 @@ public sealed class FileResult : IDisposable
     /// </summary>
     /// <returns>stream object</returns>
     /// <exception cref="ObjectDisposedException">null</exception>
+    [Obsolete("Use GetStreamAsync() instead. This method can block the calling thread and deadlock when the file was supplied through an async getter.")]
     public Stream GetStream()
     {
         if (_isDisposed)
             throw new ObjectDisposedException(null);
 
+        return GetStreamCore();
+    }
+
+    /// <summary>
+    /// Backing implementation for the synchronous accessors. When the file was supplied
+    /// through an async getter this blocks on the thread pool via <c>Task.Run</c> to avoid
+    /// deadlocking a captured synchronization context; prefer <see cref="GetStreamAsync"/>.
+    /// </summary>
+    private Stream GetStreamCore()
+    {
         if (_asyncStreamGetter is not null)
             return Task.Run(async () => await _asyncStreamGetter()).GetAwaiter().GetResult();
 

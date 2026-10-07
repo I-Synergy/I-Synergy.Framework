@@ -1,4 +1,5 @@
 using ISynergy.Framework.Automations.Triggers.Base;
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 
 namespace ISynergy.Framework.Automations.Triggers;
@@ -26,7 +27,8 @@ public class EventTrigger<T> : BaseTrigger
 
         subscription.Invoke((s, e) =>
         {
-            callbackAsync.Invoke(entity).Wait();
+            _ = callbackAsync.Invoke(entity).SafeFireAndForget(
+                onException: ex => System.Diagnostics.Debug.WriteLine(ex));
         });
     }
 }
