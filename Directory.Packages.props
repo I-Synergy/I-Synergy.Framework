@@ -21,10 +21,10 @@
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
     <PackageVersion Include="DYMO.Connect.SDK" Version="1.6.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="3.1.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.12" />    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="10.0.12" />
@@ -87,6 +87,7 @@
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry" Version="6.12.0" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.12.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.12.0" />
     <PackageVersion Include="SkiaSharp" Version="4.153.1" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.39" />
     <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="35.1.39" />

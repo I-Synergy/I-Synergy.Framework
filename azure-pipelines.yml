@@ -117,6 +117,13 @@ stages:
             msbuildArguments: '/restore /p:Version=$(VersionPackage) /p:ContinuousIntegrationBuild=true /nr:false'
 
         - task: DotNetCoreCLI@2
+          displayName: 'Audit for vulnerable packages (direct + transitive)'
+          inputs:
+            command: 'custom'
+            custom: 'list'
+            arguments: 'I-Synergy.Framework.slnx package --vulnerable --include-transitive'
+
+        - task: DotNetCoreCLI@2
           displayName: 'Pack I-Synergy Framework'
           inputs:
             command: 'pack'
