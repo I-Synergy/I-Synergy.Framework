@@ -67,7 +67,7 @@ public class FileService : IFileService<FileResult>
     public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1048576)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result && result.Count > 0)
-            return result[0].File;
+            return await result[0].GetFileAsync();
 
         return null;
     }

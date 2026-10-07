@@ -76,17 +76,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Technical Justification**: Windows 10 Version 2004 provides access to modern Windows SDK APIs and tooling features required for optimal compatibility with .NET 10, including enhanced platform capabilities and improved build toolchain support
   - **Migration Path**: See [UWP Migration Guide](src/ISynergy.Framework.UI.UWP/readme.md#migration-guide) in the package README
 
+#### Framework review — layering, async, robustness and audit (2026-10-07)
+- **[BREAKING] ISynergy.Framework.Core / ISynergy.Framework.Globalization**: Removed the `ISynergy.Framework.Core → ISynergy.Framework.Globalization` project reference so `Core` has no framework-project dependency. The shared types `ILanguageService`, `GlobalizationConstants` and the `DateTimeConverter` / `DateTimeOffsetConverter` / `TimeOnlyConverter` JSON converters now physically live in the `ISynergy.Framework.Core` assembly — their `ISynergy.Framework.Globalization.*` namespaces are unchanged and `Globalization` type-forwards them (`TypeForwarding.cs`). `Globalization` now references `Core`.
+  - **Migration**: projects that previously received `ISynergy.Framework.Globalization` transitively through `Core` must now reference it explicitly (or transitively through `UI`/`AspNetCore.Blazor`/`AspNetCore.Globalization`/`Documents.Syncfusion`/`Geography`, which were updated).
+- **ISynergy.Framework.OpenTelemetry.Sentry**: Migrated off the obsolete `Sentry.OpenTelemetry` API (`AddSentry` / `UseOpenTelemetry`) to `Sentry.OpenTelemetry.Exporter` (`AddSentryOtlpExporter` / `UseOtlp`); the package reference is now `Sentry.OpenTelemetry.Exporter`.
+- **ISynergy.Framework.Automations / ISynergy.Framework.Core**: `IActionService` / `IAutomationService` async methods and `NetworkUtility`'s async methods now accept a `CancellationToken`; `BaseAsyncRelayCommand.LogIfFailed` is no longer `async void`; the execution timer no longer leaks on refresh; previously swallowed exceptions are traced.
+- **ISynergy.Framework.CQRS**: `QueryDispatcher`'s reflection fallback no longer uses `dynamic` — it reflects `HandleAsync` once per handler shape and invokes it through `MethodInfo`.
+- **Build / CI**: `NuGetAuditMode` raised from `direct` to `all` (transitive packages are audited on every restore/build) and the Azure Pipeline now runs `dotnet list … --vulnerable --include-transitive`.
+- **Internals (no public API change)**: `BaseAsyncRelayCommand`, `MessengerService` and `RedBlackTree<T>` were decomposed — the pools/timeout-cache into `CommandExecutionResourcePool`, recipient storage into `MessengerRecipientRegistry`, and the red-black balancing fix-ups into a nested `Balancing` collaborator.
+
+### Removed
+
+- **[BREAKING] ISynergy.Framework.EntityFramework**: Removed the `DbContextExtensions` class (`ExistsAsync`, `GetItemByIdAsync`, `RemoveItemAsync`) and its unit tests. These repository-style helpers contradicted the framework's documented data-access rule — use EF Core `DbSet<T>` primitives directly on the `DataContext` — were not AOT-safe (runtime `Expression` building), used `context.Update`, and auto-included every navigation. Migrate to `_context.Set<TEntity>()` or a named `DbSet` property with `AnyAsync` / `FirstOrDefaultAsync` / `Add` / `Remove` / `SaveChangesAsync`. See `src/ISynergy.Framework.EntityFramework/readme.md`.
+
+- **[BREAKING] ISynergy.Framework.Mvvm / ISynergy.Framework.UI.Blazor / ISynergy.Framework.AspNetCore.Blazor**: The `MessageBoxImage` and `MessageBoxResult` enums were renamed to `MessageBoxImages` and `MessageBoxResults` (plural), consistent with the already-plural `MessageBoxButtons` and the framework's plural-enum convention. The enum files were renamed to match; the platform-specific `System.Windows.MessageBoxImage` / `System.Windows.MessageBoxResult` (WPF) are unaffected.
+  - **Migration**: replace references to `…Enumerations.MessageBoxImage` / `MessageBoxResult` with `MessageBoxImages` / `MessageBoxResults`; `MessageBoxRequest.MessageBoxImage` is now `MessageBoxRequest.MessageBoxImages`.
+
 ### Fixed
 - **Sample.WinUI**: Changed `<DefaultLanguage>` from `en` to `en-US` to eliminate PRI257 resource packaging warning; `makepri.exe` requires the default language tag to match the actual resource qualifiers present (`en-us`, `de-de`, etc.)
 - **Sample.Maui (Android 16)**: Resolved XA0141 by pinning `SQLitePCLRaw.lib.e_sqlite3.android` to 2.1.11 in central package management and adding a direct Android-conditional `PackageReference`; the transitively-pulled version 2.1.6 (via `Dotmim.Sync.Sqlite`) used 4KB ELF segment alignment which Android 16 rejects
 - **Compiler warnings — MAUI samples**: Replaced all deprecated `NamedSize` string values (`Title`, `Body`, `Subtitle`, `Caption`, `Large`) in MAUI XAML files with explicit numeric pixel values; removed obsolete `Frame` and `ListView` XAML styles
 - **Compiler warnings — library projects**: Removed unused private fields (`CS0169`, `CS0414`), removed unused local variables (`CS0219`), fixed nullable return on `SignUpViewModel.Mail` getter (`CS8603`), and resolved ambiguous XML `<see cref>` in `MauiAppBuilderExtensions` (`CS0419`)
+- **Compiler warnings — `FileResult` deprecation**: Migrated the WPF/WinUI/MAUI `FileService` / `CameraService` / `ImageBrowser` call sites from the obsolete `FileResult.File` to `await GetFileAsync()`, eliminating the `CS0618` warnings introduced by the deprecation below.
+- **ISynergy.Framework.EventSourcing.Storage**: `EventArchiver.CreateAggregate` now caches aggregate-type resolution and selects deterministically (ordinal full-name order, ambiguity traced) instead of depending on assembly load order.
+- **ISynergy.Framework.Storage.S3**: `S3StorageService.GetObjectKey` normalises separators and drops `.` / `..` segments, closing a path-traversal hole in the object key.
+- **Samples**: Documented the `Sample.Maui` MAUI-workload build failure (`MSB4018` in the Resizetizer `GenerateSplashAssets` task) in its readme.
 
 ### Deprecated
 - **ISynergy.Framework.Core** `ObjectExtensions.Clone<T>()` (reflection-based overload): Use `Clone<T>(JsonSerializerContext)` in AOT/trimmed deployments. The parameterless overload is annotated `[RequiresUnreferencedCode]` and will be removed in a future major version.
 - **ISynergy.Framework.CQRS** reflection-based query dispatch: Use the source-generated `QueryDispatchTable` registered via `AddQueryDispatchTable()`. The dynamic dispatch path is annotated `[RequiresDynamicCode]`.
 - **ISynergy.Framework.MessageBus.Azure** and **ISynergy.Framework.MessageBus.RabbitMQ** `JsonSerializerOptions`-based constructors: Use `JsonTypeInfo<T>`-based overloads in AOT/trimmed deployments. The `JsonSerializerOptions` constructors are annotated `[RequiresDynamicCode]`.
 - **ISynergy.Framework.Mvvm** `AppDomain`-based view/view-model scanning: Use `ViewModelExtensions.RegisterViewTypes()` with the source-generated map. The scanning path is annotated `[RequiresUnreferencedCode]`.
+- **ISynergy.Framework.Core** `FileResult.File` and `FileResult.GetStream()`: Use `FileResult.GetFileAsync()` and `FileResult.GetStreamAsync()`. The synchronous accessors block the calling thread when the file was supplied through an asynchronous getter and can deadlock.
+
+### Security
+- **Samples**: Removed the committed Sentry DSN and Azure Application Insights connection string from the sample `appsettings.json` files; telemetry credentials must now be supplied via environment variables or user-secrets (see `samples/Sample.Shared/readme.md`). **Rotate the previously committed values — they remain in git history.**
+- **Sample.EventSourcing.Api**: No longer trusts the spoofable `X-Tenant-Id` / `X-User-Name` request headers; it requires an authenticated JWT and resolves the tenant and user from claims via `AddMultiTenancyIntegration`, with CORS restricted to the configured origins.
+- **ISynergy.Framework.OpenTelemetry**: `UserContextEnrichingLogProcessor` no longer attaches user/PII attributes unless `IncludeUserContext` is enabled; the samples ship `SendDefaultPii: false`.
 
 ### Documentation
 - Updated [src/ISynergy.Framework.UI.UWP/readme.md](src/ISynergy.Framework.UI.UWP/readme.md) with breaking change notice, migration guide, and technical justification

@@ -132,7 +132,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             if (await _dialogService.ShowMessageAsync(
                 _commonServices.LanguageService.GetString("ChangeLanguage"),
                 _commonServices.LanguageService.GetString("Language"),
-                MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+                MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
             {
                 await _dialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, CultureInfo>(
                     async culture =>

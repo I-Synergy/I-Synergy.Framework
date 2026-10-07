@@ -92,7 +92,7 @@ public partial class ImageBrowser : ContentView
 
                 if (result is not null)
                 {
-                    FileBytes = result.File;
+                    FileBytes = await result.GetFileAsync();
                     ContentType = result.FilePath.ToContentType();
                     FileName = result.FileName;
                     DateTime = System.DateTime.Now;
@@ -115,7 +115,7 @@ public partial class ImageBrowser : ContentView
 
                 if (result is not null && result.Count > 0 && result[0] is not null)
                 {
-                    FileBytes = result[0].File;
+                    FileBytes = await result[0].GetFileAsync();
                     ContentType = result[0].FilePath.ToContentType();
                     FileName = result[0].FileName;
                     DateTime = System.DateTime.Now;

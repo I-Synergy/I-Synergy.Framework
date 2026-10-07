@@ -173,10 +173,10 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 - **CQRS Pattern** - Command Query Responsibility Segregation for scalable event-driven applications
 - **Event Sourcing** - Domain event store with aggregate replay; pluggable `IEventSerializer` supporting both reflection and AOT-safe source-generated JSON
 - **Dependency Injection** - Built-in DI throughout all layers
-- **Entity Framework Core** - Advanced data access with repository pattern
+- **Entity Framework Core** - Data access with EF Core `DbSet<T>` primitives directly on the `DataContext` (no repository abstraction)
 - **Domain-Driven Design** - Rich domain models with aggregate roots
 - **Vertical Slice Architecture** - Feature-organized application structure
-- **Native AOT / Trim** - Source generators and compile-time registrations eliminate runtime reflection across all libraries
+- **Trim-aware** - Trim analysis is enabled for the platform UI packages (`UI.WPF`/`UI.WinUI`/`UI.Maui`) and reflection-heavy APIs are annotated with `[RequiresUnreferencedCode]` / `[RequiresDynamicCode]`, with source generators replacing some reflection-based registration. Native AOT is a direction the code is being annotated toward, not yet a per-package guarantee.
 
 ---
 

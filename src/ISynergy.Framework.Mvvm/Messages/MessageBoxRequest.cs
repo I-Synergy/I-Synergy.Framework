@@ -8,7 +8,7 @@ public class MessageBoxRequest
     public string? Title { get; private set; }
     public NotificationTypes NotificationTypes { get; private set; }
     public MessageBoxButtons MessageBoxButtons { get; private set; }
-    public MessageBoxImage MessageBoxImage { get; private set; }
+    public MessageBoxImages MessageBoxImages { get; private set; }
 
     public MessageBoxRequest(string message, string? title = "")
     {
@@ -16,7 +16,7 @@ public class MessageBoxRequest
         Title = title;
         NotificationTypes = NotificationTypes.Information;
         MessageBoxButtons = MessageBoxButtons.OK;
-        MessageBoxImage = MessageBoxImage.None;
+        MessageBoxImages = MessageBoxImages.None;
     }
 
     public MessageBoxRequest(string message, string? title, NotificationTypes notificationTypes)
@@ -31,9 +31,9 @@ public class MessageBoxRequest
         MessageBoxButtons = messageBoxButtons;
     }
 
-    public MessageBoxRequest(string message, string? title, NotificationTypes notificationTypes, MessageBoxButtons messageBoxButtons, MessageBoxImage messageBoxImage)
+    public MessageBoxRequest(string message, string? title, NotificationTypes notificationTypes, MessageBoxButtons messageBoxButtons, MessageBoxImages messageBoxImage)
         : this(message, title, notificationTypes, messageBoxButtons)
     {
-        MessageBoxImage = messageBoxImage;
+        MessageBoxImages = messageBoxImage;
     }
 }

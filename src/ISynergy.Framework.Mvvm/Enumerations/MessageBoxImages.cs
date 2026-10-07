@@ -1,10 +1,10 @@
-namespace ISynergy.Framework.UI.Enumerations;
+namespace ISynergy.Framework.Mvvm.Enumerations;
 
 /// <summary>
-/// Enum MessageBoxImage
+/// Enum MessageBoxImages
 /// </summary>
 [Flags]
-public enum MessageBoxImage // NOSONAR
+public enum MessageBoxImages // NOSONAR
 {
     /// <summary>
     /// The none

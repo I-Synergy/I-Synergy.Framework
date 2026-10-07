@@ -124,7 +124,7 @@ public class SettingsViewModel : ViewModelNavigation<bool>
                         Environment.NewLine +
                         _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
                         _commonServices.LanguageService.GetString("TitleQuestion"),
-                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
+                        MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
                 {
                     _commonServices.RestartApplication();
                 }

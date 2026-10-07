@@ -8,6 +8,8 @@ using ISynergy.Framework.EventSourcing.Storage.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
+using System.Reflection;
 
 namespace ISynergy.Framework.EventSourcing.Storage.Services;
 
@@ -277,23 +279,65 @@ public sealed class EventArchiver : IEventArchiver
         return true;
     }
 
+    /// <summary>
+    /// Caches the aggregate type resolved from a stream type name. Resolution scans the loaded
+    /// assemblies, so the outcome (including a not-found <c>null</c>) is cached to avoid repeating the
+    /// scan for every archived stream.
+    /// </summary>
+    private static readonly ConcurrentDictionary<string, Type?> _aggregateTypeCache = new();
+
     private static AggregateRoot<Guid>? CreateAggregate(string aggregateTypeName)
     {
-        // Try to resolve the aggregate type from all loaded assemblies by short class name.
-        var type = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a =>
-            {
-                try { return a.GetTypes(); }
-                catch { return []; }
-            })
-            .FirstOrDefault(t =>
-                t.Name == aggregateTypeName
-                && !t.IsAbstract
-                && typeof(AggregateRoot<Guid>).IsAssignableFrom(t));
+        var type = _aggregateTypeCache.GetOrAdd(aggregateTypeName, static name => ResolveAggregateType(name));
 
         if (type is null)
             return null;
 
         return Activator.CreateInstance(type) as AggregateRoot<Guid>;
+    }
+
+    /// <summary>
+    /// Resolves a concrete <see cref="AggregateRoot{TId}"/> type from a stream type name by scanning the
+    /// loaded assemblies. When several aggregates share the short name the match is chosen
+    /// deterministically (ordinal order of the full name) and the ambiguity is surfaced via trace,
+    /// rather than depending on assembly load order.
+    /// </summary>
+    private static Type? ResolveAggregateType(string aggregateTypeName)
+    {
+        var matches = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(GetLoadableTypes)
+            .Where(t => t.Name == aggregateTypeName
+                && !t.IsAbstract
+                && typeof(AggregateRoot<Guid>).IsAssignableFrom(t))
+            .OrderBy(t => t.FullName, StringComparer.Ordinal)
+            .ToList();
+
+        if (matches.Count == 0)
+            return null;
+
+        if (matches.Count > 1)
+        {
+            System.Diagnostics.Trace.WriteLine(
+                $"EventArchiver: aggregate type name '{aggregateTypeName}' is ambiguous ({matches.Count} matches); " +
+                $"using '{matches[0].FullName}'.");
+        }
+
+        return matches[0];
+    }
+
+    /// <summary>
+    /// Gets the loadable types of an assembly, tolerating assemblies whose types cannot all be loaded.
+    /// </summary>
+    private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+    {
+        try
+        {
+            return assembly.GetTypes();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Trace.WriteLine($"EventArchiver.CreateAggregate could not enumerate types in '{assembly.FullName}': {ex}");
+            return [];
+        }
     }
 }

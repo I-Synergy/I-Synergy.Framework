@@ -62,8 +62,8 @@ public class DialogService : IDialogService, IDisposable
     /// </summary>
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(Exception error, string? title = "") =>
         ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -71,8 +71,8 @@ public class DialogService : IDialogService, IDisposable
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -80,8 +80,8 @@ public class DialogService : IDialogService, IDisposable
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowInformationAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -89,8 +89,8 @@ public class DialogService : IDialogService, IDisposable
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowWarningAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -127,14 +127,14 @@ public class DialogService : IDialogService, IDisposable
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
-    /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
+    /// <returns>MessageBoxResults.</returns>
+    public async Task<MessageBoxResults> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
     {
         // Input validation
         if (string.IsNullOrWhiteSpace(message))
         {
             _logger?.LogWarning("Attempted to show dialog with empty message");
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
 
         // Circuit breaker pattern: Check if service is in cooldown
@@ -142,7 +142,7 @@ public class DialogService : IDialogService, IDisposable
         {
             _logger?.LogWarning("DialogService in cooldown period. Message: {Title} - {Message}", title, message);
             await TryFallbackNotificationAsync(message, title);
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
 
         // Try to recover after cooldown period
@@ -169,7 +169,7 @@ public class DialogService : IDialogService, IDisposable
         }
     }
 
-    private async Task<MessageBoxResult> ShowMessageWithRetryAsync(string message, string title, MessageBoxButtons buttons, int retryCount = 0)
+    private async Task<MessageBoxResults> ShowMessageWithRetryAsync(string message, string title, MessageBoxButtons buttons, int retryCount = 0)
     {
         const int maxRetries = 2;
 
@@ -198,16 +198,16 @@ public class DialogService : IDialogService, IDisposable
         catch (Exception ex) when (IsCriticalDialogException(ex))
         {
             await HandleCriticalDialogFailureAsync(ex, message, title);
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
         catch (Exception ex)
         {
             await HandleDialogFailureAsync(ex, message, title);
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
     }
 
-    private async Task<MessageBoxResult> ShowMessageInternalAsync(string message, string title, MessageBoxButtons buttons)
+    private async Task<MessageBoxResults> ShowMessageInternalAsync(string message, string title, MessageBoxButtons buttons)
     {
         // Additional safety check right before showing dialog
         if (Application.Current == null ||
@@ -232,7 +232,7 @@ public class DialogService : IDialogService, IDisposable
                             _languageService.GetString("Ok"),
                             _languageService.GetString("Cancel"));
 
-                        return okCancelResult ? MessageBoxResult.OK : MessageBoxResult.Cancel;
+                        return okCancelResult ? MessageBoxResults.OK : MessageBoxResults.Cancel;
 
                     case MessageBoxButtons.YesNo:
                         var yesNoResult = await page.DisplayAlertAsync(
@@ -241,7 +241,7 @@ public class DialogService : IDialogService, IDisposable
                             _languageService.GetString("Yes"),
                             _languageService.GetString("No"));
 
-                        return yesNoResult ? MessageBoxResult.Yes : MessageBoxResult.No;
+                        return yesNoResult ? MessageBoxResults.Yes : MessageBoxResults.No;
 
                     default:
                         await page.DisplayAlertAsync(
@@ -249,11 +249,11 @@ public class DialogService : IDialogService, IDisposable
                             message,
                             _languageService.GetString("Ok"));
 
-                        return MessageBoxResult.OK;
+                        return MessageBoxResults.OK;
                 }
             }
 
-            return MessageBoxResult.Cancel;
+            return MessageBoxResults.Cancel;
         }
         catch (OperationCanceledException) when (cts.Token.IsCancellationRequested)
         {

@@ -133,7 +133,7 @@ public class NavigationServiceExceptionHandlingTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("OnNavigatedTo")),
+                It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("OnNavigatedTo")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Never);
