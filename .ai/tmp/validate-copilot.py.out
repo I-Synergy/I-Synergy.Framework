@@ -1,0 +1,24 @@
+============================================================
+  Copilot Integration Validation
+============================================================
+TEST 1: .github/copilot-instructions.md
+----------------------------------------
+  PASS: file exists
+  PASS: no stale .claude/ references
+
+TEST 2: .github/skills/ directory exists
+----------------------------------------
+  PASS: .github/skills/ exists (37 skill(s))
+
+TEST 3: .github/skills/ is a folder-level junction -> .ai/skills/
+----------------------------------------
+  PASS: folder-level junction — 37 skills (source has 37)
+
+TEST 4: .claude/skills/ is a folder-level junction -> .ai/skills/
+----------------------------------------
+  PASS: folder-level junction — 37 skills (source has 37)
+
+============================================================
+  4/4 tests passed
+============================================================
+  ALL COPILOT TESTS PASSED

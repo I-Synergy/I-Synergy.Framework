@@ -1,40 +1,40 @@
-# Session Handoff - 2026-07-15
+# Session Handoff - 2026-10-06
+
+**Written By:** Claude Code
+**Next Session May Use:** Any
 
 ## Task Summary
-Eliminated all fixable warnings across the solution in two passes (both plans in `.ai/plans/steady-cooking-storm.md` history):
-1. **Build-analyzer trim warnings** in UI.WinUI/WPF/Maui (IL2026/IL2057/IL2067/IL2072/IL2091) — commit f297f51
-2. **All remaining 85 solution warnings**: publish-time ILLink trim chain (commit 694c131d), MSTest analyzer cleanup in tests (4566e947), sample BL0007/CA1416 (c4e80453)
-
-Final state: full Release solution build = **7 warnings, 0 errors** — all IL2104 from third-party assemblies (Syncfusion ×5, WinRT.Runtime, Microsoft.Windows.SDK.NET), not fixable in this repo. Trimmed Sample.WinUI publish equally clean.
+Applied the AI template upgrade (`/upgrade-template`, non-interactive) and reconciled the repo with the new template layout:
+- 53 files added (skill `references/` folders, `book-to-skill/scripts/extract.py`, `validate-agents-md.py`); `.claude/settings.json` merged; `upgrade-template.py` self-updated. 35 changed template files kept the project version.
+- Between the upgrade and the audit, `CLAUDE.md`, `DEEPSEEK.md`, `REASONIX.md` and `.ai/chains/*.chain.md` were deleted from the working tree and a new `AGENTS.md` appeared. Cause not identified; the upgrade scripts contain no code that deletes them. User chose to treat it as an intentional migration to `AGENTS.md`.
+- `verify-config` run against `AGENTS.md`; findings fixed (below).
 
 ## Decisions Made
-- **ILLink vs analyzer suppression**: ILLink (publish) ignores `#pragma`/`.editorconfig` — only attributes work. All publish-relevant suppressions are attribute-based; `.editorconfig [**/obj/**.g.cs]` section KEPT (verified still needed for WPF generated code at build-analyzer level).
-- **Honest RUC contract**: `[RequiresUnreferencedCode]` on fundamentally trim-unsafe APIs (assembly walkers, To*Types discovery, plural Register*s, RegisterAssemblies, SettingsStorageExtensions JSON methods). Suppression only at the `ConfigureServices` boundary (justification: scanned types are rooted by app XAML compilation). NuGet consumers calling scanning APIs directly now see honest IL2026 — needs release-notes mention.
-- **Manual config binding**: all `ConfigurationBinder.Bind` on small option types replaced with trim-safe `IConfigurationSection` indexer binding (ApplicationFeatures, ClientApplicationOptions, UpdateOptions, AnalyticOptions, OTLP exporter options). New config keys on those types must be bound explicitly.
-- **DAM relaxation**: removed unneeded `DAM(All)` from Core `IsSingleton`/`IsScoped`/`IsFreeApplication` (only call `Attribute.GetCustomAttribute` — no DAM requirement).
-- **Sample.WinUI JSON source-gen**: `LocalSettingsJsonContext` fixes a live startup crash — `PublishTrimmed=true` disables reflection STJ, so the old code threw `NotSupportedException` in published Release.
-- **MSTest reference-identity tests**: in-place-contract assertions rewritten to `AreSame`/`AreNotSame` (NOT CollectionAssert, which would silently weaken them).
-- **MailServiceTests**: `[TestClass]` + class-level `[Ignore]` — it sends real email via Graph; was previously silently undiscovered, now shows 4 skipped in CI.
-- **Module-level trimmer suppressions** for generated XamlTypeInfo EventTriggerBehavior members (`Properties/GlobalSuppressions.Trimming.cs` in UI.WinUI and Sample.WinUI) — fragile to XAML index shifts (Activate_49_/_120_) but fails safe (warning reappears).
+- **AGENTS.md is the instruction file**; CLAUDE.md / DEEPSEEK.md / REASONIX.md are not restored.
+  - **Rationale**: user chose option 2 (intentional migration).
+  - **Alternatives considered**: `git restore` the old files — rejected by the user. Their uncommitted edits were never in git and are likely lost.
+- **Pi chains dropped**: removed `.ai/chains` from `sync-skills.py` and `validate-settings.py`; deleted `validate-pi.py` and removed it from `run-all-tests.sh`, `test_suite.py` and the three test docs. `.pi/skills` and `.pi/agents` junctions are still created by `sync-skills.py`.
+- **Project rules 14–16** (persisted enums, package-range bounds, no secrets) now live in `.ai/project/preferences.md`, because `AGENTS.md` is template-owned and overwritten on upgrade. `AGENTS.md` roster gained `programmer` and `winui-dev`; that edit may be overwritten by a future upgrade.
+- **settings.json**: removed the stale DEEPSEEK.md sync hook and the older duplicate `Stop` build hook (builds were running twice).
+- **Test runners retargeted** from CLAUDE.md/REASONIX.md to AGENTS.md: `validate-structure.sh`, `validate-references.sh`, `run-all-tests.sh`, `test_suite.py`. The Reasonix suite was removed from both runners.
 
 ## Open Questions
-- Local branch `development/main` has no upstream (remote only has `main`) — commits f297f51..latest are LOCAL ONLY; push not yet requested/performed.
-- Sample.WinUI plain `dotnet build -c Release` fails with pre-existing NETSDK1102 (PublishTrimmed without RID); use `-r win-x64 --self-contained true`.
-- Runtime smoke test of published Sample.WinUI settings round-trip (plan verification step 4) not performed — recommended before release.
+- **RESOLVED**: Standards surfaces written (`COMPLIANCE.md` and the `## Standards Compatibility` block in `README.md`, provenance `validators=none`). `standards.md` row 1 was changed to `Aligned` (validator `—`) because this project holds no `docs/slices/…` or `docs/test-reports/…`; `validate-standards.py` passes and the full suite is 12/12. The override is recorded in `.ai/project/preferences.md` → Template Overrides and may be reverted by an interactive upgrade.
+- **OPEN**: `~/.reasonix/` (config.json, locks, memory) was not inspected for leaked project config.
+- **ASSUMED**: Nothing in this session has been committed.
 
 ## Files Modified
-See commits f297f51, 694c131d, c4e80453, 4566e947 (`git show --stat`). Completed task logs: `.ai/completed/fix-trim-warnings-winui.md`, `.ai/completed/fix-remaining-warnings.md`.
+`.claude/settings.json`, `.ai/scripts/{upgrade-template,sync-skills}.py`, `.ai/tests/{validate-settings.py,validate-structure.sh,validate-references.sh,run-all-tests.sh,test_suite.py,README.md,TESTING-GUIDE.md,QUICK-REFERENCE.md}`, `.ai/tests/validate-pi.py` (deleted), `.ai/tests/validate-tokens.sh`, `.ai/reference/{task-execution,standards}.md`, `.ai/project/preferences.md`, `AGENTS.md`, `README.md` (standards block appended), new `COMPLIANCE.md`, plus the added template files. Nothing committed.
 
 ## Next Actions
-- Push `development/main` when user asks (recreates remote branch; CI currently builds pre-fix code).
-- Release notes: mention new RUC on SettingsStorageExtensions + scanning APIs; MailServiceTests now visible-as-skipped.
-- Optional: runtime settings round-trip test of trimmed Sample.WinUI publish.
+- Review and commit the working tree (note the unexpected deletions of `CLAUDE.md`, `DEEPSEEK.md`, `REASONIX.md`, `.ai/chains/`).
+- `bash .ai/tests/run-all-tests.sh` passes 12/12 as of this session; re-run after any upgrade.
 
 ## Files to Load Next Session
 - `.ai/session-context.md` — this file
-- `.ai/reference/critical-rules.md` — always
-- `.ai/completed/fix-remaining-warnings.md` — if warning work continues
+- `AGENTS.md` — instruction file
+- `.ai/project/preferences.md` — includes rules 14–16
 
 ## Session Notes
-- ILLink warning counts in MSBuild logs appear doubled (inline + summary block) — divide by 2.
-- WPF `_wpftmp` XAML markup-compile pass runs analyzers on clean builds only — local incremental builds can hide generated-code warnings that CI surfaces.
+- The auto-mode classifier blocks edits to `.claude/settings.json` and file deletion from the agent; those were done by the user running a script and `rm` via the `!` prefix.
+- Earlier handoff (2026-07-15, trim-warning work) is superseded here. Its decisions are recorded in `.ai/completed/fix-trim-warnings-winui.md` and `.ai/completed/fix-remaining-warnings.md`; the local `development/main` commits from that work were still unpushed and may still need a push decision.

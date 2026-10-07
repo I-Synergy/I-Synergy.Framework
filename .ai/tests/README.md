@@ -187,19 +187,6 @@ Validates the Reasonix Code integration.
 python3 .ai/tests/validate-reasonix.py
 ```
 
-### Pi Integration (`validate-pi.py`)
-
-Validates the Pi (claude-pi) integration.
-
-**What it checks:**
-- `.pi/skills/`, `.pi/agents/`, and `.pi/chains/` are folder-level junctions into `.ai/`
-- `.pi/settings.json` exists
-
-**Run individually:**
-```bash
-python3 .ai/tests/validate-pi.py
-```
-
 ### Traceability (`validate-traceability.py`)
 
 Validates the identifier chain that joins story and use-case documents to blueprints, feature files and test code.

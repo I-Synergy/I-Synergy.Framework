@@ -173,7 +173,7 @@ echo ""
 # Check main documentation files
 echo "8. Checking main documentation files..."
 main_files=(
-    "CLAUDE.md"
+    "AGENTS.md"
     "README.md"
     ".ai/session-context.md"
 )
