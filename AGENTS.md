@@ -1,10 +1,12 @@
-# .NET Development Template — DeepSeek
+# .NET Development Template
 
 ## Identity
 
-You are a development agent working within a .NET project template. You are powered by DeepSeek via the Anthropic-compatible API, running inside Claude Code's runtime. You have file I/O, shell execution, and code search tools available. Your role is to plan, delegate, review, and orchestrate — not to write code directly in the main conversation.
+You are a development agent working within a .NET project template. You are powered by AI (claude or copilot). You have file I/O, shell execution, and code search tools available. Your role is to plan, delegate, review, and orchestrate — not to write code directly in the main conversation.
 
-## Session Lifecycle
+## Session Memory
+
+`.ai/session-context.md` is the shared memory for every client. Before starting any work, read it first (on Claude Code, the `SessionStart` hook prints it automatically; on GitHub Copilot and Reasonix Code nothing loads it for you, so reading it first is your responsibility). Before your final reply of any session that changed project state, update it using `.ai/reference/templates/session-handoff.md.txt`, set Written By to your client name (Claude Code, GitHub Copilot, or Reasonix Code), update sections in place, and never overwrite another client's entries. In this template repository the file stays the unfilled placeholder; record project state in `.ai/progress/` and `.ai/completed/` instead.
 
 Every session follows this cycle:
 
@@ -16,7 +18,7 @@ Every session follows this cycle:
 
 ### When to Plan
 
-**Progress files are MANDATORY for every non-trivial task (3+ steps or multi-file).** Plan before writing code:
+For any non-trivial task (3+ steps or multi-file), plan before writing code:
 
 1. **Create a plan** — write `.ai/plans/{task-slug}.md`. Wait for approval before writing any code.
 2. Create `.ai/progress/{task-slug}.md`:
@@ -51,7 +53,7 @@ Three seats is the minimum useful council, five the ceiling, with one cross-exam
 
 ### ReAct Loop
 
-After every file edit, observe the result (build output, test results). If it fails, reason about the root cause, fix it with a different approach, and observe again. After 3 failed retries on the same error, escalate to the user with a summary of what was tried.
+After every file edit, observe the result (command output, test results). If it fails, reason about the root cause, fix it with a different approach, and observe again. After 3 failed retries on the same error, escalate to the user with a summary of what was tried.
 
 ### Progress Tracking
 
@@ -59,14 +61,14 @@ Use local `.ai/progress/` markdown files only. Do NOT use global/cloud task trac
 
 ## Subagent Delegation
 
-**HARD RULE:** the main conversation is **orchestration only**. You plan, read, review output, and run git/sync operations. You do NOT write or edit code directly.
+The main conversation is **orchestration only**. You plan, read, review output, and run git/sync operations. You do NOT write or edit code directly.
 
 All substantive work goes to a subagent:
 
 | Agent | Use For |
 |---|---|
 | `architect` | Feature design, pattern selection, component boundaries, architecture analysis |
-| `reviewer` | Code quality, SOLID, CQRS compliance, security review, architecture audit |
+| `reviewer` | Code quality, SOLID, CQRS compliance, security review, architecture audit, ISO/IEC 25010 finding attribution |
 | `security` | Blast-radius and exposure analysis, threat modelling, OWASP review, dependency and secret audits |
 | `tester` | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
 | `designer` | Visual design — color palettes, typography, branding, design tokens |
@@ -77,7 +79,7 @@ All substantive work goes to a subagent:
 | `winui-dev` | WinUI 3 desktop applications — Windows App SDK, XAML, features, conversions, bugs |
 | `writer` | XML docs, READMEs, ADRs, technical prose |
 
-Each agent's `model:` frontmatter in `.ai/agents/` carries the tier alias (`sonnet` or `haiku`); the concrete model behind each slot is defined by the backend profile in `powershell/Microsoft.PowerShell_profile.ps1`.
+Each agent's `model:` frontmatter in `.ai/agents/` carries the tier alias (`sonnet` or `haiku`); the concrete model bound to that tier is chosen by the backend runtime outside this repository.
 
 Agent definitions live in `.ai/agents/` (canonical source). When delegating, always include in the prompt:
 ```
@@ -117,7 +119,7 @@ Always map entities to Models before returning from handlers. Responses wrap Mod
 ### 5. Handler Naming: Always Include Command/Query Suffix
 `CreateBudgetCommandHandler`, `GetBudgetByIdQueryHandler` — never `CreateBudgetHandler`.
 
-### 6. File Organization: One Type Per File, Subfolder Per Operation
+### 6. Example File Organization: One Type Per File, Subfolder Per Operation
 ```
 Features/Budgets/
   Commands/CreateBudget/
@@ -154,24 +156,20 @@ If a type already exists, reuse or extend it. Never create duplicates. Every pla
 ### 13. Plan Files: Always in `.ai/plans/`
 Never save plans to `docs/plans/`. Always use `.ai/plans/`.
 
-### 14. Enums: Explicit Values When Persisted or Serialized
-Any enum persisted to a database or serialized (JSON, OpenAPI) MUST declare explicit `= 0, = 1, …` values, with a comment that values are persisted and must never be renumbered. Inserting a member in declaration order relabels every stored row.
-
-### 15. Bound Breaking Package Ranges
-Pin known-incompatible transitive packages with an upper bound in `Directory.Packages.props` so the mismatch fails at restore instead of compile. Without the bound, a newer transitive version is resolved and the build fails deep inside a consuming project.
-
-### 16. No Secrets in the Repo or Runbooks
-Never commit `.p8` private keys, keystore material, or service-account JSON. Reference pipeline secret variable names and put a placeholder in the doc; the actual key material is stored in your CI/CD system only.
-
 ## After Every Code Change
 
-Run `dotnet build --nologo --verbosity minimal` after every file edit. Read the build output. If it fails, fix before continuing. Run `dotnet test` after multi-file changes.
+The `Stop` hook runs `dotnet build --nologo --verbosity minimal` once at the end of a task, and only when files under `src/` or `tests/` changed since the last successful build, or when no successful-build marker exists yet and a solution is present. Read the build output. If it fails, fix before continuing. Run `dotnet test` after multi-file changes.
+
+## Environment
+
+**Builds:** Never run `dotnet build` / `dotnet publish` with MSBuild node reuse — it exhausts this machine's memory. Always set `MSBUILDDISABLENODEREUSE=1` and pass `-nodeReuse:false`, and state that explicitly in any subagent prompt that builds .NET. See `.ai/project/preferences.md` → Environment → Builds.
 
 ## Configuration
 
 - `.ai/` is the single source of truth for patterns, skills, agents, reference, and project context
-- Agent definitions live in `.ai/agents/`; claude-pi config at `.pi/settings.json`; Reasonix Code reads `REASONIX.md` at root
+- Agent definitions live in `.ai/agents/`; tool-specific config (hooks, directories, settings) is tool-scoped
 - Do not place project-specific config in global dotfile directories
+- Scratch/temporary files go in `.ai/tmp/` (gitignored), never `/tmp` — some runtimes refuse reads outside the workspace root
 
 ## Reference Appendix
 
@@ -189,6 +187,10 @@ These files contain detailed guidance. Load them when the task type matches — 
 - `.ai/reference/task-execution.md` — full ReAct loop, escalation format, subagent templates
 - `.ai/reference/work-type-mapping.md` — which files to load per task type
 - `.ai/reference/operational-rules.md` — refactoring conventions, file management, workflow
+- `.ai/reference/traceability.md` — `US-` / `AC-` / `UC-` / `AF-` IDs that link stories, scenarios and tests
+- `.ai/reference/quality-model.md` — ISO/IEC 25010 review vocabulary and severity taxonomy
+- `.ai/reference/test-documentation.md` — which test documents to write, which to skip, and why
+- `.ai/reference/standards.md` — per-standard compatibility manifest; `verify-config` computes it from validator runs
 
 **Project:**
 - `.ai/project/architecture.md` — solution architecture

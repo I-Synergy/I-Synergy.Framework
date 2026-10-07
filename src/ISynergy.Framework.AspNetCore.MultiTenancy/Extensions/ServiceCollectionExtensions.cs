@@ -16,9 +16,19 @@ public static class ServiceCollectionExtensions
     /// Adds multi tenancy integration.
     /// </summary>
     /// <param name="services">The service collection.</param>
+    /// <param name="configure">
+    /// Optional configuration of tenant resolution (claim names, fallback claim, whether a tenant is required).
+    /// When omitted, the defaults in <see cref="TenantResolutionOptions"/> apply.
+    /// </param>
     /// <returns>The service collection.</returns>
-    public static IServiceCollection AddMultiTenancyIntegration(this IServiceCollection services)
+    public static IServiceCollection AddMultiTenancyIntegration(
+        this IServiceCollection services,
+        Action<TenantResolutionOptions>? configure = null)
     {
+        services.AddOptions<TenantResolutionOptions>();
+        if (configure is not null)
+            services.Configure(configure);
+
         services.TryAddTransient<ITenantService, TenantService>();
         return services;
     }

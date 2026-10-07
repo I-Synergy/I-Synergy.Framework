@@ -26,7 +26,6 @@ SCRIPT_DIR = Path(__file__).parent.parent.parent  # .ai/scripts/ -> .ai/ -> repo
 JUNCTIONS = {
     ".ai/skills": [".claude/skills", ".github/skills", ".reasonix/skills", ".pi/skills"],
     ".ai/agents": [".claude/agents", ".github/agents", ".reasonix/agents", ".pi/agents"],
-    ".ai/chains": [".pi/chains"],
 }
 
 

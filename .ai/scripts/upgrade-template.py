@@ -3,7 +3,9 @@
 upgrade-template.py — Sync template improvements to an existing project.
 
 Copies new template files and shows diffs for changed ones.
-Never touches project-owned files (CLAUDE.md, session-context, project/ etc.).
+AGENTS.md is template-owned and will be copied/diffed; legacy project files
+(CLAUDE.md, REASONIX.md, DEEPSEEK.md) are left untouched if present.
+Never touches project-owned files (session-context, project/ etc.).
 
 Usage:
     python upgrade-template.py --source <template-repo> --target <project-repo>
@@ -34,10 +36,8 @@ from pathlib import Path
 # Template owns these — new files are copied, changed files are diffed.
 # Entries can be files or directories (directories are walked recursively).
 TEMPLATE_OWNED = [
-    "REASONIX.md",
     ".reasonix",
     ".ai/agents",
-    ".ai/chains",
     ".ai/skills",
     ".ai/patterns",
     ".ai/reference/templates",
@@ -58,7 +58,7 @@ TEMPLATE_OWNED = [
     ".ai/reference/standards.md",
     ".ai/reference/test-documentation.md",
     ".ai/reference/traceability.md",
-    "CLAUDE.md",
+    "AGENTS.md",
     ".ai/checklists",
     ".ai/tests",
     ".ai/scripts",
@@ -284,7 +284,7 @@ def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-    parser = argparse.ArgumentParser(description="Upgrade a project from the CLAUDE.MD template.")
+    parser = argparse.ArgumentParser(description="Upgrade a project from the AI template.")
     parser.add_argument("--source", required=True, help="Path to the template repository")
     parser.add_argument("--target", required=True, help="Path to the project to upgrade")
     parser.add_argument("--dry-run", action="store_true", help="Show what would happen without making changes")

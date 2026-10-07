@@ -4,14 +4,19 @@ namespace ISynergy.Framework.AspNetCore.MultiTenancy.Extensions;
 public static class HostApplicationBuilderExtensions
 {
     /// <summary>
-    /// Adds globalization integration.
-    /// Don't use AddLocalization() in your Startup.cs, use this extension method instead.
+    /// Adds multi tenancy integration.
     /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
-    public static IHostApplicationBuilder AddMultiTenancyIntegration(this IHostApplicationBuilder builder)
+    /// <param name="builder">The host application builder.</param>
+    /// <param name="configure">
+    /// Optional configuration of tenant resolution (claim names, fallback claim, whether a tenant is required).
+    /// When omitted, the defaults in <see cref="TenantResolutionOptions"/> apply.
+    /// </param>
+    /// <returns>The host application builder.</returns>
+    public static IHostApplicationBuilder AddMultiTenancyIntegration(
+        this IHostApplicationBuilder builder,
+        Action<TenantResolutionOptions>? configure = null)
     {
-        builder.Services.AddMultiTenancyIntegration();
+        builder.Services.AddMultiTenancyIntegration(configure);
         return builder;
     }
 }

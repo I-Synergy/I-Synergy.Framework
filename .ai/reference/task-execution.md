@@ -87,7 +87,7 @@ Which approach should I take?
 
 ## Subagent Template
 
-**Code changes must be delegated.** Never use Edit or Write directly in the main conversation. All code implementation, edits, and file creation must be done by the `programmer` sub-agent (Haiku model). Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
+**Code changes must be delegated.** Never use Edit or Write directly in the main conversation. All code implementation, edits, and file creation must be done by the `programmer` sub-agent. Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
 
 **Valid `subagent_type` values** (skill names like `dotnet-engineer` are NOT valid agent types):
 
@@ -108,7 +108,7 @@ After completing each step, use the Edit tool to mark it done:
 Do NOT use Write on the progress file — only Edit individual lines.
 ```
 
-Subagents do not inherit this CLAUDE.md. All progress instructions must be explicit in the task prompt.
+Subagents do not inherit this project's AGENTS.md. All progress instructions must be explicit in the task prompt.
 
 ## Task Definition Template
 

@@ -26,7 +26,6 @@ The pytest wrapper also runs `validate-upgrade-script.py`, which the bash runner
 | Copilot Integration | `validate-copilot.py` | Copilot instructions and the `.github/skills/` junction |
 | Integration Smoke Tests | `smoke-test.py` | Skills loadable, names and descriptions unique, patterns and templates present |
 | Reasonix Integration | `validate-reasonix.py` | REASONIX.md, `.reasonix/` junctions, settings, sync scripts |
-| Pi Integration | `validate-pi.py` | `.pi/` junctions (`skills`, `agents`, `chains`) and `settings.json` |
 | Traceability | `validate-traceability.py` | The identifier chain: story → criterion → scenario → slice → test |
 | Standards | `validate-standards.py` | `.ai/reference/standards.md` and the generated compatibility surfaces |
 | DeepSeek Parity | `validate-deepseek-parity.py` | Level-2 section parity between `CLAUDE.md` and `DEEPSEEK.md` |
@@ -72,9 +71,6 @@ python3 .ai/tests/smoke-test.py
 
 # Reasonix integration validation
 python3 .ai/tests/validate-reasonix.py
-
-# Pi integration validation
-python3 .ai/tests/validate-pi.py
 
 # Traceability validation
 python3 .ai/tests/validate-traceability.py

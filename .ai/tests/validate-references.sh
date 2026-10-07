@@ -34,28 +34,28 @@ check_reference() {
     fi
 }
 
-# Check references in CLAUDE.md
-echo "1. Checking references in CLAUDE.md..."
-if [ -f "$TEMPLATE_ROOT/CLAUDE.md" ]; then
-    echo "✅ CLAUDE.md found"
+# Check references in AGENTS.md
+echo "1. Checking references in AGENTS.md..."
+if [ -f "$TEMPLATE_ROOT/AGENTS.md" ]; then
+    echo "✅ AGENTS.md found"
     PASSED=$((PASSED + 1))
 
     # Check skill references
-    check_reference ".ai/skills/dotnet-engineer/SKILL.md" "CLAUDE.md skill ref"
-    check_reference ".ai/skills/unit-tester/SKILL.md" "CLAUDE.md skill ref"
-    check_reference ".ai/skills/architect/SKILL.md" "CLAUDE.md skill ref"
+    check_reference ".ai/skills/dotnet-engineer/SKILL.md" "AGENTS.md skill ref"
+    check_reference ".ai/skills/unit-tester/SKILL.md" "AGENTS.md skill ref"
+    check_reference ".ai/skills/architect/SKILL.md" "AGENTS.md skill ref"
 
     # Check pattern references
-    check_reference ".ai/patterns/cqrs-patterns.md" "CLAUDE.md pattern ref"
-    check_reference ".ai/patterns/api-patterns.md" "CLAUDE.md pattern ref"
-    check_reference ".ai/patterns/testing-patterns.md" "CLAUDE.md pattern ref"
+    check_reference ".ai/patterns/cqrs-patterns.md" "AGENTS.md pattern ref"
+    check_reference ".ai/patterns/api-patterns.md" "AGENTS.md pattern ref"
+    check_reference ".ai/patterns/testing-patterns.md" "AGENTS.md pattern ref"
 
     # Check reference files
-    check_reference ".ai/reference/tokens.md" "CLAUDE.md reference ref"
-    check_reference ".ai/reference/glossary.md" "CLAUDE.md reference ref"
-    check_reference ".ai/reference/critical-rules.md" "CLAUDE.md reference ref"
+    check_reference ".ai/reference/tokens.md" "AGENTS.md reference ref"
+    check_reference ".ai/reference/glossary.md" "AGENTS.md reference ref"
+    check_reference ".ai/reference/critical-rules.md" "AGENTS.md reference ref"
 else
-    echo "❌ CLAUDE.md not found"
+    echo "❌ AGENTS.md not found"
     FAILED=$((FAILED + 1))
 fi
 
@@ -100,7 +100,7 @@ echo ""
 # Check for broken markdown links in key files
 echo "4. Checking for common broken links..."
 key_files=(
-    "$TEMPLATE_ROOT/CLAUDE.md"
+    "$TEMPLATE_ROOT/AGENTS.md"
     "$TEMPLATE_ROOT/README.md"
     "$TEMPLATE_ROOT/.ai/reference/tokens.md"
     "$TEMPLATE_ROOT/.ai/reference/glossary.md"

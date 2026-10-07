@@ -39,9 +39,6 @@ python3 .ai/tests/smoke-test.py
 # Reasonix integration
 python3 .ai/tests/validate-reasonix.py
 
-# Pi integration
-python3 .ai/tests/validate-pi.py
-
 # Traceability
 python3 .ai/tests/validate-traceability.py
 

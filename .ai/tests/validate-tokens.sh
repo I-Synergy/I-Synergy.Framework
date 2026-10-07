@@ -147,22 +147,22 @@ fi
 
 echo ""
 
-echo "5. Checking token usage in CLAUDE.md..."
-if [ -f "$TEMPLATE_ROOT/CLAUDE.md" ]; then
+echo "5. Checking token usage in AGENTS.md..."
+if [ -f "$TEMPLATE_ROOT/AGENTS.md" ]; then
     token_count=0
     for token in "${TOKENS[@]}"; do
-        count=$(grep -o "$token" "$TEMPLATE_ROOT/CLAUDE.md" 2>/dev/null | wc -l)
+        count=$(grep -o "$token" "$TEMPLATE_ROOT/AGENTS.md" 2>/dev/null | wc -l)
         token_count=$((token_count + count))
     done
 
     if [ $token_count -gt 0 ]; then
-        echo "✅ CLAUDE.md uses tokens ($token_count occurrences)"
+        echo "✅ AGENTS.md uses tokens ($token_count occurrences)"
         PASSED=$((PASSED + 1))
     else
-        echo "⚠️  CLAUDE.md has no token placeholders"
+        echo "⚠️  AGENTS.md has no token placeholders"
     fi
 else
-    echo "❌ CLAUDE.md not found"
+    echo "❌ AGENTS.md not found"
     FAILED=$((FAILED + 1))
 fi
 
