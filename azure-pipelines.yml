@@ -112,11 +112,17 @@ stages:
         # before spending time on the compile/pack/test/sign work below.
         # NuGetAuditMode=all (Directory.Build.props) makes restore audit transitive
         # packages; promoting NU1901-NU1904 to errors turns that audit into a gate.
+        # Restore must use the build's Configuration: MAUI projects resolve different
+        # default RuntimeIdentifiers per configuration (e.g. net10.0-maccatalyst is
+        # maccatalyst-arm64 in Debug but maccatalyst-x64;maccatalyst-arm64 in Release),
+        # so the assets file has to be produced under the same config the build uses,
+        # otherwise the build fails with NETSDK1047.
         - task: DotNetCoreCLI@2
           displayName: 'Restore and gate on vulnerable packages (direct + transitive)'
           inputs:
             command: 'restore'
             projects: 'I-Synergy.Framework.slnx'
+            arguments: '-p:Configuration=$(BuildConfiguration)'
           env:
             WarningsAsErrors: 'NU1901;NU1902;NU1903;NU1904'
 
