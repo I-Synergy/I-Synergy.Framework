@@ -7,11 +7,13 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aspire.Azure.Storage.Blobs" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="NSwag.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ISynergy.Framework.AspNetCore.MultiTenancy\ISynergy.Framework.AspNetCore.MultiTenancy.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.EventSourcing.EntityFramework\ISynergy.Framework.EventSourcing.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.EventSourcing.Storage\ISynergy.Framework.EventSourcing.Storage.csproj" />
     <ProjectReference Include="..\..\src\ISynergy.Framework.EventSourcing.Storage.Azure\ISynergy.Framework.EventSourcing.Storage.Azure.csproj" />

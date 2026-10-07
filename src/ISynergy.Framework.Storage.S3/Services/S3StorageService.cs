@@ -235,9 +235,20 @@ internal class S3StorageService : IStorageService, IDisposable
     }
 
     private static string GetObjectKey(string folder, string filename)
-        => string.IsNullOrEmpty(folder)
+    {
+        var key = string.IsNullOrEmpty(folder)
             ? filename
             : $"{folder.TrimEnd('/')}/{filename}";
+
+        // Normalize separators and drop '.'/'..' segments so a crafted folder or filename cannot
+        // escape the intended key space (path traversal within the bucket).
+        var segments = key
+            .Replace('\\', '/')
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Where(segment => segment is not "." and not "..");
+
+        return string.Join('/', segments);
+    }
 
     private Uri BuildObjectUri(string bucketName, string key)
     {
