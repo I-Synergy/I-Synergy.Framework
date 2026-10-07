@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Localization;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using System.Globalization;
 using System.Resources;
@@ -41,6 +42,10 @@ public sealed class LanguageService : ILanguageService
     public LanguageService()
     {
         _managers = [new ResourceManager(typeof(Properties.Resources))];
+
+        // Register as the ambient language service so Core (which cannot reference this
+        // Globalization type) can localize its own messages.
+        LanguageServiceProvider.Default = this;
     }
 
     /// <summary>

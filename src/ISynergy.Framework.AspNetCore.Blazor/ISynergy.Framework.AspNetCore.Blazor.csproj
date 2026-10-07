@@ -14,6 +14,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
 	  <ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Globalization\ISynergy.Framework.Globalization.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />

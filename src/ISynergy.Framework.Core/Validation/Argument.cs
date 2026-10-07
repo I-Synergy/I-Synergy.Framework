@@ -1,4 +1,4 @@
-using ISynergy.Framework.Globalization.Services;
+using ISynergy.Framework.Core.Localization;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -20,7 +20,11 @@ public static class Argument
     {
         try
         {
-            return LanguageService.Default.GetString(key);
+            // No real provider is registered until the Globalization LanguageService is constructed;
+            // fall back to the neutral default message in that window.
+            return LanguageServiceProvider.HasProvider
+                ? LanguageServiceProvider.Default.GetString(key)
+                : defaultMessage;
         }
         catch
         {

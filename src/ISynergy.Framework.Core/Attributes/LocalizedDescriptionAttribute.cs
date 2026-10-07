@@ -1,4 +1,4 @@
-using ISynergy.Framework.Globalization.Services;
+using ISynergy.Framework.Core.Localization;
 
 namespace ISynergy.Framework.Core.Attributes;
 
@@ -22,6 +22,8 @@ public class LocalizedDescriptionAttribute : Attribute
     /// <param name="resourceKey">The description.</param>
     public LocalizedDescriptionAttribute(string resourceKey)
     {
-        Description = LanguageService.Default.GetString(resourceKey);
+        Description = LanguageServiceProvider.HasProvider
+            ? LanguageServiceProvider.Default.GetString(resourceKey)
+            : resourceKey;
     }
 }

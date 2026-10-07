@@ -20,5 +20,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
+		<ProjectReference Include="..\ISynergy.Framework.Globalization\ISynergy.Framework.Globalization.csproj" />
 	</ItemGroup>
 </Project>

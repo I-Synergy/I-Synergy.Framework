@@ -1,7 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Localization;
 using ISynergy.Framework.Globalization.Abstractions.Services;
-using ISynergy.Framework.Globalization.Services;
 
 namespace ISynergy.Framework.Core.Services;
 
@@ -30,7 +30,7 @@ public sealed class BusyService : ObservableClass, IBusyService
                 {
                     if (_defaultInstance is null)
                     {
-                        _defaultInstance = new BusyService(new LanguageService());
+                        _defaultInstance = new BusyService(LanguageServiceProvider.Default);
                     }
                 }
             }
