@@ -108,20 +108,25 @@ stages:
         #       /d:sonar.host.url="https://sonarcloud.io"
         #       /d:sonar.cs.opencover.reportsPaths="$(Agent.TempDirectory)/**/coverage.opencover.xml"
 
+        # Restore first and fail fast on vulnerable packages (direct + transitive)
+        # before spending time on the compile/pack/test/sign work below.
+        # NuGetAuditMode=all (Directory.Build.props) makes restore audit transitive
+        # packages; promoting NU1901-NU1904 to errors turns that audit into a gate.
+        - task: DotNetCoreCLI@2
+          displayName: 'Restore and gate on vulnerable packages (direct + transitive)'
+          inputs:
+            command: 'restore'
+            projects: 'I-Synergy.Framework.slnx'
+          env:
+            WarningsAsErrors: 'NU1901;NU1902;NU1903;NU1904'
+
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework'
           inputs:
             solution: 'I-Synergy.Framework.slnx'
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
-            msbuildArguments: '/restore /p:Version=$(VersionPackage) /p:ContinuousIntegrationBuild=true /nr:false'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Audit for vulnerable packages (direct + transitive)'
-          inputs:
-            command: 'custom'
-            custom: 'list'
-            arguments: 'I-Synergy.Framework.slnx package --vulnerable --include-transitive'
+            msbuildArguments: '/p:Version=$(VersionPackage) /p:ContinuousIntegrationBuild=true /nr:false'
 
         - task: DotNetCoreCLI@2
           displayName: 'Pack I-Synergy Framework'
