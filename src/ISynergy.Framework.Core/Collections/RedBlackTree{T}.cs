@@ -53,7 +53,7 @@ namespace ISynergy.Framework.Core.Collections;
 /// <typeparam name="T">The type of the value to be stored.</typeparam>
 /// 
 [Serializable]
-public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
+public partial class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ICollection<RedBlackTreeNode<T>>, ICollection<T>
 {
 
@@ -224,47 +224,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
             }
         }
 
-    fixtree:
-
-        if (item.Parent!.Color == RedBlackTreeNodeTypes.Red)
-        {
-            // red cannot have red child
-            var u = p == p.Parent!.Left ? p.Parent.Right : p.Parent.Left;
-
-            if (u is not null && u.Color == RedBlackTreeNodeTypes.Red)
-            {
-                p.Color = u.Color = RedBlackTreeNodeTypes.Black;
-                item = p.Parent;
-
-                if ((p = item.Parent) is not null)
-                {
-                    item.Color = RedBlackTreeNodeTypes.Red;
-                    goto fixtree;
-                }
-            }
-            else
-            {
-                if (item == p.Right && p == p.Parent.Left)
-                {
-                    rotate_left(p);
-                    p = item; item = item.Left!;
-                }
-                else if (item == p.Left && p == p.Parent.Right)
-                {
-                    rotate_right(p);
-                    p = item;
-                    item = item.Right!;
-                }
-
-                p.Color = RedBlackTreeNodeTypes.Black;
-                p.Parent.Color = RedBlackTreeNodeTypes.Red;
-
-                if (item == p.Left && p == p.Parent.Left)
-                    rotate_right(p.Parent);
-                else if (item == p.Right && p == p.Parent.Right)
-                    rotate_left(p.Parent);
-            }
-        }
+        Balancing.FixAfterInsert(this, item, p);
 
         this._count++;
     }
@@ -377,86 +337,7 @@ public class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
             }
             else
             {
-
-            deleteblack:
-                if (mp is not null)
-                {
-                    var s = m == mp.Left ? mp.Right : mp.Left;
-
-                    if (s!.Color == RedBlackTreeNodeTypes.Red)
-                    {
-                        mp.Color = RedBlackTreeNodeTypes.Red;
-                        s.Color = RedBlackTreeNodeTypes.Black;
-
-                        if (m == mp.Left)
-                            rotate_left(mp);
-                        else rotate_right(mp);
-
-                        s = m == mp.Left ? mp.Right : mp.Left;
-                    }
-
-                    if (mp.Color == RedBlackTreeNodeTypes.Black
-                      && s!.Color == RedBlackTreeNodeTypes.Black
-                      && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black)
-                      && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
-                    {
-                        if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
-                            s.Color = RedBlackTreeNodeTypes.Red;
-
-                        m = mp;
-                        mp = m.Parent;
-
-                        goto deleteblack;
-                    }
-
-                    if (mp.Color == RedBlackTreeNodeTypes.Red
-                        && s!.Color == RedBlackTreeNodeTypes.Black
-                        && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black)
-                        && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
-                    {
-                        if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
-                            s.Color = RedBlackTreeNodeTypes.Red;
-
-                        mp.Color = RedBlackTreeNodeTypes.Black;
-                    }
-                    else
-                    {
-                        if (m == mp.Left && s!.Color == RedBlackTreeNodeTypes.Black
-                                         && (s.Left is not null && s.Left.Color == RedBlackTreeNodeTypes.Red)
-                                         && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
-                        {
-                            s.Color = RedBlackTreeNodeTypes.Red;
-                            s.Left.Color = RedBlackTreeNodeTypes.Black;
-
-                            rotate_right(s);
-
-                            s = m == mp.Left ? mp.Right : mp.Left;
-                        }
-                        else if (m == mp.Right && s!.Color == RedBlackTreeNodeTypes.Black
-                                               && (s.Right is not null && s.Right.Color == RedBlackTreeNodeTypes.Red)
-                                               && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black))
-                        {
-                            s.Color = RedBlackTreeNodeTypes.Red;
-                            s.Right.Color = RedBlackTreeNodeTypes.Black;
-                            rotate_left(s);
-                            s = m == mp.Left ? mp.Right : mp.Left;
-                        }
-
-                        s!.Color = mp.Color;
-                        mp.Color = RedBlackTreeNodeTypes.Black;
-
-                        if (m == mp.Left)
-                        {
-                            s.Right!.Color = RedBlackTreeNodeTypes.Black;
-                            rotate_left(mp);
-                        }
-                        else
-                        {
-                            s.Left!.Color = RedBlackTreeNodeTypes.Black;
-                            rotate_right(mp);
-                        }
-                    }
-                }
+                Balancing.FixAfterRemove(this, m, mp);
             }
         }
 
