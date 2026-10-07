@@ -104,15 +104,29 @@ src/
 ## Key Framework Patterns
 
 ### Dependency Injection Registration
-Every framework project exposes an extension method on `IServiceCollection` for simple consumer wiring:
+Projects that have services to wire expose an extension method on `IServiceCollection` (or the platform builder) for simple consumer wiring:
 ```csharp
 builder.Services.AddCQRS();
-builder.Services.AddOpenTelemetry();
+builder.Services.AddAutomationServices();
 builder.Services.AddStorage(/* config */);
 ```
 
+Registration helpers are **not** uniform and **not** universal. Packages such as `AspNetCore.*`,
+`Automations`, `CQRS`, `Documents.Syncfusion`, `EventSourcing.EntityFramework`, `EventSourcing.Storage*`,
+`KeyVault.Azure`, `KeyVault.OpenBao`, `Mail.*`, `MessageBus.*`, `Monitoring.Client`, `Printer.Label.Dymo`,
+`Storage.Azure`, `Storage.S3`, and the UI platform packages expose `Add*`/`Configure*`/`Register*`
+extensions; the `OpenTelemetry.*` packages extend `TelemetryBuilder` rather than `IServiceCollection`.
+Pure abstraction/base libraries — `Core`, `Globalization`, `EntityFramework`, `EventSourcing`,
+`Financial`, `Geography`, `IO`, `Mathematics`, `Monitoring`, `Mvvm`, `Physics`, `Storage` — expose none
+and are consumed as types by the projects that reference them.
+
 ### AOT / Trim Readiness
-All libraries are annotated for Native AOT and trimmed deployments. Source generators replace reflection-based registration where possible.
+Reflection-heavy public APIs carry `[RequiresUnreferencedCode]`, `[RequiresDynamicCode]`, and
+`[DynamicallyAccessedMembers]` annotations, and source generators replace some reflection-based
+registration. **Trim analysis is enabled only for the platform UI packages** (`UI.WPF`, `UI.WinUI`,
+`UI.Maui`, via `<IsTrimmable>`/`<EnableTrimAnalyzer>`); **no project declares Native AOT
+compatibility** — `IsAotCompatible`/`PublishAot` are unset everywhere. Treat AOT/trim readiness as a
+direction the code is being annotated toward, not a guarantee for every package.
 
 ### Multi-Platform UI
 The MVVM layer (`ISynergy.Framework.Mvvm`) is platform-agnostic. Platform-specific UI projects (`UI.WinUI`, `UI.WPF`, `UI.Maui`, `UI.Blazor`) provide controls and services that bind to the same ViewModel base classes.
@@ -120,17 +134,19 @@ The MVVM layer (`ISynergy.Framework.Mvvm`) is platform-agnostic. Platform-specif
 ## Package Dependencies
 
 ```
-Core (no dependencies)
+Core (no framework dependencies)
+├── Globalization → Core
 ├── CQRS → Core
 ├── Mvvm → Core
 ├── EntityFramework → Core
 ├── EventSourcing → Core
+│   └── EventSourcing.EntityFramework → Core, EventSourcing
+│       └── EventSourcing.Storage → EventSourcing, EventSourcing.EntityFramework
+│           ├── EventSourcing.Storage.Azure → EventSourcing.Storage
+│           └── EventSourcing.Storage.S3 → EventSourcing.Storage
 ├── OpenTelemetry → Core
-├── UI → Core, Mvvm
-│   ├── UI.Maui → UI
-│   ├── UI.WinUI → UI
-│   ├── UI.WPF → UI
-│   └── UI.Blazor → UI
+│   ├── OpenTelemetry.ApplicationInsights → OpenTelemetry
+│   └── OpenTelemetry.Sentry → OpenTelemetry
 ├── MessageBus → Core
 │   ├── MessageBus.Azure → MessageBus
 │   └── MessageBus.RabbitMQ → MessageBus
@@ -143,13 +159,25 @@ Core (no dependencies)
 ├── KeyVault → Core
 │   ├── KeyVault.Azure → KeyVault
 │   └── KeyVault.OpenBao → KeyVault
-├── AspNetCore → Core
+├── AspNetCore → Core, OpenTelemetry, Storage
 │   ├── AspNetCore.Authentication → AspNetCore
-│   ├── AspNetCore.Blazor → AspNetCore
-│   ├── AspNetCore.Globalization → AspNetCore
-│   ├── AspNetCore.Monitoring → AspNetCore
-│   └── AspNetCore.MultiTenancy → AspNetCore
-└── Various leaf modules → Core
+│   ├── AspNetCore.Blazor → AspNetCore, Mvvm, Globalization
+│   ├── AspNetCore.Globalization → AspNetCore, Core, Globalization
+│   ├── AspNetCore.Monitoring → AspNetCore.Authentication, MessageBus, Monitoring
+│   └── AspNetCore.MultiTenancy → AspNetCore.Authentication
+├── UI → Mvvm, OpenTelemetry, Globalization
+│   ├── UI.Maui → UI, Mvvm
+│   ├── UI.WinUI → UI
+│   ├── UI.WPF → UI
+│   └── UI.Blazor → UI
+├── Monitoring (no framework refs)
+│   └── Monitoring.Client → Monitoring, Mvvm
+├── Documents (no framework refs)
+│   └── Documents.Syncfusion → Core, Documents, Globalization
+├── Printer.Label (no framework refs)
+│   └── Printer.Label.Dymo → Printer.Label
+└── Leaf modules → Core
+    Automations, Financial, IO, Mathematics, Physics → Core;  Geography → Core, Globalization
 ```
 
 ## Deployment Architecture
@@ -164,6 +192,7 @@ Core (no dependencies)
 
 1. **Framework, not an application** — The `.ai/project/domains.md` and `.ai/reference/critical-rules.md` entity/domain patterns are designed for consuming applications, not this repo itself
 2. **Multi-platform UI divergence** — WinUI uses StoreContext for updates, WPF uses HTTP; these are genuinely different mechanisms that cannot be unified (documented in session-context.md)
+3. **Shared Globalization types physically live in Core** — to keep `Core` dependency-free, the shared types `ILanguageService` (namespace `ISynergy.Framework.Globalization.Abstractions.Services`), `GlobalizationConstants`, and the `DateTimeConverter`/`DateTimeOffsetConverter`/`TimeOnlyConverter` JSON converters were moved into the `ISynergy.Framework.Core` assembly while keeping their `ISynergy.Framework.Globalization.*` namespaces. `ISynergy.Framework.Globalization` now references Core and type-forwards them (`TypeForwarding.cs`) for binary compatibility; the concrete `LanguageService` (which owns the resource satellite assemblies) stays in Globalization and registers itself with Core's `LanguageServiceProvider` when constructed. Consumers that previously received Globalization transitively through Core must now reference Globalization explicitly.
 
 ---
 
