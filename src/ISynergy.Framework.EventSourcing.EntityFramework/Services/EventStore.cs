@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.EventSourcing.Abstractions.Events;
 using ISynergy.Framework.EventSourcing.EntityFramework.Abstractions;
+using ISynergy.Framework.EventSourcing.Enumerations;
 using ISynergy.Framework.EventSourcing.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -93,7 +94,8 @@ public sealed class EventStore : IEventStore
             Data: data,
             Metadata: metadataJson,
             Timestamp: DateTimeOffset.UtcNow,
-            UserId: _tenantService.UserName is { Length: > 0 } u ? u : null);
+            UserId: _tenantService.UserName is { Length: > 0 } u ? u : null,
+            RecordType: EventRecordTypes.DomainEvent);
 
         _context.Events.Add(record);
         await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
