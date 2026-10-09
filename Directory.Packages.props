@@ -8,7 +8,7 @@
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.6.1" />
     <PackageVersion Include="Aspire.Hosting.Maui" Version="13.6.1-preview.1.26506.6" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.1" />
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.104.1" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.104.2" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.10.0" />
@@ -24,7 +24,8 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.12" />    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="10.0.12" />
