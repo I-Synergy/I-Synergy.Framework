@@ -19,6 +19,10 @@ builder.Services.AddScoped<TenantContext>();
 builder.Services.AddHttpClient<OrdersApiClient>(client =>
     client.BaseAddress = new Uri("http+https://eventsourcing-api")); // NOSONAR - Aspire service discovery URI resolved at runtime
 
+// ── Dev token provider (Development-only POST /dev/token) ─────────────────────
+builder.Services.AddHttpClient<DevTokenProvider>(client =>
+    client.BaseAddress = new Uri("http+https://eventsourcing-api")); // NOSONAR - Aspire service discovery URI resolved at runtime
+
 // ── Health checks ─────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
 

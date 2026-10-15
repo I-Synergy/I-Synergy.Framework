@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Sample.EventSourcing.Api.Domain;
 using Sample.EventSourcing.Api.Endpoints;
+using Sample.EventSourcing.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +86,11 @@ builder.Services.ConfigureHttpClientDefaults(h => h.AddServiceDiscovery());
 // ── Health checks ─────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
 
+// ── Development-only token issuer ─────────────────────────────────────────────
+// Signs local JWTs with the same key the API validates against. The /dev/token endpoint
+// that uses it is mapped only when running in Development.
+builder.Services.AddSingleton<DevTokenIssuer>();
+
 // ── OpenAPI / Swagger ─────────────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(c => c.Title = "Event Sourcing Sample API");
@@ -128,5 +134,6 @@ app.MapHealthChecks("/health").AllowAnonymous();
 // ── Endpoints ─────────────────────────────────────────────────────────────────
 app.MapOrderEndpoints();
 app.MapArchiveEndpoints();
+app.MapDevTokenEndpoints();
 
 await app.RunAsync();
