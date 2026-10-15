@@ -64,9 +64,9 @@ stages:
             UpdateBuildNumber: '$(VersionPackage)'
 
         - task: NuGetToolInstaller@1
-          displayName: 'Install NuGet 7.0.0'
+          displayName: 'Install NuGet 7.9.0'
           inputs:
-            versionSpec: 7.0.0
+            versionSpec: 7.9.0
 
         - task: UseDotNet@2
           displayName: 'Install .Net Sdk'
@@ -189,9 +189,9 @@ stages:
           deploy:
             steps:
               - task: NuGetToolInstaller@1
-                displayName: 'Install NuGet 7.0.0'
+                displayName: 'Install NuGet 7.9.0'
                 inputs:
-                  versionSpec: 7.0.0
+                  versionSpec: 7.9.0
 
               - task: NuGetCommand@2
                 displayName: 'NuGet push - ISynergy Framework'

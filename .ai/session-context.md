@@ -1,3 +1,60 @@
+# Session Handoff - 2026-10-09 (EventSourcing Web JWT auth)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Fixed the `401 (Unauthorized)` the Blazor front-end (`Sample.EventSourcing.Web`) got when calling the API. Root cause: the auth-hardening commit `bc6aa648` switched the API to JWT bearer (fallback policy requires an authenticated user for everything but `/health`) but **never updated the Web**, which still sent only a spoofable `X-Tenant-Id` header and no token. No token issuer existed, so the Web had no way to authenticate.
+
+Plan: `.ai/plans/eventsourcing-web-jwt-auth.md` (approved by the user). Implementation (delegated to two parallel writers):
+- **API** — new `Services/DevTokenIssuer.cs` (mints HS256 JWTs from `Jwt:*` config via `JsonWebTokenHandler`; `tenant`/`username`/`sub` claims) and `Endpoints/DevTokenEndpoints.cs` (`POST /dev/token`, anonymous, **gated on `env.IsDevelopment()`** exactly like `/api/archive/run`). `Program.cs` registers the singleton + `app.MapDevTokenEndpoints()`. Readme updated.
+- **Web** — new `Services/DevTokenProvider.cs` (typed `HttpClient`, caches token per tenant, semaphore-guarded, 60s expiry skew). `OrdersApiClient` now injects `DevTokenProvider`, sends `Authorization: Bearer` in `BuildRequestAsync`, and **drops `X-Tenant-Id`** (and its now-unused `TenantContext` ctor param). `Program.cs` registers the `DevTokenProvider` HttpClient on the Aspire base address. Readme updated.
+
+## Verified
+- `dotnet build` of both projects (with `MSBUILDDISABLENODEREUSE=1`, `-nodeReuse:false`): **0 warnings, 0 errors**.
+- `git diff --check` clean.
+- End-to-end browser check NOT run (needs Docker for the AppHost Postgres/Azurite containers — not installed here). **The user should run the AppHost and load https://localhost:7201** to confirm the Orders page loads and "Place Order" works.
+
+## Decisions Made
+- Dev token endpoint is **Development-only** (mirrors the existing `/api/archive/run` gate); production exposure unchanged — so no council was convened. The signing key stays only in the API; the Web never sees it.
+- The Web's username is hardcoded to `demo-user` for the demo (no real login).
+
+## Open Questions / Not Done
+- **Pre-existing, NOT mine:** `samples/Sample.EventSourcing.Api/appsettings.json` was edited (removed the `"SymmetricKeySecret": ""` line) outside this session's tooling — likely the user; left as-is.
+- `azure-pipelines.yml` was already modified before this session began — not mine.
+- `DevTokenProvider` is registered via `AddHttpClient<T>` (transient), so its per-instance cache is only reused within a component's lifetime, not across the app. Fine for the sample; make it scoped (via `IHttpClientFactory`) if a real cache is wanted.
+- Real user authentication (Keycloak) remains out of scope.
+
+## Files Modified
+`samples/Sample.EventSourcing.Api/{Services/DevTokenIssuer.cs, Endpoints/DevTokenEndpoints.cs, Program.cs, readme.md}`,
+`samples/Sample.EventSourcing.Web/{Services/DevTokenProvider.cs, Services/OrdersApiClient.cs, Program.cs, readme.md}`,
+`.ai/plans/eventsourcing-web-jwt-auth.md`, `.ai/completed/eventsourcing-web-jwt-auth.md`.
+
+---
+
+# Session Handoff - 2026-10-09 (EventSourcing sample UserSecretsId)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Diagnosed the startup exception on `Sample.EventSourcing.Api`:
+`InvalidOperationException: Jwt:SymmetricKeySecret is not configured` (`Program.cs:26`). The throw is an intentional fail-closed guard; the real defect was that **neither documented run path could supply the key**:
+- The error message points at `dotnet user-secrets set ...`, but the project had no `<UserSecretsId>`, so that command fails with *"Could not find the global property 'UserSecretsId'"*.
+- The Aspire path (`Program.cs:66-68` says "run through the AppHost") also fails: `samples/Sample.AppHost/Program.cs:21-25` attaches only the database/blob references to `eventsourcing-api`, never `Jwt__SymmetricKeySecret`.
+
+**Fix (user's choice):** added `<UserSecretsId>25878716-9461-4861-a00e-d6d1deb2b082</UserSecretsId>` to `samples/Sample.EventSourcing.Api/Sample.EventSourcing.Api.csproj`, matching the sibling `Sample.MessageBus.*` samples. This makes `dotnet user-secrets` work for both the standalone and Aspire-hosted paths (the API runs as its own process and loads its own user secrets in Development).
+
+## Verified
+`dotnet user-secrets list --project samples/Sample.EventSourcing.Api` → exit 0, *"No secrets configured for this application."* (errored before the change). `git diff` shows only the one csproj line added.
+
+## Open Questions / Not Done
+- **The secret value is still unset** — the user must run `dotnet user-secrets set "Jwt:SymmetricKeySecret" "<32+ char key>" --project samples/Sample.EventSourcing.Api` before the sample starts. Intentionally not committed.
+- **Separate gap, not fixed:** `Sample.EventSourcing.Web/Services/OrdersApiClient.cs` calls the API with no bearer token, but the API's authorization fallback policy (`Program.cs:49-52`) requires an authenticated caller for everything except `/health` — so Web→API calls will 401 even once the key is set.
+- `sample-api-secrets` option (AppHost injecting a dev key) was offered but declined in favour of the UserSecretsId approach.
+
+---
+
 # Session Handoff - 2026-10-07 (Release Notes & Progress Tidy)
 
 **Written By:** Reasonix Code

@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -6,9 +7,9 @@ namespace Sample.EventSourcing.Web.Services;
 /// <summary>
 /// Typed HTTP client for the Event Sourcing API.
 /// The base URL is resolved via Aspire service discovery ("api").
-/// All requests carry the active tenant ID from <see cref="TenantContext"/> as X-Tenant-Id header.
+/// All requests carry a bearer token for the active tenant obtained from <see cref="DevTokenProvider"/>.
 /// </summary>
-public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext)
+public sealed class OrdersApiClient(HttpClient http, DevTokenProvider devTokenProvider)
 {
     private static readonly JsonSerializerOptions s_jsonOptions = new()
     {
@@ -17,7 +18,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<List<OrderSummary>> GetOrdersAsync(CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Get, "/api/orders");
+        using var request = await BuildRequestAsync(HttpMethod.Get, "/api/orders", ct);
         var response = await http.SendAsync(request, ct);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<List<OrderSummary>>(s_jsonOptions, ct) ?? [];
@@ -25,7 +26,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<OrderDetail?> GetOrderAsync(Guid orderId, CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Get, $"/api/orders/{orderId}");
+        using var request = await BuildRequestAsync(HttpMethod.Get, $"/api/orders/{orderId}", ct);
         var response = await http.SendAsync(request, ct);
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
         response.EnsureSuccessStatusCode();
@@ -34,7 +35,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<List<EventEntry>> GetOrderEventsAsync(Guid orderId, CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Get, $"/api/orders/{orderId}/events");
+        using var request = await BuildRequestAsync(HttpMethod.Get, $"/api/orders/{orderId}/events", ct);
         var response = await http.SendAsync(request, ct);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<List<EventEntry>>(s_jsonOptions, ct) ?? [];
@@ -42,7 +43,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<Guid> PlaceOrderAsync(string customerName, decimal total, CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Post, "/api/orders");
+        using var request = await BuildRequestAsync(HttpMethod.Post, "/api/orders", ct);
         request.Content = JsonContent.Create(new { customerName, total });
         var response = await http.SendAsync(request, ct);
         response.EnsureSuccessStatusCode();
@@ -52,7 +53,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<OrderDetail?> EditOrderAsync(Guid orderId, string customerName, decimal total, CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Put, $"/api/orders/{orderId}");
+        using var request = await BuildRequestAsync(HttpMethod.Put, $"/api/orders/{orderId}", ct);
         request.Content = JsonContent.Create(new { customerName, total });
         var response = await http.SendAsync(request, ct);
         if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
@@ -63,7 +64,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<OrderDetail?> ShipOrderAsync(Guid orderId, string trackingNumber, CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Post, $"/api/orders/{orderId}/ship");
+        using var request = await BuildRequestAsync(HttpMethod.Post, $"/api/orders/{orderId}/ship", ct);
         request.Content = JsonContent.Create(new { trackingNumber });
         var response = await http.SendAsync(request, ct);
         if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
@@ -74,7 +75,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<OrderDetail?> CancelOrderAsync(Guid orderId, string reason, CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Post, $"/api/orders/{orderId}/cancel");
+        using var request = await BuildRequestAsync(HttpMethod.Post, $"/api/orders/{orderId}/cancel", ct);
         request.Content = JsonContent.Create(new { reason });
         var response = await http.SendAsync(request, ct);
         if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
@@ -85,7 +86,7 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<ArchiveRunResult?> RunArchiveAsync(CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Post, "/api/archive/run");
+        using var request = await BuildRequestAsync(HttpMethod.Post, "/api/archive/run", ct);
         var response = await http.SendAsync(request, ct);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<ArchiveRunResult>(s_jsonOptions, ct);
@@ -93,16 +94,17 @@ public sealed class OrdersApiClient(HttpClient http, TenantContext tenantContext
 
     public async Task<List<EventEntry>> GetOrderFullHistoryAsync(Guid orderId, CancellationToken ct = default)
     {
-        using var request = BuildRequest(HttpMethod.Get, $"/api/orders/{orderId}/full-history");
+        using var request = await BuildRequestAsync(HttpMethod.Get, $"/api/orders/{orderId}/full-history", ct);
         var response = await http.SendAsync(request, ct);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<List<EventEntry>>(s_jsonOptions, ct) ?? [];
     }
 
-    private HttpRequestMessage BuildRequest(HttpMethod method, string url)
+    private async Task<HttpRequestMessage> BuildRequestAsync(HttpMethod method, string url, CancellationToken ct)
     {
         var request = new HttpRequestMessage(method, url);
-        request.Headers.Add("X-Tenant-Id", tenantContext.TenantId.ToString());
+        var token = await devTokenProvider.GetTokenAsync(ct);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return request;
     }
 }
