@@ -1,16 +1,14 @@
-```skill
-{
-  "name": "i-synergy-ui-uwp",
-  "description": "UWP implementation of the ISynergy UI stack (Frame navigation, ContentDialog service, adaptive layouts, WinUI 2 controls).",
-  "version": "2026.02.10",
-  "sources": [
-    "src/ISynergy.Framework.UI.UWP",
-    "samples/Sample.UWP",
-    "docs/ThemeWindow-Synchronization.md"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: ui-uwp
+description: >-
+  UWP implementation of the ISynergy UI stack (Frame navigation, ContentDialog service, adaptive layouts, WinUI 2 controls).
+version: 2026.02.10
+sources:
+  - src/ISynergy.Framework.UI.UWP
+  - samples/Sample.UWP
+  - docs/ThemeWindow-Synchronization.md
+license: See license.md in repository root
+---
 
 # I-Synergy Framework UI UWP Skill (SKILL.md)
 

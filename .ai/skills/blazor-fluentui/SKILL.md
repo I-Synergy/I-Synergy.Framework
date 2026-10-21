@@ -1,19 +1,17 @@
-```skill
-{
-  "name": "i-synergy-blazor-ui",
-  "description": "Production-ready Blazor patterns exactly as implemented inside the I-Synergy Framework UI (View<TViewModel>, ConfigureServices bootstrapper, CommonServices, Dialog/Navigation services).",
-  "version": "2026.02.10",
-  "sources": [
-    "src/ISynergy.Framework.UI.Blazor",
-    "src/ISynergy.Framework.Mvvm",
-    "samples/Sample.Blazor",
-    "samples/Sample.Maui",
-    "samples/Sample.WinUI",
-    "samples/Sample.WPF"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: blazor-fluentui
+description: >-
+  Production-ready Blazor patterns exactly as implemented inside the I-Synergy Framework UI (View<TViewModel>, ConfigureServices bootstrapper, CommonServices, Dialog/Navigation services).
+version: 2026.02.10
+sources:
+  - src/ISynergy.Framework.UI.Blazor
+  - src/ISynergy.Framework.Mvvm
+  - samples/Sample.Blazor
+  - samples/Sample.Maui
+  - samples/Sample.WinUI
+  - samples/Sample.WPF
+license: See license.md in repository root
+---
 
 # I-Synergy Framework Blazor Skill (SKILL.md)
 

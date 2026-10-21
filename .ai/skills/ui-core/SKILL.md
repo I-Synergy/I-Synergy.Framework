@@ -1,17 +1,15 @@
-```skill
-{
-  "name": "i-synergy-ui-core",
-  "description": "Cross-platform UI abstractions (authentication, token storage, localization, theme + language view models) that every ISynergy shell builds on.",
-  "version": "2026.02.10",
-  "sources": [
-    "src/ISynergy.Framework.UI",
-    "src/ISynergy.Framework.Mvvm",
-    "docs/Theme-Color-Reference.md",
-    "docs/MAUI-Dynamic-Theme-System.md"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: ui-core
+description: >-
+  Cross-platform UI abstractions (authentication, token storage, localization, theme + language view models) that every ISynergy shell builds on.
+version: 2026.02.10
+sources:
+  - src/ISynergy.Framework.UI
+  - src/ISynergy.Framework.Mvvm
+  - docs/Theme-Color-Reference.md
+  - docs/MAUI-Dynamic-Theme-System.md
+license: See license.md in repository root
+---
 
 # I-Synergy Framework UI Core Skill (SKILL.md)
 

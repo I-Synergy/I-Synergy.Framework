@@ -1,16 +1,14 @@
-```skill
-{
-  "name": "i-synergy-ui-blazor-library",
-  "description": "Blazor UI library implementation (View<TViewModel>, ConfigureServices bootstrapper, Fluent UI integration, form-factor + antiforgery services, HTTP resilience).",
-  "version": "2026.02.10",
-  "sources": [
-    "src/ISynergy.Framework.UI.Blazor",
-    "samples/Sample.Blazor",
-    "docs/IndicatorControl.md"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: ui-blazor
+description: >-
+  Blazor UI library implementation (View<TViewModel>, ConfigureServices bootstrapper, Fluent UI integration, form-factor + antiforgery services, HTTP resilience).
+version: 2026.02.10
+sources:
+  - src/ISynergy.Framework.UI.Blazor
+  - samples/Sample.Blazor
+  - docs/IndicatorControl.md
+license: See license.md in repository root
+---
 
 # I-Synergy Framework UI Blazor Library Skill (SKILL.md)
 

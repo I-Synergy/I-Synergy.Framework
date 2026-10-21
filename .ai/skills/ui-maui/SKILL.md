@@ -1,16 +1,14 @@
-```skill
-{
-  "name": "i-synergy-ui-maui",
-  "description": ".NET MAUI implementation of the I-Synergy UI stack: ConfigureServices bootstrapper, cross-platform dialog/navigation/theme/file/camera services, NavigationMenu controls, and dynamic theme system.",
-  "version": "2026.02.10",
-  "sources": [
-    "src/ISynergy.Framework.UI.Maui",
-    "samples/Sample.Maui",
-    "docs/MAUI-Dynamic-Theme-System.md"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: ui-maui
+description: >-
+  .NET MAUI implementation of the I-Synergy UI stack: ConfigureServices bootstrapper, cross-platform dialog/navigation/theme/file/camera services, NavigationMenu controls, and dynamic theme system.
+version: 2026.02.10
+sources:
+  - src/ISynergy.Framework.UI.Maui
+  - samples/Sample.Maui
+  - docs/MAUI-Dynamic-Theme-System.md
+license: See license.md in repository root
+---
 
 # I-Synergy Framework UI MAUI Skill (SKILL.md)
 

@@ -1,16 +1,14 @@
-```skill
-{
-  "name": "i-synergy-ui-wpf",
-  "description": "Windows Presentation Foundation (WPF) implementation of the ISynergy UI stack: dialog/navigation services, theme system, BladeView controls, update pipeline.",
-  "version": "2026.02.10",
-  "sources": [
-    "src/ISynergy.Framework.UI.WPF",
-    "samples/Sample.WPF",
-    "docs/ThemeWindow-Selection-Enhancement.md"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: ui-wpf
+description: >-
+  Windows Presentation Foundation (WPF) implementation of the ISynergy UI stack: dialog/navigation services, theme system, BladeView controls, update pipeline.
+version: 2026.02.10
+sources:
+  - src/ISynergy.Framework.UI.WPF
+  - samples/Sample.WPF
+  - docs/ThemeWindow-Selection-Enhancement.md
+license: See license.md in repository root
+---
 
 # I-Synergy Framework UI WPF Skill (SKILL.md)
 

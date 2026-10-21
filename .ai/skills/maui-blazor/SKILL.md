@@ -1,17 +1,15 @@
-```skill
-{
-  "name": "i-synergy-maui-ui",
-  "description": "I-Synergy MVVM patterns for .NET MAUI + Blazor Hybrid shells (shared ViewModels, ConfigureServices bootstrapper, BlazorWebView orchestration).",
-  "version": "2026.02.10",
-  "sources": [
-    "samples/Sample.Maui",
-    "src/ISynergy.Framework.UI.Maui",
-    "src/ISynergy.Framework.Mvvm",
-    "docs/MAUI-Dynamic-Theme-System.md"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: maui-blazor
+description: >-
+  I-Synergy MVVM patterns for .NET MAUI + Blazor Hybrid shells (shared ViewModels, ConfigureServices bootstrapper, BlazorWebView orchestration).
+version: 2026.02.10
+sources:
+  - samples/Sample.Maui
+  - src/ISynergy.Framework.UI.Maui
+  - src/ISynergy.Framework.Mvvm
+  - docs/MAUI-Dynamic-Theme-System.md
+license: See license.md in repository root
+---
 
 # I-Synergy Framework MAUI + Blazor Skill (SKILL.md)
 

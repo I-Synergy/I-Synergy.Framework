@@ -1,16 +1,14 @@
-```skill
-{
-  "name": "i-synergy-ui-winui",
-  "description": "WinUI 3 implementation details: Fluent Design shell, ContentDialog service, camera/file integrations, title bar customization, Windows 11 accent sync.",
-  "version": "2026.02.10",
-  "sources": [
-    "src/ISynergy.Framework.UI.WinUI",
-    "samples/Sample.WinUI",
-    "docs/ThemeWindow-Selection-Fix.md"
-  ],
-  "license": "See license.md in repository root"
-}
-```
+---
+name: ui-winui
+description: >-
+  WinUI 3 implementation details: Fluent Design shell, ContentDialog service, camera/file integrations, title bar customization, Windows 11 accent sync.
+version: 2026.02.10
+sources:
+  - src/ISynergy.Framework.UI.WinUI
+  - samples/Sample.WinUI
+  - docs/ThemeWindow-Selection-Fix.md
+license: See license.md in repository root
+---
 
 # I-Synergy Framework UI WinUI Skill (SKILL.md)
 
