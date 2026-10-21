@@ -1,3 +1,42 @@
+# Session Handoff - 2026-10-21 (Sample.Maui Xcode 27 / UIScene migration)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Migrated `samples/Sample.Maui` (iOS + Mac Catalyst heads) to the UIKit scene lifecycle required by Xcode 27 / Apple SDK 27.0, following the `maui-xcode27-migration` skill.
+
+- Inventory found **no custom lifecycle code** (both `AppDelegate`s only override `CreateMauiApp`; no `ConfigureLifecycleEvents`, `OpenUrl`, `ContinueUserActivity`, `ShortcutItem`, no existing scene delegate/manifest) — the skill's fast path applied.
+- Added `Platforms/iOS/SceneDelegate.cs` and `Platforms/MacCatalyst/SceneDelegate.cs` (`[Register("SceneDelegate")] : MauiUISceneDelegate`).
+- Merged `UIApplicationSceneManifest` (single scene, `__MAUI_DEFAULT_SCENE_CONFIGURATION__`, delegate `SceneDelegate`) into both `Info.plist` files.
+- Enabled the commented-out `NSPrivacyAccessedAPICategoryUserDefaults` / `CA92.1` entry in `Platforms/iOS/Resources/PrivacyInfo.xcprivacy` (app uses `Preferences.Default`).
+- MAUI 10.0.120 already met the 10.0.110 floor — no package change.
+
+## Decisions Made (user-approved)
+- Mac Catalyst `SupportedOSPlatformVersion` 15.0 -> **17.0** (SDK 27 minimum; drops macOS 12/13). iOS stays 15.0.
+- `global.json` gained `"workloadVersion": "10.0.401.1"` (published pairing for Apple 27.0.10722 + Xcode 27.0). The machine's workloads were updated to that set.
+- No macOS CI job added; Apple build/device testing stays a manual Mac step.
+
+## Verified
+- `dotnet workload list` -> workload version 10.0.401.1, `ios`/`maccatalyst` 27.0.10722.
+- Effective MSBuild properties: iOS 15.0, Catalyst 17.0, both `TargetPlatformVersion=27.0`.
+- `dotnet build -f net10.0-ios -t:Compile` and `-f net10.0-maccatalyst -t:Compile`: 0 warnings / 0 errors; `SceneDelegate` present in both compiled assemblies.
+- plist/privacy/entitlements parsed and asserted via `plistlib`; lifecycle audit searches had no hits.
+- `git diff --check` clean.
+
+## Open Questions / Not Done
+- `audit-lifecycle.mjs` helper NOT run (no Node.js on this host) — manual step-5 searches were used instead.
+- Built-bundle `Info.plist` check NOT possible here (Apple packaging needs Xcode; the `bin/.../Sample.Maui.app` is a stale zero-byte artifact from an older macOS build). Run `plutil -p <App>.app/Info.plist` on a Mac.
+- No simulator/device validation: launch past splash, foreground/background, warm/cold links, auth return, quick actions all untested. Xcode 27.0 needs macOS 26.6+.
+- `ios-arm64` device and Release Catalyst builds untested.
+- **Not mine:** 16 `SKILL.md` files under `skills/` and `.ai/skills/` show as modified (frontmatter converted from a fenced JSON block to YAML). Left untouched.
+
+## Files Modified
+`samples/Sample.Maui/{Platforms/iOS/SceneDelegate.cs, Platforms/MacCatalyst/SceneDelegate.cs, Platforms/iOS/Info.plist, Platforms/MacCatalyst/Info.plist, Platforms/iOS/Resources/PrivacyInfo.xcprivacy, Sample.Maui.csproj}`, `global.json`,
+`.ai/plans/maui-xcode27-migration.md`, `.ai/completed/maui-xcode27-migration.md`.
+
+---
+
 # Session Handoff - 2026-10-09 (EventSourcing Web JWT auth)
 
 **Written By:** Reasonix Code
