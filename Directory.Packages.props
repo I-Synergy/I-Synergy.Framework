@@ -57,8 +57,8 @@
     <PackageVersion Include="Microsoft.Graph" Version="6.8.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.91.1" />
     <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.2" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.110" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.110" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.120" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.120" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.63.0" />
     <PackageVersion Include="Microsoft.Playwright.MSTest" Version="1.63.0" />
