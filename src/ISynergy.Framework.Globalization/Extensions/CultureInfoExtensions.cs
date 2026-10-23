@@ -1,3 +1,4 @@
+using ISynergy.Framework.Globalization.Services;
 using System.Globalization;
 
 namespace ISynergy.Framework.Globalization.Extensions;
@@ -15,7 +16,8 @@ namespace ISynergy.Framework.Globalization.Extensions;
 public static class CultureInfoExtensions
 {
     /// <summary>
-    /// Applies <paramref name="culture"/> as the process-wide default culture.
+    /// Applies <paramref name="culture"/> as the process-wide default culture and refreshes
+    /// localized strings so bound UI updates with the new language.
     /// </summary>
     /// <param name="culture">The culture to apply. Cloned internally so callers retain ownership.</param>
     /// <param name="configure">
@@ -33,6 +35,9 @@ public static class CultureInfoExtensions
 
         CultureInfo.DefaultThreadCurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+        // Refresh localized strings so bound UI updates with new language
+        LocalizedStrings.Default.Refresh();
 
         return culture;
     }

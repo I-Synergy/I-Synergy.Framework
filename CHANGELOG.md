@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ISynergy.Framework.UI.SourceGenerator**: New Roslyn incremental source generator that emits `AddUITypes()` and a `ViewModelViewMap` at compile time, replacing `AppDomain.GetAssemblies()` scanning for view/view-model discovery
 - **ISynergy.Framework.AspNetCore.Blazor.SourceGenerator**: New Roslyn incremental source generator that emits `AddBlazorRegistrations()` for AOT-safe Blazor component and service registration
 
+#### Live Localization and Theming — New APIs
+- **ISynergy.Framework.Globalization**: `LocalizedStrings` — singleton service providing indexed access to localized strings with `INotifyPropertyChanged` and `Changed` event support for automatic UI refresh on culture change
+- **ISynergy.Framework.Globalization**: `CultureInfoExtensions.ApplyCulture()` — hook that calls `LocalizedStrings.Default.Refresh()` automatically when culture changes, enabling live language switching
+- **ISynergy.Framework.UI.Maui**: `LocalizedStringsExtension` — XAML markup extension for trim-friendly, compiled binding to `LocalizedStrings.Default` indexer
+- **ISynergy.Framework.Mvvm**: `IThemeService` extended with: `Theme` property, `AccentColor` property, `ThemeChanged` event, `SetTheme(Themes)` method, `SetAccentColor(string)` method — enables live theme switching with automatic persistence
+- **ISynergy.Framework.UI.Blazor**: `LocalizedComponentBase` — base component class that automatically re-renders when language changes via `LocalizedStrings.Changed` event
+- **ISynergy.Framework.UI.Blazor**: `ThemeService` (Blazor-specific) — applies theme and accent via JavaScript interop (`theme_service_interop.js`) with `SetTheme` and `SetAccentColor` support
+
 #### AOT Compatibility — New APIs
 - **ISynergy.Framework.CQRS**: `QueryDispatchTable` — compile-time dispatch table replacing `MakeGenericType`-based dynamic dispatch in the query dispatcher
 - **ISynergy.Framework.Automations**: `ActionExecutorRegistry` — compile-time action executor registry replacing `MakeGenericType`-based dispatch for automation actions

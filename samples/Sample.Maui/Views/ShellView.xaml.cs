@@ -1,7 +1,9 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Abstractions.Views;
+using ISynergy.Framework.UI.Controls;
 using Sample.ViewModels;
 
 namespace Sample.Views;
@@ -36,7 +38,20 @@ public partial class ShellView : Shell, IShellView
     {
         InitializeComponent();
 
+        // Subscribe to LocalizedStrings changes for UI text binding updates
+        var localizedStrings = LocalizedStrings.Default;
+        UpdateShellContentTitles();
+        localizedStrings.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == "Item[]")
+                UpdateShellContentTitles();
+        };
+
         ViewModel = viewModel;
+
+        // The framework never raises BaseShellViewModel.ShellLoadedAsync for this shell, so the
+        // saved theme and the first-run flow are started here, once the visual tree is available.
+        Loaded += OnShellLoaded;
 
 #if MACCATALYST
         var fileMenu = new MenuBarItem { Text = "File" };
@@ -55,6 +70,41 @@ public partial class ShellView : Shell, IShellView
         helpMenu.Add(new MenuFlyoutItem { Text = "Feedback", Command = viewModel.FeedbackCommand });
         MenuBarItems.Add(helpMenu);
 #endif
+    }
+
+    private async void OnShellLoaded(object? sender, EventArgs e)
+    {
+        Loaded -= OnShellLoaded;
+
+        if (BindingContext is ShellViewModel viewModel)
+            await viewModel.ShellLoadedAsync();
+    }
+
+    private static readonly string[] TitleKeys = ["Dashboard", "CustomControls", "MauiControls", "SlideShow"];
+
+    private void UpdateShellContentTitles()
+    {
+        var localizedStrings = LocalizedStrings.Default;
+
+        // Each page is an implicit ShellItem > ShellSection > ShellContent chain; the flyout
+        // reads the title at any of the three levels, so keep them in step.
+        for (var i = 0; i < Items.Count && i < TitleKeys.Length; i++)
+        {
+            var title = localizedStrings[TitleKeys[i]];
+            var item = Items[i];
+            item.Title = title;
+
+            foreach (var section in item.Items)
+            {
+                section.Title = title;
+
+                foreach (var content in section.Items)
+                    content.Title = title;
+            }
+        }
+
+        if (this.FindByName<NavigationItem>("HelpItem") is NavigationItem helpItem)
+            helpItem.Text = localizedStrings["Help"];
     }
 
     #region IDisposable

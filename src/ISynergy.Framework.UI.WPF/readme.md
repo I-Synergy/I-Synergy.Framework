@@ -469,6 +469,30 @@ public class UpdateViewModel : ViewModel
                Icon="{StaticResource DashboardIcon}" />
 ```
 
+### 6. Live Localization with IndexerBinding
+
+Bind directly to `LocalizedStrings.Default` indexer for automatic language switching without page reload:
+
+```xml
+<Window xmlns:local="clr-namespace:ISynergy.Framework.Globalization.Services;assembly=ISynergy.Framework.Globalization"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Bind to indexer with string key -->
+    <TextBlock Text="{Binding [WelcomeMessage], Source={x:Static local:LocalizedStrings.Default}}" />
+    
+    <Label Content="{Binding [GreetingText], Source={x:Static local:LocalizedStrings.Default}}" />
+</Window>
+```
+
+When the application language changes, simply call:
+
+```csharp
+var newCulture = new CultureInfo("fr-FR");
+newCulture.ApplyCulture();  // Triggers PropertyChanged("Item[]") on LocalizedStrings.Default
+```
+
+All bound controls automatically update with the new translations — no page refresh needed.
+
 ## Theme Support
 
 The WPF framework includes 40+ built-in theme palettes:

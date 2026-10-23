@@ -327,6 +327,100 @@ IRelayCommand
 └── CancelCommand                    # Command for cancellation
 ```
 
+## Theme Management (IThemeService)
+
+The `IThemeService` provides live theme and accent color switching with automatic persistence:
+
+```csharp
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
+
+public class SettingsViewModel : ViewModel
+{
+    private readonly IThemeService _themeService;
+
+    public AsyncRelayCommand ToggleThemeCommand { get; }
+    public AsyncRelayCommand SelectAccentColorCommand { get; }
+
+    public Themes CurrentTheme => _themeService.Theme;
+    public string CurrentAccentColor => _themeService.AccentColor;
+
+    public SettingsViewModel(
+        ICommonServices commonServices,
+        IThemeService themeService,
+        ILogger<SettingsViewModel> logger)
+        : base(commonServices, logger)
+    {
+        _themeService = themeService;
+        
+        ToggleThemeCommand = new AsyncRelayCommand(ToggleThemeAsync);
+        SelectAccentColorCommand = new AsyncRelayCommand<string>(SelectAccentColorAsync);
+        
+        // Subscribe to theme changes
+        _themeService.ThemeChanged += OnThemeChanged;
+    }
+
+    public override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
+        // Theme is applied on startup via ApplyTheme()
+        IsInitialized = true;
+    }
+
+    private async Task ToggleThemeAsync()
+    {
+        var newTheme = _themeService.IsLightThemeEnabled ? Themes.Dark : Themes.Light;
+        _themeService.SetTheme(newTheme);  // Applies live, persists, and raises ThemeChanged
+    }
+
+    private async Task SelectAccentColorAsync(string hexColor)
+    {
+        _themeService.SetAccentColor(hexColor);  // Accepts "#0078D7" or "0078D7"
+    }
+
+    private void OnThemeChanged(object? sender, EventArgs e)
+    {
+        // Handle theme change notification
+    }
+
+    protected override void Cleanup()
+    {
+        _themeService.ThemeChanged -= OnThemeChanged;
+        base.Cleanup();
+    }
+}
+```
+
+### IThemeService Members
+
+- **`Themes Theme { get; }`** — Current application theme (Light/Dark)
+- **`string AccentColor { get; }`** — Current accent color as hex string
+- **`bool IsLightThemeEnabled { get; }`** — True if theme is Light
+- **`event EventHandler? ThemeChanged`** — Raised when theme or color changes
+- **`void ApplyTheme()`** — Applies persisted theme on startup
+- **`void SetTheme(Themes theme)`** — Changes theme, applies live, persists, raises event
+- **`void SetAccentColor(string hexColor)`** — Changes accent color, applies live, persists, raises event
+
+### Breaking Change: Custom IThemeService Implementations
+
+The `IThemeService` interface was extended with three new members (`Theme`, `AccentColor`, `ThemeChanged`). Custom implementations must add:
+
+```csharp
+public class CustomThemeService : IThemeService
+{
+    public Themes Theme { get; }
+    public string AccentColor { get; }
+    public event EventHandler? ThemeChanged;
+
+    public bool IsLightThemeEnabled { get; }
+    public void ApplyTheme() { }
+    public void SetTheme(Themes theme) { }
+    public void SetAccentColor(string hexColor) { }
+}
+```
+
+The three platform implementations (MAUI, WPF, WinUI) have been updated. If you have a custom implementation, add these members following the pattern in `src/ISynergy.Framework.UI.Maui/Services/ThemeService.cs`.
+
 ## Core Services
 
 ### Dialog Service

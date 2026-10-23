@@ -10,6 +10,8 @@ namespace Sample.Services;
 
 public class SettingsService : ISettingsService, IReloadable
 {
+    private const string IsFirstRunKey = nameof(GlobalSettings.IsFirstRun);
+
     private readonly IMessengerService _messengerService;
     private readonly ILogger _logger;
 
@@ -43,6 +45,7 @@ public class SettingsService : ISettingsService, IReloadable
         _globalSettings = new GlobalSettings();
 
         LoadLocalSettings();
+        LoadFirstRun();
 
         _messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
     }
@@ -53,6 +56,12 @@ public class SettingsService : ISettingsService, IReloadable
     {
         LoadLocalSettings();
         await LoadGlobalSettingsAsync(cancellationToken);
+    }
+
+    private void LoadFirstRun()
+    {
+        if (_globalSettings is not null)
+            _globalSettings.IsFirstRun = Preferences.Default.Get(IsFirstRunKey, true);
     }
 
     public void LoadLocalSettings()
@@ -185,13 +194,15 @@ public class SettingsService : ISettingsService, IReloadable
 
     public Task<int> AddOrUpdateGlobalSettingsAsync(IGlobalSettings e, CancellationToken cancellationToken = default)
     {
-        // Update settings
+        // Global settings are not stored remotely in this sample; only the first-run flag is kept on the device.
+        Preferences.Default.Set(IsFirstRunKey, e.IsFirstRun);
         return Task.FromResult(1);
     }
 
     public Task LoadGlobalSettingsAsync(CancellationToken cancellationToken = default)
     {
         // Load settings from database
+        LoadFirstRun();
         return Task.CompletedTask;
     }
 

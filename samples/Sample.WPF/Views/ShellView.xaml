@@ -7,6 +7,7 @@
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.WPF"
         xmlns:models="clr-namespace:ISynergy.Framework.Core.Models;assembly=ISynergy.Framework.Core"
+        xmlns:services="clr-namespace:ISynergy.Framework.Globalization.Services;assembly=ISynergy.Framework.Globalization"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
         Title="{Binding Title}">
@@ -16,6 +17,10 @@
     </c:View.Resources>
 
     <Grid>
+        <!-- Example of LocalizedStrings.Default indexer binding for live language switching -->
+        <TextBlock Text="{Binding [Info], Source={x:Static services:LocalizedStrings.Default}}"
+                   Margin="10,5,10,0" FontSize="11" Opacity="0.7" ToolTip="This text updates when language changes"/>
+
         <syncfusion:SfNavigationDrawer x:Name="NavigationView"
                                    ItemsSource="{Binding PrimaryItems}"
                                    DisplayMode="Compact"

@@ -14,15 +14,12 @@ using ColorHelper = ISynergy.Framework.UI.Helpers.ColorHelper;
 namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
-/// Class ThemeSelectorService.
-/// Implements the <see cref="IThemeService" />
+/// Provides functionality to apply the application's theme and accent color in WinUI.
 /// </summary>
-/// <seealso cref="IThemeService" />
-/// <summary>
-/// Class ThemeSelectorService.
-/// Implements the <see cref="IThemeService" />
-/// </summary>
-/// <seealso cref="IThemeService" />
+/// <remarks>
+/// The service reads the persisted <see cref="Themes"/> and color value from <see cref="ISettingsService"/> during construction.
+/// It then applies the theme via the XAML framework and updates the title bar colors accordingly.
+/// </remarks>
 public class ThemeService : IThemeService
 {
     private Themes _theme;
@@ -38,11 +35,26 @@ public class ThemeService : IThemeService
     public bool IsLightThemeEnabled => _theme == Themes.Light;
 
     /// <summary>
+    /// Gets the current application theme.
+    /// </summary>
+    public Themes Theme => _theme;
+
+    /// <summary>
+    /// Gets the current accent color as a hex string.
+    /// </summary>
+    public string AccentColor => _color;
+
+    /// <summary>
+    /// Occurs when the theme or accent color changes.
+    /// </summary>
+    public event EventHandler? ThemeChanged;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ThemeService"/> class.
     /// </summary>
     /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
-    /// <param name="logger">A logger used for diagnostics and structured logging.</param>
     /// <param name="themeColorOptions">Theme color options providing available colors and defaults.</param>
+    /// <param name="logger">A logger used for diagnostics and structured logging.</param>
     public ThemeService(
         ISettingsService settingsService,
         IOptions<ThemeColorOptions> themeColorOptions,
@@ -70,11 +82,11 @@ public class ThemeService : IThemeService
     }
 
     /// <summary>
-    /// Applies the configured theme and accent color to the MAUI <see cref="Application"/> instance.
+    /// Applies the configured theme and accent color to the WinUI <see cref="Microsoft.UI.Xaml.Application"/> instance.
     /// </summary>
     /// <remarks>
-    /// The method safely handles a missing Application.Current instance and logs diagnostics.
-    /// For Windows, it updates the title bar colors; for Android, it updates common color resources.
+    /// This method updates the XAML framework theme, sets the accent color, and customizes the title bar.
+    /// It logs diagnostics if the Application.Current instance is not available.
     /// </remarks>
     public void ApplyTheme()
     {
@@ -116,6 +128,57 @@ public class ThemeService : IThemeService
         }
     }
 
+    /// <summary>
+    /// Sets the application theme and applies it immediately.
+    /// </summary>
+    /// <remarks>
+    /// This method updates the theme, applies it live, persists the change, and raises the <see cref="ThemeChanged"/> event.
+    /// It is safe to call on the UI thread.
+    /// </remarks>
+    /// <param name="theme">The theme to apply.</param>
+    public void SetTheme(Themes theme)
+    {
+        if (_theme == theme)
+            return;
+
+        _theme = theme;
+        _settingsService.LocalSettings.Theme = theme;
+        _settingsService.SaveLocalSettings();
+
+        ApplyTheme();
+        ThemeChanged?.Invoke(this, EventArgs.Empty);
+
+        _logger.LogInformation("Theme changed to {Theme}", theme);
+    }
+
+    /// <summary>
+    /// Sets the accent color and applies it immediately.
+    /// </summary>
+    /// <remarks>
+    /// This method updates the accent color, applies it live, persists the change, and raises the <see cref="ThemeChanged"/> event.
+    /// It is safe to call on the UI thread.
+    /// </remarks>
+    /// <param name="hexColor">The hex color string (e.g., "#0078D7" or "0078D7").</param>
+    public void SetAccentColor(string hexColor)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(hexColor);
+
+        if (string.Equals(_color, hexColor, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        _color = hexColor;
+        _settingsService.LocalSettings.Color = hexColor;
+        _settingsService.SaveLocalSettings();
+
+        ApplyTheme();
+        ThemeChanged?.Invoke(this, EventArgs.Empty);
+
+        _logger.LogInformation("Accent color changed to {Color}", hexColor);
+    }
+
+    /// <summary>
+    /// Updates platform-specific colors and applies theme to the WinUI framework element.
+    /// </summary>
     private void UpdatePlatformColors()
     {
         if (Application.MainWindow is null)

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>$(SampleTargetFramework)</TargetFramework>
 		<RootNamespace>Sample.Blazor.UI.Tests</RootNamespace>
 		<AssemblyName>Sample.Blazor.UI.Tests</AssemblyName>
 		<IsPackable>false</IsPackable>

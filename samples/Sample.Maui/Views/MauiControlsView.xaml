@@ -3,95 +3,101 @@
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Sample.Views.Controls"
     x:Class="Sample.Views.MauiControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:MauiControlsViewModel"
     NavigationPage.HasNavigationBar="False">
 
-    <ScrollView>
-        <VerticalStackLayout Margin="12" Spacing="16">
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Margin="12" Spacing="16">
 
-            <!-- ===== Entry Controls ===== -->
-            <Label Text="Entry / Editor / Password / SearchBar" FontAttributes="Bold" FontSize="16" />
-            <Label Text="Entry:" />
-            <Entry Text="{Binding EntryText}" Placeholder="Type here..." />
-            <Label Text="Editor:" />
-            <Editor Text="{Binding EditorText}" Placeholder="Multi-line text..." HeightRequest="80" />
-            <Label Text="SearchBar:" />
-            <SearchBar Text="{Binding SearchText}" Placeholder="Search..." />
+                <!-- ===== Entry Controls ===== -->
+                <Label Text="Entry / Editor / Password / SearchBar" FontAttributes="Bold" FontSize="16" />
+                <Label Text="Entry:" />
+                <Entry Text="{Binding EntryText}" Placeholder="Type here..." />
+                <Label Text="Editor:" />
+                <Editor Text="{Binding EditorText}" Placeholder="Multi-line text..." HeightRequest="80" />
+                <Label Text="SearchBar:" />
+                <SearchBar Text="{Binding SearchText}" Placeholder="Search..." />
 
-            <!-- ===== Picker ===== -->
-            <Label Text="Picker" FontAttributes="Bold" FontSize="16" />
-            <Picker Title="Select an option"
-                    ItemsSource="{Binding PickerItems}"
-                    SelectedItem="{Binding SelectedPickerItem}" />
+                <!-- ===== Picker ===== -->
+                <Label Text="Picker" FontAttributes="Bold" FontSize="16" />
+                <Picker Title="Select an option"
+                        ItemsSource="{Binding PickerItems}"
+                        SelectedItem="{Binding SelectedPickerItem}" />
 
-            <!-- ===== Date & Time Pickers ===== -->
-            <Label Text="DatePicker / TimePicker" FontAttributes="Bold" FontSize="16" />
-            <HorizontalStackLayout Spacing="12">
-                <DatePicker Date="{Binding SelectedDate}" />
-                <TimePicker Time="{Binding SelectedTime}" />
-            </HorizontalStackLayout>
+                <!-- ===== Date & Time Pickers ===== -->
+                <Label Text="DatePicker / TimePicker" FontAttributes="Bold" FontSize="16" />
+                <HorizontalStackLayout Spacing="12">
+                    <DatePicker Date="{Binding SelectedDate}" />
+                    <TimePicker Time="{Binding SelectedTime}" />
+                </HorizontalStackLayout>
 
-            <!-- ===== Toggles ===== -->
-            <Label Text="Switch / CheckBox" FontAttributes="Bold" FontSize="16" />
-            <HorizontalStackLayout Spacing="12">
-                <Switch IsToggled="{Binding IsToggled}" />
-                <Label Text="{Binding IsToggled, StringFormat='Switch: {0}'}" VerticalOptions="Center" />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="12">
-                <CheckBox IsChecked="{Binding IsChecked}" />
-                <Label Text="{Binding IsChecked, StringFormat='CheckBox: {0}'}" VerticalOptions="Center" />
-            </HorizontalStackLayout>
+                <!-- ===== Toggles ===== -->
+                <Label Text="Switch / CheckBox" FontAttributes="Bold" FontSize="16" />
+                <HorizontalStackLayout Spacing="12">
+                    <Switch IsToggled="{Binding IsToggled}" />
+                    <Label Text="{Binding IsToggled, StringFormat='Switch: {0}'}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="12">
+                    <CheckBox IsChecked="{Binding IsChecked}" />
+                    <Label Text="{Binding IsChecked, StringFormat='CheckBox: {0}'}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
 
-            <!-- ===== Slider & Stepper ===== -->
-            <Label Text="Slider / Stepper" FontAttributes="Bold" FontSize="16" />
-            <Label Text="{Binding SliderValue, StringFormat='Slider: {0:F0}'}" />
-            <Slider Value="{Binding SliderValue}" Minimum="0" Maximum="100" />
-            <HorizontalStackLayout Spacing="12">
-                <Stepper Value="{Binding StepperValue}" Minimum="0" Maximum="10" Increment="1" />
-                <Label Text="{Binding StepperValue, StringFormat='Stepper: {0:F0}'}" VerticalOptions="Center" />
-            </HorizontalStackLayout>
+                <!-- ===== Slider & Stepper ===== -->
+                <Label Text="Slider / Stepper" FontAttributes="Bold" FontSize="16" />
+                <Label Text="{Binding SliderValue, StringFormat='Slider: {0:F0}'}" />
+                <Slider Value="{Binding SliderValue}" Minimum="0" Maximum="100" />
+                <HorizontalStackLayout Spacing="12">
+                    <Stepper Value="{Binding StepperValue}" Minimum="0" Maximum="10" Increment="1" />
+                    <Label Text="{Binding StepperValue, StringFormat='Stepper: {0:F0}'}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
 
-            <!-- ===== Progress ===== -->
-            <Label Text="ProgressBar / ActivityIndicator" FontAttributes="Bold" FontSize="16" />
-            <ProgressBar Progress="{Binding ProgressValue}" />
-            <ActivityIndicator IsRunning="True" />
+                <!-- ===== Progress ===== -->
+                <Label Text="ProgressBar / ActivityIndicator" FontAttributes="Bold" FontSize="16" />
+                <ProgressBar Progress="{Binding ProgressValue}" />
+                <ActivityIndicator IsRunning="True" />
 
-            <!-- ===== Button ===== -->
-            <Label Text="Button" FontAttributes="Bold" FontSize="16" />
-            <Button Text="Trigger Busy Indicator" Command="{Binding ButtonCommand}" />
+                <!-- ===== Button ===== -->
+                <Label Text="Button" FontAttributes="Bold" FontSize="16" />
+                <Button Text="Trigger Busy Indicator" Command="{Binding ButtonCommand}" />
 
-            <!-- ===== CollectionView ===== -->
-            <Label Text="CollectionView" FontAttributes="Bold" FontSize="16" />
-            <CollectionView ItemsSource="{Binding ListItems}"
-                            HeightRequest="200"
-                            SelectionMode="Single">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <Grid Padding="8,4">
-                            <Label Text="{Binding .}" />
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <!-- ===== CollectionView ===== -->
+                <Label Text="CollectionView" FontAttributes="Bold" FontSize="16" />
+                <CollectionView ItemsSource="{Binding ListItems}"
+                                HeightRequest="200"
+                                SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Grid Padding="8,4">
+                                <Label Text="{Binding .}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-            <!-- ===== Image ===== -->
-            <Label Text="Image" FontAttributes="Bold" FontSize="16" />
-            <Image Source="dotnet_bot.png" HeightRequest="100" Aspect="AspectFit" />
+                <!-- ===== Image ===== -->
+                <Label Text="Image" FontAttributes="Bold" FontSize="16" />
+                <Image Source="dotnet_bot.png" HeightRequest="100" Aspect="AspectFit" />
 
-            <!-- ===== Label with formatting ===== -->
-            <Label Text="Label / Span" FontAttributes="Bold" FontSize="16" />
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Bold " FontAttributes="Bold" />
-                        <Span Text="Italic " FontAttributes="Italic" />
-                        <Span Text="Colored" TextColor="{DynamicResource Primary}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
+                <!-- ===== Label with formatting ===== -->
+                <Label Text="Label / Span" FontAttributes="Bold" FontSize="16" />
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Bold " FontAttributes="Bold" />
+                            <Span Text="Italic " FontAttributes="Italic" />
+                            <Span Text="Colored" TextColor="{DynamicResource Primary}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
 
-        </VerticalStackLayout>
-    </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Settings drawer hosted over the page content -->
+        <controls:SettingsDrawer />
+    </Grid>
 </c:View>

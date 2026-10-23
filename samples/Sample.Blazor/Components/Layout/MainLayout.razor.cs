@@ -1,14 +1,18 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Extensions;
+using ISynergy.Framework.Globalization.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace Sample.Components.Layout;
 
@@ -28,27 +32,30 @@ public partial class MainLayout : IDisposable
     private string? _version;
 
     private readonly NavigationManager _navigationManager;
-    private readonly IDialogService _dialogService;
+    private readonly Microsoft.FluentUI.AspNetCore.Components.IDialogService _dialogService;
     private readonly INotificationService _notificationService;
     private readonly ICommonServices _commonServices;
     private readonly ISettingsService _settingsService;
     private readonly IContext _context;
     private readonly RequestCancellationService _requestCancellationService;
     private readonly IJSRuntime _jsRuntime;
+    private readonly ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService _themeService;
 
     public MainLayout(
         ICommonServices commonServices,
-        IDialogService dialogService,
+        Microsoft.FluentUI.AspNetCore.Components.IDialogService dialogService,
         INotificationService notificationService,
         NavigationManager navigationManager,
         RequestCancellationService requestCancellationService,
         IContext context,
         ISettingsService settingsService,
-        IJSRuntime jsRuntime)
+        IJSRuntime jsRuntime,
+        ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService themeService)
     {
         _commonServices = commonServices;
         _context = context;
         _settingsService = settingsService;
+        _themeService = themeService;
 
         _dialogService = dialogService;
         _notificationService = notificationService;
@@ -73,6 +80,9 @@ public partial class MainLayout : IDisposable
         _version = _commonServices.InfoService.ProductVersion.ToString();
 
         _commonServices.BusyService.PropertyChanged += BusyService_PropertyChanged;
+
+        // Subscribe to language changes from LocalizedStrings for live localization updates
+        LocalizedStrings.Default.Changed += LocalizedStrings_Changed;
 
         // v5: ShowInfoAsync/ShowWarningAsync/ShowErrorAsync already return the dialog result
         // (Task<DialogResult>); there is no intermediate reference object and DialogResult has
@@ -166,6 +176,11 @@ public partial class MainLayout : IDisposable
         StateHasChanged();
     }
 
+    private void LocalizedStrings_Changed(object? sender, EventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
     public void ToggleConsole()
     {
         if (_localSettings is not null)
@@ -174,6 +189,33 @@ public partial class MainLayout : IDisposable
             _settingsService.SaveLocalSettings();
             StateHasChanged();
         }
+    }
+
+    /// <summary>
+    /// Toggles between light and dark theme live using IThemeService.
+    /// </summary>
+    public void ToggleTheme()
+    {
+        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
+        _themeService.SetTheme(nextTheme);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Toggles between English and Dutch languages, applying changes live.
+    /// </summary>
+    public void ToggleLanguage()
+    {
+        var currentLanguage = CultureInfo.CurrentCulture.Name;
+        var nextLanguage = currentLanguage.StartsWith("nl") ? "en-US" : "nl-NL";
+
+        var culture = new CultureInfo(nextLanguage);
+        culture.ApplyCulture(); // This calls LocalizedStrings.Default.Refresh() automatically
+
+        _settingsService.LocalSettings.Language = nextLanguage;
+        _settingsService.SaveLocalSettings();
+
+        // StateHasChanged is called by the LocalizedStrings_Changed event handler
     }
 
     /// <summary>
@@ -220,6 +262,7 @@ public partial class MainLayout : IDisposable
         // Unsubscribe from events
         _commonServices.BusyService.PropertyChanged -= BusyService_PropertyChanged;
         _navigationManager.LocationChanged -= NavigationManager_LocationChanged;
+        LocalizedStrings.Default.Changed -= LocalizedStrings_Changed;
 
         if (_localSettings is not null)
         {

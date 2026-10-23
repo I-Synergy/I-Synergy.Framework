@@ -8,6 +8,7 @@
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:views="clr-namespace:Sample.Views"
+    xmlns:local="clr-namespace:Sample.Services"
     x:DataType="viewmodels:ShellViewModel"
     FlyoutBehavior="Flyout"
     FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
@@ -36,12 +37,29 @@
         ContentTemplate="{DataTemplate views:SlideShowView}"
         Route="slideshow" />
 
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="44" Padding="16,0">
+            <Label Grid.Column="0" Text="{Binding Title}" VerticalOptions="Center" FontAttributes="Bold" />
+            <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                <Button Text="{Binding ThemeIcon}"
+                        FontFamily="FluentUI"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
+                        AutomationProperties.Name="Toggle theme"
+                        Command="{Binding ToggleThemeCommand}" />
+                <Button Text="&#xf013;"
+                        FontFamily="fontawesome"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
+                        AutomationProperties.Name="Settings"
+                        Command="{Binding SettingsCommand}" />
+            </HorizontalStackLayout>
+        </Grid>
+    </Shell.TitleView>
+
     <Shell.FlyoutFooter>
-        <VerticalStackLayout Padding="4">
-            <c:NavigationItem Text="Help" Icon="{DynamicResource IconHelp}" Command="{Binding HelpCommand}"/>
-            <c:NavigationItem Text="Language" Icon="{DynamicResource IconLanguage}" Command="{Binding LanguageCommand}"/>
-            <c:NavigationItem Text="Theme" Icon="{DynamicResource IconTheme}" Command="{Binding ThemeCommand}"/>
-            <c:NavigationItem Text="Settings" Icon="{DynamicResource IconSettings}" Command="{Binding SettingsCommand}"/>
+        <VerticalStackLayout Padding="4" x:Name="HelpFooter">
+            <c:NavigationItem x:Name="HelpItem" Text="Help" Icon="{DynamicResource IconHelp}" Command="{Binding HelpCommand}"/>
             <!--<c:NavigationItem Text="Signin" Icon="{DynamicResource IconSignin}" Command="{Binding SigninCommand}"/>-->
         </VerticalStackLayout>
     </Shell.FlyoutFooter>

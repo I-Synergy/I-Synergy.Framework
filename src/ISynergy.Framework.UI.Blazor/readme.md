@@ -339,6 +339,117 @@ Centralized exception handling:
 </ErrorBoundary>
 ```
 
+## Live Localization and Theming
+
+### LocalizedComponentBase
+
+Blazor components that respond to language changes inherit from `LocalizedComponentBase`:
+
+```razor
+@page "/products"
+@using ISynergy.Framework.UI.Components.Base
+@using ISynergy.Framework.Globalization.Services
+@inherits LocalizedComponentBase
+
+<h1>@LocalizedStrings.Default["ProductsTitle"]</h1>
+
+<p>@LocalizedStrings.Default["ProductsDescription"]</p>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        // Component automatically re-renders when language changes
+    }
+}
+```
+
+`LocalizedComponentBase` subscribes to `LocalizedStrings.Changed` event and calls `StateHasChanged()` automatically when the application language switches via `CultureInfo.ApplyCulture()`.
+
+### ThemeService with JavaScript Interop
+
+The Blazor `ThemeService` applies theme and accent color via JavaScript interop:
+
+```csharp
+// In Program.cs
+builder.Services.AddScoped<IThemeService, ThemeService>();
+
+// In component or ViewModel
+public class SettingsViewModel : ViewModel
+{
+    private readonly IThemeService _themeService;
+
+    public AsyncRelayCommand ChangeThemeCommand { get; }
+    public AsyncRelayCommand ChangeAccentColorCommand { get; }
+
+    public SettingsViewModel(
+        ICommonServices commonServices,
+        IThemeService themeService,
+        ILogger<SettingsViewModel> logger)
+        : base(commonServices, logger)
+    {
+        _themeService = themeService;
+        ChangeThemeCommand = new AsyncRelayCommand(ChangeThemeAsync);
+        ChangeAccentColorCommand = new AsyncRelayCommand(ChangeAccentColorAsync);
+    }
+
+    private async Task ChangeThemeAsync()
+    {
+        _themeService.SetTheme(Themes.Dark);  // Applies immediately
+    }
+
+    private async Task ChangeAccentColorAsync()
+    {
+        _themeService.SetAccentColor("#0078D7");  // Applies immediately
+    }
+}
+```
+
+The `ThemeService`:
+1. Reads persisted theme and color from `ISettingsService.LocalSettings`
+2. On startup, loads `wwwroot/js/theme_service_interop.js` dynamically
+3. Invokes `applyTheme(theme, accentColor)` to set `data-theme` attribute and CSS variables on the document element
+4. Persists changes back to `LocalSettings`
+5. Raises `ThemeChanged` event for subscribers
+
+### JavaScript Interop (`theme_service_interop.js`)
+
+The interop module applies theme styling via DOM manipulation:
+
+```javascript
+// Sets data-theme attribute: 'light' or 'dark'
+document.documentElement.setAttribute('data-theme', theme);
+
+// Sets CSS custom properties for accent colors
+document.documentElement.style.setProperty('--accent-color', '#0078D7');
+```
+
+Your Blazor app CSS should listen to these:
+
+```css
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg-color: #1e1e1e;
+    --text-color: #ffffff;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg-color: #ffffff;
+    --text-color: #000000;
+}
+
+:root {
+    --accent-color: #0078D7;  /* Dynamically updated by ThemeService */
+}
+
+.primary-button {
+    background-color: var(--accent-color);
+}
+```
+
+The theme is applied safely during prerender (when JS is unavailable) and on first interactive render.
+
 ## Best Practices
 
 > [!TIP]

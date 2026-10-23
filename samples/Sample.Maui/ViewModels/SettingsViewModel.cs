@@ -46,6 +46,24 @@ public class SettingsViewModel : ViewModelNavigation<bool>
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// Gets or sets the LanguageOptions property value.
+    /// </summary>
+    public ObservableCollection<string> LanguageOptions
+    {
+        get => GetValue<ObservableCollection<string>>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the ThemeOptions property value.
+    /// </summary>
+    public ObservableCollection<Themes> ThemeOptions
+    {
+        get => GetValue<ObservableCollection<Themes>>();
+        set => SetValue(value);
+    }
+
     public SettingsViewModel(
         ICommonServices commonServices,
         INavigationService navigationService,
@@ -60,6 +78,22 @@ public class SettingsViewModel : ViewModelNavigation<bool>
 
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
+
+        LanguageOptions = new ObservableCollection<string>
+        {
+            "en",
+            "nl",
+            "de",
+            "fr",
+            "es",
+            "ar"
+        };
+
+        ThemeOptions = new ObservableCollection<Themes>
+        {
+            Themes.Light,
+            Themes.Dark
+        };
 
         COMPorts =
         [

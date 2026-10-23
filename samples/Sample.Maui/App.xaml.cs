@@ -1,7 +1,9 @@
 using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Globalization.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
+using Sample.Services;
 using Sample.ViewModels;
 using System.Globalization;
 using System.Runtime.ExceptionServices;
@@ -41,6 +43,33 @@ public partial class App : Application
         base.SetTitleBar(withClock: true);
 
     /// <summary>
+    /// Applies the language chosen in Site Settings to the current and default cultures.
+    /// Must be called before any resource is read, so the shell derives its flow direction
+    /// (RTL for Arabic) from the correct culture.
+    /// </summary>
+    private void ApplySavedLanguage()
+    {
+        var language = _settingsService?.LocalSettings?.Language;
+
+        if (string.IsNullOrWhiteSpace(language))
+            return;
+
+        try
+        {
+            var culture = new CultureInfo(language);
+
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
+        }
+        catch (CultureNotFoundException ex)
+        {
+            _logger?.LogWarning(ex, "Unknown language '{Language}' in settings", language);
+        }
+    }
+
+    /// <summary>
     /// Called during framework initialization. Override to perform backend initialization,
     /// load data, apply migrations, etc. Must call SignalApplicationInitialized at the end.
     /// </summary>
@@ -49,6 +78,21 @@ public partial class App : Application
         try
         {
             _logger?.LogTrace("Starting application initialization");
+
+            // The framework's language service resolves strings through CultureInfo, and the shell
+            // derives its flow direction from it, so the saved language has to be applied before
+            // anything reads a resource.
+            ApplySavedLanguage();
+
+            // Apply the user's saved theme and accent colour via IThemeService before any view can render.
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                var themeService = IPlatformApplication.Current?.Services.GetService<IThemeService>();
+                if (themeService is not null)
+                {
+                    themeService.ApplyTheme();
+                }
+            });
 
             // Perform backend initialization, data loading, migrations, etc.
             if (_commonServices?.BusyService != null)

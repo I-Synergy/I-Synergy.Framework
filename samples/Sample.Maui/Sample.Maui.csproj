@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0-android;net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0')) And $([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.26100.0</TargetFrameworks>
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is
@@ -41,7 +43,8 @@
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
       <PropertyGroup>
-        <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$(TargetFramework.StartsWith('net11.0'))">24.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="!$(TargetFramework.StartsWith('net11.0'))">21.0</SupportedOSPlatformVersion>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">

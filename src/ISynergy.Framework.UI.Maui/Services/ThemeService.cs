@@ -37,6 +37,21 @@ public class ThemeService : IThemeService
     public bool IsLightThemeEnabled => _theme == Themes.Light;
 
     /// <summary>
+    /// Gets the current application theme.
+    /// </summary>
+    public Themes Theme => _theme;
+
+    /// <summary>
+    /// Gets the current accent color as a hex string.
+    /// </summary>
+    public string AccentColor => _color;
+
+    /// <summary>
+    /// Occurs when the theme or accent color changes.
+    /// </summary>
+    public event EventHandler? ThemeChanged;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ThemeService"/> class.
     /// </summary>
     /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
@@ -121,6 +136,66 @@ public class ThemeService : IThemeService
         {
             _logger.LogError(ex, "Failed to set application style");
         }
+    }
+
+    /// <summary>
+    /// Sets the application theme and applies it immediately.
+    /// </summary>
+    /// <remarks>
+    /// This method updates the theme, applies it live, persists the change, and raises the <see cref="ThemeChanged"/> event.
+    /// It is safe to call on the UI thread.
+    /// </remarks>
+    /// <param name="theme">The theme to apply.</param>
+    public void SetTheme(Themes theme)
+    {
+        if (_theme == theme)
+            return;
+
+        _theme = theme;
+        _settingsService.LocalSettings.Theme = theme;
+        _settingsService.SaveLocalSettings();
+
+        ApplyTheme();
+        ThemeChanged?.Invoke(this, EventArgs.Empty);
+
+        _logger.LogInformation("Theme changed to {Theme}", theme);
+    }
+
+    /// <summary>
+    /// Sets the accent color and applies it immediately.
+    /// </summary>
+    /// <remarks>
+    /// This method updates the accent color, applies it live, persists the change, and raises the <see cref="ThemeChanged"/> event.
+    /// It is safe to call on the UI thread.
+    /// </remarks>
+    /// <param name="hexColor">The hex color string (e.g., "#0078D7" or "0078D7").</param>
+    public void SetAccentColor(string hexColor)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(hexColor);
+
+        if (string.Equals(_color, hexColor, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        _color = hexColor;
+        _settingsService.LocalSettings.Color = hexColor;
+        _settingsService.SaveLocalSettings();
+
+        ApplyTheme();
+
+        // Ensure live updates for DynamicResource bindings by directly updating resource values
+        // in the owning dictionary (following the AccentPalette pattern).
+        if (Application.Current is { } application)
+        {
+            var newColor = Color.FromArgb(hexColor);
+            UpdateResourceInOwningDictionary(application.Resources, Primary, newColor);
+            UpdateResourceInOwningDictionary(application.Resources, Secondary, newColor);
+            UpdateResourceInOwningDictionary(application.Resources, Tertiary, newColor);
+            UpdateResourceInOwningDictionary(application.Resources, "AccentColor", newColor);
+        }
+
+        ThemeChanged?.Invoke(this, EventArgs.Empty);
+
+        _logger.LogInformation("Accent color changed to {Color}", hexColor);
     }
 
     /// <summary>
@@ -251,5 +326,53 @@ public class ThemeService : IThemeService
             application.Resources[key] = value;
         else
             application.Resources.Add(key, value);
+    }
+
+    /// <summary>
+    /// Updates a resource value in the dictionary that owns the key, ensuring live updates
+    /// for DynamicResource bindings.
+    /// </summary>
+    /// <remarks>
+    /// This method traverses the resource dictionary hierarchy (including merged dictionaries)
+    /// and updates the value in the dictionary that owns the given key. This pattern ensures
+    /// that DynamicResource bindings are properly notified of the change.
+    /// </remarks>
+    /// <param name="resources">The application resource dictionary to search.</param>
+    /// <param name="key">The resource key to update.</param>
+    /// <param name="value">The new resource value.</param>
+    private static void UpdateResourceInOwningDictionary(ResourceDictionary resources, string key, object value)
+    {
+        // Traverse merged dictionaries to find the one that owns the key
+        foreach (var dictionary in FlattenResourceDictionaries(resources))
+        {
+            if (!dictionary.TryGetValue(key, out _))
+                continue;
+
+            dictionary[key] = value;
+            return;
+        }
+
+        // If not found in any merged dict, update in the root dict
+        resources[key] = value;
+    }
+
+    /// <summary>
+    /// Flattens a resource dictionary hierarchy into a sequence of dictionaries.
+    /// </summary>
+    /// <remarks>
+    /// Merged dictionaries are traversed recursively, yielding nested dictionaries before
+    /// the parent dictionary.
+    /// </remarks>
+    /// <param name="dictionary">The root resource dictionary to flatten.</param>
+    /// <returns>A sequence of resource dictionaries from the hierarchy.</returns>
+    private static IEnumerable<ResourceDictionary> FlattenResourceDictionaries(ResourceDictionary dictionary)
+    {
+        foreach (var merged in dictionary.MergedDictionaries)
+        {
+            foreach (var nested in FlattenResourceDictionaries(merged))
+                yield return nested;
+        }
+
+        yield return dictionary;
     }
 }

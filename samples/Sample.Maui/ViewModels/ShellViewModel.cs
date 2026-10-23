@@ -1,18 +1,38 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
+using Sample.Services;
 using System.Globalization;
 
 namespace Sample.ViewModels;
 
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
+    private readonly SettingsDrawerState _settingsDrawerState;
+    private readonly IThemeService _themeService;
+
+    /// <summary>
+    /// Gets the command that flips between the light and dark theme (header button).
+    /// </summary>
+    public RelayCommand ToggleThemeCommand { get; }
+
+    /// <summary>
+    /// Gets or sets the glyph shown on the theme toggle (moon when light, sun when dark).
+    /// </summary>
+    public string ThemeIcon
+    {
+        get => GetValue<string>() ?? "";
+        private set => SetValue(value);
+    }
+
     /// <summary>
     /// Gets or sets the Version property value.
     /// </summary>
@@ -30,56 +50,65 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
+    /// <param name="themeService">The theme service for managing theme and accent color.</param>
+    /// <param name="settingsDrawerState">The shared open/closed state of the settings drawer.</param>
     /// <param name="logger">The logger factory.</param>
     public ShellViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
         ISettingsService settingsService,
+        IThemeService themeService,
+        SettingsDrawerState settingsDrawerState,
         ILogger<ShellViewModel> logger)
         : base(commonServices, dialogService, navigationService, settingsService, logger)
     {
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
+
+        _themeService = themeService;
+        _settingsDrawerState = settingsDrawerState;
+
+        ToggleThemeCommand = new RelayCommand(ToggleTheme);
+
+        // Show the icon that matches the saved theme before the shell has loaded.
+        // Moon glyph () when light theme, sun glyph () when dark theme
+        ThemeIcon = _themeService.Theme == Themes.Light ? "" : "";
     }
 
-    public override Task ShellLoadedAsync() =>
-        InitializeFirstRunAsync();
+    public override async Task ShellLoadedAsync()
+    {
+        // Apply saved theme on shell loaded
+        _themeService.ApplyTheme();
+        await InitializeFirstRunAsync();
+    }
+
+    private void ToggleTheme()
+    {
+        var next = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
+        _themeService.SetTheme(next);
+        UpdateThemeIcon(next);
+    }
+
+    private void UpdateThemeIcon(Themes theme)
+    {
+        // Moon glyph () when light theme, sun glyph () when dark theme
+        ThemeIcon = theme == Themes.Light ? "" : "";
+    }
 
     protected override Task SignOutAsync() =>
         IPlatformApplication.Current!.Services.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {
-        if (_settingsService.GlobalSettings!.IsFirstRun)
+        if (_settingsService.GlobalSettings is { IsFirstRun: true } globalSettings)
         {
-            if (await _dialogService.ShowMessageAsync(
-                _commonServices.LanguageService.GetString("ChangeLanguage"),
-                _commonServices.LanguageService.GetString("Language"),
-                MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
-            {
-                await _dialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, CultureInfo>(
-                    async culture =>
-                    {
-                        _settingsService.LocalSettings.Language = culture.Name;
-                        _settingsService.SaveLocalSettings();
-                        culture.SetLocalizationLanguage();
-                        _commonServices.RestartApplication();
-                    });
-            }
+            // First run: offer language, theme and accent in the settings drawer (applied live,
+            // no restart), then remember that the introduction has been shown.
+            _settingsDrawerState.Open();
 
-            //using var settingsScope = _scopeFactory.CreateScope();
-            //var wizardVM = settingsScope.ServiceProvider.GetRequiredService<SettingsViewModel>();
-            //wizardVM.Submitted += (s, e) =>
-            //{
-            //    _commonServices.RestartApplication();
-            //};
-            //wizardVM.Cancelled += (s, e) =>
-            //{
-            //    _commonServices.RestartApplication();
-            //};
-
-            //await _navigationService.OpenBladeAsync(this, wizardVM);
+            globalSettings.IsFirstRun = false;
+            await _settingsService.AddOrUpdateGlobalSettingsAsync(globalSettings);
         }
     }
 
@@ -87,13 +116,34 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// Opens the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    protected override Task OpenSettingsAsync() =>
-        _navigationService.NavigateModalAsync<SettingsViewModel>();
+    protected override Task OpenSettingsAsync()
+    {
+        _settingsDrawerState.Open();
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Opens the help page as a modal.
     /// </summary>
     protected override Task OpenHelpAsync() =>
         _navigationService.NavigateModalAsync<HelpViewModel>();
+
+    /// <summary>
+    /// Opens the settings drawer to select language, theme, and accent color live.
+    /// </summary>
+    protected override async Task OpenLanguageAsync()
+    {
+        _settingsDrawerState.Open();
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Opens the settings drawer to select language, theme, and accent color live.
+    /// </summary>
+    protected override async Task OpenThemesAsync()
+    {
+        _settingsDrawerState.Open();
+        await Task.CompletedTask;
+    }
 }
 

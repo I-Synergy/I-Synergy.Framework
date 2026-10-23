@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:local="clr-namespace:Sample.Services"
+    x:Class="Sample.Views.Controls.SettingsDrawer"
+    IsVisible="False"
+    BackgroundColor="Transparent">
+
+    <!-- Settings drawer overlay: a scrim over the live page with a panel pinned to the right edge.
+         Hosted by the current page (last child of its root grid), so the page underneath stays visible
+         instead of being replaced by a modal window. -->
+
+    <Grid>
+        <!-- Scrim (tap to close) -->
+        <Button
+            BackgroundColor="#00000080"
+            Clicked="OnDismissClicked" />
+
+        <!-- Drawer panel -->
+        <Grid x:Name="DrawerPanel" WidthRequest="320" HorizontalOptions="End">
+            <Border
+                BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
+                Stroke="{DynamicResource Gray400}">
+                <Grid RowDefinitions="Auto,*,Auto" Padding="16,20" RowSpacing="12">
+                    <!-- Header -->
+                    <Label
+                        x:Name="SettingsHeader"
+                        Grid.Row="0"
+                        Text="Settings"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light={DynamicResource OffBlack}, Dark={DynamicResource White}}" />
+
+                    <!-- Content -->
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="16" Padding="0,8">
+
+                            <!-- Language -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label
+                                    x:Name="LanguageLabel"
+                                    Text="Language"
+                                    FontSize="12"
+                                    FontAttributes="Bold"
+                                    TextColor="{DynamicResource Gray500}" />
+                                <Picker
+                                    x:Name="LanguagePicker"
+                                    ItemsSource="{Binding LanguageOptions}"
+                                    SelectedItem="{Binding LocalSettings.Language}"
+                                    SelectedIndexChanged="OnLanguageChanged" />
+                            </VerticalStackLayout>
+
+                            <!-- Theme -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label
+                                    x:Name="ThemeLabel"
+                                    Text="Theme"
+                                    FontSize="12"
+                                    FontAttributes="Bold"
+                                    TextColor="{DynamicResource Gray500}" />
+                                <Picker
+                                    x:Name="ThemePicker"
+                                    ItemsSource="{Binding ThemeOptions}"
+                                    SelectedItem="{Binding LocalSettings.Theme}"
+                                    SelectedIndexChanged="OnThemeChanged" />
+                            </VerticalStackLayout>
+
+                            <!-- Accent Color -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label
+                                    x:Name="AccentColorLabel"
+                                    Text="Accent Color"
+                                    FontSize="12"
+                                    FontAttributes="Bold"
+                                    TextColor="{DynamicResource Gray500}" />
+                                <HorizontalStackLayout Spacing="8" Margin="0,4">
+                                    <Button
+                                        x:Name="ColorTeal"
+                                        WidthRequest="48"
+                                        HeightRequest="48"
+                                        CornerRadius="4"
+                                        BackgroundColor="#0B5D55"
+                                        Clicked="OnColorClicked"
+                                        CommandParameter="#0B5D55" />
+                                    <Button
+                                        x:Name="ColorBlue"
+                                        WidthRequest="48"
+                                        HeightRequest="48"
+                                        CornerRadius="4"
+                                        BackgroundColor="#0066CC"
+                                        Clicked="OnColorClicked"
+                                        CommandParameter="#0066CC" />
+                                    <Button
+                                        x:Name="ColorGreen"
+                                        WidthRequest="48"
+                                        HeightRequest="48"
+                                        CornerRadius="4"
+                                        BackgroundColor="#10B981"
+                                        Clicked="OnColorClicked"
+                                        CommandParameter="#10B981" />
+                                    <Button
+                                        x:Name="ColorOrange"
+                                        WidthRequest="48"
+                                        HeightRequest="48"
+                                        CornerRadius="4"
+                                        BackgroundColor="#FF8C00"
+                                        Clicked="OnColorClicked"
+                                        CommandParameter="#FF8C00" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Footer -->
+                    <VerticalStackLayout Grid.Row="2" Spacing="8">
+                        <Button
+                            x:Name="CloseButton"
+                            Text="Close"
+                            BackgroundColor="{DynamicResource Primary}"
+                            TextColor="White"
+                            Clicked="OnCloseClicked" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentView>

@@ -12,6 +12,28 @@
             "launchProfile": "https"
         },
         {
+            "name": "Aspire AppHost (.NET 10)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: AppHost (.NET 10)",
+            "program": "${workspaceFolder}/samples/Sample.AppHost/bin/Debug/net10.0/Sample.AppHost.dll",
+            "cwd": "${workspaceFolder}/samples/Sample.AppHost",
+            "launchSettingsFilePath": "${workspaceFolder}/samples/Sample.AppHost/Properties/launchSettings.json",
+            "launchSettingsProfile": "https",
+            "env": { "SampleTargetFramework": "net10.0" }
+        },
+        {
+            "name": "Aspire AppHost (.NET 11)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: AppHost (.NET 11)",
+            "program": "${workspaceFolder}/samples/Sample.AppHost/bin/Debug/net11.0/Sample.AppHost.dll",
+            "cwd": "${workspaceFolder}/samples/Sample.AppHost",
+            "launchSettingsFilePath": "${workspaceFolder}/samples/Sample.AppHost/Properties/launchSettings.json",
+            "launchSettingsProfile": "https",
+            "env": { "SampleTargetFramework": "net11.0" }
+        },
+        {
             "name": ".NET MAUI",
             "type": "maui",
             "request": "launch",

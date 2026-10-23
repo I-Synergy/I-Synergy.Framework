@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build: AppHost (.NET 10)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["build", "${workspaceFolder}/samples/Sample.AppHost/Sample.AppHost.csproj", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "SampleTargetFramework": "net10.0", "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build: AppHost (.NET 11)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["build", "${workspaceFolder}/samples/Sample.AppHost/Sample.AppHost.csproj", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "SampleTargetFramework": "net11.0", "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        }
+    ]
+}

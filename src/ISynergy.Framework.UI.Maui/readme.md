@@ -360,6 +360,32 @@ The theme service supports:
 </ui:TabbedView>
 ```
 
+### 7. Live Localization with Markup Extension
+
+Use the `m:LocalizedStrings` markup extension for trim-friendly, compiled localized text bindings:
+
+```xml
+xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+
+<!-- Simple usage with content property -->
+<Label Text="{m:LocalizedStrings WelcomeMessage}" />
+
+<!-- Explicit Key property -->
+<Label Text="{m:LocalizedStrings Key=GreetingText}" />
+
+<!-- Updates automatically when language changes -->
+```
+
+When you call `CultureInfo.ApplyCulture()` from Globalization library, all bound labels automatically refresh:
+
+```csharp
+// Change language at runtime
+var newCulture = new CultureInfo("de-DE");
+newCulture.ApplyCulture();  // Triggers UI refresh for all LocalizedStrings bindings
+```
+
+The extension uses OneWay binding to `LocalizedStrings.Default` indexer with property-change notification, enabling automatic translation updates without page reload.
+
 ## Platform-Specific Features
 
 ### Windows Integration

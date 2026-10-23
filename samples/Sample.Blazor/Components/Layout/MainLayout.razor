@@ -19,6 +19,24 @@
 	<FluentLayoutItem Area="LayoutArea.Header">
 		<FluentLayoutHamburger Display="HamburgerDisplay.DesktopMobile" PanelHeader="Sample" />
 		<FluentText Weight="TextWeight.Semibold">Sample</FluentText>
+		<FluentSpacer />
+
+		<!-- Theme Toggle Button: switches between Light (🌙) and Dark (☀️) -->
+		<FluentButton OnClick="@ToggleTheme" Title="Toggle theme (light/dark)" IconOnly="true">
+			@if (_localSettings?.Theme == ISynergy.Framework.Core.Enumerations.Themes.Light)
+			{
+				<span>🌙</span>
+			}
+			else
+			{
+				<span>☀️</span>
+			}
+		</FluentButton>
+
+		<!-- Language Toggle: English ↔ Dutch -->
+		<FluentButton OnClick="@ToggleLanguage" Title="Toggle language (English/Dutch)" IconOnly="true">
+			🌐
+		</FluentButton>
 	</FluentLayoutItem>
 
 	@* The navigation column follows the canonical v5 demo layout: an explicit height (the

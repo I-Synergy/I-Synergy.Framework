@@ -320,6 +320,41 @@ public class ProfileViewModel : ViewModel
                        ShowProgress="True" />
 ```
 
+### 5. Live Localization with Indexer Binding
+
+Bind to `LocalizedStrings.Default` indexer for automatic language switching at runtime:
+
+```csharp
+// In code-behind or ViewModel
+public sealed partial class MainWindow : Window
+{
+    public LocalizedStrings Strings => LocalizedStrings.Default;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+        DataContext = this;
+    }
+}
+```
+
+```xml
+<!-- In XAML (WinUI does not support x:Static, so bind through property) -->
+<TextBlock Text="{x:Bind Strings[WelcomeMessage], Mode=OneWay}" />
+<TextBlock Text="{x:Bind Strings[GreetingText], Mode=OneWay}" />
+```
+
+When language changes:
+
+```csharp
+var newCulture = new CultureInfo("es-ES");
+newCulture.ApplyCulture();  // Triggers PropertyChanged("Item[]") on LocalizedStrings.Default
+```
+
+All bound controls automatically update with new translations.
+
+**Note**: WinUI 3 does not support `x:Static` markup extension (a XAML 2009 feature). Use the property-binding workaround shown above, or store `LocalizedStrings.Default` in a public property.
+
 ## Fluent Design Integration
 
 WinUI 3 provides modern Fluent Design features:

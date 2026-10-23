@@ -84,6 +84,7 @@ public static class MauiProgram
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
                 appBuilder.Services.TryAddSingleton<ApplicationMonitor>();
+                appBuilder.Services.AddSingleton<SettingsDrawerState>();
             },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(App).Namespace!))

@@ -18,11 +18,39 @@
             <PivotItem Header="{m:LanguageResource Key=General}">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="10">
                     <StackPanel Orientation="Vertical" Spacing="10">
-                        <ComboBox 
+                        <ComboBox
                             Header="{m:LanguageResource Key=COMPort}"
                             ItemsSource="{Binding COMPorts}"
                             HorizontalAlignment="Left"
                             Width="100" />
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <PivotItem Header="{m:LanguageResource Key=Language}">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="10">
+                    <StackPanel Orientation="Vertical" Spacing="10">
+                        <ComboBox
+                            Header="{m:LanguageResource Key=Language}"
+                            ItemsSource="{Binding AvailableLanguages}"
+                            SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                            HorizontalAlignment="Left"
+                            Width="150" />
+                        <TextBlock Text="Select English (en-US) or Dutch (nl-NL) - changes live when you save" FontStyle="Italic" Opacity="0.7" />
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <PivotItem Header="{m:LanguageResource Key=Theme}">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="10">
+                    <StackPanel Orientation="Vertical" Spacing="10">
+                        <ComboBox
+                            Header="{m:LanguageResource Key=Theme}"
+                            ItemsSource="{Binding AvailableThemes}"
+                            SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                            HorizontalAlignment="Left"
+                            Width="150" />
+                        <TextBlock Text="Theme changes immediately when you save." FontStyle="Italic" Opacity="0.7" />
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>

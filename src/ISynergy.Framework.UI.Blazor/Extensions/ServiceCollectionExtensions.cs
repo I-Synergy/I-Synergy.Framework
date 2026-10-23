@@ -7,6 +7,7 @@ using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Globalization.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Security;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -90,6 +91,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IFormFactorService, FormFactorService>();
         services.TryAddSingleton<RequestCancellationService>();
+        services.TryAddSingleton<IThemeService, ThemeService>();
 
         services.RegisterAssemblies(assembly, assemblyFilter);
 

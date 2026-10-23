@@ -1,8 +1,11 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Globalization.Extensions;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
@@ -13,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
 using Sample.Models;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace Sample.ViewModels;
 
@@ -22,6 +26,7 @@ namespace Sample.ViewModels;
 public class ShellViewModel : BaseShellViewModel
 {
     private readonly IFileService<FileResult> _fileService;
+    private readonly IThemeService _themeService;
 
     /// <summary>
     /// Gets or sets the Version property value.
@@ -69,16 +74,19 @@ public class ShellViewModel : BaseShellViewModel
     /// <param name="settingsService"></param>
     /// <param name="logger"></param>
     /// <param name="fileService"></param>
+    /// <param name="themeService">The theme service for managing theme and accent color.</param>
     public ShellViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
         ISettingsService settingsService,
         ILogger<ShellViewModel> logger,
-        IFileService<FileResult> fileService)
+        IFileService<FileResult> fileService,
+        IThemeService themeService)
         : base(commonServices, dialogService, navigationService, settingsService, logger)
     {
         _fileService = fileService;
+        _themeService = themeService;
 
         Title = _commonServices.InfoService.ProductName;
         Version = _commonServices.InfoService.ProductVersion;
@@ -186,9 +194,53 @@ public class ShellViewModel : BaseShellViewModel
 
     /// <summary>
     /// Opens the settings asynchronous.
+    /// Demonstrates live theme and language switching using framework services.
     /// </summary>
     /// <returns>Task.</returns>
-    protected override Task OpenSettingsAsync() => throw new NotImplementedException();
+    protected override async Task OpenSettingsAsync()
+    {
+        // Simple implementation: toggle between light and dark themes live using IThemeService
+        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
+        _themeService.SetTheme(nextTheme);
+
+        // Show confirmation with current settings
+        await _dialogService.ShowInformationAsync(
+            $"Theme: {nextTheme}\nAccent: {_themeService.AccentColor}");
+    }
+
+    /// <summary>
+    /// Opens the theme/color selection asynchronously.
+    /// Overrides the base implementation to use live theme switching without restart.
+    /// </summary>
+    /// <returns>Task.</returns>
+    protected override Task OpenThemesAsync()
+    {
+        // Toggle between light and dark theme live using IThemeService
+        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
+        _themeService.SetTheme(nextTheme);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Opens the language selection asynchronously.
+    /// Overrides the base implementation to use live language switching without restart.
+    /// </summary>
+    /// <returns>Task.</returns>
+    protected override async Task OpenLanguageAsync()
+    {
+        // Simple live language switch: toggle between English and Dutch
+        var currentLanguage = CultureInfo.CurrentCulture.Name;
+        var nextLanguage = currentLanguage.StartsWith("nl") ? "en-US" : "nl-NL";
+
+        var culture = new CultureInfo(nextLanguage);
+        culture.ApplyCulture(); // This calls LocalizedStrings.Default.Refresh() automatically
+
+        _settingsService.LocalSettings.Language = nextLanguage;
+        _settingsService.SaveLocalSettings();
+
+        await _dialogService.ShowInformationAsync(
+            $"Language changed to: {culture.DisplayName}");
+    }
 
     public override Task ShellLoadedAsync() => Task.CompletedTask;
 

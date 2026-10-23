@@ -32,6 +32,9 @@
 		<WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
 		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
 		<NuGetAuditMode>all</NuGetAuditMode>
+		<!-- Target framework the sample apps run on. Override with -p:SampleTargetFramework=net11.0 (or as env var). -->
+		<SampleTargetFramework Condition="'$(SampleTargetFramework)' == ''">net11.0</SampleTargetFramework>
+		<AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)' == '' And '$(ANDROID_HOME)' != ''">$(ANDROID_HOME)</AndroidSdkDirectory>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
