@@ -72,6 +72,7 @@
     <PackageVersion Include="Syncfusion.SfInput.WPF" Version="35.1.41" />
     <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="35.1.41" />
     <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="35.1.41" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
   </ItemGroup>
   <!-- Framework-aligned packages for net10.0 -->
