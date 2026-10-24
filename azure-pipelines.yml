@@ -73,6 +73,7 @@ stages:
           inputs:
             packageType: 'sdk'
             useGlobalJson: true
+            includePreviewVersions: true
 
         - task: DotNetCoreCLI@2
           displayName: 'Install MAUI workloads'
@@ -108,13 +109,16 @@ stages:
         #       /d:sonar.host.url="https://sonarcloud.io"
         #       /d:sonar.cs.opencover.reportsPaths="$(Agent.TempDirectory)/**/coverage.opencover.xml"
 
+        # Directory.Build.props sets GeneratePackageOnBuild=true for local developer convenience.
+        # Packaging in CI is done once, by the dedicated 'Pack I-Synergy Framework' step below
+        # (it owns the versioning scheme and packDirectory), so suppress the build-time pack here.
         - task: MSBuild@1
           displayName: 'Build I-Synergy Framework'
           inputs:
             solution: 'I-Synergy.Framework.slnx'
             msbuildArchitecture: 'x64'
             configuration: $(BuildConfiguration)
-            msbuildArguments: '/restore /p:Version=$(VersionPackage) /p:ContinuousIntegrationBuild=true /nr:false'
+            msbuildArguments: '/restore /p:Version=$(VersionPackage) /p:ContinuousIntegrationBuild=true /p:GeneratePackageOnBuild=false /nr:false'
 
         - task: DotNetCoreCLI@2
           displayName: 'Audit for vulnerable packages (direct + transitive)'
@@ -134,6 +138,46 @@ stages:
             versioningScheme: 'byEnvVar'
             versionEnvVar: 'VersionPackage'
             arguments: '-p:ContinuousIntegrationBuild=true'
+
+        # Fails the run if packaging ever regresses to net10-only assets (e.g. the RC SDK is not
+        # resolved and the conditional net11.0 TFMs are silently dropped) or skips a project.
+        - task: PowerShell@2
+          displayName: 'Verify packages target .NET 10 and .NET 11'
+          inputs:
+            targetType: 'inline'
+            script: |
+              $packagesPath = '$(Build.SourcesDirectory)/packages'
+              $packages = @(Get-ChildItem -Path $packagesPath -Filter *.nupkg)
+              $expected = @(Get-ChildItem -Path '$(Build.SourcesDirectory)/src' -Filter *.csproj -Recurse).Count
+
+              $problems = @()
+              if ($packages.Count -ne $expected) {
+                $problems += 'Expected ' + $expected + ' package(s) for ' + $expected + ' src project(s), found ' + $packages.Count + '.'
+              }
+
+              Add-Type -AssemblyName System.IO.Compression.FileSystem
+              foreach ($package in $packages) {
+                $zip = [System.IO.Compression.ZipFile]::OpenRead($package.FullName)
+                try {
+                  $entries = @($zip.Entries | ForEach-Object { $_.FullName })
+                }
+                finally {
+                  $zip.Dispose()
+                }
+
+                foreach ($tfm in @('net10.0', 'net11.0')) {
+                  if (-not ($entries | Where-Object { $_ -like ('lib/' + $tfm + '*/*') })) {
+                    $problems += $package.Name + ': missing lib/' + $tfm + ' assets'
+                  }
+                }
+              }
+
+              if ($problems.Count -gt 0) {
+                $problems | ForEach-Object { Write-Host ('##vso[task.logissue type=error]' + $_) }
+                throw ('Package verification failed with ' + $problems.Count + ' problem(s).')
+              }
+
+              Write-Host ('Verified ' + $packages.Count + ' package(s): each contains lib/net10.0* and lib/net11.0* assets.')
 
         - task: DotNetCoreCLI@2
           displayName: 'Test I-Synergy Framework'
