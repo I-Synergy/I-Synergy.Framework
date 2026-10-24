@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Images.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Style.xaml" />
+                <ResourceDictionary Source="Resources/Styles/ShellStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </c:Application.Resources>

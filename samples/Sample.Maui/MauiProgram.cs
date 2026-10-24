@@ -72,6 +72,10 @@ public static class MauiProgram
             {
                 fonts.AddFont("FontAwesomeRegular.otf", "fontawesome");
                 fonts.AddFont("FluentSystemIconsRegular.ttf", FluentUI.FontFamily);
+                fonts.AddFont("Figtree-Regular.ttf", "Figtree");
+                fonts.AddFont("Figtree-Medium.ttf", "FigtreeMedium");
+                fonts.AddFont("Figtree-SemiBold.ttf", "FigtreeSemiBold");
+                fonts.AddFont("Figtree-Bold.ttf", "FigtreeBold");
             })
             //.UseThemeColors(colors =>
             //{
@@ -85,6 +89,7 @@ public static class MauiProgram
                 appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
                 appBuilder.Services.TryAddSingleton<ApplicationMonitor>();
                 appBuilder.Services.AddSingleton<SettingsDrawerState>();
+                appBuilder.Services.AddSingleton<ShellAccentTokens>();
             },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(App).Namespace!))

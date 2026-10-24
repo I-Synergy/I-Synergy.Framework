@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    x:Class="Sample.Views.Controls.AppHeaderView"
+    x:DataType="viewmodels:ShellViewModel">
+
+    <!-- 880px centred column with 40px side padding (matches content width on desktop) -->
+    <Grid>
+        <Grid MaximumWidthRequest="880" HorizontalOptions="Fill">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="44"
+                  Padding="{OnPlatform WinUI='40,0', MacCatalyst='40,0', iOS='16,0', Android='16,0'}">
+
+                <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+
+                    <!-- Breadcrumb: app name (link) / muted slash / current page (bold) -->
+                    <!-- First breadcrumb: app name as accent link, tappable to navigate to dashboard -->
+                    <Label Text="{m:LocalizedStrings Key=ApplicationName}"
+                           Style="{StaticResource AppBreadcrumbLinkLabel}"
+                           TextColor="{AppThemeBinding Light={DynamicResource AppAccentLight}, Dark={DynamicResource AppAccentDark}}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="dashboard" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Text="/"
+                           Style="{StaticResource AppBreadcrumbLabel}"
+                           TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"
+                           VerticalOptions="Center" />
+
+                    <!-- Current page breadcrumb -->
+                    <Label Text="{Binding CrumbCurrent}"
+                           Style="{StaticResource AppBreadcrumbCurrentLabel}"
+                           TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}"
+                           VerticalOptions="Center" />
+
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                    <!-- Theme toggle: moon when light, sun when dark -->
+                    <Button Text="{Binding ThemeIcon}"
+                            FontFamily="FluentUI"
+                            Style="{StaticResource AppVerseActionButton}"
+                            TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"
+                            Command="{Binding ToggleThemeCommand}" />
+                    <!-- Settings: sliders icon -->
+                    <Button Text="&#xf588;"
+                            FontFamily="FluentUI"
+                            Style="{StaticResource AppVerseActionButton}"
+                            TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"
+                            Command="{Binding SettingsCommand}" />
+                </HorizontalStackLayout>
+
+            </Grid>
+        </Grid>
+    </Grid>
+
+</ContentView>

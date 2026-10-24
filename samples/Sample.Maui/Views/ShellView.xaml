@@ -8,59 +8,53 @@
     xmlns:converters="clr-namespace:ISynergy.Framework.UI.Converters;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:views="clr-namespace:Sample.Views"
+    xmlns:controls="clr-namespace:Sample.Views.Controls"
     xmlns:local="clr-namespace:Sample.Services"
+    x:Name="ShellRoot"
     x:DataType="viewmodels:ShellViewModel"
-    FlyoutBehavior="Flyout"
-    FlyoutBackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}">
+    FlyoutBehavior="{OnPlatform WinUI=Locked, MacCatalyst=Locked, iOS=Disabled, Android=Disabled}"
+    FlyoutBackgroundColor="Transparent"
+    FlyoutWidth="300"
+    Shell.BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}"
+    Shell.ForegroundColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}"
+    Shell.NavBarIsVisible="True"
+    Shell.TitleColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}">
 
-    <ShellContent
-        Title="Dashboard"
-        Icon="{DynamicResource IconInformation}"
-        ContentTemplate="{DataTemplate views:InfoView}"
-        Route="dashboard" />
-
-    <ShellContent
-        Title="Custom Controls"
-        Icon="{DynamicResource IconCustomControls}"
-        ContentTemplate="{DataTemplate views:CustomControlsView}"
-        Route="customcontrols" />
-
-    <ShellContent
-        Title="Maui Controls"
-        Icon="{DynamicResource IconMauiControls}"
-        ContentTemplate="{DataTemplate views:MauiControlsView}"
-        Route="mauicontrols" />
-
-    <ShellContent
-        Title="Slide Show"
-        Icon="{DynamicResource IconSlideShow}"
-        ContentTemplate="{DataTemplate views:SlideShowView}"
-        Route="slideshow" />
+    <!-- Permanent desktop sidebar; on phones the FlyoutBehavior is Disabled and the
+         four ShellContents render as a bottom tab bar instead. -->
+    <Shell.FlyoutContent>
+        <controls:SidebarView x:Name="Sidebar" BindingContext="{Binding BindingContext, Source={x:Reference ShellRoot}}" />
+    </Shell.FlyoutContent>
 
     <Shell.TitleView>
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="44" Padding="16,0">
-            <Label Grid.Column="0" Text="{Binding Title}" VerticalOptions="Center" FontAttributes="Bold" />
-            <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
-                <Button Text="{Binding ThemeIcon}"
-                        FontFamily="FluentUI"
-                        BackgroundColor="Transparent"
-                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
-                        AutomationProperties.Name="Toggle theme"
-                        Command="{Binding ToggleThemeCommand}" />
-                <Button Text="&#xf013;"
-                        FontFamily="fontawesome"
-                        BackgroundColor="Transparent"
-                        TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"
-                        AutomationProperties.Name="Settings"
-                        Command="{Binding SettingsCommand}" />
-            </HorizontalStackLayout>
-        </Grid>
+        <controls:AppHeaderView BindingContext="{Binding BindingContext, Source={x:Reference ShellRoot}}" />
     </Shell.TitleView>
 
-    <Shell.FlyoutFooter>
-        <VerticalStackLayout Padding="4" x:Name="HelpFooter">
-            <c:NavigationItem x:Name="HelpItem" Text="Help" Icon="{DynamicResource IconHelp}" Command="{Binding HelpCommand}"/>
-            <!--<c:NavigationItem Text="Signin" Icon="{DynamicResource IconSignin}" Command="{Binding SigninCommand}"/>-->
-        </VerticalStackLayout>
-    </Shell.FlyoutFooter>
+    <TabBar Shell.TabBarIsVisible="{OnPlatform WinUI=False, MacCatalyst=False, iOS=True, Android=True}">
+
+        <ShellContent
+            Title="Dashboard"
+            Icon="{DynamicResource IconInformation}"
+            ContentTemplate="{DataTemplate views:InfoView}"
+            Route="dashboard" />
+
+        <ShellContent
+            Title="Custom Controls"
+            Icon="{DynamicResource IconCustomControls}"
+            ContentTemplate="{DataTemplate views:CustomControlsView}"
+            Route="customcontrols" />
+
+        <ShellContent
+            Title="Maui Controls"
+            Icon="{DynamicResource IconMauiControls}"
+            ContentTemplate="{DataTemplate views:MauiControlsView}"
+            Route="mauicontrols" />
+
+        <ShellContent
+            Title="Slide Show"
+            Icon="{DynamicResource IconSlideShow}"
+            ContentTemplate="{DataTemplate views:SlideShowView}"
+            Route="slideshow" />
+
+    </TabBar>
 </Shell>

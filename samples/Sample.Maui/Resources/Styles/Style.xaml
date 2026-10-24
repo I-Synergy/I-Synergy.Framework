@@ -407,9 +407,10 @@
     </Style>
 
     <Style TargetType="Editor">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="Figtree" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
@@ -429,9 +430,10 @@
     </Style>
 
     <Style TargetType="Entry">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="Figtree" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />

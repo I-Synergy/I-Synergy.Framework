@@ -61,6 +61,12 @@
   <data name="AccentColor" xml:space="preserve">
     <value>Color de acento</value>
   </data>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>Ejemplo Maui</value>
+  </data>
+  <data name="ApplicationTagline" xml:space="preserve">
+    <value>Demostración del marco</value>
+  </data>
   <data name="CustomControls" xml:space="preserve">
     <value>Controles personalizados</value>
   </data>

@@ -11,7 +11,8 @@
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     xmlns:core_enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
     x:DataType="viewmodels:CustomControlsViewModel"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}">
 
     <c:View.Resources>
         <converters:IntegerToStringConverter x:Key="IntegerToStringConverter"/>

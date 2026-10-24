@@ -6,6 +6,26 @@
     xmlns:local="using:Sample.WinUI">
 
     <maui:MauiWinUIApplication.Resources>
+        <!-- Shell input look: 1px palette border, no native focus underline, rounded corners. -->
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#E0E6E2" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#E0E6E2" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#0B5D55" />
+                    <SolidColorBrush x:Key="TextControlElevationBorderBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlElevationBorderFocusedBrush" Color="Transparent" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#26352F" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#26352F" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#5ED3B0" />
+                    <SolidColorBrush x:Key="TextControlElevationBorderBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlElevationBorderFocusedBrush" Color="Transparent" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <CornerRadius x:Key="ControlCornerRadius">12</CornerRadius>
+        </ResourceDictionary>
         <!--<StaticResource x:Key="SystemAccentColorDark1" ResourceKey="Primary"/>
         <StaticResource x:Key="SystemAccentColorDark2" ResourceKey="Primary"/>
         <StaticResource x:Key="SystemAccentColorDark3" ResourceKey="Primary"/>

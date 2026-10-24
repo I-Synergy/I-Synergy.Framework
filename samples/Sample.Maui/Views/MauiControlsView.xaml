@@ -7,7 +7,8 @@
     x:Class="Sample.Views.MauiControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:DataType="viewmodels:MauiControlsViewModel"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}">
 
     <Grid>
         <ScrollView>

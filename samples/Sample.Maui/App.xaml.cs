@@ -91,6 +91,10 @@ public partial class App : Application
                 if (themeService is not null)
                 {
                     themeService.ApplyTheme();
+
+                    // Initialize dynamic accent tokens after theme is applied
+                    var accentTokens = IPlatformApplication.Current?.Services.GetService<ShellAccentTokens>();
+                    accentTokens?.ApplyAccentTokens();
                 }
             });
 

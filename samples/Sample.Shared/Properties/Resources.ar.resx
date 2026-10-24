@@ -61,6 +61,12 @@
   <data name="AccentColor" xml:space="preserve">
     <value>لون النص البارز</value>
   </data>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>عينة Maui</value>
+  </data>
+  <data name="ApplicationTagline" xml:space="preserve">
+    <value>عرض إطار العمل</value>
+  </data>
   <data name="CustomControls" xml:space="preserve">
     <value>أدوات تحكم مخصصة</value>
   </data>

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
@@ -25,9 +26,50 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public RelayCommand ToggleThemeCommand { get; }
 
     /// <summary>
+    /// Gets the command to navigate to a specific route.
+    /// </summary>
+    public RelayCommand<string> NavigateToCommand { get; }
+
+    /// <summary>
     /// Gets or sets the glyph shown on the theme toggle (moon when light, sun when dark).
     /// </summary>
     public string ThemeIcon
+    {
+        get => GetValue<string>() ?? "";
+        private set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current breadcrumb text (page name).
+    /// </summary>
+    public string CrumbCurrent
+    {
+        get => GetValue<string>() ?? "";
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current route for sidebar active-row detection.
+    /// </summary>
+    public string CurrentRoute
+    {
+        get => GetValue<string>() ?? "";
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the version text shown in the sidebar footer.
+    /// </summary>
+    public string VersionText
+    {
+        get => GetValue<string>() ?? "";
+        private set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the copyright text shown in the sidebar footer.
+    /// </summary>
+    public string CopyrightText
     {
         get => GetValue<string>() ?? "";
         private set => SetValue(value);
@@ -70,9 +112,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         _settingsDrawerState = settingsDrawerState;
 
         ToggleThemeCommand = new RelayCommand(ToggleTheme);
+        NavigateToCommand = new RelayCommand<string>(NavigateTo);
+
+        // Initialize breadcrumb, route, and footer text
+        NavigateTo("dashboard");
+        VersionText = $"v{commonServices.InfoService.ProductVersion}";
+        CopyrightText = $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
 
         // Show the icon that matches the saved theme before the shell has loaded.
-        // Moon glyph () when light theme, sun glyph () when dark theme
+        // Moon glyph when light theme, sun glyph when dark theme
         ThemeIcon = _themeService.Theme == Themes.Light ? "" : "";
     }
 
@@ -92,8 +140,35 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void UpdateThemeIcon(Themes theme)
     {
-        // Moon glyph () when light theme, sun glyph () when dark theme
+        // Moon glyph when light theme, sun glyph when dark theme
         ThemeIcon = theme == Themes.Light ? "" : "";
+    }
+
+    private void NavigateTo(string? route)
+    {
+        CurrentRoute = route;
+        // Update breadcrumb based on the route
+        CrumbCurrent = route switch
+        {
+            "dashboard" => LocalizedString("Dashboard"),
+            "customcontrols" => LocalizedString("CustomControls"),
+            "mauicontrols" => LocalizedString("MauiControls"),
+            "slideshow" => LocalizedString("SlideShow"),
+            _ => Title
+        };
+    }
+
+    private string LocalizedString(string resourceKey)
+    {
+        try
+        {
+            // Get localized string from LocalizedStrings; fallback to key if not found
+            return LocalizedStrings.Default[resourceKey] ?? resourceKey;
+        }
+        catch
+        {
+            return resourceKey;
+        }
     }
 
     protected override Task SignOutAsync() =>
@@ -146,4 +221,3 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         await Task.CompletedTask;
     }
 }
-

@@ -120,6 +120,12 @@
   <data name="AccentColor" xml:space="preserve">
     <value>Accent Color</value>
   </data>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>Maui Sample</value>
+  </data>
+  <data name="ApplicationTagline" xml:space="preserve">
+    <value>Framework Demo</value>
+  </data>
   <data name="Colors" xml:space="preserve">
     <value>Set theme color...</value>
   </data>
