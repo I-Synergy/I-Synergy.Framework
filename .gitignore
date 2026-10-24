@@ -350,3 +350,6 @@ _site/
 
 # DeepSeek session swap backup (crash recovery)
 CLAUDE.md.deepseek-backup
+
+# Agent scratch area (probes, screenshots, throwaway scripts)
+.ai/tmp/
