@@ -46,14 +46,12 @@ public class LocalizedStringsExtension : IMarkupExtension<BindingBase>
     /// <returns>A <see cref="Binding"/> configured for live localization updates.</returns>
     public BindingBase ProvideValue(IServiceProvider serviceProvider)
     {
-        if (string.IsNullOrEmpty(Key))
-            return new Binding { Source = LocalizedStrings.Default, Path = "Item[]", Mode = BindingMode.OneWay };
-
-        // Create binding with indexer path for the key, e.g., [Settings] -> Item[[Settings]]
+        // A string indexer is addressed as "[key]" in a binding path (not "Item[key]").
+        // LocalizedStrings raises PropertyChanged("Item[]"), which refreshes every indexer binding.
         return new Binding
         {
             Source = LocalizedStrings.Default,
-            Path = $"Item[{Key}]",
+            Path = $"[{Key}]",
             Mode = BindingMode.OneWay
         };
     }
