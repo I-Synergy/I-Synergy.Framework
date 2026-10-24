@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### .NET 11 (RC) Multi-Targeting
+- **All 48 `src/` libraries** now ship `net10.0` (LTS) **and** `net11.0` (preview) assets in the same NuGet package; the WPF, WinUI and MAUI packages twin their platform variants (`net11.0-windows*`, `net11.0-android` / `-ios` / `-maccatalyst`), so WPF ships six target frameworks and MAUI eight
+- **Directory.Packages.props**: framework-aligned packages are split into per-TFM groups — `10.0.13` for `net10.0`, `11.0.0-rc.2.26504.105` for `net11.0` (plus `Npgsql.EntityFrameworkCore.PostgreSQL` `11.0.0-rc.2` and `Microsoft.Maui.Controls` `11.0.0-rc.2.26505.5`); third-party packages remain unconditional
+- **global.json**: pinned to the .NET 11 RC SDK with `allowPrerelease: true`
+- **Toolchain**: `net11.0` targets are only appended when `$(BundledNETCoreAppPackageVersion)` is ≥ 11, so machines and pipelines still on SDK 10 keep building the `net10.0` assets
+- **tests/ISynergy.Framework.UI.WinUI.Tests**: `WindowsSdkPackageVersion` raised to `10.0.26100.87`; the projection conflict that SDK 10 reported as a warning is an error (`NETSDK1148`) on SDK 11
+
+#### MAUI Clipboard — Platform Image Support
+- **ISynergy.Framework.UI.Maui**: dropped the `SkiaSharp` dependency; `ClipboardService.GetImageFromClipboardAsync()` now uses each platform's native imaging APIs — WinRT `BitmapDecoder`/`BitmapEncoder` on Windows (BMP → PNG), `ClipboardManager` + `BitmapFactory` on Android (content URI), `UIPasteboard` on iOS and MacCatalyst
+- Image clipboard support now exists on Android, iOS and MacCatalyst, which previously always returned `null`
+- Also clears the `MSB4018`/`MissingMethodException` in `Microsoft.Maui.Resizetizer` 11.0 RC (`SKTextBlobBuilder.AddPositionedRun`) that broke MAUI 11 builds, caused by the project's `SkiaSharp` 4.153.1 being loaded instead of the version the Resizetizer task ships with
+
 #### AOT Compatibility — New Projects
 - **ISynergy.Framework.CQRS.SourceGenerator**: New Roslyn incremental source generator that emits `AddCqrsHandlers()` and `AddQueryDispatchTable()` extension methods at compile time, enabling fully AOT-safe CQRS handler registration without runtime reflection
 - **ISynergy.Framework.UI.SourceGenerator**: New Roslyn incremental source generator that emits `AddUITypes()` and a `ViewModelViewMap` at compile time, replacing `AppDomain.GetAssemblies()` scanning for view/view-model discovery

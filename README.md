@@ -1,12 +1,12 @@
 # 🚀 I-Synergy Framework
 
-> **Comprehensive .NET 10 framework for building enterprise-grade backend and frontend applications**
+> **Comprehensive .NET framework for building enterprise-grade backend and frontend applications — targets .NET 10 (LTS) and .NET 11 (preview)**
 
 <div align="center">
 
 [![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=.net)
+![.NET](https://img.shields.io/badge/.NET-10%20LTS%20%7C%2011%20preview-512BD4?logo=.net)
 
 </div>
 
