@@ -89,7 +89,10 @@
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#17171a" />
+		<!-- Splash is a PNG on purpose: the MAUI 11 RC Resizetizer crashes on SVG text (Svg.Skia/Microsoft.Maui.Resizetizer 11.0.0-rc.2 -> MAUIR0005,
+		     MissingMethodException in SKTextBlobBuilder.AddPositionedRun) and the source SVG contains the wordmarks as <text>. splash.svg is kept next to
+		     this file as the editable source; re-rendering it to splash.png is what produces the PNG. -->
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#17171a" />
 		
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
