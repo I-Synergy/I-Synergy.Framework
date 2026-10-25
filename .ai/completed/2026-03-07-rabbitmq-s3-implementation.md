@@ -76,7 +76,7 @@ git commit -m "chore: add RabbitMQ.Client and AWSSDK.S3 package versions"
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <PackageId>I-Synergy.Framework.MessageBus.RabbitMQ</PackageId>
         <Description>I-Synergy Framework RabbitMQ MessageBus</Description>
         <PackageTags>I-Synergy, Framework, MessageBus, RabbitMQ</PackageTags>
@@ -569,7 +569,7 @@ git commit -m "feat(rabbitmq): add ServiceCollectionExtensions"
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <PackageId>I-Synergy.Framework.Storage.S3</PackageId>
         <Description>I-Synergy Framework S3 Storage (AWS S3 and S3-compatible providers such as MinIO)</Description>
         <PackageTags>I-Synergy, Framework, Storage, S3, AWS, MinIO</PackageTags>

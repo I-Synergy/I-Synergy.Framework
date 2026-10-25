@@ -16,7 +16,7 @@ Every NuGet package under `src/` (48 projects) ships `net10.0` (LTS) **and** `ne
 ## Changes
 1. **Directory.Packages.props** - split the framework-aligned versions (AspNetCore, EFCore, Extensions train 10.0.13, Maui.Controls*, Npgsql EFCore) into two groups:
    `Condition="!$(TargetFramework.StartsWith('net11.0'))"` -> 10.0.x (current) and `Condition="$(TargetFramework.StartsWith('net11.0'))"` -> 11.0.0-rc.2. Everything else (third-party, 10.11.0 train) stays unconditional. Your uncommitted version bumps in that file are preserved.
-2. **48 csproj** - `<TargetFramework>net10.0</TargetFramework>` -> `<TargetFrameworks>net10.0;net11.0</TargetFrameworks>`; WPF/WinUI/MAUI get the matching `net11.0-*` twins (WPF becomes 6 TFMs). Existing platform conditions in the MAUI csproj extended for `net11.0`.
+2. **48 csproj** - `<TargetFramework>net11.0</TargetFramework>` -> `<TargetFrameworks>net10.0;net11.0</TargetFrameworks>`; WPF/WinUI/MAUI get the matching `net11.0-*` twins (WPF becomes 6 TFMs). Existing platform conditions in the MAUI csproj extended for `net11.0`.
 3. **global.json** - pin SDK `11.0.100-rc.2.26504.105` (`allowPrerelease: true`, `rollForward: latestFeature`), update `tools.dotnet`.
 4. **azure-pipelines.yml** - already uses `useGlobalJson: true`; verify it installs the prerelease SDK (`includePreviewVersions`) and workloads for the new band.
 5. Verify: `dotnet restore` + `dotnet build` of each TFM (`MSBUILDDISABLENODEREUSE=1`, `-nodeReuse:false`), then `dotnet test` on `net10.0`. Delegated to the `developer` agent; progress in `.ai/progress/net11-multitarget.md`.
