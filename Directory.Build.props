@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<LangVersion>14.0</LangVersion>
+		<LangVersion>15.0</LangVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<DefaultLanguage>en-US</DefaultLanguage>
 		<Authors>Ismail Hassani</Authors>
@@ -26,9 +26,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<NoWarn>1701;1702;CS1591;CS8002;NETSDK1023;UXAML0002;NU5104;NETSDK1057;XC0103;NU1608;XA1023;PRI257;NETSDK1187;S107;MAUIX2005</NoWarn>
-		<SignAssembly>True</SignAssembly>
-		<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
-		<AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\..\..\..\I-Synergy.Framework.snk')">..\..\..\..\..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
 		<WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
 		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
 		<NuGetAuditMode>all</NuGetAuditMode>
