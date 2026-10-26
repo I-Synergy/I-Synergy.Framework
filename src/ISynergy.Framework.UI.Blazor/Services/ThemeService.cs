@@ -69,6 +69,8 @@ public class ThemeService : IThemeService
             settingsService.LocalSettings.Color = _color;
             settingsService.SaveLocalSettings();
         }
+
+        _isInitialized = true;
     }
 
     /// <summary>

@@ -154,6 +154,8 @@ public class NavigationServiceMemoryTests
             "CleanupPageResources should remove the entry from the table");
     }
 
+
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
     /// <summary>
     /// Verifies the back-navigation scope disposal pattern.
     ///
@@ -167,6 +169,7 @@ public class NavigationServiceMemoryTests
     /// while the cached (restored) scope is left intact.
     /// </summary>
     [TestMethod]
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
     public void BackNavigationScopeDisposal_Pattern()
     {
         // Arrange

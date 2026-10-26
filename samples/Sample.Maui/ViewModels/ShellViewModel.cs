@@ -174,7 +174,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void SelectRoute(string? route)
     {
-        CurrentRoute = route;
+        CurrentRoute = route ?? "dashboard";
 
         // Update breadcrumb based on the route
         CrumbCurrent = route switch

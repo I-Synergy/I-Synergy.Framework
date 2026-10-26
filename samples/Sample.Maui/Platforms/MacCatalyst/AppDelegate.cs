@@ -12,7 +12,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     /// Hides the native window title so the shell header is the only title bar on macOS.
     /// The traffic-light buttons stay in place.
     /// </summary>
-    public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
+    public override bool FinishedLaunching(UIApplication application, NSDictionary? launchOptions)
     {
         var result = base.FinishedLaunching(application, launchOptions);
 
