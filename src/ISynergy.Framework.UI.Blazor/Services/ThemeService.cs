@@ -69,8 +69,6 @@ public class ThemeService : IThemeService
             settingsService.LocalSettings.Color = _color;
             settingsService.SaveLocalSettings();
         }
-
-        _isInitialized = true;
     }
 
     /// <summary>
@@ -119,7 +117,9 @@ public class ThemeService : IThemeService
                 IsLightThemeEnabled ? "light" : "dark",
                 accentColor);
 
-            _isInitialized = true;
+            if (!_isInitialized)
+                _isInitialized = true;
+
             _logger.LogInformation("Application style successfully applied");
         }
         catch (Exception ex) when (ex.GetType().Name.Contains("JSException") || ex.GetType().Name.Contains("JSDisabled"))
