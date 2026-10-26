@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Styles;
 using ISynergy.Framework.UI.Styles;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,8 @@ public static class ApplicationExtensions
     public static System.Windows.Application SetApplicationColor(
         this System.Windows.Application application,
         Color color,
-        ILogger? logger = null)
+        ILogger? logger = null,
+        Themes theme = Themes.Dark)
     {
         ArgumentNullException.ThrowIfNull(application);
 
@@ -22,10 +24,10 @@ public static class ApplicationExtensions
         foreach (var d in toRemove)
             application.Resources.MergedDictionaries.Remove(d);
 
-        var themeDict = new DynamicThemeResourceDictionary(color);
+        var themeDict = new DynamicThemeResourceDictionary(color, theme);
         application.Resources.MergedDictionaries.Add(themeDict);
 
-        logger?.LogInformation("Applied WPF dynamic theme for color {Color}", color);
+        logger?.LogInformation("Applied WPF dynamic theme for color {Color} and theme {Theme}", color, theme);
         return application;
     }
 }

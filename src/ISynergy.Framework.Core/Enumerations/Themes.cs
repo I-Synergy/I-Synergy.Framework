@@ -10,7 +10,7 @@ public enum Themes
     /// <summary>
     /// System default
     /// </summary>
-    [LocalizedDescription("Default")]
+    [LocalizedDescription("System")]
     Default = 0,
     /// <summary>
     /// Light theme.

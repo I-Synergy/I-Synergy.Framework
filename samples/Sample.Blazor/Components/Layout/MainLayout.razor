@@ -7,7 +7,7 @@
 @* The Blazor shell mirrors the MAUI sample: a permanent sidebar, a breadcrumb header and a
    content column. FluentLayout is deliberately not used here — its chrome does not match the
    native sample shells. *@
-<div class="app-shell" data-app-theme="@((_localSettings?.Theme ?? Themes.Dark) == Themes.Dark ? "dark" : "light")">
+<div class="app-shell" data-app-theme="@(_themeService.IsLightThemeEnabled ? "light" : "dark")">
     <aside class="app-sidebar @(_navOpen ? "is-open" : "")" aria-label="@L("Navigation")">
         <div class="app-brand">
             <span class="app-brand-tile" aria-hidden="true">▦</span>
@@ -59,7 +59,7 @@
             </div>
             <div class="app-header-actions">
                 <button type="button" class="app-icon-button" title="@L("Theme")" aria-label="@L("Theme")" @onclick="ToggleTheme">
-                    @((_localSettings?.Theme ?? Themes.Dark) == Themes.Light ? "🌙" : "☀️")
+                    @(_themeService.IsLightThemeEnabled ? "🌙" : "☀️")
                 </button>
                 <button type="button" class="app-icon-button" title="@L("Settings")" aria-label="@L("Settings")" @onclick="ToggleSettings">
                     ⚙
@@ -97,8 +97,9 @@
 
             <label class="app-settings-label" for="app-theme">@L("Theme")</label>
             <select id="app-theme" class="app-settings-select" @bind="_selectedThemeName" @bind:after="ApplyThemeAsync">
-                <option value="Light">Light</option>
-                <option value="Dark">Dark</option>
+                <option value="Default">@L("System")</option>
+                <option value="Light">@L("Light")</option>
+                <option value="Dark">@L("Dark")</option>
             </select>
 
             <label class="app-settings-label">@L("AccentColor")</label>

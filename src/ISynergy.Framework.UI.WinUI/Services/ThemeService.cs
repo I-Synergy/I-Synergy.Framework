@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using System.Runtime.InteropServices;
 using Windows.UI;
 using ColorHelper = ISynergy.Framework.UI.Helpers.ColorHelper;
 
@@ -20,24 +21,32 @@ namespace ISynergy.Framework.UI.Services;
 /// The service reads the persisted <see cref="Themes"/> and color value from <see cref="ISettingsService"/> during construction.
 /// It then applies the theme via the XAML framework and updates the title bar colors accordingly.
 /// </remarks>
-public class ThemeService : IThemeService
+public class ThemeService : IThemeService, IDisposable
 {
     private Themes _theme;
     private string _color;
+    private Themes _resolvedSystemTheme;
 
     private readonly ISettingsService _settingsService;
     private readonly ILogger<ThemeService> _logger;
+    private FrameworkElement? _themeWatchedElement;
+    private bool _disposed;
 
     /// <summary>
     /// Gets a value indicating whether this instance is light theme enabled.
     /// </summary>
     /// <value><c>true</c> if this instance is light theme enabled; otherwise, <c>false</c>.</value>
-    public bool IsLightThemeEnabled => _theme == Themes.Light;
+    public bool IsLightThemeEnabled => Theme == Themes.Light;
 
     /// <summary>
     /// Gets the current application theme.
     /// </summary>
-    public Themes Theme => _theme;
+    /// <remarks>
+    /// <see cref="Themes.Default"/> is resolved to the theme the window root actually renders, so
+    /// consumers never have to interpret it themselves. The resolved value is refreshed when the
+    /// operating system theme changes.
+    /// </remarks>
+    public Themes Theme => _theme == Themes.Default ? _resolvedSystemTheme : _theme;
 
     /// <summary>
     /// Gets the current accent color as a hex string.
@@ -65,6 +74,7 @@ public class ThemeService : IThemeService
 
         _theme = settingsService.LocalSettings.Theme;
         _color = settingsService.LocalSettings.Color;
+        _resolvedSystemTheme = ResolveSystemTheme();
 
         var opts = themeColorOptions.Value;
         if (opts.AvailableColors.Count == 1)
@@ -91,9 +101,22 @@ public class ThemeService : IThemeService
     public void ApplyTheme()
     {
         _logger.LogInformation("Setting application style with color {Color} and theme {Theme}",
-            _color, _theme);
+            _color, Theme);
 
-        if (Application.Current is not Application application)
+        Microsoft.UI.Xaml.Application? currentApplication;
+
+        try
+        {
+            currentApplication = Microsoft.UI.Xaml.Application.Current;
+        }
+        catch (Exception ex) when (ex is COMException or InvalidOperationException)
+        {
+            // The WinUI runtime is not initialized (unit-test host, design-time, early shutdown).
+            _logger.LogWarning(ex, "WinUI Application.Current is not available");
+            return;
+        }
+
+        if (currentApplication is not Application application)
         {
             _logger.LogWarning("Application.Current is not available");
             return;
@@ -138,7 +161,9 @@ public class ThemeService : IThemeService
     /// <param name="theme">The theme to apply.</param>
     public void SetTheme(Themes theme)
     {
-        if (_theme == theme)
+        // An explicit choice is persisted even when it matches the resolved system theme, so the
+        // application stops following the OS once the user has picked light or dark.
+        if (_theme == theme && theme != Themes.Default)
             return;
 
         _theme = theme;
@@ -198,9 +223,91 @@ public class ThemeService : IThemeService
                     frameworkElement.RequestedTheme = ElementTheme.Default;
                     break;
             }
+
+            // Remember the theme the root is actually rendering, so Theme reports the resolved
+            // system theme before the first ActualThemeChanged event arrives.
+            _resolvedSystemTheme = ToTheme(frameworkElement.ActualTheme);
+            UpdateSystemThemeSubscription(frameworkElement);
         }
 
         SetTitlebar();
+    }
+
+    /// <summary>
+    /// Subscribes to the window root's actual-theme changes while the application follows the
+    /// system, and detaches when an explicit light or dark theme is selected.
+    /// </summary>
+    /// <param name="element">The current window root.</param>
+    private void UpdateSystemThemeSubscription(FrameworkElement element)
+    {
+        if (_theme != Themes.Default)
+        {
+            DetachSystemThemeSubscription();
+            return;
+        }
+
+        if (ReferenceEquals(_themeWatchedElement, element))
+            return;
+
+        DetachSystemThemeSubscription();
+        element.ActualThemeChanged += OnActualThemeChanged;
+        _themeWatchedElement = element;
+        _logger.LogDebug("Watching the window root for operating system theme changes");
+    }
+
+    /// <summary>
+    /// Re-applies the title bar colors when the operating system theme changes.
+    /// </summary>
+    private void OnActualThemeChanged(FrameworkElement sender, object args)
+    {
+        if (_theme != Themes.Default)
+            return;
+
+        var resolvedTheme = ToTheme(sender.ActualTheme);
+
+        if (resolvedTheme == _resolvedSystemTheme)
+            return;
+
+        _resolvedSystemTheme = resolvedTheme;
+        _logger.LogInformation("Operating system theme changed to {Theme}", resolvedTheme);
+
+        SetTitlebar();
+        ThemeChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Detaches the actual-theme subscription from the watched root.
+    /// </summary>
+    private void DetachSystemThemeSubscription()
+    {
+        if (_themeWatchedElement is null)
+            return;
+
+        _themeWatchedElement.ActualThemeChanged -= OnActualThemeChanged;
+        _themeWatchedElement = null;
+    }
+
+    /// <summary>
+    /// Maps an <see cref="ElementTheme"/> to a concrete <see cref="Themes"/> value.
+    /// </summary>
+    private static Themes ToTheme(ElementTheme elementTheme) =>
+        elementTheme == ElementTheme.Dark ? Themes.Dark : Themes.Light;
+
+    /// <summary>
+    /// Reads the theme Windows is currently using for applications.
+    /// </summary>
+    private static Themes ResolveSystemTheme()
+    {
+        try
+        {
+            return Application.Current?.RequestedTheme == ApplicationTheme.Dark
+                ? Themes.Dark
+                : Themes.Light;
+        }
+        catch (Exception)
+        {
+            return Themes.Light;
+        }
     }
 
     /// <summary>
@@ -223,15 +330,10 @@ public class ThemeService : IThemeService
 
         appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
 
-        // Themes.Default follows the operating system, so it has to be resolved instead of being
-        // treated as light: painting opaque white caption buttons over a dark shell is exactly what
+        // The resolved theme is used instead of the raw setting: Themes.Default follows the
+        // operating system, and painting white caption buttons over a dark shell is exactly what
         // made the min/max/close buttons look light themed.
-        var isDark = _theme switch
-        {
-            Themes.Light => false,
-            Themes.Dark => true,
-            _ => Application.Current?.RequestedTheme == ApplicationTheme.Dark
-        };
+        var isDark = Theme == Themes.Dark;
 
         var foreground = isDark ? Colors.White : Colors.Black;
         var hoverBackground = isDark
@@ -258,5 +360,29 @@ public class ThemeService : IThemeService
         appWindow.TitleBar.ButtonPressedForegroundColor = foreground;
 
         appWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
+    }
+
+    /// <summary>
+    /// Stops watching the window root and releases the subscription.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases the actual-theme subscription.
+    /// </summary>
+    /// <param name="disposing"><see langword="true"/> when called from <see cref="Dispose()"/>.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+            DetachSystemThemeSubscription();
+
+        _disposed = true;
     }
 }

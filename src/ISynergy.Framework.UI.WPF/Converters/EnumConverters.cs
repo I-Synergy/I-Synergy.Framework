@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Globalization.Services;
 using System.Globalization;
@@ -75,4 +76,27 @@ public class EnumToArrayConverter : IValueConverter
         Argument.IsNotNull(nameof(value));
         return LanguageService.Default.GetString(value.ToString());
     }
+}
+
+/// <summary>
+/// Converts an enum value to its localized description, falling back to the member name.
+/// </summary>
+public sealed class EnumToDescriptionConverter : IValueConverter
+{
+    /// <summary>
+    /// Converts the specified enum value to its localized description.
+    /// </summary>
+    /// <param name="value">The enum value.</param>
+    /// <param name="targetType">Type of the target.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <param name="culture">The culture.</param>
+    /// <returns>The localized description, or the original value when it is not an enum.</returns>
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is Enum enumeration ? enumeration.GetLocalizedDescription() : value;
+
+    /// <summary>
+    /// Conversion back is not supported.
+    /// </summary>
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
 }

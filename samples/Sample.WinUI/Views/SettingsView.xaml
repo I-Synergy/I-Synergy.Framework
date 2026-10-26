@@ -33,7 +33,13 @@
                     <ComboBox
                         ItemsSource="{Binding AvailableThemes}"
                         SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
-                        Style="{StaticResource AppSettingsField}" />
+                        Style="{StaticResource AppSettingsField}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
 
                 <StackPanel Spacing="4">

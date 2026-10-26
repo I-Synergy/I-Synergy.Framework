@@ -9,6 +9,7 @@
     <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     <Converters:MaskToRegexConverter x:Key="MaskToRegexConverter"/>
     <Converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <Converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <Converters:StringToGeometryConverter x:Key="StringToGeometryConverter"/>
 

@@ -115,7 +115,9 @@ public partial class App : Application
     /// </summary>
     private void ApplySampleTokens(IThemeService themeService)
     {
-        var isDark = themeService.Theme == ISynergy.Framework.Core.Enumerations.Themes.Dark;
+        // IsLightThemeEnabled resolves Themes.Default to the operating system theme, so a settings
+        // file without an explicit choice still paints the surface the OS is actually using.
+        var isDark = !themeService.IsLightThemeEnabled;
 
         SetBrush("AppBackgroundBrush", isDark ? "#0D1614" : "#F4F6F3");
         SetBrush("SplashBackgroundBrush", isDark ? "#0D1614" : "#F4F6F3");

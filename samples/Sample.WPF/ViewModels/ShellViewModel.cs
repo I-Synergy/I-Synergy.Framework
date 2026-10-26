@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
@@ -105,7 +104,7 @@ public class ShellViewModel : BaseShellViewModel
 
         Title = _commonServices.InfoService.ProductName;
         Version = _commonServices.InfoService.ProductVersion;
-        ThemeIcon = GetThemeIcon(_themeService.Theme);
+        ThemeIcon = GetThemeIcon(_themeService.IsLightThemeEnabled);
         _themeService.ThemeChanged += OnThemeChanged;
 
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
@@ -232,11 +231,11 @@ public class ShellViewModel : BaseShellViewModel
 
     protected override Task SignOutAsync() => Task.CompletedTask;
 
-    private static string GetThemeIcon(Themes theme) =>
-        theme == Themes.Light ? "\uEE45" : "\uEE4D";
+    private static string GetThemeIcon(bool isLight) =>
+        isLight ? "\uEE45" : "\uEE4D";
 
     private void OnThemeChanged(object? sender, EventArgs e) =>
-        ThemeIcon = GetThemeIcon(_themeService.Theme);
+        ThemeIcon = GetThemeIcon(_themeService.IsLightThemeEnabled);
 
     protected override void Dispose(bool disposing)
     {

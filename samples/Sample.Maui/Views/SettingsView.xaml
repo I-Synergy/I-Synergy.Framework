@@ -51,7 +51,8 @@
                         <Picker
                             x:Name="ThemePicker"
                             ItemsSource="{Binding ThemeOptions}"
-                            SelectedItem="{Binding SelectedTheme, Mode=TwoWay}" />
+                            SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
                     </VerticalStackLayout>
 
                     <!-- Accent Color -->

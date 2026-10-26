@@ -136,6 +136,7 @@ public class SettingsViewModel : ViewModelBlade<object>
 
         AvailableThemes = new ObservableCollection<Themes>
         {
+            Themes.Default,
             Themes.Light,
             Themes.Dark
         };

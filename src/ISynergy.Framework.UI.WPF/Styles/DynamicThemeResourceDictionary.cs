@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.UI.Abstractions.Styles;
 using ISynergy.Framework.UI.Utilities;
 using System.Windows;
@@ -7,7 +8,7 @@ namespace ISynergy.Framework.UI.Styles;
 
 public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeResourceDictionary
 {
-    public DynamicThemeResourceDictionary(Color primary)
+    public DynamicThemeResourceDictionary(Color primary, Themes theme = Themes.Dark)
     {
         var (primaryRed, primaryGreen, primaryBlue) = (primary.R / 255f, primary.G / 255f, primary.B / 255f);
 
@@ -36,14 +37,17 @@ public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeR
             this[$"TintedGray{key}Brush"] = new SolidColorBrush(FromFloats(red, green, blue));
         }
 
-        // Semantic tinted brushes (assumes dark theme as default; apps toggle via LocalSettings)
+        // Semantic tinted brushes follow the selected theme. The dark palette uses the low
+        // (dark) end of the gray ramp and the light palette the high (light) end, matching the
+        // WinUI theme dictionaries so framework controls switch with the application theme.
+        var isDark = theme != Themes.Light;
         Color GrayColor(string key) { var (red, green, blue) = grays[key]; return FromFloats(red, green, blue); }
-        this["TintedBackgroundBrush"] = new SolidColorBrush(GrayColor("950"));
-        this["TintedSurfaceBrush"] = new SolidColorBrush(GrayColor("900"));
-        this["TintedControlBrush"] = new SolidColorBrush(GrayColor("900"));
-        this["TintedDisabledBrush"] = new SolidColorBrush(GrayColor("600"));
-        this["TintedBorderBrush"] = new SolidColorBrush(GrayColor("600"));
-        this["TintedSecondaryBrush"] = new SolidColorBrush(GrayColor("500"));
+        this["TintedBackgroundBrush"] = new SolidColorBrush(GrayColor(isDark ? "950" : "000"));
+        this["TintedSurfaceBrush"] = new SolidColorBrush(GrayColor(isDark ? "900" : "100"));
+        this["TintedControlBrush"] = new SolidColorBrush(GrayColor(isDark ? "900" : "100"));
+        this["TintedDisabledBrush"] = new SolidColorBrush(GrayColor(isDark ? "600" : "200"));
+        this["TintedBorderBrush"] = new SolidColorBrush(GrayColor(isDark ? "600" : "200"));
+        this["TintedSecondaryBrush"] = new SolidColorBrush(GrayColor(isDark ? "500" : "300"));
     }
 
     private static Color FromFloats(float red, float green, float blue) =>

@@ -17,7 +17,7 @@ namespace ISynergy.Framework.UI.Services;
 /// It then applies the theme via Application.UserAppTheme and sets the global Application.AccentColor.
 /// Platform-specific resources (Android, Windows) are updated to keep native UI elements in sync.
 /// </remarks>
-public class ThemeService : IThemeService
+public class ThemeService : IThemeService, IDisposable
 {
     private const string Primary = nameof(Primary);
     private const string Secondary = nameof(Secondary);
@@ -27,19 +27,26 @@ public class ThemeService : IThemeService
 
     private Themes _theme;
     private string _color;
+    private Themes _resolvedSystemTheme;
     private readonly ISettingsService _settingsService;
     private readonly ILogger<ThemeService> _logger;
+    private bool _isListeningToSystemTheme;
+    private bool _disposed;
 
     /// <summary>
     /// Gets a value that indicates whether the light theme is enabled.
     /// </summary>
-    /// <value><see langword="true"/> if the current theme equals <see cref="Themes.Light"/>; otherwise, <see langword="false"/>.</value>
-    public bool IsLightThemeEnabled => _theme == Themes.Light;
+    /// <value><see langword="true"/> if the resolved theme is light; otherwise, <see langword="false"/>.</value>
+    public bool IsLightThemeEnabled => Theme == Themes.Light;
 
     /// <summary>
     /// Gets the current application theme.
     /// </summary>
-    public Themes Theme => _theme;
+    /// <remarks>
+    /// <see cref="Themes.Default"/> is resolved to the platform theme, so consumers never have to
+    /// interpret it themselves. The resolved value is refreshed when the OS theme changes.
+    /// </remarks>
+    public Themes Theme => _theme == Themes.Default ? _resolvedSystemTheme : _theme;
 
     /// <summary>
     /// Gets the current accent color as a hex string.
@@ -67,6 +74,7 @@ public class ThemeService : IThemeService
 
         _theme = settingsService.LocalSettings.Theme;
         _color = settingsService.LocalSettings.Color;
+        _resolvedSystemTheme = ResolveSystemTheme();
 
         var opts = themeColorOptions.Value;
 
@@ -106,10 +114,17 @@ public class ThemeService : IThemeService
 
         try
         {
-            if (IsLightThemeEnabled)
-                Application.Current.UserAppTheme = AppTheme.Light;
-            else
-                Application.Current.UserAppTheme = AppTheme.Dark;
+            // Themes.Default means "follow the platform": leaving UserAppTheme unspecified is what
+            // lets MAUI track the operating system, including runtime changes.
+            Application.Current.UserAppTheme = _theme switch
+            {
+                Themes.Light => AppTheme.Light,
+                Themes.Dark => AppTheme.Dark,
+                _ => AppTheme.Unspecified
+            };
+
+            _resolvedSystemTheme = ResolveSystemTheme();
+            UpdateSystemThemeSubscription();
 
             // Use the new ApplicationExtensions to dynamically load the theme
             application.SetApplicationColor(_color, _logger);
@@ -148,7 +163,9 @@ public class ThemeService : IThemeService
     /// <param name="theme">The theme to apply.</param>
     public void SetTheme(Themes theme)
     {
-        if (_theme == theme)
+        // An explicit choice is persisted even when it matches the resolved platform theme, so the
+        // application stops following the OS once the user has picked light or dark.
+        if (_theme == theme && theme != Themes.Default)
             return;
 
         _theme = theme;
@@ -374,5 +391,96 @@ public class ThemeService : IThemeService
         }
 
         yield return dictionary;
+    }
+
+    /// <summary>
+    /// Subscribes to the platform theme changes while the application follows the system, and
+    /// detaches once an explicit light or dark theme is selected.
+    /// </summary>
+    private void UpdateSystemThemeSubscription()
+    {
+        if (Application.Current is not { } application)
+            return;
+
+        var shouldListen = _theme == Themes.Default;
+
+        if (shouldListen == _isListeningToSystemTheme)
+            return;
+
+        if (shouldListen)
+        {
+            application.RequestedThemeChanged += OnRequestedThemeChanged;
+            _logger.LogDebug("Watching platform theme changes");
+        }
+        else
+        {
+            application.RequestedThemeChanged -= OnRequestedThemeChanged;
+        }
+
+        _isListeningToSystemTheme = shouldListen;
+    }
+
+    /// <summary>
+    /// Re-applies the palette and raises <see cref="ThemeChanged"/> when the platform theme changes.
+    /// </summary>
+    private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
+    {
+        if (_theme != Themes.Default)
+            return;
+
+        var resolvedTheme = e.RequestedTheme == AppTheme.Dark ? Themes.Dark : Themes.Light;
+
+        if (resolvedTheme == _resolvedSystemTheme)
+            return;
+
+        _resolvedSystemTheme = resolvedTheme;
+        _logger.LogInformation("Platform theme changed to {Theme}", resolvedTheme);
+
+        ApplyTheme();
+        ThemeChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Reads the theme the operating system is using, independently of the application's user theme.
+    /// </summary>
+    private static Themes ResolveSystemTheme()
+    {
+        try
+        {
+            return Application.Current?.PlatformAppTheme == AppTheme.Dark
+                ? Themes.Dark
+                : Themes.Light;
+        }
+        catch (Exception)
+        {
+            return Themes.Light;
+        }
+    }
+
+    /// <summary>
+    /// Stops watching the platform theme and releases the subscription.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases the platform theme subscription.
+    /// </summary>
+    /// <param name="disposing"><see langword="true"/> when called from <see cref="Dispose()"/>.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing && _isListeningToSystemTheme && Application.Current is { } application)
+        {
+            application.RequestedThemeChanged -= OnRequestedThemeChanged;
+            _isListeningToSystemTheme = false;
+        }
+
+        _disposed = true;
     }
 }

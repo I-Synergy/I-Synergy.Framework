@@ -34,7 +34,7 @@ public partial class MainLayout : IDisposable
     private bool _settingsOpen;
     private bool _navOpen;
     private string _selectedLanguage = string.Empty;
-    private string _selectedThemeName = nameof(Themes.Dark);
+    private string _selectedThemeName = nameof(Themes.Default);
 
     private static readonly string[] AccentColors = ["#0B5D55", "#0066CC", "#10B981", "#FF8C00"];
 
@@ -107,6 +107,10 @@ public partial class MainLayout : IDisposable
 
         // Subscribe to language changes from LocalizedStrings for live localization updates
         LocalizedStrings.Default.Changed += LocalizedStrings_Changed;
+
+        // The resolved system theme can change while the app runs (OS color scheme), so the shell
+        // icon and its data-app-theme attribute follow the theme service rather than LocalSettings.
+        _themeService.ThemeChanged += ThemeService_ThemeChanged;
 
         // v5: ShowInfoAsync/ShowWarningAsync/ShowErrorAsync already return the dialog result
         // (Task<DialogResult>); there is no intermediate reference object and DialogResult has
@@ -268,6 +272,11 @@ public partial class MainLayout : IDisposable
         InvokeAsync(StateHasChanged);
     }
 
+    private void ThemeService_ThemeChanged(object? sender, EventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
     public void ToggleConsole()
     {
         if (_localSettings is not null)
@@ -340,6 +349,7 @@ public partial class MainLayout : IDisposable
         _commonServices.BusyService.PropertyChanged -= BusyService_PropertyChanged;
         _navigationManager.LocationChanged -= NavigationManager_LocationChanged;
         LocalizedStrings.Default.Changed -= LocalizedStrings_Changed;
+        _themeService.ThemeChanged -= ThemeService_ThemeChanged;
 
         if (_localSettings is not null)
         {

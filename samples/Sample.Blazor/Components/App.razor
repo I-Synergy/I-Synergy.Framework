@@ -1,7 +1,10 @@
 @using ISynergy.Framework.Globalization.Constants
+@using ISynergy.Framework.Core.Abstractions.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Globalization
 @using Microsoft.AspNetCore.Components.Web
+
+@inject ISettingsService SettingsService
 
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@GlobalizationConstants.GetDirection(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)">
@@ -17,6 +20,19 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="Sample.Blazor.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    @* Apply the persisted theme before the first paint. The interactive render would otherwise
+       flash the light palette while the circuit starts, even when the dark theme is selected
+       (including "System" on an OS in dark mode). Themes.Default (0) follows the OS. *@
+    <script>
+        (function () {
+            var preference = @((int)SettingsService.LocalSettings.Theme);
+            var prefersDark = window.matchMedia
+                && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = preference === 2 || (preference === 0 && prefersDark);
+
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        })();
+    </script>
 </head>
 
 <body>

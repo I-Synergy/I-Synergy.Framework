@@ -14,7 +14,7 @@ public class LocalSettings : ObservableValidatedClass, ILocalSettings
     public string DefaultUser { get; set; } = string.Empty;
     public string? RefreshToken { get; set; } = string.Empty;
     public string Color { get; set; } = "#0B5D55";
-    public Themes Theme { get; set; } = Themes.Dark;
+    public Themes Theme { get; set; } = Themes.Default;
     public bool IsLightThemeEnabled => Theme == Themes.Light;
     public bool IsAutoLogin { get; set; }
     public bool IsAdvanced { get; set; }

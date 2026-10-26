@@ -1,3 +1,4 @@
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.UI.Styles;
 using System.Windows.Media;
 
@@ -197,6 +198,51 @@ public class DynamicThemeResourceDictionaryTests
 
         Assert.IsTrue(tertiaryLum < primaryLum, $"Tertiary ({tertiaryLum:F1}) should be darker than primary ({primaryLum:F1})");
     }
+
+    // ── Semantic brushes follow the theme ────────────────────────────────────
+
+    [TestMethod]
+    public void LightTheme_UsesLightSemanticGrays()
+    {
+        var dict = new DynamicThemeResourceDictionary(WindowsBlue, Themes.Light);
+
+        var background = (SolidColorBrush)dict["TintedBackgroundBrush"];
+        var border = (SolidColorBrush)dict["TintedBorderBrush"];
+
+        Assert.IsTrue(IsLighter(background.Color, border.Color),
+            "The light background brush must be lighter than the light border brush");
+        Assert.IsTrue(background.Color.R > 200, "The light background brush must be a light gray");
+    }
+
+    [TestMethod]
+    public void DarkTheme_UsesDarkSemanticGrays()
+    {
+        var dict = new DynamicThemeResourceDictionary(WindowsBlue, Themes.Dark);
+
+        var background = (SolidColorBrush)dict["TintedBackgroundBrush"];
+        var border = (SolidColorBrush)dict["TintedBorderBrush"];
+
+        Assert.IsTrue(IsLighter(border.Color, background.Color),
+            "The dark border brush must be lighter than the dark background brush");
+        Assert.IsTrue(background.Color.R < 60, "The dark background brush must be a dark gray");
+    }
+
+    [TestMethod]
+    public void ThemeParameter_ChangesOnlySemanticBrushes()
+    {
+        var light = new DynamicThemeResourceDictionary(WindowsBlue, Themes.Light);
+        var dark = new DynamicThemeResourceDictionary(WindowsBlue, Themes.Dark);
+
+        Assert.AreEqual(
+            ((SolidColorBrush)light["TintedGray500Brush"]).Color,
+            ((SolidColorBrush)dark["TintedGray500Brush"]).Color);
+        Assert.AreNotEqual(
+            ((SolidColorBrush)light["TintedBackgroundBrush"]).Color,
+            ((SolidColorBrush)dark["TintedBackgroundBrush"]).Color);
+    }
+
+    private static bool IsLighter(System.Windows.Media.Color left, System.Windows.Media.Color right) =>
+        left.R + left.G + left.B > right.R + right.G + right.B;
 
     // ── Different primaries produce different dictionaries ───────────────────
 

@@ -14,25 +14,34 @@ namespace ISynergy.Framework.UI.Services;
 /// It then applies the theme via the document element's data-theme attribute and CSS custom properties via JavaScript interop.
 /// The service tolerates prerender scenarios (when JS interop is not available) and applies the theme on first interactive render.
 /// </remarks>
-public class ThemeService : IThemeService
+public class ThemeService : IThemeService, IDisposable
 {
     private Themes _theme;
     private string _color;
+    private Themes _resolvedSystemTheme = Themes.Light;
     private readonly ISettingsService _settingsService;
     private readonly IJSRuntime _jsRuntime;
     private readonly ILogger<ThemeService> _logger;
+    private DotNetObjectReference<ThemeService>? _dotNetReference;
+    private bool _isWatchingSystemTheme;
     private bool _isInitialized;
+    private bool _disposed;
 
     /// <summary>
     /// Gets a value that indicates whether the light theme is enabled.
     /// </summary>
-    /// <value><see langword="true"/> if the current theme equals <see cref="Themes.Light"/>; otherwise, <see langword="false"/>.</value>
-    public bool IsLightThemeEnabled => _theme == Themes.Light;
+    /// <value><see langword="true"/> if the resolved theme is light; otherwise, <see langword="false"/>.</value>
+    public bool IsLightThemeEnabled => Theme == Themes.Light;
 
     /// <summary>
     /// Gets the current application theme.
     /// </summary>
-    public Themes Theme => _theme;
+    /// <remarks>
+    /// <see cref="Themes.Default"/> is resolved to the color scheme the browser reports, so
+    /// consumers never have to interpret it themselves. The resolved value is refreshed when the
+    /// operating system color scheme changes.
+    /// </remarks>
+    public Themes Theme => _theme == Themes.Default ? _resolvedSystemTheme : _theme;
 
     /// <summary>
     /// Gets the current accent color as a hex string.
@@ -112,20 +121,101 @@ public class ThemeService : IThemeService
             // Normalize the color to ensure it has a # prefix
             var accentColor = _color.StartsWith("#") ? _color : "#" + _color;
 
-            // Apply theme via JS interop
-            await module.InvokeVoidAsync("applyTheme",
-                IsLightThemeEnabled ? "light" : "dark",
+            // Apply theme via JS interop. "system" makes the document follow the browser/OS
+            // color scheme; the module resolves it and returns the concrete theme it applied.
+            var resolvedTheme = await module.InvokeAsync<string>("applyTheme",
+                ToJsPreference(_theme),
                 accentColor);
+
+            var systemThemeChanged = _theme == Themes.Default
+                && TryParseTheme(resolvedTheme, out var resolved)
+                && resolved != _resolvedSystemTheme;
+
+            if (TryParseTheme(resolvedTheme, out var concreteTheme))
+                _resolvedSystemTheme = concreteTheme;
+
+            await EnsureSystemThemeWatcherAsync(module);
 
             if (!_isInitialized)
                 _isInitialized = true;
 
             _logger.LogInformation("Application style successfully applied");
+
+            if (systemThemeChanged)
+                ThemeChanged?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex) when (ex.GetType().Name.Contains("JSException") || ex.GetType().Name.Contains("JSDisabled"))
         {
             _logger.LogDebug(ex, "JavaScript interop error; theme application may not have succeeded");
         }
+    }
+
+    /// <summary>
+    /// Maps a theme preference to the value understood by the interop module.
+    /// </summary>
+    private static string ToJsPreference(Themes theme) => theme switch
+    {
+        Themes.Light => "light",
+        Themes.Dark => "dark",
+        _ => "system"
+    };
+
+    /// <summary>
+    /// Parses the concrete theme name returned by the interop module.
+    /// </summary>
+    private static bool TryParseTheme(string? themeName, out Themes theme) =>
+        Enum.TryParse(themeName, ignoreCase: true, out theme);
+
+    /// <summary>
+    /// Registers the JavaScript color-scheme listener while the theme follows the system.
+    /// </summary>
+    private async Task EnsureSystemThemeWatcherAsync(IJSObjectReference module)
+    {
+        if (_theme != Themes.Default)
+        {
+            // The listener stays registered but ignores non-system preferences, so switching back
+            // to system does not need a second registration.
+            _isWatchingSystemTheme = false;
+            return;
+        }
+
+        if (_isWatchingSystemTheme)
+            return;
+
+        _dotNetReference ??= DotNetObjectReference.Create(this);
+
+        try
+        {
+            await module.InvokeVoidAsync("watchSystemTheme", _dotNetReference);
+            _isWatchingSystemTheme = true;
+        }
+        catch (JSException ex)
+        {
+            _logger.LogDebug(ex, "The JavaScript color-scheme listener could not be registered");
+        }
+    }
+
+    /// <summary>
+    /// Called from the interop module when the operating system color scheme changes.
+    /// </summary>
+    /// <param name="isDark"><see langword="true"/> when the system switched to dark mode.</param>
+    [JSInvokable]
+    public Task OnSystemThemeChanged(bool isDark)
+    {
+        if (_theme != Themes.Default)
+            return Task.CompletedTask;
+
+        var resolvedTheme = isDark ? Themes.Dark : Themes.Light;
+
+        if (resolvedTheme == _resolvedSystemTheme)
+            return Task.CompletedTask;
+
+        _resolvedSystemTheme = resolvedTheme;
+        _logger.LogInformation("Operating system color scheme changed to {Theme}", resolvedTheme);
+
+        ThemeChanged?.Invoke(this, EventArgs.Empty);
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -138,7 +228,9 @@ public class ThemeService : IThemeService
     /// <param name="theme">The theme to apply.</param>
     public void SetTheme(Themes theme)
     {
-        if (_theme == theme)
+        // An explicit choice is persisted even when it matches the resolved system theme, so the
+        // application stops following the OS once the user has picked light or dark.
+        if (_theme == theme && theme != Themes.Default)
             return;
 
         _theme = theme;
@@ -174,5 +266,33 @@ public class ThemeService : IThemeService
         ThemeChanged?.Invoke(this, EventArgs.Empty);
 
         _logger.LogInformation("Accent color changed to {Color}", hexColor);
+    }
+
+    /// <summary>
+    /// Releases the .NET reference shared with the JavaScript color-scheme listener.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases the interop reference.
+    /// </summary>
+    /// <param name="disposing"><see langword="true"/> when called from <see cref="Dispose()"/>.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            _dotNetReference?.Dispose();
+            _dotNetReference = null;
+            _isWatchingSystemTheme = false;
+        }
+
+        _disposed = true;
     }
 }

@@ -115,11 +115,14 @@ public class SettingsViewModel : ViewModelBlade<object>
         _settingsService.LoadLocalSettings();
 
         Languages = new ObservableCollection<CultureInfo>(supportedCulturesService.SupportedCultures);
-        ThemeOptions = new ObservableCollection<Themes> { Themes.Light, Themes.Dark };
+        ThemeOptions = new ObservableCollection<Themes> { Themes.Default, Themes.Light, Themes.Dark };
 
         SelectedLanguage = Languages.FirstOrDefault(culture =>
             string.Equals(culture.Name, _settingsService.LocalSettings.Language, StringComparison.OrdinalIgnoreCase))
             ?? supportedCulturesService.DefaultCulture;
+
+        // The picker shows the persisted preference (including System), not the resolved theme:
+        // resolving before the picker would display "Dark" while the setting is "System".
         SelectedTheme = _settingsService.LocalSettings.Theme;
         SelectedAccentColor = string.IsNullOrWhiteSpace(_settingsService.LocalSettings.Color)
             ? AccentColors[0]

@@ -463,7 +463,10 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             if (_mainWindow.Content is FrameworkElement windowRoot)
             {
                 windowRoot.ApplyFlowDirection(language);
-                windowRoot.ApplyRequestedTheme(_themeService.Theme);
+
+                // The stored preference is applied, not the resolved theme: Themes.Default must stay
+                // on ElementTheme.Default so the root keeps following the OS.
+                windowRoot.ApplyRequestedTheme(theme);
             }
 
             _mainWindow.Activate();
