@@ -37,6 +37,15 @@ record: `.ai/completed/blazor-shell-mobile-drawer.md`. The suite is 36/36 and th
 in a real browser at 1280px and 480px. Remaining nicety: the dark theme's active nav icon glyph is
 ~1.87:1 (decorative, `aria-hidden`, therefore excluded from the text-contrast sweep).
 
+**Pipeline is green.** Three commits were pushed and watched (6181 → 6182 → 6183). Fixes after the
+first push: the dark-theme breadcrumb contrast (new `--app-accent-text` token, 10:1 measured) and the
+MAUI memory test that still asserted `NavigationService._pageFrames` (now guards
+`NavigationHostView._bodies`). Build 6182 proved all tests green but failed signing, because
+`AzureSignTool` is a .NET 10 tool and the pinned .NET 11 SDK leaves only the 11 runtime on the agent;
+6183 adds a `UseDotNet@2` step installing the `10.0.x` runtime and **succeeds end to end** (build,
+tests, sign, artifacts, NuGet deploy). Also note `scripts/Update-PackageVersions.ps1` rewrote every
+version in `Directory.Packages.props` during local runs — it was reverted and is not committed.
+
 ---
 
 # Session Handoff - 2026-10-25 (Settings as a blade: WPF + WinUI + MAUI)

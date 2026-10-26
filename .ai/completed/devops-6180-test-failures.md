@@ -41,5 +41,25 @@ Once the suite can start, 16 of its 36 tests fail because they still assert the 
 that commit `cbd17689` deliberately removed from `samples/Sample.Blazor` (`.fluent-layout`,
 `nav.fluent-nav`, `#main_menu`, hamburger drawer). The app serves HTTP 200 and renders the new
 `.app-shell` / `.app-sidebar` / `nav.app-nav` shell; at `<=900px` the sidebar becomes a 72px icon
-rail and there is no drawer at all. Re-baselining those tests (or restoring a mobile drawer) is a
-separate decision.
+rail and there is no drawer at all. Resolved in the same session by adding the drawer and
+re-baselining the suite — see `.ai/completed/blazor-shell-mobile-drawer.md`.
+
+## CI outcome (PR 1685)
+
+Three commits were pushed to `development/main` and watched through three pipeline runs:
+
+- **6181** (31da603a) — the three original failure classes were gone; two new ones surfaced:
+  `UI.Maui.Windows` `PageFramesField_ExistsAndIsCorrectType` (asserting a field `cbd17689` deleted)
+  and `Sample.Blazor.UI.Tests` contrast, `a 'Blazor Sample' ratio=2.37` in the dark theme.
+- **6182** (e49ce9c4) — fixed both: a text-safe `--app-accent-text` token (`#5ED3B0` in dark, 10:1
+  measured) and `HostBodiesTable_ExistsAndIsCorrectType` guarding `NavigationHostView._bodies`.
+  Test task **succeeded** (all 34 projects), but `Sign Nuget packages` failed: `AzureSignTool` is a
+  .NET 10 tool and the pinned .NET 11 SDK step leaves only the 11 runtime on the agent.
+- **6183** (ebff9ecd) — added a `UseDotNet@2` step installing the `10.0.x` runtime before signing.
+  **Build succeeded end to end**: build, pack, verify net10/net11 assets, copy, **sign**, publish
+  artifacts, deploy to NuGet, and every test project green (Sample.Blazor 36/36,
+  UI.Maui.Windows 45 + 4 skipped, UI.WPF 20/20, UI.WinUI 52 + 8 skipped, ...).
+
+Watch out: `scripts/Update-PackageVersions.ps1` rewrote all package versions in
+`Directory.Packages.props` (Aspire/framework preview bumps) at some point during local runs. It was
+reverted and is not part of these commits — check that file before committing if the script runs.
