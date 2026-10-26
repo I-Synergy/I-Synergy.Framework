@@ -195,6 +195,15 @@ stages:
             Contents: '*'
             TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+        # AzureSignTool is a global tool that targets .NET 10. The pinned .NET 11 SDK step puts only
+        # the 11 runtime in the agent's shared x64 dotnet root, so the tool cannot start
+        # ("Framework: 'Microsoft.NETCore.App', version '10.0.0'"). Install a 10.x runtime for signing.
+        - task: UseDotNet@2
+          displayName: 'Install .NET 10 runtime for AzureSignTool'
+          inputs:
+            packageType: 'runtime'
+            version: '10.0.x'
+
         - task: CmdLine@2
           displayName: 'Sign Nuget packages'
           inputs:
