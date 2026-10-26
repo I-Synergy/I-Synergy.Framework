@@ -1,3 +1,67 @@
+# Session Handoff - 2026-10-26 (System theme in every sample app)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+`Themes.Default` is now "System" in all four heads, every sample offers it and fresh installs start on
+it. Plan: `.ai/plans/system-theme-all-samples.md` (IMPLEMENTED), record:
+`.ai/completed/system-theme-all-samples.md`.
+
+- **Framework**: WPF resolves Default from `AppsUseLightTheme` and watches
+  `SystemEvents.UserPreferenceChanged`; WinUI maps Default to `ElementTheme.Default` and watches the
+  root's `ActualThemeChanged`; MAUI maps Default to `AppTheme.Unspecified` (it used to force Dark) and
+  watches `Application.RequestedThemeChanged`; Blazor resolves `system` with `matchMedia`, watches it
+  and calls `[JSInvokable] OnSystemThemeChanged`. All four raise `ThemeChanged` on a live OS change and
+  persist an explicit choice made while the resolved theme already matches.
+- **Samples**: `LocalSettings.Theme` defaults to `Themes.Default`; WPF/WinUI/MAUI/Blazor pickers list
+  System and show localized descriptions (new WPF `EnumToDescriptionConverter`); `Themes.Default`'s
+  description is "System"; Blazor applies the theme in an inline head script to avoid a light first
+  paint.
+- **Runtime checks**: WPF (dark + picker "System"), MAUI (dark) and Blazor (dark before and after
+  hydration; stubbed matchMedia change flipped `data-theme` and called back into .NET) were run against
+  the OS dark theme. WinUI's unpackaged sample cannot start on this machine (`REGDB_E_CLASSNOTREG`
+  from the Windows App SDK initializer); it is covered by build + 56 tests.
+- **Tests**: WPF 27/27, WinUI 56 passed / 8 skipped. All four samples build. MAUI was built against
+  `net10.0-windows` because the rc.3 SDK lacks the `maui-tizen` workload.
+
+## Follow-up
+- Verify WinUI at runtime on a machine with the Windows App Runtime installed.
+- The OS-level theme was not flipped during verification; the WPF/WinUI/MAUI live handlers still
+  deserve one manual OS-toggle pass.
+
+---
+
+# Session Handoff - 2026-10-26 (WPF sample started in the wrong theme)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Fixed the WPF sample starting with light surfaces while its theme state reported dark (it took two
+toggles to reach dark). Record: `.ai/completed/wpf-theme-startup.md`.
+
+- **Root cause:** `Themes.Default` was interpreted inconsistently. `Sample.WPF` painted the light
+  tokens (`Theme == Themes.Dark`), while the shell toggle, the icon and `IsLightThemeEnabled` treated
+  it as dark. The framework's WPF theme dictionary also always used the dark gray ramp.
+- **Fix:** WPF `ThemeService.Theme` now resolves `Themes.Default` from the Windows
+  `AppsUseLightTheme` personalization value and `ApplyTheme` passes the resolved theme through;
+  `DynamicThemeResourceDictionary(primary, theme)` derives `Tinted*` brushes from the matching gray
+  ramp end (light or dark); the WPF sample derives tokens, icon and the settings picker from the
+  resolved theme.
+- **Verified** on the real sample with `"Theme":0` on an OS in dark app mode: dark on start, one
+  click to light, persistence correct; explicit Light/Dark restarts and the settings-blade path were
+  also checked visually. `dotnet test tests/ISynergy.Framework.UI.WPF.Tests` 27/27; `Sample.WPF`
+  builds with 0 warnings.
+
+## Follow-up
+- WPF resolves `Themes.Default` per read but does not subscribe to OS theme changes, so a running app
+  with `Default` keeps its painted palette until the next apply/toggle.
+- WinUI and MAUI keep their stored-theme semantics; consider aligning them if `Default` is offered
+  by a settings surface.
+
+---
+
 # Session Handoff - 2026-10-26 (Azure DevOps build 6180: test failures)
 
 **Written By:** Reasonix Code
