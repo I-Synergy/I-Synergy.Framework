@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace ISynergy.Framework.Financial;
 
@@ -15,20 +16,20 @@ public class PercentageTests
     /// <param name="mainamount">The mainamount.</param>
     /// <param name="result">The result.</param>
     [TestMethod]
-    [DataRow(1, 50, 49)]
-    [DataRow(100, 120, 0.2)]
-    [DataRow(0, 0, 0)]
-    [DataRow(0, 100, 1)]
-    [DataRow(75, 15, -0.80)]
-    [DataRow(573, 520, -0.0925)]
-    [DataRow(12510.41, 14696.23, 0.1747)]
-    public void CalcPercAmountOfAmountTest(object amount, object mainamount, object result)
+    [DataRow(1, 50, "49")]
+    [DataRow(100, 120, "0.2")]
+    [DataRow(0, 0, "0")]
+    [DataRow(0, 100, "1")]
+    [DataRow(75, 15, "-0.80")]
+    [DataRow(573, 520, "-0.0925")]
+    [DataRow(12510.41, 14696.23, "0.1747")]
+    public void CalcPercAmountOfAmountTest(object amount, object mainamount, string result)
     {
         decimal assert = Math.Round(
             Percentage.CalculatePercentageAmountOfAmount(
                 Convert.ToDecimal(amount),
                 Convert.ToDecimal(mainamount)), 4);
-        Assert.AreEqual(Convert.ToDecimal(result), assert);
+        Assert.AreEqual(decimal.Parse(result, CultureInfo.InvariantCulture), assert);
     }
 
     /// <summary>
@@ -58,20 +59,20 @@ public class PercentageTests
     /// <param name="salesPrice">The sales price.</param>
     /// <param name="result">The result.</param>
     [TestMethod]
-    [DataRow(1, 50, 49)]
-    [DataRow(10, 100, 9)]
-    [DataRow(10, 20, 1)]
-    [DataRow(0, 100, 1)]
-    [DataRow(1.25, 1.75, 0.4)]
-    [DataRow(4.95, 2.5, -0.4949)]
-    public void CalcMarginPercentageTest(object purchasePrice, object salesPrice, object result)
+    [DataRow(1, 50, "49")]
+    [DataRow(10, 100, "9")]
+    [DataRow(10, 20, "1")]
+    [DataRow(0, 100, "1")]
+    [DataRow(1.25, 1.75, "0.4")]
+    [DataRow(4.95, 2.5, "-0.4949")]
+    public void CalcMarginPercentageTest(object purchasePrice, object salesPrice, string result)
     {
         decimal assert = Math.Round(
             Percentage.CalculateMarginPercentage(
                 Convert.ToDecimal(salesPrice),
                 Convert.ToDecimal(purchasePrice)), 4);
 
-        Assert.AreEqual(Convert.ToDecimal(result), assert);
+        Assert.AreEqual(decimal.Parse(result, CultureInfo.InvariantCulture), assert);
     }
 
     /// <summary>

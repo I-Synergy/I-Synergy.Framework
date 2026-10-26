@@ -42,12 +42,12 @@ dotnet test tests/Sample.Blazor.UI.Tests/Sample.Blazor.UI.Tests.csproj
 | `Infrastructure/SampleAppHost.cs` | assembly fixture: starts/stops `Sample.Blazor` on `http://localhost:5210` |
 | `Infrastructure/SamplePageTest.cs` | browser/context/page lifecycle, console + network diagnostics, circuit-ready wait |
 | `Infrastructure/SampleDom.cs` | the v5 DOM contract (selectors) in one place |
-| `SmokeTests.cs` | layout shell, providers, dead `loading-theme.js`, per-route baseline |
-| `NavigationTests.cs` | `FluentNav`/`FluentNavItem` rendering, single nav instance, active item, click-through |
+| `SmokeTests.cs` | hand-rolled app shell (`.app-shell` + header/sidebar/content/sidebar-footer), providers, dead `loading-theme.js`, per-route baseline |
+| `NavigationTests.cs` | `nav.app-nav` rendering, single nav instance, active item, click-through |
 | `PageInteractionTests.cs` | counter increment, streamed weather table |
 | `DialogTests.cs` | dialog open, `FluentTextInput`, header title, two-way binding, Cancel |
 | `BusyOverlayTests.cs` | busy overlay hidden by default, `FluentSpinner` (not `FluentProgressRing`) |
-| `ResponsiveLayoutTests.cs` | mobile drawer relocation, desktop hamburger collapse, nav column measurements |
+| `ResponsiveLayoutTests.cs` | mobile off-canvas drawer (toggle / scrim / navigate from the drawer), runtime breakpoint switch, permanent desktop sidebar, sidebar measurements |
 | `AccessibilityTests.cs` | accessible names (shadow DOM aware), heading order, computed contrast |
 
 ## Deliberate non-inheritance
@@ -58,10 +58,15 @@ MSTest 4.x (`MSTest.TestFramework.dll`). MSTest matches attributes by exact type
 inherited `[TestInitialize]`/`[TestCleanup]` would be silently ignored (build warning MSTEST0082) and
 `Page` would never be created. `SamplePageTest` owns the lifecycle explicitly instead.
 
-## Notes on the v5 DOM
+## Notes on the DOM
 
-* `FluentLayout`, `FluentLayoutItem`, `FluentNav`, `FluentNavItem`, `FluentProviders` and the dialog
-  provider render **plain elements with `fluent-*` CSS classes** (`<div class="fluent-layout">`), not
+* The shell is **hand-rolled**, not `FluentLayout`: `div.app-shell` &gt; `aside.app-sidebar` (with
+  `nav.app-nav#main_menu`) + `header.app-header` + `main.app-content`. Above 900px the sidebar is a
+  permanent 300px column and `button.app-nav-toggle` is `display:none`; at 900px and below the same
+  sidebar becomes a fixed 280px off-canvas drawer that the toggle slides in (`is-open`), with
+  `div.app-nav-scrim` rendered behind it.
+* What is still Fluent UI — `FluentProviders` and the dialog/toast/tooltip providers — renders
+  **plain elements with `fluent-*` CSS classes** (`.fluent-providers`, `.fluent-dialog-provider`), not
   custom elements.
 * `FluentSpinner`, `FluentOverlay`, `FluentButton`, `FluentTextInput`, `FluentDrawer`, `FluentDialog`
   render **real custom elements** whose content lives in shadow DOM. Their host element frequently has

@@ -151,7 +151,7 @@ public class AccessibilityTests : SamplePageTest
     {
         var json = await Page.EvaluateAsync<string>(ContrastScript);
         using var document = System.Text.Json.JsonDocument.Parse(json);
-        var findings = document.RootElement.EnumerateArray()
+        var findings = document.RootElement.GetProperty("findings").EnumerateArray()
             .Select(e => new
             {
                 Tag = e.GetProperty("tag").GetString(),
@@ -163,8 +163,20 @@ public class AccessibilityTests : SamplePageTest
             })
             .ToList();
 
+        var decorative = document.RootElement.GetProperty("decorative").EnumerateArray()
+            .Select(e => $"{e.GetProperty("tag").GetString()} '{Truncate(e.GetProperty("text").GetString())}' " +
+                         $"color={e.GetProperty("color").GetString()}")
+            .ToList();
+
+        // Evidence that the decoration filter is a *filter*, not a blanket exclusion, and that the sweep
+        // still had plenty of real text to measure.
+        Assert.IsTrue(findings.Count >= 10,
+            $"{label}: only {findings.Count} text element(s) were measured; the contrast sweep must still " +
+            $"cover the page's real text. Skipped as aria-hidden decoration: {decorative.Count}.");
+
         var lowest = findings.OrderBy(f => f.Ratio).FirstOrDefault();
         Log($"{label} contrast: {findings.Count} text element(s) measured; " +
+            $"skipped {decorative.Count} aria-hidden decorative glyph(s) [{string.Join(", ", decorative)}]; " +
             $"lowest ratio {(lowest is null ? "n/a" : $"{lowest.Ratio} ({lowest.Tag} '{Truncate(lowest.Text)}')")}");
 
         var failures = findings.Where(f => f.Ratio < MinimumContrast).ToList();
@@ -254,16 +266,37 @@ public class AccessibilityTests : SamplePageTest
                 return 0.2126 * channel(c.r) + 0.7152 * channel(c.g) + 0.0722 * channel(c.b);
             };
             const background = (el) => {
+                // Alpha-composite the ancestor chain. A translucent layer (the active navigation item's
+                // rgba accent tint, for instance) was previously taken as if it were opaque, which
+                // reported a contrast ratio against a colour that is never rendered. Measuring the
+                // composite is both correct and strictly stricter: it also catches a tint that destroys
+                // the contrast of the surface it is laid over.
+                const layers = [];
                 let node = el;
                 while (node) {
                     const c = parse(getComputedStyle(node).backgroundColor);
-                    if (c && c.a > 0.05) return c;
+                    if (c && c.a > 0.05) layers.push(c);
+                    if (c && c.a >= 0.99) break;
                     node = node.parentElement;
                 }
-                return { r: 255, g: 255, b: 255, a: 1 };
+
+                let result = { r: 255, g: 255, b: 255, a: 1 };
+                for (let i = layers.length - 1; i >= 0; i--) {
+                    const top = layers[i];
+                    const a = top.a;
+                    result = {
+                        r: top.r * a + result.r * (1 - a),
+                        g: top.g * a + result.g * (1 - a),
+                        b: top.b * a + result.b * (1 - a),
+                        a: 1
+                    };
+                }
+
+                return result;
             };
 
             const results = [];
+            const decorative = [];
             for (const el of document.querySelectorAll('body *')) {
                 const own = [...el.childNodes]
                     .filter(n => n.nodeType === 3)
@@ -281,13 +314,25 @@ public class AccessibilityTests : SamplePageTest
                 const fg = parse(style.color);
                 if (!fg || fg.a < 0.5) continue;
 
+                const label = el.tagName.toLowerCase() + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/)[0] : '');
+
+                // Decorative, assistive-tech-hidden glyphs (the shell's navigation icons and the brand
+                // tile are aria-hidden="true"; the meaning is carried by the adjacent label) are not text
+                // that conveys information, so WCAG 1.4.3's contrast floor does not apply to them. They
+                // are collected and reported instead of being silently dropped, so the exclusion stays
+                // visible - and every remaining text element is still measured at the full floor.
+                if (el.closest('[aria-hidden="true"]')) {
+                    decorative.push({ tag: label, text: own.slice(0, 60), color: style.color });
+                    continue;
+                }
+
                 const bg = background(el);
                 const l1 = luminance(fg);
                 const l2 = luminance(bg);
                 const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
 
                 results.push({
-                    tag: el.tagName.toLowerCase() + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/)[0] : ''),
+                    tag: label,
                     text: own.slice(0, 60),
                     ratio: ratio,
                     foreground: style.color,
@@ -295,7 +340,7 @@ public class AccessibilityTests : SamplePageTest
                     fontSize: parseFloat(style.fontSize)
                 });
             }
-            return JSON.stringify(results);
+            return JSON.stringify({ findings: results, decorative: decorative });
         }
         """;
 }

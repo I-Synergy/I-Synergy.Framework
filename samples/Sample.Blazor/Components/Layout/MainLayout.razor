@@ -8,7 +8,7 @@
    content column. FluentLayout is deliberately not used here — its chrome does not match the
    native sample shells. *@
 <div class="app-shell" data-app-theme="@((_localSettings?.Theme ?? Themes.Dark) == Themes.Dark ? "dark" : "light")">
-    <aside class="app-sidebar" aria-label="@L("Navigation")">
+    <aside class="app-sidebar @(_navOpen ? "is-open" : "")" aria-label="@L("Navigation")">
         <div class="app-brand">
             <span class="app-brand-tile" aria-hidden="true">▦</span>
             <span class="app-brand-name">
@@ -17,20 +17,20 @@
             </span>
         </div>
 
-        <nav class="app-nav" aria-label="@L("Navigation")">
-            <NavLink class="app-nav-item" href="" Match="NavLinkMatch.All">
+        <nav class="app-nav" id="main_menu" role="navigation" aria-label="@L("Navigation")">
+            <NavLink class="app-nav-item" href="" Match="NavLinkMatch.All" @onclick="CloseNavigation">
                 <span class="app-nav-icon" aria-hidden="true">⌂</span>
                 <span>Home</span>
             </NavLink>
-            <NavLink class="app-nav-item" href="counter">
+            <NavLink class="app-nav-item" href="counter" @onclick="CloseNavigation">
                 <span class="app-nav-icon" aria-hidden="true">＋</span>
                 <span>Counter</span>
             </NavLink>
-            <NavLink class="app-nav-item" href="weather">
+            <NavLink class="app-nav-item" href="weather" @onclick="CloseNavigation">
                 <span class="app-nav-icon" aria-hidden="true">☁</span>
                 <span>Weather</span>
             </NavLink>
-            <NavLink class="app-nav-item" href="commanddemoview">
+            <NavLink class="app-nav-item" href="commanddemoview" @onclick="CloseNavigation">
                 <span class="app-nav-icon" aria-hidden="true">▶</span>
                 <span>Command Demo</span>
             </NavLink>
@@ -51,6 +51,7 @@
 
     <div class="app-main">
         <header class="app-header">
+            <button type="button" class="app-icon-button app-nav-toggle" title="@L("Navigation")" aria-label="@L("Navigation")" aria-expanded="@(_navOpen ? "true" : "false")" aria-controls="main_menu" @onclick="ToggleNavigation"><span aria-hidden="true">☰</span></button>
             <div class="app-breadcrumb">
                 <a href="">Blazor Sample</a>
                 <span aria-hidden="true">/</span>
@@ -73,6 +74,11 @@
         </main>
     </div>
 </div>
+
+@if (_navOpen)
+{
+    <div class="app-nav-scrim" @onclick="CloseNavigation"></div>
+}
 
 @if (_settingsOpen)
 {

@@ -207,11 +207,20 @@ public abstract class SamplePageTest
                 "the Blazor Server circuit did not start.");
     }
 
-    /// <summary>Waits for the layout JS to finish its first ResizeObserver pass (desktop/mobile decision).</summary>
-    protected async Task WaitForLayoutInitialisedAsync()
+    /// <summary>
+    /// Waits until the hand-rolled shell is rendered and its navigation is in the DOM.
+    /// <para>
+    /// The shell replaced <c>FluentLayout</c>, whose desktop/mobile decision was made in .NET from a
+    /// JS callback (and had to be waited for). The replacement's responsive behaviour is pure CSS
+    /// (<c>@media (max-width: 900px)</c>), so there is no JS state to settle: what is left to wait for
+    /// is the shell itself plus its four route links, which is what every shape assertion relies on.
+    /// </para>
+    /// </summary>
+    protected async Task WaitForShellReadyAsync()
     {
         await Page.WaitForFunctionAsync(
-            "() => document.querySelector('.fluent-layout')?.fluentLayoutInitialized === true",
+            "() => document.querySelector('.app-shell') !== null " +
+            "&& document.querySelectorAll('nav.app-nav a.app-nav-item').length === 4",
             null,
             new() { Timeout = 15_000 });
     }
@@ -326,17 +335,20 @@ public abstract class SamplePageTest
         return await Page.EvaluateAsync<string>(
             """
             () => {
-                const nav = document.querySelector('nav.fluent-nav');
-                if (!nav) return 'no nav.fluent-nav in the DOM';
-                const items = [...nav.querySelectorAll('a.fluent-navitem')];
+                const nav = document.querySelector('nav.app-nav');
+                if (!nav) return 'no nav.app-nav in the DOM';
+                const items = [...nav.querySelectorAll('a.app-nav-item')];
+                const sidebar = document.querySelector('aside.app-sidebar');
                 return JSON.stringify({
-                    navCount: document.querySelectorAll('nav.fluent-nav').length,
+                    navCount: document.querySelectorAll('nav.app-nav').length,
                     menuIdCount: document.querySelectorAll('#main_menu').length,
                     itemCount: items.length,
                     activeCount: items.filter(i => i.classList.contains('active')).length,
                     items: items.map(i => ({ text: i.textContent.trim(), href: i.getAttribute('href'), cls: i.className })),
                     navWidth: getComputedStyle(nav).width,
-                    navHeight: Math.round(nav.getBoundingClientRect().height)
+                    navHeight: Math.round(nav.getBoundingClientRect().height),
+                    sidebarPosition: sidebar ? getComputedStyle(sidebar).position : null,
+                    sidebarOpen: sidebar ? sidebar.classList.contains('is-open') : null
                 });
             }
             """);

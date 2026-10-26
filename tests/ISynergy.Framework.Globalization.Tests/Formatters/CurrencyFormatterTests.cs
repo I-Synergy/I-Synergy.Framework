@@ -96,10 +96,10 @@ public sealed class CurrencyFormatterTests
     }
 
     [TestMethod]
-    [DataRow("123.45", 123.45)]
-    [DataRow("0.99", 0.99)]
-    [DataRow("1000.00", 1000.00)]
-    public void TryParse_ValidInput_ReturnsTrue(string input, double expected)
+    [DataRow("123.45", "123.45")]
+    [DataRow("0.99", "0.99")]
+    [DataRow("1000.00", "1000.00")]
+    public void TryParse_ValidInput_ReturnsTrue(string input, string expected)
     {
         // Arrange
         var formatter = new CurrencyFormatter(CultureInfo.InvariantCulture);
@@ -109,7 +109,7 @@ public sealed class CurrencyFormatterTests
 
         // Assert
         Assert.IsTrue(success);
-        Assert.AreEqual((decimal)expected, value);
+        Assert.AreEqual(decimal.Parse(expected, CultureInfo.InvariantCulture), value);
     }
 
     [TestMethod]

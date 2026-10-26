@@ -1,14 +1,26 @@
 namespace Sample.Blazor.UI.Tests.Infrastructure;
 
 /// <summary>
-/// The DOM contract of the Fluent UI Blazor v5 sample app, as verified against the rendered page.
+/// The DOM contract of the Blazor sample app, as verified against the rendered page.
 /// <para>
-/// IMPORTANT: v5 renders the layout / navigation / provider components as plain elements carrying a
-/// <c>fluent-*</c> CSS class (a <c>&lt;div class="fluent-layout"&gt;</c>), NOT as <c>fluent-layout</c>
-/// custom elements. Only the components that wrap a real web component (spinner, overlay, button,
-/// text input, drawer, ...) appear as <c>fluent-*</c> tags. Both kinds are asserted below, and the
-/// distinction is itself the regression guard: a silently degraded (unresolved) component tag and a
-/// plain class-carrying div are different things, and only one of them is correct per component.
+/// The shell is hand-rolled (see <c>samples/Sample.Blazor/Components/Layout/MainLayout.razor</c> and
+/// <c>wwwroot/site.css</c>): <c>FluentLayout</c> / <c>FluentLayoutItem</c> / <c>FluentNav</c> are no
+/// longer used, because their chrome does not match the native (MAUI / WinUI) sample shells. The
+/// layout is now plain, stable markup:
+/// </para>
+/// <list type="bullet">
+///   <item><description><c>div.app-shell</c> — flex root (100dvh) carrying <c>data-app-theme</c>.</description></item>
+///   <item><description><c>aside.app-sidebar</c> — permanent 300px column at &gt;=901px, off-canvas
+///   (fixed, 280px, <c>translateX(-100%)</c>) drawer at &lt;=900px, slid in by the <c>is-open</c> class.</description></item>
+///   <item><description><c>header.app-header</c> — mobile nav toggle, breadcrumb, header actions.</description></item>
+///   <item><description><c>main.app-content</c> — wraps <c>article#article</c>.</description></item>
+///   <item><description><c>div.app-nav-scrim</c> — rendered only while the drawer is open.</description></item>
+/// </list>
+/// <para>
+/// What is still Fluent UI: the provider container and the provider/decorator components below, plus the
+/// real web components (spinner, overlay, dialog, text input). Those keep their <c>fluent-*</c> class or
+/// tag. The distinction is itself the regression guard: a silently degraded (unresolved) component tag
+/// and a plain class-carrying div are different things, and only one of them is correct per component.
 /// </para>
 /// </summary>
 internal static class SampleDom
@@ -21,17 +33,41 @@ internal static class SampleDom
 
     public static readonly string[] AllRoutes = [HomeRoute, CounterRoute, WeatherRoute, CommandDemoRoute];
 
-    // ---- layout (class based, rendered by FluentLayout / FluentLayoutItem) ---
-    public const string LayoutRoot = ".fluent-layout";
-    public const string LayoutItem = ".fluent-layout-item";
-    public const string LayoutHamburger = ".fluent-layout-hamburger";
+    // ---- shell root ---------------------------------------------------------
+    /// <summary>Flex root of the hand-rolled shell; carries <c>data-app-theme</c> ("dark" / "light").</summary>
+    public const string LayoutRoot = ".app-shell";
 
-    public static string LayoutArea(string area) => $".fluent-layout-item[area=\"{area}\"]";
+    // ---- shell areas --------------------------------------------------------
+    /// <summary>The sidebar column / off-canvas drawer (also the navigation's container).</summary>
+    public const string AreaSidebar = "aside.app-sidebar";
 
-    public const string AreaHeader = ".fluent-layout-item[area=\"header\"]";
-    public const string AreaNavigation = ".fluent-layout-item[area=\"nav\"]";
-    public const string AreaContent = ".fluent-layout-item[area=\"content\"]";
-    public const string AreaFooter = ".fluent-layout-item[area=\"footer\"]";
+    /// <summary>The sidebar while the mobile drawer is slid in.</summary>
+    public const string AreaSidebarOpen = "aside.app-sidebar.is-open";
+
+    public const string AreaHeader = "header.app-header";
+    public const string AreaContent = "main.app-content";
+
+    /// <summary>Bottom block of the sidebar: the Help link and the version label.</summary>
+    public const string AreaFooter = ".app-sidebar-footer";
+
+    public const string Brand = ".app-brand";
+    public const string Breadcrumb = ".app-breadcrumb";
+
+    /// <summary>Theme + Settings icon buttons; the (mobile only) nav toggle is <see cref="NavToggle"/>.</summary>
+    public const string HeaderActions = ".app-header-actions";
+    public const string IconButton = "button.app-icon-button";
+
+    /// <summary>
+    /// The mobile hamburger in the header. <c>display:none</c> at &gt;=901px, <c>inline-flex</c> at
+    /// &lt;=900px — desktop has no collapsing toggle at all, the sidebar is always there.
+    /// </summary>
+    public const string NavToggle = "button.app-nav-toggle";
+
+    /// <summary>Semi transparent backdrop; only rendered while the drawer is open, hidden at &gt;900px.</summary>
+    public const string NavScrim = "div.app-nav-scrim";
+
+    /// <summary>The sidebar's footer link shares the nav item styling; assertions scope through <see cref="NavRoot"/>.</summary>
+    public const string SidebarFooterNavItem = ".app-sidebar-footer a.app-nav-item";
 
     // ---- providers (class based, rendered by FluentProviders) ---------------
     public const string Providers = ".fluent-providers";
@@ -39,17 +75,35 @@ internal static class SampleDom
     public const string ToastProvider = ".fluent-toast-provider";
     public const string TooltipProvider = ".fluent-tooltip-provider";
 
-    // ---- navigation (class based, rendered by FluentNav / FluentNavItem) ----
-    public const string NavRoot = "nav.fluent-nav";
+    // ---- navigation (plain markup rendered by MainLayout) ------------------
+    public const string NavRoot = "nav.app-nav";
     public const string NavMenuId = "#main_menu";
-    public const string NavItem = "a.fluent-navitem";
-    public const string NavItemActive = "a.fluent-navitem.active";
+
+    /// <summary>
+    /// The four route links. Scoped to <see cref="NavRoot"/> on purpose: the sidebar footer's Help link
+    /// carries the same <c>app-nav-item</c> class but is not a navigation item.
+    /// </summary>
+    public const string NavItem = "nav.app-nav a.app-nav-item";
+
+    /// <summary>The label span of a nav item; the leading icon span is <c>aria-hidden</c> decoration.</summary>
+    public const string NavItemLabel = "nav.app-nav a.app-nav-item > span:not(.app-nav-icon)";
+
+    /// <summary><c>NavLink</c> adds <c>active</c> (the CSS hook) plus <c>aria-current="page"</c>.</summary>
+    public const string NavItemActive = "nav.app-nav a.app-nav-item.active";
+
+    public const string NavItemActiveAttribute = "aria-current";
 
     /// <summary>v4 markup: <c>FluentNavLink</c> emitted <c>fluent-nav-link</c>. It must not exist in v5.</summary>
     public const string RemovedNavLinkClass = "a.fluent-nav-link";
 
     /// <summary>v4 markup: <c>FluentNavMenu</c> emitted a <c>fluent-nav-menu</c> element. It must not exist in v5.</summary>
     public const string RemovedNavMenuTag = "fluent-nav-menu";
+
+    /// <summary>The v4/v5 <c>FluentLayout</c> column; the hand-rolled shell must not render it.</summary>
+    public const string RemovedLayoutItem = ".fluent-layout-item";
+
+    /// <summary>The v4/v5 <c>FluentNav</c> root; the hand-rolled shell must not render it.</summary>
+    public const string RemovedNavRoot = "nav.fluent-nav";
 
     // ---- web components (real custom elements) ------------------------------
     public const string Spinner = "fluent-spinner";
@@ -58,7 +112,6 @@ internal static class SampleDom
     public const string RemovedProgressRing = "fluent-progress-ring";
 
     public const string Overlay = "fluent-overlay";
-    public const string Drawer = "fluent-drawer";
     public const string TextInput = "fluent-text-input";
 
     /// <summary>v4 name of <see cref="TextInput"/>; removed in v5 (rendered as inert HTML).</summary>

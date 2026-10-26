@@ -32,6 +32,7 @@ public partial class MainLayout : IDisposable
     private ILocalSettings? _localSettings;
     private string? _version;
     private bool _settingsOpen;
+    private bool _navOpen;
     private string _selectedLanguage = string.Empty;
     private string _selectedThemeName = nameof(Themes.Dark);
 
@@ -218,6 +219,16 @@ public partial class MainLayout : IDisposable
         _selectedThemeName = _localSettings.Theme.ToString();
     }
 
+    /// <summary>
+    /// Opens or closes the mobile navigation drawer.
+    /// </summary>
+    private void ToggleNavigation() => _navOpen = !_navOpen;
+
+    /// <summary>
+    /// Closes the mobile navigation drawer.
+    /// </summary>
+    private void CloseNavigation() => _navOpen = false;
+
     private void ToggleSettings() => _settingsOpen = !_settingsOpen;
 
     private void CloseSettings() => _settingsOpen = false;
@@ -286,12 +297,19 @@ public partial class MainLayout : IDisposable
     /// MESSAGES_TOP provider.
     /// The layout-level hamburger owns its own open/close state in v5, so the v4
     /// '#navmenu-toggle' / mobile-menu bookkeeping is no longer needed here.
+    /// The hand-rolled shell's own mobile drawer does have to be closed here, because
+    /// <c>MainLayout</c> survives client-side navigation and would otherwise stay open
+    /// over the destination page.
     /// </summary>
     private void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
     {
         if (!_disposed)
         {
             _ = _notificationService.CloseAllMessageBarsAsync();
+
+            // A location change always ends the mobile drawer's purpose: close it so the
+            // destination page is visible without a second tap.
+            _navOpen = false;
         }
     }
 

@@ -1,3 +1,44 @@
+# Session Handoff - 2026-10-26 (Azure DevOps build 6180: test failures)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Diagnosed and fixed the three failure classes of build 6180 (PR 1685, commit `286339dd`, "target
+.NET 11"), then verified everything locally on the pinned 11.0.100-rc.2 SDK. Tests only — no
+production code changed. Plan: `.ai/plans/devops-6180-test-failures.md`,
+record: `.ai/completed/devops-6180-test-failures.md`.
+
+- **9 assertion failures — .NET 11 breaking change.** Since .NET 11 Preview 7, `double` → `decimal`
+  conversions round the *exact* source value once instead of keeping 15 significant digits
+  (`Decimal and BigInteger floating-point conversions are correctly rounded`), so
+  `(decimal)0.2d` is `0.2000000000000000111022302463`. Reproduced locally (net10 = `0.2`,
+  net11 = the 28-digit value) and fixed the expectations, never the conversion behaviour:
+  `PercentageTests` (expected column is now a `string` parsed with `InvariantCulture`),
+  `CurrencyFormatterTests.TryParse_ValidInput_ReturnsTrue(string, string)`, and
+  `Matrix.Conversion.cs TableToJaggedTest` (explicit single-column `decimal[][]` instead of a
+  `double[] → decimal[]` round-trip).
+- **WPF + WinUI runs aborted** because their test projects were still on `net10.0-*` while the agent
+  installs only the 11 runtime. Bumped to `net11.0-windows` / `net11.0-windows10.0.26100.0`.
+- **`Sample.Blazor.UI.Tests`** — the `IThemeService` DI crash seen in the log was already fixed by
+  `cbd17689`; added the missing `coverlet.collector` reference so the pipeline's
+  `--collect:"XPlat Code Coverage"` resolves for that project too.
+
+## Verification
+Financial 29/29, Globalization 122/122, Mathematics 954 (+1 skipped) — all previously red;
+WPF 20/20 on net11; WinUI builds (pre-existing CsWinRT1032 warning only); Blazor suite builds and
+emits `coverage.cobertura.xml`.
+
+## Follow-up, also done in this session
+With the Blazor suite able to start, 16 of its 36 tests failed against the shell `cbd17689`
+introduced (stale FluentLayout DOM, and at `<=900px` an icon rail with no drawer). Per the user's
+choice, a mobile drawer was added and the tests were re-baselined —
+record: `.ai/completed/blazor-shell-mobile-drawer.md`. The suite is 36/36 and the drawer was checked
+in a real browser at 1280px and 480px. Remaining nicety: the dark theme's active nav icon glyph is
+~1.87:1 (decorative, `aria-hidden`, therefore excluded from the text-contrast sweep).
+
+---
+
 # Session Handoff - 2026-10-25 (Settings as a blade: WPF + WinUI + MAUI)
 
 **Written By:** Reasonix Code

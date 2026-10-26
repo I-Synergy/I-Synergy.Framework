@@ -704,6 +704,9 @@ body {
 
 /* ---------------------------------------------------------------------------
    App shell — mirrors the MAUI sample (sidebar, breadcrumb header, content).
+   Mobile (<=900px): the sidebar is an off-canvas drawer (280px, translateX) opened by the
+   header .app-nav-toggle hamburger, with div.app-nav-scrim behind it; above 900px it stays
+   the permanent 300px column and the toggle/scrim are never shown.
    --------------------------------------------------------------------------- */
 
 .app-shell {
@@ -889,6 +892,20 @@ body {
     color: var(--app-text);
 }
 
+/* Hamburger for the off-canvas navigation drawer. Desktop shows the permanent sidebar,
+   so the toggle only exists below the 900px breakpoint (see the media query below). */
+.app-nav-toggle {
+    display: none;
+}
+
+/* Drawer scrim: only ever rendered while the drawer is open, and only visible on mobile. */
+.app-nav-scrim {
+    position: fixed;
+    inset: 0;
+    background: #00000080;
+    z-index: 1050;
+}
+
 .app-content {
     flex: 1 1 auto;
     min-height: 0;
@@ -904,31 +921,45 @@ body {
 }
 
 @media (max-width: 900px) {
+    /* No icon rail any more: below 900px the sidebar becomes an off-canvas drawer that the
+       header hamburger slides in. The full brand, labels and version stay in the DOM. */
+    .app-nav-toggle {
+        display: inline-flex;
+    }
+
     .app-sidebar {
-        flex-basis: 72px;
-        width: 72px;
-        padding: 16px 8px;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 280px;
+        flex: 0 0 280px;
+        z-index: 1100;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
     }
 
-    .app-brand {
-        justify-content: center;
-        padding: 0;
-    }
-
-    .app-brand-name,
-    .app-nav-item > span:last-child,
-    .app-version {
-        display: none;
-    }
-
-    .app-nav-item {
-        justify-content: center;
-        padding: 0;
+    .app-sidebar.is-open {
+        transform: translateX(0);
+        box-shadow: 0 0 24px rgb(0 0 0 / 35%);
     }
 
     .app-header,
     .app-content {
         padding-left: 16px;
         padding-right: 16px;
+    }
+
+    /* The header now has three children (toggle, breadcrumb, actions); letting the breadcrumb
+       grow keeps it next to the hamburger instead of centred by `space-between`. */
+    .app-breadcrumb {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+}
+
+@media (min-width: 901px) {
+    .app-nav-scrim {
+        display: none;
     }
 }

@@ -5,15 +5,22 @@ using Sample.Blazor.UI.Tests.Infrastructure;
 namespace Sample.Blazor.UI.Tests;
 
 /// <summary>
-/// Item 1 of the v5 migration validation: the page shell is built from real v5 components
-/// (<c>FluentLayout</c> / <c>FluentLayoutItem</c> / <c>FluentProviders</c>), the removed v4 theming
-/// script is gone, and no page produces request, console or Blazor-error noise.
+/// The page shell contract: the sample renders its hand-rolled app shell (sidebar, breadcrumb header,
+/// content column), the Fluent UI providers are still mounted, the removed v4 theming script is gone,
+/// and no page produces request, console or Blazor-error noise.
+/// <para>
+/// Re-baselined: the shell used to be built from <c>FluentLayout</c> / <c>FluentLayoutItem</c>. Those
+/// components are gone (their chrome does not match the native samples), so the shape assertions below
+/// target the markup that actually exists now — and are equally specific: one shell, one of each area,
+/// the 56px header, the fixed 300px desktop sidebar and a hamburger that is <c>display:none</c> on
+/// desktop. What is still Fluent UI keeps its <c>fluent-*</c> assertions.
+/// </para>
 /// </summary>
 [TestClass]
 public class SmokeTests : SamplePageTest
 {
     [TestMethod]
-    public async Task Home_RendersTheFluentLayoutShell()
+    public async Task Home_RendersTheHandRolledAppShell()
     {
         var response = await NavigateAsync(SampleDom.HomeRoute);
 
@@ -22,32 +29,74 @@ public class SmokeTests : SamplePageTest
 
         await Expect(Page.Locator("h1")).ToHaveTextAsync("Hello, world!");
 
-        // FluentLayout renders <div class="fluent-layout"> (class based, not a custom element).
+        // div.app-shell is the flex root of the shell (plain markup, not a custom element).
         await Expect(Page.Locator(SampleDom.LayoutRoot)).ToHaveCountAsync(1);
+        await Expect(Page.Locator(SampleDom.LayoutRoot)).ToBeVisibleAsync();
 
-        foreach (var area in new[] { "header", "nav", "content", "footer" })
+        foreach (var area in new[] { SampleDom.AreaHeader, SampleDom.AreaSidebar, SampleDom.AreaContent, SampleDom.AreaFooter })
         {
-            var locator = Page.Locator(SampleDom.LayoutArea(area));
-            Assert.AreEqual(1, await locator.CountAsync(), $"layout item [area={area}] must exist exactly once");
+            var locator = Page.Locator(area);
+            Assert.AreEqual(1, await locator.CountAsync(), $"shell area '{area}' must exist exactly once");
             await Expect(locator).ToBeVisibleAsync();
         }
 
-        // The hamburger lives in the header area and the footer carries the 40px height parameter.
-        await Expect(Page.Locator(SampleDom.AreaHeader).Locator(SampleDom.LayoutHamburger)).ToHaveCountAsync(1);
-        await Expect(Page.Locator(SampleDom.AreaFooter)).ToHaveAttributeAsync("area", "footer");
+        // The pages render into the content column's article.
+        await Expect(Page.Locator(SampleDom.AreaContent).Locator(SampleDom.ContentArticle)).ToHaveCountAsync(1);
+
+        // The hamburger lives in the header, next to the breadcrumb and the header actions.
+        await Expect(Page.Locator(SampleDom.AreaHeader).Locator(SampleDom.NavToggle)).ToHaveCountAsync(1);
+        await Expect(Page.Locator(SampleDom.AreaHeader).Locator(SampleDom.Breadcrumb)).ToHaveCountAsync(1);
 
         var shell = await Page.EvaluateAsync<string>(
             """
-            () => JSON.stringify({
-                layoutTag: document.querySelector('.fluent-layout')?.tagName.toLowerCase(),
-                layoutCustomElement: !!customElements.get('fluent-layout'),
-                areas: [...document.querySelectorAll('.fluent-layout-item')].map(i => i.getAttribute('area')),
-                headerHeight: getComputedStyle(document.querySelector('.fluent-layout-item[area="header"]')).height,
-                footerHeight: getComputedStyle(document.querySelector('.fluent-layout-item[area="footer"]')).height,
-                hamburgerDisplay: getComputedStyle(document.querySelector('.fluent-layout-hamburger')).display
-            })
+            () => {
+                const shell = document.querySelector('.app-shell');
+                const header = document.querySelector('header.app-header');
+                const sidebar = document.querySelector('aside.app-sidebar');
+                const content = document.querySelector('main.app-content');
+                const footer = document.querySelector('.app-sidebar-footer');
+                const toggle = document.querySelector('button.app-nav-toggle');
+                const box = (el) => { const r = el.getBoundingClientRect(); return { w: Math.round(r.width), h: Math.round(r.height) }; };
+                return JSON.stringify({
+                    shellTag: shell?.tagName.toLowerCase(),
+                    shellTheme: shell?.getAttribute('data-app-theme'),
+                    shellHeight: box(shell).h,
+                    viewportHeight: innerHeight,
+                    areas: [...document.querySelectorAll('.app-header, .app-sidebar, .app-content, .app-sidebar-footer')]
+                        .map(a => a.className),
+                    headerDisplay: getComputedStyle(header).display,
+                    headerHeight: getComputedStyle(header).height,
+                    sidebarPosition: getComputedStyle(sidebar).position,
+                    sidebarWidth: box(sidebar).w,
+                    contentDisplay: getComputedStyle(content).display,
+                    footerChildCount: footer?.children.length ?? null,
+                    navToggleDisplay: toggle ? getComputedStyle(toggle).display : null
+                });
+            }
             """);
-        Log($"layout shell: {shell}");
+        Log($"shell: {shell}");
+
+        var state = System.Text.Json.JsonDocument.Parse(shell).RootElement;
+
+        // The shell fills the viewport (100dvh) and is themed through a data attribute.
+        Assert.AreEqual(state.GetProperty("viewportHeight").GetInt32(), state.GetProperty("shellHeight").GetInt32(),
+            $"The shell must fill the viewport. Observed: {shell}");
+        CollectionAssert.Contains(new[] { "dark", "light" }, state.GetProperty("shellTheme").GetString(),
+            $"The shell must declare its theme. Observed: {shell}");
+
+        // Desktop shape: permanent 300px sidebar column, no hamburger.
+        Assert.AreEqual("flex", state.GetProperty("headerDisplay").GetString(), $"header.app-header must be laid out. Observed: {shell}");
+        Assert.AreEqual("56px", state.GetProperty("headerHeight").GetString(), $"header.app-header must be 56px tall. Observed: {shell}");
+        Assert.AreEqual("static", state.GetProperty("sidebarPosition").GetString(),
+            $"The sidebar must be a permanent column on desktop. Observed: {shell}");
+        Assert.AreEqual(300, state.GetProperty("sidebarWidth").GetInt32(),
+            $"The desktop sidebar must be 300px wide. Observed: {shell}");
+        Assert.AreEqual("none", state.GetProperty("navToggleDisplay").GetString(),
+            $"Desktop has no collapsing toggle: the toggle must be display:none. Observed: {shell}");
+
+        Assert.IsTrue(state.GetProperty("footerChildCount").GetInt32() >= 2,
+            $"The sidebar footer must carry the Help link and the version label. Observed: {shell}");
+        await Expect(Page.Locator(SampleDom.SidebarFooterNavItem)).ToHaveCountAsync(1);
 
         await AssertBaselineAsync("home");
     }
