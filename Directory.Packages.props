@@ -5,12 +5,12 @@
   </PropertyGroup>
   <!-- Third-party and cross-framework packages (unconditional) -->
   <ItemGroup>
-    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="17.0.0-preview.1.26526.2" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0-preview.1.26526.2" />
-    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="17.0.0-preview.1.26526.2" />
-    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0-preview.1.26526.2" />
-    <PackageVersion Include="Aspire.Hosting.Maui" Version="17.0.0-preview.1.26526.2" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0-preview.1.26526.2" />
+    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="17.0.0-preview.1.26524.2" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0-preview.1.26524.2" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="17.0.0-preview.1.26524.2" />
+    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0-preview.1.26524.2" />
+    <PackageVersion Include="Aspire.Hosting.Maui" Version="17.0.0-preview.1.26524.2" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0-preview.1.26524.2" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.104.6" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
@@ -71,6 +71,7 @@
     <PackageVersion Include="Syncfusion.Maui.Core" Version="35.1.41" />
     <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="35.1.41" />
     <PackageVersion Include="Syncfusion.SfInput.WPF" Version="35.1.41" />
+    <PackageVersion Include="Syncfusion.SfNavigationDrawer.WPF" Version="35.1.41" />
     <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="35.1.41" />
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
