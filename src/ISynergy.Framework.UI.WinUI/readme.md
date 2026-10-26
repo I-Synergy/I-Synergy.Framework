@@ -299,8 +299,20 @@ public class ProfileViewModel : ViewModel
 
 ```xml
 <controls:BladeView ItemsSource="{x:Bind ViewModel.Blades, Mode=OneWay}"
-                    SelectedItem="{x:Bind ViewModel.SelectedBlade, Mode=TwoWay}" />
+                    Anchor="Auto"
+                    BladeSpacing="10" />
 ```
+
+`BladeView` renders a backdrop plus a horizontal `ListBox` of blade cards and keeps only the newest blade interactive; every earlier card is dimmed to `DisabledOpacity`.
+
+- `ItemsSource` — the blade views to host, in opening order.
+- `Anchor` — `BladePaneAnchor`, default `Auto`: the *logical* edge the pane is anchored to (`Auto` resolves to `End`, i.e. the right edge in a left-to-right culture).
+- `BladeAlignment` — read-only, resolved physical `HorizontalAlignment` published by the control. It is already mirrored for right-to-left, is consumed by the control template, and must never be hardcoded in XAML.
+- `HorizontalBladeAlignment` — the left-to-right *intent* (`Right` by default). It is only used as the base value that `BladeAlignment` mirrors when `Anchor` is `Auto`; prefer `Anchor` for new call sites.
+- `DisabledOpacity` (`0.75`), `BladeSpacing` (`10`), `InnerPadding` (`8`), `BladeHeight`, `AutoCollapseThreshold`, `Orientation`.
+
+Blades are opened through `IBladeService.OpenBladeAsync<TBladeViewModel, TEntity>(owner, ...)`; the owner view model implements `IViewModelBladeView` (`Blades`, `IsPaneVisible`).
+Here the shell itself is the owner (`BaseShellViewModel : ViewModelBladeView<NavigationItem>`), so its `BladeView` hosts every shell-level blade — the sample opens Settings exactly that way.
 
 ### ImageBrowser
 
@@ -355,6 +367,17 @@ All bound controls automatically update with new translations.
 
 **Note**: WinUI 3 does not support `x:Static` markup extension (a XAML 2009 feature). Use the property-binding workaround shown above, or store `LocalizedStrings.Default` in a public property.
 
+### Right-to-left
+
+The app content is mirrored through XAML `FlowDirection`, not through the native window style:
+
+- The window root receives `FlowDirection` in `Application.OnLaunched` from `LocalSettings.Language`, so every page inherits it.
+- `NavigationService.SetWindowContent` re-applies it from `CultureInfo.CurrentUICulture` for window-level pages, because a page assigned as the window content is a new root and does not inherit.
+- The native `WS_EX_LAYOUTRTL` window style is still applied, but only for the non-client area (caption buttons and native title text); the XAML content is composed outside GDI and is mirrored by `FlowDirection`.
+- `FrameworkElementExtensions.ApplyFlowDirection` accepts a nullable culture name; `null` or whitespace means left-to-right.
+
+Blading follows the logical anchor: `Anchor` is `Start`/`End`/`Auto`, `BladeView` resolves the physical edge with `BladePlacement`, forces its `ListBox` to `LeftToRight` so the alignment is physical, and mirrors each card's content through `FlowDirection`.
+
 ## Fluent Design Integration
 
 WinUI 3 provides modern Fluent Design features:
@@ -393,12 +416,8 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 // Theme is automatically applied on startup
 // Accent color is synchronized with Windows system accent
 
-// Show theme selection to users
-private async Task ShowThemeSelectionAsync()
-{
-    await CommonServices.DialogService
-        .ShowDialogAsync<ThemeWindow, ThemeViewModel, ThemeStyle>();
-}
+// Light/dark switching is built into the shell: ThemeCommand toggles through IThemeService.
+// Language, theme and accent color are selected in your own settings blade/page.
 ```
 
 ## Title Bar Customization

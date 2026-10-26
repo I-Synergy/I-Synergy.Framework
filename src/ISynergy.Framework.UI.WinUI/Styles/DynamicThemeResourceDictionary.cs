@@ -90,6 +90,25 @@ public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeR
         inner["TintedBorderBrush"] = new SolidColorBrush(isDark ? GrayColor("600") : GrayColor("200"));
         inner["TintedSecondaryBrush"] = new SolidColorBrush(isDark ? GrayColor("500") : GrayColor("300"));
 
+        // Shared sample design tokens (match Sample.Maui).
+        inner["AppBackgroundBrush"] = inner["TintedBackgroundBrush"];
+        inner["AppSurfaceBrush"] = inner["TintedSurfaceBrush"];
+        inner["AppSurface2Brush"] = new SolidColorBrush(isDark
+            ? Color.FromArgb(255, 0x1C, 0x2A, 0x25)
+            : Color.FromArgb(255, 0xE8, 0xED, 0xE9));
+        inner["AppControlBrush"] = inner["TintedControlBrush"];
+        inner["AppBorderBrush"] = inner["TintedBorderBrush"];
+        inner["AppTextBrush"] = new SolidColorBrush(isDark
+            ? Color.FromArgb(255, 0xEE, 0xF1, 0xEA)
+            : Color.FromArgb(255, 0x14, 0x21, 0x1E));
+        inner["AppMutedBrush"] = new SolidColorBrush(isDark
+            ? Color.FromArgb(255, 0x9C, 0xB0, 0xA8)
+            : Color.FromArgb(255, 0x55, 0x66, 0x5F));
+        inner["AppAccentBrush"] = new SolidColorBrush(accent);
+        inner["AppInkBrush"] = new SolidColorBrush(isDark
+            ? Color.FromArgb(255, 0x04, 0x23, 0x1A)
+            : Color.FromArgb(255, 0xFF, 0xFF, 0xFF));
+
         var theme = new ResourceDictionary();
         theme.MergedDictionaries.Add(palette);
         theme.MergedDictionaries.Add(inner);

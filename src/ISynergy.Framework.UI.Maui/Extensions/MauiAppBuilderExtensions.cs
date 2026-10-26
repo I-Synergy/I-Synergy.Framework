@@ -12,6 +12,7 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -141,6 +142,10 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
+        appBuilder.Services.TryAddSingleton<IBladePaneHost, BladePaneHostRegistry>();
+        appBuilder.Services.TryAddSingleton<INavigationHostRegistry, NavigationHostRegistry>();
+        appBuilder.Services.TryAddSingleton<IBladeService, BladeService>();
+        appBuilder.Services.TryAddSingleton<BladeHostViewModel>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
         appBuilder.Services.TryAddSingleton<IDialogService, DialogService>();
         appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();

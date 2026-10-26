@@ -1,16 +1,12 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Windows;
-using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Globalization;
 
 namespace ISynergy.Framework.UI.ViewModels.Base;
 
@@ -26,6 +22,7 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
     protected readonly INavigationService _navigationService;
     protected readonly IDialogService _dialogService;
     protected readonly ISettingsService _settingsService;
+    protected readonly IThemeService _themeService;
 
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
@@ -38,7 +35,6 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
 
     public AsyncRelayCommand RestartUpdateCommand { get; private set; }
     public AsyncRelayCommand SignInCommand { get; private set; }
-    public AsyncRelayCommand LanguageCommand { get; private set; }
     public AsyncRelayCommand ThemeCommand { get; private set; }
     public AsyncRelayCommand HelpCommand { get; private set; }
     public AsyncRelayCommand SettingsCommand { get; private set; }
@@ -72,13 +68,15 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
+    /// <param name="themeService">The theme service used to toggle light/dark.</param>
     /// <param name="logger">The logger factory.</param>
-    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, ILogger<BaseShellViewModel> logger)
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IThemeService themeService, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
         _settingsService = settingsService;
+        _themeService = themeService;
 
         _navigationService.BackStackChanged += NavigationService_BackStackChanged;
 
@@ -90,8 +88,7 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
-        LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
-        ThemeCommand = new AsyncRelayCommand(OpenThemesAsync);
+        ThemeCommand = new AsyncRelayCommand(ToggleThemeAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -179,58 +176,16 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
     /// Opens the language asynchronous.
     /// </summary>
     /// <summary>
-    /// Opens the language selection dialog.
-    /// The LanguageViewModel sets its own initial selection in its constructor,
-    /// so no entity is passed — only the submit callback is provided.
+    /// Toggles between the light and dark theme and applies it immediately.
+    /// Accent color selection lives in the application's settings UI.
     /// </summary>
     /// <returns>Task.</returns>
-    protected virtual Task OpenLanguageAsync() =>
-        _dialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, CultureInfo>(
-            async culture =>
-            {
-                _settingsService.LocalSettings.Language = culture.Name;
-                _settingsService.SaveLocalSettings();
-
-                culture.SetLocalizationLanguage();
-
-                if (await _dialogService.ShowMessageAsync(
-                            _commonServices.LanguageService.GetString("WarningLanguageChange") +
-                            Environment.NewLine +
-                            _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                            _commonServices.LanguageService.GetString("WarningInfo"),
-                            MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
-                {
-                    _commonServices.RestartApplication();
-                }
-            });
-
-    /// <summary>
-    /// Opens the theme/color selection dialog.
-    /// </summary>
-    /// <returns>Task.</returns>
-    protected virtual Task OpenThemesAsync() =>
-        _dialogService.ShowDialogAsync<IThemeWindow, ThemeViewModel, ThemeStyle>(
-            new ThemeStyle
-            {
-                Theme = _settingsService.LocalSettings.Theme,
-                Color = _settingsService.LocalSettings.Color
-            },
-            async themeStyle =>
-            {
-                _settingsService.LocalSettings.Theme = themeStyle.Theme;
-                _settingsService.LocalSettings.Color = (themeStyle.Color ?? string.Empty).ToLowerInvariant();
-
-                if (_settingsService.SaveLocalSettings() &&
-                    await _dialogService.ShowMessageAsync(
-                        _commonServices.LanguageService.GetString("WarningColorChange") +
-                        Environment.NewLine +
-                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                        _commonServices.LanguageService.GetString("TitleQuestion"),
-                        MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
-                {
-                    _commonServices.RestartApplication();
-                }
-            });
+    protected Task ToggleThemeAsync()
+    {
+        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
+        _themeService.SetTheme(nextTheme);
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Opens the help asynchronously.
@@ -265,7 +220,6 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
 
             RestartUpdateCommand?.Dispose();
             SignInCommand?.Dispose();
-            LanguageCommand?.Dispose();
             ThemeCommand?.Dispose();
             HelpCommand?.Dispose();
             SettingsCommand?.Dispose();

@@ -2,7 +2,6 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
@@ -13,24 +12,30 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.UI.Services;
 
+/// <summary>
+/// MAUI implementation of the navigation service.
+/// </summary>
+/// <remarks>
+/// Navigation follows the WinUI and WPF model: the shell owns a content host (the MAUI
+/// equivalent of a <c>Frame</c>) and navigation replaces the host's content while
+/// <see cref="BaseNavigationService"/> owns the backstack. MAUI pages cannot be children of a
+/// layout, so <see cref="INavigationHost"/> reparents each page's content instead of the page.
+/// Modal navigation still uses MAUI's native modal stack.
+/// </remarks>
 public class NavigationService : BaseNavigationService
 {
     private const string DefaultPageNotAvailable = "Main page is not available.";
     private const bool Animated = true;
 
     /// <summary>
-    /// Safety net: maps Page instances to their NavigationFrames so scopes
-    /// can be cleaned up even when pages are popped by the platform back
-    /// button (which bypasses <see cref="GoBackAsync"/>). Unlike the old
-    /// <c>_pageScopes</c> table, this is secondary — the backstack is the
-    /// primary scope owner. This table only defends against native stack
-    /// manipulation.
+    /// Modals pushed onto the native stack, with the scope that owns their view model.
     /// </summary>
-    private static readonly ConditionalWeakTable<Page, NavigationFrame> _pageFrames = new();
+    private readonly Stack<ModalPage> _modals = new();
+
+    private sealed record ModalPage(Page Page, IServiceScope Scope);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
@@ -47,26 +52,20 @@ public class NavigationService : BaseNavigationService
     }
 
     // -----------------------------------------------------------------------
-    // Override: CanGoBack — checks MAUI's actual native navigation stacks
+    // Override: CanGoBack — the shell backstack plus any open native modal
     // -----------------------------------------------------------------------
     public override bool CanGoBack =>
-        GetMainPage() is Page page &&
-        (page.GetNavigation().Navigation.NavigationStack.Count > 0 ||
-         page.Navigation.ModalStack.Count > 0);
+        _backStack.Count > 0 ||
+        (GetMainPage() is Page page && page.Navigation.ModalStack.Count > 0);
 
     // -----------------------------------------------------------------------
-    // Abstract: GetNavigationFrame — not used (all navigation methods overridden)
+    // Abstract: navigation frame — the shell's content host
     // -----------------------------------------------------------------------
-    protected override object? GetNavigationFrame() => null;
+    protected override object? GetNavigationFrame() => NavigationHostRegistry.Resolve();
 
-    // -----------------------------------------------------------------------
-    // Abstract: Frame content accessors — not used (MAUI push/pop model)
-    // -----------------------------------------------------------------------
-    protected override object? GetFrameContent(object frame)
-        => throw new NotSupportedException("MAUI uses push/pop navigation, not frame content replacement.");
+    protected override object? GetFrameContent(object frame) => ((INavigationHost)frame).CurrentPage;
 
-    protected override void SetFrameContent(object frame, IView page)
-        => throw new NotSupportedException("MAUI uses push/pop navigation, not frame content replacement.");
+    protected override void SetFrameContent(object frame, IView page) => ((INavigationHost)frame).SetContent(page);
 
     // -----------------------------------------------------------------------
     // Abstract: Window content accessors
@@ -126,142 +125,92 @@ public class NavigationService : BaseNavigationService
     }
 
     // -----------------------------------------------------------------------
-    // Override: NavigateAsync<TViewModel> — MAUI push/pop model
+    // Override: GoBackAsync — pop a native modal first, then the shell backstack
     // -----------------------------------------------------------------------
-    public override async Task NavigateAsync<TViewModel>(
-        TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+    public override async Task GoBackAsync()
     {
-        var scope = _serviceScopeFactory.CreateScope();
-        var scopedProvider = scope.ServiceProvider;
+        var mainPage = GetMainPage();
 
-        if (NavigationExtensions.CreatePage<TViewModel>(scopedProvider, viewModel, parameter) is { } view && view is Page page)
+        if (mainPage is null)
+            throw new InvalidOperationException(DefaultPageNotAvailable);
+
+        if (mainPage.Navigation.ModalStack.Count > 0)
         {
-            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
-                page.FlowDirection = FlowDirection.RightToLeft;
+            var poppedPage = mainPage.Navigation.ModalStack[^1];
+            await mainPage.Navigation.PopModalAsync(Animated);
+
+            if (_modals.Count > 0)
+            {
+                var modal = _modals.Pop();
+
+                if (ReferenceEquals(modal.Page, poppedPage))
+                {
+                    try { modal.Scope.Dispose(); }
+                    catch (Exception ex) { _logger.LogError(ex, "Error disposing the modal scope"); }
+                }
+            }
+
+            CleanupPageResources(poppedPage);
+            OnBackStackChanged(EventArgs.Empty);
+            return;
+        }
+
+        await base.GoBackAsync();
+
+        // Always announce the pop: shells derive their back-button state, breadcrumb and selection
+        // from the stack, and the base only raises when the stack becomes empty.
+        OnBackStackChanged(EventArgs.Empty);
+    }
+
+    // -----------------------------------------------------------------------
+    // Override: NavigateModalAsync — native MAUI modal stack
+    // -----------------------------------------------------------------------
+    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null)
+    {
+        if (Application.Current is null)
+            return;
+
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            var scope = _serviceScopeFactory.CreateScope();
+
+            if (NavigationExtensions.CreatePage<TViewModel>(scope.ServiceProvider, parameter: parameter) is not { } view ||
+                view is not Page page)
+            {
+                scope.Dispose();
+                return;
+            }
+
+            // Detach any existing handler so MAUI reinitializes the native view tree for
+            // recycled singleton pages.
+            page.Handler = null;
 
             var mainPage = GetMainPage();
+
             if (mainPage is null)
-                throw new InvalidOperationException(DefaultPageNotAvailable);
-
-            var result = mainPage.GetNavigation();
-
-            if (result.Navigation.NavigationStack.Contains(page))
             {
-                // Page already in the navigation stack — back-navigation scenario.
-                // Pop intermediate pages and their corresponding NavigationFrames.
-                var poppedPages = new List<Page>();
-                for (int i = result.Navigation.NavigationStack.Count - 1; i >= 0; i--)
-                {
-                    if (result.Navigation.NavigationStack[i].Equals(page))
-                        break;
-
-                    if (!backNavigation)
-                    {
-                        var poppedPage = result.Navigation.NavigationStack[i];
-                        await result.Navigation.PopAsync(Animated);
-                        poppedPages.Add(poppedPage);
-                    }
-                }
-
-                // Dispose frames for popped intermediate pages.
-                // _currentFrame corresponds to the topmost page (first popped).
-                // Remaining popped pages' frames are on _backStack.
-                HandleCurrentFrame(backNavigation: true);
-
-                // Pop and dispose additional frames for deeper intermediate pages.
-                for (int j = 0; j < poppedPages.Count - 1; j++)
-                {
-                    if (_backStack.Count > 0)
-                    {
-                        var frame = _backStack.Pop();
-                        frame.Dispose();
-                    }
-                }
-
-                // Now _backStack top should be the target page's frame (or it was
-                // already _currentFrame). If the target's frame is in _backStack,
-                // restore it as _currentFrame.
-                // Note: the target page itself was NOT popped — its frame must
-                // survive in _backStack or be _currentFrame.
-                // Since HandleCurrentFrame disposed _currentFrame and the extra
-                // popped frames were removed from _backStack, we need to find
-                // and restore the target's frame.
-                // Actually, the target's frame remains in _backStack (it was never
-                // popped from _backStack because it wasn't popped from MAUI stack).
-                // We just need to ensure _currentFrame is set to it.
-                // But _currentFrame was null after HandleCurrentFrame.
-                // Find and restore the target's frame.
-                if (TryRemoveFromBackStack<TViewModel>(out var targetFrame))
-                {
-                    _currentFrame = targetFrame;
-                }
-
-                // Dispose the scope created for this navigation. The target
-                // page's existing frame (restored above) has its own preserved
-                // scope — we don't need this one.
                 scope.Dispose();
+                throw new InvalidOperationException(DefaultPageNotAvailable);
+            }
 
-                // Clean up MAUI resources for popped pages
-                foreach (var poppedPage in poppedPages)
-                    CleanupPageResources(poppedPage);
+            if (mainPage is Shell or NavigationPage || GetNavigationFrame() is not null)
+            {
+                // The root owns a content host (or is a Shell/NavigationPage), so a modal can be
+                // pushed on top of it and the shell stays alive underneath.
+                await mainPage.Navigation.PushModalAsync(page, Animated);
+                _modals.Push(new ModalPage(page, scope));
             }
             else
             {
-                // Forward navigation: create NavigationFrame, push to MAUI stack.
-                NavigationFrame newFrame;
+                // Initial setup or bare-page root (e.g., LoadingView): replace the window root.
+                var oldPage = Application.Current.Windows[0].Page;
+                Application.Current.Windows[0].Page = page;
 
-                if (viewModel is not null)
-                {
-                    // Caller provided a pre-constructed ViewModel — do NOT resolve
-                    // from DI. The ViewModel may have constructor parameters (e.g.
-                    // data models) that aren't registered in the container.
-                    newFrame = new NavigationFrame
-                    {
-                        Scope = scope,
-                        ViewModelType = typeof(TViewModel),
-                        Parameter = parameter
-                    };
-                }
-                else if (TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
-                {
-                    // Reuse existing frame from backstack — ViewModel is already
-                    // cached in the frame's scope from the original navigation.
-                    backStackFrame.Parameter = parameter;
-                    newFrame = backStackFrame;
-                }
-                else
-                {
-                    // Fresh frame — CreatePage below resolves the ViewModel into
-                    // this scope when viewModel is null. We don't pre-resolve here
-                    // because the ViewModel may have constructor parameters not
-                    // registered in DI (e.g. data models passed via the thin
-                    // overload through a factory or caller-provided instance).
-                    newFrame = new NavigationFrame
-                    {
-                        Scope = scope,
-                        ViewModelType = typeof(TViewModel),
-                        Parameter = parameter
-                    };
-                }
-
-                if (parameter is not null)
-                    newFrame.Parameter = parameter;
-
-                HandleCurrentFrame(backNavigation: false);
-                _currentFrame = newFrame;
-
-                // Register page→frame mapping so the safety net can clean up
-                // if the platform back button pops this page without going
-                // through GoBackAsync. Remove-then-add avoids duplicate-key
-                // errors when the same singleton page is reused.
-                _pageFrames.Remove(page);
-                _pageFrames.Add(page, newFrame);
-
-                page.Parent = null;
-                await result.Navigation.PushAsync(page, Animated);
+                CleanupPageResources(oldPage);
+                scope.Dispose();
             }
 
-            if (view is not null && view.ViewModel is not null)
+            if (view.ViewModel is not null)
             {
                 try
                 {
@@ -275,181 +224,11 @@ public class NavigationService : BaseNavigationService
                     }
                     catch
                     {
-                        System.Diagnostics.Debug.WriteLine("Error initializing ViewModel: {0}", ex.Message);
+                        System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
                     }
                 }
             }
-
-            OnBackStackChanged(EventArgs.Empty);
-        }
-        else
-        {
-            scope.Dispose();
-        }
-    }
-
-    // -----------------------------------------------------------------------
-    // Override: GoBackAsync
-    // -----------------------------------------------------------------------
-    public override async Task GoBackAsync()
-    {
-        var mainPage = GetMainPage();
-        if (mainPage is null)
-            throw new InvalidOperationException(DefaultPageNotAvailable);
-
-        if (CanGoBack)
-        {
-            Page? poppedPage = null;
-
-            if (mainPage.Navigation.ModalStack.Count > 0)
-            {
-                poppedPage = mainPage.Navigation.ModalStack[^1];
-                await mainPage.Navigation.PopModalAsync(Animated);
-            }
-            else
-            {
-                var navigation = mainPage.GetNavigation().Navigation;
-                if (navigation.NavigationStack.Count > 0)
-                {
-                    poppedPage = navigation.NavigationStack[^1];
-                    await navigation.PopAsync(Animated);
-                }
-            }
-
-            // Dispose current NavigationFrame (its scope owns the popped ViewModel)
-            HandleCurrentFrame(backNavigation: true);
-
-            // Restore previous frame from backstack
-            if (_backStack.Count > 0)
-            {
-                _currentFrame = _backStack.Pop();
-            }
-
-            // Clean up MAUI-specific resources on the popped page
-            CleanupPageResources(poppedPage);
-        }
-
-        OnBackStackChanged(EventArgs.Empty);
-    }
-
-    // -----------------------------------------------------------------------
-    // Override: NavigateModalAsync
-    // -----------------------------------------------------------------------
-    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null)
-    {
-        if (Application.Current is not null)
-        {
-            await MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                var oldScope = _modalScope;
-                _modalScope = _serviceScopeFactory.CreateScope();
-                var scopedProvider = _modalScope.ServiceProvider;
-
-                if (NavigationExtensions.CreatePage<TViewModel>(scopedProvider, parameter: parameter) is { } view && view is Page page)
-                {
-                    // Detach any existing handler so MAUI reinitializes the
-                    // native view tree for recycled singleton pages.
-                    page.Handler = null;
-
-                    var mainPage = GetMainPage();
-
-                    if (mainPage is null || mainPage is not Shell)
-                    {
-                        // Initial setup or non-Shell root (e.g., LoadingView):
-                        // replace the window root page entirely.
-                        if (mainPage is null)
-                            throw new InvalidOperationException(DefaultPageNotAvailable);
-
-                        var oldPage = Application.Current.Windows[0].Page;
-                        Application.Current.Windows[0].Page = page;
-
-                        CleanupPageResources(oldPage);
-                        oldScope?.Dispose();
-                    }
-                    else
-                    {
-                        // Shell is the root — push as a native MAUI modal so
-                        // the Shell (and its tab bar) stays attached as
-                        // Window.Page. Frame/scope lifecycle is managed via
-                        // HandleCurrentFrame and the _backStack so GoBackAsync
-                        // can pop and dispose correctly.
-                        var newFrame = new NavigationFrame
-                        {
-                            Scope = _modalScope,
-                            ViewModelType = typeof(TViewModel),
-                            Parameter = parameter
-                        };
-
-                        HandleCurrentFrame(backNavigation: false);
-                        _currentFrame = newFrame;
-
-                        _pageFrames.Remove(page);
-                        _pageFrames.Add(page, newFrame);
-
-                        await mainPage.Navigation.PushModalAsync(page, Animated);
-
-                        // oldScope belongs to the page underneath (Shell or
-                        // a previous modal) — do NOT dispose it.
-                    }
-
-                    if (view is not null && view.ViewModel is not null)
-                    {
-                        try
-                        {
-                            await view.ViewModel.InitializeAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            try
-                            {
-                                _exceptionHandlerService.HandleException(ex);
-                            }
-                            catch
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    _modalScope?.Dispose();
-                    _modalScope = null;
-                    oldScope?.Dispose();
-                }
-            });
-        }
-    }
-
-    // -----------------------------------------------------------------------
-    // Override: CleanBackStackAsync
-    // -----------------------------------------------------------------------
-    public override async Task CleanBackStackAsync(bool suppressEvent = false)
-    {
-        var mainPage = GetMainPage();
-        if (mainPage is null)
-            throw new InvalidOperationException(DefaultPageNotAvailable);
-
-        await mainPage.GetNavigation().Navigation.PopToRootAsync(Animated);
-
-        foreach (var frame in _backStack)
-        {
-            try { frame.Dispose(); }
-            catch (Exception ex) { _logger.LogError(ex, "Error disposing backstack frame during cleanup"); }
-        }
-        _backStack.Clear();
-
-        if (!suppressEvent)
-        {
-            try
-            {
-                OnBackStackChanged(EventArgs.Empty);
-            }
-            catch (ObjectDisposedException)
-            {
-                _backStackChanged = null;
-            }
-        }
+        });
     }
 
     // -----------------------------------------------------------------------
@@ -457,6 +236,12 @@ public class NavigationService : BaseNavigationService
     // -----------------------------------------------------------------------
     public override void Dispose()
     {
+        while (_modals.Count > 0)
+        {
+            try { _modals.Pop().Scope.Dispose(); }
+            catch (Exception ex) { _logger.LogError(ex, "Error disposing a modal scope during shutdown"); }
+        }
+
         base.Dispose();
     }
 
@@ -483,24 +268,13 @@ public class NavigationService : BaseNavigationService
         Application.Current?.Windows.FirstOrDefault()?.Page;
 
     /// <summary>
-    /// Clears MAUI-specific resources (BindingContext, Handler) on a popped or
-    /// replaced page. Scope disposal is handled separately by the
-    /// NavigationFrame backstack.
+    /// Clears MAUI-specific resources (BindingContext, Handler) on a popped modal page.
+    /// Scope disposal is handled separately by the modal bookkeeping.
     /// </summary>
     private static void CleanupPageResources(Page? page)
     {
         if (page is null)
             return;
-
-        // Remove the page→frame mapping. If the frame hasn't been disposed
-        // yet (e.g. the platform back button popped the page without going
-        // through GoBackAsync), dispose it now.
-        if (_pageFrames.TryGetValue(page, out var frame))
-        {
-            try { frame.Dispose(); }
-            catch (Exception) { /* best-effort */ }
-            _pageFrames.Remove(page);
-        }
 
         bool isSingleton = page.GetType().GetCustomAttribute<LifetimeAttribute>()?.Lifetime == Lifetimes.Singleton;
 

@@ -13,6 +13,7 @@ using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -104,6 +105,7 @@ public static class WpfAppBuilderExtensions
             services.TryAddSingleton<IClipboardService, ClipboardService>();
             services.TryAddSingleton<INavigationService, NavigationService>();
             services.TryAddSingleton<IBladeService, BladeService>();
+            services.TryAddSingleton<BladeHostViewModel>();
             services.TryAddSingleton<IDialogService, DialogService>();
             services.TryAddSingleton<IFileService<FileResult>, FileService>();
             services.TryAddSingleton<IDispatcherService, DispatcherService>();

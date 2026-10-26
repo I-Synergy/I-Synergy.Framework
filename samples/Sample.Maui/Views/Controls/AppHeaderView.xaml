@@ -10,14 +10,34 @@
     <!-- 880px centred column with 40px side padding (matches content width on desktop) -->
     <Grid>
         <Grid MaximumWidthRequest="880" HorizontalOptions="Fill">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="44"
-                  Padding="{OnPlatform WinUI='40,0', MacCatalyst='40,0', iOS='16,0', Android='16,0'}">
+            <Grid x:Name="HeaderBar" ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="48"
+                  Padding="{OnPlatform WinUI='40,0,140,0', MacCatalyst='80,0,40,0', iOS='16,0', Android='16,0'}">
 
                 <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+
+                    <!-- Menu: first, so its icon sits on the same column as the sidebar's icons. -->
+                    <Button
+                        Text="&#x2630;"
+                        StyleId="HeaderIconButton"
+                        Command="{Binding ToggleMenuCommand}"
+                        Style="{StaticResource AppVerseActionButton}"
+                        FontSize="18"
+                        VerticalOptions="Center" />
+
+                    <!-- Back: visible while the navigation service has a page to return to. -->
+                    <Button
+                        Text="&#x2190;"
+                        StyleId="HeaderIconButton"
+                        IsVisible="{Binding IsBackEnabled}"
+                        Command="{Binding BackCommand}"
+                        Style="{StaticResource AppVerseActionButton}"
+                        FontSize="18"
+                        VerticalOptions="Center" />
 
                     <!-- Breadcrumb: app name (link) / muted slash / current page (bold) -->
                     <!-- First breadcrumb: app name as accent link, tappable to navigate to dashboard -->
                     <Label Text="{m:LocalizedStrings Key=ApplicationName}"
+                           StyleId="LinkLabel"
                            Style="{StaticResource AppBreadcrumbLinkLabel}"
                            TextColor="{AppThemeBinding Light={DynamicResource AppAccentLight}, Dark={DynamicResource AppAccentDark}}"
                            VerticalOptions="Center">
@@ -44,12 +64,14 @@
                 <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
                     <!-- Theme toggle: moon when light, sun when dark -->
                     <Button Text="{Binding ThemeIcon}"
+                            StyleId="HeaderIconButton"
                             FontFamily="FluentUI"
                             Style="{StaticResource AppVerseActionButton}"
                             TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"
-                            Command="{Binding ToggleThemeCommand}" />
+                            Command="{Binding ThemeCommand}" />
                     <!-- Settings: sliders icon -->
                     <Button Text="&#xf588;"
+                            StyleId="HeaderIconButton"
                             FontFamily="FluentUI"
                             Style="{StaticResource AppVerseActionButton}"
                             TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"

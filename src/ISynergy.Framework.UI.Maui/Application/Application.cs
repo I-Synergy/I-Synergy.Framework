@@ -51,9 +51,11 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected virtual ImageSource? Icon => null;
 
     /// <summary>
-    /// Creates the title bar for the main window. Override to provide a custom title bar.
+    /// Creates the title bar for the main window. Override to provide a custom title bar, or
+    /// return <see langword="null"/> to let the shell header occupy the title bar area itself
+    /// (the window still extends its content into the title bar).
     /// </summary>
-    protected virtual TitleBar SetTitleBar(bool withClock = false)
+    protected virtual TitleBar? SetTitleBar(bool withClock = false)
     {
         var titleBar = new TitleBar();
 

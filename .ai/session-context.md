@@ -1,3 +1,413 @@
+# Session Handoff - 2026-10-25 (Settings as a blade: WPF + WinUI + MAUI)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Converted the settings surface of every supported head into a blade (edge pane) page, opened through
+`IBladeService` and closed through the blade lifecycle instead of navigating. Implementation + docs only —
+no runtime visual verification was done. Plan: `.ai/plans/settings-as-blade.md` (now IMPLEMENTED),
+record: `.ai/completed/settings-as-blade.md`.
+
+- Shared: new `src/ISynergy.Framework.UI/ViewModels/BladeHostViewModel.cs` — `sealed class
+  BladeHostViewModel : ViewModelBladeView<object>`, a shell-level blade owner with no page and no items
+  (no-op `AddAsync`/`EditAsync`/`RemoveAsync`/`SearchAsync`). Registered as a singleton in
+  `src/ISynergy.Framework.UI.WPF/Extensions/WPFAppBuilderExtensions.cs:108` and
+  `src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs:147`.
+- WPF: new `src/ISynergy.Framework.UI.WPF/Controls/BladeHostView.xaml(.cs)` — resolves
+  `BladeHostViewModel` from `Application.Services`, sets it as `DataContext`, hosts a `BladeView` bound to
+  `Blades`; collapses + traces when the view model is not resolvable (design time).
+  `samples/Sample.WPF/Views/ShellView.xaml:215` hosts it above the content frame and below the busy
+  overlay. `samples/Sample.WPF/ViewModels/SettingsViewModel.cs` is now `ViewModelBlade<object>` (no
+  `INavigationService`, no `GoBackAsync` cancel override); `ShellViewModel.OpenSettingsAsync` (:213) calls
+  `_bladeService.OpenBladeAsync<SettingsViewModel, object>(_bladeHost)`. `SettingsView` keeps its layout and
+  its Close button binds `CancelCommand` (CancelAsync → CloseAsync → `Closed` → `BaseBladeService.RemoveBlade`).
+- MAUI: new `src/ISynergy.Framework.UI.Maui/Controls/BladeHostView.cs` — a `ContentView` that resolves
+  `BladeHostViewModel` lazily (constructor + `Loaded` + `OnParentSet`) and attaches a `BladePane` with
+  `ItemsSource = host.Blades`; hidden + traced when unresolvable. Declared as the last child of
+  `InfoView.xaml:33`, `CustomControlsView.xaml:107`, `MauiControlsView.xaml:101`, `SlideShowView.xaml:43`,
+  replacing the old per-page `SettingsDrawer`.
+- MAUI sample: `samples/Sample.Maui/ViewModels/SettingsViewModel.cs` is now `ViewModelBlade<object>` with a
+  `SaveCommand` (`SaveAsync`: save local settings → restart question → save global settings → `CloseAsync`)
+  and the inherited `CancelCommand` for Close; the settings UI moved from the drawer into
+  `samples/Sample.Maui/Views/SettingsView.xaml` (a `c:View` blade page with language/theme pickers, four
+  accent swatches and a Save & close / Close footer). `SettingsDrawer.xaml(.cs)` and
+  `Services/SettingsDrawerState.cs` were deleted together with their `MauiProgram` registration;
+  `ShellViewModel.OpenSettingsAsync` (:174) and first run now open the blade through `IBladeService`
+  against `BladeHostViewModel`.
+- WinUI: no change beyond the earlier RTL work — `Sample.WinUI/ViewModels/SettingsViewModel.cs:18` is
+  already `ViewModelBlade<object>`, opened by `ShellViewModel.OpenSettingsBladeAsync` (:206-212) through
+  `IBladeService` into the shell's `c:BladeView` (`ShellView.xaml:160`) and closed by its `CloseCommand`.
+- Blazor: out of scope — `ISynergy.Framework.UI.Blazor` has no blade infrastructure; its settings remain an
+  inline drawer in `MainLayout.razor`.
+- Docs: `src/ISynergy.Framework.UI.WPF/readme.md` and `src/ISynergy.Framework.UI.Maui/readme.md` gained a
+  `### Shell-level pane` subsection, `src/ISynergy.Framework.UI.WinUI/readme.md` a shell-ownership sentence
+  in `### BladeView`; `screenshots/README.md` MAUI rows now say "settings blade";
+  `CHANGELOG.md` → `### Added` gained `#### Settings as a Blade — WPF, WinUI and MAUI`.
+
+## Decisions Made
+- **Shared `BladeHostViewModel` instead of re-basing the shells**: a new `ViewModelBladeView<object>` owner
+  in `ISynergy.Framework.UI`, registered as a singleton, rather than deriving WPF/MAUI `BaseShellViewModel`
+  from `ViewModelBladeView<NavigationItem>` like WinUI.
+  - **Rationale**: changing a published base class is a public API break, and on MAUI it would drop
+    `ViewModelNavigation`/`IShellViewModel` (WPF `BaseShellViewModel` derives from `ViewModel`).
+  - **Alternatives considered**: per-sample host view models (rejected: three copies of the same owner);
+    no shell owner, blades on the current page (rejected: the pane would vanish on navigation).
+- **MAUI drawer replaced by an in-page blade pane**: the per-page `SettingsDrawer` became a
+  `BladeHostView`/`BladePane` in the four tab pages, and the settings UI moved into a blade page
+  (`Views/SettingsView.xaml`); `SettingsDrawerState` and the drawer control were deleted.
+  - **Rationale**: the MAUI `Shell` root cannot host an overlay, and the drawer duplicated the blade UX the
+    framework now provides.
+  - **Alternatives considered**: keeping the drawer and adding a second settings surface (rejected: two
+    implementations of the same screen).
+- **WinUI left as-is**: it already owns the pane on the shell view model and opens Settings as a blade.
+  - **Rationale**: nothing to gain from migrating a working shell to `BladeHostViewModel`; risk without
+    benefit.
+  - **Alternatives considered**: migrating WinUI for uniformity (deferred; not worth the churn).
+
+## Open Questions
+- **ASSUMED**: `BladeHostView`'s design-time/unregistered path (collapsed + traced) is only exercised in the
+  designer; it has not been observed at runtime.
+- **OPEN**: whether consumers want a shell-owned settings blade pre-registered instead of wiring
+  `OpenBladeAsync<SettingsViewModel, object>(_bladeHost)` themselves.
+- **ASSUMED**: the MAUI in-page pane overlays the page content correctly because `BladeHostView` is the last
+  child; visual layering was not checked on a device.
+
+## Files Modified
+- `src/ISynergy.Framework.UI/ViewModels/BladeHostViewModel.cs` - Created, shell-level blade owner
+- `src/ISynergy.Framework.UI.WPF/Extensions/WPFAppBuilderExtensions.cs:108` - Singleton registration
+- `src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs:147` - Singleton registration
+- `src/ISynergy.Framework.UI.WPF/Controls/BladeHostView.xaml(.cs)` - Created, WPF pane host
+- `src/ISynergy.Framework.UI.Maui/Controls/BladeHostView.cs` - Created, MAUI pane host
+- `samples/Sample.WPF/Views/ShellView.xaml:215` - `BladeHostView` between content frame and busy overlay
+- `samples/Sample.WPF/ViewModels/ShellViewModel.cs:213` - Settings opened through `IBladeService`
+- `samples/Sample.WPF/ViewModels/SettingsViewModel.cs`, `Views/SettingsView.xaml(.cs)` - Converted to a blade
+- `samples/Sample.Maui/ViewModels/SettingsViewModel.cs` - `ViewModelBlade<object>` + `SaveCommand`
+- `samples/Sample.Maui/Views/SettingsView.xaml(.cs)` - Settings blade page (was a dead TabbedView demo)
+- `samples/Sample.Maui/Views/InfoView.xaml:33`, `CustomControlsView.xaml:107`, `MauiControlsView.xaml:101`,
+  `SlideShowView.xaml:43` - `BladeHostView` as last child
+- `samples/Sample.Maui/ViewModels/ShellViewModel.cs:174` - Settings/first run open the blade
+- `samples/Sample.Maui/Views/Controls/SettingsDrawer.xaml(.cs)`, `Services/SettingsDrawerState.cs` - Deleted
+- `samples/Sample.Maui/MauiProgram.cs` - Drawer registration removed
+- `src/ISynergy.Framework.UI.WPF/readme.md`, `src/ISynergy.Framework.UI.Maui/readme.md`,
+  `src/ISynergy.Framework.UI.WinUI/readme.md`, `screenshots/README.md`, `CHANGELOG.md` - Documentation
+
+## Conditional Branches
+- **If the MAUI in-page pane does not overlay the page**: check the `BladeHostView` child index in the four
+  tab pages — it must stay the last child of the root layout.
+- **If a head needs a second shell-level pane owner**: register a second `BladeHostViewModel`-style type;
+  do not make the singleton generic over owners.
+- **If Blazor ever gets blades**: implement `IBladeService`/`IViewModelBladeView` there first; the Blazor
+  settings drawer is untouched by this pass.
+
+## Cross-Document Relationships
+- `.ai/plans/settings-as-blade.md` (status IMPLEMENTED) is the plan this session executed; the record lives
+  in `.ai/completed/settings-as-blade.md`.
+- `BladeHostViewModel` (shared) is consumed by `BladeHostView` in both `ISynergy.Framework.UI.WPF` and
+  `ISynergy.Framework.UI.Maui`; changing the owner's shape touches both hosts and both readmes.
+- `CHANGELOG.md` → `#### Settings as a Blade — WPF, WinUI and MAUI`, the two `### Shell-level pane` readme
+  subsections and the WinUI `### BladeView` sentence document the same contract.
+- The MAUI settings blade relies on the adaptive `BladeService` (`.ai/completed/blade-pane-parity.md`):
+  `DeviceInfo.Idiom == Phone` still presents the blade as a modal page.
+
+## Next Actions (Priority Order)
+1. Runtime check: open Settings from the WPF header gear and from the MAUI sidebar/menu — confirm the pane
+   shows the settings card, the scrim closes it, and a second open re-creates it.
+2. Runtime check: MAUI phone idiom — confirm Settings still presents as a modal page and returns cleanly.
+3. Runtime check: live apply — language, theme and accent changes on screen, and the MAUI Save & close
+   restart question.
+4. Re-capture `screenshots/maui/*-settings-*.png` (the rows now read "settings blade").
+
+## Files to Load Next Session
+- `.ai/completed/settings-as-blade.md` - What was implemented and what remains unverified
+- `src/ISynergy.Framework.UI/ViewModels/BladeHostViewModel.cs` - The shared shell-level owner
+- `src/ISynergy.Framework.UI.Maui/Controls/BladeHostView.cs` - Lazy resolution + pane attachment
+
+## Work Type for Next Session
+Runtime UI verification (pane visuals, phone-idiom modal flow, live settings apply, screenshot refresh).
+
+## Reason for Session End
+- Task complete (implementation + documentation); runtime verification deferred.
+
+## Session Notes
+- Builds are clean: `ISynergy.Framework.UI` (`net11.0`), `UI.WPF` (`net10.0-windows10.0.26100.0`),
+  `UI.Maui` (`net11.0-windows10.0.26100.0`), `UI.WinUI` (`net10.0-windows10.0.26100.0`, only the
+  pre-existing `CsWinRT1032`), `Sample.WPF` (`net11.0-windows`), `Sample.Maui`
+  (`net11.0-windows10.0.26100.0`, only the pre-existing `CS8601`), `Sample.WinUI`
+  (`net11.0-windows10.0.26100.0`, x64).
+- `tests/ISynergy.Framework.UI.Tests`: 90/90 pass. `git diff --check` clean.
+- Nothing here breaks framework consumers; the removals (`SettingsDrawer`, `SettingsDrawerState`, the dead
+  TabbedView settings page) are sample-only.
+- NOT runtime-verified: pane visuals/scrim/animation, the MAUI phone modal branch, RTL rendering with the new
+  host, and settings live-apply on screen.
+
+## Follow-up (same session) — VS Code launch targets, hot reload, WPF dark-mode polish
+- `.vscode/launch.json` + `.vscode/tasks.json`: added `Sample.WPF`, `Sample.WinUI` and `Sample.Maui` launch
+  targets for **.NET 10 and .NET 11**, all **arm64** (WinUI `-p:Platform=arm64 -p:WindowsPackageType=None`
+  so the coreclr debugger can start it; Maui `-p:RuntimeIdentifierOverride=win-arm64`). Build tasks pin the
+  properties that make the output paths deterministic and keep `MSBUILDDISABLENODEREUSE=1` + `-nodeReuse:false`.
+- Added `watch: Sample.WPF/.WinUI (.NET 10/11)` tasks (`dotnet watch run`, Ctrl+R works) and an
+  `Attach: Sample (WPF / WinUI, dotnet watch)` configuration. Verified live: WPF applied a C# edit in ~1.1 s,
+  WinUI in ~2.4 s. **Maui is intentionally excluded** — dotnet-watch's delta build compiles the
+  iOS/MacCatalyst sources too and fails with a CS0518 avalanche.
+- `tools/NugetUnlister/NugetUnlister.csproj`: `<TargetFrameworks>net10.0;net11.0</TargetFrameworks>`
+  (was net11-only), which unblocked the WPF .NET 10 target (`NU1201`).
+- WPF window chrome radius 4 → 8 in `ISynergy.Framework.UI.WPF/Application/Application.cs` (initial and
+  restored) and `Sample.WPF/Views/ShellView.xaml.cs`; maximized stays 0.
+- `Sample.WPF` dark-mode polish: the Help footer row now matches the navigation rows (52 px row, 36 px icon
+  tile, `AppSidebarName` label) and `InfoView` uses `AppSettingsLabel` + the new `AppReadOnlyField` style
+  (tokens: `AppControlBrush`/`AppBorderBrush`/`AppTextBrush`, 8 px corners) so labels and fields follow the theme.
+- Note: VS Code's saved `debug.selectedconfigname` was an Aspire configuration, which is why F5 started the
+  AppHost even when WPF was intended; pick `Sample.WPF (...)` in the Run and Debug dropdown once.
+
+---
+
+# Session Handoff - 2026-10-25 (Blade pane parity: WPF + MAUI + WinUI RTL)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Gave WPF and MAUI the WinUI "blades" (edge pane) interaction, made all three hosts RTL-correct,
+and ported the selection views. Implementation only — no runtime visual verification was done.
+
+- Shared: `src/ISynergy.Framework.UI/Enumerations/BladePaneAnchor.cs` (`Auto`/`Start`/`End`) and
+  `src/ISynergy.Framework.UI/Helpers/BladePlacement.cs` (`Resolve`, `IsStartSide`, `HorizontalSign`;
+  logical edge → physical edge, RTL-aware). 22 unit tests in
+  `tests/ISynergy.Framework.UI.Tests/Helpers/BladePlacementTests.cs`.
+- WPF: new `src/ISynergy.Framework.UI.WPF/Controls/BladeView/BladeView.xaml(.cs)` (`ItemsSource`,
+  `Anchor`, `DisabledOpacity`, `BladeSpacing`, `BladeMaxWidth`, `InnerPadding`; `Page` blades hosted in a
+  `Frame`; position container forced LTR; blade content mirrored from the ambient `FlowDirection`;
+  slide-in direction from `HorizontalSign`). `Services/BladeService.cs` also resolves
+  `ISingleSelectionViewModel`/`IMultipleSelectionViewModel`. New `Views/SingleSelectionView`,
+  `Views/MultipleSelectionView`.
+- MAUI: new `src/ISynergy.Framework.UI.Maui/Controls/BladePane.cs` (same bindable properties; renders each
+  blade's `ContentPage.Content` because a page cannot be a child; registers itself in `IBladePaneHost`),
+  `Services/IBladePaneHost.cs` + `Services/BladePaneHostRegistry.cs`, and an ADAPTIVE
+  `Services/BladeService.cs` (overlay pane on tablet/desktop when a host is attached and the idiom is not
+  `Phone`; otherwise `PushModalAsync` + pop on the blade's `Closed` while it is on top of the modal stack;
+  falls back to the overlay with a warning when neither path is possible). New `Views/SingleSelectionView`,
+  `Views/MultipleSelectionView`. Registered in `MauiAppBuilderExtensions.cs:144-145`.
+- WinUI: `Controls/BladeView/BladeView.xaml(.cs)` gained `Anchor` (`BladePaneAnchor`, default `Auto`) and
+  the read-only resolved `BladeAlignment` (`HorizontalBladeAlignment` kept as the LTR intent and mirrored);
+  the `ListBox` is pinned to `FlowDirection=LeftToRight` and card content mirrors via `FlowDirection`.
+  XAML `FlowDirection` is applied to the window root (`Application.OnLaunched:458` with
+  `LocalSettings.Language`) and to window-level pages (`NavigationService.SetWindowContent:80` with
+  `CultureInfo.CurrentUICulture`); `WS_EX_LAYOUTRTL` stays, via `WindowHelper.CreateWindow`, for
+  non-client/caption chrome only. `FrameworkElementExtensions.ApplyFlowDirection` now takes `string?`
+  (null/whitespace = LTR).
+- Samples: `Sample.WPF` got a Blades page (`DetailsView`/`DetailView`/`DetailAView` + view models + the
+  "Blades" nav entry in `ShellViewModel:125`); `Sample.Maui` converted its Details/Detail flow to blades
+  with the pane inside `DetailsView.xaml:189`.
+- Docs: `readme.md` for UI.WPF (`## Blades (edge panes)`), UI.Maui (`## Blades (edge panes)` + adaptive and
+  RTL subsections), UI.WinUI (`Anchor`/`BladeAlignment` in `### BladeView` + `### Right-to-left`),
+  and a `#### Blade Panes — WPF and MAUI Parity + RTL Anchoring` block under `CHANGELOG.md` → `### Added`.
+
+## Decisions Made
+- **RTL design rule — positioning container forced LTR, logical anchor resolved by `BladePlacement`**:
+  the container that positions the pane (WPF `Grid`, MAUI `Grid`, WinUI `ListBox`) is explicitly
+  `LeftToRight`, so `Left`/`Right` (or `Start`/`End`) inside it are *physical*; only the blade *content*
+  inherits the ambient flow direction. `Anchor` stays logical and is resolved in one place.
+  - **Rationale**: under RTL every platform mirrors the layout coordinate system, which makes an
+    alignment applied inside a mirrored container ambiguous and made the WinUI control hardcode `Right`.
+  - **Alternatives considered**: reading an explicit `IsRightToLeft` input from the language setting on
+    every control (rejected: three places to keep in sync); letting the platform mirror everything
+    (rejected: render transforms are never mirrored, so slide-in and shadows would go the wrong way).
+- **MAUI adaptive presentation**: `BladeService` picks the overlay when `IBladePaneHost.IsHostAttached`
+  and `DeviceInfo.Idiom != Phone`, otherwise pushes a modal page.
+  - **Rationale**: a phone has no room for a stacked pane; the overlay needs a host in the owning page.
+  - **Alternatives considered**: overlay everywhere (rejected: unusable on phone); modal everywhere
+    (rejected: loses the WinUI parity the feature exists for).
+- **WinUI keeps native `WS_EX_LAYOUTRTL` for chrome**: XAML `FlowDirection` mirrors app content, the
+  native style remains for caption buttons and native title text.
+  - **Rationale**: the two are not redundant — XAML content is composed outside GDI and is not mirrored
+    by the window style.
+  - **Alternatives considered**: dropping the native style entirely (deferred: needs an `ar-SA` visual
+    check, which was not run).
+
+## Open Questions
+- **ASSUMED**: `WS_EX_LAYOUTRTL` and XAML `FlowDirection` do not double-mirror the content. The native
+  style is applied in `WindowHelper.CreateWindow` and the XAML root carries `FlowDirection`, so a
+  composition could in principle mirror twice — needs one `ar-SA` visual check on WinUI.
+- **ASSUMED**: WPF `Page.Loaded` still fires for a blade hosted in a `Frame`, so
+  `BaseBladeService.MonitorViewLoadAsync` completes on the WPF path.
+- **OPEN**: whether a MAUI blade that loses page-level resources (only `ContentPage.Content` is
+  reparented) is acceptable for consumers that put resources in page scope.
+
+## Files Modified
+- `src/ISynergy.Framework.UI/Enumerations/BladePaneAnchor.cs` - Created, logical pane anchor enum
+- `src/ISynergy.Framework.UI/Helpers/BladePlacement.cs` - Created, RTL-aware edge/sign resolution
+- `tests/ISynergy.Framework.UI.Tests/Helpers/BladePlacementTests.cs` - Created, 22 tests
+- `src/ISynergy.Framework.UI.WPF/Controls/BladeView/BladeView.xaml(.cs)` - Created, WPF blade host
+- `src/ISynergy.Framework.UI.WPF/Services/BladeService.cs` - Selection-view resolution added
+- `src/ISynergy.Framework.UI.WPF/Views/SingleSelectionView.*`, `MultipleSelectionView.*` - Created
+- `src/ISynergy.Framework.UI.WPF/Application/Application.cs` - RTL/root flow-direction handling
+- `src/ISynergy.Framework.UI.Maui/Controls/BladePane.cs` - Created, MAUI blade host
+- `src/ISynergy.Framework.UI.Maui/Services/IBladePaneHost.cs`, `BladePaneHostRegistry.cs` - Created
+- `src/ISynergy.Framework.UI.Maui/Services/BladeService.cs` - Created, adaptive presentation
+- `src/ISynergy.Framework.UI.Maui/Views/SingleSelectionView.*`, `MultipleSelectionView.*` - Created
+- `src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs:144-145` - DI registration
+- `src/ISynergy.Framework.UI.WinUI/Controls/BladeView/BladeView.xaml(.cs)` - `Anchor`/`BladeAlignment`
+- `src/ISynergy.Framework.UI.WinUI/Application/Application.cs:458` - Root `FlowDirection`
+- `src/ISynergy.Framework.UI.WinUI/Services/NavigationService.cs:80` - Window-content `FlowDirection`
+- `src/ISynergy.Framework.UI.WinUI/Extensions/FrameworkElementExtensions.cs:21` - `string?` overload
+- `src/ISynergy.Framework.UI/Services/Base/BaseBladeService.cs` - Shared blade plumbing
+- `samples/Sample.WPF/Views/DetailsView.xaml`, `DetailView.xaml`, `DetailAView.xaml` + view models,
+  `samples/Sample.WPF/ViewModels/ShellViewModel.cs:125` - Blades page + nav entry
+- `samples/Sample.Maui/Views/DetailsView.xaml:189`, `DetailView.xaml` + view models - Blade flow
+- `src/ISynergy.Framework.UI.WPF/readme.md`, `src/ISynergy.Framework.UI.Maui/readme.md`,
+  `src/ISynergy.Framework.UI.WinUI/readme.md`, `CHANGELOG.md` - Documentation
+
+## Conditional Branches
+- **If a `ar-SA` visual check shows content double-mirrored on WinUI**: drop `ApplyNativeFlowDirection`
+  from `WindowHelper.CreateWindow` and keep XAML `FlowDirection` only.
+- **If a MAUI blade must keep page-scoped resources**: stop reparenting `ContentPage.Content` and present
+  the blade as a modal page on every idiom instead.
+- **If a WPF blade needs page navigation inside it**: the per-blade `Frame` uses
+  `JournalOwnership=OwnsJournal`; re-check journal leakage before adding a `NavigationService` to it.
+
+## Cross-Document Relationships
+- `BladeView` (WPF), `BladePane` (MAUI) and `BladeView` (WinUI) all depend on `BladePlacement` for the
+  physical edge — never hardcode an edge in a host.
+- `.ai/plans/blade-pane-parity.md` is the plan this session implemented; its step 9 (docs) is complete, so
+  the file lives in `.ai/completed/blade-pane-parity.md`.
+- `CHANGELOG.md` → `#### Blade Panes — WPF and MAUI Parity + RTL Anchoring` and the three readme sections
+  document the same contract; change all four together.
+
+## Next Actions (Priority Order)
+1. Runtime check: WinUI `ar-SA` — confirm content mirrors once (not twice) with `WS_EX_LAYOUTRTL` active,
+   and that `Anchor="Start"` puts the pane on the right.
+2. Runtime check: MAUI phone idiom — open two blades, close the newest, confirm the modal stack stays
+   consistent and the previous blade is re-enabled.
+3. Runtime check: selection blades (`SingleSelectionView`/`MultipleSelectionView`) in WPF and MAUI — the
+   ports were never opened at runtime.
+4. Capture `screenshots/` for WPF/MAUI/WinUI in `en-US` and `ar-SA` with two stacked blades.
+
+## Files to Load Next Session
+- `.ai/completed/blade-pane-parity.md` - What was implemented and the remaining verification
+- `src/ISynergy.Framework.UI/Helpers/BladePlacement.cs` - The single RTL rule all hosts use
+- `src/ISynergy.Framework.UI.Maui/Services/BladeService.cs` - Adaptive presentation logic
+
+## Work Type for Next Session
+Runtime UI verification (RTL visual checks, phone-idiom modal flow, selection blades).
+
+## Reason for Session End
+- Task complete (implementation + documentation); runtime verification deferred.
+
+## Session Notes
+- Builds are clean: UI.WPF `net10.0-windows10.0.26100.0`, UI.Maui `net11.0-windows10.0.26100.0`,
+  UI.WinUI `net10.0-windows10.0.26100.0`, Sample.WPF `net11.0-windows`, Sample.Maui `net11.0-windows`,
+  Sample.WinUI `net11.0-windows` x64 — only pre-existing warnings remain.
+- `BladePlacement` tests: 22/22 pass.
+- Builds must use `MSBUILDDISABLENODEREUSE=1` and `-nodeReuse:false`.
+- NOT runtime-verified: visual RTL (`ar-SA`) on all three heads, phone-idiom modal flow, selection-blade
+  interaction, and `WS_EX_LAYOUTRTL` composition with XAML `FlowDirection`.
+
+---
+
+# Session Handoff - 2026-10-25 (MAUI DevFlow added to Sample.Maui)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Added MAUI DevFlow (agent) to `samples/Sample.Maui` so the app can be driven by
+`maui devflow` (UI tree, screenshots, element interaction).
+
+- `Directory.Packages.props`: `Microsoft.Maui.DevFlow.Agent` 0.1.0-preview.13.26512.5 (CPM, versionless project ref).
+- `samples/Sample.Maui/Sample.Maui.csproj`: `PackageReference` added (standard MAUI, no Blazor/GTK packages).
+- `samples/Sample.Maui/MauiProgram.cs`: `builder.AddMauiDevFlowAgent();` inside `#if DEBUG` only.
+- `Platforms/MacCatalyst/Entitlements.plist`: added `com.apple.security.network.server` for the in-app HTTP server.
+
+## Verified
+- Debug `net10.0-windows10.0.26100.0` build (win-arm64 host): 0 errors, only the pre-existing CS8601.
+- Runtime: app logged `[Microsoft.Maui.DevFlow] Agent started on port 9223`;
+  `maui devflow agent status -ap 9223` -> app "Maui Sample", platform WinUI;
+  `maui devflow ui tree --depth 1 -ap 9223` -> Window node.
+
+## Notes / Not Done
+- The DevFlow CLI broker is not running on this host, so `maui devflow diagnose`/`list` do not
+  auto-discover the agent; use `-ap 9223` (or start the broker).
+- No Apple build was run; the Mac Catalyst entitlement is unverified at runtime on this Windows host.
+- Package ships net10 assets only but restores/builds for the net11 TFMs as well.
+
+---
+
+# Session Handoff - 2026-10-25 (Theme/language dialogs removed from all UI heads)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Removed the dialog-based theme/language flow from WPF, WinUI and MAUI (Blazor never had it).
+`ThemeCommand` now toggles light/dark through `IThemeService`; language, theme and accent
+selection moved into each app's settings surface.
+
+- Deleted `ThemeViewModel`, `LanguageViewModel`, `IThemeWindow`, `ILanguageWindow`,
+  `ILanguageViewModel`, the WPF/WinUI/MAUI `ThemeWindow` + `LanguageWindow`, the MAUI
+  `RadioButtonToThemeConverter`, and `LanguageViewModelTests`.
+- `BaseShellViewModel` (WPF/WinUI/MAUI): `LanguageCommand`/`OpenLanguageAsync`/`OpenThemesAsync`
+  removed; `ThemeCommand` = `ToggleThemeAsync`; constructors now take `IThemeService`.
+- Sample.WPF: new `SettingsView`/`SettingsViewModel` (language/theme/accent), `Settings` nav item,
+  `OpenSettingsAsync` navigates to it; ad-hoc theme/language overrides removed.
+- Sample.WinUI: `OpenSettingsAsync` and first run use `IBladeService.OpenBladeAsync<SettingsViewModel>`;
+  language dialog/nav item removed; settings blade gained accent color.
+- Sample.Maui: theme/language overrides removed, `ToggleThemeCommand` replaced by `ThemeCommand`
+  (header + macOS View menu), `ThemeIcon` follows `IThemeService.ThemeChanged`.
+- Readmes (UI, UI.WPF, UI.WinUI, UI.Maui) and CHANGELOG updated with the BREAKING migration note.
+- Added the missing `BladeView` host to `Sample.WinUI/Views/ShellView.xaml` so the settings blade renders.
+- Captured platform screenshots in `screenshots/` (WPF settings/shell, WinUI theme light/dark + settings blade, MAUI settings dark/light + shell).
+- **Shell parity follow-up**: WPF shell rebuilt with plain WPF controls (Syncfusion `SfNavigationDrawer` removed) — sidebar with brand tile and navigation rows, breadcrumb header with theme/settings buttons, `Frame` host. WinUI shell gained the shared breadcrumb header, `PaneHeader` brand tile and tokens; theme/settings left the footer. All samples auto-authenticate the demo user and skip the login screen.
+- **Footer**: WPF/WinUI/Blazor sidebars now show a Help action styled like the navigation rows plus the product version; MAUI already had this. Logout/Login was removed from the WPF/WinUI shell navigation.
+- **Title bar/maximize pass**: platform-specific titles, WPF caption buttons flush right, WPF 4px corners only when restored, WPF normal maximize honors the work area, WinUI caption buttons follow the active theme.
+- **Bugfix pass**: WPF live validation + working light/dark tokens; WinUI guarded settings close, aligned Help footer, breadcrumb follows selection; Blazor shell rebuilt with custom sidebar/header instead of FluentLayout.
+- **Title bar**: OS title bars were removed from WPF/WinUI/MAUI. WPF uses `WindowChrome` + custom minimize/maximize/close buttons in `ShellView`; WinUI and MAUI Windows extend the shared header into the title bar with transparent native caption buttons; macOS hides the native title text in `AppDelegate` (traffic lights remain).
+
+### Follow-up: unified sample styling (same session)
+- Ported the `Sample.Maui` design language to all samples: shared surface/border/text/muted/accent
+  tokens, Figtree typography, four accent swatches (teal/blue/green/orange) and the same settings
+  layout; menu items remain platform-specific.
+- Figtree bundled in WPF/WinUI/Blazor; default accent is now `#0B5D55` (`Sample.Shared` LocalSettings).
+- Blazor gained the same settings drawer; fixed its missing `IThemeService` registration, live
+  re-application and the `_content` interop path.
+- 2026-10-25 screenshots regenerated for WPF, WinUI, MAUI and Blazor.
+
+## Verified
+- `dotnet build` (with `MSBUILDDISABLENODEREUSE=1`, `-nodeReuse:false`):
+  UI.WPF/UI.WinUI/UI.Maui (net10 windows) and Sample.WPF / Sample.WinUI (x64) / Sample.Maui
+  (net11.0-windows) — 0 errors. Remaining warnings are pre-existing
+  (`CsWinRT1032` in the builder extensions, `CS8601` on `CurrentRoute = route`).
+- Styling pass: Sample.WPF (0 warnings), Sample.WinUI arm64 (0 errors), Sample.Maui windows
+  (0 errors), Sample.Blazor (0 errors) — all rebuilt and run for the screenshots.
+- `dotnet test tests/ISynergy.Framework.UI.Tests`: 68/68 passed.
+
+## Not Done
+- WPF persists the selected theme but keeps the system light control palette; the settings tokens
+  are intentionally light to match the shell.
+- No automated visual-regression tests; screenshots are manual captures.
+
+## Files Modified
+Framework: `src/ISynergy.Framework.UI/ViewModels/{Theme,Language}ViewModel.cs` (deleted),
+`src/ISynergy.Framework.UI/Abstractions/Windows/IThemeWindow.cs` (deleted),
+`src/ISynergy.Framework.Mvvm/Abstractions/ViewModels/ILanguageViewModel.cs` (deleted),
+`src/ISynergy.Framework.Mvvm/Abstractions/Windows/ILanguageWindow.cs` (deleted),
+`src/ISynergy.Framework.UI.{WPF,WinUI,Maui}/ViewModels/Base/BaseShellViewModel.cs`,
+deleted platform windows, `src/ISynergy.Framework.UI.WinUI/ISynergy.Framework.UI.WinUI.csproj`,
+the four readmes, `CHANGELOG.md`.
+Samples: `Sample.WPF/{App.xaml, App.xaml.cs, Styles/Style.xaml, Assets/Fonts/Figtree-*.ttf, ViewModels/SettingsViewModel.cs, Views/SettingsView.xaml(.cs), ViewModels/ShellViewModel.cs}`,
+`Sample.WinUI/{Styles/Style.xaml, Assets/Fonts/Figtree-*.ttf, ViewModels/SettingsViewModel.cs, ViewModels/ShellViewModel.cs, Views/SettingsView.xaml(.cs), Views/ShellView.xaml}`,
+`Sample.Maui/{ViewModels/ShellViewModel.cs, Views/Controls/AppHeaderView.xaml, Views/ShellView.xaml.cs}`,
+`Sample.Blazor/{Program.cs, Components/Layout/MainLayout.razor(.cs), wwwroot/site.css, wwwroot/fonts/*.ttf}`,
+`Sample.WPF/{Views/ShellView.xaml(.cs), ViewModels/AuthenticationViewModel.cs, Sample.WPF.csproj, Assets/Fonts/FluentSystemIconsRegular.ttf}`,
+`Sample.WinUI/{Views/ShellView.xaml(.cs), ViewModels/ShellViewModel.cs, App.xaml.cs}`,
+`Sample.Shared/Models/LocalSettings.cs`,
+`src/ISynergy.Framework.UI.WinUI/Styles/DynamicThemeResourceDictionary.cs`,
+`src/ISynergy.Framework.UI.Blazor/Services/ThemeService.cs`.
+Screenshots: `screenshots/{README.md,wpf/*.png,winui/*.png,maui/*.png,blazor/*.png}`.
+Tests: `tests/ISynergy.Framework.UI.Tests/ViewModels/LanguageViewModelTests.cs` (deleted).
+
+---
+
 # Session Handoff - 2026-10-21 (Sample.Maui Xcode 27 / UIScene migration)
 
 **Written By:** Reasonix Code

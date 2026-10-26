@@ -8,9 +8,30 @@
             <ResourceDictionary.MergedDictionaries>
                 <!--<ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />-->
                 <ResourceDictionary Source="Assets/Images.xaml" />
-                <ResourceDictionary Source="Styles/Style.xaml"/>
+                <!-- Framework defaults first: the sample's styles below must win for implicit
+                     control styles (Button, TextBox, ComboBox, ListBox, ...). -->
                 <ResourceDictionary Source="/ISynergy.Framework.UI.WPF;component/Styles/Generic.xaml"/>
+                <ResourceDictionary Source="Styles/Style.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Shared sample typography (same family as Sample.Maui). -->
+            <FontFamily x:Key="Figtree">pack://application:,,,/Assets/Fonts/#Figtree</FontFamily>
+            <FontFamily x:Key="FigtreeMedium">pack://application:,,,/Assets/Fonts/#Figtree Medium</FontFamily>
+            <FontFamily x:Key="FigtreeSemiBold">pack://application:,,,/Assets/Fonts/#Figtree SemiBold</FontFamily>
+            <FontFamily x:Key="FluentUI">pack://application:,,,/Assets/Fonts/#FluentSystemIcons-Regular</FontFamily>
+
+            <!-- Shared design tokens. App.xaml.cs swaps these on theme changes. -->
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#F4F6F3" />
+            <SolidColorBrush x:Key="SplashBackgroundBrush" Color="#F4F6F3" />
+            <SolidColorBrush x:Key="AppSurfaceBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="AppSurface2Brush" Color="#E8EDE9" />
+            <SolidColorBrush x:Key="AppControlBrush" Color="#E8EDE9" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#E0E6E2" />
+            <SolidColorBrush x:Key="AppTextBrush" Color="#14211E" />
+            <SolidColorBrush x:Key="AppMutedBrush" Color="#55665F" />
+            <SolidColorBrush x:Key="AppAccentBrush" Color="#0B5D55" />
+            <SolidColorBrush x:Key="AppAccentSoftBrush" Color="#E1EEEA" />
+            <SolidColorBrush x:Key="AppInkBrush" Color="#FFFFFF" />
         </ResourceDictionary>
     </app:Application.Resources>
 </app:Application>

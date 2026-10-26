@@ -49,9 +49,7 @@
 		<None Remove="Controls\Tiles\Tile.xaml" />
 		<None Remove="Views\SingleSelectionView.xaml" />
 		<None Remove="Views\MultipleSelectionView.xaml" />
-		<None Remove="Windows\LanguageWindow.xaml" />
 		<None Remove="Windows\NoteWindow.xaml" />
-		<None Remove="Windows\ThemeWindow.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -85,13 +83,7 @@
 		<Page Include="Views\MultipleSelectionView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<Page Include="Windows\LanguageWindow.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
 		<Page Include="Windows\NoteWindow.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-		<Page Include="Windows\ThemeWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>

@@ -16,8 +16,9 @@ Cross-platform .NET MAUI UI framework for building modern applications on Window
 - **File service** with platform-specific pickers
 - **Clipboard service** for text and data operations
 - **Camera service** for photo capture and gallery access
-- **Custom controls** (NavigationMenu, ImageBrowser, ErrorPresenter, TabbedView)
+- **Custom controls** (NavigationMenu, ImageBrowser, ErrorPresenter, TabbedView, BladePane)
 - **Value converters** for all common data types
+- **Blade panes** with adaptive presentation — an overlay pane on tablet/desktop, a modal page on phone
 - **Behaviors** (SelectAllOnFocusBehavior)
 - **Platform extensions** for Windows-specific features
 - **Dynamic theme system** with 40+ built-in color palettes
@@ -292,25 +293,12 @@ using ISynergy.Framework.Core.Enumerations;
 // Theme service is automatically configured during startup
 // It reads theme preferences from ISettingsService
 
-// To show theme selection to users:
-public class SettingsViewModel : ViewModel
-{
-    public AsyncRelayCommand ChangeThemeCommand { get; }
+// Light/dark switching is built into the shell: ThemeCommand toggles through IThemeService.
+// Accent color selection belongs in your own settings view.
 
-    public SettingsViewModel(
-        ICommonServices commonServices,
-        ILogger<SettingsViewModel> logger)
-        : base(commonServices, logger)
-    {
-        ChangeThemeCommand = new AsyncRelayCommand(ChangeThemeAsync);
-    }
+// In your settings view model:
+public void ApplyAccent(string color) => _themeService.SetAccentColor(color);
 
-    private async Task ChangeThemeAsync()
-    {
-        await CommonServices.DialogService
-            .ShowDialogAsync<ThemeWindow, ThemeViewModel, ThemeStyle>();
-    }
-}
 ```
 
 The theme service supports:
@@ -360,6 +348,15 @@ The theme service supports:
 </ui:TabbedView>
 ```
 
+#### BladePane
+
+```xml
+<c:BladePane ItemsSource="{Binding Blades}"
+             Anchor="Auto" />
+```
+
+See [Blades (edge panes)](#blades-edge-panes) for the hosting and RTL rules.
+
 ### 7. Live Localization with Markup Extension
 
 Use the `m:LocalizedStrings` markup extension for trim-friendly, compiled localized text bindings:
@@ -385,6 +382,61 @@ newCulture.ApplyCulture();  // Triggers UI refresh for all LocalizedStrings bind
 ```
 
 The extension uses OneWay binding to `LocalizedStrings.Default` indexer with property-change notification, enabling automatic translation updates without page reload.
+
+## Blades (edge panes)
+
+A *blade* is a card that slides in from a screen edge and stacks on top of the previous one, matching the WinUI `BladeView` interaction.
+The owning view model implements `IViewModelBladeView` and exposes the stack through `Blades` (`ObservableCollection<IView>`) plus `IsPaneVisible`.
+Blades are opened through `IBladeService.OpenBladeAsync<TBladeViewModel, TEntity>(owner, ...)`, which resolves the view and view model from a DI scope, appends the view to `owner.Blades` and disables every earlier blade; closing the newest blade removes it and re-enables the previous one.
+Derive the owner from `ViewModelBladeView<TModel>` to get `Blades` and the blade commands for free.
+
+A page that wants an overlay pane declares the control in its own root layout (a `Shell` cannot host an overlay itself):
+
+```xml
+<c:BladePane ItemsSource="{Binding Blades}"
+             Anchor="End" />
+```
+
+`BladePane` properties:
+
+- `ItemsSource` — the blade views to host, in opening order. When `null`, the `Blades` of the `IViewModelBladeView` binding context is used.
+- `Anchor` — the logical edge, `Auto` (default, resolves to `End`), `Start` or `End`.
+- `DisabledOpacity` — opacity of every blade except the newest one (`0.75` by default).
+- `BladeSpacing` — gap between two adjacent blades (`10` by default).
+- `BladeMaxWidth` — maximum width of a single blade card (`520` by default).
+- `InnerPadding` — padding between the blade stack and the host edges (`8` on every side by default).
+
+The pane registers itself in `IBladePaneHost` (`BladePaneHostRegistry`, singleton, weak references) while it is attached to the visual tree and unregisters when it leaves or is disposed.
+
+### Shell-level pane
+
+`Controls/BladeHostView` is a self-contained host: it resolves the framework's `BladeHostViewModel` (`ISynergy.Framework.UI/ViewModels`, singleton) lazily — in the constructor, again on `Loaded` and on `OnParentSet`, because the platform service provider may not exist yet during startup — and then attaches a `BladePane` with `ItemsSource = host.Blades`.
+Declare it as the **last child** of the page's root layout so the pane overlays the page content.
+When the view model cannot be resolved the control stays hidden and traces the failure instead of throwing.
+
+Use `BladeHostView` when the blades are shell-level, and a page-level `BladePane` when the blades belong to that page.
+The sample's Settings is a blade now: `OpenSettingsAsync` (and first run) opens `SettingsViewModel` through `IBladeService` against the shared `BladeHostViewModel`, and `BladeHostView` is declared as the last child of `InfoView`, `CustomControlsView`, `MauiControlsView` and `SlideShowView`; the old per-page settings drawer (`SettingsDrawer` and `SettingsDrawerState`) is gone.
+On `DeviceInfo.Idiom == Phone` the blade still presents as a modal page, per the adaptive behaviour below.
+
+### Adaptive presentation
+
+`BladeService` is adaptive and decides per blade at open time:
+
+- **Tablet and desktop** — when a `BladePane` is attached (`IBladePaneHost.IsHostAttached`) and `DeviceInfo.Idiom` is not `Phone`, the blade is added to the owner and rendered by the pane.
+- **Phone** — the blade view is pushed with `PushModalAsync` and popped on the blade's `Closed` event, but only when that page is still on top of the modal stack, so closing an older blade never pops a newer page.
+- **Fallback** — when neither path is possible (the view is not a `Page`, there is no root page, the push fails, or no pane is attached) the blade falls back to the overlay pane and a warning is logged; a blade is never dropped silently.
+
+### Hosting contract
+
+A blade view is a `ContentPage`. A page cannot be a child of a layout, so the pane detaches `ContentPage.Content` and reparents it into a `ContentView` (keeping the page `BindingContext`), then restores it when the blade is released.
+The consequence: **page-level resources, styles and any behaviour that depends on the page being in the visual tree are not available to a hosted blade** — put shared resources in `Application.Resources` or a merged dictionary instead.
+
+### Right-to-left
+
+`Anchor` is *logical*: `Start` is the left edge in a left-to-right culture and the right edge in a right-to-left one, and `Auto` follows `End`.
+The edge is resolved once through `BladePlacement.IsStartSide`/`BladePlacement.HorizontalSign`, never hardcoded, and re-resolved on `FlowDirectionChanged`.
+The positioning container is forced to `LeftToRight` so `Start`/`End` stay physical; each blade's host receives the pane's `FlowDirection`, so the blade content mirrors while the pane stays anchored where `Anchor` says; the slide-in offset uses `HorizontalSign`, because render transforms are never mirrored.
+The page inherits `FlowDirection` from the window (`LocalSettings.Language`), so no per-page setup is required.
 
 ## Platform-Specific Features
 

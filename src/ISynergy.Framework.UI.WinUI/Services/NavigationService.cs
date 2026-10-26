@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
@@ -73,6 +74,20 @@ public class NavigationService : BaseNavigationService
     /// </summary>
     protected override void SetWindowContent(IView page)
     {
+        // The window content replaces the whole tree, so the flow direction has to be re-applied from
+        // the thread culture (set from LocalSettings.Language at startup); it is not inherited across
+        // independent root elements.
+        if (page is FrameworkElement frameworkElement)
+        {
+            frameworkElement.ApplyFlowDirection(CultureInfo.CurrentUICulture.Name);
+
+            // The window content replaces the whole tree, so the requested theme has to be re-applied
+            // too: RequestedTheme belongs to the root element and is not inherited across independent
+            // roots. A root left on the system default makes system-drawn chrome (window caption
+            // buttons) follow the OS theme, which shows up as light caption buttons in a dark app.
+            frameworkElement.ApplyRequestedTheme(_localSettings.Theme);
+        }
+
         Application.MainWindow?.Content = (Microsoft.UI.Xaml.UIElement)page;
     }
 

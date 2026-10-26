@@ -492,3 +492,443 @@ ul.news {
         display: none;
     }
 }
+
+/* ---------------------------------------------------------------------------
+   Shared sample design tokens and settings drawer (match Sample.Maui).
+   --------------------------------------------------------------------------- */
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-Bold.ttf') format('truetype');
+    font-weight: 700;
+}
+
+:root {
+    --app-bg: #F4F6F3;
+    --app-surface: #FFFFFF;
+    --app-control: #E8EDE9;
+    --app-border: #E0E6E2;
+    --app-text: #14211E;
+    --app-muted: #55665F;
+    --app-ink: #FFFFFF;
+    --app-accent: var(--accent-color, #0B5D55);
+    --app-accent-soft: #E1EEEA;
+
+    /* Align the Fluent UI shell with the same palette. */
+    --colorNeutralBackground1: var(--app-bg);
+    --colorNeutralBackground2: var(--app-bg);
+    --colorNeutralBackground3: var(--app-control);
+    --colorNeutralBackground4: var(--app-surface);
+    --colorNeutralForeground1: var(--app-text);
+    --colorNeutralForeground2: var(--app-muted);
+    --colorNeutralStroke1: var(--app-border);
+    --colorBrandBackground: var(--app-accent);
+}
+
+[data-theme="dark"] {
+    --app-bg: #0D1614;
+    --app-surface: #14201C;
+    --app-control: #1C2A25;
+    --app-border: #26352F;
+    --app-text: #EEF1EA;
+    --app-muted: #9CB0A8;
+    --app-ink: #04231A;
+    --app-accent-soft: rgba(94, 211, 176, 0.16);
+}
+
+body {
+    background: var(--app-bg);
+    color: var(--app-text);
+    font-family: 'Figtree', var(--fontFamilyBase);
+}
+
+.app-settings-scrim {
+    position: fixed;
+    inset: 0;
+    background: #00000080;
+    z-index: 1000;
+}
+
+.app-settings-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 16px;
+    background: var(--app-surface);
+    border-left: 1.5px solid var(--app-border);
+    color: var(--app-text);
+    z-index: 1001;
+}
+
+.app-settings-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.app-settings-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-settings-label {
+    margin: 12px 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--app-muted);
+}
+
+.app-settings-select {
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    background: var(--app-control);
+    color: var(--app-text);
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.app-accent-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.app-accent-swatch {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.app-accent-swatch.selected {
+    border: 3px solid #FFFFFF;
+}
+
+.app-settings-close {
+    margin-top: auto;
+    min-height: 34px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--app-accent);
+    color: var(--app-ink);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Sidebar footer — Help + version, matching the WPF/WinUI/MAUI shells.
+   --------------------------------------------------------------------------- */
+
+.app-nav-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.app-nav-column > .fluent-nav {
+    flex: 1 1 auto;
+}
+
+.app-nav-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: auto;
+    padding: 16px 16px 20px;
+}
+
+.app-nav-help {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    padding: 0 8px;
+    border-radius: 12px;
+    color: var(--colorNeutralForeground3);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.app-nav-help:hover {
+    background: var(--colorNeutralBackground1Hover);
+    color: var(--colorNeutralForeground1);
+    text-decoration: none;
+}
+
+.app-nav-help-icon {
+    width: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.app-nav-version {
+    padding: 0 12px;
+    color: var(--colorNeutralForeground3);
+    font-size: 12px;
+}
+
+
+/* ---------------------------------------------------------------------------
+   App shell — mirrors the MAUI sample (sidebar, breadcrumb header, content).
+   --------------------------------------------------------------------------- */
+
+.app-shell {
+    display: flex;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--app-bg);
+    color: var(--app-text);
+    font-family: 'Figtree', var(--fontFamilyBase);
+}
+
+.app-sidebar {
+    flex: 0 0 300px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px 16px;
+    background: var(--app-surface);
+    border-right: 1px solid var(--app-border);
+}
+
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px;
+}
+
+.app-brand-tile {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 12px;
+    background: var(--app-accent);
+    color: var(--app-ink);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.app-brand-name {
+    display: flex;
+    flex-direction: column;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.app-brand-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--app-muted);
+}
+
+.app-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.app-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--app-text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.app-nav-item:hover {
+    background: var(--app-control);
+    color: var(--app-text);
+    text-decoration: none;
+}
+
+.app-nav-item.active {
+    background: var(--app-accent-soft);
+}
+
+.app-nav-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border-radius: 10px;
+    background: var(--app-control);
+    color: var(--app-muted);
+    font-size: 17px;
+}
+
+.app-nav-item.active .app-nav-icon {
+    background: var(--app-accent-soft);
+    color: var(--app-accent);
+}
+
+.app-sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: auto;
+}
+
+.app-version {
+    padding: 0 12px;
+    color: var(--app-muted);
+    font-size: 12px;
+}
+
+.app-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--app-bg);
+}
+
+.app-header {
+    flex: 0 0 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--app-border);
+    background: var(--app-bg);
+}
+
+.app-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--app-muted);
+}
+
+.app-breadcrumb a {
+    color: var(--app-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.app-breadcrumb strong {
+    color: var(--app-text);
+    font-weight: 600;
+}
+
+.app-header-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.app-icon-button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--app-muted);
+    font-family: inherit;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.app-icon-button:hover {
+    background: var(--app-control);
+    color: var(--app-text);
+}
+
+.app-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px 32px 24px;
+}
+
+.app-content article {
+    width: 100%;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+@media (max-width: 900px) {
+    .app-sidebar {
+        flex-basis: 72px;
+        width: 72px;
+        padding: 16px 8px;
+    }
+
+    .app-brand {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .app-brand-name,
+    .app-nav-item > span:last-child,
+    .app-version {
+        display: none;
+    }
+
+    .app-nav-item {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .app-header,
+    .app-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}

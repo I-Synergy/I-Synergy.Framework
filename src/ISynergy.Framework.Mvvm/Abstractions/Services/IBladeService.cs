@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Enumerations;
 
 namespace ISynergy.Framework.Mvvm.Abstractions.Services;
 
@@ -20,13 +21,15 @@ public interface IBladeService
     /// <param name="cancelledEventHandler">Optional. Invoked when the user cancels.</param>
     /// <param name="closedEventHandler">Optional. Invoked when the blade closes on ANY path.</param>
     /// <param name="initialization">Optional. Invoked after ViewModel resolution but before the blade is shown.</param>
+    /// <param name="hostTarget">Optional. Where the blade is rendered; defaults to <see cref="BladeHostTargets.Shell"/>.</param>
     Task OpenBladeAsync<TBladeViewModel, TEntity>(
         IViewModelBladeView owner,
         TEntity entity,
         Func<TEntity, Task>? submittedEventHandler = null,
         Func<Task>? cancelledEventHandler = null,
         Func<Task>? closedEventHandler = null,
-        Action<TBladeViewModel>? initialization = null)
+        Action<TBladeViewModel>? initialization = null,
+        BladeHostTargets hostTarget = BladeHostTargets.Shell)
         where TBladeViewModel : IViewModelBlade<TEntity>;
 
     /// <summary>
@@ -39,12 +42,14 @@ public interface IBladeService
     /// <param name="cancelledEventHandler">Optional. Invoked when the user cancels.</param>
     /// <param name="closedEventHandler">Optional. Invoked when the blade closes on ANY path.</param>
     /// <param name="initialization">Optional. Invoked after ViewModel resolution but before the blade is shown.</param>
+    /// <param name="hostTarget">Optional. Where the blade is rendered; defaults to <see cref="BladeHostTargets.Shell"/>.</param>
     Task OpenBladeAsync<TBladeViewModel, TEntity>(
         IViewModelBladeView owner,
         Func<TEntity, Task>? submittedEventHandler = null,
         Func<Task>? cancelledEventHandler = null,
         Func<Task>? closedEventHandler = null,
-        Action<TBladeViewModel>? initialization = null)
+        Action<TBladeViewModel>? initialization = null,
+        BladeHostTargets hostTarget = BladeHostTargets.Shell)
         where TBladeViewModel : IViewModelBlade<TEntity>;
 
     /// <summary>

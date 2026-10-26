@@ -76,6 +76,12 @@
 	  <Compile Update="Windows\SingleSelectionWindow.xaml.cs">
 	    <DependentUpon>SingleSelectionWindow.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\SingleSelectionView.xaml.cs">
+	    <DependentUpon>SingleSelectionView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\MultipleSelectionView.xaml.cs">
+	    <DependentUpon>MultipleSelectionView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 	<ItemGroup>
 		<MauiXaml Update="Controls\ErrorPresenter\ErrorPresenter.xaml">
@@ -98,6 +104,12 @@
 		</MauiXaml>
 		<MauiXaml Update="Windows\MultipleSelectionWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SingleSelectionView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\MultipleSelectionView.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>
 </Project>

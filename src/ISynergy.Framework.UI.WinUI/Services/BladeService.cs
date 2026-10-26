@@ -2,6 +2,8 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,6 +70,21 @@ public class BladeService : BaseBladeService
 
         var viewName = bladeVm.GetRelatedView();
         return viewName.GetRelatedViewType();
+    }
+
+    /// <inheritdoc />
+    protected override IViewModelBladeView ResolveBladeHost(IViewModelBladeView owner, BladeHostTargets hostTarget) =>
+        hostTarget == BladeHostTargets.Shell
+            ? Application.Services.GetService<BladeHostViewModel>() ?? owner
+            : owner;
+
+    /// <inheritdoc />
+    protected override void DetachBladeView(IView view)
+    {
+        // Blade views are singletons (Controls.View): clear the data context so a queued binding
+        // update cannot write into the view model that the blade scope is about to dispose.
+        if (view is FrameworkElement element)
+            element.DataContext = null;
     }
 
     /// <inheritdoc />

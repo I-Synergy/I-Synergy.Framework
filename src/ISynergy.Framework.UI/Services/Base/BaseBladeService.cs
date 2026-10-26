@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -41,10 +42,11 @@ public abstract class BaseBladeService : IBladeService
         Func<TEntity, Task>? submittedEventHandler = null,
         Func<Task>? cancelledEventHandler = null,
         Func<Task>? closedEventHandler = null,
-        Action<TBladeViewModel>? initialization = null)
+        Action<TBladeViewModel>? initialization = null,
+        BladeHostTargets hostTarget = BladeHostTargets.Shell)
         where TBladeViewModel : IViewModelBlade<TEntity>
     {
-        await OpenBladeInternalAsync(owner, entity, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
+        await OpenBladeInternalAsync(owner, entity, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hostTarget);
     }
 
     /// <inheritdoc />
@@ -53,10 +55,11 @@ public abstract class BaseBladeService : IBladeService
         Func<TEntity, Task>? submittedEventHandler = null,
         Func<Task>? cancelledEventHandler = null,
         Func<Task>? closedEventHandler = null,
-        Action<TBladeViewModel>? initialization = null)
+        Action<TBladeViewModel>? initialization = null,
+        BladeHostTargets hostTarget = BladeHostTargets.Shell)
         where TBladeViewModel : IViewModelBlade<TEntity>
     {
-        await OpenBladeInternalAsync<TBladeViewModel, TEntity>(owner, default, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
+        await OpenBladeInternalAsync<TBladeViewModel, TEntity>(owner, default, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hostTarget);
     }
 
     private async Task OpenBladeInternalAsync<TBladeViewModel, TEntity>(
@@ -65,7 +68,8 @@ public abstract class BaseBladeService : IBladeService
         Func<TEntity, Task>? submittedEventHandler,
         Func<Task>? cancelledEventHandler,
         Func<Task>? closedEventHandler,
-        Action<TBladeViewModel>? initialization)
+        Action<TBladeViewModel>? initialization,
+        BladeHostTargets hostTarget = BladeHostTargets.Shell)
         where TBladeViewModel : IViewModelBlade<TEntity>
     {
         var scope = _scopeFactory.CreateScope();
@@ -99,22 +103,40 @@ public abstract class BaseBladeService : IBladeService
                     _ = HandleBladeCancelledAsync(cancelledEventHandler, cancelledVmTypeName).SafeFireAndForget();
             }
 
-            // Scope cleanup when blade closes
-            bladeVm.Closed += (_, _) =>
-            {
-                if (closedEventHandler is not null)
-                {
-                    var closedVmTypeName = typeof(TBladeViewModel).Name;
-                    _ = HandleBladeClosedAsync(closedEventHandler, closedVmTypeName).SafeFireAndForget();
-                }
-
-                scope.Dispose();
-            };
-
             // Platform-specific view resolution and blade setup.
             // The scope's ServiceProvider is passed so the view can be resolved
             // from the SAME scope as the ViewModel.
-            await SetupAndOpenBladeAsync(owner, bladeVm, scope.ServiceProvider);
+            await SetupAndOpenBladeAsync(ResolveBladeHost(owner, hostTarget), bladeVm, scope.ServiceProvider);
+
+            // Scope cleanup when the blade closes. Registered AFTER the owner has wired its own
+            // Closed handler (PrepareOwnerForBlade), so the blade is removed from the owner's
+            // collection before its scope — and therefore its view model — is disposed.
+            bladeVm.Closed += (_, _) =>
+            {
+                try
+                {
+                    if (closedEventHandler is not null)
+                    {
+                        var closedVmTypeName = typeof(TBladeViewModel).Name;
+                        _ = HandleBladeClosedAsync(closedEventHandler, closedVmTypeName).SafeFireAndForget();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Blade close callback failed for {ViewModelType}", typeof(TBladeViewModel).Name);
+                }
+                finally
+                {
+                    try
+                    {
+                        scope.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Blade scope disposal failed for {ViewModelType}", typeof(TBladeViewModel).Name);
+                    }
+                }
+            };
         }
         catch
         {
@@ -149,9 +171,16 @@ public abstract class BaseBladeService : IBladeService
             var bladeToRemove = owner.Blades
                 .FirstOrDefault(q => q.ViewModel == bladeVm && ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
 
-            if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
+            if (bladeToRemove is not null)
             {
-                if (owner.Blades.Count < 1)
+                // Detach the (possibly singleton) view from the view model before the owner drops it:
+                // the blade's DI scope disposes that view model right after, and a queued binding
+                // update must not land on a disposed instance.
+                DetachBladeView(bladeToRemove);
+            }
+
+            if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
+            {                if (owner.Blades.Count < 1)
                     owner.IsPaneVisible = false;
                 else if (owner.Blades[^1] is { } blade)
                 {
@@ -236,8 +265,15 @@ public abstract class BaseBladeService : IBladeService
         // Auto-remove blade when its ViewModel fires Closed
         bladeVm.Closed += (sender, _) =>
         {
-            if (sender is IViewModelBlade vm)
-                RemoveBlade(vm.Owner, vm);
+            try
+            {
+                if (sender is IViewModelBlade vm)
+                    RemoveBlade(vm.Owner, vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to remove closed blade {ViewModelType}", bladeVm.GetType().Name);
+            }
         };
     }
 
@@ -253,10 +289,40 @@ public abstract class BaseBladeService : IBladeService
                 blade.IsEnabled = false;
             }
 
+            // A blade view can be a reused page that was disabled while it was not the newest
+            // blade; make sure it is interactive again before it is shown.
+            view.IsEnabled = true;
+
             owner.Blades.Add(view);
         }
 
         owner.IsPaneVisible = true;
+    }
+
+    /// <summary>
+    /// Resolves the view that actually hosts the blade.
+    /// </summary>
+    /// <remarks>
+    /// The default keeps the caller's owner. A platform can override this to redirect blades to a
+    /// shell-level host when <paramref name="hostTarget"/> is <see cref="BladeHostTargets.Shell"/>.
+    /// </remarks>
+    /// <param name="owner">The owner passed to <c>OpenBladeAsync</c>.</param>
+    /// <param name="hostTarget">Where the blade should be rendered.</param>
+    /// <returns>The view that hosts the blade.</returns>
+    protected virtual IViewModelBladeView ResolveBladeHost(IViewModelBladeView owner, BladeHostTargets hostTarget) => owner;
+
+    /// <summary>
+    /// Detaches a blade view from its view model before the owner removes it.
+    /// </summary>
+    /// <remarks>
+    /// Hosts that reuse view instances (singleton views, as in MAUI and WinUI) must override this and
+    /// clear the view's data context. The blade's DI scope disposes the view model right after the
+    /// view is removed, and a binding update queued in the meantime would otherwise write into the
+    /// disposed instance.
+    /// </remarks>
+    /// <param name="view">The view that is being removed.</param>
+    protected virtual void DetachBladeView(IView view)
+    {
     }
 
     /// <summary>

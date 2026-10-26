@@ -1,6 +1,8 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.UI.Enumerations;
+using ISynergy.Framework.UI.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
@@ -83,7 +85,44 @@ public partial class BladeView : UserControl, IDisposable
         set { SetValue(HorizontalBladeAlignmentProperty, value); }
     }
 
-    public static readonly DependencyProperty HorizontalBladeAlignmentProperty = DependencyProperty.Register(nameof(HorizontalBladeAlignment), typeof(HorizontalAlignment), typeof(BladeView), new PropertyMetadata(HorizontalAlignment.Right));
+    public static readonly DependencyProperty HorizontalBladeAlignmentProperty = DependencyProperty.Register(nameof(HorizontalBladeAlignment), typeof(HorizontalAlignment), typeof(BladeView), new PropertyMetadata(HorizontalAlignment.Right, OnHorizontalBladeAlignmentChanged));
+
+    /// <summary>
+    /// Gets or sets the logical edge the blade pane is anchored to. Logical means the edge follows
+    /// the active flow direction: <see cref="BladePaneAnchor.Start"/> is the left edge in
+    /// left-to-right cultures and the right edge in right-to-left cultures.
+    /// </summary>
+    public BladePaneAnchor Anchor
+    {
+        get { return (BladePaneAnchor)GetValue(AnchorProperty); }
+        set { SetValue(AnchorProperty, value); }
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="Anchor"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(BladePaneAnchor), typeof(BladeView), new PropertyMetadata(BladePaneAnchor.Auto, OnAnchorChanged));
+
+    /// <summary>
+    /// Gets the resolved, physical horizontal alignment of the blade pane. Unlike
+    /// <see cref="HorizontalBladeAlignment"/>, which describes the left-to-right intent, this value is
+    /// already mirrored for right-to-left flow directions. It is consumed by the control template and
+    /// must never be hardcoded in XAML.
+    /// </summary>
+    public HorizontalAlignment BladeAlignment
+    {
+        get { return (HorizontalAlignment)GetValue(BladeAlignmentProperty); }
+        private set { SetValue(BladeAlignmentProperty, value); }
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="BladeAlignment"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty BladeAlignmentProperty =
+        DependencyProperty.Register(nameof(BladeAlignment),
+            typeof(HorizontalAlignment),
+            typeof(BladeView),
+            new PropertyMetadata(HorizontalAlignment.Right));
 
     public Thickness InnerPadding
     {
@@ -101,6 +140,22 @@ public partial class BladeView : UserControl, IDisposable
 
     public static readonly DependencyProperty BladeHeightProperty = DependencyProperty.Register(nameof(BladeHeight), typeof(double), typeof(BladeView), new PropertyMetadata(0d));
 
+    /// <summary>
+    /// Gets or sets the width of a blade card.
+    /// </summary>
+    /// <remarks>
+    /// The host owns the width so every blade in the pane has the same footprint; a blade page that
+    /// declares its own width would otherwise make the cards inconsistent. The value includes the
+    /// card's inner padding, so the content area is this width minus the content presenter margins.
+    /// </remarks>
+    public double BladeWidth
+    {
+        get { return (double)GetValue(BladeWidthProperty); }
+        set { SetValue(BladeWidthProperty, value); }
+    }
+
+    public static readonly DependencyProperty BladeWidthProperty = DependencyProperty.Register(nameof(BladeWidth), typeof(double), typeof(BladeView), new PropertyMetadata(420d));
+
     public int AutoCollapseThreshold
     {
         get { return (int)GetValue(AutoCollapseThresholdProperty); }
@@ -115,12 +170,12 @@ public partial class BladeView : UserControl, IDisposable
     private readonly ILogger _logger = Application.Services.GetRequiredService<ILogger<BladeView>>();
     private bool _isInternalUpdate;
     private bool _isDisposed;
+    private long _flowDirectionCallbackToken;
 
     private class BladeState
     {
         public bool IsRemoving { get; set; }
         public Guid MessageToken { get; set; }
-        public WeakReference<IViewModel>? ViewModel { get; set; }
         public DateTime RegisteredAt { get; set; }
     }
 
@@ -129,6 +184,7 @@ public partial class BladeView : UserControl, IDisposable
         InitializeComponent();
         InitializeDefaultValues();
         InitializeBladeManagement();
+        InitializePlacement();
     }
 
     private void InitializeDefaultValues()
@@ -149,7 +205,70 @@ public partial class BladeView : UserControl, IDisposable
             BladeHeight = e.NewSize.Height -
                 (InnerPadding.Top + InnerPadding.Bottom + Margin.Top + Margin.Bottom);
         }
+
+        ApplyPlacement();
     }
+
+    #region Placement
+
+    private static void OnAnchorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is BladeView bladeView && !bladeView._isDisposed)
+            bladeView.ApplyPlacement();
+    }
+
+    private static void OnHorizontalBladeAlignmentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is BladeView bladeView && !bladeView._isDisposed)
+            bladeView.ApplyPlacement();
+    }
+
+    private void InitializePlacement()
+    {
+        // FlowDirection is inherited, so the ambient direction is only known once the control is
+        // placed in a visual tree. Watch the property instead of reading it once in the constructor.
+        _flowDirectionCallbackToken = RegisterPropertyChangedCallback(FlowDirectionProperty, OnFlowDirectionChanged);
+
+        ApplyPlacement();
+    }
+
+    private void OnFlowDirectionChanged(DependencyObject sender, DependencyProperty dependencyProperty)
+    {
+        if (!_isDisposed)
+            ApplyPlacement();
+    }
+
+    /// <summary>
+    /// Resolves the physical edge of the blade pane from <see cref="Anchor"/> and the ambient
+    /// inherited <see cref="Microsoft.UI.Xaml.FrameworkElement.FlowDirection"/>, and publishes it
+    /// through <see cref="BladeAlignment"/>.
+    /// </summary>
+    private void ApplyPlacement()
+    {
+        if (_isDisposed)
+            return;
+
+        var isRtl = FlowDirection == FlowDirection.RightToLeft;
+
+        BladeAlignment = Anchor == BladePaneAnchor.Auto
+            ? (isRtl ? Mirror(HorizontalBladeAlignment) : HorizontalBladeAlignment)
+            : (BladePlacement.IsStartSide(Anchor, isRtl) ? HorizontalAlignment.Left : HorizontalAlignment.Right);
+    }
+
+    /// <summary>
+    /// Mirrors a horizontal alignment for a right-to-left flow direction. Center and Stretch are
+    /// direction agnostic and are returned unchanged.
+    /// </summary>
+    /// <param name="alignment">The alignment expressed for a left-to-right flow direction.</param>
+    /// <returns>The mirrored alignment.</returns>
+    private static HorizontalAlignment Mirror(HorizontalAlignment alignment) => alignment switch
+    {
+        HorizontalAlignment.Left => HorizontalAlignment.Right,
+        HorizontalAlignment.Right => HorizontalAlignment.Left,
+        _ => alignment
+    };
+
+    #endregion
 
     private void InitializeBladeManagement()
     {
@@ -180,6 +299,7 @@ public partial class BladeView : UserControl, IDisposable
             {
                 if (item is IView view)
                 {
+                    DetachBladeView(view);
                     UnregisterBlade(view);
                 }
             }
@@ -199,6 +319,23 @@ public partial class BladeView : UserControl, IDisposable
         UpdateBladeVisibility();
     }
 
+    /// <summary>
+    /// Detaches a blade page from the view model that is about to be disposed.
+    /// </summary>
+    /// <remarks>
+    /// Blade views are registered as singletons (see <c>Controls.View</c>) while their view models are
+    /// scoped and disposed together with the blade scope. Removing the blade from the owner's
+    /// collection is the last moment where the page is still attached, so the data context is cleared
+    /// here — otherwise a pending/queued binding update (e.g. a TwoWay ComboBox selection) can write
+    /// into the already disposed view model and throw <see cref="ObjectDisposedException"/> on the
+    /// next open of the same page.
+    /// </remarks>
+    private void DetachBladeView(IView view)
+    {
+        if (view is FrameworkElement element)
+            element.DataContext = null;
+    }
+
     private void RegisterBlade(IView view)
     {
         if (view.ViewModel == null) return;
@@ -207,7 +344,6 @@ public partial class BladeView : UserControl, IDisposable
         _bladeStates[view] = new BladeState
         {
             MessageToken = token,
-            ViewModel = new WeakReference<IViewModel>(view.ViewModel),
             RegisteredAt = DateTime.UtcNow
         };
     }
@@ -235,16 +371,19 @@ public partial class BladeView : UserControl, IDisposable
                 bladeView.Blades?.Remove(view);
             }
 
-            if (view is IDisposable disposableView)
-            {
-                disposableView.Dispose();
-            }
+            // Blade views are registered as singletons (see Controls.View), while the blade's view
+            // model is scoped and disposed together with the blade scope. Detach the page from it so
+            // that a binding cannot write into the disposed instance if the same page is shown again
+            // before the service attaches the next view model.
+            DetachBladeView(view);
 
-            if (state.ViewModel is not null && state.ViewModel.TryGetTarget(out var viewModel) && // NOSONAR
-                viewModel is IDisposable disposableViewModel)
-            {
-                disposableViewModel.Dispose();
-            }
+            // Do NOT dispose the blade view or its view model here.
+            // - Blade views are registered as singletons, so disposing one makes the next open of
+            //   the same blade use a disposed page.
+            // - The view model belongs to the blade's DI scope; the scope disposes it after the
+            //   blade has been removed. Disposing it here left the (still bound) page pointing at a
+            //   disposed instance, and the next DataContext switch made TwoWay bindings write into
+            //   that disposed view model (ObjectDisposedException in SetValue).
 
             UnregisterBlade(view);
         }
@@ -326,6 +465,7 @@ public partial class BladeView : UserControl, IDisposable
         if (disposing)
         {
             this.SizeChanged -= BladeView_SizeChanged;
+            UnregisterPropertyChangedCallback(FlowDirectionProperty, _flowDirectionCallbackToken);
             CleanupBlades();
         }
 

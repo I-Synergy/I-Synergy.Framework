@@ -12,6 +12,7 @@ using ISynergy.Framework.Physics.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Sample;
 
@@ -33,6 +35,11 @@ public partial class App : Application
         : base()
     {
     }
+
+    /// <summary>
+    /// The sample renders its own header and caption buttons, so the OS title bar is removed.
+    /// </summary>
+    protected override bool UseCustomWindowChrome => true;
 
     protected override IHostBuilder CreateHostBuilder()
     {
@@ -85,11 +92,55 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        // Apply the design tokens before the framework creates the window and the splash page,
+        // so the splash surface is already themed on the first frame.
+        if (_themeService is not null)
+            ApplySampleTokens(_themeService);
+
         base.OnStartup(e);
+
+        // Keep the shared sample design tokens in sync with the current theme/accent.
+        if (_themeService is not null)
+        {
+            _themeService.ThemeChanged += (_, _) => ApplySampleTokens(_themeService);
+        }
 
         // Subscribe to authentication messages
         _commonServices.MessengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
         _commonServices.MessengerService.Register<UserSignedOutMessage>(this, OnUserSignedOut, keepTargetAlive: true);
+    }
+
+    /// <summary>
+    /// Applies the shared sample design tokens (light/dark surfaces, text and accent).
+    /// </summary>
+    private void ApplySampleTokens(IThemeService themeService)
+    {
+        var isDark = themeService.Theme == ISynergy.Framework.Core.Enumerations.Themes.Dark;
+
+        SetBrush("AppBackgroundBrush", isDark ? "#0D1614" : "#F4F6F3");
+        SetBrush("SplashBackgroundBrush", isDark ? "#0D1614" : "#F4F6F3");
+        SetBrush("AppSurfaceBrush", isDark ? "#14201C" : "#FFFFFF");
+        SetBrush("AppSurface2Brush", isDark ? "#1C2A25" : "#E8EDE9");
+        SetBrush("AppControlBrush", isDark ? "#1C2A25" : "#E8EDE9");
+        SetBrush("AppBorderBrush", isDark ? "#26352F" : "#E0E6E2");
+        SetBrush("AppTextBrush", isDark ? "#EEF1EA" : "#14211E");
+        SetBrush("AppMutedBrush", isDark ? "#9CB0A8" : "#55665F");
+        SetBrush("AppAccentBrush", isDark ? "#5ED3B0" : themeService.AccentColor);
+        SetBrush("AppAccentSoftBrush", isDark ? "#295ED3B0" : "#E1EEEA");
+        SetBrush("AppInkBrush", isDark ? "#04231A" : "#FFFFFF");
+    }
+
+    private void SetBrush(string key, string hex)
+    {
+        try
+        {
+            if (ColorConverter.ConvertFromString(hex) is Color color)
+                Resources[key] = new SolidColorBrush(color);
+        }
+        catch
+        {
+            // Keep the previous token when a persisted color is malformed.
+        }
     }
 
     protected override async void OnApplicationLoaded(object? sender, EventArgs e)
@@ -98,8 +149,10 @@ public partial class App : Application
         {
             _commonServices.BusyService.StartBusy();
 
-            _logger.LogTrace("Navigate to SignIn page");
-            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+            // The demo sample goes straight to the shell; authentication accepts any user.
+            _logger.LogTrace("Authenticating demo user");
+            var authenticationService = Services.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>();
+            await authenticationService.AuthenticateWithUsernamePasswordAsync("admin", "Welkom01");
         }
         finally
         {

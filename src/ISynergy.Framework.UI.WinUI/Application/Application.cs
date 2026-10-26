@@ -444,6 +444,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             }
 
             _logger?.LogTrace("Setting up theming.");
+
+            // Must run before the window content exists: it publishes the themed brushes that the
+            // content binds to (e.g. TintedBackgroundBrush).
             _themeService.ApplyTheme();
 
             // LoadingView shows the spinner for all splash screen types, including None.
@@ -451,6 +454,18 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             // fires SignalApplicationInitialized(). Both signals are required before
             // ApplicationLifecycleService raises ApplicationLoaded and navigation begins.
             _mainWindow.Content = CreateLoadingView();
+
+            // The native window style (WS_EX_LAYOUTRTL) only mirrors the non-client area; XAML content
+            // is mirrored through FlowDirection, which every page then inherits from the window root.
+            // The requested theme is re-applied for the same reason: it belongs to the root element,
+            // and the root that ApplyTheme themed above has just been replaced. Leaving it on the
+            // system default makes system-drawn chrome (caption buttons) follow the OS theme.
+            if (_mainWindow.Content is FrameworkElement windowRoot)
+            {
+                windowRoot.ApplyFlowDirection(language);
+                windowRoot.ApplyRequestedTheme(_themeService.Theme);
+            }
+
             _mainWindow.Activate();
 
             InitializeApplication();

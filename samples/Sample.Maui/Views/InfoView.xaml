@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <c:View
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
-    xmlns:controls="clr-namespace:Sample.Views.Controls"
     x:DataType="viewmodels:InfoViewModel"
     x:Class="Sample.Views.InfoView"
     BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}">
@@ -29,8 +28,5 @@
             <Label Text="Memo"/>
             <Editor HeightRequest="100" />
         </VerticalStackLayout>
-
-        <!-- Settings drawer hosted over the page content -->
-        <controls:SettingsDrawer />
     </Grid>
 </c:View>

@@ -4,80 +4,75 @@
     xmlns:c="using:ISynergy.Framework.UI.Controls"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     x:Class="Sample.Views.SettingsView">
-    
-    <Grid Margin="20,10">
+
+    <!-- Settings surface matching the Sample.Maui settings drawer. -->
+    <Grid Padding="20,16">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextBlockStyle}"/>
-        
-        <Pivot Grid.Row="1">
-            <PivotItem Header="{m:LanguageResource Key=General}">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="10">
-                    <StackPanel Orientation="Vertical" Spacing="10">
-                        <ComboBox
-                            Header="{m:LanguageResource Key=COMPort}"
-                            ItemsSource="{Binding COMPorts}"
-                            HorizontalAlignment="Left"
-                            Width="100" />
+        <TextBlock
+            Grid.Row="0"
+            Text="{Binding Title}"
+            Style="{StaticResource AppSettingsHeader}" />
+
+        <ScrollViewer Grid.Row="1" Margin="0,18,0,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="16">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{m:LanguageResource Key=Language}" Style="{StaticResource AppSettingsLabel}" />
+                    <ComboBox
+                        ItemsSource="{Binding AvailableLanguages}"
+                        SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                        Style="{StaticResource AppSettingsField}" />
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{m:LanguageResource Key=Theme}" Style="{StaticResource AppSettingsLabel}" />
+                    <ComboBox
+                        ItemsSource="{Binding AvailableThemes}"
+                        SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                        Style="{StaticResource AppSettingsField}" />
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{m:LanguageResource Key=AccentColor}" Style="{StaticResource AppSettingsLabel}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button
+                            x:Name="AccentTeal"
+                            Tag="#0B5D55"
+                            Background="#0B5D55"
+                            Style="{StaticResource AppAccentSwatch}"
+                            Click="OnAccentClicked" />
+                        <Button
+                            x:Name="AccentBlue"
+                            Tag="#0066CC"
+                            Background="#0066CC"
+                            Style="{StaticResource AppAccentSwatch}"
+                            Click="OnAccentClicked" />
+                        <Button
+                            x:Name="AccentGreen"
+                            Tag="#10B981"
+                            Background="#10B981"
+                            Style="{StaticResource AppAccentSwatch}"
+                            Click="OnAccentClicked" />
+                        <Button
+                            x:Name="AccentOrange"
+                            Tag="#FF8C00"
+                            Background="#FF8C00"
+                            Style="{StaticResource AppAccentSwatch}"
+                            Click="OnAccentClicked" />
                     </StackPanel>
-                </ScrollViewer>
-            </PivotItem>
-
-            <PivotItem Header="{m:LanguageResource Key=Language}">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="10">
-                    <StackPanel Orientation="Vertical" Spacing="10">
-                        <ComboBox
-                            Header="{m:LanguageResource Key=Language}"
-                            ItemsSource="{Binding AvailableLanguages}"
-                            SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
-                            HorizontalAlignment="Left"
-                            Width="150" />
-                        <TextBlock Text="Select English (en-US) or Dutch (nl-NL) - changes live when you save" FontStyle="Italic" Opacity="0.7" />
-                    </StackPanel>
-                </ScrollViewer>
-            </PivotItem>
-
-            <PivotItem Header="{m:LanguageResource Key=Theme}">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="10">
-                    <StackPanel Orientation="Vertical" Spacing="10">
-                        <ComboBox
-                            Header="{m:LanguageResource Key=Theme}"
-                            ItemsSource="{Binding AvailableThemes}"
-                            SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
-                            HorizontalAlignment="Left"
-                            Width="150" />
-                        <TextBlock Text="Theme changes immediately when you save." FontStyle="Italic" Opacity="0.7" />
-                    </StackPanel>
-                </ScrollViewer>
-            </PivotItem>
-        </Pivot>
-        
-        <StackPanel 
-            Orientation="Horizontal" 
-            HorizontalAlignment="Center" 
-            Spacing="10" 
-            Grid.Row="2" 
-            Margin="10">
-            <Button
-                Content="{m:LanguageResource Key=SaveRestart}" 
-                Command="{Binding SubmitCommand}"
-                Style="{StaticResource DefaultButtonStyle}"/>
-
-            <Button
-                Content="{m:LanguageResource Key=Cancel}" 
-                Command="{Binding CancelCommand}"
-                Style="{StaticResource DefaultButtonStyle}"/>
-        </StackPanel>
-
-        <Grid Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Grid.RowSpan="3">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <ProgressRing x:Name="IsBusyProgressRing" IsActive="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}" Height="48" Width="48" />
-                <TextBlock FontSize="16" Text="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" Foreground="{Binding Foreground, ElementName=IsBusyProgressRing}" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}"/>
+                </StackPanel>
             </StackPanel>
-        </Grid>
+        </ScrollViewer>
+
+        <Button
+            Grid.Row="2"
+            Content="{m:LanguageResource Key=Close}"
+            Style="{StaticResource AppPrimaryButton}"
+            Command="{Binding CloseCommand}"
+            Margin="0,22,0,0" />
     </Grid>
 </c:View>

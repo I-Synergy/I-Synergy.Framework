@@ -8,8 +8,8 @@
     x:Name="SidebarRoot"
     x:DataType="viewmodels:ShellViewModel">
 
-    <!-- The Shell's flyout background is transparent (ShellView), so this panel
-         carries the surface color and borders to fill the entire sidebar. -->
+    <!-- The panel carries the surface color and the right border so the sidebar
+         fills its column in the root grid. -->
     <Grid ColumnDefinitions="*,1"
           BackgroundColor="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}">
 
@@ -45,9 +45,9 @@
 
             <!-- Navigation rows: one for each shell page -->
             <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
-                <VerticalStackLayout Spacing="4">
+                <VerticalStackLayout x:Name="NavRows" Spacing="4">
                     <!-- Dashboard -->
-                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
@@ -84,7 +84,7 @@
                     </Border>
 
                     <!-- Custom Controls -->
-                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
@@ -121,7 +121,7 @@
                     </Border>
 
                     <!-- Maui Controls -->
-                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
@@ -158,7 +158,7 @@
                     </Border>
 
                     <!-- Slide Show -->
-                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
@@ -197,22 +197,27 @@
             </ScrollView>
 
             <!-- Footer: Help + version/copyright -->
-            <VerticalStackLayout Grid.Row="3" Spacing="4">
-                <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="44">
+            <VerticalStackLayout x:Name="FooterRows" Grid.Row="3" Spacing="4">
+                <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding HelpCommand}" />
                     </Border.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" VerticalOptions="Center">
-                        <Label Grid.Column="0"
-                               Text="&#xf63e;"
-                               FontFamily="FluentUI"
-                               FontSize="16"
-                               VerticalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                    <Grid ColumnDefinitions="36,*" ColumnSpacing="12" VerticalOptions="Center">
+                        <Border Grid.Column="0" WidthRequest="36" HeightRequest="36"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource AppSurface2Light}, Dark={StaticResource AppSurface2Dark}}"
+                                VerticalOptions="Center">
+                            <Label Text="&#xf63e;"
+                                   FontFamily="FluentUI"
+                                   FontSize="18"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                        </Border>
                         <Label Grid.Column="1"
                                Text="{m:LocalizedStrings Key=Help}"
-                               Style="{StaticResource AppMutedLabel}"
-                               TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"
+                               Style="{StaticResource AppSidebarNameLabel}"
+                               TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}"
                                VerticalOptions="Center" />
                     </Grid>
                 </Border>

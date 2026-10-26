@@ -7,7 +7,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="500"
+    Scrollable="False"
     mc:Ignorable="d">
 
     <RelativePanel>

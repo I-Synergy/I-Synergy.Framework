@@ -208,54 +208,55 @@ public class ThemeService : IThemeService
     /// </summary>
     private void SetTitlebar()
     {
-        var appWindow = WindowNativeExtensions.GetAppWindowForCurrentWindow(Application.MainWindow!);
+        if (Application.MainWindow is null)
+            return;
+
+        var appWindow = WindowNativeExtensions.GetAppWindowForCurrentWindow(Application.MainWindow);
 
         var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon.ico");
 
         if (File.Exists(iconPath))
             appWindow.SetIcon(iconPath);
 
-        if (AppWindowTitleBar.IsCustomizationSupported())
+        if (!AppWindowTitleBar.IsCustomizationSupported())
+            return;
+
+        appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+
+        // Themes.Default follows the operating system, so it has to be resolved instead of being
+        // treated as light: painting opaque white caption buttons over a dark shell is exactly what
+        // made the min/max/close buttons look light themed.
+        var isDark = _theme switch
         {
-            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+            Themes.Light => false,
+            Themes.Dark => true,
+            _ => Application.Current?.RequestedTheme == ApplicationTheme.Dark
+        };
 
-            if (_theme == Themes.Dark)
-            {
-                appWindow.TitleBar.ForegroundColor = Colors.White;
-                appWindow.TitleBar.BackgroundColor = Windows.UI.Color.FromArgb(255, 31, 31, 31);
-                appWindow.TitleBar.InactiveForegroundColor = Colors.Gray;
-                appWindow.TitleBar.InactiveBackgroundColor = Windows.UI.Color.FromArgb(255, 31, 31, 31);
+        var foreground = isDark ? Colors.White : Colors.Black;
+        var hoverBackground = isDark
+            ? Windows.UI.Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+            : Windows.UI.Color.FromArgb(0x14, 0x00, 0x00, 0x00);
+        var pressedBackground = isDark
+            ? Windows.UI.Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)
+            : Windows.UI.Color.FromArgb(0x24, 0x00, 0x00, 0x00);
 
-                appWindow.TitleBar.ButtonForegroundColor = Colors.White;
-                appWindow.TitleBar.ButtonBackgroundColor = Windows.UI.Color.FromArgb(255, 31, 31, 31);
-                appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.Gray;
-                appWindow.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Color.FromArgb(255, 31, 31, 31);
+        // Transparent backgrounds let the caption buttons blend with the application's own title bar
+        // instead of drawing an opaque box that contradicts the shell.
+        appWindow.TitleBar.BackgroundColor = Colors.Transparent;
+        appWindow.TitleBar.InactiveBackgroundColor = Colors.Transparent;
+        appWindow.TitleBar.ForegroundColor = foreground;
+        appWindow.TitleBar.InactiveForegroundColor = foreground;
 
-                appWindow.TitleBar.ButtonHoverForegroundColor = Colors.White;
-                appWindow.TitleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(255, 51, 51, 51);
-                appWindow.TitleBar.ButtonPressedForegroundColor = Colors.White;
-                appWindow.TitleBar.ButtonPressedBackgroundColor = Colors.Gray;
-            }
-            else
-            {
-                appWindow.TitleBar.ForegroundColor = Colors.Black;
-                appWindow.TitleBar.BackgroundColor = Colors.White;
-                appWindow.TitleBar.InactiveForegroundColor = Colors.Gray;
-                appWindow.TitleBar.InactiveBackgroundColor = Colors.White;
+        appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+        appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+        appWindow.TitleBar.ButtonForegroundColor = foreground;
+        appWindow.TitleBar.ButtonInactiveForegroundColor = foreground;
+        appWindow.TitleBar.ButtonHoverBackgroundColor = hoverBackground;
+        appWindow.TitleBar.ButtonHoverForegroundColor = foreground;
+        appWindow.TitleBar.ButtonPressedBackgroundColor = pressedBackground;
+        appWindow.TitleBar.ButtonPressedForegroundColor = foreground;
 
-                appWindow.TitleBar.ButtonForegroundColor = Colors.Black;
-                appWindow.TitleBar.ButtonBackgroundColor = Colors.White;
-                appWindow.TitleBar.ButtonInactiveForegroundColor = Colors.Gray;
-                appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.White;
-
-                appWindow.TitleBar.ButtonHoverForegroundColor = Colors.Black;
-                appWindow.TitleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(255, 245, 245, 245);
-                appWindow.TitleBar.ButtonPressedForegroundColor = Colors.Black;
-                appWindow.TitleBar.ButtonPressedBackgroundColor = Colors.White;
-            }
-
-            appWindow.TitleBar.IconShowOptions = IconShowOptions.HideIconAndSystemMenu;
-            appWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
-        }
+        appWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
     }
 }

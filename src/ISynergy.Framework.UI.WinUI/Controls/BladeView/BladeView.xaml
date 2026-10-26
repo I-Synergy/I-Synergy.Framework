@@ -13,15 +13,22 @@
             x:Name="BackdropBorder"
             Background="{ThemeResource TintedBackgroundBrush}"
             Opacity="0.75" />
+        <!--
+            The positioning container is deliberately forced to LeftToRight: XAML mirrors the
+            layout coordinate system under RTL, so a Left/Right alignment applied inside a
+            mirrored container would be ambiguous. The physical edge is resolved once in
+            code-behind (BladeAlignment) and the blade content is mirrored per card instead.
+        -->
         <ListBox
             Background="Transparent"
+            FlowDirection="LeftToRight"
             Padding="{Binding InnerPadding, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
             ItemsSource="{Binding ItemsSource, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel
                         MaxHeight="{Binding BladeHeight, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                        HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        HorizontalAlignment="{Binding BladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         Orientation="{Binding Orientation, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         Spacing="{Binding BladeSpacing, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                 </ItemsPanelTemplate>
@@ -32,7 +39,9 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
                                 <Grid
-                                    HorizontalAlignment="{Binding HorizontalBladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    FlowDirection="{Binding FlowDirection, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    HorizontalAlignment="{Binding BladeAlignment, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="{Binding BladeWidth, ElementName=BladeViewControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                     Background="{ThemeResource TintedBackgroundBrush}"
                                     BorderBrush="{ThemeResource SurfaceStrokeColorDefault}"
                                     BorderThickness="{ThemeResource ContentDialogBorderWidth}"

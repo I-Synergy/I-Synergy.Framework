@@ -103,14 +103,11 @@ public class ThemeService : IThemeService
     /// </summary>
     private async Task ApplyThemeAsync()
     {
-        if (_isInitialized)
-            return;
-
         try
         {
             // Ensure the JS module is loaded
             var module = await _jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./js/theme_service_interop.js");
+                "import", "./_content/I-Synergy.Framework.UI.Blazor/js/theme_service_interop.js");
 
             // Normalize the color to ensure it has a # prefix
             var accentColor = _color.StartsWith("#") ? _color : "#" + _color;

@@ -1,13 +1,11 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
 using Sample.Models;
-using System.Globalization;
 
 namespace Sample.ViewModels;
 
@@ -28,6 +25,16 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     private readonly IFileService<FileResult> _fileService;
     private readonly IBladeService _bladeService;
 
+    /// <summary>
+    /// Gets the glyph of the theme toggle: moon while the light theme is active, sun while the dark
+    /// theme is active (same mapping as Sample.Maui and Sample.WPF).
+    /// </summary>
+    public string ThemeIcon
+    {
+        get => GetValue<string>() ?? string.Empty;
+        private set => SetValue(value);
+    }
+
     public AsyncRelayCommand DisplayCommand { get; private set; }
     public AsyncRelayCommand InfoCommand { get; private set; }
     public AsyncRelayCommand BrowseCommand { get; private set; }
@@ -39,12 +46,18 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public AsyncRelayCommand ChartCommand { get; private set; }
 
     /// <summary>
+    /// Gets the version text shown in the sidebar footer.
+    /// </summary>
+    public string VersionText => $"v{_commonServices.InfoService.ProductVersion}";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="settingsService"></param>
+    /// <param name="themeService">The theme service used to toggle light/dark.</param>
     /// <param name="fileService"></param>
     /// <param name="bladeService"></param>
     /// <param name="logger"></param>
@@ -53,15 +66,19 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         IDialogService dialogService,
         INavigationService navigationService,
         ISettingsService settingsService,
+        IThemeService themeService,
         IFileService<FileResult> fileService,
         IBladeService bladeService,
         ILogger<ShellViewModel> logger)
-        : base(commonServices, dialogService, navigationService, settingsService, logger)
+        : base(commonServices, dialogService, navigationService, settingsService, themeService, logger)
     {
         SetClock();
 
         _fileService = fileService;
         _bladeService = bladeService;
+
+        ThemeIcon = GetThemeIcon(_themeService.Theme);
+        _themeService.ThemeChanged += OnThemeChanged;
 
         _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _clockTimer.Tick += ClockTimerCallBack;
@@ -111,15 +128,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             PrimaryItems?.Add(new NavigationItem("Charts", Application.Current.Resources["chart"], _settingsService.LocalSettings.Color, ChartCommand));
 
             SecondaryItems?.Clear();
-            SecondaryItems?.Add(new NavigationItem("Help", Application.Current.Resources["help"], _settingsService.LocalSettings.Color, HelpCommand));
-            SecondaryItems?.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _settingsService.LocalSettings.Color, LanguageCommand));
-            SecondaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _settingsService.LocalSettings.Color, ThemeCommand));
-
-            if (Application.Services.GetRequiredService<IContext>().IsAuthenticated && Application.Services.GetRequiredService<IContext>().Profile is Profile)
-                SecondaryItems?.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _settingsService.LocalSettings.Color, SettingsCommand));
         }
 
-        SecondaryItems?.Add(new NavigationItem(Application.Services.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
     }
 
     protected override Task SignOutAsync() =>
@@ -127,27 +137,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     public override async Task InitializeFirstRunAsync()
     {
-        if (_settingsService.GlobalSettings!.IsFirstRun)
+        if (_settingsService.GlobalSettings is { IsFirstRun: true } globalSettings)
         {
-            if (await _dialogService.ShowMessageAsync(
-                _commonServices.LanguageService.GetString("ChangeLanguage"),
-                _commonServices.LanguageService.GetString("Language"),
-                MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
-            {
-                await _dialogService.ShowDialogAsync<ILanguageWindow, LanguageViewModel, CultureInfo>(
-                    async culture =>
-                    {
-                        _settingsService.LocalSettings.Language = culture.Name;
-                        _settingsService.SaveLocalSettings();
-                        culture.SetLocalizationLanguage();
-                        _commonServices.RestartApplication();
-                    });
-            }
-
-            await _bladeService.OpenBladeAsync<SettingsViewModel, object>(
-                this,
-                _ => { _commonServices.RestartApplication(); return Task.CompletedTask; },
-                () => { _commonServices.RestartApplication(); return Task.CompletedTask; });
+            // The settings blade is opened from the header; do not force it on first run.
+            globalSettings.IsFirstRun = false;
+            await _settingsService.AddOrUpdateGlobalSettingsAsync(globalSettings);
         }
     }
 
@@ -224,7 +218,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        _navigationService.NavigateModalAsync<SettingsViewModel>();
+        OpenSettingsBladeAsync();
+
+    private Task OpenSettingsBladeAsync() =>
+        _bladeService.OpenBladeAsync<SettingsViewModel, object>(
+            // The shell-level host, so the settings pane spans the whole window (it is rendered by the
+            // shell's BladeView rather than by the page that requested it).
+            Application.Services.GetRequiredService<BladeHostViewModel>(),
+            _ => Task.CompletedTask,
+            () => Task.CompletedTask);
 
     protected override Task OpenBackgroundAsync() => throw new NotImplementedException();
 
@@ -240,6 +242,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
 
 
+            _themeService.ThemeChanged -= OnThemeChanged;
+
             DisplayCommand?.Dispose();
             InfoCommand?.Dispose();
             BrowseCommand?.Dispose();
@@ -253,5 +257,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             base.Dispose(disposing);
         }
     }
+
+    private static string GetThemeIcon(Themes theme) =>
+        theme == Themes.Light ? "\uEE45" : "\uEE4D";
+
+    private void OnThemeChanged(object? sender, EventArgs e) =>
+        ThemeIcon = GetThemeIcon(_themeService.Theme);
 }
 

@@ -10,6 +10,7 @@ using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
@@ -120,6 +121,7 @@ public static class WindowsAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
         appBuilder.Services.TryAddSingleton<IBladeService, BladeService>();
+        appBuilder.Services.TryAddSingleton<BladeHostViewModel>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
         appBuilder.Services.TryAddSingleton<DialogService>();
         appBuilder.Services.TryAddSingleton<IDialogService>(sp => sp.GetRequiredService<DialogService>());

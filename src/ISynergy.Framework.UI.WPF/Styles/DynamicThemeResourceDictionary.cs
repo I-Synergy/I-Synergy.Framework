@@ -23,6 +23,12 @@ public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeR
         this["SecondaryBrush"] = new SolidColorBrush(secondary);
         this["TertiaryBrush"] = new SolidColorBrush(tertiary);
 
+        // System-alias keys used by framework controls (spinner, splash) and by WinUI-compatible
+        // resource dictionaries. Without them those DynamicResource lookups resolve to nothing and
+        // the controls fall back to system/default colours.
+        this["SystemAccentColor"] = primary;
+        this["SystemAccentBrush"] = new SolidColorBrush(primary);
+
         // TintedGray colors and brushes
         foreach (var (key, (red, green, blue)) in grays)
         {

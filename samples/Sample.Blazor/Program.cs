@@ -38,6 +38,10 @@ public static class Program
                     builder.Services.AddFluentUIComponents();
 
                     builder.Services.AddSingleton<INavigationMenuService, NavigationMenuService>();
+
+                    builder.Services.AddScoped<
+                        ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService,
+                        ISynergy.Framework.UI.Services.ThemeService>();
                 },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(Program).Namespace!));

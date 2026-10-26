@@ -9,8 +9,10 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:ISynergy.Framework.Core.Models"
+    xmlns:m="using:ISynergy.Framework.UI.Markup"
     xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     x:Name="MainWindow"
+    Scrollable="False"
     mc:Ignorable="d">
 
     <c:View.Resources>
@@ -44,23 +46,37 @@
 
     <Grid Background="{ThemeResource TintedBackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="35" />
+            <RowDefinition Height="48" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <StackPanel
-            Grid.Row="0"
-            Margin="18,0"
-            Orientation="Horizontal">
-            <Image
-                Width="18"
-                Height="18"
-                Source="/Assets/icon.png" />
-            <TextBlock
-                Margin="18,0"
+        <Grid x:Name="AppTitleBar" Grid.Row="0" Margin="18,0" Background="Transparent">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+                <TextBlock Style="{StaticResource AppBreadcrumbLink}" Text="WinUI Sample" />
+                <TextBlock Style="{StaticResource AppBreadcrumbLabel}" Text="/" />
+                <TextBlock Style="{StaticResource AppBreadcrumbCurrent}" Text="{Binding SelectedItem.Name}" />
+            </StackPanel>
+
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Text="{Binding Title}" />
-        </StackPanel>
+                Margin="0,0,150,0"
+                Spacing="4">
+                <Button
+                    Style="{StaticResource AppIconButton}"
+                    Command="{Binding ThemeCommand}"
+                    Content="{Binding ThemeIcon}"
+                    FontFamily="{StaticResource FluentUI}"
+                    ToolTipService.ToolTip="{m:LanguageResource Key=Theme}" />
+                <Button
+                    Style="{StaticResource AppIconButton}"
+                    Command="{Binding SettingsCommand}"
+                    Content="&#xF588;"
+                    FontFamily="{StaticResource FluentUI}"
+                    ToolTipService.ToolTip="{m:LanguageResource Key=Settings}" />
+            </StackPanel>
+        </Grid>
 
         <NavigationView
             x:Name="RootNavigationView"
@@ -71,10 +87,52 @@
             IsBackEnabled="{Binding IsBackEnabled, Mode=OneWay}"
             IsEnabled="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             IsSettingsVisible="False"
+            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+            Background="{ThemeResource AppSurfaceBrush}"
             IsTitleBarAutoPaddingEnabled="False"
             MenuItemTemplateSelector="{StaticResource ItemSelector}"
             MenuItemsSource="{Binding PrimaryItems}"
             PaneDisplayMode="Left">
+            <NavigationView.PaneHeader>
+                <StackPanel Margin="8,12,8,8" Orientation="Horizontal" Spacing="12">
+                    <Border Style="{StaticResource AppBrandTile}">
+                        <Path
+                            Width="20"
+                            Height="20"
+                            Fill="White"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Data="M3,3 H11 V11 H3 Z M13,3 H21 V11 H13 Z M3,13 H11 V21 H3 Z M13,13 H21 V21 H13 Z" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource AppBrandName}" Text="WinUI Sample" />
+                        <TextBlock Style="{StaticResource AppSidebarSubtitle}" Text="{m:LanguageResource Key=ApplicationTagline}" />
+                    </StackPanel>
+                </StackPanel>
+            </NavigationView.PaneHeader>
+            <NavigationView.PaneFooter>
+                <StackPanel Margin="0,0,0,16" Spacing="4">
+                    <!-- A NavigationViewItem (not a custom Button) so the footer entry inherits the
+                         exact size, padding and indentation of the menu items above it. -->
+                    <NavigationViewItem
+                        Content="{m:LanguageResource Key=Help}"
+                        SelectsOnInvoked="False">
+                        <NavigationViewItem.Icon>
+                            <FontIcon Glyph="&#xE897;" />
+                        </NavigationViewItem.Icon>
+                        <i:Interaction.Behaviors>
+                            <i:EventTriggerBehavior EventName="Tapped">
+                                <i:InvokeCommandAction Command="{Binding HelpCommand}" />
+                            </i:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </NavigationViewItem>
+                    <TextBlock
+                        Style="{StaticResource AppMutedLabel}"
+                        Margin="16,0,0,0"
+                        Text="{Binding VersionText}" />
+                </StackPanel>
+            </NavigationView.PaneFooter>
             <Frame x:Name="ContentRootFrame" IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
                 <not_wasm:Frame.ContentTransitions>
                     <not_wasm:TransitionCollection>
@@ -83,6 +141,11 @@
                 </not_wasm:Frame.ContentTransitions>
             </Frame>
         </NavigationView>
+
+        <c:BladeView
+            x:Name="BladeDetails"
+            Grid.Row="1"
+            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <Grid Grid.RowSpan="2" Visibility="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

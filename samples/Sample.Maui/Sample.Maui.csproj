@@ -121,6 +121,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+		<PackageReference Include="Microsoft.Maui.DevFlow.Agent" />
 		<PackageReference Include="Syncfusion.Maui.Core" />
 	</ItemGroup>
 	<ItemGroup>

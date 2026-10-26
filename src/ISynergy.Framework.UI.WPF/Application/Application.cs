@@ -20,6 +20,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 #pragma warning disable IDE0130, S1200
 
@@ -41,6 +42,13 @@ public abstract class Application : System.Windows.Application, IDisposable
 
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
+
+    /// <summary>
+    /// Resource key used by <see cref="LoadingView"/> and the main window for the splash/surface
+    /// background. Define it in application resources to theme the splash screen; when it is absent
+    /// the system window brush is used.
+    /// </summary>
+    public const string SplashBackgroundBrushKey = "SplashBackgroundBrush";
 
     protected IServiceProvider? _services;
     protected LoadingView? _loadingView;
@@ -64,6 +72,12 @@ public abstract class Application : System.Windows.Application, IDisposable
                 app._services = value;
         }
     }
+
+    /// <summary>
+    /// Gets a value indicating whether the main window uses the framework's borderless
+    /// window chrome (the app renders its own header and caption buttons).
+    /// </summary>
+    protected virtual bool UseCustomWindowChrome => false;
 
     /// <summary>
     /// Default constructor.
@@ -332,7 +346,43 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected override void OnStartup(StartupEventArgs e)
     {
         MainWindow = new Window();
+
+        if (UseCustomWindowChrome)
+        {
+            MainWindow.WindowStyle = WindowStyle.None;
+            MainWindow.ResizeMode = ResizeMode.CanResize;
+
+            var windowChrome = new System.Windows.Shell.WindowChrome
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(6),
+                GlassFrameThickness = new Thickness(0),
+                CornerRadius = new CornerRadius(8),
+                UseAeroCaptionButtons = false
+            };
+
+            System.Windows.Shell.WindowChrome.SetWindowChrome(MainWindow, windowChrome);
+
+            // Rounded corners only while the window is restored; maximized windows are square.
+            MainWindow.StateChanged += (_, _) =>
+            {
+                var normalMaximized = string.Equals(MainWindow.Tag as string, "NormalMaximized", StringComparison.Ordinal);
+                windowChrome.CornerRadius = MainWindow.WindowState == WindowState.Normal && !normalMaximized
+                    ? new CornerRadius(8)
+                    : new CornerRadius(0);
+            };
+        }
+
         MainWindow.Activate();
+
+        // Give the window a themed surface before the first page renders. Without this the window
+        // falls back to the system window brush and the splash (a translucent scrim page) shows up
+        // grey regardless of the selected theme. Consumers can theme the splash by defining
+        // "SplashBackgroundBrush"; otherwise the system window brush is used.
+        if (TryFindResource(SplashBackgroundBrushKey) is Brush)
+            MainWindow.SetResourceReference(System.Windows.Window.BackgroundProperty, SplashBackgroundBrushKey);
+        else
+            MainWindow.Background = SystemColors.WindowBrush;
 
         var rootFrame = MainWindow.Content as Frame;
 

@@ -1,0 +1,86 @@
+<c:View
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.WPF"
+    x:Class="Sample.Views.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    Width="380"
+    mc:Ignorable="d"
+    d:DesignHeight="600" d:DesignWidth="800">
+
+    <!-- Settings blade content. The blade card already supplies the surface, border and corner
+         radius, so there is no nested card here and no page background. -->
+    <Grid Margin="22,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Text="{Binding Title}"
+            Style="{StaticResource AppSettingsHeader}" />
+
+        <StackPanel Grid.Row="1" Margin="0,18,0,0">
+            <TextBlock Text="{m:GetString Language}" Style="{StaticResource AppSettingsLabel}" />
+            <ComboBox
+                ItemsSource="{Binding Languages}"
+                SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                DisplayMemberPath="DisplayName"
+                Style="{StaticResource AppSettingsField}" />
+
+            <TextBlock
+                Text="{m:GetString Theme}"
+                Style="{StaticResource AppSettingsLabel}"
+                Margin="0,16,0,4" />
+            <ComboBox
+                ItemsSource="{Binding ThemeOptions}"
+                SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                Style="{StaticResource AppSettingsField}" />
+
+            <TextBlock
+                Text="{m:GetString AccentColor}"
+                Style="{StaticResource AppSettingsLabel}"
+                Margin="0,16,0,4" />
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    x:Name="AccentTeal"
+                    Tag="#0B5D55"
+                    Background="#0B5D55"
+                    Style="{StaticResource AppAccentSwatch}"
+                    Click="OnAccentClicked" />
+                <Button
+                    x:Name="AccentBlue"
+                    Tag="#0066CC"
+                    Background="#0066CC"
+                    Style="{StaticResource AppAccentSwatch}"
+                    Margin="8,0,0,0"
+                    Click="OnAccentClicked" />
+                <Button
+                    x:Name="AccentGreen"
+                    Tag="#10B981"
+                    Background="#10B981"
+                    Style="{StaticResource AppAccentSwatch}"
+                    Margin="8,0,0,0"
+                    Click="OnAccentClicked" />
+                <Button
+                    x:Name="AccentOrange"
+                    Tag="#FF8C00"
+                    Background="#FF8C00"
+                    Style="{StaticResource AppAccentSwatch}"
+                    Margin="8,0,0,0"
+                    Click="OnAccentClicked" />
+            </StackPanel>
+        </StackPanel>
+
+        <Button
+            Grid.Row="2"
+            Content="{m:GetString Close}"
+            Style="{StaticResource AppPrimaryButton}"
+            Command="{Binding CancelCommand}"
+            Margin="0,22,0,0" />
+    </Grid>
+</c:View>

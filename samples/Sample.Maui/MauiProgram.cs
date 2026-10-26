@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
+using Microsoft.Maui.DevFlow.Agent;
 using Sample.Abstractions.Services;
 using Sample.Extensions;
 using Sample.OpenTelemetry;
@@ -88,7 +90,6 @@ public static class MauiProgram
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
                 appBuilder.Services.TryAddSingleton<ICameraService, CameraService>();
                 appBuilder.Services.TryAddSingleton<ApplicationMonitor>();
-                appBuilder.Services.AddSingleton<SettingsDrawerState>();
                 appBuilder.Services.AddSingleton<ShellAccentTokens>();
             },
                 mainAssembly,
@@ -161,12 +162,82 @@ public static class MauiProgram
             })
             .ConfigureSyncfusionCore();
 
+#if WINDOWS
+        // The shell header is drawn by the root page; extend it into the native title bar so the
+        // window has no separate OS title bar. The caption buttons stay native. Their colours and
+        // backgrounds are applied by the root page once the title bar is realized (MAUI's title-bar
+        // handler resets them here otherwise).
+        builder.ConfigureLifecycleEvents(events =>
+        {
+            events.AddWindows(windows => windows.OnWindowCreated(window =>
+            {
+                window.ExtendsContentIntoTitleBar = true;
+
+                // The header is the title bar; drop the system backdrop so the title-bar strip is
+                // painted by the header/shell instead of blending the desktop wallpaper through it.
+                window.SystemBackdrop = null;
+
+                // Tall caption area (48px), the same height as the shell header row, so the native
+                // minimise/maximise/close buttons line up with the header's icon buttons — the
+                // WinUI sample does the same.
+                window.AppWindow.TitleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
+            }));
+        });
+
+        // The header icon buttons live in the title bar. WinUI draws its focus rectangle around the
+        // first focusable control, which reads as a permanent "selected" state; the rectangle is
+        // suppressed while keyboard focus still moves between the buttons.
+        Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping(
+            "HeaderIconFocusVisual",
+            (handler, view) =>
+            {
+                if (view is Button { StyleId: "HeaderIconButton" })
+                    handler.PlatformView.UseSystemFocusVisuals = false;
+            });
+
+
+        // Cursors: MAUI has no cursor API, so the buttons and the tappable rows/labels get the hand
+        // cursor through their platform element.
+        Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping(
+            "HandCursor", (handler, view) => ApplyHandCursor(handler.PlatformView));
+        Microsoft.Maui.Handlers.BorderHandler.Mapper.AppendToMapping(
+            "HandCursor", (handler, view) =>
+            {
+                if (view is Border { StyleId: "SidebarRow" })
+                    ApplyHandCursor(handler.PlatformView);
+            });
+        Microsoft.Maui.Handlers.LabelHandler.Mapper.AppendToMapping(
+            "HandCursor", (handler, view) =>
+            {
+                if (view is Label { StyleId: "LinkLabel" })
+                    ApplyHandCursor(handler.PlatformView);
+            });
+#endif
+
+#if DEBUG
+        builder.AddMauiDevFlowAgent();
+#endif
+
         return builder.Build();
     }
 
+#if WINDOWS
+    private static void ApplyHandCursor(Microsoft.UI.Xaml.UIElement? element)
+    {
+        try
+        {
+            var property = typeof(Microsoft.UI.Xaml.UIElement).GetProperty(
+                "ProtectedCursor",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
 
-
-
-
-
+            property?.SetValue(
+                element,
+                Microsoft.UI.Input.InputSystemCursor.Create(Microsoft.UI.Input.InputSystemCursorShape.Hand));
+        }
+        catch (Exception)
+        {
+            // A missing cursor is cosmetic; never fail the handler mapping over it.
+        }
+    }
+#endif
 }

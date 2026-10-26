@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net11.0</TargetFramework>
+		<TargetFrameworks>net10.0;net11.0</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Http" />
-		<PackageReference Include="Microsoft.Extensions.Options" />
 		<PackageReference Include="NuGet.Commands" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" />
 	</ItemGroup>

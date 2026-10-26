@@ -1,98 +1,132 @@
 @using ISynergy.Framework.AspNetCore.Blazor.Constants
-@using ISynergy.Framework.Core.Services
+@using ISynergy.Framework.Core.Enumerations
 @using Microsoft.FluentUI.AspNetCore.Components
-@using Sample.Components.Controls
 
-@* v5: FluentHeader / FluentBodyContent / FluentFooter were removed and replaced by the CSS-grid
-   based FluentLayout + FluentLayoutItem (Area + optional Height/Width/Sticky).
-   The navigation collapse is owned by FluentLayoutHamburger: on desktop it toggles the [hidden]
-   attribute of the navigation area, on mobile it opens a drawer holding the same content.
-   Display="DesktopMobile" is required, otherwise the hamburger is hidden above the breakpoint
-   and the navigation would always stay expanded.
-   Note: the shipped FluentLayoutHamburger JS leaves aria-expanded unset on first render, so the
-   first desktop click collapses the navigation while setting aria-expanded="true" (upstream
-   quirk); the show/hide behaviour itself toggles correctly on every click.
-   NavigationDeferredLoading keeps exactly one copy of the navigation in the DOM: the hamburger
-   drawer reuses the Navigation area's content, so without it the navigation (and its DOM ids)
-   would be rendered twice. *@
-<FluentLayout NavigationDeferredLoading="true">
-	<FluentLayoutItem Area="LayoutArea.Header">
-		<FluentLayoutHamburger Display="HamburgerDisplay.DesktopMobile" PanelHeader="Sample" />
-		<FluentText Weight="TextWeight.Semibold">Sample</FluentText>
-		<FluentSpacer />
+@inherits LayoutComponentBase
 
-		<!-- Theme Toggle Button: switches between Light (🌙) and Dark (☀️) -->
-		<FluentButton OnClick="@ToggleTheme" Title="Toggle theme (light/dark)" IconOnly="true">
-			@if (_localSettings?.Theme == ISynergy.Framework.Core.Enumerations.Themes.Light)
-			{
-				<span>🌙</span>
-			}
-			else
-			{
-				<span>☀️</span>
-			}
-		</FluentButton>
+@* The Blazor shell mirrors the MAUI sample: a permanent sidebar, a breadcrumb header and a
+   content column. FluentLayout is deliberately not used here — its chrome does not match the
+   native sample shells. *@
+<div class="app-shell" data-app-theme="@((_localSettings?.Theme ?? Themes.Dark) == Themes.Dark ? "dark" : "light")">
+    <aside class="app-sidebar" aria-label="@L("Navigation")">
+        <div class="app-brand">
+            <span class="app-brand-tile" aria-hidden="true">▦</span>
+            <span class="app-brand-name">
+                Blazor Sample
+                <span class="app-brand-sub">Framework Demo</span>
+            </span>
+        </div>
 
-		<!-- Language Toggle: English ↔ Dutch -->
-		<FluentButton OnClick="@ToggleLanguage" Title="Toggle language (English/Dutch)" IconOnly="true">
-			🌐
-		</FluentButton>
-	</FluentLayoutItem>
+        <nav class="app-nav" aria-label="@L("Navigation")">
+            <NavLink class="app-nav-item" href="" Match="NavLinkMatch.All">
+                <span class="app-nav-icon" aria-hidden="true">⌂</span>
+                <span>Home</span>
+            </NavLink>
+            <NavLink class="app-nav-item" href="counter">
+                <span class="app-nav-icon" aria-hidden="true">＋</span>
+                <span>Counter</span>
+            </NavLink>
+            <NavLink class="app-nav-item" href="weather">
+                <span class="app-nav-icon" aria-hidden="true">☁</span>
+                <span>Weather</span>
+            </NavLink>
+            <NavLink class="app-nav-item" href="commanddemoview">
+                <span class="app-nav-icon" aria-hidden="true">▶</span>
+                <span>Command Demo</span>
+            </NavLink>
+        </nav>
 
-	@* The navigation column follows the canonical v5 demo layout: an explicit height (the
-	   --layout-body-height variable is published by FluentLayout itself, as
-	   calc(var(--layout-height) - header height - footer height)), sticky positioning, its own
-	   scrollbar and a divider. The Height parameter is required because v5.0.0 styles
-	   [area="nav"][sticky] as `height: fit-content`.
-	   No Width parameter on purpose: the grid's auto column is already sized by the navigation's
-	   own Width="250px" (see NavigationMenuControl), and an explicit 250px item width would clip
-	   1px off the navigation, since the border below is inside the border box.
-	   One sizing rule cannot be expressed through these parameters and lives in site.css. *@
-	<FluentLayoutItem Area="LayoutArea.Navigation" Height="var(--layout-body-height)" Sticky="true"
-					  Style="overflow-y: auto; padding: 0px; border-right: var(--strokeWidthThin) solid var(--colorNeutralStroke1);">
-		<NavigationMenuControl />
-	</FluentLayoutItem>
+        <div class="app-sidebar-footer">
+            <a class="app-nav-item"
+               href="https://github.com/I-Synergy/I-Synergy.Framework"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="@L("Help")">
+                <span class="app-nav-icon" aria-hidden="true">?</span>
+                <span>@L("Help")</span>
+            </a>
+            <span class="app-version">v@_version</span>
+        </div>
+    </aside>
 
-	<FluentLayoutItem Area="LayoutArea.Content">
-		@* v5 removed FluentMessageBarProvider.ClearAfterNavigation; the same behaviour is
-		   emulated in MainLayout.razor.cs via INotificationService.CloseAllMessageBarsAsync(). *@
-		<FluentMessageBarProvider Section="@MessageConstants.MESSAGES_TOP" />
+    <div class="app-main">
+        <header class="app-header">
+            <div class="app-breadcrumb">
+                <a href="">Blazor Sample</a>
+                <span aria-hidden="true">/</span>
+                <strong>@CurrentPageTitle</strong>
+            </div>
+            <div class="app-header-actions">
+                <button type="button" class="app-icon-button" title="@L("Theme")" aria-label="@L("Theme")" @onclick="ToggleTheme">
+                    @((_localSettings?.Theme ?? Themes.Dark) == Themes.Light ? "🌙" : "☀️")
+                </button>
+                <button type="button" class="app-icon-button" title="@L("Settings")" aria-label="@L("Settings")" @onclick="ToggleSettings">
+                    ⚙
+                </button>
+            </div>
+        </header>
 
-		<div class="@ContentClass" style="display: flex; flex-direction: column; height: 100%;">
-			<article id="article" class="@ArticleClass" style="margin: 4px; flex: 1; min-height: 0; display: flex; flex-direction: column;">
-				@Body
-			</article>
-		</div>
-	</FluentLayoutItem>
+        <FluentMessageBarProvider Section="@MessageConstants.MESSAGES_TOP" />
 
-	<FluentLayoutItem Area="LayoutArea.Footer" Height="40px">
-		<div class="version">
-		</div>
-		<FluentSpacer />
-		<div class="copy">
-		</div>
-	</FluentLayoutItem>
-</FluentLayout>
+        <main class="app-content">
+            <article id="article">@Body</article>
+        </main>
+    </div>
+</div>
 
-@* v5: FluentProviders replaces FluentDialogProvider + FluentToastProvider + FluentTooltipProvider +
-   FluentKeyCodeProvider. It has no ChildContent, so it must be self-closing, and it does NOT
-   include FluentMessageBarProvider (its Section parameter is required) — that stays separate above.
-   FluentMenuProvider was removed in v5: the menu service is no longer used. *@
-<FluentProviders />
+@if (_settingsOpen)
+{
+    <div class="app-settings-scrim" @onclick="CloseSettings"></div>
+    <aside class="app-settings-drawer" role="dialog" aria-label="@L("Settings")">
+        <h2 class="app-settings-title">@L("Settings")</h2>
+
+        <div class="app-settings-body">
+            <label class="app-settings-label" for="app-language">@L("Language")</label>
+            <select id="app-language" class="app-settings-select" @bind="_selectedLanguage" @bind:after="ApplyLanguageAsync">
+                @foreach (var culture in SupportedCultures)
+                {
+                    <option value="@culture.Name">@culture.DisplayName</option>
+                }
+            </select>
+
+            <label class="app-settings-label" for="app-theme">@L("Theme")</label>
+            <select id="app-theme" class="app-settings-select" @bind="_selectedThemeName" @bind:after="ApplyThemeAsync">
+                <option value="Light">Light</option>
+                <option value="Dark">Dark</option>
+            </select>
+
+            <label class="app-settings-label">@L("AccentColor")</label>
+            <div class="app-accent-row">
+                @foreach (var color in AccentColors)
+                {
+                    <button
+                        type="button"
+                        class="app-accent-swatch @(IsAccentSelected(color) ? "selected" : "")"
+                        style="background-color:@color"
+                        aria-label="@color"
+                        @onclick="() => ApplyAccent(color)"></button>
+                }
+            </div>
+        </div>
+
+        <button type="button" class="app-settings-close" @onclick="CloseSettings">@L("Close")</button>
+    </aside>
+}
 
 @* v5: FluentOverlay dropped Transparent / InteractiveExceptId / PreventScroll, and Opacity is now an
    int percentage. CloseMode="Manual" replaces v4's InteractiveExceptId intent (the busy overlay
    can only be shown/hidden through BusyService.IsBusy and never by user interaction). *@
 <FluentOverlay Visible="@_commonServices.BusyService.IsBusy"
-			   FullScreen="true"
-			   Interactive="true"
-			   CloseMode="OverlayCloseMode.Manual"
-			   Opacity="40">
-	<div id="busyIndicator" style="width: 100vw; height: 100vh; display:flex; align-items:center; justify-content:center">
-		<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
-			<FluentSpinner />
-			<FluentText>@_commonServices.BusyService.BusyMessage</FluentText>
-		</FluentStack>
-	</div>
-
+               FullScreen="true"
+               Interactive="true"
+               CloseMode="OverlayCloseMode.Manual"
+               Opacity="40">
+    <div id="busyIndicator" style="width: 100vw; height: 100vh; display:flex; align-items:center; justify-content:center">
+        <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
+            <FluentSpinner />
+            <FluentText>@_commonServices.BusyService.BusyMessage</FluentText>
+        </FluentStack>
+    </div>
 </FluentOverlay>
+
+<FluentProviders />

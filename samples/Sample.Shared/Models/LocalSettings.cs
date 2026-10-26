@@ -13,7 +13,7 @@ public class LocalSettings : ObservableValidatedClass, ILocalSettings
     public List<string> Users { get; set; } = [];
     public string DefaultUser { get; set; } = string.Empty;
     public string? RefreshToken { get; set; } = string.Empty;
-    public string Color { get; set; } = string.Empty;
+    public string Color { get; set; } = "#0B5D55";
     public Themes Theme { get; set; } = Themes.Dark;
     public bool IsLightThemeEnabled => Theme == Themes.Light;
     public bool IsAutoLogin { get; set; }

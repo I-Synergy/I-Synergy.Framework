@@ -67,6 +67,13 @@ public class LoadingView : Page
 
     private void InitializeContent(SplashScreenOptions splashScreenOptions)
     {
+        // Theme the splash surface instead of leaving the page transparent over the system window
+        // brush (which made the splash look grey whatever the selected theme).
+        if (Application.Current?.TryFindResource(Application.SplashBackgroundBrushKey) is Brush)
+            SetResourceReference(BackgroundProperty, Application.SplashBackgroundBrushKey);
+        else
+            Background = SystemColors.WindowBrush;
+
         var overlay = new Grid
         {
             Background = new SolidColorBrush(Color.FromArgb(0x40, 0x00, 0x00, 0x00))
@@ -76,13 +83,22 @@ public class LoadingView : Page
         {
             Content = _commonServices.LanguageService.GetString("Skip"),
             Margin = new Thickness(20),
+            MinWidth = 96,
+            Padding = new Thickness(14, 6, 14, 6),
+            BorderThickness = new Thickness(0),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Bottom,
             IsEnabled = false
         };
 
-        if (Application.Current.Resources.Contains("SystemAccentColor") && Application.Current.Resources["SystemAccentColor"] is Color primaryColor)
-            _signInButton.Background = new SolidColorBrush(primaryColor);
+        // Use the themed accent when one is available and pick a caption colour that stays readable
+        // on it (light accents need dark ink). Without this the button kept the default grey chrome
+        // and an inherited light caption, which was unreadable on the splash.
+        if (ResolveAccentColor() is { } accentColor)
+        {
+            _signInButton.Background = new SolidColorBrush(accentColor);
+            _signInButton.Foreground = GetContrastingBrush(accentColor);
+        }
 
         var mainGrid = new Grid();
 
@@ -95,6 +111,10 @@ public class LoadingView : Page
                 Opacity = 1
             };
             mainGrid.Children.Add(backgroundImage);
+
+            // The scrim exists to keep the spinner/button readable over a splash image. Without an
+            // image it would only wash out the themed surface, so it is only added for image splashes.
+            mainGrid.Children.Add(overlay);
         }
 
         var loadingSpinner = new LoadingSpinner
@@ -110,11 +130,48 @@ public class LoadingView : Page
             Path = new PropertyPath(nameof(IBusyService.BusyMessage))
         });
 
-        mainGrid.Children.Add(overlay);
         mainGrid.Children.Add(loadingSpinner);
         mainGrid.Children.Add(_signInButton);
 
         Content = mainGrid;
+    }
+
+    /// <summary>
+    /// Resolves the theme accent from the application resources, when one is available.
+    /// </summary>
+    private static Color? ResolveAccentColor()
+    {
+        if (Application.Current is not { } app)
+            return null;
+
+        if (app.TryFindResource("SystemAccentBrush") is SolidColorBrush accentBrush)
+            return accentBrush.Color;
+
+        if (app.TryFindResource("SystemAccentColor") is Color accentColor)
+            return accentColor;
+
+        if (app.TryFindResource("PrimaryBrush") is SolidColorBrush primaryBrush)
+            return primaryBrush.Color;
+
+        return app.TryFindResource("Primary") is Color primary ? primary : null;
+    }
+
+    /// <summary>
+    /// Returns black or white, whichever stays readable on <paramref name="background"/>.
+    /// </summary>
+    private static Brush GetContrastingBrush(Color background)
+    {
+        static double Linearize(byte channel)
+        {
+            var value = channel / 255d;
+            return value <= 0.03928d ? value / 12.92d : Math.Pow((value + 0.055d) / 1.055d, 2.4d);
+        }
+
+        var luminance = (0.2126d * Linearize(background.R))
+            + (0.7152d * Linearize(background.G))
+            + (0.0722d * Linearize(background.B));
+
+        return luminance > 0.5d ? Brushes.Black : Brushes.White;
     }
 
     private void SetupEventHandlers()

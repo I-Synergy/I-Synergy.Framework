@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Sample.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="400"
     mc:Ignorable="d">
 
     <Grid>

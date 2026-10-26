@@ -4,19 +4,17 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.Globalization.Extensions;
-using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.ViewModels;
 using Sample.Models;
 using System.Collections.ObjectModel;
-using System.Globalization;
 
 namespace Sample.ViewModels;
 
@@ -26,7 +24,8 @@ namespace Sample.ViewModels;
 public class ShellViewModel : BaseShellViewModel
 {
     private readonly IFileService<FileResult> _fileService;
-    private readonly IThemeService _themeService;
+    private readonly IBladeService _bladeService;
+    private readonly BladeHostViewModel _bladeHost;
 
     /// <summary>
     /// Gets or sets the Version property value.
@@ -54,6 +53,16 @@ public class ShellViewModel : BaseShellViewModel
     /// <value>The selected test items.</value>
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = [];
 
+    /// <summary>
+    /// Gets the glyph of the theme toggle: moon while the light theme is active, sun while the dark
+    /// theme is active (the same mapping as Sample.Maui).
+    /// </summary>
+    public string ThemeIcon
+    {
+        get => GetValue<string>() ?? string.Empty;
+        private set => SetValue(value);
+    }
+
     public AsyncRelayCommand InfoCommand { get; private set; }
     public AsyncRelayCommand BrowseCommand { get; private set; }
 
@@ -61,6 +70,7 @@ public class ShellViewModel : BaseShellViewModel
     public AsyncRelayCommand UnitConversionCommand { get; private set; }
     public AsyncRelayCommand ValidationTestCommand { get; private set; }
     public AsyncRelayCommand NugetUnlisterCommand { get; private set; }
+    public AsyncRelayCommand DetailsCommand { get; private set; }
     public AsyncRelayCommand SelectSingleCommand { get; private set; }
     public AsyncRelayCommand SelectMultipleCommand { get; private set; }
 
@@ -75,6 +85,8 @@ public class ShellViewModel : BaseShellViewModel
     /// <param name="logger"></param>
     /// <param name="fileService"></param>
     /// <param name="themeService">The theme service for managing theme and accent color.</param>
+    /// <param name="bladeService">The blade service that opens blades into the shell-owned pane.</param>
+    /// <param name="bladeHost">The shell-level owner of the blade pane.</param>
     public ShellViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
@@ -82,14 +94,19 @@ public class ShellViewModel : BaseShellViewModel
         ISettingsService settingsService,
         ILogger<ShellViewModel> logger,
         IFileService<FileResult> fileService,
-        IThemeService themeService)
-        : base(commonServices, dialogService, navigationService, settingsService, logger)
+        IThemeService themeService,
+        IBladeService bladeService,
+        BladeHostViewModel bladeHost)
+        : base(commonServices, dialogService, navigationService, settingsService, themeService, logger)
     {
         _fileService = fileService;
-        _themeService = themeService;
+        _bladeService = bladeService;
+        _bladeHost = bladeHost;
 
         Title = _commonServices.InfoService.ProductName;
         Version = _commonServices.InfoService.ProductVersion;
+        ThemeIcon = GetThemeIcon(_themeService.Theme);
+        _themeService.ThemeChanged += OnThemeChanged;
 
         InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
         BrowseCommand = new AsyncRelayCommand(BrowseFileAsync);
@@ -97,6 +114,7 @@ public class ShellViewModel : BaseShellViewModel
         ValidationTestCommand = new AsyncRelayCommand(OpenValidationTestAsync);
         UnitConversionCommand = new AsyncRelayCommand(OpenUnitConversionAsync);
         NugetUnlisterCommand = new AsyncRelayCommand(UnlistNugetAsync);
+        DetailsCommand = new AsyncRelayCommand(OpenDetailsAsync);
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
 
@@ -126,10 +144,12 @@ public class ShellViewModel : BaseShellViewModel
             PrimaryItems?.Add(new NavigationItem("Select single item", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, SelectSingleCommand));
             PrimaryItems?.Add(new NavigationItem("Select multiple items", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, SelectMultipleCommand));
             PrimaryItems?.Add(new NavigationItem("Nuget Unlister", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, NugetUnlisterCommand));
+            PrimaryItems?.Add(new NavigationItem("Blades", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, DetailsCommand));
         }
 
-        PrimaryItems?.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _settingsService.LocalSettings.Color, ThemeCommand));
-        PrimaryItems?.Add(new NavigationItem(Application.Services.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _settingsService.LocalSettings.Color, SignInCommand));
+
+        if (PrimaryItems?.FirstOrDefault() is { } firstItem)
+            SelectedItem = firstItem;
     }
 
     private Task SelectSingleAsync() =>
@@ -150,6 +170,13 @@ public class ShellViewModel : BaseShellViewModel
 
     private Task UnlistNugetAsync() =>
         _navigationService.NavigateAsync<NugetViewModel>();
+
+    /// <summary>
+    /// Opens the blade sample page, which hosts the blade pane inside the page itself.
+    /// </summary>
+    /// <returns></returns>
+    private Task OpenDetailsAsync() =>
+        _navigationService.NavigateAsync<DetailsViewModel>();
 
     /// <summary>
     /// Opens the Unit conversion view asynchronous.
@@ -193,59 +220,30 @@ public class ShellViewModel : BaseShellViewModel
     }
 
     /// <summary>
-    /// Opens the settings asynchronous.
-    /// Demonstrates live theme and language switching using framework services.
+    /// Opens the settings blade, where language, theme and accent color are applied live.
     /// </summary>
     /// <returns>Task.</returns>
-    protected override async Task OpenSettingsAsync()
-    {
-        // Simple implementation: toggle between light and dark themes live using IThemeService
-        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
-        _themeService.SetTheme(nextTheme);
-
-        // Show confirmation with current settings
-        await _dialogService.ShowInformationAsync(
-            $"Theme: {nextTheme}\nAccent: {_themeService.AccentColor}");
-    }
-
-    /// <summary>
-    /// Opens the theme/color selection asynchronously.
-    /// Overrides the base implementation to use live theme switching without restart.
-    /// </summary>
-    /// <returns>Task.</returns>
-    protected override Task OpenThemesAsync()
-    {
-        // Toggle between light and dark theme live using IThemeService
-        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
-        _themeService.SetTheme(nextTheme);
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Opens the language selection asynchronously.
-    /// Overrides the base implementation to use live language switching without restart.
-    /// </summary>
-    /// <returns>Task.</returns>
-    protected override async Task OpenLanguageAsync()
-    {
-        // Simple live language switch: toggle between English and Dutch
-        var currentLanguage = CultureInfo.CurrentCulture.Name;
-        var nextLanguage = currentLanguage.StartsWith("nl") ? "en-US" : "nl-NL";
-
-        var culture = new CultureInfo(nextLanguage);
-        culture.ApplyCulture(); // This calls LocalizedStrings.Default.Refresh() automatically
-
-        _settingsService.LocalSettings.Language = nextLanguage;
-        _settingsService.SaveLocalSettings();
-
-        await _dialogService.ShowInformationAsync(
-            $"Language changed to: {culture.DisplayName}");
-    }
+    protected override Task OpenSettingsAsync() =>
+        _bladeService.OpenBladeAsync<SettingsViewModel, object>(_bladeHost);
 
     public override Task ShellLoadedAsync() => Task.CompletedTask;
 
     public override Task InitializeFirstRunAsync() => Task.CompletedTask;
 
     protected override Task SignOutAsync() => Task.CompletedTask;
+
+    private static string GetThemeIcon(Themes theme) =>
+        theme == Themes.Light ? "\uEE45" : "\uEE4D";
+
+    private void OnThemeChanged(object? sender, EventArgs e) =>
+        ThemeIcon = GetThemeIcon(_themeService.Theme);
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+            _themeService.ThemeChanged -= OnThemeChanged;
+
+        base.Dispose(disposing);
+    }
 }
 

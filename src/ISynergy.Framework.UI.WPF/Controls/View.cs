@@ -1,3 +1,5 @@
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
@@ -14,6 +16,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// <seealso cref="Page" />
 /// <seealso cref="IView" />
 [Bindable(true)]
+[Lifetime(Lifetimes.Singleton)]
 public abstract partial class View : Page, IView
 {
     /// <summary>

@@ -18,6 +18,117 @@
             "options": { "env": { "SampleTargetFramework": "net11.0", "MSBUILDDISABLENODEREUSE": "1" } },
             "problemMatcher": "$msCompile",
             "group": "build"
+        },
+
+        // ------------------------------------------------------------------
+        // Build tasks for the desktop sample launch configurations. The output
+        // paths are pinned by the properties below; see launch.json.
+        // ------------------------------------------------------------------
+        {
+            "label": "build: Sample.WPF (.NET 10)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["build", "${workspaceFolder}/samples/Sample.WPF/Sample.WPF.csproj", "-p:SampleTargetFramework=net10.0", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build: Sample.WPF (.NET 11)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["build", "${workspaceFolder}/samples/Sample.WPF/Sample.WPF.csproj", "-p:SampleTargetFramework=net11.0", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build: Sample.WinUI (.NET 10)",
+            "type": "process",
+            "command": "dotnet",
+            // WindowsPackageType=None builds unpackaged, which the coreclr debugger can start.
+            "args": ["build", "${workspaceFolder}/samples/Sample.WinUI/Sample.WinUI.csproj", "-p:SampleTargetFramework=net10.0", "-p:Platform=arm64", "-p:WindowsPackageType=None", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build: Sample.WinUI (.NET 11)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["build", "${workspaceFolder}/samples/Sample.WinUI/Sample.WinUI.csproj", "-p:SampleTargetFramework=net11.0", "-p:Platform=arm64", "-p:WindowsPackageType=None", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build: Sample.Maui (Windows, .NET 10)",
+            "type": "process",
+            "command": "dotnet",
+            // RuntimeIdentifierOverride pins the win-arm64 output folder the launch path expects.
+            "args": ["build", "${workspaceFolder}/samples/Sample.Maui/Sample.Maui.csproj", "-f", "net10.0-windows10.0.26100.0", "-p:RuntimeIdentifierOverride=win-arm64", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build: Sample.Maui (Windows, .NET 11)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["build", "${workspaceFolder}/samples/Sample.Maui/Sample.Maui.csproj", "-f", "net11.0-windows10.0.26100.0", "-p:RuntimeIdentifierOverride=win-arm64", "-nodeReuse:false", "--nologo"],
+            "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+
+        // ------------------------------------------------------------------
+        // Hot reload. `dotnet watch run` owns the app process, so these are
+        // tasks (Terminal > Run Task), not launch configurations: start one,
+        // then use "Attach: Sample (WPF / WinUI, dotnet watch)" to debug it.
+        // Ctrl+R restarts the app inside the task terminal.
+        //
+        // WPF and WinUI are verified to apply C# edits. Maui is deliberately
+        // absent: for the multi-targeted MAUI project dotnet-watch's delta
+        // build also compiles the iOS/MacCatalyst sources and fails with a
+        // CS0518 avalanche, so edits cannot be applied there (use the normal
+        // Sample.Maui launch configurations instead).
+        // ------------------------------------------------------------------
+        {
+            "label": "watch: Sample.WPF (.NET 10)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["watch", "run", "--project", "${workspaceFolder}/samples/Sample.WPF/Sample.WPF.csproj", "--nologo"],
+            "options": { "env": { "SampleTargetFramework": "net10.0", "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "presentation": { "reveal": "always", "panel": "dedicated" }
+        },
+        {
+            "label": "watch: Sample.WPF (.NET 11)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["watch", "run", "--project", "${workspaceFolder}/samples/Sample.WPF/Sample.WPF.csproj", "--nologo"],
+            "options": { "env": { "SampleTargetFramework": "net11.0", "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "presentation": { "reveal": "always", "panel": "dedicated" }
+        },
+        {
+            "label": "watch: Sample.WinUI (.NET 10)",
+            "type": "process",
+            "command": "dotnet",
+            // Unpackaged + arm64, matching the launch configurations.
+            "args": ["watch", "run", "--project", "${workspaceFolder}/samples/Sample.WinUI/Sample.WinUI.csproj", "--nologo"],
+            "options": { "env": { "SampleTargetFramework": "net10.0", "Platform": "arm64", "WindowsPackageType": "None", "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "presentation": { "reveal": "always", "panel": "dedicated" }
+        },
+        {
+            "label": "watch: Sample.WinUI (.NET 11)",
+            "type": "process",
+            "command": "dotnet",
+            "args": ["watch", "run", "--project", "${workspaceFolder}/samples/Sample.WinUI/Sample.WinUI.csproj", "--nologo"],
+            "options": { "env": { "SampleTargetFramework": "net11.0", "Platform": "arm64", "WindowsPackageType": "None", "MSBUILDDISABLENODEREUSE": "1" } },
+            "problemMatcher": "$msCompile",
+            "presentation": { "reveal": "always", "panel": "dedicated" }
         }
     ]
 }

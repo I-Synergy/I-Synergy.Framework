@@ -4,6 +4,9 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using Sample.Views;
@@ -43,6 +46,13 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = [];
 
     /// <summary>
+    /// The shell-level blade host, so this page's blades are rendered by the shell pane and cover the
+    /// navigation pane instead of being confined to the page.
+    /// </summary>
+    private static BladeHostViewModel ShellBladeHost =>
+        Application.Services.GetRequiredService<BladeHostViewModel>();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
@@ -50,8 +60,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <param name="navigationService"></param>
     /// <param name="bladeService"></param>
     /// <param name="logger"></param>
-    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<SelectionTestViewModel> logger)
-        : base(commonServices, logger)
+    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<SelectionTestViewModel> logger)        : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
@@ -109,7 +118,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task.</returns>
     private Task SelectMultipleAsync() =>
         _bladeService.OpenBladeAsync<ViewModelMultipleSelectionBlade<TestItem>, List<TestItem>>(
-            this,
+            ShellBladeHost,
             async items =>
             {
                 SelectedTestItems = new ObservableCollection<TestItem>();
@@ -120,7 +129,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 
     private Task SelectSingleAsync() =>
         _bladeService.OpenBladeAsync<ViewModelSingleSelectionBlade<TestItem>, TestItem>(
-            this,
+            ShellBladeHost,
             async item =>
             {
                 SelectedTestItems = new ObservableCollection<TestItem> { item };

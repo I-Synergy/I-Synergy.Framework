@@ -4,6 +4,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls;
@@ -64,8 +65,30 @@ public abstract partial class View : Page, IView
     {
         Loaded -= OnViewLoaded;
 
-        if (!_isWrapped && Content is not null && Scrollable)
+        // A page that hosts a blade pane must not be wrapped: the pane has to fill the page (and
+        // therefore the shell) height, otherwise it scrolls with the content and sizes to content.
+        if (!_isWrapped && Content is not null && Scrollable && !ContainsBladeView(Content))
             WrapContent();
+    }
+
+    /// <summary>
+    /// Determines whether the element tree contains a blade pane.
+    /// </summary>
+    /// <param name="element">The root element to inspect.</param>
+    /// <returns><c>true</c> when a <see cref="BladeView"/> is part of the tree.</returns>
+    private static bool ContainsBladeView(DependencyObject element)
+    {
+        if (element is BladeView)
+            return true;
+
+        var childCount = VisualTreeHelper.GetChildrenCount(element);
+        for (var index = 0; index < childCount; index++)
+        {
+            if (ContainsBladeView(VisualTreeHelper.GetChild(element, index)))
+                return true;
+        }
+
+        return false;
     }
 
     private void WrapContent()

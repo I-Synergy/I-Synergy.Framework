@@ -33,8 +33,7 @@ public class BladeService : BaseBladeService
         IViewModelBlade bladeVm,
         IServiceProvider serviceProvider)
     {
-        var viewName = bladeVm.GetRelatedView();
-        var viewType = viewName.GetRelatedViewType();
+        var viewType = ResolveViewType(bladeVm);
 
         if (viewType is null || serviceProvider.GetRequiredService(viewType) is not IView view)
             throw new InvalidOperationException($"Cannot resolve view for blade: {bladeVm.GetType().Name}");
@@ -53,6 +52,31 @@ public class BladeService : BaseBladeService
 
         SafeOnNavigatedTo(bladeVm);
         AddBladeToOwner(owner, view);
+    }
+
+    /// <summary>
+    /// Resolves the view type for a blade ViewModel. Selection ViewModels get
+    /// their known selection views; others use reflection-based naming convention.
+    /// </summary>
+    private static Type? ResolveViewType(IViewModel bladeVm)
+    {
+        if (bladeVm is ISingleSelectionViewModel)
+            return typeof(SingleSelectionView);
+
+        if (bladeVm is IMultipleSelectionViewModel)
+            return typeof(MultipleSelectionView);
+
+        var viewName = bladeVm.GetRelatedView();
+        return viewName.GetRelatedViewType();
+    }
+
+    /// <inheritdoc />
+    protected override void DetachBladeView(IView view)
+    {
+        // Blade views are singletons (Controls.View): clear the data context so a queued binding
+        // update cannot write into the view model that the blade scope is about to dispose.
+        if (view is FrameworkElement element)
+            element.DataContext = null;
     }
 
     /// <inheritdoc />

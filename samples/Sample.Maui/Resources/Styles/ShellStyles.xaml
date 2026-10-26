@@ -69,10 +69,10 @@
 
     <!-- ── Buttons ──────────────────────────────────────────────────── -->
 
-    <!-- Icon button in header (theme, settings): 44px, ghost style, muted icon -->
+    <!-- Icon button in header (theme, settings, menu, back): 44px, ghost style, muted icon -->
     <Style x:Key="AppVerseActionButton" TargetType="Button">
         <Setter Property="FontSize" Value="16" />
-        <Setter Property="TextColor" Value="{DynamicResource AppMuted}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource AppMutedLight}, Dark={DynamicResource AppMutedDark}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="12" />
@@ -93,6 +93,19 @@
                     <VisualState x:Name="PointerOver">
                         <VisualState.Setters>
                             <Setter Property="BackgroundColor" Value="{DynamicResource AppSurface2}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <!-- Pressed and keyboard focus must not leave a persistent "selected" fill:
+                         the header buttons are commands, not toggles. A blade opening over the
+                         pointer can swallow the release, so a painted Pressed state sticks. -->
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Disabled">

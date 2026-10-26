@@ -321,7 +321,9 @@ public class AuthenticationViewModel : ViewModel
 
         await Task.Delay(1000);
 
-        if (Validate())
+        // The view model is disposed once authentication navigates away; a second/queued
+        // execution must not touch it (Validate raises change notifications).
+        if (!IsDisposed && Validate())
             await _authenticationService.AuthenticateWithUsernamePasswordAsync(Username, Password);
 
         _commonServices.BusyService.StopBusy();

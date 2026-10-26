@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -30,12 +31,18 @@ public partial class MainLayout : IDisposable
 
     private ILocalSettings? _localSettings;
     private string? _version;
+    private bool _settingsOpen;
+    private string _selectedLanguage = string.Empty;
+    private string _selectedThemeName = nameof(Themes.Dark);
+
+    private static readonly string[] AccentColors = ["#0B5D55", "#0066CC", "#10B981", "#FF8C00"];
 
     private readonly NavigationManager _navigationManager;
     private readonly Microsoft.FluentUI.AspNetCore.Components.IDialogService _dialogService;
     private readonly INotificationService _notificationService;
     private readonly ICommonServices _commonServices;
     private readonly ISettingsService _settingsService;
+    private readonly ISupportedCulturesService _supportedCulturesService;
     private readonly IContext _context;
     private readonly RequestCancellationService _requestCancellationService;
     private readonly IJSRuntime _jsRuntime;
@@ -49,12 +56,14 @@ public partial class MainLayout : IDisposable
         RequestCancellationService requestCancellationService,
         IContext context,
         ISettingsService settingsService,
+        ISupportedCulturesService supportedCulturesService,
         IJSRuntime jsRuntime,
         ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService themeService)
     {
         _commonServices = commonServices;
         _context = context;
         _settingsService = settingsService;
+        _supportedCulturesService = supportedCulturesService;
         _themeService = themeService;
 
         _dialogService = dialogService;
@@ -64,8 +73,22 @@ public partial class MainLayout : IDisposable
         _jsRuntime = jsRuntime;
     }
 
-    [Parameter]
-    public RenderFragment? Body { get; set; }
+    private string CurrentPageTitle
+    {
+        get
+        {
+            var path = new Uri(_navigationManager.Uri).AbsolutePath.Trim('/');
+
+            return path switch
+            {
+                "" => "Home",
+                "counter" => "Counter",
+                "weather" => "Weather",
+                "commanddemoview" => "Command Demo",
+                _ => "Home"
+            };
+        }
+    }
 
     private string ContentClass => _localSettings?.ShowConsole == true && _navigationManager!.Uri != _navigationManager!.BaseUri
        ? "content with-console"
@@ -108,6 +131,7 @@ public partial class MainLayout : IDisposable
         {
             _localSettings = localSettings;
             _localSettings.PropertyChanged += LocalSettings_PropertyChanged;
+            SyncSettingsSelection();
         }
     }
 
@@ -117,6 +141,7 @@ public partial class MainLayout : IDisposable
         {
             // MainLayout is the Router's layout: it is not re-created on a client side navigation
             // (only its Body parameter changes), so firstRender happens exactly once per page load.
+            _themeService.ApplyTheme();
             await ApplyLayoutBreakpointFixAsync();
         }
 
@@ -173,8 +198,59 @@ public partial class MainLayout : IDisposable
 
     private void LocalSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        SyncSettingsSelection();
         StateHasChanged();
     }
+
+    private IReadOnlyList<CultureInfo> SupportedCultures =>
+        _supportedCulturesService.SupportedCultures;
+
+    private string L(string key) => _commonServices.LanguageService.GetString(key);
+
+    private void SyncSettingsSelection()
+    {
+        if (_localSettings is null)
+            return;
+
+        _selectedLanguage = string.IsNullOrWhiteSpace(_localSettings.Language)
+            ? CultureInfo.CurrentCulture.Name
+            : _localSettings.Language;
+        _selectedThemeName = _localSettings.Theme.ToString();
+    }
+
+    private void ToggleSettings() => _settingsOpen = !_settingsOpen;
+
+    private void CloseSettings() => _settingsOpen = false;
+
+    private async Task ApplyLanguageAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_selectedLanguage))
+            return;
+
+        var culture = new CultureInfo(_selectedLanguage);
+        culture.ApplyCulture();
+        _settingsService.LocalSettings.Language = _selectedLanguage;
+        _settingsService.SaveLocalSettings();
+
+        await Task.CompletedTask;
+    }
+
+    private async Task ApplyThemeAsync()
+    {
+        if (Enum.TryParse<Themes>(_selectedThemeName, out var theme))
+            _themeService.SetTheme(theme);
+
+        await Task.CompletedTask;
+    }
+
+    private void ApplyAccent(string color)
+    {
+        _themeService.SetAccentColor(color);
+        StateHasChanged();
+    }
+
+    private bool IsAccentSelected(string color) =>
+        string.Equals(_themeService.AccentColor, color, StringComparison.OrdinalIgnoreCase);
 
     private void LocalizedStrings_Changed(object? sender, EventArgs e)
     {
@@ -199,23 +275,6 @@ public partial class MainLayout : IDisposable
         var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
         _themeService.SetTheme(nextTheme);
         StateHasChanged();
-    }
-
-    /// <summary>
-    /// Toggles between English and Dutch languages, applying changes live.
-    /// </summary>
-    public void ToggleLanguage()
-    {
-        var currentLanguage = CultureInfo.CurrentCulture.Name;
-        var nextLanguage = currentLanguage.StartsWith("nl") ? "en-US" : "nl-NL";
-
-        var culture = new CultureInfo(nextLanguage);
-        culture.ApplyCulture(); // This calls LocalizedStrings.Default.Refresh() automatically
-
-        _settingsService.LocalSettings.Language = nextLanguage;
-        _settingsService.SaveLocalSettings();
-
-        // StateHasChanged is called by the LocalizedStrings_Changed event handler
     }
 
     /// <summary>

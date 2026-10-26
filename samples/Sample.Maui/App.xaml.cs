@@ -5,6 +5,7 @@ using ISynergy.Framework.Mvvm.Messages;
 using Microsoft.Extensions.Logging;
 using Sample.Services;
 using Sample.ViewModels;
+using Sample.Views;
 using System.Globalization;
 using System.Runtime.ExceptionServices;
 using Application = ISynergy.Framework.UI.Application;
@@ -37,10 +38,48 @@ public partial class App : Application
     protected override ImageSource? Icon => ImageSource.FromFile("icon.png");
 
     /// <summary>
-    /// Enables the live clock in the title bar subtitle for this app.
+    /// The shell header is the title bar: the window title area is left empty and hosts the same
+    /// header the phones and tablets render as a page row, so the breadcrumb starts at the window
+    /// edge and the native caption buttons keep their place at the right (the WinUI look).
     /// </summary>
-    protected override TitleBar SetTitleBar(bool withClock = false) =>
-        base.SetTitleBar(withClock: true);
+    protected override TitleBar? SetTitleBar(bool withClock = false)
+    {
+        var titleBar = new TitleBar { BackgroundColor = ResolveShellBackground() };
+        var header = new Sample.Views.Controls.AppHeaderView
+        {
+            // The title bar strip is translucent by default (system backdrop); an opaque surface on
+            // the header makes the top row exactly the shell background colour.
+            BackgroundColor = ResolveShellBackground()
+        };
+
+        header.ApplyTitleBarPadding();
+
+        // TitleBar.Content has no public CLR setter; set the bindable property instead. The header
+        // is created here, before the title bar gets a platform handler, so it renders as part of
+        // the title bar rather than being reparented after realization.
+        titleBar.SetValue(TitleBar.ContentProperty, header);
+
+        // The title bar paints its own surface; keep it identical to the shell background so the
+        // header row and the page below it read as one window.
+        if (Application.Current is { } application)
+            application.RequestedThemeChanged += (_, _) => titleBar.BackgroundColor = ResolveShellBackground();
+
+        return titleBar;
+    }
+
+    /// <summary>
+    /// Resolves the shell background for the current theme from the app resources.
+    /// </summary>
+    private static Color ResolveShellBackground()
+    {
+        var isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
+        var key = isDark ? "AppBgDark" : "AppBgLight";
+
+        if (Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color)
+            return color;
+
+        return isDark ? Color.FromArgb("#0D1614") : Color.FromArgb("#F4F6F3");
+    }
 
     /// <summary>
     /// Applies the language chosen in Site Settings to the current and default cultures.
@@ -178,7 +217,15 @@ public partial class App : Application
 
             //await _navigationService.NavigateModalAsync<SignInViewModel>();
 
-            await _navigationService.NavigateModalAsync<ShellViewModel>();
+            // The shell is the window root, not a modal page: it stays alive for the lifetime of
+            // the window so its blade pane (the last child of the root grid) can cover every
+            // section. Navigation happens inside the shell's content host (the MAUI equivalent of
+            // the WinUI content frame), so the root itself is a plain page.
+            var rootView = IPlatformApplication.Current!.Services.GetRequiredService<RootView>();
+
+            Microsoft.Maui.Controls.Application.Current!.Windows[0].Page = rootView;
+
+            await rootView.ViewModel.InitializeAsync();
         }
         catch (Exception ex)
         {
@@ -224,9 +271,8 @@ public partial class App : Application
             var culture = CultureInfo.DefaultThreadCurrentCulture ?? CultureInfo.CurrentCulture;
             culture.ApplyCulture(ConfigureNumberFormat);
 
-            // Pop all modals back to the Shell. Since Shell is now never
-            // replaced (modals are pushed on top via PushModalAsync),
-            // we just dismiss every modal to reveal the original Shell.
+            // Pop all modals to reveal the shell. The shell itself is never replaced
+            // (modals are pushed on top via PushModalAsync).
             while (_navigationService.CanGoBack)
                 await _navigationService.GoBackAsync();
         }

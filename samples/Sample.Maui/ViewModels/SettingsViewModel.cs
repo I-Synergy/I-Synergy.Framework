@@ -1,22 +1,32 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace Sample.ViewModels;
 
+/// <summary>
+/// Settings blade for language, theme and accent color. Changes are applied live and persisted;
+/// the blade is closed through <see cref="SaveCommand"/> (save) or the inherited cancel command.
+/// </summary>
 [Lifetime(Lifetimes.Scoped)]
-public class SettingsViewModel : ViewModelNavigation<bool>
+public class SettingsViewModel : ViewModelBlade<object>
 {
-    private readonly INavigationService _navigationService;
     private readonly IDialogService _dialogService;
     private readonly ISettingsService _settingsService;
+    private readonly IThemeService _themeService;
 
+    /// <summary>
+    /// Gets the title.
+    /// </summary>
     public override string Title { get => _commonServices.LanguageService.GetString("Settings"); }
 
     /// <summary>
@@ -64,17 +74,78 @@ public class SettingsViewModel : ViewModelNavigation<bool>
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// Gets or sets the selected language.
+    /// </summary>
+    /// <remarks>
+    /// The view binds to this instead of <see cref="LocalSettings"/> directly: a two-way binding into the
+    /// settings model would write the picker's transient empty selection back into persisted settings
+    /// while the blade page is being re-parented.
+    /// </remarks>
+    public string SelectedLanguage
+    {
+        get => LocalSettings?.Language ?? string.Empty;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value) || string.Equals(LocalSettings?.Language, value, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            if (LocalSettings is not null)
+                LocalSettings.Language = value;
+
+            SetValue(value);
+
+            _settingsService.SaveLocalSettings();
+
+            var culture = new CultureInfo(value);
+            culture.ApplyCulture();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the selected theme.
+    /// </summary>
+    /// <remarks>
+    /// Bound two-way by the view so the theme is applied and persisted from the view model, matching
+    /// the WPF and WinUI settings blades.
+    /// </remarks>
+    public Themes SelectedTheme
+    {
+        get => LocalSettings?.Theme ?? Themes.Default;
+        set
+        {
+            if (LocalSettings is not null && LocalSettings.Theme == value)
+                return;
+
+            if (LocalSettings is not null)
+                LocalSettings.Theme = value;
+
+            SetValue(value);
+
+            _themeService.SetTheme(value);
+            _settingsService.SaveLocalSettings();
+        }
+    }
+
+    /// <summary>
+    /// Gets the command that persists the settings and closes the blade.
+    /// </summary>
+    public AsyncRelayCommand SaveCommand { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
+    /// </summary>
     public SettingsViewModel(
         ICommonServices commonServices,
-        INavigationService navigationService,
         IDialogService dialogService,
         ISettingsService settingsService,
+        IThemeService themeService,
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
-        _navigationService = navigationService;
         _dialogService = dialogService;
         _settingsService = settingsService;
+        _themeService = themeService;
 
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
@@ -106,6 +177,8 @@ public class SettingsViewModel : ViewModelNavigation<bool>
             "COM7",
             "COM8"
         ];
+
+        SaveCommand = new AsyncRelayCommand(SaveAsync);
     }
 
     public override async Task InitializeAsync()
@@ -138,13 +211,10 @@ public class SettingsViewModel : ViewModelNavigation<bool>
         }
     }
 
-    public override async Task CancelAsync()
-    {
-        await base.CancelAsync();
-        await _navigationService.GoBackAsync();
-    }
-
-    public override async Task SubmitAsync(bool e, bool validateUnderlayingProperties = true)
+    /// <summary>
+    /// Persists the local and global settings and closes the blade.
+    /// </summary>
+    private async Task SaveAsync()
     {
         try
         {
@@ -172,6 +242,6 @@ public class SettingsViewModel : ViewModelNavigation<bool>
             _commonServices.BusyService.StopBusy();
         }
 
-        await base.SubmitAsync(e, validateUnderlayingProperties);
+        await CloseAsync();
     }
 }

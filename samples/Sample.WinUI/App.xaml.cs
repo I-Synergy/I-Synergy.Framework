@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Messages;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Sample.ViewModels;
@@ -113,8 +114,10 @@ public sealed partial class App : Application
 
             _logger.LogInformation("Application loaded event: checking for auto-login");
 
-            _logger.LogInformation("Navigate to SignIn page");
-            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+            // The demo sample goes straight to the shell; authentication accepts any user.
+            _logger.LogInformation("Authenticating demo user");
+            var authenticationService = Services.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>();
+            await authenticationService.AuthenticateWithUsernamePasswordAsync("admin", "Welkom01");
         }
         catch (Exception ex)
         {

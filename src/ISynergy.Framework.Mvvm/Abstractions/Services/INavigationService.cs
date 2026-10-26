@@ -7,6 +7,14 @@ public interface INavigationService
     event EventHandler? BackStackChanged;
 
     bool CanGoBack { get; }
+
+    /// <summary>
+    /// Gets the type of the view model the navigation host currently shows, or
+    /// <see langword="null"/> when nothing has been navigated to yet. Shells use it to keep a
+    /// breadcrumb, selection or title in step with the navigation stack after a back navigation.
+    /// </summary>
+    Type? CurrentViewModelType { get; }
+
     Task GoBackAsync();
     Task CleanBackStackAsync(bool suppressEvent = false);
 

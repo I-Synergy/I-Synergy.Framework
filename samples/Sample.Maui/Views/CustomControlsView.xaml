@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <c:View
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:Sample.Views.Controls"
     x:Class="Sample.Views.CustomControlsView"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     xmlns:behaviors="clr-namespace:ISynergy.Framework.UI.Behaviors;assembly=ISynergy.Framework.UI.Maui"
@@ -11,7 +10,6 @@
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     xmlns:core_enums="clr-namespace:ISynergy.Framework.Core.Enumerations;assembly=ISynergy.Framework.Core"
     x:DataType="viewmodels:CustomControlsViewModel"
-    NavigationPage.HasNavigationBar="False"
     BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}">
 
     <c:View.Resources>
@@ -103,8 +101,5 @@
         </ScrollView>
 
         <c:BusyIndicator />
-
-        <!-- Settings drawer hosted over the page content -->
-        <controls:SettingsDrawer />
     </Grid>
 </c:View>

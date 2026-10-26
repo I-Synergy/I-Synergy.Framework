@@ -8,17 +8,23 @@ using Sample.Models;
 
 namespace Sample.ViewModels;
 
-public class DetailsViewModel : ViewModelSummary<TestItem>
+/// <summary>
+/// Blade-owning page view model. Hosts <see cref="DetailViewModel"/> and, through it,
+/// <see cref="DetailAViewModel"/> inside the <c>BladePane</c> of the details page.
+/// </summary>
+public class DetailsViewModel : ViewModelBladeView<TestItem>
 {
-    private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     public DetailsViewModel(
         ICommonServices commonServices,
-        INavigationService navigationService,
+        IBladeService bladeService,
         ILogger<DetailsViewModel> logger)
         : base(commonServices, logger)
     {
-        _navigationService = navigationService;
+        _bladeService = bladeService;
+
+        Title = "Blades";
     }
 
     public override Task AddAsync()
@@ -28,7 +34,9 @@ public class DetailsViewModel : ViewModelSummary<TestItem>
 
     public override Task EditAsync(TestItem e)
     {
-        throw new NotImplementedException();
+        Argument.IsNotNull(e);
+
+        return _bladeService.OpenBladeAsync<DetailViewModel, TestItem>(this, e);
     }
 
     public override Task RemoveAsync(TestItem e)
@@ -58,9 +66,6 @@ public class DetailsViewModel : ViewModelSummary<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = IPlatformApplication.Current!.Services.GetRequiredService<DetailViewModel>();
-        detailsVm.SetSelectedItem(e);
-        await _navigationService.NavigateAsync(detailsVm);
+        await _bladeService.OpenBladeAsync<DetailViewModel, TestItem>(this, e);
     }
 }
-

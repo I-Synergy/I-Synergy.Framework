@@ -94,6 +94,11 @@ public abstract class BaseNavigationService : INavigationService
     /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
     public virtual bool CanGoBack => _backStack.Count > 0;
 
+    /// <summary>
+    /// Gets the type of the view model the navigation host currently shows.
+    /// </summary>
+    public virtual Type? CurrentViewModelType => _currentFrame?.ViewModelType;
+
     #region Abstract Platform-Specific Methods
 
     /// <summary>

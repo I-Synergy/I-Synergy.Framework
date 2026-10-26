@@ -93,10 +93,5 @@
                     Mode="Wide" />
             </StackPanel>
         </StackPanel>
-
-        <c:BladeView
-            x:Name="BladeDetails"
-            Grid.RowSpan="2"
-            ItemsSource="{Binding Blades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </c:View>
