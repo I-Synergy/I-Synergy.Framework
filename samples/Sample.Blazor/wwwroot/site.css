@@ -530,6 +530,10 @@ ul.news {
     --app-muted: #55665F;
     --app-ink: #FFFFFF;
     --app-accent: var(--accent-color, #0B5D55);
+    /* Accent to use for text (and decorative glyphs). Lightened in the dark theme so it
+       clears the 3:1 contrast floor against the dark surfaces. --app-accent itself stays
+       untouched because --colorBrandBackground depends on it. */
+    --app-accent-text: var(--app-accent);
     --app-accent-soft: #E1EEEA;
 
     /* Align the Fluent UI shell with the same palette. */
@@ -552,6 +556,7 @@ ul.news {
     --app-muted: #9CB0A8;
     --app-ink: #04231A;
     --app-accent-soft: rgba(94, 211, 176, 0.16);
+    --app-accent-text: #5ED3B0;
 }
 
 body {
@@ -813,7 +818,7 @@ body {
 
 .app-nav-item.active .app-nav-icon {
     background: var(--app-accent-soft);
-    color: var(--app-accent);
+    color: var(--app-accent-text);
 }
 
 .app-sidebar-footer {
@@ -858,7 +863,7 @@ body {
 }
 
 .app-breadcrumb a {
-    color: var(--app-accent);
+    color: var(--app-accent-text);
     font-weight: 600;
     text-decoration: none;
 }

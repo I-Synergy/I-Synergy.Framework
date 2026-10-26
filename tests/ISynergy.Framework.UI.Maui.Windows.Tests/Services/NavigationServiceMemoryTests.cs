@@ -10,7 +10,11 @@ namespace ISynergy.Framework.UI.Maui.Services;
 /// Tests for the memory-management safety net in the MAUI NavigationService.
 ///
 /// These tests verify:
-///   1. The <c>_pageFrames</c> ConditionalWeakTable exists and is correctly typed.
+///   1. The <c>_bodies</c> ConditionalWeakTable on the shell host
+///      (global::ISynergy.Framework.UI.Controls.NavigationHostView) exists and is
+///      correctly typed. The page → content-body cache moved from <c>NavigationService</c> to
+///      <c>NavigationHostView</c> when the shell took ownership of the content host
+///      (commit cbd17689).
 ///   2. The Remove-before-Add pattern prevents duplicate-key ArgumentException.
 ///   3. The CleanupPageResources pattern (TryGetValue → Dispose → Remove) works.
 ///   4. Back-navigation scope disposal: the new scope is disposed when a cached
@@ -25,46 +29,43 @@ namespace ISynergy.Framework.UI.Maui.Services;
 public class NavigationServiceMemoryTests
 {
     /// <summary>
-    /// Verifies that the <c>_pageFrames</c> field exists on
-    /// <see cref="NavigationService"/>, is a private static readonly
-    /// <see cref="ConditionalWeakTable{TKey, TValue}"/> with key
-    /// <see cref="Page"/> and value <c>NavigationFrame</c>, and is
-    /// initialized (non-null).
+    /// Verifies that the <c>_bodies</c> field exists on
+    /// <see cref="global::ISynergy.Framework.UI.Controls.NavigationHostView"/>, is a private
+    /// instance (non-static) readonly <see cref="ConditionalWeakTable{TKey, TValue}"/> with key
+    /// <see cref="Microsoft.Maui.Controls.ContentPage"/> and value
+    /// <see cref="Microsoft.Maui.Controls.View"/>.
     /// </summary>
     [TestMethod]
-    public void PageFramesField_ExistsAndIsCorrectType()
+    public void HostBodiesTable_ExistsAndIsCorrectType()
     {
         // Arrange
-        var field = typeof(NavigationService).GetField("_pageFrames",
-            BindingFlags.NonPublic | BindingFlags.Static);
+        var field = typeof(global::ISynergy.Framework.UI.Controls.NavigationHostView).GetField("_bodies",
+            BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Assert — field exists and is correctly declared
-        Assert.IsNotNull(field, "_pageFrames field should exist on NavigationService");
-        Assert.IsTrue(field.IsPrivate, "_pageFrames should be private");
-        Assert.IsTrue(field.IsStatic, "_pageFrames should be static");
-        Assert.IsTrue(field.IsInitOnly, "_pageFrames should be readonly (readonly keyword)");
+        Assert.IsNotNull(field, "_bodies field should exist on NavigationHostView");
+        Assert.IsTrue(field.IsPrivate, "_bodies should be private");
+        Assert.IsFalse(field.IsStatic, "_bodies should be an instance field (not static)");
+        Assert.IsTrue(field.IsInitOnly, "_bodies should be readonly (readonly keyword)");
 
-        // Assert — generic type is ConditionalWeakTable<Page, NavigationFrame>
+        // Assert — generic type is ConditionalWeakTable<ContentPage, View>
         var fieldType = field.FieldType;
-        Assert.IsTrue(fieldType.IsGenericType, "_pageFrames should be a generic type");
+        Assert.IsTrue(fieldType.IsGenericType, "_bodies should be a generic type");
         Assert.AreEqual(
             typeof(ConditionalWeakTable<,>),
             fieldType.GetGenericTypeDefinition(),
-            "_pageFrames type should be ConditionalWeakTable<,>");
+            "_bodies type should be ConditionalWeakTable<,>");
 
         var genericArgs = fieldType.GetGenericArguments();
         Assert.AreEqual(2, genericArgs.Length, "ConditionalWeakTable should have two type arguments");
-        Assert.AreEqual(typeof(Page), genericArgs[0], "Key type should be Page");
+        Assert.AreEqual(typeof(Microsoft.Maui.Controls.ContentPage), genericArgs[0],
+            "Key type should be ContentPage");
+        Assert.AreEqual(typeof(Microsoft.Maui.Controls.View), genericArgs[1],
+            "Value type should be Microsoft.Maui.Controls.View");
 
-        // NavigationFrame is protected on BaseNavigationService — verify by name
-        Assert.IsTrue(genericArgs[1].Name.Contains("NavigationFrame"),
-            "Value type should be NavigationFrame (found: {0})", genericArgs[1].Name);
-        Assert.AreEqual("BaseNavigationService", genericArgs[1].DeclaringType?.Name,
-            "NavigationFrame should be nested on BaseNavigationService");
-
-        // Assert — field is initialized (the inline = new() assignment)
-        var value = field.GetValue(null);
-        Assert.IsNotNull(value, "_pageFrames should be initialized (non-null)");
+        // No instance-value assertion here: _bodies is an instance field, and MAUI controls
+        // cannot be constructed in a unit test (they need platform init), so there is no
+        // instance to read the table from. The declaration itself is what we verify.
     }
 
     /// <summary>
