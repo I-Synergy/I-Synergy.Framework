@@ -143,6 +143,10 @@
                         Style="{StaticResource AppMutedLabel}"
                         Margin="8,4,8,0"
                         Text="{Binding Version, StringFormat=v{0}}" />
+                    <TextBlock
+                        Style="{StaticResource AppMutedLabel}"
+                        Margin="8,0,8,4"
+                        Text="{Binding CopyrightText}" />
                 </StackPanel>
             </Grid>
         </Border>

@@ -165,6 +165,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Migration**: replace references to `…Enumerations.MessageBoxImage` / `MessageBoxResult` with `MessageBoxImages` / `MessageBoxResults`; `MessageBoxRequest.MessageBoxImage` is now `MessageBoxRequest.MessageBoxImages`.
 
 ### Fixed
+- **Sample.WPF / Sample.WinUI / Sample.Blazor**: the sidebar footer now shows the copyright line (`© <year> I-Synergy. All rights reserved.`) under the version, matching the MAUI sample's footer.
 - **ISynergy.Framework.UI.Maui**: `Themes.Default` was mapped to `AppTheme.Dark` in `ThemeService.ApplyTheme`, so "follow the system" actually forced dark mode. It now maps to `AppTheme.Unspecified`.
 - **ISynergy.Framework.UI.WPF**: `ThemeService` resolves `Themes.Default` to the operating system's application theme instead of letting each consumer interpret it, and `Theme` / `IsLightThemeEnabled` now report that resolved theme. `Themes.Default` used to paint the light palette (`Sample.WPF` compared it with `Themes.Dark`) while the shell's toggle treated it as dark, so the WPF sample started in light mode with a dark-mode icon and needed two clicks to reach the dark theme; one click now switches correctly.
 - **ISynergy.Framework.UI.WPF**: `DynamicThemeResourceDictionary` takes the theme and derives the semantic `Tinted*` brushes from the matching end of the gray ramp (dark: 950/900/600/500, light: 000/100/200/300) instead of always using the dark values, so framework controls follow light/dark switches.

@@ -131,6 +131,10 @@
                         Style="{StaticResource AppMutedLabel}"
                         Margin="16,0,0,0"
                         Text="{Binding VersionText}" />
+                    <TextBlock
+                        Style="{StaticResource AppMutedLabel}"
+                        Margin="16,0,0,0"
+                        Text="{Binding CopyrightText}" />
                 </StackPanel>
             </NavigationView.PaneFooter>
             <Frame x:Name="ContentRootFrame" IsEnabled="{Binding CommonServices.BusyService.IsBusy, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">

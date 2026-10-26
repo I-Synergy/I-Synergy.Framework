@@ -51,6 +51,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public string VersionText => $"v{_commonServices.InfoService.ProductVersion}";
 
     /// <summary>
+    /// Gets the copyright text shown in the sidebar footer, matching the MAUI shell.
+    /// </summary>
+    public string CopyrightText => $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
