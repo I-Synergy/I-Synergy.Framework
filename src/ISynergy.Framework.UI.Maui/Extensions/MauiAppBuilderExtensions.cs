@@ -116,9 +116,11 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
 
-        // Fallback: English-only if ConfigureSupportedCultures was not called
+        // Fallback: English-only if ConfigureSupportedCultures was not called.
+        // A concrete array (not a collection expression) keeps CsWinRT's trimming/AOT analyzer
+        // quiet: a collection expression cannot infer a concrete type for IEnumerable<CultureInfo>.
         appBuilder.Services.TryAddSingleton<ISupportedCulturesService>(s =>
-            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
+            new SupportedCulturesService(new[] { CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName) }));
 
         appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
