@@ -276,3 +276,17 @@ jobs:
           -SourceVersion $env:SOURCE_VERSION
           -UserEmail 'github-actions[bot]@users.noreply.github.com'
           -UserName 'github-actions[bot]'
+
+      - name: Create GitHub release
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_NUMBER: ${{ needs.build.outputs.buildNumber }}
+          VERSION_PACKAGE: ${{ needs.build.outputs.versionPackage }}
+        run: |
+          gh release create "v$env:BUILD_NUMBER" `
+            --title "v$env:BUILD_NUMBER" `
+            --notes "NuGet packages published as ``$env:VERSION_PACKAGE``." `
+            --generate-notes `
+            --verify-tag
