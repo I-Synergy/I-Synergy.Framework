@@ -1,14 +1,10 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Views;
 using Microsoft.Extensions.Logging;
 using Sample.Enumerations;
 using Sample.Models;
@@ -23,6 +19,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     /// <summary>
     /// Gets the title.
@@ -102,12 +99,14 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <param name="commonServices">The common service.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="bladeService"></param>
     /// <param name="logger"></param>
-    public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<TestItemsListViewModel> logger)
+    public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<TestItemsListViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
 
         ClearCommand = new RelayCommand(ClearItems);
     }
@@ -161,7 +160,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>()
+        Items?.AddNewRange(new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},
@@ -194,7 +193,7 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// </summary>
     protected void ClearItems()
     {
-        Items.Clear();
+        Items?.Clear();
     }
 
     /// <summary>
@@ -203,24 +202,11 @@ public class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBl
     /// <returns>Task.</returns>
     public override Task AddAsync()
     {
-        var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
-        selectionVM.SetItems(Items);
-        selectionVM.SetSelectedItems(SelectedItems);
-        selectionVM.SetSelectionMode(SelectionModes.Single);
-        selectionVM.Submitted += SelectionVM_Submitted;
-        return _navigationService.OpenBladeAsync<ISelectionView>(this, selectionVM);
-    }
-
-    /// <summary>
-    /// Selections the vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<TestItem>> e)
-    {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVM_Submitted;
-
-        SelectedItems = e.Result;
+        return _bladeService.OpenBladeAsync<ViewModelSingleSelectionBlade<TestItem>, TestItem>(
+            this,
+            SelectedItems.FirstOrDefault()!,
+            item => { SelectedItems = new List<TestItem> { item }; return Task.CompletedTask; },
+            initialization: vm => vm.SetItems(Items!));
     }
 }
+

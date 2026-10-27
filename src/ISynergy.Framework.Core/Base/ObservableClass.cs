@@ -1,10 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-
-#pragma warning disable S3776 // cognitive complexity is inherent in reflection-based property equality comparison
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -40,7 +37,9 @@ public abstract class ObservableClass : IObservableClass
     [DataTableIgnore]
     [XmlIgnore]
     [Display(AutoGenerateField = false)]
-    public Dictionary<string, IProperty> Properties { get; } = new Dictionary<string, IProperty>();
+    public ConcurrentDictionary<string, IProperty> Properties { get; } = new ConcurrentDictionary<string, IProperty>();
+
+    System.Collections.Generic.IDictionary<string, IProperty> IObservableClass.Properties => Properties;
 
     /// <summary>
     /// Gets a value indicating whether this instance is dirty.
@@ -60,28 +59,17 @@ public abstract class ObservableClass : IObservableClass
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Equality comparison intentionally uses runtime reflection. Not safe for AOT, but this is a framework base class fallback.")]
     public override bool Equals(object? obj) // NOSONAR
     {
         if (ReferenceEquals(this, obj))
             return true;
 
-        var currentPropertiesToCheck = this.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableClass.Properties)));
+        var currentPropertiesToCheck = this.GetProperties(includeMemo: true, includeAudit: true);
 
         if (obj is null)
             return false;
 
-        var propertiesToCheck = obj.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableClass.Properties)));
+        var propertiesToCheck = obj.GetProperties(includeMemo: true, includeAudit: true);
 
         foreach (var property in currentPropertiesToCheck.EnsureNotNull())
         {
@@ -110,7 +98,7 @@ public abstract class ObservableClass : IObservableClass
     /// </summary>
     /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode() =>
-        new HashCode().ToHashCode();
+        System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
 
     /// <summary>
     /// Gets the value.
@@ -120,10 +108,7 @@ public abstract class ObservableClass : IObservableClass
     /// <returns>T.</returns>
     protected T GetValue<T>([CallerMemberName] string? propertyName = "")
     {
-        if (propertyName is not null && !Properties.ContainsKey(propertyName))
-            Properties.Add(propertyName, new Property<T>(propertyName));
-
-        if (propertyName is not null && Properties[propertyName] is IProperty<T> property)
+        if (propertyName is not null && Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is IProperty<T> property)
             return property.Value!;
 
         return default!;
@@ -164,10 +149,7 @@ public abstract class ObservableClass : IObservableClass
         if (propertyName is null)
             return;
 
-        if (!Properties.ContainsKey(propertyName))
-            Properties.Add(propertyName, new Property<T>(propertyName));
-
-        if (Properties[propertyName] is not IProperty<T> property) return;
+        if (Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is not IProperty<T> property) return;
 
         // During cleanup or when events are suppressed, just set the value
         if (!shouldRaiseEvents || IsInCleanup)
@@ -233,32 +215,28 @@ public abstract class ObservableClass : IObservableClass
     public virtual void RaisePropertyChanged([CallerMemberName] string? propertyName = "")
     {
         ThrowIfDisposed();
-        
-        if (_propertyChanged != null)
+
+        var handler = _propertyChanged;
+        if (handler != null)
         {
             // Invoke each handler individually to prevent one exception from stopping others
-            var handlers = _propertyChanged.GetInvocationList().OfType<PropertyChangedEventHandler>();
-            foreach (var handler in handlers)
+            Exception? capturedException = null;
+            var handlers = handler.GetInvocationList().OfType<PropertyChangedEventHandler>();
+            foreach (var h in handlers)
             {
                 try
                 {
-                    handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                    h.Invoke(this, new PropertyChangedEventArgs(propertyName));
                 }
                 catch (Exception ex)
                 {
-                    // Try to use exception handler service if available
-                    try
-                    {
-                        var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-                        exceptionHandlerService?.HandleException(ex);
-                    }
-                    catch
-                    {
-                        // If exception handler service is not available, log to debug
-                        System.Diagnostics.Debug.WriteLine($"Exception in PropertyChanged handler for {propertyName}: {ex.Message}");
-                    }
+                    System.Diagnostics.Debug.WriteLine($"Exception in PropertyChanged handler for {GetType().Name}: {ex.Message}");
+                    capturedException = ex;
                 }
             }
+
+            if (capturedException is not null)
+                throw capturedException;
         }
     }
     #endregion
@@ -311,7 +289,7 @@ public abstract class ObservableClass : IObservableClass
     {
         await DisposeAsyncCore().ConfigureAwait(false);
 
-        Dispose(disposing: false);
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 

@@ -75,80 +75,70 @@ services.AddScoped<IAuthenticationProvider, CustomAuthenticationProvider>();
 
 ### 2. Theme Management
 
-Use the ThemeViewModel to provide theme and color selection:
-
-```csharp
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.UI.ViewModels;
-using Microsoft.Extensions.Logging;
-
-public class ThemeWindow : Window
-{
-    public ThemeWindow()
-    {
-        InitializeComponent();
-    }
-}
-
-// In your application
-public class SettingsViewModel : ViewModel
-{
-    private readonly IDialogService _dialogService;
-
-    public AsyncRelayCommand ChangeThemeCommand { get; }
-
-    public SettingsViewModel(
-        ICommonServices commonServices,
-        ILogger<SettingsViewModel> logger)
-        : base(commonServices, logger)
-    {
-        ChangeThemeCommand = new AsyncRelayCommand(ChangeThemeAsync);
-    }
-
-    private async Task ChangeThemeAsync()
-    {
-        // Show theme selection dialog
-        await CommonServices.DialogService
-            .ShowDialogAsync<ThemeWindow, ThemeViewModel, ThemeStyle>();
-    }
-}
-```
-
-### 3. Language Selection
-
-Provide multi-language support using the LanguageViewModel:
+Use `IThemeService` for live light/dark switching and accent colors. The shell's `ThemeCommand`
+toggles light/dark; accent color selection belongs in your settings UI:
 
 ```csharp
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.UI.ViewModels;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 
-public class LanguageWindow : Window
-{
-    public LanguageWindow()
-    {
-        InitializeComponent();
-    }
-}
-
-// In your application
 public class SettingsViewModel : ViewModel
 {
-    public AsyncRelayCommand ChangeLanguageCommand { get; }
+    private readonly IThemeService _themeService;
+
+    public ObservableCollection<Themes> ThemeOptions { get; } =
+        new ObservableCollection<Themes> { Themes.Light, Themes.Dark };
+
+    public ObservableCollection<string> AccentColors { get; } =
+        new ObservableCollection<string>(ThemeColors.Colors);
 
     public SettingsViewModel(
         ICommonServices commonServices,
+        IThemeService themeService,
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
-        ChangeLanguageCommand = new AsyncRelayCommand(ChangeLanguageAsync);
+        _themeService = themeService;
     }
 
-    private async Task ChangeLanguageAsync()
+    public void ApplyTheme(Themes theme) => _themeService.SetTheme(theme);
+    public void ApplyAccent(string color) => _themeService.SetAccentColor(color);
+}
+```
+
+`SetTheme`/`SetAccentColor` persist through `ISettingsService` automatically.
+
+### 3. Language Selection
+
+Language selection belongs in your settings UI. Apply a culture live with
+`CultureInfoExtensions.ApplyCulture()`; it refreshes `LocalizedStrings` bindings:
+
+```csharp
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Extensions;
+
+public class SettingsViewModel : ViewModel
+{
+    private readonly ISettingsService _settingsService;
+
+    public ObservableCollection<CultureInfo> Languages { get; }
+
+    public SettingsViewModel(
+        ICommonServices commonServices,
+        ISettingsService settingsService,
+        ISupportedCulturesService supportedCulturesService,
+        ILogger<SettingsViewModel> logger)
+        : base(commonServices, logger)
     {
-        // Show language selection dialog
-        await CommonServices.DialogService
-            .ShowDialogAsync<LanguageWindow, LanguageViewModel, Languages>();
+        _settingsService = settingsService;
+        Languages = new ObservableCollection<CultureInfo>(supportedCulturesService.SupportedCultures);
+    }
+
+    public void ApplyLanguage(CultureInfo culture)
+    {
+        culture.ApplyCulture();
+        _settingsService.LocalSettings.Language = culture.Name;
+        _settingsService.SaveLocalSettings();
     }
 }
 ```
@@ -211,16 +201,6 @@ ISynergy.Framework.UI.Abstractions/
 │   ├── IDashboard                  # Dashboard view interface
 │   ├── ISelectionView              # Selection view interface
 │   └── IShellView                  # Shell/main view interface
-└── Windows/
-    └── IThemeWindow                # Theme selection window interface
-```
-
-### ViewModels
-
-```
-ISynergy.Framework.UI.ViewModels/
-├── ThemeViewModel                  # Theme and accent color selection
-└── LanguageViewModel               # Language/locale selection
 ```
 
 ### Options
@@ -313,7 +293,6 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Providers;
-using ISynergy.Framework.UI.ViewModels;
 
 public void ConfigureServices(IServiceCollection services)
 {
@@ -325,10 +304,6 @@ public void ConfigureServices(IServiceCollection services)
     // UI services
     services.AddSingleton<ITokenStorageService, TokenStorageService>();
     services.AddScoped<IAuthenticationProvider, AuthenticationProvider>();
-
-    // ViewModels
-    services.AddTransient<ThemeViewModel>();
-    services.AddTransient<LanguageViewModel>();
 
     // Platform-specific services (implemented in UI.WPF, UI.MAUI, etc.)
     // services.AddSingleton<IDialogService, DialogService>();
@@ -358,10 +333,10 @@ public void ConfigureServices(IServiceCollection services)
 ### Theme Management
 
 - Store theme preferences in `ISettingsService`
-- Use `ThemeViewModel` for user-facing theme selection
+- Use the shell's `ThemeCommand` for light/dark switching
+- Put accent color selection in your settings UI
 - Apply themes through platform-specific `IThemeService`
 - Support both light and dark themes
-- Allow custom accent colors
 
 ### Token Storage
 

@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFrameworks>net10.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.AspNetCore.Globalization</PackageId>
 		<Description>I-Synergy Framework Globalization</Description>
 		<PackageTags>I-Synergy, Framework, Globalization</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ISynergy.Framework.AspNetCore\ISynergy.Framework.AspNetCore.csproj" />
 	  <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
+	  <ProjectReference Include="..\ISynergy.Framework.Globalization\ISynergy.Framework.Globalization.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

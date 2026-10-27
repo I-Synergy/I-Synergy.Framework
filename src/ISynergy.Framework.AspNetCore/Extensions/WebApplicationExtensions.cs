@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Locators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,13 +23,6 @@ public static class WebApplicationExtensions
         {
             Predicate = static r => r.Tags.Contains("live")
         });
-        return app;
-    }
-
-
-    public static WebApplication SetLocatorProvider(this WebApplication app)
-    {
-        ServiceLocator.SetLocatorProvider(app.Services);
         return app;
     }
 }

@@ -791,9 +791,7 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         return false;
     }
 
-#if !NET35 && !NET40
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private void swap_index(int i, int j)
     {
         swap(indices, i, j);
@@ -806,9 +804,7 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         swap(G_bar, i, j);
     }
 
-#if !NET35 && !NET40
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     private static void swap<T>(T[] array, int i, int j)
     {
         var t = array[i];

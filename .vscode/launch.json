@@ -12,10 +12,111 @@
             "launchProfile": "https"
         },
         {
+            "name": "Aspire AppHost (.NET 10)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: AppHost (.NET 10)",
+            "program": "${workspaceFolder}/samples/Sample.AppHost/bin/Debug/net10.0/Sample.AppHost.dll",
+            "cwd": "${workspaceFolder}/samples/Sample.AppHost",
+            "launchSettingsFilePath": "${workspaceFolder}/samples/Sample.AppHost/Properties/launchSettings.json",
+            "launchSettingsProfile": "https",
+            "env": { "SampleTargetFramework": "net10.0" }
+        },
+        {
+            "name": "Aspire AppHost (.NET 11)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: AppHost (.NET 11)",
+            "program": "${workspaceFolder}/samples/Sample.AppHost/bin/Debug/net11.0/Sample.AppHost.dll",
+            "cwd": "${workspaceFolder}/samples/Sample.AppHost",
+            "launchSettingsFilePath": "${workspaceFolder}/samples/Sample.AppHost/Properties/launchSettings.json",
+            "launchSettingsProfile": "https",
+            "env": { "SampleTargetFramework": "net11.0" }
+        },
+        {
             "name": ".NET MAUI",
             "type": "maui",
             "request": "launch",
             "preLaunchTask": "maui: Build"
+        },
+
+        // ------------------------------------------------------------------
+        // Desktop samples, one configuration per target framework.
+        //
+        // Each configuration launches the built apphost directly, so the
+        // output path has to be deterministic. The matching build task in
+        // tasks.json pins the properties that produce it:
+        //   - WPF:   -p:SampleTargetFramework=<tfm>            -> bin/Debug/<tfm>-windows/
+        //   - WinUI: -p:SampleTargetFramework=<tfm> -p:Platform=arm64
+        //            -p:WindowsPackageType=None               -> bin/arm64/Debug/<tfm>-windows10.0.26100.0/win-arm64/
+        //   - Maui:  -f <tfm>-windows10.0.26100.0 -p:RuntimeIdentifierOverride=win-arm64
+        //                                                     -> bin/Debug/<tfm>-windows10.0.26100.0/win-arm64/
+        //
+        // WinUI is built unpackaged (WindowsPackageType=None) because a packaged
+        // MSIX build cannot be started by the coreclr debugger; it needs package
+        // identity. The arguments mirror the "Packaged" launch profile.
+        // ------------------------------------------------------------------
+        {
+            "name": "Sample.WPF (.NET 10)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: Sample.WPF (.NET 10)",
+            "program": "${workspaceFolder}/samples/Sample.WPF/bin/Debug/net10.0-windows/Sample.exe",
+            "cwd": "${workspaceFolder}/samples/Sample.WPF/bin/Debug/net10.0-windows"
+        },
+        {
+            "name": "Sample.WPF (.NET 11)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: Sample.WPF (.NET 11)",
+            "program": "${workspaceFolder}/samples/Sample.WPF/bin/Debug/net11.0-windows/Sample.exe",
+            "cwd": "${workspaceFolder}/samples/Sample.WPF/bin/Debug/net11.0-windows"
+        },
+        {
+            "name": "Sample.WinUI (.NET 10)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: Sample.WinUI (.NET 10)",
+            "program": "${workspaceFolder}/samples/Sample.WinUI/bin/arm64/Debug/net10.0-windows10.0.26100.0/win-arm64/Sample.exe",
+            "args": ["?environment=local&country=nl"],
+            "cwd": "${workspaceFolder}/samples/Sample.WinUI/bin/arm64/Debug/net10.0-windows10.0.26100.0/win-arm64"
+        },
+        {
+            "name": "Sample.WinUI (.NET 11)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: Sample.WinUI (.NET 11)",
+            "program": "${workspaceFolder}/samples/Sample.WinUI/bin/arm64/Debug/net11.0-windows10.0.26100.0/win-arm64/Sample.exe",
+            "args": ["?environment=local&country=nl"],
+            "cwd": "${workspaceFolder}/samples/Sample.WinUI/bin/arm64/Debug/net11.0-windows10.0.26100.0/win-arm64"
+        },
+        {
+            "name": "Sample.Maui (Windows, .NET 10)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: Sample.Maui (Windows, .NET 10)",
+            "program": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net10.0-windows10.0.26100.0/win-arm64/Sample.Maui.exe",
+            "cwd": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net10.0-windows10.0.26100.0/win-arm64",
+            "env": { "Environment": "Staging" }
+        },
+        {
+            "name": "Sample.Maui (Windows, .NET 11)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: Sample.Maui (Windows, .NET 11)",
+            "program": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-windows10.0.26100.0/win-arm64/Sample.Maui.exe",
+            "cwd": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-windows10.0.26100.0/win-arm64",
+            "env": { "Environment": "Staging" }
+        },
+
+        // Hot reload: `dotnet watch run` owns the process, so start one of the
+        // "watch: Sample.*" tasks (Terminal > Run Task) and then attach here.
+        // WPF and WinUI apply C# edits; MAUI does not (see tasks.json).
+        {
+            "name": "Attach: Sample (WPF / WinUI, dotnet watch)",
+            "type": "coreclr",
+            "request": "attach",
+            "processName": "Sample"
         }
     ]
 }

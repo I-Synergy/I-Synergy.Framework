@@ -16,6 +16,7 @@
     <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     <converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter" />
     <converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
     <converters:StringFormatConverter x:Key="StringFormatConverter" />
     <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
@@ -53,9 +54,6 @@
     <converters:SelectionModeConverter x:Key="SelectionModeConverter" />
     <converters:ListToStringConverter x:Key="ListToStringConverter" />
 
-    <x:Double x:Key="DefaultFontSize">12</x:Double>
-    <x:Double x:Key="DefaultMinimumWidthRequest">130</x:Double>
-
     <Shadow
         x:Key="DefaultButtonShadow"
         Brush="{DynamicResource Tertiary}"
@@ -88,7 +86,7 @@
 
     <Style TargetType="Border">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray600}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
         <Setter Property="StrokeShape" Value="Rectangle" />
         <Setter Property="StrokeThickness" Value="1" />
     </Style>
@@ -100,7 +98,7 @@
 
     <Style x:Key="DefaultButtonStyle" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource TintedGray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource Secondary}}" />
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="CornerRadius" Value="{DynamicResource DefaultCornerRadius}" />
@@ -124,7 +122,7 @@
                     <VisualState x:Name="PointerOver">
                         <VisualState.Setters>
                             <Setter Property="Opacity" Value="1" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Secondary}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
                             <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
                         </VisualState.Setters>
                     </VisualState>
@@ -219,17 +217,17 @@
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}" />
                             <Setter Property="Opacity" Value="0.5" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray200}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="PointerOver">
                         <VisualState.Setters>
                             <Setter Property="Opacity" Value="1" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Secondary}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
                             <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
                         </VisualState.Setters>
                     </VisualState>
@@ -401,7 +399,7 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -410,9 +408,10 @@
     </Style>
 
     <Style TargetType="Editor">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="Figtree" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
@@ -423,7 +422,7 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -432,9 +431,10 @@
     </Style>
 
     <Style TargetType="Entry">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="Figtree" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
@@ -514,7 +514,7 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
                             <Setter Property="TitleColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -580,10 +580,10 @@
 
     <Style TargetType="SearchBar">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="CancelButtonColor" Value="{DynamicResource Primary}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="FontSize" Value="12" />
         <Setter Property="MinimumHeightRequest" Value="{DynamicResource DefaultMinimumHeightRequest}" />
         <Setter Property="MinimumWidthRequest" Value="{DynamicResource DefaultMinimumWidthRequest}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -594,7 +594,7 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
                             <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource Gray400}, Dark={DynamicResource Gray500}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -603,10 +603,10 @@
     </Style>
 
     <Style TargetType="SearchHandler">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource White}}" />
-        <Setter Property="PlaceholderColor" Value="{DynamicResource Gray500}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Transparent, Dark={DynamicResource Gray900}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource TintedGray800}}" />
         <Setter Property="FontSize" Value="12" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -706,25 +706,11 @@
 
     <Style ApplyToDerivedTypes="True" TargetType="Page">
         <Setter Property="Padding" Value="0" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
     </Style>
 
-    <Style ApplyToDerivedTypes="True" TargetType="Shell">
-        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
-        <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={DynamicResource Primary}, Default={DynamicResource White}}" />
-        <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
-        <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray950}}" />
-        <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={DynamicResource Gray200}, Dark={DynamicResource Gray200}}" />
-        <Setter Property="Shell.NavBarHasShadow" Value="False" />
-        <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
-        <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
-        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
-        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={DynamicResource TintedGray400}, Dark={DynamicResource TintedGray500}}" />
-    </Style>
-
-    <!-- Default NavigationPage style: Primary accent color for app-level navigation -->
     <Style TargetType="NavigationPage">
-        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray000}, Dark={DynamicResource TintedGray950}}" />
+        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}" />
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}" />
         <Setter Property="IconColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
     </Style>
@@ -752,66 +738,7 @@
         <Setter Property="InitialsColor" Value="White" />
         <Setter Property="Margin" Value="10" />
     </Style>
-
-    <DataTemplate x:Key="DefaultMenuItemStyle" x:DataType="models:NavigationItem">
-        <Grid
-            Padding="10"
-            ColumnDefinitions="Auto,*"
-            ColumnSpacing="10"
-            behaviors:CursorBehavior.Cursor="Hand">
-            <Image
-                Grid.Column="0"
-                HeightRequest="18"
-                VerticalOptions="Center"
-                WidthRequest="18">
-                <Image.Source>
-                    <FontImageSource
-                        FontFamily="FluentUI"
-                        Glyph="{Binding Icon}"
-                        Color="{DynamicResource Primary}" />
-                </Image.Source>
-            </Image>
-            <Label
-                Grid.Column="1"
-                FontSize="12"
-                Text="{Binding Name}"
-                VerticalOptions="Center" />
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer
-                    Command="{Binding Command}"
-                    CommandParameter="{Binding CommandParameter}"
-                    NumberOfTapsRequired="1" />
-            </Grid.GestureRecognizers>
-        </Grid>
-    </DataTemplate>
-
-    <!-- Note: ViewCell is deprecated along with ListView/TableView as of .NET 9.
-         Use CollectionView with regular DataTemplates instead. -->
-    <DataTemplate x:Key="ShellMenuItemTemplate" x:DataType="models:NavigationItem">
-        <Grid Padding="15,10" HorizontalOptions="Fill">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
-            </Grid.GestureRecognizers>
-            <Label
-                HorizontalOptions="Start"
-                TextColor="{AppThemeBinding Light={DynamicResource Primary},
-                                            Dark={DynamicResource White}}"
-                VerticalOptions="Center"
-                VerticalTextAlignment="Center">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span
-                            CharacterSpacing="10"
-                            FontFamily="fontawesome"
-                            FontSize="{DynamicResource DefaultFontSize}"
-                            Text="{Binding Icon}" />
-                        <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-        </Grid>
-    </DataTemplate>
-
+    
     <Style x:Key="DefaultLineStyle" TargetType="Line">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource Gray900}, Dark={DynamicResource Gray200}}" />
         <Setter Property="StrokeThickness" Value="2" />
@@ -958,4 +885,98 @@
                 Color="{DynamicResource White}" />
         </Setter>
     </Style>
+
+    <Style x:Key="IconOnlyButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="HeightRequest" Value="32" />
+        <Setter Property="WidthRequest" Value="32" />
+        <Setter Property="MinimumWidthRequest" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="FontFamily" Value="fontawesome" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextTransform" Value="None" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.55" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.2" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1.0" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="DefaultMenuItemStyle" x:DataType="models:NavigationItem">
+        <Grid
+            Padding="10"
+            ColumnDefinitions="Auto,*"
+            ColumnSpacing="10"
+            behaviors:CursorBehavior.Cursor="Hand">
+            <Image
+                Grid.Column="0"
+                HeightRequest="18"
+                VerticalOptions="Center"
+                WidthRequest="18">
+                <Image.Source>
+                    <FontImageSource
+                        FontFamily="FluentUI"
+                        Glyph="{Binding Icon}"
+                        Color="{DynamicResource Primary}" />
+                </Image.Source>
+            </Image>
+            <Label
+                Grid.Column="1"
+                FontSize="12"
+                Text="{Binding Name}"
+                VerticalOptions="Center" />
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer
+                    Command="{Binding Command}"
+                    CommandParameter="{Binding CommandParameter}"
+                    NumberOfTapsRequired="1" />
+            </Grid.GestureRecognizers>
+        </Grid>
+    </DataTemplate>
+
+    <!-- Note: ViewCell is deprecated along with ListView/TableView as of .NET 9.
+         Use CollectionView with regular DataTemplates instead. -->
+    <DataTemplate x:Key="ShellMenuItemTemplate" x:DataType="models:NavigationItem">
+        <Grid Padding="15,10" HorizontalOptions="Fill">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding CommandParameter}" />
+            </Grid.GestureRecognizers>
+            <Label
+                HorizontalOptions="Start"
+                TextColor="{AppThemeBinding Light={DynamicResource Primary},
+                                            Dark={DynamicResource White}}"
+                VerticalOptions="Center"
+                VerticalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span
+                            CharacterSpacing="10"
+                            FontFamily="fontawesome"
+                            FontSize="{DynamicResource DefaultFontSize}"
+                            Text="{Binding Icon}" />
+                        <Span FontSize="{DynamicResource DefaultFontSize}" Text="{Binding Name}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </Grid>
+    </DataTemplate>
+
 </ResourceDictionary>

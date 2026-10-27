@@ -555,10 +555,10 @@ public sealed class PasswordHasher
 }
 
 // Usage in handler
-public sealed class CreateUserHandler(
+public sealed class CreateUserCommandHandler(
     DataContext dataContext,
     PasswordHasher passwordHasher,
-    ILogger<CreateUserHandler> logger
+    ILogger<CreateUserCommandHandler> logger
 ) : ICommandHandler<CreateUserCommand, CreateUserResponse>
 {
     public async Task<CreateUserResponse> HandleAsync(

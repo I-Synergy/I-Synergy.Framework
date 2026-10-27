@@ -1,8 +1,13 @@
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Security;
 using ISynergy.Framework.UI.Abstractions.Services;
@@ -13,7 +18,7 @@ using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -35,17 +40,6 @@ public static class ServiceCollectionExtensions
     /// <param name="assembly">The assembly to scan for ViewModels and Views.</param>
     /// <param name="assemblyFilter">A filter function for assembly names.</param>
     /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
-    /// <remarks>
-    /// This overload calls <c>RegisterAssemblies</c> which performs runtime assembly scanning.
-    /// This is not compatible with Blazor WASM AOT or IL trimming.
-    /// Use <c>services.AddUITypes()</c> from <c>ISynergy.Framework.UI.SourceGenerator</c> for AOT-compatible registration.
-    /// </remarks>
-    [RequiresUnreferencedCode(
-        "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
-        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
-    [RequiresDynamicCode(
-        "BindWithReload uses dynamic code generation which is not AOT-compatible. " +
-        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
     public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
         this IServiceCollection services,
         IConfiguration configuration,
@@ -61,20 +55,17 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions();
 
-        services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
-        services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
+        services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).Bind);
+        services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).Bind);
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-        var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+        var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
+        services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
         services.TryAddSingleton<IMessengerService, MessengerService>();
-        services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         services.TryAddSingleton<IBusyService, BusyService>();
 
         services.TryAddScoped<TContext>();
@@ -83,6 +74,9 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
         services.TryAddScoped<ISettingsService, TSettingsService>();
+        services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
         services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
         services.TryAddSingleton<TCommonServices>();
@@ -97,11 +91,25 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IFormFactorService, FormFactorService>();
         services.TryAddSingleton<RequestCancellationService>();
+        services.TryAddSingleton<IThemeService, ThemeService>();
 
         services.RegisterAssemblies(assembly, assemblyFilter);
 
         action.Invoke(services);
 
+        return services;
+    }
+
+    /// <summary>
+    /// Configures the supported cultures for the application.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="cultures">The cultures to support.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection ConfigureSupportedCultures(this IServiceCollection services, params CultureInfo[] cultures)
+    {
+        services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService(cultures)));
         return services;
     }
 }

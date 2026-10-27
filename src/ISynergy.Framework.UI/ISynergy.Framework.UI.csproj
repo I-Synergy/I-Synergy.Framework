@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<IsAotCompatible>true</IsAotCompatible>
+		<TargetFrameworks>net10.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0</TargetFrameworks>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<PackageId>I-Synergy.Framework.UI</PackageId>
 		<Description>I-Synergy UI Framework for Windows, Linux, Android and WebAssembly</Description>
@@ -19,33 +19,8 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Update="Properties\Resources.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resources.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
-	<ItemGroup>
 		<ProjectReference Include="..\ISynergy.Framework.Mvvm\ISynergy.Framework.Mvvm.csproj" />
 		<ProjectReference Include="..\ISynergy.Framework.OpenTelemetry\ISynergy.Framework.OpenTelemetry.csproj" />
-		<ProjectReference Include="..\ISynergy.Framework.UI.SourceGenerator\ISynergy.Framework.UI.SourceGenerator.csproj"
-		                  OutputItemType="Analyzer"
-		                  ReferenceOutputAssembly="false" />
-	</ItemGroup>
-
-	<!-- Ensure the generator DLL lands in the correct NuGet folder -->
-	<Target Name="CopyGeneratorToAnalyzers" BeforeTargets="_GetPackageFiles">
-	  <ItemGroup>
-	    <None Include="$(MSBuildProjectDirectory)\..\ISynergy.Framework.UI.SourceGenerator\bin\$(Configuration)\netstandard2.0\ISynergy.Framework.UI.SourceGenerator.dll"
-	          Pack="true"
-	          PackagePath="analyzers/dotnet/cs/"
-	          Visible="false" />
-	  </ItemGroup>
-	</Target>
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Resources.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
+		<ProjectReference Include="..\ISynergy.Framework.Globalization\ISynergy.Framework.Globalization.csproj" />
 	</ItemGroup>
 </Project>

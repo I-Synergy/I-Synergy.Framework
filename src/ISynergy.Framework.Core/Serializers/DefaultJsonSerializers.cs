@@ -1,5 +1,4 @@
-using ISynergy.Framework.Core.Converters;
-using System.Diagnostics.CodeAnalysis;
+using ISynergy.Framework.Globalization.Converters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -7,7 +6,6 @@ namespace ISynergy.Framework.Core.Serializers;
 
 public static class DefaultJsonSerializers
 {
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "JsonStringEnumConverter is used in reflection-based serialization contexts. Use source-generated serialization for AOT scenarios.")]
     public static JsonSerializerOptions Default => new JsonSerializerOptions(JsonSerializerDefaults.General)
     {
         Converters =
@@ -22,7 +20,6 @@ public static class DefaultJsonSerializers
         ReferenceHandler = ReferenceHandler.Preserve
     };
 
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "JsonStringEnumConverter is used in reflection-based serialization contexts. Use source-generated serialization for AOT scenarios.")]
     public static JsonSerializerOptions Web => new JsonSerializerOptions(JsonSerializerDefaults.Web)
     {
         AllowTrailingCommas = true,

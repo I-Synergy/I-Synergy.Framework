@@ -67,7 +67,7 @@ public class CommandHandlerDecoratorTests
         loggerMock.Verify(l => l.Log(
             LogLevel.Debug,
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Handling command")),
+            It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("Handling command")),
             null,
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.AtLeastOnce);
     }
@@ -87,7 +87,7 @@ public class CommandHandlerDecoratorTests
         loggerMock.Verify(l => l.Log(
             LogLevel.Error,
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Error handling command")),
+            It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("Error handling command")),
             It.IsAny<InvalidOperationException>(),
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Once);
     }

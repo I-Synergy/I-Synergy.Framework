@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
@@ -18,8 +17,6 @@ namespace ISynergy.Framework.Mathematics.IO.NumPy;
 /// <typeparam name="T">The type of the arrays to be loaded.</typeparam>
 /// <seealso cref="NpyFormat" />
 /// <seealso cref="NpzFormat" />
-[RequiresUnreferencedCode("Accessing entries calls Load(Stream) which uses reflection-based type conversion.")]
-[RequiresDynamicCode("Accessing entries calls Load(Stream) which requires dynamic code generation.")]
 public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICollection<T>
     where T : class, ICloneable, IList, ICollection, IEnumerable, IStructuralComparable, IStructuralEquatable
 {
@@ -204,8 +201,7 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
         foreach (var entry in archive.Entries)
             yield return new KeyValuePair<string, T>(entry.Name, OpenEntry(entry));
     }
-    [RequiresUnreferencedCode("Calls Load(Stream) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls Load(Stream) which requires dynamic code generation.")]
+
     private T OpenEntry(ZipArchiveEntry entry)
     {
         T array;
@@ -221,8 +217,6 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
     /// <summary>
     ///     Loads the array from the specified stream.
     /// </summary>
-    [RequiresUnreferencedCode("Calls NpyFormat.Load<T>(Stream) which uses reflection-based type conversion.")]
-    [RequiresDynamicCode("Calls NpyFormat.Load<T>(Stream) which requires dynamic code generation.")]
     protected virtual T Load(Stream s)
     {
         return NpyFormat.Load<T>(s);

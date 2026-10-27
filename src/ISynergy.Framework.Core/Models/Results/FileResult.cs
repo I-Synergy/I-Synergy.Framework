@@ -20,7 +20,13 @@ public sealed class FileResult : IDisposable
     /// <summary>
     /// Function to get a stream to the picked file.
     /// </summary>
-    private readonly Func<Stream> _streamGetter;
+    private readonly Func<Stream>? _streamGetter;
+
+    /// <summary>
+    /// Async function to get a stream to the picked file.
+    /// Takes precedence over <see cref="_streamGetter"/> when both are set.
+    /// </summary>
+    private readonly Func<Task<Stream>>? _asyncStreamGetter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FileResult"/> class.
@@ -34,6 +40,20 @@ public sealed class FileResult : IDisposable
         _fileName = Path.GetFileName(_filePath);
         _dispose = dispose;
         _streamGetter = streamGetter;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileResult"/> class with an async stream getter.
+    /// </summary>
+    /// <param name="filePath">The file path.</param>
+    /// <param name="asyncStreamGetter">The async stream getter.</param>
+    /// <param name="dispose">The dispose.</param>
+    public FileResult(string filePath, Func<Task<Stream>> asyncStreamGetter, Action<bool>? dispose = null)
+    {
+        _filePath = filePath;
+        _fileName = Path.GetFileName(_filePath);
+        _dispose = dispose;
+        _asyncStreamGetter = asyncStreamGetter;
     }
 
     /// <summary>
@@ -57,13 +77,26 @@ public sealed class FileResult : IDisposable
     /// Gets or sets the file.
     /// </summary>
     /// <value>The file.</value>
+    [Obsolete("Use GetFileAsync() instead. Synchronous access to a file supplied through an async getter blocks the calling thread and can deadlock.")]
     public byte[] File
     {
         get
         {
-            using var stream = GetStream();
+            using var stream = GetStreamCore();
             return stream.ToByteArray();
         }
+    }
+
+    /// <summary>
+    /// Gets the picked file's contents asynchronously. This is the preferred accessor and
+    /// never blocks the calling thread.
+    /// </summary>
+    /// <returns>The file contents as a byte array.</returns>
+    /// <exception cref="ObjectDisposedException">The instance has been disposed.</exception>
+    public async Task<byte[]> GetFileAsync()
+    {
+        using var stream = await GetStreamAsync().ConfigureAwait(false);
+        return stream.ToByteArray();
     }
 
     /// <summary>
@@ -73,12 +106,42 @@ public sealed class FileResult : IDisposable
     /// </summary>
     /// <returns>stream object</returns>
     /// <exception cref="ObjectDisposedException">null</exception>
+    [Obsolete("Use GetStreamAsync() instead. This method can block the calling thread and deadlock when the file was supplied through an async getter.")]
     public Stream GetStream()
     {
         if (_isDisposed)
             throw new ObjectDisposedException(null);
 
-        return _streamGetter();
+        return GetStreamCore();
+    }
+
+    /// <summary>
+    /// Backing implementation for the synchronous accessors. When the file was supplied
+    /// through an async getter this blocks on the thread pool via <c>Task.Run</c> to avoid
+    /// deadlocking a captured synchronization context; prefer <see cref="GetStreamAsync"/>.
+    /// </summary>
+    private Stream GetStreamCore()
+    {
+        if (_asyncStreamGetter is not null)
+            return Task.Run(async () => await _asyncStreamGetter()).GetAwaiter().GetResult();
+
+        return _streamGetter!();
+    }
+
+    /// <summary>
+    /// Gets a stream to access the picked file asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task{Stream}"/> representing the async stream operation.</returns>
+    /// <exception cref="ObjectDisposedException">null</exception>
+    public async Task<Stream> GetStreamAsync()
+    {
+        if (_isDisposed)
+            throw new ObjectDisposedException(null);
+
+        if (_asyncStreamGetter is not null)
+            return await _asyncStreamGetter();
+
+        return _streamGetter!();
     }
 
     /// <summary>

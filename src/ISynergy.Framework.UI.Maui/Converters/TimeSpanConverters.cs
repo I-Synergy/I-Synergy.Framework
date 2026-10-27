@@ -1,5 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Services;
 using System.Globalization;
 using System.Text;
 
@@ -28,13 +27,13 @@ public class TimeSpanToStringConverter : IValueConverter
 
             if (timeSpan.Days > 0)
             {
-                result.Append($"{timeSpan.Days} {ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("Day_s")}, ");
+                result.Append($"{timeSpan.Days} {LanguageService.Default.GetString("Day_s")}, ");
             }
 
             result.Append(
-                $"{timeSpan.Hours} {ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("Hour_s")} " +
-                $"{ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("And")} " +
-                $"{timeSpan.Minutes} {ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString("Minute_s")}");
+                $"{timeSpan.Hours} {LanguageService.Default.GetString("Hour_s")} " +
+                $"{LanguageService.Default.GetString("And")} " +
+                $"{timeSpan.Minutes} {LanguageService.Default.GetString("Minute_s")}");
 
             return result.ToString();
         }

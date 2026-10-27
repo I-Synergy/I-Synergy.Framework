@@ -17,7 +17,6 @@ public static class EnumerableExtensions
     /// <param name="value">Value to test</param>
     /// <param name="desiredFlags">Flags we wish to find</param>
     /// <returns>Whether the two specified values have any flags in common.</returns>
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static bool HasAny(this Enum value, Enum desiredFlags)
     {
         return desiredFlags.GetIndividualFlags().EnsureNotNull().Any(flag => value.HasFlag(flag));
@@ -36,7 +35,8 @@ public static class EnumerableExtensions
         if (pageSize < 1)
             throw new ArgumentOutOfRangeException(nameof(pageSize), "Value must be greater than 0.");
 
-        return source.Count() / pageSize;
+        var countPages = Convert.ToDecimal(source.Count());
+        return Convert.ToInt32(Math.Ceiling(countPages / pageSize));
     }
 
     /// <summary>
@@ -48,12 +48,12 @@ public static class EnumerableExtensions
     /// <param name="pageIndex">Has to be non-negative.</param>
     /// <param name="pageSize">Has to be greater than 0.</param>
     /// <returns>IEnumerable&lt;TSource&gt;.</returns>
-    /// <exception cref="ArgumentBelowZeroException">pageSize</exception>
+    /// <exception cref="ArgumentBelowZeroException">pageIndex</exception>
     /// <exception cref="ArgumentOutOfRangeException">pageSize - Value must be greater than 0.</exception>
     public static IEnumerable<TSource> ToPage<TSource>(this IEnumerable<TSource> source, int pageIndex, int pageSize = int.MaxValue)
     {
         if (pageIndex < 0)
-            throw new ArgumentBelowZeroException(nameof(pageSize));
+            throw new ArgumentBelowZeroException(nameof(pageIndex));
         if (pageSize < 1)
             throw new ArgumentOutOfRangeException(nameof(pageSize), "Value must be greater than 0.");
 
@@ -63,11 +63,40 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Orders the sequence by the specified key and then applies paging, guaranteeing a stable
+    /// result order. Take note that this should be applied after any Where-clauses, to make sure
+    /// you're not missing any results.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the t source.</typeparam>
+    /// <typeparam name="TKey">The type of the ordering key.</typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="orderBy">The ordering key selector, applied before <c>Skip</c>/<c>Take</c>.</param>
+    /// <param name="pageIndex">Has to be non-negative.</param>
+    /// <param name="pageSize">Has to be greater than 0.</param>
+    /// <returns>IEnumerable&lt;TSource&gt;.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="orderBy"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentBelowZeroException">pageIndex</exception>
+    /// <exception cref="ArgumentOutOfRangeException">pageSize - Value must be greater than 0.</exception>
+    public static IEnumerable<TSource> ToPage<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> orderBy, int pageIndex, int pageSize = int.MaxValue)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(orderBy);
+        if (pageIndex < 0)
+            throw new ArgumentBelowZeroException(nameof(pageIndex));
+        if (pageSize < 1)
+            throw new ArgumentOutOfRangeException(nameof(pageSize), "Value must be greater than 0.");
+
+        return source
+            .OrderBy(orderBy)
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize);
+    }
+
+    /// <summary>
     /// Gets the flags.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static IEnumerable<Enum> GetFlags(this Enum value)
     {
         return GetFlags(value, Enum.GetValues(value.GetType()).Cast<Enum>().ToArray());
@@ -78,7 +107,6 @@ public static class EnumerableExtensions
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static IEnumerable<Enum> GetIndividualFlags(this Enum value)
     {
         return GetFlags(value, GetFlagValues(value.GetType()).ToArray());
@@ -119,7 +147,6 @@ public static class EnumerableExtensions
     /// </summary>
     /// <param name="enumType">Type of the enum.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     private static IEnumerable<Enum> GetFlagValues(Type enumType)
     {
         ulong flag = 0x1;

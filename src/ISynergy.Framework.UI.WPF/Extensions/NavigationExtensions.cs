@@ -1,8 +1,7 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Controls;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
 namespace ISynergy.Framework.UI.Extensions;
@@ -16,27 +15,24 @@ public static class NavigationExtensions
     /// Creates or gets a <see cref="View"/> from a ViewModel type using runtime type resolution.
     /// </summary>
     /// <typeparam name="TViewModel">The ViewModel type to resolve a view for.</typeparam>
-    /// <param name="scopedContextService">The scoped service provider.</param>
+    /// <param name="serviceProvider">The service provider.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
     /// <returns>The resolved <see cref="View"/> instance.</returns>
     /// <exception cref="FileNotFoundException">Thrown when the view cannot be resolved for the ViewModel.</exception>
     /// <remarks>
-    /// This overload calls <see cref="CreatePage{TViewModel}(IScopedContextService, TViewModel, object?)"/>
+    /// This overload calls <see cref="CreatePage{TViewModel}(IServiceProvider, TViewModel, object?)"/>
     /// with a <see langword="null"/> ViewModel; the ViewModel is resolved from the service container.
     /// The view-type resolution uses <c>GetRelatedViewType()</c> which scans loaded assemblies —
     /// not compatible with IL trimming without a source-generated registration.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
-    public static View CreatePage<TViewModel>(IScopedContextService scopedContextService, object? parameter = null) where TViewModel : class, IViewModel
-        => CreatePage<TViewModel>(scopedContextService, default(TViewModel), parameter);
+    public static View CreatePage<TViewModel>(IServiceProvider serviceProvider, object? parameter = null) where TViewModel : class, IViewModel
+        => CreatePage<TViewModel>(serviceProvider, default(TViewModel), parameter);
 
     /// <summary>
     /// Creates or gets a <see cref="View"/> from a ViewModel instance using runtime type resolution.
     /// </summary>
     /// <typeparam name="TViewModel">The ViewModel type to resolve a view for.</typeparam>
-    /// <param name="scopedContextService">The scoped service provider.</param>
+    /// <param name="serviceProvider">The service provider.</param>
     /// <param name="viewModel">
     /// The ViewModel instance to associate with the view. When <see langword="null"/>,
     /// the ViewModel is resolved from the service container.
@@ -50,24 +46,21 @@ public static class NavigationExtensions
     /// Note: WPF does not support NativeAOT (<c>PublishAot=true</c>) as of .NET 10.
     /// This trim annotation targets <c>PublishTrimmed=true</c> scenarios only.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via a trimmer root descriptor or source-generated registration.")]
-    public static View CreatePage<TViewModel>(IScopedContextService scopedContextService, TViewModel? viewModel, object? parameter = null) where TViewModel : class, IViewModel
+    public static View CreatePage<TViewModel>(IServiceProvider serviceProvider, TViewModel? viewModel, object? parameter = null) where TViewModel : class, IViewModel
     {
         if (viewModel is null)
-            viewModel = scopedContextService.GetRequiredService<TViewModel>();
+            viewModel = serviceProvider.GetRequiredService<TViewModel>();
 
         var view = typeof(TViewModel).GetRelatedView();
         var viewType = view.GetRelatedViewType();
 
-        if (viewType is not null && scopedContextService.GetRequiredService(viewType) is View resolvedPage)
+        if (viewType is not null && serviceProvider.GetRequiredService(viewType) is View resolvedPage)
         {
             if (viewModel is not null)
                 resolvedPage.ViewModel = viewModel;
 
             if (resolvedPage.ViewModel is null)
-                resolvedPage.ViewModel = scopedContextService.GetRequiredService<TViewModel>();
+                resolvedPage.ViewModel = serviceProvider.GetRequiredService<TViewModel>();
 
             if (parameter is not null && resolvedPage.ViewModel is not null)
                 resolvedPage.ViewModel.Parameter = parameter;

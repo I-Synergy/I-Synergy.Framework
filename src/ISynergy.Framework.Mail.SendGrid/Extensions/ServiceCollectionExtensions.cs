@@ -5,7 +5,6 @@ using ISynergy.Framework.Mail.SendGrid.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mail.SendGrid.Extensions;
 
@@ -29,12 +28,10 @@ public static class ServiceCollectionExtensions
     /// suppress <c>IL2026</c> and <c>IL3050</c> warnings at this call site with a justification comment.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("SendGrid SDK uses Newtonsoft.Json for serialization, which is not AOT-compatible. Use a different mail provider for AOT publishing.")]
-    [RequiresDynamicCode("Newtonsoft.Json requires dynamic code generation.")]
     public static IServiceCollection AddSendGridMailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<SendGridMailOptions>(configuration.GetSection($"{prefix}{nameof(SendGridMailOptions)}").BindWithReload);
+        services.Configure<SendGridMailOptions>(configuration.GetSection($"{prefix}{nameof(SendGridMailOptions)}").Bind);
         services.TryAddSingleton<IMailService, SendGridMailService>();
         return services;
     }

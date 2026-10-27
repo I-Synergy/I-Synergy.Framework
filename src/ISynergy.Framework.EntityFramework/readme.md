@@ -111,11 +111,12 @@ public class ApplicationDbContext : DbContext
 }
 ```
 
-### 3. Use DbContext Extensions
+### 3. Query and Persist with EF Core Primitives
+
+The framework deliberately ships **no** repository or CRUD extension methods — use EF Core
+`DbSet<T>` primitives directly on your `DataContext`.
 
 ```csharp
-using ISynergy.Framework.EntityFramework.Extensions;
-
 public class ProductService
 {
     private readonly ApplicationDbContext _context;
@@ -126,63 +127,47 @@ public class ProductService
     }
 
     // Check if product exists
-    public async Task<bool> ProductExistsAsync(string name, CancellationToken cancellationToken)
-    {
-        return await _context.ExistsAsync<Product>(
-            p => p.Name == name,
-            cancellationToken);
-    }
+    public Task<bool> ProductExistsAsync(string name, CancellationToken cancellationToken) =>
+        _context.Products.AnyAsync(p => p.Name == name, cancellationToken);
 
     // Get product by ID
-    public async Task<Product?> GetProductByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        return await _context.GetItemByIdAsync<Product, int>(id, cancellationToken);
-    }
-
-    // Get product as DTO
-    public async Task<ProductDto?> GetProductDtoAsync(int id, CancellationToken cancellationToken)
-    {
-        return await _context.GetItemByIdAsync<Product, ProductDto, int>(
-            id,
-            cancellationToken);
-    }
+    public Task<Product?> GetProductByIdAsync(int id, CancellationToken cancellationToken) =>
+        _context.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
     // Add product
-    public async Task<int> AddProductAsync(ProductDto dto, CancellationToken cancellationToken)
+    public async Task<int> AddProductAsync(Product product, CancellationToken cancellationToken)
     {
-        return await _context.AddItemAsync<Product, ProductDto>(dto, cancellationToken);
+        _context.Products.Add(product);
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 
-    // Update product
-    public async Task<int> UpdateProductAsync(ProductDto dto, CancellationToken cancellationToken)
+    // Update product — entities returned from the context are tracked; mutate and save.
+    public async Task<int> UpdateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        return await _context.UpdateItemAsync<Product, ProductDto>(dto, cancellationToken);
-    }
-
-    // Add or update product (upsert)
-    public async Task<int> UpsertProductAsync(ProductDto dto, CancellationToken cancellationToken)
-    {
-        return await _context.AddUpdateItemAsync<Product, ProductDto>(
-            dto,
-            cancellationToken);
+        product.ChangedDate = DateTimeOffset.UtcNow;
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 
     // Soft delete product
     public async Task<int> SoftDeleteProductAsync(int id, CancellationToken cancellationToken)
     {
-        return await _context.RemoveItemAsync<Product, int>(
-            id,
-            cancellationToken,
-            soft: true);
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        if (product is null)
+            return 0;
+
+        product.IsDeleted = true;
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 
     // Hard delete product
     public async Task<int> DeleteProductAsync(int id, CancellationToken cancellationToken)
     {
-        return await _context.RemoveItemAsync<Product, int>(
-            id,
-            cancellationToken,
-            soft: false);
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        if (product is null)
+            return 0;
+
+        _context.Products.Remove(product);
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }
 ```
@@ -208,15 +193,6 @@ ISynergy.Framework.EntityFramework.Base/
 
 ```
 ISynergy.Framework.EntityFramework.Extensions/
-├── DbContextExtensions         # CRUD operations
-│   ├── ExistsAsync<TEntity>
-│   ├── GetItemByIdAsync<TEntity, TId>
-│   ├── GetItemByIdAsync<TEntity, TModel, TId>
-│   ├── AddItemAsync<TEntity, TModel>
-│   ├── UpdateItemAsync<TEntity, TModel>
-│   ├── AddUpdateItemAsync<TEntity, TModel>
-│   └── RemoveItemAsync<TEntity, TId>
-│
 ├── ModelBuilderExtensions      # Configuration helpers
 │   ├── ApplyDecimalPrecision
 │   ├── ApplyVersioning
@@ -273,7 +249,12 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 }
 
 // Soft delete a record
-await _context.RemoveItemAsync<Product, int>(productId, cancellationToken, soft: true);
+var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
+if (product is not null)
+{
+    product.IsDeleted = true;
+    await _context.SaveChangesAsync(cancellationToken);
+}
 
 // Excluded from queries automatically
 var products = await _context.Products.ToListAsync(); // Doesn't include soft-deleted
@@ -316,7 +297,9 @@ public class LogEntry : BaseEntity
 
 ### Pagination
 
-Easily implement pagination in queries:
+Easily implement pagination in queries. Pass the ordering key to the ordered `ToPage`
+overload: it applies the `OrderBy` before `Skip`/`Take`, so paging is deterministic and
+EF Core does not raise `RowLimitingOperationWithoutOrderByWarning`:
 
 ```csharp
 using ISynergy.Framework.EntityFramework.Extensions;
@@ -327,14 +310,13 @@ public async Task<PagedResult<ProductDto>> GetProductsPagedAsync(
     CancellationToken cancellationToken)
 {
     var query = _context.Products
-        .Where(p => p.IsActive)
-        .OrderBy(p => p.Name);
+        .Where(p => p.IsActive);
 
     var totalPages = query.CountPages(pageSize);
     var totalItems = await query.CountAsync(cancellationToken);
 
     var items = await query
-        .ToPage(pageIndex, pageSize)
+        .ToPage(p => p.Name, pageIndex, pageSize)
         .Select(p => new ProductDto
         {
             Id = p.Id,
@@ -514,7 +496,7 @@ public class ProductServiceTests
     }
 
     [TestMethod]
-    public async Task GetItemByIdAsync_ReturnsEntity_WhenExists()
+    public async Task GetProduct_ReturnsEntity_WhenExists()
     {
         // Arrange
         var product = new Product { Id = 1, Name = "Test" };
@@ -522,9 +504,7 @@ public class ProductServiceTests
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _context.GetItemByIdAsync<Product, int>(
-            1,
-            CancellationToken.None);
+        var result = await _context.Products.FirstOrDefaultAsync(p => p.Id == 1);
 
         // Assert
         Assert.IsNotNull(result);
@@ -532,13 +512,14 @@ public class ProductServiceTests
     }
 
     [TestMethod]
-    public async Task AddItemAsync_AddsEntity()
+    public async Task AddProduct_AddsEntity()
     {
         // Arrange
-        var dto = new ProductDto { Name = "Widget", Price = 9.99m };
+        var product = new Product { Id = 1, Name = "Widget", Price = 9.99m };
 
         // Act
-        await _context.AddItemAsync<Product, ProductDto>(dto, CancellationToken.None);
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
 
         // Assert
         Assert.AreEqual(1, _context.Products.Count());

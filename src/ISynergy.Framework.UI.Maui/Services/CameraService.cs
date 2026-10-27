@@ -11,7 +11,7 @@ public class CameraService : ICameraService
         if (MediaPicker.Default.IsCaptureSupported)
         {
             var photo = await MediaPicker.Default.CapturePhotoAsync();
-            if (photo != null && photo.ToFileResult() is FileResult result && result.File.Length <= maxFileSize)
+            if (photo != null && photo.ToFileResult() is FileResult result && (await result.GetFileAsync()).Length <= maxFileSize)
                 return result;
         }
 

@@ -22,15 +22,21 @@ public class StateToBrushConverter : IValueConverter
     {
         if (!(value is bool))
         {
-            return Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
+            return Application.Current?.Resources.TryGetValue("TertiaryDarkBrush", out var fallbackBrush) == true && fallbackBrush is SolidColorBrush solidFallbackBrush
+                ? solidFallbackBrush
+                : new SolidColorBrush(Microsoft.UI.Colors.Gray);
         }
 
         if ((bool)value)
         {
-            return Application.Current.Resources["PrimaryMediumBrush"] as SolidColorBrush;
+            return Application.Current?.Resources.TryGetValue("PrimaryMediumBrush", out var activeBrush) == true && activeBrush is SolidColorBrush solidActiveBrush
+                ? solidActiveBrush
+                : new SolidColorBrush(Microsoft.UI.Colors.Gray);
         }
 
-        return Application.Current.Resources["TertiaryDarkBrush"] as SolidColorBrush;
+        return Application.Current?.Resources.TryGetValue("TertiaryDarkBrush", out var fallbackBrush2) == true && fallbackBrush2 is SolidColorBrush solidFallbackBrush2
+            ? solidFallbackBrush2
+            : new SolidColorBrush(Microsoft.UI.Colors.Gray);
     }
 
     /// <summary>

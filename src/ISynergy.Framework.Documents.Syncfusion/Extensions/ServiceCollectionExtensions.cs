@@ -1,13 +1,12 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Documents.Abstractions.Services;
 using ISynergy.Framework.Documents.Syncfusion.Options;
 using ISynergy.Framework.Documents.Syncfusion.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Documents.Syncfusion.Extensions;
 
@@ -32,12 +31,10 @@ public static class ServiceCollectionExtensions
     /// document generation alternative. Monitor Syncfusion release notes for future AOT/NativeAOT support.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("Registers DocumentService which requires Syncfusion reflection-based libraries. Not compatible with AOT publishing.")]
-    [RequiresDynamicCode("Syncfusion libraries require dynamic code generation.")]
     public static IServiceCollection AddDocumentsIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
         services.AddOptions();
-        services.Configure<SyncfusionLicenseOptions>(configuration.GetSection($"{prefix}{nameof(SyncfusionLicenseOptions)}").BindWithReload);
+        services.Configure<SyncfusionLicenseOptions>(configuration.GetSection($"{prefix}{nameof(SyncfusionLicenseOptions)}").Bind);
         services.TryAddSingleton<ILanguageService, LanguageService>();
         services.TryAddSingleton<IDocumentService, DocumentService>();
 

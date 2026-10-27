@@ -30,7 +30,8 @@ public static class SettingsStorageExtensions
     /// <param name="folder">The folder.</param>
     /// <param name="name">The name.</param>
     /// <param name="content">The content.</param>
-    [RequiresUnreferencedCode("JsonSerializer.Serialize requires the type T to be statically analyzable. Use the overload that takes a JsonTypeInfo for AOT-safe serialization.")]
+    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
+    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
     public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
     {
         var file = await folder.CreateFileAsync(GetJsonFileName(name), CreationCollisionOption.ReplaceExisting);
@@ -46,7 +47,8 @@ public static class SettingsStorageExtensions
     /// <param name="folder">The folder.</param>
     /// <param name="name">The name.</param>
     /// <returns>T.</returns>
-    [RequiresUnreferencedCode("JsonSerializer.Deserialize requires the type T to be statically analyzable. Use the overload that takes a JsonTypeInfo for AOT-safe deserialization.")]
+    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
+    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
     public static async Task<T?> ReadAsync<T>(this StorageFolder folder, string name)
     {
         if (!File.Exists(Path.Combine(folder.Path, GetJsonFileName(name))))
@@ -70,7 +72,8 @@ public static class SettingsStorageExtensions
     /// <param name="settings">The settings.</param>
     /// <param name="key">The key.</param>
     /// <param name="value">The value.</param>
-    [RequiresUnreferencedCode("JsonSerializer.Serialize requires the type T to be statically analyzable. Use the overload that takes a JsonTypeInfo for AOT-safe serialization.")]
+    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
+    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
     public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value) // NOSONAR
     {
         settings.SaveString(key, JsonSerializer.Serialize(value));
@@ -95,7 +98,8 @@ public static class SettingsStorageExtensions
     /// <param name="settings">The settings.</param>
     /// <param name="key">The key.</param>
     /// <returns>T.</returns>
-    [RequiresUnreferencedCode("JsonSerializer.Deserialize requires the type T to be statically analyzable. Use the overload that takes a JsonTypeInfo for AOT-safe deserialization.")]
+    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
+    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
     public static Task<T?> ReadAsync<T>(this ApplicationDataContainer settings, string key) // NOSONAR
     {
         if (settings.Values.TryGetValue(key, out var obj))

@@ -1,24 +1,14 @@
 # 🚀 I-Synergy Framework
 
-> **Comprehensive .NET 10 framework for building enterprise-grade backend and frontend applications**
+> **Comprehensive .NET framework for building enterprise-grade backend and frontend applications — targets .NET 10 (LTS) and .NET 11 (preview)**
 
 <div align="center">
 
-[![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main)
+[![CI](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=.net)
+![.NET](https://img.shields.io/badge/.NET-10%20LTS%20%7C%2011%20preview-512BD4?logo=.net)
 
 </div>
-
-<!-- ---
-
-## 📖 Documentation & Resources
-
-| 📚 Libraries | 🎯 Samples | 👨‍💻 Developer Guide |
-|:---:|:---:|:---:|
-| [Framework Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Libraries) | [Sample Projects](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Samples) | [Developer Docs](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers) |
-
---- -->
 
 ## ✨ Key Features
 
@@ -33,7 +23,6 @@
 - 🌍 **Globalization** - Multi-language and localization support
 - 📄 **Document Processing** - PDF, Excel with Syncfusion support
 - 🧮 **Scientific Computing** - Financial, Geography, Physics, Mathematics libraries
-- ⚡ **AOT / Trim Ready** - All libraries annotated for Native AOT and trimmed deployments; source generators for zero-reflection registration
 
 ---
 
@@ -116,6 +105,17 @@
 | **I-Synergy.Framework.UI.WinUI** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WinUI?label=) |
 | **I-Synergy.Framework.UI.WPF** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.UI.WPF?label=) |
 
+#### 🎨 Theme Color Palette
+
+All UI packages share a common accent color palette (`ThemeColors.Colors`) — 42 colors across 6 hue families (Red → Orange → Yellow → Green → Blue → Violet), each with 7 shades from mid-light to deep.
+
+> **[Open color preview →](theme-color-preview.html)**
+>
+> Regenerate at any time by running:
+> ```
+> dotnet test tests/ISynergy.Framework.UI.Tests --filter GenerateColorPreviewHtml
+> ```
+
 ### 🧮 Specialized Libraries
 
 | Package | Latest Version |
@@ -124,6 +124,7 @@
 | **I-Synergy.Framework.Documents.Syncfusion** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Documents.Syncfusion?label=) |
 | **I-Synergy.Framework.Financial** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Financial?label=) |
 | **I-Synergy.Framework.Geography** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Geography?label=) |
+| **I-Synergy.Framework.Globalization** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Globalization?label=) |
 | **I-Synergy.Framework.IO** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.IO?label=) |
 | **I-Synergy.Framework.Mathematics** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mathematics?label=) |
 | **I-Synergy.Framework.Physics** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Physics?label=) |
@@ -162,10 +163,10 @@
 - **CQRS Pattern** - Command Query Responsibility Segregation for scalable event-driven applications
 - **Event Sourcing** - Domain event store with aggregate replay; pluggable `IEventSerializer` supporting both reflection and AOT-safe source-generated JSON
 - **Dependency Injection** - Built-in DI throughout all layers
-- **Entity Framework Core** - Advanced data access with repository pattern
+- **Entity Framework Core** - Data access with EF Core `DbSet<T>` primitives directly on the `DataContext` (no repository abstraction)
 - **Domain-Driven Design** - Rich domain models with aggregate roots
 - **Vertical Slice Architecture** - Feature-organized application structure
-- **Native AOT / Trim** - Source generators and compile-time registrations eliminate runtime reflection across all libraries
+- **Trim-aware** - Trim analysis is enabled for the platform UI packages (`UI.WPF`/`UI.WinUI`/`UI.Maui`) and reflection-heavy APIs are annotated with `[RequiresUnreferencedCode]` / `[RequiresDynamicCode]`, with source generators replacing some reflection-based registration. Native AOT is a direction the code is being annotated toward, not yet a per-package guarantee.
 
 ---
 
@@ -184,15 +185,33 @@
 
 | Component | Status |
 |:---|:---|
-| **I-Synergy.Framework** | [![Build](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main) |
+| **I-Synergy.Framework** | [![CI](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml) |
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please refer to the [Developer Guide](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers) for guidelines.
+Contributions are welcome! Please refer to the [Developer Guide](https://i-synergy.github.io/I-Synergy.Framework/developers/) for guidelines. The documentation site is built from [`docs/`](docs/index.md).
 
 ---
+
+## 🤖 Repository Agents
+
+Work in this repository is delegated to the agent definitions under `.ai/agents/` — one file per agent, for example [`architect.md`](.ai/agents/architect.md); the main conversation plans, reviews and coordinates rather than editing code.
+
+| Agent | Use for |
+|---|---|
+| `architect` | Feature design, pattern selection, component boundaries, architecture analysis |
+| `reviewer` | Code quality, SOLID, CQRS compliance, security review, ISO/IEC 25010 finding attribution |
+| `security` | Blast-radius and exposure analysis, threat modelling, OWASP review, dependency and secret audits |
+| `tester` | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
+| `designer` | Visual design — colour palettes, typography, branding, design tokens |
+| `developer` | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring, builds |
+| `programmer` | Programming and code implementation — writes, edits, builds and tests code |
+| `ui-developer` | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
+| `ui-tester` | Playwright E2E tests, accessibility checks, visual regression |
+| `winui-dev` | WinUI 3 desktop applications — Windows App SDK, XAML, features, conversions, bugs |
+| `writer` | XML docs, READMEs, ADRs, technical prose |
 
 ## 📝 License
 
@@ -207,3 +226,24 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 [Azure DevOps](https://dev.azure.com/i-synergy/I-Synergy.Framework) • [NuGet](https://www.nuget.org/packages?q=i-synergy) • [GitHub](https://github.com/I-Synergy/I-Synergy.Framework)
 
 </div>
+
+<!-- BEGIN standards-status -->
+## Standards Compatibility
+
+Engineering artifacts produced by this repository correspond to published standards, and their status
+is computed from validator runs rather than asserted. The full view — what is produced, what is
+aligned in practice only, and what stays outside a code repository's reach — is in
+[`COMPLIANCE.md`](COMPLIANCE.md).
+
+| Compatibility | Meaning | Standards |
+|---|---|---|
+| **Evidence** | An artifact a certification auditor can sample directly | *(none)* |
+| **Aligned** | Engineering practice follows the standard's model; no audit artifact is produced | ISO/IEC/IEEE 29119-3:2021, ISO/IEC 25010:2023 |
+| **Organizational** | Certifiable only at organization level; this repository supplies nothing for it | ISO/IEC 27001, ISO/IEC 27701 / ISO/IEC 27017 / ISO/IEC 27018, ISO 9001, ISO/IEC 15504 / ISO/IEC 33001, IEC 62304, ISO/IEC 42001 |
+
+**This is not a certification and it asserts no conformity with any standard.** Certification is
+issued by an accredited third-party body after auditing an organizational management system; it
+cannot be established by a code repository.
+
+<!-- standards-status: source=.ai/reference/standards.md generated=2026-10-06 revision=a98b3bbf validators=none -->
+<!-- END standards-status -->

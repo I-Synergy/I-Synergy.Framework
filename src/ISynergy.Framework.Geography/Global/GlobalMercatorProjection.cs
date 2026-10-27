@@ -1,3 +1,4 @@
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Projection;
 
@@ -148,7 +149,7 @@ public abstract class GlobalMercatorProjection : MercatorProjection
         bearing = 0;
 
         if (numberOfPoints < 2)
-            throw new ArgumentOutOfRangeException(Properties.Resources.GEODETIC_PATH_MIN_2);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("GEODETIC_PATH_MIN_2"));
 
         if (start == end || numberOfPoints == 2)
             return [start, end];

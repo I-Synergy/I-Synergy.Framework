@@ -38,14 +38,24 @@ public static class Program
                     builder.Services.AddFluentUIComponents();
 
                     builder.Services.AddSingleton<INavigationMenuService, NavigationMenuService>();
+
+                    builder.Services.AddScoped<
+                        ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService,
+                        ISynergy.Framework.UI.Services.ThemeService>();
                 },
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(Program).Namespace!));
 
+        builder.Services.ConfigureSupportedCultures(cultures =>
+        {
+            cultures.AddCulture("nl");
+            cultures.AddCulture("de");
+            cultures.AddCulture("fr");
+            cultures.AddCulture("ar");
+        });
 
         var app = builder
-            .Build()
-            .SetLocatorProvider();
+            .Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

@@ -1,55 +1,140 @@
 @using ISynergy.Framework.AspNetCore.Blazor.Constants
-@using ISynergy.Framework.Core.Services
+@using ISynergy.Framework.Core.Enumerations
 @using Microsoft.FluentUI.AspNetCore.Components
-@using Sample.Components.Controls
 
-<div class="page">
-	<FluentLayout>
-		<FluentHeader Class="siteheader">
-			Sample
-		</FluentHeader>
+@inherits LayoutComponentBase
 
-		<FluentStack Orientation="Orientation.Horizontal" Width="100%" HorizontalGap="0">
-			<NavigationMenuControl />
+@* The Blazor shell mirrors the MAUI sample: a permanent sidebar, a breadcrumb header and a
+   content column. FluentLayout is deliberately not used here — its chrome does not match the
+   native sample shells. *@
+<div class="app-shell" data-app-theme="@(_themeService.IsLightThemeEnabled ? "light" : "dark")">
+    <aside class="app-sidebar @(_navOpen ? "is-open" : "")" aria-label="@L("Navigation")">
+        <div class="app-brand">
+            <span class="app-brand-tile" aria-hidden="true">▦</span>
+            <span class="app-brand-name">
+                Blazor Sample
+                <span class="app-brand-sub">Framework Demo</span>
+            </span>
+        </div>
 
-			<FluentBodyContent id="body-content" Style="height: calc(100dvh - 90px);">
-				<FluentMessageBarProvider Section="@MessageConstants.MESSAGES_TOP" ClearAfterNavigation="true" />
+        <nav class="app-nav" id="main_menu" role="navigation" aria-label="@L("Navigation")">
+            <NavLink class="app-nav-item" href="" Match="NavLinkMatch.All" @onclick="CloseNavigation">
+                <span class="app-nav-icon" aria-hidden="true">⌂</span>
+                <span>Home</span>
+            </NavLink>
+            <NavLink class="app-nav-item" href="counter" @onclick="CloseNavigation">
+                <span class="app-nav-icon" aria-hidden="true">＋</span>
+                <span>Counter</span>
+            </NavLink>
+            <NavLink class="app-nav-item" href="weather" @onclick="CloseNavigation">
+                <span class="app-nav-icon" aria-hidden="true">☁</span>
+                <span>Weather</span>
+            </NavLink>
+            <NavLink class="app-nav-item" href="commanddemoview" @onclick="CloseNavigation">
+                <span class="app-nav-icon" aria-hidden="true">▶</span>
+                <span>Command Demo</span>
+            </NavLink>
+        </nav>
 
-				<div class="@ContentClass" style="display: flex; flex-direction: column; height: 100%;">
-					<article id="article" class="@ArticleClass" style="margin: 4px; flex: 1; min-height: 0; display: flex; flex-direction: column;">
-						@Body
-					</article>
-				</div>
-			</FluentBodyContent>
-		</FluentStack>
+        <div class="app-sidebar-footer">
+            <a class="app-nav-item"
+               href="https://github.com/I-Synergy/I-Synergy.Framework"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="@L("Help")">
+                <span class="app-nav-icon" aria-hidden="true">?</span>
+                <span>@L("Help")</span>
+            </a>
+            <span class="app-version">v@_version</span>
+            <span class="app-version">© @DateTime.Now.Year I-Synergy. All rights reserved.</span>
+        </div>
+    </aside>
 
-		<FluentFooter Style="@("height: 40px; color: white;  font-size: var(--type-ramp-minus-1-font-size); line-height: var(--type-ramp-base-line-height);")">
-			<div class="version">
-			</div>
-			<FluentSpacer />
-			<div class="copy">
-			</div>
-		</FluentFooter>
+    <div class="app-main">
+        <header class="app-header">
+            <button type="button" class="app-icon-button app-nav-toggle" title="@L("Navigation")" aria-label="@L("Navigation")" aria-expanded="@(_navOpen ? "true" : "false")" aria-controls="main_menu" @onclick="ToggleNavigation"><span aria-hidden="true">☰</span></button>
+            <div class="app-breadcrumb">
+                <a href="">Blazor Sample</a>
+                <span aria-hidden="true">/</span>
+                <strong>@CurrentPageTitle</strong>
+            </div>
+            <div class="app-header-actions">
+                <button type="button" class="app-icon-button" title="@L("Theme")" aria-label="@L("Theme")" @onclick="ToggleTheme">
+                    @(_themeService.IsLightThemeEnabled ? "🌙" : "☀️")
+                </button>
+                <button type="button" class="app-icon-button" title="@L("Settings")" aria-label="@L("Settings")" @onclick="ToggleSettings">
+                    ⚙
+                </button>
+            </div>
+        </header>
 
-		<FluentDialogProvider />
-		<FluentToastProvider MaxToastCount="10" />
-		<FluentTooltipProvider />
-		<FluentKeyCodeProvider />
-		<FluentMenuProvider />
-	</FluentLayout>
+        <FluentMessageBarProvider Section="@MessageConstants.MESSAGES_TOP" />
 
-	<FluentOverlay Visible="@_commonServices.BusyService.IsBusy"
-				   Transparent=false
-				   FullScreen=true
-				   Interactive="@true"
-				   InteractiveExceptId="busyIndicator"
-				   PreventScroll=true>
-		<div id="busyIndicator" style="width: 100vw; height: 100vh; display:flex; align-items:center; justify-content:center">
-			<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
-				<FluentProgressRing />
-				<FluentLabel>@_commonServices.BusyService.BusyMessage</FluentLabel>
-			</FluentStack>
-		</div>
-
-	</FluentOverlay>
+        <main class="app-content">
+            <article id="article">@Body</article>
+        </main>
+    </div>
 </div>
+
+@if (_navOpen)
+{
+    <div class="app-nav-scrim" @onclick="CloseNavigation"></div>
+}
+
+@if (_settingsOpen)
+{
+    <div class="app-settings-scrim" @onclick="CloseSettings"></div>
+    <aside class="app-settings-drawer" role="dialog" aria-label="@L("Settings")">
+        <h2 class="app-settings-title">@L("Settings")</h2>
+
+        <div class="app-settings-body">
+            <label class="app-settings-label" for="app-language">@L("Language")</label>
+            <select id="app-language" class="app-settings-select" @bind="_selectedLanguage" @bind:after="ApplyLanguageAsync">
+                @foreach (var culture in SupportedCultures)
+                {
+                    <option value="@culture.Name">@culture.DisplayName</option>
+                }
+            </select>
+
+            <label class="app-settings-label" for="app-theme">@L("Theme")</label>
+            <select id="app-theme" class="app-settings-select" @bind="_selectedThemeName" @bind:after="ApplyThemeAsync">
+                <option value="Default">@L("System")</option>
+                <option value="Light">@L("Light")</option>
+                <option value="Dark">@L("Dark")</option>
+            </select>
+
+            <label class="app-settings-label">@L("AccentColor")</label>
+            <div class="app-accent-row">
+                @foreach (var color in AccentColors)
+                {
+                    <button
+                        type="button"
+                        class="app-accent-swatch @(IsAccentSelected(color) ? "selected" : "")"
+                        style="background-color:@color"
+                        aria-label="@color"
+                        @onclick="() => ApplyAccent(color)"></button>
+                }
+            </div>
+        </div>
+
+        <button type="button" class="app-settings-close" @onclick="CloseSettings">@L("Close")</button>
+    </aside>
+}
+
+@* v5: FluentOverlay dropped Transparent / InteractiveExceptId / PreventScroll, and Opacity is now an
+   int percentage. CloseMode="Manual" replaces v4's InteractiveExceptId intent (the busy overlay
+   can only be shown/hidden through BusyService.IsBusy and never by user interaction). *@
+<FluentOverlay Visible="@_commonServices.BusyService.IsBusy"
+               FullScreen="true"
+               Interactive="true"
+               CloseMode="OverlayCloseMode.Manual"
+               Opacity="40">
+    <div id="busyIndicator" style="width: 100vw; height: 100vh; display:flex; align-items:center; justify-content:center">
+        <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
+            <FluentSpinner />
+            <FluentText>@_commonServices.BusyService.BusyMessage</FluentText>
+        </FluentStack>
+    </div>
+</FluentOverlay>
+
+<FluentProviders />

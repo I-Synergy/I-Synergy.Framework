@@ -5,9 +5,9 @@ using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Optimization;
+
 [TestClass]
 public class AugmentedLagrangianTest
 {
@@ -120,7 +120,6 @@ public class AugmentedLagrangianTest
         Assert.IsFalse(double.IsNaN(solver.Solution[1]));
     }
 
-#if !NET35
     [TestMethod]
     public void AugmentedLagrangianSolverConstructorTest3()
     {
@@ -569,9 +568,6 @@ public class AugmentedLagrangianTest
         Assert.AreEqual(2.77, solver.Solution[0], 1e-2);
         Assert.AreEqual(4.16, solver.Solution[1], 1e-2);
     }
-
-#endif
-
 
     [TestMethod]
     public void ConstructorTest2()

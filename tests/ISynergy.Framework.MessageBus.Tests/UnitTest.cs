@@ -14,6 +14,8 @@ public class UnitTest
     [TestMethod]
     public void Test()
     {
-        Assert.IsTrue(true);
+        // Intentionally empty placeholder. Keeps the test project discoverable by the
+        // runner (a zero-test run fails under Microsoft.Testing.Platform) without
+        // asserting a tautology (MSTEST0032). Replace with real tests.
     }
 }

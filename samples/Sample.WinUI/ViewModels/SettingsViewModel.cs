@@ -1,20 +1,31 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.ViewModels;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace Sample.ViewModels;
 
-public class SettingsViewModel : ViewModelNavigation<object>
+/// <summary>
+/// Settings blade for language, theme and accent color.
+/// Changes are applied live, matching the Sample.Maui settings drawer.
+/// </summary>
+public class SettingsViewModel : ViewModelBlade<object>
 {
-    private readonly IDialogService _dialogService;
-    private readonly INavigationService _navigationService;
+    private readonly ISettingsService _settingsService;
+    private readonly IThemeService _themeService;
+    private readonly ISupportedCulturesService _supportedCulturesService;
+    private bool _isInitializing = true;
 
-    public override string Title { get => _commonServices.LanguageService.GetString("Settings"); }
+    /// <summary>
+    /// Gets the title.
+    /// </summary>
+    public override string Title => _commonServices.LanguageService.GetString("Settings");
 
     /// <summary>
     /// Gets or sets the LocalSettings property value.
@@ -35,38 +46,103 @@ public class SettingsViewModel : ViewModelNavigation<object>
     }
 
     /// <summary>
-    /// Gets or sets the COMPorts property value.
+    /// Gets or sets the selected theme.
     /// </summary>
-    public ObservableCollection<string> COMPorts
+    public Themes SelectedTheme
     {
-        get => GetValue<ObservableCollection<string>>();
-        set => SetValue(value);
+        get => GetValue<Themes>();
+        set
+        {
+            var changed = !Equals(GetValue<Themes>(), value);
+            SetValue(value);
+
+            if (changed && !_isInitializing && _themeService.Theme != value)
+                _themeService.SetTheme(value);
+        }
     }
+
+    /// <summary>
+    /// Gets or sets the available themes.
+    /// </summary>
+    public ObservableCollection<Themes> AvailableThemes { get; }
+
+    /// <summary>
+    /// Gets or sets the selected language.
+    /// </summary>
+    public string SelectedLanguage
+    {
+        get => GetValue<string>();
+        set
+        {
+            var changed = !string.Equals(GetValue<string>(), value, StringComparison.OrdinalIgnoreCase);
+            SetValue(value);
+
+            if (changed && !_isInitializing && !string.IsNullOrWhiteSpace(value))
+            {
+                var culture = new CultureInfo(value);
+                culture.ApplyCulture();
+                _settingsService.LocalSettings.Language = value;
+                _settingsService.SaveLocalSettings();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the available languages.
+    /// </summary>
+    public ObservableCollection<string> AvailableLanguages { get; }
+
+    /// <summary>
+    /// Gets or sets the selected accent color.
+    /// </summary>
+    public string SelectedAccentColor
+    {
+        get => GetValue<string>();
+        set
+        {
+            var changed = !string.Equals(GetValue<string>(), value, StringComparison.OrdinalIgnoreCase);
+            SetValue(value);
+
+            if (changed && !_isInitializing && !string.IsNullOrWhiteSpace(value))
+                _themeService.SetAccentColor(value);
+        }
+    }
+
+    /// <summary>
+    /// Gets the sample accent palette (same four colors as Sample.Maui).
+    /// </summary>
+    public ObservableCollection<string> AvailableAccentColors { get; } = new()
+    {
+        "#0B5D55",
+        "#0066CC",
+        "#10B981",
+        "#FF8C00"
+    };
 
     public SettingsViewModel(
         ICommonServices commonServices,
-        IDialogService dialogService,
-        INavigationService navigationService,
+        ISettingsService settingsService,
+        IThemeService themeService,
+        ISupportedCulturesService supportedCulturesService,
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
-        _dialogService = dialogService;
-        _navigationService = navigationService;
+        _settingsService = settingsService;
+        _themeService = themeService;
+        _supportedCulturesService = supportedCulturesService;
 
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
 
-        COMPorts =
-        [
-            "COM1",
-            "COM2",
-            "COM3",
-            "COM4",
-            "COM5",
-            "COM6",
-            "COM7",
-            "COM8"
-        ];
+        AvailableThemes = new ObservableCollection<Themes>
+        {
+            Themes.Default,
+            Themes.Light,
+            Themes.Dark
+        };
+
+        AvailableLanguages = new ObservableCollection<string>(
+            supportedCulturesService.SupportedCultures.Select(culture => culture.Name));
     }
 
     public override async Task InitializeAsync()
@@ -79,48 +155,39 @@ public class SettingsViewModel : ViewModelNavigation<object>
 
             if (!IsInitialized)
             {
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadLocalSettings();
+                _settingsService.LoadLocalSettings();
 
-                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings localSetting)
+                if (_settingsService.LocalSettings is LocalSettings localSetting)
+                {
                     LocalSettings = localSetting;
+                    SelectedTheme = localSetting.Theme;
+                    SelectedAccentColor = string.IsNullOrWhiteSpace(localSetting.Color)
+                        ? AvailableAccentColors[0]
+                        : localSetting.Color;
+                }
 
-                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LoadGlobalSettingsAsync();
+                await _settingsService.LoadGlobalSettingsAsync();
 
-                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
+                if (_settingsService.GlobalSettings is GlobalSettings globalSetting)
                     GlobalSettings = globalSetting;
+
+                var savedLanguage = string.IsNullOrWhiteSpace(_settingsService.LocalSettings.Language)
+                    ? CultureInfo.CurrentCulture.Name
+                    : _settingsService.LocalSettings.Language;
+
+                SelectedLanguage = AvailableLanguages.Contains(savedLanguage)
+                    ? savedLanguage
+                    : AvailableLanguages.FirstOrDefault() ?? CultureInfo.CurrentCulture.Name;
 
                 IsInitialized = true;
             }
         }
         finally
         {
-            _commonServices.BusyService.StopBusy();
+            _isInitializing = false;
         }
-    }
-
-    public override async Task CancelAsync()
-    {
-        await base.CancelAsync();
-        await _navigationService.NavigateModalAsync<IShellViewModel>();
-    }
-
-    public override async Task SubmitAsync(object e, bool validateUnderlayingProperties = true)
-    {
-        try
-        {
-            _commonServices.BusyService.StartBusy();
-
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings is LocalSettings)
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-
-            if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings is GlobalSettings globalSetting)
-                await _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().AddOrUpdateGlobalSettingsAsync(globalSetting);
-        }
-        finally
         {
             _commonServices.BusyService.StopBusy();
         }
-
-        await base.SubmitAsync(e, validateUnderlayingProperties);
     }
 }

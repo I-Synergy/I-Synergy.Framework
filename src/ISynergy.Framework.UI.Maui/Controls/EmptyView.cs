@@ -19,7 +19,7 @@ public class EmptyView : ContentPage
         {
             try
             {
-                var lifecycleService = commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+                var lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
                 lifecycleService.SignalApplicationUIReady();
             }
             catch (Exception ex)

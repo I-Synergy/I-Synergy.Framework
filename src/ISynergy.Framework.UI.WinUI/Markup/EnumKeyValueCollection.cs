@@ -1,10 +1,8 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.UI.Markup;
 
@@ -34,12 +32,6 @@ public class EnumKeyValueCollection : MarkupExtension
     /// with NativeAOT. For AOT-safe scenarios, compute enum key-value pairs using
     /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code and bind to the resulting collection.
     /// </remarks>
-    [UnconditionalSuppressMessage("Trimming", "IL2046",
-        Justification = "MarkupExtension.ProvideValue is an external WinUI SDK base method without RequiresUnreferencedCode; suppressing annotation mismatch.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "Enum.GetValues(Type) is intentionally used for XAML markup; callers must ensure enum types are preserved.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050",
-        Justification = "Enum.GetValues requires dynamic code; not AOT-safe by design.")]
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsNotNull(EnumType);
@@ -63,6 +55,6 @@ public class EnumKeyValueCollection : MarkupExtension
     private static string GetDescription(Enum value)
     {
         Argument.IsNotNull(value);
-        return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(value.ToString());
+        return LanguageService.Default.GetString(value.ToString());
     }
 }

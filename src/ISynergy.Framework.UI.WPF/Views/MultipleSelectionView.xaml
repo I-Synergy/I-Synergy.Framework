@@ -1,0 +1,45 @@
+<c:View
+    x:Class="ISynergy.Framework.UI.MultipleSelectionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="500"
+    mc:Ignorable="d">
+
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{Binding Title}" />
+
+        <ListView
+            x:Name="DataSummary"
+            Grid.Row="1"
+            Margin="4"
+            ItemsSource="{Binding Items}"
+            SelectionChanged="DataSummary_SelectionChanged"
+            SelectionMode="Extended">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="PreviewMouseDoubleClick">
+                    <behaviors:InvokeCommandAction Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItem}" />
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+        </ListView>
+
+        <StackPanel
+            Grid.Row="2"
+            Margin="0,4"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button Command="{Binding SelectCommand}" CommandParameter="{Binding SelectedItem}" Content="{m:GetString Ok}" />
+            <Button Command="{Binding CancelCommand}" Content="{m:GetString Cancel}" />
+        </StackPanel>
+    </Grid>
+</c:View>

@@ -3,7 +3,6 @@ using ISynergy.Framework.EventSourcing.Storage.Configuration;
 using ISynergy.Framework.EventSourcing.Storage.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.EventSourcing.Storage.Extensions;
 
@@ -24,8 +23,6 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="configuration">Used to bind <see cref="EventArchiveSettings"/>.</param>
     /// <returns>The <paramref name="services"/> for chaining.</returns>
-    [RequiresUnreferencedCode("EventArchiver uses reflection to instantiate aggregate types.")]
-    [RequiresDynamicCode("EventArchiver uses Activator.CreateInstance at runtime.")]
     public static IServiceCollection AddEventArchiving(
         this IServiceCollection services,
         IConfiguration configuration)

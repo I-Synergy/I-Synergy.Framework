@@ -5,7 +5,6 @@ using ISynergy.Framework.MessageBus.Abstractions.Messages.Base;
 using ISynergy.Framework.MessageBus.Abstractions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -57,8 +56,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
     /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.
     /// </remarks>
-    [RequiresUnreferencedCode("Serialization uses reflection. Pass a JsonTypeInfo<TQueueMessage> for AOT compatibility.")]
-    [RequiresDynamicCode("Serialization uses dynamic code generation. Pass a JsonTypeInfo<TQueueMessage> for AOT compatibility.")]
     public PublisherServiceBus(
         IOptions<TOption> options,
         ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger)
@@ -80,8 +77,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// <param name="sessionId">The session identifier.</param>
     /// <returns>Task.</returns>
     /// <exception cref="ArgumentException">Entity should be type of IQueueMessage{TModel} instead of {queueMessage.GetType().FullName}</exception>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresUnreferencedCode] constructor.")]
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresDynamicCode] constructor.")]
     public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId) // NOSONAR
     {
         if (queueMessage is { } model)

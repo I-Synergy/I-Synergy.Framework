@@ -63,6 +63,8 @@ public static class {Entity}Endpoints
             .WithSummary("Create a new {entity}")
             .WithDescription("Creates a new {entity} with the provided details")
             .Accepts<{Entity}>("application/json")
+            .WithValidation<{Entity}>()
+            .Produces<Guid>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesValidationProblem();
 
@@ -70,12 +72,15 @@ public static class {Entity}Endpoints
         group.MapGet("{id}", Get{Entity}ByIdAsync)
             .WithSummary("Get {entity} by ID")
             .WithDescription("Retrieves a specific {entity} by its unique identifier")
-            .Produces(StatusCodes.Status401Unauthorized);
+            .Produces<{Entity}>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound);
 
         // GET: Get list
         group.MapGet("", Get{Entity}ListAsync)
             .WithSummary("Get all {entities}")
             .WithDescription("Retrieves a paginated list of {entities}")
+            .Produces<List<{Entity}>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized);
 
         // PUT: Update
@@ -83,6 +88,8 @@ public static class {Entity}Endpoints
             .WithSummary("Update an existing {entity}")
             .WithDescription("Updates an existing {entity} with the provided details")
             .Accepts<{Entity}>("application/json")
+            .WithValidation<{Entity}>()
+            .Produces<bool>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesValidationProblem();
 
@@ -90,7 +97,9 @@ public static class {Entity}Endpoints
         group.MapDelete("{id}", Remove{Entity}Async)
             .WithSummary("Delete a {entity}")
             .WithDescription("Deletes a {entity} by its unique identifier")
-            .Produces(StatusCodes.Status401Unauthorized);
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound);
     }
 
     #region {Entity} Methods
@@ -229,6 +238,9 @@ var group = app
 group.MapPost("", Add{Entity}Async)
     .WithSummary("Create a new {entity}")
     .Accepts<{Entity}>("application/json")
+    .WithValidation<{Entity}>()
+    .Produces<Guid>(StatusCodes.Status201Created)
+    .Produces(StatusCodes.Status401Unauthorized)
     .ProducesValidationProblem();
 
 // WRONG: Inline lambda (do NOT use this pattern)
@@ -421,20 +433,449 @@ group.MapPost("verify/accept", VerifyAcceptAsync)
     .WithSummary("Accept authorization");
 ```
 
+### Input Validation (Data Annotations)
+
+Use Data Annotations on request models and a reusable validation filter. Every POST/PUT route that accepts a body must include `.ProducesValidationProblem()` and the validation filter.
+
+**Model with validation attributes:**
+
+```csharp
+// File: {ApplicationName}.Models.{Domain}/{Entity}.cs
+
+using System.ComponentModel.DataAnnotations;
+
+public sealed record {Entity}
+{
+    [Required, MaxLength(100)]
+    public string Property1 { get; init; }
+
+    [Required, Range(1, 10000)]
+    public int Property2 { get; init; }
+
+    [MaxLength(500)]
+    public string? Property3 { get; init; }
+}
+```
+
+**Reusable validation filter:**
+
+```csharp
+// File: {ApplicationName}.Service.Api/Extensions/ValidationExtensions.cs
+
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http.HttpResults;
+
+namespace Microsoft.AspNetCore.Builder;
+
+public static class ValidationExtensions
+{
+    public static RouteHandlerBuilder WithValidation<T>(this RouteHandlerBuilder builder)
+    {
+        builder.AddEndpointFilter(async (context, next) =>
+        {
+            var argument = context.Arguments.OfType<T>().FirstOrDefault();
+            if (argument is null)
+                return TypedResults.BadRequest("Invalid request body");
+
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(argument, new ValidationContext(argument), results, true))
+            {
+                return TypedResults.ValidationProblem(
+                    results.ToDictionary(
+                        r => r.MemberNames.FirstOrDefault() ?? "Error",
+                        r => new[] { r.ErrorMessage! }));
+            }
+
+            return await next(context);
+        });
+
+        return builder;
+    }
+}
+```
+
+**Usage on the route:**
+
+```csharp
+group.MapPost("", Add{Entity}Async)
+    .Accepts<{Entity}>("application/json")
+    .WithValidation<{Entity}>()
+    .ProducesValidationProblem();
+```
+
+The filter runs before the endpoint. If validation fails, it returns a 400 with the validation errors — matching the `.ProducesValidationProblem()` declaration. If it passes, the endpoint executes normally.
+
+### Rate Limiting
+
+All API endpoints must be protected by rate limiting to prevent abuse and DoS:
+
+```csharp
+// File: {ApplicationName}.Service.Api/Program.cs
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("api", config =>
+    {
+        config.PermitLimit = 1000;
+        config.Window = TimeSpan.FromMinutes(1);
+        config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        config.QueueLimit = 0;
+    });
+});
+
+var app = builder.Build();
+
+app.UseRateLimiter();
+```
+
+Per-route policy override when needed:
+
+```csharp
+group.MapPost("", Add{Entity}Async)
+    .RequireRateLimiting("api");
+```
+
+### CORS
+
+Cross-Origin Resource Sharing must be explicitly configured for web clients:
+
+```csharp
+// File: {ApplicationName}.Service.Api/Program.cs
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("https://{ApplicationName}.App.Api")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+var app = builder.Build();
+
+app.UseCors();
+```
+
+**Rules:**
+- Never use `.AllowAnyOrigin()` with `AllowCredentials()` — they're mutually exclusive
+- Always specify explicit origins; never use `AllowAnyOrigin()` in production
+- Call `UseCors()` after `UseRouting()` but before `UseAuthorization()` and `UseRateLimiter()`
+
+### Middleware Order
+
+The middleware pipeline in Program.cs must follow this order:
+
+```csharp
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseCors();
+app.UseRateLimiter();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.Map{Entity}Endpoints("Bearer", "ApiKey");
+
+app.Run();
+```
+
+### HTTPS Enforcement
+
+HTTPS redirection is mandatory for all environments:
+
+```csharp
+// File: {ApplicationName}.Service.Api/Program.cs
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+```
+
+Note: .NET Aspire handles TLS termination at the infrastructure level; `UseHttpsRedirection` remains for non-Aspire scenarios.
+
 ---
 
 ## OpenAPI Configuration
 
 ### Route Metadata
 
+Every route MUST declare all possible response types via `.Produces<T>()` or `.Produces(statusCode)`. This includes both success and error codes. Never rely on inference — OpenAPI/Swagger needs explicit metadata for accurate documentation.
+
 ```csharp
 group.MapPost("", Add{Entity}Async)
     .WithSummary("Create a new {entity}")                       // Short title
     .WithDescription("Creates a new {entity} with details")     // Detailed description
     .Accepts<{Entity}>("application/json")                      // Expected input type
-    .Produces(StatusCodes.Status401Unauthorized)                // Possible response codes
+    .WithValidation<{Entity}>()                                 // Data Annotations validation
+    .Produces<Guid>(StatusCodes.Status201Created)               // Success (created)
+    .Produces(StatusCodes.Status401Unauthorized)                // Auth failure
     .ProducesValidationProblem();                               // 400 with validation errors
+
+group.MapGet("{id}", Get{Entity}ByIdAsync)
+    .WithSummary("Get {entity} by ID")
+    .WithDescription("Retrieves a specific {entity} by its unique identifier")
+    .Produces<{Entity}>(StatusCodes.Status200OK)                // Success
+    .Produces(StatusCodes.Status401Unauthorized)                // Auth failure
+    .Produces(StatusCodes.Status404NotFound);                   // Not found
+
+group.MapGet("", Get{Entity}ListAsync)
+    .WithSummary("Get all {entities}")
+    .WithDescription("Retrieves a paginated list of {entities}")
+    .Produces<List<{Entity}>>(StatusCodes.Status200OK)          // Success
+    .Produces(StatusCodes.Status401Unauthorized);               // Auth failure
+
+group.MapPut("", Update{Entity}Async)
+    .WithSummary("Update an existing {entity}")
+    .WithDescription("Updates an existing {entity} with the provided details")
+    .Accepts<{Entity}>("application/json")
+    .WithValidation<{Entity}>()
+    .Produces<bool>(StatusCodes.Status200OK)                    // Success
+    .Produces(StatusCodes.Status401Unauthorized)                // Auth failure
+    .ProducesValidationProblem();                               // 400 with validation errors
+
+group.MapDelete("{id}", Remove{Entity}Async)
+    .WithSummary("Delete a {entity}")
+    .WithDescription("Deletes a {entity} by its unique identifier")
+    .Produces(StatusCodes.Status204NoContent)                   // Success (no content)
+    .Produces(StatusCodes.Status401Unauthorized)                // Auth failure
+    .Produces(StatusCodes.Status404NotFound);                   // Not found
 ```
+
+### Produces Metadata — Required
+
+- **Every route** must explicitly declare every status code it can return, both success and failure
+- Use `.Produces<T>(statusCode)` for typed success responses (the `T` matches the return type's success branch)
+- Use `.Produces(statusCode)` for untyped responses (204, 401, 404, etc.)
+- Use `.ProducesValidationProblem()` for automatic 400 validation error handling
+- Do NOT omit success codes — OpenAPI generators cannot infer them from `Results<T1, T2, ...>`
+
+### Project Configuration for OpenAPI Document Generation
+
+Every API project `.csproj` must include the MSBuild properties and package reference to generate the OpenAPI spec at build time:
+
+```xml
+<!-- File: {ApplicationName}.Service.Api/{ApplicationName}.Service.Api.csproj -->
+
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <OpenApiDocumentsDirectory>../../openapi</OpenApiDocumentsDirectory>
+    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
+    <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
+    <OpenApiGenerateEnvironment>Development</OpenApiGenerateEnvironment>
+  </PropertyGroup>
+
+  <!-- ... other PropertyGroups and ItemGroups ... -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Generate Kiota client from OpenAPI spec on every build -->
+  <Target Name="OpenAPI" AfterTargets="Build">
+    <Exec Command="dotnet kiota generate -l CSharp --output ../{ApplicationName}.Clients.Api --namespace-name {ApplicationName}.Clients.Api --class-name ApiClient --exclude-backward-compatible --openapi ../../openapi/{ApplicationName}.Api.json" WorkingDirectory="$(ProjectDir)" />
+  </Target>
+
+</Project>
+```
+
+- `OpenApiDocumentsDirectory` — relative path from the project file to the output directory (typically `../../openapi` for a solution layout)
+- `OpenApiGenerateDocumentsOnBuild` — ensures the spec stays in sync with every build
+- `Microsoft.Extensions.ApiDescription.Server` — the MSBuild-integrated generator; PrivateAssets prevents it from leaking to consumers
+- The generated `{ProjectName}.json` OpenAPI spec lands in the specified directory on every build
+- The `OpenAPI` MSBuild target — runs `dotnet kiota generate` after every build, regenerating the client from the latest spec
+
+### Document Transformer: Servers Entry
+
+Without a `servers` entry, the generated OpenAPI spec has no base URL — Kiota clients won't know where to send requests. Always add a document transformer that sets the server URL:
+
+```csharp
+// File: {ApplicationName}.Service.Api/Program.cs
+
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Servers = [new OpenApiServer { Url = "https://api" }];
+        return Task.CompletedTask;
+    });
+});
+```
+
+The URL uses the .NET Aspire service discovery short name — `https://api`. Aspire resolves this at runtime to the actual endpoint, so no configuration or environment-specific URLs are needed.
+
+### Schema Transformers for Accurate Type Mapping
+
+**Without schema transformers, Kiota generates all model properties as `UntypedNode` instead of their actual types.** The default OpenAPI generation infers types incorrectly for many .NET primitives. Always add a schema transformer in `Program.cs` (or via `.AddOpenApi()`) that explicitly maps every .NET type to its correct JSON schema representation:
+
+```csharp
+// File: {ApplicationName}.Service.Api/Program.cs
+
+builder.Services.AddOpenApi(options =>
+{
+    // ... document transformer (servers) goes here ...
+
+    options.AddSchemaTransformer((schema, context, cancellationToken) =>
+    {
+        var propertyType = context.JsonPropertyInfo?.PropertyType;
+
+        if (propertyType == null)
+            return Task.CompletedTask;
+
+        var nullableType = Nullable.GetUnderlyingType(propertyType);
+        var actualType = nullableType ?? propertyType;
+
+        // Date and Time types
+        if (actualType == typeof(DateTimeOffset))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "date-time";
+        }
+        else if (actualType == typeof(DateTime))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "date-time";
+        }
+        else if (actualType == typeof(DateOnly))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "date";
+        }
+        else if (actualType == typeof(TimeOnly))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "time";
+        }
+        else if (actualType == typeof(TimeSpan))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "duration";
+        }
+
+        // Numeric types
+        else if (actualType == typeof(decimal))
+        {
+            schema.Type = JsonSchemaType.Number;
+            schema.Format = "double";
+        }
+        else if (actualType == typeof(double))
+        {
+            schema.Type = JsonSchemaType.Number;
+            schema.Format = "double";
+        }
+        else if (actualType == typeof(float))
+        {
+            schema.Type = JsonSchemaType.Number;
+            schema.Format = "float";
+        }
+
+        // Integer types
+        else if (actualType == typeof(int))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int32";
+        }
+        else if (actualType == typeof(long))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int64";
+        }
+        else if (actualType == typeof(short))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int16";
+        }
+        else if (actualType == typeof(byte))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int8";
+            schema.Minimum = "0";
+            schema.Maximum = "255";
+        }
+        else if (actualType == typeof(sbyte))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int8";
+            schema.Minimum = "-128";
+            schema.Maximum = "127";
+        }
+        else if (actualType == typeof(uint))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int32";
+            schema.Minimum = "0";
+        }
+        else if (actualType == typeof(ulong))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int64";
+            schema.Minimum = "0";
+        }
+        else if (actualType == typeof(ushort))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int16";
+            schema.Minimum = "0";
+        }
+
+        // String and identifier types
+        else if (actualType == typeof(Guid))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "uuid";
+        }
+        else if (actualType == typeof(string))
+        {
+            schema.Type = JsonSchemaType.String;
+        }
+        else if (actualType == typeof(char))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.MinLength = 1;
+            schema.MaxLength = 1;
+        }
+
+        // Boolean type
+        else if (actualType == typeof(bool))
+        {
+            schema.Type = JsonSchemaType.Boolean;
+        }
+
+        // Binary types
+        else if (actualType == typeof(byte[]))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "byte";
+        }
+
+        // URI type
+        else if (actualType == typeof(Uri))
+        {
+            schema.Type = JsonSchemaType.String;
+            schema.Format = "uri";
+        }
+
+        // Handle enums
+        else if (actualType.IsEnum)
+        {
+            schema.Type = JsonSchemaType.String;
+            var enumNames = Enum.GetNames(actualType);
+            schema.Enum = enumNames
+                .Select(name => System.Text.Json.Nodes.JsonValue.Create(name)!)
+                .Cast<System.Text.Json.Nodes.JsonNode>()
+                .ToList();
+        }
+
+        return Task.CompletedTask;
+    });
+});
+```
+
+This transformer is non-negotiable — without it, the OpenAPI spec omits type information and Kiota falls back to `UntypedNode` for every property, making the generated client useless.
 
 ### Do NOT Use
 
@@ -446,13 +887,225 @@ group.MapPost("", Add{Entity}Async)
 
 ---
 
+## Kiota API Client Generation
+
+[Kiota](https://learn.microsoft.com/en-us/openapi/kiota/) generates strongly-typed API clients from the OpenAPI spec produced at build time. Every API project that exposes endpoints needs a corresponding client project so consumers get compile-time safety instead of raw `HttpClient` calls.
+
+### Naming Convention
+
+For a **single-app** project, the client is simply `{ApplicationName}.Clients.Api`:
+
+| Consuming App | | Kiota Client |
+|---------------|---|--------------|
+| `{ApplicationName}.App.Api` | → | `{ApplicationName}.Clients.Api` |
+
+For **multi-app** projects, each consuming app gets its own client by swapping `App` for `Clients`:
+
+| Consuming App | | Kiota Client |
+|---------------|---|--------------|
+| `{ApplicationName}.App.Business` | → | `{ApplicationName}.Clients.Business` |
+| `{ApplicationName}.App.Business.Web` | → | `{ApplicationName}.Clients.Business.Web` |
+| `{ApplicationName}.App.Business.Maui` | → | `{ApplicationName}.Clients.Business.Maui` |
+
+Pattern: `{ApplicationName}.Clients.Api` for single-app; `{ApplicationName}.Clients.{AppName}` for multi-app.
+
+### Solution Layout
+
+```
+solution/
+├── openapi/                                    # Generated OpenAPI specs
+│   └── {ApplicationName}.Service.Api.json
+├── src/
+│   ├── {ApplicationName}.Service.Api/          # API project (produces spec)
+│   │   └── {ApplicationName}.Service.Api.csproj
+│   ├── {ApplicationName}.App.Business/         # Consuming app (Blazor Server)
+│   ├── {ApplicationName}.App.Business.Web/     # Consuming app (WebAssembly)
+│   ├── {ApplicationName}.Clients.Api/          # Default client (single-app)
+│   │   ├── {ApplicationName}.Clients.Api.csproj
+│   │   ├── ApiClient.cs                        # Kiota-generated entry point
+│   │   ├── Api/                                # Kiota-generated request builders
+│   │   ├── Models/                             # Kiota-generated models
+│   │   └── kiota-lock.json                     # Generation lock file
+│   ├── {ApplicationName}.Clients.Business/     # Client for App.Business
+│   │   ├── {ApplicationName}.Clients.Business.csproj
+│   │   ├── ApiClient.cs
+│   │   ├── Api/
+│   │   ├── Models/
+│   │   └── kiota-lock.json
+│   └── {ApplicationName}.Clients.Business.Web/ # Client for App.Business.Web
+│       └── ...
+```
+
+### Client Project .csproj
+
+```xml
+<!-- File: {ApplicationName}.Clients.Api/{ApplicationName}.Clients.Api.csproj -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Microsoft.Kiota.Bundle" />
+  </ItemGroup>
+
+</Project>
+```
+
+### Setup: Install Kiota as a Local Tool
+
+From the solution root, create the tool manifest (if it doesn't exist) and install Kiota:
+
+```bash
+dotnet new tool-manifest          # Creates .config/dotnet-tools.json (skip if it exists)
+dotnet tool install Microsoft.OpenApi.Kiota
+```
+
+This pins the Kiota CLI version in `.config/dotnet-tools.json`:
+
+```json
+// File: .config/dotnet-tools.json
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "microsoft.openapi.kiota": {
+      "version": "1.31.1",
+      "commands": [
+        "kiota"
+      ],
+      "rollForward": false
+    }
+  }
+}
+```
+
+- `rollForward: false` — ensures the exact pinned version is used; no automatic upgrades
+- The manifest is **committed** to source control
+- Run `dotnet tool restore` to install the pinned version on a fresh checkout
+
+### Client Project Structure
+
+```
+{ApplicationName}.Clients.Api/
+├── {ApplicationName}.Clients.Api.csproj
+├── ApiClient.cs               # Kiota-generated entry point (BaseRequestBuilder)
+├── Api/                        # Kiota-generated request builders
+├── Models/                     # Kiota-generated models
+├── Extensions/                 # DI registration (hand-written)
+└── kiota-lock.json             # Generation lock file
+```
+
+### Client Registration in DI
+
+```csharp
+// File: {ApplicationName}.Clients.Api/Extensions/ServiceCollectionExtensions.cs
+
+namespace {ApplicationName}.Clients.Api.Extensions;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Http.HttpClientLibrary;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddApiClient(
+        this IServiceCollection services,
+        string baseUrl)
+    {
+        services.AddSingleton<IAuthenticationProvider, AnonymousAuthenticationProvider>();
+
+        services.AddHttpClient<ApiClient>(client =>
+        {
+            client.BaseAddress = new Uri(baseUrl);
+        });
+
+        services.AddScoped(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>()
+                .CreateClient(nameof(ApiClient));
+            var authProvider = sp.GetRequiredService<IAuthenticationProvider>();
+            var adapter = new HttpClientRequestAdapter(authProvider)
+            {
+                BaseUrl = httpClient.BaseAddress!.ToString()
+            };
+            return new ApiClient(adapter);
+        });
+
+        return services;
+    }
+}
+```
+
+### Authenticated Client Registration
+
+When the target API requires authentication (Bearer token, API key), use the appropriate auth provider:
+
+```csharp
+// Bearer token (delegating user identity or client credentials)
+services.AddSingleton<IAuthenticationProvider>(sp =>
+    new BaseBearerTokenAuthenticationProvider(
+        new TokenProvider(token)));
+
+// API key (header-based)
+services.AddSingleton<IAuthenticationProvider>(
+    new ApiKeyAuthenticationProvider(
+        apiKey, "X-Api-Key", KeyLocation.Header));
+```
+
+### Using the Generated Client from a Handler
+
+```csharp
+// File: {ApplicationName}.Services.{CallerDomain}/Queries/Get{Entity}List/Get{Entity}ListQueryHandler.cs
+
+public sealed class Get{Entity}ListQueryHandler(
+    ApiClient client
+) : IQueryHandler<Get{Entity}ListQuery, Get{Entity}ListResponse>
+{
+    public async Task<Get{Entity}ListResponse> HandleAsync(
+        Get{Entity}ListQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await client.{Entities}.GetAsync(requestConfiguration =>
+        {
+            requestConfiguration.QueryParameters.Page = query.PageIndex;
+            requestConfiguration.QueryParameters.PageSize = query.PageSize;
+        }, cancellationToken);
+
+        return new Get{Entity}ListResponse(
+            result?.Select(e => /* map to model */).ToList() ?? []);
+    }
+}
+```
+
+### Key Rules
+
+- **Default client** — `{ApplicationName}.Clients.Api` is the default for single-app projects
+- **Multi-app clients** — swap `App` for `Clients`: `{ApplicationName}.App.Business` → `{ApplicationName}.Clients.Business`
+- **Kiota version pinned in `dotnet-tools.json`** — `rollForward: false` ensures every developer and CI uses the exact same version
+- **Client generated via MSBuild target** — the API project's `.csproj` includes an `OpenAPI` target that runs `dotnet kiota generate` after every build
+- **Client source is committed** — `Api/`, `Models/`, `ApiClient.cs`, and `kiota-lock.json` are all committed as the client project's source code
+- **`Microsoft.Kiota.Bundle`** — single metapackage covering Abstractions, HttpClientLibrary, and all serializers
+- **Client registration is a consuming concern** — the client project owns its own `ServiceCollectionExtensions`
+- **Don't share request/response types from the API project** — Kiota generates its own models from the OpenAPI spec
+- **Always pass `cancellationToken`** — Kiota methods accept it as the last parameter
+
+---
+
 ## File Download Pattern
 
 ```csharp
 // Route registration
 group.MapGet($"{nameof(Document)}/{{id}}/download", Download{Entity}DocumentByIdAsync)
     .WithSummary("Download {entity} document")
-    .Produces(StatusCodes.Status401Unauthorized);
+    .Produces(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status401Unauthorized)
+    .Produces(StatusCodes.Status404NotFound);
 
 // Handler method
 public static async Task<Results<FileContentHttpResult, NotFound>> Download{Entity}DocumentByIdAsync(
@@ -580,3 +1233,9 @@ public static class BudgetEndpoints
 10. **`CancellationToken cancellationToken = default`** — on all async methods
 11. **`nameof()` for nested routes** — type-safe sub-entity route segments
 12. **`#region` blocks** — organize methods by entity type
+13. **Explicit `.Produces<T>()` on every route** — always declare both success and error response types; never rely on inference
+14. **OpenAPI document generation in `.csproj`** — every API project includes `OpenApiGenerateDocumentsOnBuild`, `OpenApiDocumentsDirectory`, and the `Microsoft.Extensions.ApiDescription.Server` package reference
+15. **Document + schema transformers in `AddOpenApi()`** — always register a document transformer (servers URL) and a schema transformer (type mapping); missing either breaks Kiota client generation
+16. **Kiota client per application** — `{ApplicationName}.Clients.Api` by default; `{ApplicationName}.Clients.{AppName}` for multi-app; never use raw `HttpClient` to call an internal API
+17. **Data Annotations validation** — every POST/PUT route uses `.WithValidation<T>()` with `[Required]`, `[MaxLength]`, `[Range]` on request models
+18. **Rate limiting + CORS + HTTPS** — every API project configures `AddRateLimiter` + `UseCors` + `UseHttpsRedirection`

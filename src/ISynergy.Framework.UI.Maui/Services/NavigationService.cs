@@ -1,106 +1,216 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using ISynergy.Framework.Mvvm.Extensions;
 using ISynergy.Framework.UI.Extensions;
+using ISynergy.Framework.UI.Services.Base;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
+using System.Reflection;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class NavigationService : INavigationService
+/// <summary>
+/// MAUI implementation of the navigation service.
+/// </summary>
+/// <remarks>
+/// Navigation follows the WinUI and WPF model: the shell owns a content host (the MAUI
+/// equivalent of a <c>Frame</c>) and navigation replaces the host's content while
+/// <see cref="BaseNavigationService"/> owns the backstack. MAUI pages cannot be children of a
+/// layout, so <see cref="INavigationHost"/> reparents each page's content instead of the page.
+/// Modal navigation still uses MAUI's native modal stack.
+/// </remarks>
+public class NavigationService : BaseNavigationService
 {
     private const string DefaultPageNotAvailable = "Main page is not available.";
-
-    private readonly IScopedContextService _scopedContextService;
-    private readonly IExceptionHandlerService _exceptionHandlerService;
-    private readonly ILogger _logger;
     private const bool Animated = true;
 
-    public event EventHandler? BackStackChanged;
+    /// <summary>
+    /// Modals pushed onto the native stack, with the scope that owns their view model.
+    /// </summary>
+    private readonly Stack<ModalPage> _modals = new();
+
+    private sealed record ModalPage(Page Page, IServiceScope Scope);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
     /// </summary>
-    /// <param name="scopedContextService"></param>
-    /// <param name="exceptionHandlerService"></param>
-    /// <param name="logger"></param>
     public NavigationService(
-        IScopedContextService scopedContextService,
         IExceptionHandlerService exceptionHandlerService,
+        ICommonServices commonServices,
+        ILocalSettings localSettings,
+        IServiceScopeFactory serviceScopeFactory,
         ILogger<NavigationService> logger)
+        : base(exceptionHandlerService, commonServices, localSettings, serviceScopeFactory, logger)
     {
-        _logger = logger;
-        _logger.LogTrace("NavigationService instance created with ID: {InstanceId}", Guid.NewGuid());
-
-        _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
-        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
+        _logger.LogTrace("NavigationService instance created for MAUI");
     }
 
-    /// <summary>
-    /// Handles the <see cref="E:BackStackChanged" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    public virtual void OnBackStackChanged(EventArgs e) => BackStackChanged?.Invoke(this, e);
+    // -----------------------------------------------------------------------
+    // Override: CanGoBack — the shell backstack plus any open native modal
+    // -----------------------------------------------------------------------
+    public override bool CanGoBack =>
+        _backStack.Count > 0 ||
+        (GetMainPage() is Page page && page.Navigation.ModalStack.Count > 0);
 
-    /// <summary>
-    /// Gets a value indicating whether this instance can go back.
-    /// </summary>
-    /// <value><c>true</c> if this instance can go back; otherwise, <c>false</c>.</value>
-    private static Page? GetMainPage() =>
-        Application.Current?.Windows.FirstOrDefault()?.Page;
+    // -----------------------------------------------------------------------
+    // Abstract: navigation frame — the shell's content host
+    // -----------------------------------------------------------------------
+    protected override object? GetNavigationFrame() => NavigationHostRegistry.Resolve();
 
-    public bool CanGoBack =>
-        GetMainPage() is Page page && (page.GetNavigation().Navigation.NavigationStack.Count > 0 || page.Navigation.ModalStack.Count > 0);
+    protected override object? GetFrameContent(object frame) => ((INavigationHost)frame).CurrentPage;
 
+    protected override void SetFrameContent(object frame, IView page) => ((INavigationHost)frame).SetContent(page);
 
-    /// <summary>
-    /// Navigates to a specified viewmodel asynchronous.
-    /// </summary>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <param name="parameter"></param>
-    /// <param name="backNavigation"></param>
-    /// <returns></returns>
-    public Task NavigateAsync<TViewModel>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel =>
-        NavigateAsync<TViewModel>(null, parameter, backNavigation);
+    // -----------------------------------------------------------------------
+    // Abstract: Window content accessors
+    // -----------------------------------------------------------------------
+    protected override object? GetWindowContent()
+        => Application.Current?.Windows.FirstOrDefault()?.Page;
 
-    /// <summary>
-    /// Navigates to the viewmodel with parameters.
-    /// </summary>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <param name="viewModel"></param>
-    /// <param name="parameter"></param>
-    /// <param name="backNavigation"></param>
-    /// <returns></returns>
-    public async Task NavigateAsync<TViewModel>(TViewModel? viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
-        where TViewModel : class, IViewModel
+    protected override void SetWindowContent(IView page)
     {
-        if (NavigationExtensions.CreatePage<TViewModel>(viewModel, parameter) is { } view && view is Page page)
+        if (Application.Current?.Windows.Count > 0)
+            Application.Current.Windows[0].Page = (Page)page;
+    }
+
+    // -----------------------------------------------------------------------
+    // Abstract: CreateView — MAUI-specific view creation with RTL support
+    // -----------------------------------------------------------------------
+    protected override IView CreateView(IServiceProvider serviceProvider, Type viewModelType, IViewModel? viewModel, object? parameter)
+    {
+        if (viewModel is null)
+            viewModel = (IViewModel)serviceProvider.GetRequiredService(viewModelType);
+
+        var viewName = viewModelType.GetRelatedView();
+        var viewType = viewName.GetRelatedViewType();
+
+        if (viewType is not null && serviceProvider.GetRequiredService(viewType) is IView resolvedView)
         {
+            resolvedView.ViewModel = viewModel;
+
+            if (parameter is not null && resolvedView.ViewModel is not null)
+                resolvedView.ViewModel.Parameter = parameter;
+
+            if (resolvedView is VisualElement visualElement &&
+                CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                visualElement.FlowDirection = FlowDirection.RightToLeft;
+
+            return resolvedView;
+        }
+
+        throw new FileNotFoundException($"Cannot create or navigate to page: {viewName}.");
+    }
+
+    // -----------------------------------------------------------------------
+    // Abstract: MonitorViewLoadAsync — MAUI uses OnNavigatedTo, no Loaded event
+    // -----------------------------------------------------------------------
+    protected override Task MonitorViewLoadAsync(IView view, int timeoutMs = 500)
+        => Task.CompletedTask;
+
+    // -----------------------------------------------------------------------
+    // Abstract: DispatchOnUIThread
+    // -----------------------------------------------------------------------
+    protected override void DispatchOnUIThread(Action action)
+    {
+        if (MainThread.IsMainThread)
+            action();
+        else
+            MainThread.BeginInvokeOnMainThread(action);
+    }
+
+    // -----------------------------------------------------------------------
+    // Override: GoBackAsync — pop a native modal first, then the shell backstack
+    // -----------------------------------------------------------------------
+    public override async Task GoBackAsync()
+    {
+        var mainPage = GetMainPage();
+
+        if (mainPage is null)
+            throw new InvalidOperationException(DefaultPageNotAvailable);
+
+        if (mainPage.Navigation.ModalStack.Count > 0)
+        {
+            var poppedPage = mainPage.Navigation.ModalStack[^1];
+            await mainPage.Navigation.PopModalAsync(Animated);
+
+            if (_modals.Count > 0)
+            {
+                var modal = _modals.Pop();
+
+                if (ReferenceEquals(modal.Page, poppedPage))
+                {
+                    try { modal.Scope.Dispose(); }
+                    catch (Exception ex) { _logger.LogError(ex, "Error disposing the modal scope"); }
+                }
+            }
+
+            CleanupPageResources(poppedPage);
+            OnBackStackChanged(EventArgs.Empty);
+            return;
+        }
+
+        await base.GoBackAsync();
+
+        // Always announce the pop: shells derive their back-button state, breadcrumb and selection
+        // from the stack, and the base only raises when the stack becomes empty.
+        OnBackStackChanged(EventArgs.Empty);
+    }
+
+    // -----------------------------------------------------------------------
+    // Override: NavigateModalAsync — native MAUI modal stack
+    // -----------------------------------------------------------------------
+    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null)
+    {
+        if (Application.Current is null)
+            return;
+
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            var scope = _serviceScopeFactory.CreateScope();
+
+            if (NavigationExtensions.CreatePage<TViewModel>(scope.ServiceProvider, parameter: parameter) is not { } view ||
+                view is not Page page)
+            {
+                scope.Dispose();
+                return;
+            }
+
+            // Detach any existing handler so MAUI reinitializes the native view tree for
+            // recycled singleton pages.
+            page.Handler = null;
+
             var mainPage = GetMainPage();
 
             if (mainPage is null)
-                throw new InvalidOperationException(DefaultPageNotAvailable);
-
-            var result = mainPage.GetNavigation();
-
-            if (result.Navigation.NavigationStack.Contains(page))
             {
-                for (int i = result.Navigation.NavigationStack.Count - 1; i >= 0; i--)
-                {
-                    if (result.Navigation.NavigationStack[i].Equals(page))
-                        break;
+                scope.Dispose();
+                throw new InvalidOperationException(DefaultPageNotAvailable);
+            }
 
-                    if (!backNavigation)
-                        await result.Navigation.PopAsync(Animated);
-                }
+            if (mainPage is Shell or NavigationPage || GetNavigationFrame() is not null)
+            {
+                // The root owns a content host (or is a Shell/NavigationPage), so a modal can be
+                // pushed on top of it and the shell stays alive underneath.
+                await mainPage.Navigation.PushModalAsync(page, Animated);
+                _modals.Push(new ModalPage(page, scope));
             }
             else
             {
-                page.Parent = null;
-                await result.Navigation.PushAsync(page, Animated);
+                // Initial setup or bare-page root (e.g., LoadingView): replace the window root.
+                var oldPage = Application.Current.Windows[0].Page;
+                Application.Current.Windows[0].Page = page;
+
+                CleanupPageResources(oldPage);
+                scope.Dispose();
             }
 
-            if (view is not null && view.ViewModel is not null) // NOSONAR
+            if (view.ViewModel is not null)
             {
                 try
                 {
@@ -108,134 +218,71 @@ public class NavigationService : INavigationService
                 }
                 catch (Exception ex)
                 {
-                    // Use exception handler service instead of just logging
                     try
                     {
-                        _exceptionHandlerService?.HandleException(ex);
+                        _exceptionHandlerService.HandleException(ex);
                     }
                     catch
                     {
-                        // If we can't get the exception handler service, log to debug
-                        System.Diagnostics.Debug.WriteLine("Error initializing ViewModel: {0}", ex.Message);
+                        System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
                     }
                 }
             }
-
-            OnBackStackChanged(EventArgs.Empty);
-        }
+        });
     }
+
+    // -----------------------------------------------------------------------
+    // Override: Dispose
+    // -----------------------------------------------------------------------
+    public override void Dispose()
+    {
+        while (_modals.Count > 0)
+        {
+            try { _modals.Pop().Scope.Dispose(); }
+            catch (Exception ex) { _logger.LogError(ex, "Error disposing a modal scope during shutdown"); }
+        }
+
+        base.Dispose();
+    }
+
+    // -----------------------------------------------------------------------
+    // Obsolete: Typed-view navigation overloads (not supported in MAUI)
+    // -----------------------------------------------------------------------
+    [Obsolete("Not supported!", true)]
+    public new Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel
+        where TView : IView
+        => throw new NotImplementedException();
+
+    [Obsolete("Not supported!", true)]
+    public new Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
+        where TViewModel : class, IViewModel
+        where TView : IView
+        => throw new NotImplementedException();
+
+    // -----------------------------------------------------------------------
+    // Private helpers
+    // -----------------------------------------------------------------------
+
+    private static Page? GetMainPage() =>
+        Application.Current?.Windows.FirstOrDefault()?.Page;
 
     /// <summary>
-    /// Navigates to the modal viewmodel with parameters.
+    /// Clears MAUI-specific resources (BindingContext, Handler) on a popped modal page.
+    /// Scope disposal is handled separately by the modal bookkeeping.
     /// </summary>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <param name="parameter"></param>
-    /// <returns></returns>
-    public async Task NavigateModalAsync<TViewModel>(object? parameter = null) // NOSONAR
-        where TViewModel : class, IViewModel
+    private static void CleanupPageResources(Page? page)
     {
-        if (Application.Current is not null)
-        {
-            if (!Application.Current.Dispatcher.IsDispatchRequired)
-            {
-                if (NavigationExtensions.CreatePage<TViewModel>(parameter) is { } view && view is Page page)
-                {
-                    // Added this nullification of handler because of some issues with TabbedPage.
-                    // When tabbed page is set as main page and then modal page is opened, then after closing and reopening the page, the tabs are not visible.
-                    page.Handler = null;
+        if (page is null)
+            return;
 
-                    var mainPage = GetMainPage();
+        bool isSingleton = page.GetType().GetCustomAttribute<LifetimeAttribute>()?.Lifetime == Lifetimes.Singleton;
 
-                    if (mainPage is null)
-                        throw new InvalidOperationException(DefaultPageNotAvailable);
+        // Clear BindingContext to break the reference chain to the ViewModel.
+        page.BindingContext = null;
 
-                    Application.Current.Windows[0].Page = page;
-
-                    if (view is not null && view.ViewModel is not null) // NOSONAR
-                    {
-                        try
-                        {
-                            await view.ViewModel.InitializeAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            // Use exception handler service instead of just logging
-                            try
-                            {
-                                _exceptionHandlerService?.HandleException(ex);
-                            }
-                            catch
-                            {
-                                // If we can't get the exception handler service, log to debug
-                                System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                await Application.Current.Dispatcher.DispatchAsync(async () => await NavigateModalAsync<TViewModel>(parameter));
-            }
-        }
+        // Disconnect native handler. Skip for Singletons — they are reused.
+        if (!isSingleton)
+            page.Handler = null;
     }
-
-    public async Task CleanBackStackAsync(bool _ = false)
-    {
-        var mainPage = GetMainPage();
-
-        if (mainPage is null)
-            throw new InvalidOperationException("Main page is not available.");
-
-        await mainPage.GetNavigation().Navigation.PopToRootAsync(Animated);
-
-        OnBackStackChanged(EventArgs.Empty);
-    }
-
-    /// <summary>
-    /// Goes the back.
-    /// </summary>
-    public async Task GoBackAsync()
-    {
-        var mainPage = GetMainPage();
-
-        if (mainPage is null)
-            throw new InvalidOperationException("Main page is not available.");
-
-        if (CanGoBack)
-        {
-            if (mainPage.Navigation.ModalStack.Count > 0)
-                await mainPage.Navigation.PopModalAsync(Animated);
-            else
-                await mainPage.GetNavigation().Navigation.PopAsync(Animated);
-        }
-
-        OnBackStackChanged(EventArgs.Empty);
-    }
-
-    #region NotImplemented
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException(); // NOSONAR
-
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR
-        where TView : IView =>
-        throw new NotImplementedException();
-
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) => throw new NotImplementedException(); // NOSONAR
-
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false) // NOSONAR
-        where TViewModel : class, IViewModel
-        where TView : IView => throw new NotImplementedException();
-
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false) // NOSONAR
-        where TViewModel : class, IViewModel
-        where TView : IView => throw new NotImplementedException();
-
-    [Obsolete("Not supported!", true)] // NOSONAR
-    public Task GoForwardAsync() => throw new NotImplementedException(); // NOSONAR
-    #endregion
 }

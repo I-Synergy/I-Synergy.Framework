@@ -1,0 +1,164 @@
+using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.Windows;
+using ISynergy.Framework.Mvvm.Commands;
+using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Logging;
+using Sample.Abstractions.Windows;
+using Sample.Models;
+using System.Collections.ObjectModel;
+
+namespace Sample.ViewModels;
+
+[Lifetime(Lifetimes.Scoped)]
+public class CustomControlsViewModel : ViewModelNavigation<object>
+{
+    private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
+    private System.Timers.Timer? _timer;
+
+    public override string Title { get { return _commonServices.LanguageService.GetString("CustomControls"); } }
+
+    public decimal Price
+    {
+        get => GetValue<decimal>();
+        set => SetValue(value);
+    }
+
+    public decimal Weight
+    {
+        get => GetValue<decimal>();
+        set => SetValue(value);
+    }
+
+    public int Quantity
+    {
+        get => GetValue<int>();
+        set => SetValue(value);
+    }
+
+    public string SearchText
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    public Themes SelectedTheme
+    {
+        get => GetValue<Themes>();
+        set => SetValue(value);
+    }
+
+    public ObservableCollection<TestItem> Items { get; set; } = new();
+    public ObservableCollection<TestItem> SelectedTestItems { get; set; } = new();
+
+    public byte[] File
+    {
+        get => GetValue<byte[]>();
+        set => SetValue(value);
+    }
+
+    public RelayCommand BusyOnCommand { get; private set; }
+    public RelayCommand NotImplementedErrorCommand { get; private set; }
+    public AsyncRelayCommand AsyncNotImplementedErrorCommand { get; private set; }
+    public AsyncRelayCommand ShowMemoCommand { get; private set; }
+    public AsyncRelayCommand SelectSingleCommand { get; private set; }
+    public AsyncRelayCommand SelectMultipleCommand { get; private set; }
+    public AsyncRelayCommand NavigateToDetailCommand { get; private set; }
+    public AsyncRelayCommand ShowErrorWindowCommand { get; private set; }
+
+    public CustomControlsViewModel(
+        ICommonServices commonServices,
+        IDialogService dialogService,
+        INavigationService navigationService,
+        ILogger<CustomControlsViewModel> logger)
+        : base(commonServices, logger)
+    {
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+
+        BusyOnCommand = new RelayCommand(StartTimer);
+        ShowMemoCommand = new AsyncRelayCommand(ShowMemoAsync);
+        SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
+        SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
+        NavigateToDetailCommand = new AsyncRelayCommand(NavigateToDetailAsync);
+        NotImplementedErrorCommand = new RelayCommand(() => throw new NotImplementedException());
+        AsyncNotImplementedErrorCommand = new AsyncRelayCommand(() => throw new NotImplementedException());
+        ShowErrorWindowCommand = new AsyncRelayCommand(ShowErrorWindowAsync);
+
+        SearchText = string.Empty;
+        SelectedTheme = Themes.Dark;
+        Quantity = 19;
+        Weight = 91.19m;
+        Price = 19.19m;
+
+        Items =
+        [
+            new TestItem { Id = 1, Description = "Test 1"},
+            new TestItem { Id = 2, Description = "Test 2"},
+            new TestItem { Id = 3, Description = "Test 3"},
+            new TestItem { Id = 4, Description = "Test 4"},
+            new TestItem { Id = 5, Description = "Test 5"}
+        ];
+    }
+
+    private Task ShowErrorWindowAsync() =>
+        _dialogService.ShowDialogAsync<ITestExceptionWindow, TestExceptionViewModel, TestItem>(
+            _ => Task.CompletedTask);
+
+    private async Task NavigateToDetailAsync()
+    {
+        var detailsVm = IPlatformApplication.Current!.Services.GetRequiredService<DetailsViewModel>();
+        await _navigationService.NavigateAsync(detailsVm);
+    }
+
+    private Task SelectMultipleAsync() =>
+        _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<TestItem>, List<TestItem>>(
+            SelectedTestItems.ToList(),
+            async items =>
+            {
+                SelectedTestItems = new ObservableCollection<TestItem>();
+                SelectedTestItems.AddRange(items);
+                await _dialogService.ShowInformationAsync($"{string.Join(", ", items.Select(s => s.Description))} selected.");
+            },
+            initialization: vm => vm.SetItems(Items));
+
+    private Task SelectSingleAsync() =>
+        _dialogService.ShowDialogAsync<ISingleSelectionWindow, ViewModelSingleSelectionDialog<TestItem>, TestItem>(
+            async item => await _dialogService.ShowInformationAsync($"{item.Description} selected."),
+            initialization: vm => vm.SetItems(Items));
+
+    private Task ShowMemoAsync() =>
+        _dialogService.ShowDialogAsync<INoteWindow, NoteViewModel, string>(
+            async result => await _dialogService.ShowInformationAsync(result));
+
+    private void StartTimer()
+    {
+        _timer = new(5000);
+        _timer.Elapsed += Timer_Elapsed;
+        _commonServices.BusyService.StartBusy();
+        _timer.Enabled = true;
+        _timer.AutoReset = true;
+        _timer.Start();
+    }
+
+    private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _commonServices.BusyService.StopBusy();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (disposing && _timer is not null)
+        {
+            _timer.Stop();
+            _timer.Elapsed -= Timer_Elapsed;
+            _timer.Dispose();
+        }
+    }
+}

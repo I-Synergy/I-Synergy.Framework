@@ -478,7 +478,7 @@ public class DistanceTest
         #endregion
 
         double expected = 4.58257569495584;
-        Assert.AreEqual(a, expected);
-        Assert.AreEqual(b, expected);
+        Assert.AreEqual(expected, a);
+        Assert.AreEqual(expected, b);
     }
 }

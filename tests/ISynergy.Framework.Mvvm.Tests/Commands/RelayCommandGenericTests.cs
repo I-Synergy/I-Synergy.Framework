@@ -1,5 +1,5 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -32,15 +32,11 @@ public class RelayCommandGenericTests
         _mockServiceScope
             .Setup(x => x.ServiceProvider)
             .Returns(_mockServiceProvider.Object);
-
-        // Initialize ServiceLocator with mock service provider
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     [TestMethod]
@@ -111,48 +107,37 @@ public class RelayCommandGenericTests
     }
 
     [TestMethod]
-    public void Execute_WithException_CallsExceptionHandlerService()
+    public void Execute_WithException_DoesNotThrowAndRaisesCommandExceptionDispatcher()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Test exception");
-        var mockExceptionHandler = new Mock<IExceptionHandlerService>();
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns(mockExceptionHandler.Object);
-
         var command = new RelayCommand<string>(_ => throw expectedException);
 
-        // Act
+        CommandExceptionEventArgs? raisedArgs = null;
+        object? raisedSender = null;
+        void Handler(object? sender, CommandExceptionEventArgs e)
+        {
+            raisedSender = sender;
+            raisedArgs = e;
+        }
+
+        CommandExceptionDispatcher.UnhandledCommandException += Handler;
         try
         {
+            // Act - a synchronous throw must never escape Execute(): on some platforms (e.g.
+            // Mac Catalyst) an unhandled exception on the calling thread aborts the process
+            // unconditionally, bypassing the framework's global exception handling.
             command.Execute("test");
-            //Assert.Fail("Expected exception was not thrown");
         }
-        catch (InvalidOperationException)
+        finally
         {
-            // Expected
+            CommandExceptionDispatcher.UnhandledCommandException -= Handler;
         }
 
         // Assert
-        mockExceptionHandler.Verify(x => x.HandleException(It.Is<Exception>(e => e == expectedException)), Times.Once);
-    }
-
-    [TestMethod]
-    public void Execute_WithException_WhenExceptionHandlerServiceNotAvailable_RethrowsException()
-    {
-        // Arrange
-        var expectedException = new InvalidOperationException("Test exception");
-
-        _mockServiceProvider
-            .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
-            .Returns((IExceptionHandlerService?)null);
-
-        var command = new RelayCommand<string>(_ => throw expectedException);
-
-        // Act & Assert
-        var thrownException = Assert.Throws<InvalidOperationException>(() => command.Execute("test"));
-        Assert.AreEqual(expectedException, thrownException);
+        Assert.AreSame(command, raisedSender);
+        Assert.IsNotNull(raisedArgs);
+        Assert.AreSame(expectedException, raisedArgs!.Exception);
     }
 
     [TestMethod]

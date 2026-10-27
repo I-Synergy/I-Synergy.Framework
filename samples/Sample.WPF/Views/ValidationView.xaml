@@ -20,7 +20,7 @@
               Margin="10">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock Margin="0,10" Text="{Binding Description}"/>
+                <TextBlock Margin="0,10" Text="{Binding Description}" Style="{StaticResource AppTextLabel}"/>
                 <ToggleButton Content="Automatic Validation Trigger" IsChecked="{Binding AutomaticValidationTrigger, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <RadioButton Content="Null or Empty" GroupName="Validation" IsChecked="{Binding IsNullCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -28,16 +28,16 @@
                 <RadioButton Content="Regex" GroupName="Validation" IsChecked="{Binding IsRegexCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Separator Height="10" Visibility="{Binding IsRegexCheck, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="Regular expression:" Visibility="{Binding IsRegexCheck, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Regular expression:" Style="{StaticResource AppTextLabel}" Visibility="{Binding IsRegexCheck, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox Text="{Binding Regex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Visibility="{Binding IsRegexCheck, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 
                 <Separator Height="10"/>
-                <TextBlock Text="Test:"/>
+                <TextBlock Text="Test:" Style="{StaticResource AppTextLabel}"/>
                 <TextBox Text="{Binding Test, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          behaviors:AutoFocusBehavior.AutoFocusable="True"/>
 
-                <Button Content="Test" Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" Margin="0,10" Width="150"/>
+                <Button Content="Test" Command="{Binding SubmitCommand}" CommandParameter="{Binding SelectedItem}" Margin="0,10" Width="150" HorizontalAlignment="Left"/>
             </StackPanel>
         </Grid>
     </DockPanel>

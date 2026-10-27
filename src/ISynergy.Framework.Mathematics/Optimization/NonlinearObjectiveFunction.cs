@@ -2,6 +2,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
@@ -86,7 +87,6 @@ public class NonlinearObjectiveFunction : IObjectiveFunction
         Gradient = gradient;
     }
 
-#if !NET35
     /// <summary>
     ///     Creates a new objective function specified through a lambda expression.
     /// </summary>
@@ -98,6 +98,7 @@ public class NonlinearObjectiveFunction : IObjectiveFunction
     ///     A <see cref="Expression{T}" /> containing
     ///     the gradient of the <paramref name="function">objective function</paramref>.
     /// </param>
+    [RequiresDynamicCode("Compiles the given Expression<Func<double>>/Expression<Func<double[]>> at runtime via LambdaExpression.Compile(), which is not supported under NativeAOT. Use the Func<double[], double> constructor overload instead.")]
     public NonlinearObjectiveFunction(Expression<Func<double>> function, Expression<Func<double[]>> gradient = null)
         : this()
     {
@@ -121,7 +122,6 @@ public class NonlinearObjectiveFunction : IObjectiveFunction
         Function = func.Compile();
         Gradient = grad.Compile();
     }
-#endif
 
     /// <summary>
     ///     Gets the name of each input variable.

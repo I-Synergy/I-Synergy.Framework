@@ -1,9 +1,12 @@
-using System.Diagnostics.CodeAnalysis;
 using ISynergy.Framework.CQRS.Abstractions.Dispatchers;
 using ISynergy.Framework.CQRS.Dispatch;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
 
 namespace ISynergy.Framework.CQRS.Dispatchers;
 
@@ -17,6 +20,12 @@ public class QueryDispatcher : IQueryDispatcher
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger? _logger;
     private readonly QueryDispatchTable? _dispatchTable;
+
+    /// <summary>
+    /// Caches the reflected <c>HandleAsync</c> method per constructed handler interface type, so the
+    /// reflection fallback reflects each handler shape only once.
+    /// </summary>
+    private static readonly ConcurrentDictionary<Type, MethodInfo> _handleAsyncCache = new();
 
     /// <summary>
     /// Initializes a new instance of <see cref="QueryDispatcher"/>.
@@ -38,8 +47,8 @@ public class QueryDispatcher : IQueryDispatcher
     }
 
     /// <inheritdoc/>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection fallback is only reached when QueryDispatchTable is absent. AOT builds must register a dispatch table via AddQueryDispatchTable().")]
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection fallback is only reached when QueryDispatchTable is absent. AOT builds must register a dispatch table via AddQueryDispatchTable().")]
+    [RequiresDynamicCode("Falls back to MakeGenericType-based reflection dispatch when no QueryDispatchTable entry exists for the query's runtime type; not supported under NativeAOT.")]
+    [RequiresUnreferencedCode("The reflection dispatch fallback is not trim-compatible.")]
     public async Task<TResult> DispatchAsync<TResult>(
         IQuery<TResult> query,
         CancellationToken cancellationToken = default)
@@ -85,14 +94,34 @@ public class QueryDispatcher : IQueryDispatcher
         }
     }
 
-    [RequiresDynamicCode("Reflection-based query dispatch is not AOT-compatible. Register a QueryDispatchTable via AddQueryDispatchTable() or use DispatchAsync<TQuery, TResult> instead.")]
-    [RequiresUnreferencedCode("Reflection-based query dispatch may not work after trimming. Register a QueryDispatchTable via AddQueryDispatchTable() or use DispatchAsync<TQuery, TResult> instead.")]
+    [RequiresDynamicCode("Uses MakeGenericType to resolve IQueryHandler<,> for a runtime-only-known query type; not supported under NativeAOT.")]
+    [RequiresUnreferencedCode("Not trim-compatible.")]
     private async Task<TResult> DispatchViaReflection<TResult>(
         IQuery<TResult> query,
         CancellationToken cancellationToken)
     {
         var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
-        dynamic handler = _serviceProvider.GetRequiredService(handlerType);
-        return await handler.HandleAsync((dynamic)query, cancellationToken);
+        var handler = _serviceProvider.GetRequiredService(handlerType);
+
+        // Invoke HandleAsync through a cached MethodInfo rather than `dynamic`: this avoids the
+        // runtime (DLR) binder entirely and reflects each handler shape only once.
+        var handleAsync = _handleAsyncCache.GetOrAdd(handlerType, static type =>
+            type.GetMethod("HandleAsync")
+            ?? throw new InvalidOperationException($"Type '{type}' has no HandleAsync method."));
+
+        try
+        {
+            var task = handleAsync.Invoke(handler, [query, cancellationToken]) as Task<TResult>
+                ?? throw new InvalidOperationException(
+                    $"HandleAsync on '{handlerType}' did not return a Task<{typeof(TResult).Name}>.");
+
+            return await task.ConfigureAwait(false);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            // Surface the handler's own exception rather than the reflection wrapper.
+            ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            throw; // unreachable - Throw() always throws; present to satisfy the compiler
+        }
     }
 }

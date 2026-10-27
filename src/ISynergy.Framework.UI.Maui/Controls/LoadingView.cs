@@ -22,6 +22,7 @@ public class LoadingView : ContentPage
     private MediaElement? _backgroundMediaElement;
     private Image? _backgroundImage;
     private Button? _signInButton;
+    private bool _loadingCompleted;
     /// <summary>
     /// Initializes a new instance of the LoadingView class.
     /// </summary>
@@ -33,7 +34,7 @@ public class LoadingView : ContentPage
         ArgumentNullException.ThrowIfNull(commonServices);
         ArgumentNullException.ThrowIfNull(splashScreenOptions);
 
-        _applicationLifecycleService = commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
+        _applicationLifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
 
         InitializeContent(commonServices, splashScreenOptions);
 
@@ -42,28 +43,22 @@ public class LoadingView : ContentPage
         // Signal that the UI framework is ready for interaction.
         // At this point, the window is fully created and first page is loaded.
         // This is the earliest safe point for dialogs and modal navigation.
-        Loaded += (s, e) =>
-        {
-            try
-            {
-                _applicationLifecycleService.SignalApplicationUIReady();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error signaling UI ready: {ex}");
-            }
-        };
+        Loaded += OnSignalUIReady;
 
         // Configure background based on splash screen type
+        // Always set the default splash as the background image
+        if (_backgroundImage is not null)
+            _backgroundImage.Source = ImageSource.FromFile("splashscreen.png");
+
+        // Override with custom image if explicitly specified
         if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
         {
-            // Use Image for image resources
             if (_backgroundImage is not null)
                 _backgroundImage.Source = ImageSource.FromResource(splashScreenOptions.Resource);
         }
+        // Override with custom video if explicitly specified
         else if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
         {
-            // Use MediaElement for video resources
             if (_backgroundMediaElement is not null)
                 _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
         }
@@ -134,6 +129,7 @@ public class LoadingView : ContentPage
         if (_backgroundMediaElement is not null && _backgroundMediaElement.CurrentState != MediaElementState.Stopped)
             _backgroundMediaElement.Pause();
 
+        _loadingCompleted = true;
         _applicationLifecycleService.SignalApplicationLoaded();
         LoadingCompleted?.Invoke(this, EventArgs.Empty);
     }
@@ -143,19 +139,19 @@ public class LoadingView : ContentPage
     /// </summary>
     private void InitializeContent(ICommonServices _, SplashScreenOptions splashScreenOptions)
     {
-        // Create background element based on splash screen type
-        if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
+        // Always create background image for the default splash
+        _backgroundImage = new Image
         {
-            // Create image for image-based splash screens
-            _backgroundImage = new Image
-            {
-                Aspect = Aspect.AspectFill,
-                IsOpaque = true
-            };
-        }
-        else
+            Aspect = splashScreenOptions.SplashScreenType == SplashScreenTypes.Image ? Aspect.Fill : Aspect.Center,
+            IsOpaque = true
+        };
+
+        if (splashScreenOptions.SplashScreenType == SplashScreenTypes.None)
+            _backgroundImage.VerticalOptions = LayoutOptions.Start;
+
+        // Create media element only for Video splash screens
+        if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
         {
-            // Create media element for video-based splash screens
             _backgroundMediaElement = new MediaElement
             {
                 Aspect = Aspect.AspectFill,
@@ -167,29 +163,32 @@ public class LoadingView : ContentPage
         // Create semi-transparent overlay
         var overlay = new Grid
         {
-            BackgroundColor = Color.FromArgb("#00000040")
+            BackgroundColor = Color.FromArgb("#40000000")
         };
 
-        // Create sign-in/skip button
+        // Create sign-in/skip button (only for Video splash — no skip needed for Image/None)
         _signInButton = new Button
         {
             Text = "Skip",
             Margin = new Thickness(20),
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.End,
-            IsEnabled = false
+            IsEnabled = false,
+            IsVisible = splashScreenOptions.SplashScreenType == SplashScreenTypes.Video
         };
         _signInButton.SetDynamicResource(Button.BackgroundColorProperty, "Primary");
 
         // Create main grid
         var mainGrid = new Grid();
 
-        // Add background element based on type
+        // Always add the background image (default splash or custom image)
         if (_backgroundImage is not null) // NOSONAR
         {
             mainGrid.Add(_backgroundImage);
         }
-        else if (_backgroundMediaElement is not null)
+
+        // Add media element on top if present (video overlays the default splash background)
+        if (_backgroundMediaElement is not null)
         {
             mainGrid.Add(_backgroundMediaElement);
         }
@@ -221,7 +220,10 @@ public class LoadingView : ContentPage
     /// </summary>
     private void OnApplicationInitialized(object? sender, EventArgs e)
     {
-        IsSignInButtonEnabled = true;
+        if (MainThread.IsMainThread)
+            IsSignInButtonEnabled = true;
+        else
+            MainThread.BeginInvokeOnMainThread(() => IsSignInButtonEnabled = true);
     }
 
     /// <summary>
@@ -241,6 +243,29 @@ public class LoadingView : ContentPage
         {
             _backgroundMediaElement.MediaEnded += OnMediaEnded;
             _backgroundMediaElement.Play();
+        }
+    }
+
+    /// <summary>
+    /// Handles the view loaded event to signal the UI is ready.
+    /// </summary>
+    private void OnSignalUIReady(object? sender, EventArgs e) => SignalUIReady();
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        SignalUIReady();
+    }
+
+    private void SignalUIReady()
+    {
+        try
+        {
+            _applicationLifecycleService.SignalApplicationUIReady();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error signaling UI ready: {ex}");
         }
     }
 
@@ -276,6 +301,7 @@ public class LoadingView : ContentPage
         if (_signInButton is not null)
             _signInButton.Clicked -= OnSignInClicked;
 
+        Loaded -= OnSignalUIReady;
         Loaded -= OnViewLoaded;
         Unloaded -= OnViewUnloaded;
 
@@ -291,6 +317,9 @@ public class LoadingView : ContentPage
     /// </summary>
     public Task WaitForLoadingCompleteAsync()
     {
+        if (_loadingCompleted)
+            return Task.CompletedTask;
+
         var tcs = new TaskCompletionSource<bool>();
 
         EventHandler? handler = null;
@@ -301,12 +330,6 @@ public class LoadingView : ContentPage
         };
 
         LoadingCompleted += handler;
-
-        // If already completed, set result immediately
-        if (tcs.Task.IsCompleted)
-        {
-            return tcs.Task;
-        }
 
         return tcs.Task;
     }

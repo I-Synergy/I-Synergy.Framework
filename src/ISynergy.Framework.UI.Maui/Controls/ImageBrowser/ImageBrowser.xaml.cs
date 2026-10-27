@@ -1,6 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Constants;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
@@ -60,14 +58,21 @@ public partial class ImageBrowser : ContentView
 
     private async void PasteButton_Clicked(object? sender, EventArgs e)
     {
-        if (ServiceLocator.Default.GetRequiredService<IClipboardService>() is { } clipboardService &&
-            await clipboardService.GetImageFromClipboardAsync() is { } imageResult &&
-            imageResult is not null) // NOSONAR
+        try
         {
-            FileBytes = imageResult.FileBytes ?? Array.Empty<byte>();
-            ContentType = imageResult.ContentType ?? string.Empty;
-            FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
-            DateTime = System.DateTime.Now;
+            if (IPlatformApplication.Current!.Services.GetRequiredService<IClipboardService>() is { } clipboardService &&
+                await clipboardService.GetImageFromClipboardAsync() is { } imageResult &&
+                imageResult is not null) // NOSONAR
+            {
+                FileBytes = imageResult.FileBytes ?? Array.Empty<byte>();
+                ContentType = imageResult.ContentType ?? string.Empty;
+                FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
+                DateTime = System.DateTime.Now;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ImageBrowser error: {ex.Message}");
         }
     }
 
@@ -79,33 +84,47 @@ public partial class ImageBrowser : ContentView
 
     private async void CameraButton_Clicked(object? sender, EventArgs e)
     {
-        if (ServiceLocator.Default.GetRequiredService<ICameraService>() is { } cameraService)
+        try
         {
-            var result = await cameraService.TakePictureAsync();
-
-            if (result is not null)
+            if (IPlatformApplication.Current!.Services.GetRequiredService<ICameraService>() is { } cameraService)
             {
-                FileBytes = result.File;
-                ContentType = result.FilePath.ToContentType();
-                FileName = result.FileName;
-                DateTime = System.DateTime.Now;
+                var result = await cameraService.TakePictureAsync();
+
+                if (result is not null)
+                {
+                    FileBytes = await result.GetFileAsync();
+                    ContentType = result.FilePath.ToContentType();
+                    FileName = result.FileName;
+                    DateTime = System.DateTime.Now;
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ImageBrowser error: {ex.Message}");
         }
     }
 
     private async void BrowseButton_Clicked(object? sender, EventArgs e)
     {
-        if (ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
+        try
         {
-            var result = await fileService.BrowseFileAsync(FileTypeConstants.FileTypesImages);
-
-            if (result is not null && result.Count > 0 && result[0] is not null)
+            if (IPlatformApplication.Current!.Services.GetRequiredService<IFileService<FileResult>>() is { } fileService)
             {
-                FileBytes = result[0].File;
-                ContentType = result[0].FilePath.ToContentType();
-                FileName = result[0].FileName;
-                DateTime = System.DateTime.Now;
+                var result = await fileService.BrowseFileAsync(FileTypeConstants.FileTypesImages);
+
+                if (result is not null && result.Count > 0 && result[0] is not null)
+                {
+                    FileBytes = await result[0].GetFileAsync();
+                    ContentType = result[0].FilePath.ToContentType();
+                    FileName = result[0].FileName;
+                    DateTime = System.DateTime.Now;
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ImageBrowser error: {ex.Message}");
         }
     }
 }

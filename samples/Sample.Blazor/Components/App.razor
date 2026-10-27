@@ -1,8 +1,13 @@
+@using ISynergy.Framework.Globalization.Constants
+@using ISynergy.Framework.Core.Abstractions.Services
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Globalization
 @using Microsoft.AspNetCore.Components.Web
 
+@inject ISettingsService SettingsService
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@GlobalizationConstants.GetDirection(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)">
 
 <head>
     <meta charset="utf-8" />
@@ -15,6 +20,19 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="Sample.Blazor.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    @* Apply the persisted theme before the first paint. The interactive render would otherwise
+       flash the light palette while the circuit starts, even when the dark theme is selected
+       (including "System" on an OS in dark mode). Themes.Default (0) follows the OS. *@
+    <script>
+        (function () {
+            var preference = @((int)SettingsService.LocalSettings.Theme);
+            var prefersDark = window.matchMedia
+                && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = preference === 2 || (preference === 0 && prefersDark);
+
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        })();
+    </script>
 </head>
 
 <body>
@@ -24,10 +42,11 @@
 
     <div class="status-bar-safe-area"></div>
 
-    <!-- Set the default theme ("mode" overrides the "storage-name") -->
-    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/js/loading-theme.js" type="text/javascript"></script>
-    <loading-theme storage-name="theme"></loading-theme>
-    <!-- End -->
+    @* v5: loading-theme.js is no longer shipped, and FluentDesignTheme /
+       FluentDesignSystemProvider were removed. Theming is now pure CSS custom properties
+       ("--colorBrandBackground", "color-scheme: dark", ...) applied by the library's own
+       collocated JS module, which also injects css/default-fuib.css. No script tag is
+       required — if runtime theming is ever needed, inject the IThemeService interface. *@
 
     <div id="app">
         <div class="loading-progress-text"></div>

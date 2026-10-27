@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Core.Utilities;
 
@@ -14,7 +13,6 @@ public static class CompareUtility
     /// <param name="source">The source.</param>
     /// <param name="destination">The destination.</param>
     /// <returns>List&lt;System.String&gt;.</returns>
-    [RequiresUnreferencedCode("CompareObject uses reflection over unknown object types.")]
     public static List<string> CompareObject(object source, object destination)
     {
         var oType = source.GetType();
@@ -29,7 +27,7 @@ public static class CompareUtility
     /// <param name="operation">The operation.</param>
     /// <param name="value1">The value1.</param>
     /// <param name="value2">The value2.</param>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <returns><c>true</c> when the comparison of <paramref name="value1"/> and <paramref name="value2"/> by <paramref name="operation"/> holds; otherwise, <c>false</c>.</returns>
     public static bool Compare<T>(string operation, T value1, T value2) where T : IComparable
     {
         return operation switch
@@ -50,7 +48,7 @@ public static class CompareUtility
     /// <param name="operation">The operation.</param>
     /// <param name="value1">The value1.</param>
     /// <param name="value2">The value2.</param>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <returns><c>true</c> when the equality comparison of <paramref name="value1"/> and <paramref name="value2"/> by <paramref name="operation"/> holds; otherwise, <c>false</c>.</returns>
     public static bool Compare(string operation, object value1, object value2)
     {
         return operation switch

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Geodetic;
 using ISynergy.Framework.Geography.Global;
@@ -160,7 +161,7 @@ public abstract class MercatorProjection : IEquatable<MercatorProjection>
             throw new ArgumentNullException(nameof(point2));
 
         if (!(point1.Projection.Equals(this) && point2.Projection.Equals(this)))
-            throw new ArgumentException(Properties.Resources.POINT_NOT_OWNED, nameof(point1));
+            throw new ArgumentException(LanguageService.Default.GetString("POINT_NOT_OWNED"), nameof(point1));
 
         return point1.DistanceTo(point2);
     }

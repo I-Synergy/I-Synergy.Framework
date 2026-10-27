@@ -6,7 +6,7 @@ The code doesn't take any direct inputs or produce any outputs. Instead, it defi
 
 The code achieves its purpose by defining two main elements:
 
-- An enumeration called RedBlackTreeNodeType, which specifies the possible colors for nodes in a Red-Black Tree. It has two values: Red and Black. This is crucial because the color of nodes is a key aspect of how Red-Black Trees maintain their balance.
+- An enumeration called RedBlackTreeNodeTypes, which specifies the possible colors for nodes in a Red-Black Tree. It has two values: Red and Black. This is crucial because the color of nodes is a key aspect of how Red-Black Trees maintain their balance.
 
 - A generic class called RedBlackTreeNode, which represents a node in the Red-Black Tree. This class inherits from BinaryNode<RedBlackTreeNode>, suggesting that it's part of a binary tree structure where each node can have up to two children.
 

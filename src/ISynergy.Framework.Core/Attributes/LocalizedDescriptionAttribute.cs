@@ -1,5 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Localization;
 
 namespace ISynergy.Framework.Core.Attributes;
 
@@ -23,6 +22,8 @@ public class LocalizedDescriptionAttribute : Attribute
     /// <param name="resourceKey">The description.</param>
     public LocalizedDescriptionAttribute(string resourceKey)
     {
-        Description = ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(resourceKey);
+        Description = LanguageServiceProvider.HasProvider
+            ? LanguageServiceProvider.Default.GetString(resourceKey)
+            : resourceKey;
     }
 }

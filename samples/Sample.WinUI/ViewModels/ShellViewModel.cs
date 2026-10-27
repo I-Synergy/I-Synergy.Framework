@@ -1,20 +1,17 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Results;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Sample.Abstractions;
-using Sample.Abstractions.Services;
 using Sample.Models;
 
 namespace Sample.ViewModels;
@@ -26,6 +23,17 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
     private readonly IFileService<FileResult> _fileService;
+    private readonly IBladeService _bladeService;
+
+    /// <summary>
+    /// Gets the glyph of the theme toggle: moon while the light theme is active, sun while the dark
+    /// theme is active (same mapping as Sample.Maui and Sample.WPF).
+    /// </summary>
+    public string ThemeIcon
+    {
+        get => GetValue<string>() ?? string.Empty;
+        private set => SetValue(value);
+    }
 
     public AsyncRelayCommand DisplayCommand { get; private set; }
     public AsyncRelayCommand InfoCommand { get; private set; }
@@ -38,26 +46,46 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     public AsyncRelayCommand ChartCommand { get; private set; }
 
     /// <summary>
+    /// Gets the version text shown in the sidebar footer.
+    /// </summary>
+    public string VersionText => $"v{_commonServices.InfoService.ProductVersion}";
+
+    /// <summary>
+    /// Gets the copyright text shown in the sidebar footer, matching the MAUI shell.
+    /// </summary>
+    public string CopyrightText => $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="settingsService"></param>
+    /// <param name="themeService">The theme service used to toggle light/dark.</param>
     /// <param name="fileService"></param>
+    /// <param name="bladeService"></param>
     /// <param name="logger"></param>
     public ShellViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
+        ISettingsService settingsService,
+        IThemeService themeService,
         IFileService<FileResult> fileService,
+        IBladeService bladeService,
         ILogger<ShellViewModel> logger)
-        : base(commonServices, dialogService, navigationService, logger)
+        : base(commonServices, dialogService, navigationService, settingsService, themeService, logger)
     {
         SetClock();
 
         _fileService = fileService;
+        _bladeService = bladeService;
 
-        _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
+        ThemeIcon = GetThemeIcon(_themeService.Theme);
+        _themeService.ThemeChanged += OnThemeChanged;
+
+        _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _clockTimer.Tick += ClockTimerCallBack;
         _clockTimer.Start();
 
@@ -78,7 +106,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     {
         await Task.Delay(100);
 
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
+        if (Application.Services.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
         {
             if (PrimaryItems[0].Command!.CanExecute(PrimaryItems[0].CommandParameter))
                 PrimaryItems[0].Command!.Execute(PrimaryItems[0].CommandParameter);
@@ -91,65 +119,34 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void PopulateNavigationMenuItems()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated)
+        if (Application.Services.GetRequiredService<IContext>().IsAuthenticated)
         {
-            PrimaryItems.Clear();
-            PrimaryItems.Add(new NavigationItem("Info", Application.Current.Resources["info"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, InfoCommand));
-            PrimaryItems.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, DisplayCommand));
-            PrimaryItems.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, BrowseCommand));
-            PrimaryItems.Add(new NavigationItem("Converters", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ConverterCommand));
-            PrimaryItems.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SelectionTestCommand));
-            PrimaryItems.Add(new NavigationItem("ListView", Application.Current.Resources["products"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ListViewTestCommand));
-            PrimaryItems.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ValidationTestCommand));
-            PrimaryItems.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, TreeNodeTestCommand));
-            PrimaryItems.Add(new NavigationItem("Charts", Application.Current.Resources["chart"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ChartCommand));
+            PrimaryItems?.Clear();
+            PrimaryItems?.Add(new NavigationItem("Info", Application.Current.Resources["info"], _settingsService.LocalSettings.Color, InfoCommand));
+            PrimaryItems?.Add(new NavigationItem("SlideShow", Application.Current.Resources["kiosk"], _settingsService.LocalSettings.Color, DisplayCommand));
+            PrimaryItems?.Add(new NavigationItem("Browse", Application.Current.Resources["search"], _settingsService.LocalSettings.Color, BrowseCommand));
+            PrimaryItems?.Add(new NavigationItem("Converters", Application.Current.Resources["products"], _settingsService.LocalSettings.Color, ConverterCommand));
+            PrimaryItems?.Add(new NavigationItem("Selection", Application.Current.Resources["multiselect"], _settingsService.LocalSettings.Color, SelectionTestCommand));
+            PrimaryItems?.Add(new NavigationItem("ListView", Application.Current.Resources["products"], _settingsService.LocalSettings.Color, ListViewTestCommand));
+            PrimaryItems?.Add(new NavigationItem("Validation", Application.Current.Resources["Validation"], _settingsService.LocalSettings.Color, ValidationTestCommand));
+            PrimaryItems?.Add(new NavigationItem("TreeView", Application.Current.Resources["TreeView"], _settingsService.LocalSettings.Color, TreeNodeTestCommand));
+            PrimaryItems?.Add(new NavigationItem("Charts", Application.Current.Resources["chart"], _settingsService.LocalSettings.Color, ChartCommand));
 
-            SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", Application.Current.Resources["help"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, HelpCommand));
-            SecondaryItems.Add(new NavigationItem("Language", Application.Current.Resources["flag"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, LanguageCommand));
-            SecondaryItems.Add(new NavigationItem("Theme", Application.Current.Resources["color"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, ColorCommand));
-
-            if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && _commonServices.ScopedContextService.GetRequiredService<IContext>().Profile is Profile)
-                SecondaryItems.Add(new NavigationItem("Settings", Application.Current.Resources["settings"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SettingsCommand));
+            SecondaryItems?.Clear();
         }
 
-        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", Application.Current.Resources["user2"], _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color, SignInCommand));
     }
 
     protected override Task SignOutAsync() =>
-        _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>().SignOutAsync();
+        Application.Services.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings!.IsFirstRun)
+        if (_settingsService.GlobalSettings is { IsFirstRun: true } globalSettings)
         {
-            if (await _dialogService.ShowMessageAsync(
-                _commonServices.LanguageService.GetString("ChangeLanguage"),
-                _commonServices.LanguageService.GetString("Language"),
-                MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-            {
-                var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
-                languageVM.Submitted += (s, e) =>
-                {
-                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-                    e.Result.SetLocalizationLanguage();
-                    _commonServices.RestartApplication();
-                };
-                await _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
-            }
-
-            var wizardVM = _commonServices.ScopedContextService.GetRequiredService<SettingsViewModel>();
-            wizardVM.Submitted += (s, e) =>
-            {
-                _commonServices.RestartApplication();
-            };
-            wizardVM.Cancelled += (s, e) =>
-            {
-                _commonServices.RestartApplication();
-            };
-
-            await _navigationService.OpenBladeAsync(this, wizardVM);
+            // The settings blade is opened from the header; do not force it on first run.
+            globalSettings.IsFirstRun = false;
+            await _settingsService.AddOrUpdateGlobalSettingsAsync(globalSettings);
         }
     }
 
@@ -157,7 +154,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void SetClock()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is not null)
+        if (Application.Services.GetRequiredService<IContext>() is not null)
             base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
     }
 
@@ -226,7 +223,15 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        _navigationService.NavigateModalAsync<SettingsViewModel>();
+        OpenSettingsBladeAsync();
+
+    private Task OpenSettingsBladeAsync() =>
+        _bladeService.OpenBladeAsync<SettingsViewModel, object>(
+            // The shell-level host, so the settings pane spans the whole window (it is rendered by the
+            // shell's BladeView rather than by the page that requested it).
+            Application.Services.GetRequiredService<BladeHostViewModel>(),
+            _ => Task.CompletedTask,
+            () => Task.CompletedTask);
 
     protected override Task OpenBackgroundAsync() => throw new NotImplementedException();
 
@@ -242,6 +247,8 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
 
 
 
+            _themeService.ThemeChanged -= OnThemeChanged;
+
             DisplayCommand?.Dispose();
             InfoCommand?.Dispose();
             BrowseCommand?.Dispose();
@@ -255,4 +262,11 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
             base.Dispose(disposing);
         }
     }
+
+    private static string GetThemeIcon(Themes theme) =>
+        theme == Themes.Light ? "\uEE45" : "\uEE4D";
+
+    private void OnThemeChanged(object? sender, EventArgs e) =>
+        ThemeIcon = GetThemeIcon(_themeService.Theme);
 }
+

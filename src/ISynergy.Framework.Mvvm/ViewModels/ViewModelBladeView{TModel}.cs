@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Extensions;
@@ -8,8 +7,6 @@ using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -21,43 +18,24 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// <typeparam name="TModel">The type of the t entity.</typeparam>
 /// <seealso cref="ViewModel" />
 /// <seealso cref="IViewModelBladeView" />
-public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeView<TModel>
+public abstract class ViewModelBladeView<TModel> : ViewModelSelectable<TModel>, IViewModelBladeView<TModel>, IViewModelBlade<TModel>
 {
     /// <summary>
-    /// Occurs when [submitted].
+    /// Gets or sets the Owner property value.
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TModel>>? Submitted;
-    /// <summary>
-    /// Called when [submitted].
-    /// </summary>
-    /// <param name="e">The e.</param>
-    protected virtual void OnSubmitted(SubmitEventArgs<TModel> e)
+    public IViewModelBladeView Owner
     {
-        if (Submitted != null)
-        {
-            // Invoke each handler individually to prevent one exception from stopping others
-            var handlers = Submitted.GetInvocationList();
-            foreach (EventHandler<SubmitEventArgs<TModel>> handler in handlers)
-            {
-                try
-                {
-                    handler.Invoke(this, e);
-                }
-                catch (Exception ex)
-                {
-                    // Try to use exception handler service if available
-                    try
-                    {
-                        _commonServices.ExceptionHandlerService?.HandleException(ex);
-                    }
-                    catch
-                    {
-                        // If exception handler service is not available, log to debug
-                        System.Diagnostics.Debug.WriteLine($"Exception in Submitted handler: {ex.Message}");
-                    }
-                }
-            }
-        }
+        get => GetValue<IViewModelBladeView>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the IsDisabled property value.
+    /// </summary>
+    public bool IsDisabled
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
     }
 
     /// <summary>
@@ -65,9 +43,9 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     /// </summary>
     /// <value>The blades.</value>
     [IgnoreValidation]
-    public ObservableCollection<IView> Blades
+    public ObservableCollection<IView>? Blades
     {
-        get => GetValue<ObservableCollection<IView>>();
+        get => GetValue<ObservableCollection<IView>?>();
         set => SetValue(value);
     }
 
@@ -75,9 +53,9 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     /// Gets or sets the Items property value.
     /// </summary>
     /// <value>The items.</value>
-    public ObservableCollection<TModel> Items
+    public ObservableCollection<TModel>? Items
     {
-        get => GetValue<ObservableCollection<TModel>>();
+        get => GetValue<ObservableCollection<TModel>?>();
         set => SetValue(value);
     }
 
@@ -90,80 +68,6 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
         get => GetValue<bool>();
         set => SetValue(value);
     }
-
-    /// <summary>
-    /// Gets or sets the SelectedItem property value.
-    /// </summary>
-    /// <value>The selected item.</value>
-    public TModel? SelectedItem
-    {
-        get => GetValue<TModel>();
-        set
-        {
-            var oldValue = GetValue<TModel>();
-
-            // Unsubscribe from old item
-            if (oldValue is INotifyPropertyChanged oldItem)
-            {
-                oldItem.PropertyChanged -= SelectedItem_PropertyChanged;
-            }
-
-            SetValue(value);
-
-            // Subscribe to new item if it implements INotifyPropertyChanged
-            if (value is INotifyPropertyChanged newItem)
-            {
-                newItem.PropertyChanged += SelectedItem_PropertyChanged;
-            }
-
-            // Notify command that SelectedItem changed
-            SubmitCommand?.NotifyCanExecuteChanged();
-        }
-    }
-
-    /// <summary>
-    /// Handles property changes within SelectedItem and propagates them.
-    /// </summary>
-    private void SelectedItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        _logger.LogTrace("SelectedItem property '{PropertyName}' changed in {ViewModelName}", e.PropertyName, GetType().Name);
-
-        // When any property in SelectedItem changes, notify that SelectedItem itself changed
-        // This ensures the UI and commands re-evaluate
-        RaisePropertyChanged(nameof(SelectedItem));
-        SubmitCommand?.NotifyCanExecuteChanged();
-    }
-
-    /// <summary>
-    /// Sets the selected item.
-    /// </summary>
-    /// <param name="e">The e.</param>
-    /// <param name="isUpdate"></param>
-    public virtual void SetSelectedItem(TModel e, bool isUpdate = true)
-    {
-        SelectedItem = e;
-
-        if (SelectedItem is IObservableValidatedClass observableClass)
-            observableClass.MarkAsClean();
-
-        IsUpdate = isUpdate;
-    }
-
-    /// <summary>
-    /// Gets or sets the IsUpdate property value.
-    /// </summary>
-    /// <value><c>true</c> if this instance is an update; otherwise (new), <c>false</c>.</value>
-    public bool IsUpdate
-    {
-        get { return GetValue<bool>(); }
-        set { SetValue(value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the submit command.
-    /// </summary>
-    /// <value>The submit command.</value>
-    public AsyncRelayCommand<TModel> SubmitCommand { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].
@@ -202,8 +106,6 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="logger"></param>
-    [RequiresUnreferencedCode("JSON serialization without a JsonSerializerContext is not trim-safe.")]
-    [RequiresDynamicCode("JSON serialization without a JsonSerializerContext requires dynamic code.")]
     protected ViewModelBladeView(
         ICommonServices commonServices,
         ILogger<ViewModelBladeView<TModel>> logger)
@@ -278,7 +180,7 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     /// <returns>Task&lt;List&lt;TEntity&gt;&gt;.</returns>
     public virtual Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(Enumerable.Empty<TModel>());
+        Items?.AddNewRange(Enumerable.Empty<TModel>());
         return Task.CompletedTask;
     }
 
@@ -288,7 +190,7 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     /// <param name="e">The e.</param>
     /// <param name="validateUnderlayingProperties"></param>
     /// <returns>Task.</returns>
-    public virtual Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true)
+    public new virtual Task SubmitAsync(TModel e, bool validateUnderlayingProperties = true)
     {
         if (Validate(validateUnderlayingProperties))
             OnSubmitted(new SubmitEventArgs<TModel>(e));
@@ -300,22 +202,9 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     {
         try
         {
-            // Set flag to prevent property change notifications during cleanup
             IsInCleanup = true;
-
-            // Unsubscribe from SelectedItem before clearing
-            var currentItem = GetValue<TModel>();
-            if (currentItem is INotifyPropertyChanged item)
-            {
-                item.PropertyChanged -= SelectedItem_PropertyChanged;
-            }
-
-            // Clear selected item first
-            SelectedItem = default;
-
-            Items?.Clear();
-            Blades?.Clear();
-
+            Items = null;
+            Blades = null;
             base.Cleanup(isClosing);
         }
         finally
@@ -328,27 +217,11 @@ public abstract class ViewModelBladeView<TModel> : ViewModel, IViewModelBladeVie
     {
         if (disposing)
         {
-            // Unsubscribe before disposal
-            var currentItem = GetValue<TModel>();
-            if (currentItem is INotifyPropertyChanged item)
-            {
-                item.PropertyChanged -= SelectedItem_PropertyChanged;
-            }
-
-            // Make sure cleanup is done before disposal
-            if (!IsInCleanup)
-            {
-                Cleanup();
-            }
-
-            // Dispose and clear all commands
             AddCommand?.Dispose();
             EditCommand?.Dispose();
             DeleteCommand?.Dispose();
             RefreshCommand?.Dispose();
             SearchCommand?.Dispose();
-            SubmitCommand?.Dispose();
-
             base.Dispose(disposing);
         }
     }

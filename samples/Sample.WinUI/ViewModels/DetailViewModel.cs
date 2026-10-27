@@ -11,6 +11,7 @@ public class DetailViewModel : ViewModelBlade<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     public AsyncRelayCommand OpenNewBladeCommand { get; private set; }
 
@@ -18,11 +19,13 @@ public class DetailViewModel : ViewModelBlade<TestItem>
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
+        IBladeService bladeService,
         ILogger<DetailViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
 
         OpenNewBladeCommand = new AsyncRelayCommand(OpenNewBladeAsync);
     }
@@ -32,9 +35,7 @@ public class DetailViewModel : ViewModelBlade<TestItem>
         if (SelectedItem is null)
             return;
 
-        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailAViewModel>();
-        detailsVm.SetSelectedItem(SelectedItem);
-        await _navigationService.OpenBladeAsync(Owner, detailsVm);
+        await _bladeService.OpenBladeAsync<DetailAViewModel, TestItem>(Owner, SelectedItem);
     }
 
     public override async Task InitializeAsync()
@@ -47,3 +48,4 @@ public class DetailViewModel : ViewModelBlade<TestItem>
         }
     }
 }
+

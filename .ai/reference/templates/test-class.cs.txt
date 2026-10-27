@@ -1,4 +1,5 @@
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/Create{Entity}HandlerTests.cs
+// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/Create{Entity}CommandHandlerTests.cs
+// Traces: US-{BC}-{NNN} / AC-{BC}-{NNN}.{n}, …
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -8,30 +9,31 @@ using Moq;
 namespace {ApplicationName}.{Domain}.Tests.Handlers;
 
 [TestClass]
-public class Create{Entity}HandlerTests
+public class Create{Entity}CommandHandlerTests
 {
     private Mock<DataContext> _dataContextMock;
     private Mock<DbSet<{Entity}>> _entitiesSetMock;
-    private Mock<ILogger<Create{Entity}Handler>> _loggerMock;
-    private Create{Entity}Handler _handler;
+    private Mock<ILogger<Create{Entity}CommandHandler>> _loggerMock;
+    private Create{Entity}CommandHandler _handler;
 
     [TestInitialize]
     public void Setup()
     {
         _dataContextMock = new Mock<DataContext>();
         _entitiesSetMock = new Mock<DbSet<{Entity}>>();
-        _loggerMock = new Mock<ILogger<Create{Entity}Handler>>();
+        _loggerMock = new Mock<ILogger<Create{Entity}CommandHandler>>();
 
         _dataContextMock.Setup(x => x.{Entities}).Returns(_entitiesSetMock.Object);
         _dataContextMock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
-        _handler = new Create{Entity}Handler(
+        _handler = new Create{Entity}CommandHandler(
             _dataContextMock.Object,
             _loggerMock.Object);
     }
 
     [TestMethod]
+    [TestCategory("AC-{BC}-{NNN}.{n}")]
     public async Task HandleAsync_ValidCommand_Creates{Entity}Successfully()
     {
         // Arrange
@@ -56,6 +58,7 @@ public class Create{Entity}HandlerTests
     }
 
     [TestMethod]
+    [TestCategory("Unit")]
     [ExpectedException(typeof(ArgumentNullException))]
     public async Task HandleAsync_NullCommand_ThrowsArgumentNullException()
     {
@@ -66,6 +69,7 @@ public class Create{Entity}HandlerTests
     }
 
     [TestMethod]
+    [TestCategory("AC-{BC}-{NNN}.{n}")]
     [ExpectedException(typeof(ArgumentException))]
     public async Task HandleAsync_NegativeProperty2_ThrowsArgumentException()
     {
@@ -82,6 +86,7 @@ public class Create{Entity}HandlerTests
     }
 
     [TestMethod]
+    [TestCategory("Unit")]
     public async Task HandleAsync_ValidCommand_LogsInformation()
     {
         // Arrange

@@ -10,10 +10,22 @@ namespace ISynergy.Framework.Core.Utilities;
 public static class NetworkUtility
 {
     /// <summary>
+    /// Shared HTTP client reused across calls to avoid socket exhaustion; a pooled
+    /// connection lifetime also refreshes DNS.
+    /// </summary>
+    private static readonly HttpClient HttpClient = new(new SocketsHttpHandler
+    {
+        PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+    })
+    {
+        Timeout = TimeSpan.FromSeconds(5)
+    };
+
+    /// <summary>
     /// Determines whether [is internet connection available].
     /// </summary>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public static async Task<bool> IsInternetConnectionAvailable()
+    public static async Task<bool> IsInternetConnectionAvailable(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -24,23 +36,22 @@ public static class NetworkUtility
 
             foreach (var host in hosts)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 var reply = await ping.SendPingAsync(host, 1000, new byte[32], new PingOptions());
                 if (reply.Status == IPStatus.Success)
                     return true;
             }
             return false;
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Trace.WriteLine($"NetworkUtility.IsInternetConnectionAvailable failed: {ex}");
             return false;
         }
     }
 
-    public static async Task<string> GetInternetIPAddressAsync()
+    public static async Task<string> GetInternetIPAddressAsync(CancellationToken cancellationToken = default)
     {
-        using var client = new HttpClient();
-        client.Timeout = TimeSpan.FromSeconds(5);
-
         // Try multiple IP services in case one fails
         string[] ipServices = {
             "https://api.ipify.org",
@@ -52,11 +63,12 @@ public static class NetworkUtility
         {
             try
             {
-                var response = await client.GetStringAsync(service);
+                var response = await HttpClient.GetStringAsync(service, cancellationToken);
                 return response.Trim();
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Trace.WriteLine($"NetworkUtility.GetInternetIPAddressAsync failed for '{service}': {ex}");
                 // Continue to next service
             }
         }
@@ -135,16 +147,14 @@ public static class NetworkUtility
     /// </summary>
     /// <param name="url">The URL.</param>
     /// <param name="method">The method.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns><c>true</c> if [is URL reachable] [the specified URL]; otherwise, <c>false</c>.</returns>
-    public static async Task<bool> IsUrlReachableAsync(Uri url, string method = "GET")
+    public static async Task<bool> IsUrlReachableAsync(Uri url, string method = "GET", CancellationToken cancellationToken = default)
     {
-        using var client = new HttpClient();
-        client.Timeout = TimeSpan.FromSeconds(5);
-
         try
         {
             var request = new HttpRequestMessage(new HttpMethod(method), url);
-            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             return response.IsSuccessStatusCode;
         }
         catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
@@ -152,4 +162,4 @@ public static class NetworkUtility
             return false;
         }
     }
-}
+}

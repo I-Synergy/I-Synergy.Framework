@@ -12,6 +12,14 @@ echo ""
 echo "Running comprehensive validation tests..."
 echo ""
 
+# Pre-step: ensure folder-level junctions/symlinks exist
+# (CI checkouts have real directories; this converts them)
+echo "--- Pre-step: Syncing platform junctions ---"
+python3 "$SCRIPT_DIR/../scripts/sync-skills.py" 2>&1
+echo ""
+echo "--- Validation tests follow ---"
+echo ""
+
 # Function to run a test and track results
 run_test() {
     local test_name="$1"
@@ -41,10 +49,13 @@ run_test "2. YAML Frontmatter" "python3 '$SCRIPT_DIR/validate-skills.py'"
 run_test "3. File References" "bash '$SCRIPT_DIR/validate-references.sh'"
 run_test "4. Content Quality" "python3 '$SCRIPT_DIR/validate-content.py'"
 run_test "5. Token Consistency" "bash '$SCRIPT_DIR/validate-tokens.sh'"
-run_test "6. CLAUDE.md References" "python3 '$SCRIPT_DIR/validate-claude-md.py'"
+run_test "6. AGENTS.md References" "python3 '$SCRIPT_DIR/validate-agents-md.py'"
 run_test "7. Settings & Structure" "python3 '$SCRIPT_DIR/validate-settings.py'"
 run_test "8. Copilot Integration" "python3 '$SCRIPT_DIR/validate-copilot.py'"
 run_test "9. Integration Smoke Tests" "python3 '$SCRIPT_DIR/smoke-test.py'"
+run_test "12. Traceability" "python3 '$SCRIPT_DIR/validate-traceability.py'"
+run_test "13. Standards" "python3 '$SCRIPT_DIR/validate-standards.py'"
+run_test "14. DeepSeek Parity" "python3 '$SCRIPT_DIR/validate-deepseek-parity.py'"
 
 # Final Summary
 echo "========================================="

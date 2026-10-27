@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 
 namespace ISynergy.Framework.UI.Controls;
 
@@ -34,7 +33,7 @@ public class BusyIndicator : ContentView
             nameof(OverlayOpacity),
             typeof(double),
             typeof(BusyIndicator),
-            defaultValue: 0.5,
+            defaultValue: 0d,
             propertyChanged: OnOverlayOpacityChanged);
 
     /// <summary>
@@ -133,7 +132,7 @@ public class BusyIndicator : ContentView
         };
 
         // Use dynamic resource "Tertiary" for overlay background color
-        _overlayBackground.SetDynamicResource(Grid.BackgroundColorProperty, "TintedGray950");
+        _overlayBackground.SetDynamicResource(Grid.BackgroundColorProperty, "Tertiary");
 
         // Create root grid with overlay and indicator
         _rootGrid = new Grid();
@@ -150,7 +149,7 @@ public class BusyIndicator : ContentView
     /// </summary>
     public void BindToBusyService()
     {
-        IBusyService busyService = ServiceLocator.Default.GetRequiredService<IBusyService>();
+        IBusyService busyService = IPlatformApplication.Current!.Services.GetRequiredService<IBusyService>();
 
         _messageLabel.BindingContext = busyService;
         _messageLabel.SetBinding(Label.TextProperty, new Binding(nameof(IBusyService.BusyMessage), BindingMode.OneWay));

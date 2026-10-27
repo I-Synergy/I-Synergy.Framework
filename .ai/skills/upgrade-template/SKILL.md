@@ -79,6 +79,8 @@ python .ai/scripts/upgrade-template.py \
 
 | Path | Behaviour |
 |------|-----------|
+| `REASONIX.md` | Diffed if changed |
+| `.reasonix/` | New files copied; changed diffed |
 | `CLAUDE.md` | Diffed if changed |
 | `.ai/skills/` | New skill dirs copied; changed skills diffed |
 | `.ai/patterns/` | New pattern files copied; changed diffed |
@@ -93,8 +95,8 @@ python .ai/scripts/upgrade-template.py \
 
 ## After Upgrade
 
-The script automatically runs `sync-skills.py` in the target project after every upgrade,
-syncing all skills to Claude Code and GitHub Copilot targets.
+The script automatically runs `sync-skills.py` and `sync-agents.py` in the target project after every upgrade,
+syncing all skills to Claude Code, GitHub Copilot, and Reasonix Code targets.
 
 ## Running This as Claude
 

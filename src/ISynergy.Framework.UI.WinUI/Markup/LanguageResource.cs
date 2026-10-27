@@ -1,5 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
 using Windows.ApplicationModel;
@@ -29,7 +28,7 @@ public class LanguageResource : MarkupExtension
     {
         if (!string.IsNullOrEmpty(Key) && !DesignMode.DesignMode2Enabled)
         {
-            return ServiceLocator.Default.GetRequiredService<ILanguageService>().GetString(Key);
+            return LanguageService.Default.GetString(Key);
         }
 
         return $"[{Key}]";

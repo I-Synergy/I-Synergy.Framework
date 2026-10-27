@@ -13,8 +13,7 @@ public static class TypeActivator
     /// <param name="assemblyQualifiedName">Name of the assembly qualified.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="ArgumentException">Unable to resolve object type: " + assemblyQualifiedName</exception>
-    [RequiresUnreferencedCode("Type resolution by assembly-qualified name is not AOT-safe.")]
-    [RequiresDynamicCode("Activator.CreateInstance is not AOT-safe for unknown types.")]
+    [RequiresUnreferencedCode("Type.GetType(string) resolves an arbitrary type by name; that type's constructor may be removed by the trimmer if not otherwise referenced.")]
     public static object CreateInstance(string assemblyQualifiedName)
     {
         var targetType = Type.GetType(assemblyQualifiedName, false, false);
@@ -30,8 +29,6 @@ public static class TypeActivator
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>T.</returns>
-    [RequiresUnreferencedCode("Calls CreateInstance(Type) which is not AOT-safe.")]
-    [RequiresDynamicCode("Calls CreateInstance(Type) which requires dynamic code generation.")]
     public static T CreateInstance<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>() => (T)CreateInstance(typeof(T));
 
     /// <summary>
@@ -40,9 +37,7 @@ public static class TypeActivator
     /// <param name="targetType">Type of the target.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="ArgumentException">Unable to instantiate type: " + targetType.AssemblyQualifiedName + " - Unknown Error</exception>
-    [RequiresUnreferencedCode("Type resolution by assembly-qualified name is not AOT-safe.")]
-    [RequiresDynamicCode("Activator.CreateInstance is not AOT-safe for unknown types.")]
-    public static object CreateInstance(Type targetType)
+    public static object CreateInstance([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type targetType)
     {
         object? result;
 

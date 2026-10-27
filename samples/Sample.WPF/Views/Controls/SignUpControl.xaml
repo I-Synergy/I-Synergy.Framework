@@ -17,19 +17,19 @@
         <StackPanel Margin="2,10" VerticalAlignment="Center">
             <TextBlock Text="{m:GetString Register}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" TextWrapping="Wrap" />
 
-            <TextBlock Text="{m:GetString CompanyName}" />
+            <TextBlock Text="{m:GetString CompanyName}" Style="{StaticResource AppTextLabel}" />
             <TextBox x:Name="Text_CompanyName" Text="{Binding Registration_Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock Text="{m:GetString Email}" />
+            <TextBlock Text="{m:GetString Email}" Style="{StaticResource AppTextLabel}" />
             <TextBox x:Name="Text_Email" CharacterCasing="Lower" Text="{Binding Registration_Mail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ToolTip="{m:GetString Email}" InputScope="EmailSmtpAddress" />
 
-            <TextBlock Text="{m:GetString TimeZone}" />
+            <TextBlock Text="{m:GetString TimeZone}" Style="{StaticResource AppTextLabel}" />
             <ComboBox x:Name="ComboBox_TimeZone" ItemsSource="{Binding TimeZones}" SelectedValuePath="Id" DisplayMemberPath="DisplayName" SelectedValue="{Binding Registration_TimeZone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock Text="{m:GetString Password}" />
+            <TextBlock Text="{m:GetString Password}" Style="{StaticResource AppTextLabel}" />
             <TextBox x:Name="Text_Password" ToolTipService.ToolTip="{m:GetString Password}" Text="{Binding Registration_Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock  Text="{m:GetString Password_Retype}"/>
+            <TextBlock Text="{m:GetString Password_Retype}" Style="{StaticResource AppTextLabel}"/>
             <TextBox x:Name="Text_Password_Retype" ToolTipService.ToolTip="{m:GetString Password_Retype}" Text="{Binding Registration_PasswordCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <Button x:Name="Button_Register" 

@@ -407,7 +407,10 @@ public class SingularValueDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(target1.Reverse(), value1, 1e-5));
         Assert.IsTrue(Matrix.IsEqual(target2.Reverse(), value2, 1e-5));
 
-        Assert.AreSame(target1.DiagonalMatrix, target1.DiagonalMatrix);
+        // The decomposition caches DiagonalMatrix: repeated access must return the same instance.
+        var firstAccess = target1.DiagonalMatrix;
+        var secondAccess = target1.DiagonalMatrix;
+        Assert.AreSame(firstAccess, secondAccess);
     }
 
     [TestMethod]

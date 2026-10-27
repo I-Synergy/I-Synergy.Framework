@@ -1,0 +1,781 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Add" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+	<data name="AmountOfSubstance" xml:space="preserve">
+    <value>Stoffmenge</value>
+  </data>
+	<data name="ampere" xml:space="preserve">
+    <value>Ampere</value>
+  </data>
+	<data name="And" xml:space="preserve">
+    <value>und</value>
+  </data>
+	<data name="AnglePlane" xml:space="preserve">
+    <value>Ebener Winkel</value>
+  </data>
+	<data name="AngleSolid" xml:space="preserve">
+    <value>Raumwinkel</value>
+  </data>
+	<data name="astronomical_unit" xml:space="preserve">
+    <value>Astronomische Einheit</value>
+  </data>
+	<data name="Between" xml:space="preserve">
+    <value>zwischen</value>
+  </data>
+	<data name="Browse" xml:space="preserve">
+    <value>Blättern</value>
+  </data>
+	<data name="By" xml:space="preserve">
+    <value>Von</value>
+  </data>
+	<data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+	<data name="candela" xml:space="preserve">
+    <value>Candela</value>
+  </data>
+	<data name="CannotAttachBehaviorMultipleTimesExceptionMessage" xml:space="preserve">
+    <value>Eine Instanz eines Verhaltens kann nicht an mehrere Objekte gleichzeitig angefügt werden.</value>
+  </data>
+	<data name="CannotFindUpdateFile" xml:space="preserve">
+    <value>Update-Datei kann nicht gefunden werden.</value>
+  </data>
+	<data name="CannotInstallUpdate" xml:space="preserve">
+    <value>Update kann nicht installiert werden.</value>
+  </data>
+	<data name="centimetre" xml:space="preserve">
+    <value>Zentimeter</value>
+  </data>
+	<data name="Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+	<data name="Collapsed" xml:space="preserve">
+    <value>Reduziert</value>
+  </data>
+	<data name="COORD_ARRAY_MUST_BE_2DIM" xml:space="preserve">
+    <value>Das Koordinatenarray muss zwei Dimensionen haben.</value>
+  </data>
+	<data name="CouldNotRetrieveVersionInformation" xml:space="preserve">
+    <value>Versionsinformationen konnten nicht abgerufen werden.</value>
+  </data>
+	<data name="Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+	<data name="CreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+    <value>CreateBuilder muss vor CreateServiceProvider aufgerufen werden.</value>
+  </data>
+	<data name="cubic_metre" xml:space="preserve">
+    <value>Kubikmeter</value>
+  </data>
+	<data name="Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+	<data name="day" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+	<data name="Day_s" xml:space="preserve">
+    <value>Day(s)</value>
+  </data>
+	<data name="decimetre" xml:space="preserve">
+    <value>Dezimeter</value>
+  </data>
+	<data name="Default" xml:space="preserve">
+    <value>Norm</value>
+  </data>
+	<data name="DefaultException" xml:space="preserve">
+    <value>Irgendetwas ist schief gelaufen.</value>
+    <value>Wenden Sie sich an den Support.</value>
+  </data>
+	<data name="degree_Celcius" xml:space="preserve">
+    <value>Grad Celsius</value>
+  </data>
+	<data name="degree_Farenheit" xml:space="preserve">
+    <value>Grad Fahrenheit</value>
+  </data>
+	<data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+	<data name="DuplicateBehaviorInCollectionExceptionMessage" xml:space="preserve">
+    <value>Eine Instanz eines Verhaltens kann einer BehaviorCollection nicht mehr als einmal hinzugefügt werden.</value>
+  </data>
+	<data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+	<data name="ElectricCurrent" xml:space="preserve">
+    <value>Elektrischer Strom</value>
+  </data>
+	<data name="EmailAddress" xml:space="preserve">
+    <value>E-Mail-Adresse</value>
+  </data>
+	<data name="Energy" xml:space="preserve">
+    <value>Energie</value>
+  </data>
+	<data name="EnterNote" xml:space="preserve">
+    <value>Hier Notiz eintragen...</value>
+  </data>
+	<data name="Expanded" xml:space="preserve">
+    <value>Erweitert</value>
+  </data>
+	<data name="foot" xml:space="preserve">
+    <value>Fuß</value>
+  </data>
+	<data name="Force" xml:space="preserve">
+    <value>Kraft</value>
+  </data>
+	<data name="Frequency" xml:space="preserve">
+    <value>Frequenz</value>
+  </data>
+	<data name="Fullname" xml:space="preserve">
+    <value>Vollständiger Name</value>
+  </data>
+	<data name="GEODETIC_PATH_MIN_2" xml:space="preserve">
+    <value>Ein geodätischer Pfad muss mindestens zwei Punkte enthalten.</value>
+  </data>
+	<data name="gram_force" xml:space="preserve">
+    <value>Gramm-Kraft</value>
+  </data>
+	<data name="Greeting_Afternoon" xml:space="preserve">
+    <value>Guten Tag {0}</value>
+  </data>
+	<data name="Greeting_Evening" xml:space="preserve">
+    <value>Guten Abend {0}</value>
+  </data>
+	<data name="Greeting_Morning" xml:space="preserve">
+    <value>Guten Morgen {0}</value>
+  </data>
+	<data name="Greeting_Night" xml:space="preserve">
+    <value>Gute Nacht {0}</value>
+  </data>
+	<data name="GRID_EXCEPTION" xml:space="preserve">
+    <value>Die UTM-Gitter 32X, 34X und 36X sind nicht zugewiesen.</value>
+  </data>
+	<data name="Heat" xml:space="preserve">
+    <value>Wärme</value>
+  </data>
+	<data name="hertz" xml:space="preserve">
+    <value>Hertz</value>
+  </data>
+	<data name="hour" xml:space="preserve">
+    <value>Stunde</value>
+  </data>
+	<data name="Hour_s" xml:space="preserve">
+    <value>Stunden(e)</value>
+  </data>
+	<data name="inch" xml:space="preserve">
+    <value>Zoll</value>
+  </data>
+	<data name="InputFirst" xml:space="preserve">
+    <value>Erstellt</value>
+  </data>
+	<data name="InputLast" xml:space="preserve">
+    <value>Letzte Änderung</value>
+  </data>
+	<data name="INVALID_BAND" xml:space="preserve">
+    <value>Ungültiges UTMBand angegeben.</value>
+  </data>
+	<data name="INVALID_DISTANCE" xml:space="preserve">
+    <value>Ungültige Entfernung</value>
+  </data>
+	<data name="INVALID_LATITUDE" xml:space="preserve">
+    <value>Die UTM-Projektion erlaubt nur Breitengrade von -80° bis +84°.</value>
+  </data>
+	<data name="INVALID_MESH_NUMBER" xml:space="preserve">
+    <value>Die Mesh-Nummer ist ungültig.</value>
+  </data>
+	<data name="INVALID_ORDINAL" xml:space="preserve">
+    <value>Die Ordnungszahl des Rasters ist ungültig.</value>
+  </data>
+	<data name="INVALID_ZONE" xml:space="preserve">
+    <value>Ungültige UTM-Zone angegeben.</value>
+  </data>
+	<data name="InvalidAssociatedObjectExceptionMessage" xml:space="preserve">
+    <value>AssociatedObject hat den Typ {0}, sollte aber vom Typ {1} sein.</value>
+  </data>
+	<data name="joule" xml:space="preserve">
+    <value>Joule</value>
+  </data>
+	<data name="kelvin" xml:space="preserve">
+    <value>Kelvin</value>
+  </data>
+	<data name="kilogram" xml:space="preserve">
+    <value>Kilogramm</value>
+  </data>
+	<data name="kilogram_force" xml:space="preserve">
+    <value>Kilogramm-Kraft</value>
+  </data>
+	<data name="kilogram_per_cubic_metre" xml:space="preserve">
+    <value>Kilogramm pro Kubikmeter</value>
+  </data>
+	<data name="Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+	<data name="Language_Arabic" xml:space="preserve">
+    <value>Arabisch</value>
+  </data>
+	<data name="Language_Dutch" xml:space="preserve">
+    <value>Holländisch</value>
+  </data>
+	<data name="Language_English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+	<data name="Language_French" xml:space="preserve">
+    <value>Französisch</value>
+  </data>
+	<data name="Language_German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+	<data name="Language_Spanish" xml:space="preserve">
+    <value>Spanisch</value>
+  </data>
+	<data name="Length" xml:space="preserve">
+    <value>Länge</value>
+  </data>
+	<data name="Light" xml:space="preserve">
+    <value>Licht</value>
+  </data>
+	<data name="litre" xml:space="preserve">
+    <value>Liter</value>
+  </data>
+	<data name="LoginAccount" xml:space="preserve">
+    <value>Sie haben bereits ein Konto?</value>
+  </data>
+	<data name="LoginNoAccount" xml:space="preserve">
+    <value>Sie haben noch kein Konto?</value>
+  </data>
+	<data name="LoginText" xml:space="preserve">
+    <value>Wenn Sie bereits ein Konto haben, können Sie sich mit Ihrer E-Mail-Adresse und Ihrem Passwort anmelden.</value>
+  </data>
+	<data name="LoginTitle" xml:space="preserve">
+    <value>Haben Sie ein Konto?</value>
+  </data>
+	<data name="LuminousIntensity" xml:space="preserve">
+    <value>Lichtstärke</value>
+  </data>
+	<data name="MandatoryUpdateFailed" xml:space="preserve">
+    <value>Obligatorisches Update ist fehlgeschlagen!</value>
+  </data>
+	<data name="Mass" xml:space="preserve">
+    <value>Masse</value>
+  </data>
+	<data name="MESHSIZE_MIN_VIOLATION" xml:space="preserve">
+    <value>Die Mesh-Größe muss mindestens 1 Meter betragen.</value>
+  </data>
+	<data name="MESHSIZE_TOO_BIG" xml:space="preserve">
+    <value>Die Mesh-Größe ist zu groß, sie teilt nicht alle UTMGrids in mehrere Zellen.</value>
+  </data>
+	<data name="metre" xml:space="preserve">
+    <value>Meter</value>
+  </data>
+	<data name="metre_per_second" xml:space="preserve">
+    <value>Meter pro Sekunde</value>
+  </data>
+	<data name="metre_per_second_squared" xml:space="preserve">
+    <value>Meter pro Quadratsekunde</value>
+  </data>
+	<data name="micrometre" xml:space="preserve">
+    <value>Mikrometer</value>
+  </data>
+	<data name="millimetre" xml:space="preserve">
+    <value>Millimeter</value>
+  </data>
+	<data name="MINSEC_0_TO_60" xml:space="preserve">
+    <value>Minuten oder Sekunden müssen einen Wert zwischen 0 und 60 haben.</value>
+  </data>
+	<data name="minute" xml:space="preserve">
+    <value>Minute</value>
+  </data>
+	<data name="Minute_s" xml:space="preserve">
+    <value>Minute(n)</value>
+  </data>
+	<data name="Modules" xml:space="preserve">
+    <value>Module</value>
+  </data>
+	<data name="mole" xml:space="preserve">
+    <value>Mol</value>
+  </data>
+	<data name="nanometre" xml:space="preserve">
+    <value>Nanometer</value>
+  </data>
+	<data name="NEGATIVE_DISTANCE" xml:space="preserve">
+    <value>Die Entfernung kann nicht negativ sein.</value>
+  </data>
+	<data name="newton" xml:space="preserve">
+    <value>Newton</value>
+  </data>
+	<data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+	<data name="NO_NORTH_NEIGHBOR" xml:space="preserve">
+    <value>Das Raster befindet sich im nördlichsten Band, es gibt keinen nördlichen Nachbarn.</value>
+  </data>
+	<data name="NO_SOUTH_NEIGHBOR" xml:space="preserve">
+    <value>Das Raster befindet sich im südlichsten Band, es gibt keinen südlichen Nachbarn.</value>
+  </data>
+	<data name="NO_UNIQUE_NORTH_NEIGHBOR" xml:space="preserve">
+    <value>Das UTM-Raster hat keinen eindeutigen nördlichen Nachbarn (Ausnahmegitter in der nördlichen Hemisphäre).</value>
+  </data>
+	<data name="NO_UNIQUE_SOUTH_NEIGHBOR" xml:space="preserve">
+    <value>Das UTM-Raster hat keinen eindeutigen südlichen Nachbarn (Ausnahmegitter in der nördlichen Hemisphäre).</value>
+  </data>
+	<data name="NO_UTM_COORDINATE" xml:space="preserve">
+    <value>Die Koordinate muss eine _UtmCoordinate sein.</value>
+  </data>
+	<data name="NoInternetConnectionAvailable" xml:space="preserve">
+    <value>Es ist keine Internetverbindung verfügbar.</value>
+  </data>
+	<data name="NoItems" xml:space="preserve">
+    <value>Keine Artikel verfügbar</value>
+  </data>
+	<data name="NonActionAddedToActionCollectionExceptionMessage" xml:space="preserve">
+    <value>Nur IAction-Typen werden in einer ActionCollection unterstützt.</value>
+  </data>
+	<data name="NonBehaviorAddedToBehaviorCollectionExceptionMessage" xml:space="preserve">
+    <value>Nur IBehavior-Typen werden in einer BehaviorCollection unterstützt.</value>
+  </data>
+	<data name="Note" xml:space="preserve">
+    <value>Hinweis</value>
+  </data>
+	<data name="NullIServiceProvider" xml:space="preserve">
+    <value>Die IServiceProviderFactory hat einen IServiceProvider vom Typ NULL zurückgegeben</value>
+  </data>
+	<data name="Ok" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+	<data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+	<data name="PasswordForgot" xml:space="preserve">
+    <value>Passwort vergessen?</value>
+  </data>
+	<data name="PasswordRetype" xml:space="preserve">
+    <value>Kennwort erneut eingeben</value>
+  </data>
+	<data name="Paste" xml:space="preserve">
+    <value>Kleister</value>
+  </data>
+	<data name="Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+	<data name="PleaseWait" xml:space="preserve">
+    <value>Ein Moment bitte</value>
+  </data>
+	<data name="POINT_NOT_OWNED" xml:space="preserve">
+    <value>Die euklidische Koordinate gehört nicht zu dieser Projektion.</value>
+  </data>
+	<data name="POINT_NOT_SAME_PROJECTION" xml:space="preserve">
+    <value>Die euklidischen Koordinaten gehören nicht zur gleichen Projektion.</value>
+  </data>
+	<data name="Power" xml:space="preserve">
+    <value>Leistung</value>
+  </data>
+	<data name="Pressure" xml:space="preserve">
+    <value>Druck</value>
+  </data>
+	<data name="PROJECTION_NULL" xml:space="preserve">
+    <value>Das Projektionsargument darf nicht null sein.</value>
+  </data>
+	<data name="Refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+	<data name="Register" xml:space="preserve">
+    <value>Registrieren</value>
+  </data>
+	<data name="Remember" xml:space="preserve">
+    <value>Merken</value>
+  </data>
+	<data name="ResolverReturnedNull" xml:space="preserve">
+    <value>Der Resolver hat den Wert IServiceProviderFactory vom Typ NULL zurückgegeben.</value>
+  </data>
+	<data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+	<data name="SaveRestart" xml:space="preserve">
+    <value>Speichern und Neustarten</value>
+  </data>
+	<data name="Search" xml:space="preserve">
+    <value>Suche</value>
+  </data>
+	<data name="second" xml:space="preserve">
+    <value>Sekunde</value>
+  </data>
+	<data name="Select" xml:space="preserve">
+    <value>Auswählen</value>
+  </data>
+	<data name="SelectCountry" xml:space="preserve">
+    <value>Land auswählen</value>
+  </data>
+	<data name="Selection" xml:space="preserve">
+    <value>Auswahl</value>
+  </data>
+	<data name="SelectTimeZone" xml:space="preserve">
+    <value>Zeitzone auswählen</value>
+  </data>
+	<data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+	<data name="SignIn" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+	<data name="SignInHere" xml:space="preserve">
+    <value>Melden Sie sich hier an</value>
+  </data>
+	<data name="SignOut" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+	<data name="SignupHere" xml:space="preserve">
+    <value>Registrieren Sie sich hier</value>
+  </data>
+	<data name="SignupText" xml:space="preserve">
+    <value>Wenn Sie noch kein Konto haben, füllen Sie die erforderlichen Felder aus und registrieren Sie sich. </value>
+    <value>Nach Bestätigung Ihrer Anmeldung können Sie sich mit Ihrer E-Mail-Adresse und Ihrem Passwort anmelden.</value>
+  </data>
+	<data name="SignupTitle" xml:space="preserve">
+    <value>Sie haben noch kein Konto?</value>
+  </data>
+	<data name="Skip" xml:space="preserve">
+    <value>Hüpfen</value>
+  </data>
+	<data name="sqaure_metre" xml:space="preserve">
+    <value>Quadratmeter</value>
+  </data>
+	<data name="Stress" xml:space="preserve">
+    <value>Spannung</value>
+  </data>
+	<data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+	<data name="TakePhoto" xml:space="preserve">
+    <value>Foto aufnehmen</value>
+  </data>
+	<data name="Theme" xml:space="preserve">
+    <value>Thema</value>
+  </data>
+	<data name="ThermodynamicTemperature" xml:space="preserve">
+    <value>Thermodynamische Temperatur</value>
+  </data>
+	<data name="ThisItem" xml:space="preserve">
+    <value>dieser Artikel</value>
+  </data>
+	<data name="Time" xml:space="preserve">
+    <value>Zeit</value>
+  </data>
+	<data name="TimeZone" xml:space="preserve">
+    <value>Zeitzone</value>
+  </data>
+	<data name="TitleCriticalError" xml:space="preserve">
+    <value>Kritischer Fehler</value>
+  </data>
+	<data name="TitleError" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+	<data name="TitleInfo" xml:space="preserve">
+    <value>Informationen</value>
+  </data>
+	<data name="TitleQuestion" xml:space="preserve">
+    <value>Frage</value>
+  </data>
+	<data name="TitleWarning" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+	<data name="TitleWelcome" xml:space="preserve">
+    <value>Willkommen</value>
+  </data>
+	<data name="tonne" xml:space="preserve">
+    <value>Tonne</value>
+  </data>
+	<data name="Unknown" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+	<data name="UpdateCheckForUpdates" xml:space="preserve">
+    <value>Nach Updates gesucht...</value>
+  </data>
+	<data name="UpdateDownloadAndInstall" xml:space="preserve">
+    <value>Update wird heruntergeladen und installiert...</value>
+  </data>
+	<data name="UpdateExecuteNow" xml:space="preserve">
+    <value>Möchten Sie das Update wirklich jetzt installieren?</value>
+  </data>
+	<data name="UpdateFoundNewUpdate" xml:space="preserve">
+    <value>Es gibt ein neues Update.</value>
+  </data>
+	<data name="UpdateRestart" xml:space="preserve">
+    <value>Es ist ein Update verfügbar.</value>
+    <value>Speichern Sie Ihre Arbeit, und starten Sie die Anwendung neu.</value>
+  </data>
+	<data name="Username" xml:space="preserve">
+    <value>Nutzername</value>
+  </data>
+	<data name="Volume" xml:space="preserve">
+    <value>Volumen</value>
+  </data>
+	<data name="WarningBetween" xml:space="preserve">
+    <value>Der Wert muss zwischen {0} und {1} sein</value>
+  </data>
+	<data name="WarningBuildCalled" xml:space="preserve">
+    <value>Build kann nur einmal aufgerufen werden.</value>
+  </data>
+	<data name="WarningColorChange" xml:space="preserve">
+    <value>Sie müssen die Anwendung neu starten, um die Farbänderungen anzuwenden.</value>
+  </data>
+	<data name="WarningCreateBuilderCallBeforeCreateServiceProvider" xml:space="preserve">
+    <value>CreateBuilder muss vor CreateServiceProvider aufgerufen werden.</value>
+  </data>
+	<data name="WarningDocumentSizeTooBig" xml:space="preserve">
+    <value>Die Dokumentgröße darf {0} überschreiten.</value>
+  </data>
+	<data name="WarningDoYouWantToDoItNow" xml:space="preserve">
+    <value>Möchten Sie es jetzt tun?</value>
+  </data>
+	<data name="WarningEmailExists" xml:space="preserve">
+    <value>Die eingegebene E-Mail-Adresse ist bereits vorhanden. Geben Sie eine neue ein, und versuchen Sie es erneut.</value>
+  </data>
+	<data name="WarningEnum" xml:space="preserve">
+    <value>Der Wert kann nur Enumerationen enthalten.</value>
+  </data>
+	<data name="WarningFilenameIsNullOrEmpty" xml:space="preserve">
+    <value>Der Dateiname ist null oder leer. Geben Sie einen gültigen Dateinamen an.</value>
+  </data>
+	<data name="WarningFutureModule" xml:space="preserve">
+    <value>Diese Funktion ist derzeit in dieser Version nicht verfügbar.</value>
+  </data>
+	<data name="WarningGuidEmpty" xml:space="preserve">
+    <value>Der Wert kann kein emty Guid sein.</value>
+  </data>
+	<data name="WarningInvalidEmail" xml:space="preserve">
+    <value>Die eingegebene E-Mail-Adresse ist ungültig.</value>
+  </data>
+	<data name="WarningItemRemove" xml:space="preserve">
+    <value>Möchten Sie {0}löschen, so sind Sie sicher?</value>
+  </data>
+	<data name="WarningLanguageChange" xml:space="preserve">
+    <value>Sie müssen die Anwendung neu starten, um die Sprachänderungen anzuwenden.</value>
+  </data>
+	<data name="WarningLicenseNameSize" xml:space="preserve">
+    <value>Sie müssen einen (Firmen-)Namen eingeben, der aus mindestens 3 Zeichen besteht.</value>
+  </data>
+	<data name="WarningMandatoryProperty" xml:space="preserve">
+    <value>{0} ist obligatorisch.</value>
+  </data>
+	<data name="WarningMandatoryUpdateFailed" xml:space="preserve">
+    <value>Die obligatorische Paketaktualisierung ist fehlgeschlagen.</value>
+    <value>Versuchen Sie es erneut, oder aktualisieren Sie die Anwendung über den Microsoft Store.</value>
+  </data>
+	<data name="WarningMaximum" xml:space="preserve">
+    <value>Der Wert darf {0} nicht überschreiten.</value>
+  </data>
+	<data name="WarningMinumum" xml:space="preserve">
+    <value>Der Wert kann mindestens {0} sein.</value>
+  </data>
+	<data name="WarningNameExists" xml:space="preserve">
+    <value>Der eingegebene Name ist bereits vorhanden. Geben Sie eine neue an, und versuchen Sie es erneut.</value>
+  </data>
+	<data name="WarningNoCountrySelected" xml:space="preserve">
+    <value>Es ist kein Land ausgewählt.</value>
+  </data>
+	<data name="WarningNoModulesSelected" xml:space="preserve">
+    <value>Es sind keine Module ausgewählt. Wählen Sie mindestens eine aus.</value>
+  </data>
+	<data name="WarningNoTimeZoneSelected" xml:space="preserve">
+    <value>Es ist keine Zeitzone ausgewählt.</value>
+  </data>
+	<data name="WarningNull" xml:space="preserve">
+    <value>Der Wert darf nicht null sein.</value>
+  </data>
+	<data name="WarningNullEmptyArray" xml:space="preserve">
+    <value>Der Wert darf nicht null oder ein leeres Array sein.</value>
+  </data>
+	<data name="WarningNullEmptyList" xml:space="preserve">
+    <value>Der Wert darf nicht null oder eine leeres Liste sein.</value>
+  </data>
+	<data name="WarningNullGuidEmpty" xml:space="preserve">
+    <value>Der Wert darf nicht null oder eine leere GUID sein.</value>
+  </data>
+	<data name="WarningNullIServiceProvider" xml:space="preserve">
+    <value>IServiceProviderFactory hat einen IServiceProvider NULL zurückgegeben.</value>
+  </data>
+	<data name="WarningNullWhitespace" xml:space="preserve">
+    <value>Der Wert darf nicht null sein oder nur Leerzeichen enthalten.</value>
+  </data>
+	<data name="WarningNullOrEmpty" xml:space="preserve">
+    <value>Der Wert darf nicht null oder leer sein.</value>
+  </data>
+	<data name="WarningPasswordMatch" xml:space="preserve">
+    <value>Passwörter stimmen nicht überein!</value>
+  </data>
+	<data name="WarningPasswordSize" xml:space="preserve">
+    <value>Das Passwort sollte mindestens 6 Zeichen und mindestens 1 Kleinbuchstabe, 1 Großbuchstabe und 1 Zahl haben.</value>
+  </data>
+	<data name="WarningRegistrationConfirmEmail" xml:space="preserve">
+    <value>Sie erhalten eine E-Mail, die Sie zuerst bestätigen müssen, bevor Sie sich anmelden können.</value>
+  </data>
+	<data name="WarningRegistrationExists" xml:space="preserve">
+    <value>Die Kombination aus Name und E-Mail-Adresse existiert bereits. Geben Sie einen neuen Namen und/oder eine neue E-Mail-Adresse ein und versuchen Sie es erneut.</value>
+  </data>
+	<data name="WarningReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+    <value>Das Ersetzen von IHostApplicationLifetime wird nicht unterstützt.</value>
+  </data>
+	<data name="WarningResetPassword" xml:space="preserve">
+    <value>Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen Ihres Passworts.</value>
+  </data>
+	<data name="WarningResolverReturnedNull" xml:space="preserve">
+    <value>Der Resolver hat IServiceProviderFactory null zurückgegeben.</value>
+  </data>
+	<data name="WarningSelectItem" xml:space="preserve">
+    <value>Sie müssen ein Element auswählen.</value>
+  </data>
+	<data name="WarningSettingsChange" xml:space="preserve">
+    <value>Sie müssen die Anwendung neu starten, um die Einstellungen zu übernehmen.</value>
+  </data>
+	<data name="WarningSynchronizationRestart" xml:space="preserve">
+    <value>Um synchronisieren zu können, müssen Sie die Anwendung neu starten, um die Synchronisierungseinstellungen zu übernehmen</value>
+  </data>
+	<data name="WarningUserLoggedin" xml:space="preserve">
+    <value>{0} hat sich eingeloggt.</value>
+  </data>
+	<data name="WarningUserLoggedout" xml:space="preserve">
+    <value>{0} ist abgemeldet.</value>
+  </data>
+	<data name="WarningUsernameSize" xml:space="preserve">
+    <value>Der Benutzername sollte mindestens 3 Zeichen enthalten.</value>
+  </data>
+	<data name="Weight" xml:space="preserve">
+    <value>Gewicht</value>
+  </data>
+	<data name="WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported" xml:space="preserve">
+    <value>Das Ersetzen von IHostApplicationLifetime wird nicht unterstützt.</value>
+  </data>
+	<data name="Work" xml:space="preserve">
+    <value>Arbeit</value>
+  </data>
+	<data name="yard" xml:space="preserve">
+    <value>Yard</value>
+  </data>
+	<data name="WarningError" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+	<data name="WarningInfo" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+	<data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+</root>

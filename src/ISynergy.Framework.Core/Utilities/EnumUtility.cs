@@ -30,7 +30,7 @@ public static class EnumUtility
     /// <typeparam name="T"></typeparam>
     /// <param name="str">The string.</param>
     /// <param name="result">The result.</param>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <returns><c>true</c> if <paramref name="str"/> matches an <see cref="EnumMemberAttribute"/> value of <typeparamref name="T"/>; otherwise, <c>false</c>.</returns>
     public static bool TryToEnum<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string str, out T result)
         where T : struct
     {
@@ -56,8 +56,6 @@ public static class EnumUtility
     /// </summary>
     /// <param name="flags">The flags.</param>
     /// <returns>IEnumerable&lt;Enum&gt;.</returns>
-    [RequiresUnreferencedCode("Enum.GetValues on a runtime-typed enum is not AOT-safe.")]
-    [RequiresDynamicCode("Enum.GetValues requires dynamic code generation for an array of the enum type at runtime.")]
     public static IEnumerable<Enum> GetUniqueFlags(this Enum flags)
     {
         ulong flag = 1;

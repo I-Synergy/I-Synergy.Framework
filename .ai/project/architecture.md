@@ -1,378 +1,199 @@
-# Project Architecture (CUSTOMIZE THIS)
+# Project Architecture — I-Synergy Framework
 
 > **Note:** This repository is a reusable framework library (`ISynergy.Framework.*`), not an application with domain projects. The documented `{ApplicationName}.Domain.{Domain}` project structure with CQRS Features/Commands/Queries/Models applies to consuming applications built on top of this framework, not to this repo itself. The src/ directory contains framework projects providing CQRS abstractions, EntityFramework helpers, UI components, and cross-cutting utilities.
 
-**Instructions:** Document your project's architecture decisions and patterns.
-
-**Purpose:** This file defines HOW your system is structured - layers, patterns, data flow, and architectural decisions.
-
 ## Architecture Style
 
-**Primary Architecture:** [Clean Architecture / Hexagonal / Onion / Layered / Custom]
+**Primary Architecture:** Modular Framework Library
 
-**Why Chosen:** [Reasoning for this architecture choice]
+**Why:** The framework provides reusable building blocks for Clean Architecture / CQRS / Event Sourcing applications. It does not prescribe one application topology — instead it ships composable packages that consuming applications wire together.
 
-## Architectural Patterns
+## Architectural Patterns (as provided by the framework)
 
-| Pattern | Used? | Notes |
-|---------|-------|-------|
-| **Clean Architecture** | [Yes / No / Partial] | [How applied] |
-| **CQRS** | [Yes / No / Partial] | [Command/Query separation level] |
-| **DDD** | [Yes / No / Partial] | [Aggregates, entities, value objects] |
-| **Vertical Slices** | [Yes / No / Partial] | [Feature folders organization] |
-| **Event Sourcing** | [Yes / No] | [If yes, which domain] |
-| **Microservices** | [Yes / No] | [If yes, service boundaries] |
+| Pattern | Provided By | Mechanism |
+|---------|-------------|-----------|
+| **CQRS** | `ISynergy.Framework.CQRS` | `ICommand<T>`, `IQuery<T>`, handlers, dispatcher |
+| **Event Sourcing** | `ISynergy.Framework.EventSourcing.*` | Event store, aggregate replay, snapshots |
+| **MVVM** | `ISynergy.Framework.Mvvm` + `ISynergy.Framework.UI.*` | ViewModel base classes, navigation, dialog, messaging |
+| **Message Bus** | `ISynergy.Framework.MessageBus.*` | Pub/sub (Azure Service Bus, RabbitMQ) |
+| **Multi-Tenancy** | `ISynergy.Framework.AspNetCore.MultiTenancy` | Tenant resolution, per-tenant data isolation |
+| **Automations** | `ISynergy.Framework.Automations` | Rule-based triggers, actions, conditions |
+| **Monitoring** | `ISynergy.Framework.Monitoring` + `ISynergy.Framework.OpenTelemetry.*` | Real-time monitoring via SignalR + OpenTelemetry |
+| **Synchronization** | `ISynergy.Framework.Synchronization` | Offline/online data sync via Dotmim.Sync |
 
-## Clean Architecture Layers
+## Clean Architecture Layers (how the framework supports them)
 
-**Layer definitions and dependencies:**
+The framework provides building blocks for each Clean Architecture layer:
 
 ```
-[Document your actual layer dependencies]
-
-Example:
-Presentation Layer (UI, API Controllers)
+Presentation Layer (UI, API)
     ↓ depends on
-Application Layer (Use Cases, CQRS Handlers)
+Application Layer (Use Cases, CQRS)
     ↓ depends on
-Domain Layer (Entities, Business Rules, Interfaces)
+Domain Layer (Core Abstractions)
     ↑ implements
-Infrastructure Layer (Database, External Services)
+Infrastructure Layer (Data, External Services)
 ```
 
-**Layer mapping to projects:**
-
-- **Domain:** `{ApplicationName}.Domain.*` - Entities, value objects, domain events, CQRS definitions
-- **Application:** `{ApplicationName}.Services.*` - API endpoints, orchestration, DTOs
-- **Infrastructure:** `{ApplicationName}.Data.*` - Persistence, external integrations
-- **Presentation:** `{ApplicationName}.UI.*` - Blazor/MAUI apps, ViewModels
+| Layer | Framework Projects | Purpose |
+|-------|-------------------|---------|
+| **Presentation** | `UI.*`, `UI.Maui`, `UI.WinUI`, `UI.WPF`, `UI.Blazor`, `AspNetCore.Blazor` | ViewModels, pages, controls, navigation, dialogs |
+| **Application** | `CQRS`, `Automations`, `Monitoring` | Command/Query handling, automation rules, monitoring hubs |
+| **Domain / Core** | `Core`, `Mvvm` | Base classes, abstractions, messaging, MVVM primitives |
+| **Infrastructure** | `EntityFramework`, `EventSourcing.*`, `Storage.*`, `Mail.*`, `MessageBus.*`, `KeyVault.*`, `OpenTelemetry.*` | Data access, external services, telemetry |
 
 ## Project Structure
 
 ```
-[Document your actual project structure]
-
-Example:
-solution/
-├── src/
-│   ├── {ApplicationName}.Contracts.{Domain}/      # Interfaces, service contracts
-│   ├── {ApplicationName}.Entities.{Domain}/       # EF Core entity classes
-│   ├── {ApplicationName}.Models.{Domain}/         # DTOs, view models
-│   ├── {ApplicationName}.Domain.{Domain}/         # CQRS handlers, domain logic
-│   └── {ApplicationName}.Services.{Domain}/       # API endpoints
-├── tests/
-│   └── {ApplicationName}.{Domain}.Tests/          # Unit and integration tests
-└── docs/
+src/
+├── ISynergy.Framework.Core/              # Core abstractions, base classes, utilities
+├── ISynergy.Framework.CQRS/              # CQRS abstractions (ICommand, IQuery, handlers)
+├── ISynergy.Framework.Mvvm/              # MVVM base classes, ViewModel primitives
+├── ISynergy.Framework.EntityFramework/    # EF Core helpers, DataContext base, repositories
+├── ISynergy.Framework.EventSourcing/     # Event store abstractions, aggregate roots
+│   ├── ISynergy.Framework.EventSourcing.EntityFramework/
+│   ├── ISynergy.Framework.EventSourcing.Storage/
+│   ├── ISynergy.Framework.EventSourcing.Storage.Azure/
+│   └── ISynergy.Framework.EventSourcing.Storage.S3/
+├── ISynergy.Framework.AspNetCore/        # ASP.NET Core middleware, filters, extensions
+│   ├── ISynergy.Framework.AspNetCore.Authentication/
+│   ├── ISynergy.Framework.AspNetCore.Blazor/
+│   ├── ISynergy.Framework.AspNetCore.Globalization/
+│   ├── ISynergy.Framework.AspNetCore.Monitoring/
+│   └── ISynergy.Framework.AspNetCore.MultiTenancy/
+├── ISynergy.Framework.UI/               # Shared UI base (dialogs, navigation, theming)
+│   ├── ISynergy.Framework.UI.Maui/       # MAUI controls, services
+│   ├── ISynergy.Framework.UI.WinUI/      # WinUI 3 controls, services
+│   ├── ISynergy.Framework.UI.WPF/        # WPF controls, services
+│   └── ISynergy.Framework.UI.Blazor/     # Blazor components
+├── ISynergy.Framework.MessageBus/       # Message bus abstractions
+│   ├── ISynergy.Framework.MessageBus.Azure/
+│   └── ISynergy.Framework.MessageBus.RabbitMQ/
+├── ISynergy.Framework.Storage/          # Storage abstractions
+│   ├── ISynergy.Framework.Storage.Azure/
+│   └── ISynergy.Framework.Storage.S3/
+├── ISynergy.Framework.Mail/             # Mail abstractions
+│   ├── ISynergy.Framework.Mail.Microsoft365/
+│   └── ISynergy.Framework.Mail.SendGrid/
+├── ISynergy.Framework.KeyVault/         # Secrets management abstractions
+│   ├── ISynergy.Framework.KeyVault.Azure/
+│   └── ISynergy.Framework.KeyVault.OpenBao/
+├── ISynergy.Framework.OpenTelemetry/    # Observability abstractions
+│   ├── ISynergy.Framework.OpenTelemetry.ApplicationInsights/
+│   └── ISynergy.Framework.OpenTelemetry.Sentry/
+├── ISynergy.Framework.Documents/        # Document processing
+│   ├── ISynergy.Framework.Documents.Syncfusion/
+├── ISynergy.Framework.Financial/        # Financial/mathematical libraries
+├── ISynergy.Framework.Geography/        # Geography types & calculations
+├── ISynergy.Framework.Mathematics/      # Math utilities
+├── ISynergy.Framework.Physics/          # Physics types & calculations
+├── ISynergy.Framework.IO/              # I/O utilities
+├── ISynergy.Framework.Printer.Label/   # Label printing
+│   └── ISynergy.Framework.Printer.Label.Dymo/
+├── ISynergy.Framework.Synchronization/ # Data synchronization
+├── ISynergy.Framework.Automations/     # Automation engine
+├── ISynergy.Framework.Monitoring/      # Real-time monitoring
+│   └── ISynergy.Framework.Monitoring.Client/
+└── ISynergy.Framework.Automations/     # Rule-based automation
 ```
 
-## CQRS Implementation Pattern
+## Data Access Pattern (for consuming applications)
 
-**Command/Query structure:**
+**NO explicit Repository interfaces** — Consuming apps use EF Core primitives directly on DataContext via named DbSet properties. The framework provides `ISynergy.Framework.EntityFramework` with base `DataContext` class and audit/soft-delete support.
 
+## Key Framework Patterns
+
+### Dependency Injection Registration
+Projects that have services to wire expose an extension method on `IServiceCollection` (or the platform builder) for simple consumer wiring:
 ```csharp
-// Commands use individual parameters (NOT model objects)
-public sealed record Create{Entity}Command(
-    string Property1,
-    decimal Property2
-) : ICommand<Create{Entity}Response>;
-
-// Queries use named parameters
-public sealed record Get{Entity}ByIdQuery(Guid {Entity}Id)
-    : IQuery<{Entity}Response>;
-
-// Handlers inject DataContext directly
-public sealed class Create{Entity}CommandHandler(DataContext dataContext)
-    : ICommandHandler<Create{Entity}Command, Create{Entity}Response>
-{
-    public async Task<Create{Entity}Response> HandleAsync(
-        Create{Entity}Command command,
-        CancellationToken cancellationToken)
-    {
-        // Implementation
-    }
-}
+builder.Services.AddCQRS();
+builder.Services.AddAutomationServices();
+builder.Services.AddStorage(/* config */);
 ```
 
-## Data Access Pattern
+Registration helpers are **not** uniform and **not** universal. Packages such as `AspNetCore.*`,
+`Automations`, `CQRS`, `Documents.Syncfusion`, `EventSourcing.EntityFramework`, `EventSourcing.Storage*`,
+`KeyVault.Azure`, `KeyVault.OpenBao`, `Mail.*`, `MessageBus.*`, `Monitoring.Client`, `Printer.Label.Dymo`,
+`Storage.Azure`, `Storage.S3`, and the UI platform packages expose `Add*`/`Configure*`/`Register*`
+extensions; the `OpenTelemetry.*` packages extend `TelemetryBuilder` rather than `IServiceCollection`.
+Pure abstraction/base libraries — `Core`, `Globalization`, `EntityFramework`, `EventSourcing`,
+`Financial`, `Geography`, `IO`, `Mathematics`, `Monitoring`, `Mvvm`, `Physics`, `Storage` — expose none
+and are consumed as types by the projects that reference them.
 
-**NO explicit Repository interfaces** - Use EF Core primitives directly on DataContext named DbSet properties:
+### AOT / Trim Readiness
+Reflection-heavy public APIs carry `[RequiresUnreferencedCode]`, `[RequiresDynamicCode]`, and
+`[DynamicallyAccessedMembers]` annotations, and source generators replace some reflection-based
+registration. **Trim analysis is enabled only for the platform UI packages** (`UI.WPF`, `UI.WinUI`,
+`UI.Maui`, via `<IsTrimmable>`/`<EnableTrimAnalyzer>`); **no project declares Native AOT
+compatibility** — `IsAotCompatible`/`PublishAot` are unset everywhere. Treat AOT/trim readiness as a
+direction the code is being annotated toward, not a guarantee for every package.
 
-```csharp
-// Use named DbSet properties for all CRUD operations
-// Create
-dataContext.Budgets.Add(entity);
-await dataContext.SaveChangesAsync(cancellationToken);
+### Multi-Platform UI
+The MVVM layer (`ISynergy.Framework.Mvvm`) is platform-agnostic. Platform-specific UI projects (`UI.WinUI`, `UI.WPF`, `UI.Maui`, `UI.Blazor`) provide controls and services that bind to the same ViewModel base classes.
 
-// Read single
-var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == id, cancellationToken);
-
-// Read list
-var models = await dataContext.Budgets
-    .OrderBy(b => b.Description)
-    .Select(b => new BudgetModel(b.BudgetId, b.Description, b.Amount))
-    .ToListAsync(cancellationToken);
-
-// Update — no .Update() call needed; change tracker handles property mutations
-var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
-entity.Description = command.Description;
-await dataContext.SaveChangesAsync(cancellationToken);
-
-// Delete
-var entity = await dataContext.Budgets.FirstOrDefaultAsync(e => e.BudgetId == command.BudgetId, cancellationToken);
-dataContext.Budgets.Remove(entity);
-await dataContext.SaveChangesAsync(cancellationToken);
-```
-
-## Vertical Slice Organization
+## Package Dependencies
 
 ```
-Domain/Features/{Entity}/
-  Commands/
-    Create{Entity}Command.cs
-    Create{Entity}CommandHandler.cs
-    Update{Entity}Command.cs
-    Update{Entity}CommandHandler.cs
-    Delete{Entity}Command.cs
-    Delete{Entity}CommandHandler.cs
-  Queries/
-    Get{Entity}ByIdQuery.cs
-    Get{Entity}ByIdQueryHandler.cs
-    Get{Entity}ListQuery.cs
-    Get{Entity}ListQueryHandler.cs
-  Events/
-    {Entity}CreatedEvent.cs
-    {Entity}UpdatedEvent.cs
-    {Entity}DeletedEvent.cs
-Extensions/ServiceCollectionExtensions.cs
+Core (no framework dependencies)
+├── Globalization → Core
+├── CQRS → Core
+├── Mvvm → Core
+├── EntityFramework → Core
+├── EventSourcing → Core
+│   └── EventSourcing.EntityFramework → Core, EventSourcing
+│       └── EventSourcing.Storage → EventSourcing, EventSourcing.EntityFramework
+│           ├── EventSourcing.Storage.Azure → EventSourcing.Storage
+│           └── EventSourcing.Storage.S3 → EventSourcing.Storage
+├── OpenTelemetry → Core
+│   ├── OpenTelemetry.ApplicationInsights → OpenTelemetry
+│   └── OpenTelemetry.Sentry → OpenTelemetry
+├── MessageBus → Core
+│   ├── MessageBus.Azure → MessageBus
+│   └── MessageBus.RabbitMQ → MessageBus
+├── Storage → Core
+│   ├── Storage.Azure → Storage
+│   └── Storage.S3 → Storage
+├── Mail → Core
+│   ├── Mail.Microsoft365 → Mail
+│   └── Mail.SendGrid → Mail
+├── KeyVault → Core
+│   ├── KeyVault.Azure → KeyVault
+│   └── KeyVault.OpenBao → KeyVault
+├── AspNetCore → Core, OpenTelemetry, Storage
+│   ├── AspNetCore.Authentication → AspNetCore
+│   ├── AspNetCore.Blazor → AspNetCore, Mvvm, Globalization
+│   ├── AspNetCore.Globalization → AspNetCore, Core, Globalization
+│   ├── AspNetCore.Monitoring → AspNetCore.Authentication, MessageBus, Monitoring
+│   └── AspNetCore.MultiTenancy → AspNetCore.Authentication
+├── UI → Mvvm, OpenTelemetry, Globalization
+│   ├── UI.Maui → UI, Mvvm
+│   ├── UI.WinUI → UI
+│   ├── UI.WPF → UI
+│   └── UI.Blazor → UI
+├── Monitoring (no framework refs)
+│   └── Monitoring.Client → Monitoring, Mvvm
+├── Documents (no framework refs)
+│   └── Documents.Syncfusion → Core, Documents, Globalization
+├── Printer.Label (no framework refs)
+│   └── Printer.Label.Dymo → Printer.Label
+└── Leaf modules → Core
+    Automations, Financial, IO, Mathematics, Physics → Core;  Geography → Core, Globalization
 ```
-
-## Data Flow
-
-### Request Flow
-
-```
-[Document your request/response flow]
-
-Example:
-HTTP Request
-  → API Endpoint
-  → Command/Query
-  → Handler
-  → DataContext
-  → Database
-  ← Response
-```
-
-### Event Flow (if using domain events)
-
-```
-[Document event flow]
-
-Example:
-Command
-  → Handler
-  → Entity State Change
-  → Domain Event Raised
-  → Event Handler(s)
-  → Side Effects
-```
-
-**Service registration:**
-
-```csharp
-// Domain Extensions/ServiceCollectionExtensions.cs
-public static IServiceCollection With{Domain}DomainHandlers(
-    this IServiceCollection services)
-{
-    var assembly = typeof(ServiceCollectionExtensions).Assembly;
-    services.AddCQRS().AddHandlers(assembly);
-    return services;
-}
-```
-
-## Domain Events
-
-**Event definitions:**
-
-```csharp
-// Domain/Features/{Entity}/Events/
-public sealed record {Entity}CreatedEvent(
-    Guid {Entity}Id,
-    string Property1,
-    DateTimeOffset CreatedDate
-) : IDomainEvent;
-```
-
-**Event handling approach:**
-- Raise only meaningful state changes
-- Dispatch via [your event infrastructure]
-- Handlers must be idempotent
-- Handlers must be resilient (retry transient failures)
-
-## Integration Patterns
-
-### External Service Integration
-
-**Integration approach:**
-- **Pattern:** [Adapter / Gateway / Direct]
-- **Error Handling:** [Retry / Circuit Breaker / Fallback]
-- **Authentication:** [API Key / OAuth2 / Certificate]
-
-### Inter-Domain Communication
-
-**How domains communicate:**
-- **Same Service:** [Direct references / Domain events / Messaging]
-- **Different Services:** [HTTP / gRPC / Messaging]
-
-## Persistence Strategy
-
-**How data is persisted:**
-
-- **Primary Store:** [Database technology and ORM approach]
-- **Caching:** [When to cache, what to cache, cache invalidation]
-- **File Storage:** [Where and how files are stored] (if applicable)
-- **Message Queue:** [Technology and usage] (if applicable)
-
-**Example:**
-- **Primary Store:** PostgreSQL via EF Core, code-first migrations
-- **Caching:** Redis for reference data (countries, categories), 15-minute TTL
-- **File Storage:** Azure Blob Storage for documents, private containers
-- **Message Queue:** Azure Service Bus for cross-domain events
-
-## Security Architecture
-
-**Authentication & Authorization:**
-
-- **Authentication:** [Where implemented - API Gateway / Each service / Middleware]
-- **Authorization:** [Policy-based / Role-based / Claims-based]
-- **Token handling:** [JWT validation, refresh token strategy]
-
-**API Security:**
-
-- **CORS:** [Configuration approach]
-- **Rate Limiting:** [Strategy and limits]
-- **Input Validation:** [Where validated - endpoints / commands / both]
-
-**Secrets Management:**
-
-- **Development:** [Local secrets, Key Vault emulator]
-- **Production:** [Azure Key Vault / AWS Secrets Manager]
-
-## Scalability Strategy
-
-**How the system scales:**
-
-- **Horizontal Scaling:** [Stateless design / Session handling approach]
-- **Database Scaling:** [Read replicas / Sharding / Partitioning]
-- **Caching Strategy:** [Distributed cache for shared data]
-- **Async Processing:** [Background jobs / Message queue for long operations]
-
-## Monitoring & Observability
-
-**How the system is monitored:**
-
-- **Logging:** [Structured logging with correlation IDs]
-- **Metrics:** [What is measured - response times, error rates, etc.]
-- **Tracing:** [Distributed tracing across services]
-- **Health Checks:** [What is monitored - database, cache, external APIs]
 
 ## Deployment Architecture
 
-**Deployment strategy:**
-
-- **Environment Strategy:** [Dev / Staging / Production]
-- **Deployment Method:** [Blue-Green / Rolling / Canary]
-- **Infrastructure:** [Cloud / On-premises / Hybrid]
-- **CI/CD:** [Pipeline approach and stages]
-
-## Architectural Decision Records (ADRs)
-
-### ADR Template
-
-```markdown
-## ADR-XXX: [Decision Title]
-
-**Status:** [Proposed / Accepted / Deprecated / Superseded]
-**Date:** [YYYY-MM-DD]
-**Deciders:** [Who decided]
-
-### Context
-[What is the issue that we're seeing that is motivating this decision]
-
-### Decision
-[What is the change that we're proposing/have agreed to]
-
-### Consequences
-**Positive:**
-- [e.g., easier to understand, better performance]
-
-**Negative:**
-- [e.g., increased complexity, more boilerplate]
-
-### Alternatives Considered
-- [Alternative 1] - [Why rejected]
-- [Alternative 2] - [Why rejected]
-```
-
-### Example ADR
-
-```markdown
-## ADR-001: [Decision Name]
-
-**Status:** [Proposed | Accepted | Deprecated | Superseded]
-**Date:** [Date]
-**Deciders:** [Team]
-
-### Context
-[What is the issue that motivates this decision?]
-
-### Decision
-[What is the change being proposed or accepted?]
-
-### Consequences
-**Positive:**
-- [Positive outcome]
-
-**Negative:**
-- [Negative outcome or trade-off]
-
-### Alternatives Considered
-- [Alternative 1] - [Why rejected]
-```
-
-## Reference Implementations
-
-**Which implementations serve as patterns:**
-
-- **Primary Reference:** [{Domain}.{Entity}] - [Why it's the reference]
-- **Alternative Patterns:** [{Domain}.{Entity}] - [What pattern it demonstrates]
-
-**Example:**
-- **Primary Reference:** [Budgets.Budget] - Complete CRUD implementation with all operations, comprehensive testing, full documentation
-- **Alternative Patterns:** [Customers.Customer] - Demonstrates soft-delete pattern with audit fields
+- **Library packaging:** NuGet packages built via `dotnet pack`, published to nuget.org
+- **CI/CD:** GitHub Actions (`.github/workflows/ci.yml`) — build, test, pack, sign, publish to NuGet.org, tag
+- **Versioning:** Date-based (`yyyy.1MMdd.1HHmm`, computed by `scripts/Set-VersionVariables.ps1`; PR builds append `-preview`)
+- **Strong naming:** All assemblies strong-named with SNK file
+- **Signing:** Release builds run analyzers; Debug builds skip them for build speed
 
 ## Known Limitations
 
-**Document known architectural limitations:**
-
-1. [Limitation 1] - [Why it exists, when to address]
-2. [Limitation 2] - [Impact and planned mitigation]
-
-**Example:**
-1. Single database instance - Acceptable for current scale (<100k users), plan to implement read replicas when load increases
-2. Synchronous inter-domain communication - Acceptable for low latency requirements, consider event-driven architecture for high volume operations
-
-## Future Architectural Considerations
-
-**What might evolve:**
-
-- [Consideration 1] - [Trigger for this change]
-- [Consideration 2] - [Benefits and costs]
-
-**Example:**
-- Event sourcing for audit-heavy domains - Consider when audit requirements become more stringent
-- Microservices architecture - Evaluate when team size exceeds 10 developers or domains become truly independent
+1. **Framework, not an application** — The `.ai/project/domains.md` and `.ai/reference/critical-rules.md` entity/domain patterns are designed for consuming applications, not this repo itself
+2. **Multi-platform UI divergence** — WinUI uses StoreContext for updates, WPF uses HTTP; these are genuinely different mechanisms that cannot be unified (documented in session-context.md)
+3. **Shared Globalization types physically live in Core** — to keep `Core` dependency-free, the shared types `ILanguageService` (namespace `ISynergy.Framework.Globalization.Abstractions.Services`), `GlobalizationConstants`, and the `DateTimeConverter`/`DateTimeOffsetConverter`/`TimeOnlyConverter` JSON converters were moved into the `ISynergy.Framework.Core` assembly while keeping their `ISynergy.Framework.Globalization.*` namespaces. `ISynergy.Framework.Globalization` now references Core and type-forwards them (`TypeForwarding.cs`) for binary compatibility; the concrete `LanguageService` (which owns the resource satellite assemblies) stays in Globalization and registers itself with Core's `LanguageServiceProvider` when constructed. Consumers that previously received Globalization transitively through Core must now reference Globalization explicitly.
 
 ---
 
-**Remember:** This file documents your system's architecture. Update it when patterns evolve. For technology choices, see [tech-stack.md](tech-stack.md). For business domains, see [domains.md](domains.md).
+**Remember:** This file documents the framework architecture. For technology choices, see [tech-stack.md](tech-stack.md). For project preferences, see [preferences.md](preferences.md).

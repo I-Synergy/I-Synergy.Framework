@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- =====================================================================
+         Shared design primitives for the sample shell UI.
+         All color references use DynamicResource so they update on theme
+         changes and accent color changes via IThemeService.
+         ===================================================================== -->
+
+    <!-- ── Surfaces ──────────────────────────────────────────────────── -->
+
+    <Style x:Key="AppCardBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{DynamicResource AppSurface}" />
+        <Setter Property="Stroke" Value="{DynamicResource AppBorder}" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+    </Style>
+
+    <!-- ── Type ──────────────────────────────────────────────────────── -->
+
+    <Style x:Key="AppBreadcrumbLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="FigtreeSemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{DynamicResource AppMuted}" />
+    </Style>
+
+    <Style
+        x:Key="AppBreadcrumbLinkLabel"
+        BasedOn="{StaticResource AppBreadcrumbLabel}"
+        TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource AppAccent}" />
+    </Style>
+
+    <Style
+        x:Key="AppBreadcrumbCurrentLabel"
+        BasedOn="{StaticResource AppBreadcrumbLabel}"
+        TargetType="Label">
+        <Setter Property="FontFamily" Value="FigtreeBold" />
+        <Setter Property="TextColor" Value="{DynamicResource AppText}" />
+    </Style>
+
+    <Style x:Key="AppSidebarNameLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="FigtreeSemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
+        <Setter Property="TextColor" Value="{DynamicResource AppText}" />
+    </Style>
+
+    <Style x:Key="AppSidebarSubtitleLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="Figtree" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextColor" Value="{DynamicResource AppMuted}" />
+    </Style>
+
+    <Style x:Key="AppSidebarRowBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Padding" Value="8,0" />
+    </Style>
+
+    <Style x:Key="AppMutedLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="Figtree" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextColor" Value="{DynamicResource AppMuted}" />
+    </Style>
+
+    <!-- ── Buttons ──────────────────────────────────────────────────── -->
+
+    <!-- Icon button in header (theme, settings, menu, back): 44px, ghost style, muted icon -->
+    <Style x:Key="AppVerseActionButton" TargetType="Button">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource AppMutedLight}, Dark={DynamicResource AppMutedDark}}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="WidthRequest" Value="44" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="MinimumWidthRequest" Value="44" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <!-- Subtle fill on hover: a neutral surface2 tint, never green accent -->
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{DynamicResource AppSurface2}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <!-- Pressed and keyboard focus must not leave a persistent "selected" fill:
+                         the header buttons are commands, not toggles. A blade opening over the
+                         pointer can swallow the release, so a painted Pressed state sticks. -->
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.35" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

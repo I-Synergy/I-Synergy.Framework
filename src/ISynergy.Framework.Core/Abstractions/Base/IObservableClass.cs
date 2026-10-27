@@ -1,4 +1,5 @@
 namespace ISynergy.Framework.Core.Abstractions.Base;
+
 public interface IObservableClass : IBindable, IDisposable, IAsyncDisposable
 {
     /// <summary>
@@ -17,7 +18,7 @@ public interface IObservableClass : IBindable, IDisposable, IAsyncDisposable
     /// Gets the properties.
     /// </summary>
     /// <value>The properties.</value>
-    Dictionary<string, IProperty> Properties { get; }
+    System.Collections.Generic.IDictionary<string, IProperty> Properties { get; }
     /// <summary>
     /// Gets a value indicating whether this instance is dirty.
     /// </summary>

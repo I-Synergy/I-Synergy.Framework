@@ -1,5 +1,4 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,7 +7,6 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
 /// <summary>
@@ -26,8 +24,6 @@ public static class TelemetryExtensions
     /// <param name="meterProviderBuilderAction"></param>
     /// <param name="loggerProviderBuilderAction"></param>
     /// <returns>The service collection for chaining.</returns>
-    [RequiresUnreferencedCode("Calls GetDefaultLogLevel which uses ConfigurationBinder.Get<T> with reflection.")]
-    [RequiresDynamicCode("Calls GetDefaultLogLevel which requires dynamic code generation at runtime.")]
     public static TelemetryBuilder AddTelemetry(
         this ILoggingBuilder loggingBuilder,
         IHostApplicationBuilder hostBuilderContext,
@@ -52,8 +48,6 @@ public static class TelemetryExtensions
         // Configure OpenTelemetry Logging
         telemetryBuilder.Services.AddLogging(loggingBuilder =>
         {
-            loggingBuilder.SetMinimumLevel(hostBuilderContext.Configuration.GetDefaultLogLevel());
-
             loggingBuilder.AddOpenTelemetry(loggerOptions =>
             {
                 // Add default console exporter in development

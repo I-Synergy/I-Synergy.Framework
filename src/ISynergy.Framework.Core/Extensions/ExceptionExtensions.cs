@@ -17,7 +17,7 @@ public static class ExceptionExtensions
     /// <summary>
     /// Defines the verbosity level for exception messages
     /// </summary>
-    public enum ExceptionVerbosityLevel
+    public enum ExceptionVerbosityLevels
     {
         /// <summary>
         /// Minimal information (type and message only)
@@ -41,23 +41,33 @@ public static class ExceptionExtensions
 
     private static readonly TimeSpan _regexTimeout = TimeSpan.FromMilliseconds(100);
 
-    // Patterns for sensitive data that should be sanitized
+    // Maximum input length for regex sanitization to prevent catastrophic backtracking
+    // on very large inputs like full stack traces with embedded connection strings.
+    private const int MaxSanitizeInputLength = 64_000;
+
+    // Patterns for sensitive data that should be sanitized.
+    // IMPORTANT: all quantifiers must be bounded to avoid runaway backtracking.
     private static readonly Regex[] _sensitivePatterns = new[]
     {
-        // Connection strings
-        new Regex(@"(?i)(ConnectionString|Connection String|Data Source|Server|Initial Catalog|Database|User ID|User Id|UID|Pwd|Password|Integrated Security|Trusted_Connection)\s*=\s*[^;,\s]+", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
-        // Passwords and tokens
-        new Regex(@"(?i)(password|pwd|passwd|pass|token|accesstoken|bearer|apikey|secret|key)\s*[:=]\s*['""]?[^'""\s]+['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
-        // API keys and secrets
-        new Regex(@"(?i)(api[_-]?key|secret[_-]?key|private[_-]?key|public[_-]?key)\s*[:=]\s*['""]?[A-Za-z0-9+/=]{20,}['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
-        // JWT tokens
-        new Regex(@"(?i)(eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,})", RegexOptions.Compiled, _regexTimeout),
+        // Connection strings — keywords followed by = value.
+        // \b prevents partial matches (e.g. "ServerName" matching "Server").
+        // {1,300} upper bound on the value avoids quadratic scan on long lines.
+        new Regex(@"(?i)\b(ConnectionString|Connection\s+String|Data\s+Source|Server|Initial\s+Catalog|Database|User\s+ID|User\s+Id|UID|Pwd|Password|Integrated\s+Security|Trusted_Connection)\s*=\s*[^;,\s]{1,300}", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
+        // Passwords and tokens — key:value or key=value pairs.
+        // Longer alternatives come first so "password" is tried before the prefix "pass".
+        // \b boundaries and {1,300} upper bound prevent runaway scans.
+        new Regex(@"(?i)\b(password|passwd|accesstoken|pass|token|bearer|apikey|secret|pwd|key)\s*[:=]\s*['""]?[^'""\s]{1,300}['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
+        // API keys and secrets — base64-looking values.
+        // {20,500} upper bound prevents scanning indefinitely through long base64 blobs.
+        new Regex(@"(?i)\b(api[_-]?key|secret[_-]?key|private[_-]?key|public[_-]?key)\s*[:=]\s*['""]?[A-Za-z0-9+/=]{20,500}['""]?", RegexOptions.Compiled | RegexOptions.IgnoreCase, _regexTimeout),
+        // JWT tokens — three base64url segments separated by dots.
+        // {10,200} upper bound per segment prevents catastrophic backtracking when
+        // "eyJ" appears but no valid JWT follows (e.g. in long stack traces).
+        new Regex(@"(?i)\b(eyJ[A-Za-z0-9_-]{10,200}\.[A-Za-z0-9_-]{10,200}\.[A-Za-z0-9_-]{10,200})", RegexOptions.Compiled, _regexTimeout),
         // File paths with usernames (Windows)
-        new Regex(@"(?i)(C:\\Users\\)[^\\]+", RegexOptions.Compiled, _regexTimeout),
+        new Regex(@"(?i)(C:\\Users\\)[^\\]{1,200}", RegexOptions.Compiled, _regexTimeout),
         // File paths with usernames (Unix)
-        new Regex(@"(?i)(/home/|/Users/)[^/]+", RegexOptions.Compiled, _regexTimeout),
-        // Email addresses (optional - may want to keep for some scenarios)
-        // new Regex(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}", RegexOptions.Compiled),
+        new Regex(@"(?i)(/home/|/Users/)[^/]{1,200}", RegexOptions.Compiled, _regexTimeout),
     };
 
     private const string SanitizedValue = "[REDACTED]";
@@ -70,6 +80,12 @@ public static class ExceptionExtensions
     public static string SanitizeSensitiveData(string input)
     {
         if (string.IsNullOrEmpty(input))
+            return input;
+
+        // Skip regex sanitization for very large inputs to prevent timeout.
+        // Exception messages with full stack traces can exceed this threshold,
+        // and running unbounded regex over them risks RegexMatchTimeoutException.
+        if (input.Length > MaxSanitizeInputLength)
             return input;
 
         var sanitized = input;
@@ -111,7 +127,7 @@ public static class ExceptionExtensions
     public static string ToMessage( // NOSONAR
         this Exception exception,
         string environmentStackTrace,
-        ExceptionVerbosityLevel verbosity = ExceptionVerbosityLevel.Full,
+        ExceptionVerbosityLevels verbosity = ExceptionVerbosityLevels.Full,
         bool includeEnvironmentStack = true,
         bool sanitizeSensitiveData = true)
     {
@@ -126,7 +142,7 @@ public static class ExceptionExtensions
             sb.AppendLine($"Exception type: {exception.GetType().FullName}");
             sb.AppendLine($"Message: {exceptionMessage}");
 
-            if (verbosity >= ExceptionVerbosityLevel.Standard)
+            if (verbosity >= ExceptionVerbosityLevels.Standard)
             {
                 // Add exception data if available
                 if (exception.Data.Count > 0)
@@ -156,7 +172,7 @@ public static class ExceptionExtensions
                 }
             }
 
-            if (verbosity == ExceptionVerbosityLevel.Full)
+            if (verbosity == ExceptionVerbosityLevels.Full)
             {
                 // Add stack trace information
                 var stackTrace = exception.StackTrace ?? string.Empty;
@@ -199,7 +215,7 @@ public static class ExceptionExtensions
     /// <returns>Formatted exception message with stack trace</returns>
     public static string ToMessage(this Exception exception, string environmentStackTrace)
     {
-        return ToMessage(exception, environmentStackTrace, ExceptionVerbosityLevel.Full, true, true);
+        return ToMessage(exception, environmentStackTrace, ExceptionVerbosityLevels.Full, true, true);
     }
 
     /// <summary>
@@ -237,7 +253,7 @@ public static class ExceptionExtensions
     private static void AppendInnerExceptions( // NOSONAR
         StringBuilder sb,
         Exception innerException,
-        ExceptionVerbosityLevel verbosity,
+        ExceptionVerbosityLevels verbosity,
         bool sanitizeSensitiveData = true,
         int currentDepth = 0,
         int maxDepth = 10)
@@ -255,7 +271,7 @@ public static class ExceptionExtensions
         sb.AppendLine($"Inner exception: {innerException.GetType().FullName}");
         sb.AppendLine($"Message: {innerMessage}");
 
-        if (verbosity == ExceptionVerbosityLevel.Full && innerException.Data.Count > 0)
+        if (verbosity == ExceptionVerbosityLevels.Full && innerException.Data.Count > 0)
         {
             sb.AppendLine("Exception Data:");
             foreach (DictionaryEntry entry in innerException.Data)
@@ -300,7 +316,7 @@ public static class ExceptionExtensions
     private static void AppendAggregateException(
         StringBuilder sb,
         AggregateException aggregateException,
-        ExceptionVerbosityLevel verbosity,
+        ExceptionVerbosityLevels verbosity,
         bool sanitizeSensitiveData = true)
     {
         sb.AppendLine($"AggregateException with {aggregateException.InnerExceptions.Count} inner exceptions:");
@@ -313,7 +329,7 @@ public static class ExceptionExtensions
             sb.AppendLine($"Type: {innerEx.GetType().FullName}");
             sb.AppendLine($"Message: {innerMessage}");
 
-            if (verbosity == ExceptionVerbosityLevel.Full && !string.IsNullOrEmpty(innerEx.StackTrace))
+            if (verbosity == ExceptionVerbosityLevels.Full && !string.IsNullOrEmpty(innerEx.StackTrace))
             {
                 var stackTrace = sanitizeSensitiveData ? SanitizeSensitiveData(innerEx.StackTrace) : innerEx.StackTrace;
                 sb.AppendLine("Stack trace:");

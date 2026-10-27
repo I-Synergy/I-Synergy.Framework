@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -274,7 +273,7 @@ public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
     {
         if (value is DateTimeOffset datetime)
         {
-            var context = ServiceLocator.Default.GetRequiredService<IContext>();
+            var context = IPlatformApplication.Current!.Services.GetRequiredService<IContext>();
             var timeZone = context.TimeZone;
             if (timeZone is not null)
             {

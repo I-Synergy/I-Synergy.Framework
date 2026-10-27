@@ -11,81 +11,144 @@
 @typeparam TModel where TModel : class, new()
 @typeparam TViewModel where TViewModel : class, IViewModelDialog<TModel>
 
-@implements IDialogContentComponent<TViewModel>
-
-<FluentDialogHeader>
-	<FluentStack Orientation="Orientation.Vertical" VerticalGap="4">
-		@if (!string.IsNullOrEmpty(DialogSubtitle))
-		{
-			<FluentLabel Typo="Typography.Body">
-				@DialogSubtitle
-			</FluentLabel>
-		}
-	</FluentStack>
-</FluentDialogHeader>
+@* v5: IDialogContentComponent<T> was replaced by the FluentDialogInstance abstract base class, and
+   FluentDialogHeader / FluentDialogFooter no longer exist. The custom header/footer markup is now
+   hosted in the TitleTemplate / ActionTemplate slots of FluentDialogBody, which keeps the existing
+   CommandBinding command wiring intact.
+   Caveat: supplying ActionTemplate replaces the options-driven footer, so the default Enter/Escape
+   shortcuts carried by DialogOptionsFooterAction.ShortCut no longer apply to these buttons. *@
+@inherits FluentDialogInstance
 
 <FluentDialogBody>
-	@DialogContent
+	<TitleTemplate>
+		<FluentStack Orientation="Orientation.Vertical" VerticalGap="4">
+			@if (!string.IsNullOrEmpty(DialogTitle))
+			{
+				@* Rendering a TitleTemplate suppresses the options-provided header title, so it has
+				   to be re-rendered here to keep DialogOptions.Header.Title visible. *@
+				<FluentText Block="true">@DialogTitle</FluentText>
+			}
+			@if (!string.IsNullOrEmpty(DialogSubtitle))
+			{
+				<FluentText>
+					@DialogSubtitle
+				</FluentText>
+			}
+		</FluentStack>
+	</TitleTemplate>
+
+	<ChildContent>
+		@DialogContent
+	</ChildContent>
+
+	<ActionTemplate>
+		<FluentStack Orientation="Orientation.Horizontal"
+					 HorizontalAlignment="HorizontalAlignment.Right"
+					 Style="gap: 0.5rem; margin-top: 1rem;">
+			@if (Content?.CancelCommand is not null)
+			{
+				<FluentButton Appearance="ButtonAppearance.Default"
+							  @attributes="@this.CommandBinding(Content.CancelCommand)">
+					@CancelButtonText
+				</FluentButton>
+			}
+			@if (Content?.SubmitCommand is not null)
+			{
+				<FluentButton Appearance="ButtonAppearance.Primary"
+							  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content?.SelectedItem)">
+					@SaveButtonText
+				</FluentButton>
+			}
+		</FluentStack>
+	</ActionTemplate>
 </FluentDialogBody>
 
-<FluentDialogFooter>
-	<FluentStack Orientation="Orientation.Horizontal"
-				 HorizontalAlignment="HorizontalAlignment.Right"
-				 Style="gap: 0.5rem; margin-top: 1rem;">
-		@if (Content?.CancelCommand is not null)
-		{
-			<FluentButton Appearance="Appearance.Neutral"
-						  @attributes="@this.CommandBinding(Content.CancelCommand)">
-				@CancelButtonText
-			</FluentButton>
-		}
-		@if (Content?.SubmitCommand is not null)
-		{
-			<FluentButton Appearance="Appearance.Accent"
-						  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content?.SelectedItem)">
-				@SaveButtonText
-			</FluentButton>
-		}
-	</FluentStack>
-</FluentDialogFooter>
-
 	@code {
-	private TViewModel _viewModel = default!;
+	private TViewModel? _previousViewModel;
 
 	/// <summary>
 	/// Collection of commands that have been subscribed to for CanExecuteChanged events.
 	/// </summary>
 	private readonly List<ICommand> _subscribedCommands = new();
 
-	[CascadingParameter] public FluentDialog? Dialog { get; set; }
-
 	[Parameter] public RenderFragment? DialogContent { get; set; } = default!;
 	[Parameter] public string? DialogSubtitle { get; set; }
 
-	[Parameter]
-	public TViewModel Content
+	/// <summary>
+	/// Gets or sets a value indicating whether this instance owns the dialog's close path.
+	/// <para>
+	/// Razor's generated BuildRenderTree on a derived component replaces the base markup, so
+	/// SampleDialog (which derives from this component) renders a *nested* BaseModelDialog to host
+	/// its content. Both instances are handed the same Content and the same cascaded
+	/// IDialogInstance, so if both subscribed to Content.Closed they would both close the dialog:
+	/// the first call removes it from the provider and the second throws
+	/// "Failed to remove dialog from DialogProvider" out of DialogService.CloseAsync. That
+	/// exception is raised from an async void handler, so it is unhandled, tears down the Blazor
+	/// circuit and leaves the page unresponsive. v4 tolerated the second close because
+	/// FluentDialog.CloseAsync() did not throw; v5 does.
+	/// The nested content host sets this to <c>false</c> so exactly one instance owns the close.
+	/// The other subscriptions (PropertyChanged, CanExecuteChanged) are deliberately unaffected,
+	/// so the CommandBinding footer keeps working.
+	/// </para>
+	/// </summary>
+	[Parameter] public bool ClosesOnViewModelClosed { get; set; } = true;
+
+	[Parameter] public TViewModel Content { get; set; } = default!;
+
+	/// <summary>
+	/// Gets the title configured on the dialog options, if any.
+	/// </summary>
+	private string? DialogTitle => DialogInstance.Options.Header.Title;
+
+	/// <summary>
+	/// v5 removed FluentDialogHeader/FluentDialogFooter. FluentDialogInstance.OnInitializedAsync
+	/// defaults the options footer actions to an OK/Cancel pair; this dialog renders its own
+	/// buttons through the FluentDialogBody.ActionTemplate slot, so the defaults are hidden to
+	/// preserve the v4 behaviour (footer owned by the dialog markup).
+	/// </summary>
+	protected override void OnInitializeDialog(DialogOptionsHeader header, DialogOptionsFooter footer)
 	{
-		get => _viewModel;
-		set
+		base.OnInitializeDialog(header, footer);
+
+		footer.PrimaryAction.Visible = false;
+		footer.SecondaryAction.Visible = false;
+	}
+
+	/// <summary>
+	/// v5: FluentDialogInstance requires an override. The footer is template driven (see markup),
+	/// so the only reachable call is the header close action, which maps to a cancelled result.
+	/// </summary>
+	protected override Task OnActionClickedAsync(bool primary)
+	{
+		return DialogInstance.CancelAsync();
+	}
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+
+		if (ReferenceEquals(_previousViewModel, Content))
+			return;
+
+		if (_previousViewModel is not null)
 		{
-			if (_viewModel != value)
-			{
-				// Unsubscribe from old ViewModel if it exists
-				if (_viewModel != null)
-				{
-					_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
-					_viewModel.Closed -= OnViewModelClosed;
-				}
+			_previousViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+			_previousViewModel.Closed -= OnViewModelClosed;
+			UnsubscribeFromViewModelCommands();
+		}
 
-				_viewModel = value;
+		_previousViewModel = Content;
 
-				// Subscribe to new ViewModel if it exists
-				if (_viewModel != null)
-				{
-					_viewModel.PropertyChanged += OnViewModelPropertyChanged;
-					_viewModel.Closed += OnViewModelClosed;
-				}
-			}
+		if (Content is not null)
+		{
+			Content.PropertyChanged += OnViewModelPropertyChanged;
+
+			// Only the owning instance may close the dialog; a second close throws inside
+			// DialogService.CloseAsync and kills the circuit. See ClosesOnViewModelClosed.
+			if (ClosesOnViewModelClosed)
+				Content.Closed += OnViewModelClosed;
+
+			SubscribeToViewModelCommands();
 		}
 	}
 
@@ -96,15 +159,8 @@
 	{
 		await base.OnInitializedAsync();
 
-		if (_viewModel is not null)
-		{
-			if (!_viewModel.IsInitialized)
-				await _viewModel.InitializeAsync();
-
-			_viewModel.PropertyChanged += OnViewModelPropertyChanged;
-
-			SubscribeToViewModelCommands();
-		}
+		if (Content is not null && !Content.IsInitialized)
+			await Content.InitializeAsync();
 	}
 
 	/// <summary>
@@ -112,17 +168,17 @@
 	/// </summary>
 	private void SubscribeToViewModelCommands()
 	{
-		if (_viewModel is null)
+		if (Content is null)
 			return;
 
-		var commandProperties = _viewModel.GetType()
+		var commandProperties = Content.GetType()
 			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 			.Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType))
 			.ToList();
 
 		foreach (var property in commandProperties)
 		{
-			if (property.GetValue(_viewModel) is ICommand command)
+			if (property.GetValue(Content) is ICommand command)
 			{
 				command.CanExecuteChanged += OnCommandCanExecuteChanged;
 				_subscribedCommands.Add(command);
@@ -158,9 +214,14 @@
 
 	private async void OnViewModelClosed(object? sender, EventArgs e)
 	{
-		if (Dialog is not null)
-			await Dialog.CloseAsync();
-		
+		// v5: FluentDialog.CloseAsync() no longer exists; the dialog is closed through the
+		// IDialogInstance cascaded into FluentDialogInstance. The view-model distinguishes an
+		// explicit cancel (IsCancelled) from a successful submit.
+		if (Content?.IsCancelled == true)
+			await DialogInstance.CancelAsync();
+		else
+			await DialogInstance.CloseAsync();
+
 		StateHasChanged();
 	}
 
@@ -180,12 +241,12 @@
 	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
 	protected virtual void Dispose(bool disposing)
 	{
-		if (disposing && _viewModel is not null)
+		if (disposing && Content is not null)
 		{
-			_viewModel.PropertyChanged -= OnViewModelPropertyChanged;
-			_viewModel.Closed -= OnViewModelClosed;
+			Content.PropertyChanged -= OnViewModelPropertyChanged;
+			Content.Closed -= OnViewModelClosed;
 			UnsubscribeFromViewModelCommands();
-			_viewModel.Dispose();
+			Content.Dispose();
 		}
 
 		// free native resources if there are any.

@@ -1,8 +1,8 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -69,18 +69,25 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Browse_Tapped(object? sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetRequiredService<IFileService<FileResult>>() is { } fileService)
+        try
         {
-            var languageService = ServiceLocator.Default.GetRequiredService<ILanguageService>();
-            var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
-
-            if (result is not null && result.Count > 0)
+            if (Application.Services.GetRequiredService<IFileService<FileResult>>() is { } fileService)
             {
-                FileBytes = result.First().File;
-                ContentType = result.First().FilePath.ToContentType();
-                FileName = result.First().FileName;
-                DateTime = System.DateTime.Now;
+                var languageService = Application.Services.GetRequiredService<ILanguageService>();
+                var result = await fileService.BrowseFileAsync($"{languageService.GetString("Images")} (Jpeg, Gif, Png, WebP)|*.jpg; *.jpeg; *.gif; *.png; *.webp");
+
+                if (result is not null && result.Count > 0)
+                {
+                    FileBytes = await result.First().GetFileAsync();
+                    ContentType = result.First().FilePath.ToContentType();
+                    FileName = result.First().FileName;
+                    DateTime = System.DateTime.Now;
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ImageBrowser error: {ex.Message}");
         }
     }
 
@@ -90,17 +97,24 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Camera_Tapped(object? sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetRequiredService<ICameraService>() is { } cameraService)
+        try
         {
-            var result = await cameraService.TakePictureAsync();
-
-            if (result is not null)
+            if (Application.Services.GetRequiredService<ICameraService>() is { } cameraService)
             {
-                FileBytes = result.File;
-                ContentType = result.FilePath.ToContentType();
-                FileName = result.FileName;
-                DateTime = System.DateTime.Now;
+                var result = await cameraService.TakePictureAsync();
+
+                if (result is not null)
+                {
+                    FileBytes = await result.GetFileAsync();
+                    ContentType = result.FilePath.ToContentType();
+                    FileName = result.FileName;
+                    DateTime = System.DateTime.Now;
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ImageBrowser error: {ex.Message}");
         }
     }
 
@@ -119,13 +133,20 @@ public sealed partial class ImageBrowser : UserControl
     /// <returns>A Task&lt;System.Threading.Tasks.Task&gt; representing the asynchronous operation.</returns>
     private async void Button_Paste_Tapped(object? sender, TappedRoutedEventArgs e)
     {
-        if (ServiceLocator.Default.GetRequiredService<IClipboardService>() is { } clipboardService &&
-            await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
+        try
         {
-            FileBytes = imageResult.FileBytes;
-            ContentType = imageResult.ContentType!;
-            FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
-            DateTime = System.DateTime.Now;
+            if (Application.Services.GetRequiredService<IClipboardService>() is { } clipboardService &&
+                await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
+            {
+                FileBytes = imageResult.FileBytes;
+                ContentType = imageResult.ContentType!;
+                FileName = $"FROM_CLIPBOARD_{System.DateTime.Now}";
+                DateTime = System.DateTime.Now;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ImageBrowser error: {ex.Message}");
         }
     }
 }

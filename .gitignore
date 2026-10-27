@@ -336,3 +336,20 @@ ASALocalRun/
 _site/
 .claude/settings.local.json
 .claude/worktrees/
+
+# Template-generated junction targets (created by sync-skills.py / sync-agents.py)
+.claude/skills/
+.claude/agents/
+.github/skills/
+.github/agents/
+.reasonix/skills/
+.reasonix/agents/
+.pi/skills/
+.pi/agents/
+.pi/chains/
+
+# DeepSeek session swap backup (crash recovery)
+CLAUDE.md.deepseek-backup
+
+# Agent scratch area (probes, screenshots, throwaway scripts)
+.ai/tmp/

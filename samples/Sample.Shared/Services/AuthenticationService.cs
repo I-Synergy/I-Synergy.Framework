@@ -1,78 +1,39 @@
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
 using Sample.Models;
 
 namespace Sample.Services;
 
 /// <summary>
-/// Fake/Demo Authentication Service for sample applications.
-/// Implements the <see cref="IAuthenticationService" />
-/// Provides event-driven authentication state management.
-/// 
-/// Security Note: This is a DEMO service only. It accepts ANY username/password combination
-/// for testing purposes. Never use this in production.
+/// Demo authentication service for sample applications.
+/// Accepts any username/password combination for testing purposes.
+/// On sign-in, sets the profile on the current context and sends <see cref="UserSignedInMessage"/>.
+/// On sign-out, clears the profile and sends <see cref="UserSignedOutMessage"/>.
+///
+/// Security Note: DEMO ONLY — never use in production.
 /// </summary>
-/// <seealso cref="IAuthenticationService" />
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService : Sample.Abstractions.Services.IAuthenticationService
 {
-    private readonly IScopedContextService _scopedContextService;
+    private readonly IContext _context;
+    private readonly IMessengerService _messengerService;
     private readonly ILogger _logger;
 
-    /// <summary>
-    /// Raised when authentication succeeds (user logged in).
-    /// The authentication state has been updated in the context.
-    /// </summary>
-    public event EventHandler<AuthenticationSuccessEventArgs>? AuthenticationSucceeded;
-
-    /// <summary>
-    /// Raised when authentication fails or user logs out.
-    /// The context has been cleared.
-    /// </summary>
-    public event EventHandler<EventArgs>? AuthenticationFailed;
-
-    /// <summary>
-    /// Determines if a user is currently authenticated.
-    /// </summary>
-    public bool IsAuthenticated { get; private set; }
+    public bool IsAuthenticated => _context.IsAuthenticated;
+    public IProfile? CurrentProfile => _context.Profile;
 
     public AuthenticationService(
-            IScopedContextService scopedContextService,
-         ILogger<AuthenticationService> logger)
+        IContext context,
+        IMessengerService messengerService,
+        ILogger<AuthenticationService> logger)
     {
-        _scopedContextService = scopedContextService;
+        _context = context;
+        _messengerService = messengerService;
         _logger = logger;
-        _logger.LogTrace("AuthenticationService instance created with ID: {InstanceId}", Guid.NewGuid());
     }
 
-    public Task AuthenticateWithApiKeyAsync(string apiKey, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task AuthenticateWithClientCredentialsAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task AuthenticateWithRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
-    {
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Demo authentication that accepts any username/password combination.
-    /// 
-    /// Security: DEMO ONLY - Never use in production!
-    /// This method accepts any credentials for testing purposes and creates
-    /// a profile with realistic demo data.
-    /// </summary>
-    /// <param name="username">Any username (for demo purposes)</param>
-    /// <param name="password">Any password (for demo purposes)</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task that completes when authentication is processed</returns>
     public Task AuthenticateWithUsernamePasswordAsync(
         string username,
         string password,
@@ -80,7 +41,6 @@ public class AuthenticationService : IAuthenticationService
     {
         _logger.LogTrace("Demo authentication attempt for user: {Username}", username);
 
-        // Create profile with demo data
         var profile = new Profile
         {
             Token = new Token
@@ -91,95 +51,66 @@ public class AuthenticationService : IAuthenticationService
                 ExpiresIn = 3600,
                 TokenType = "Bearer"
             },
-            AccountId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
-            Description = $"Demo Account - {username}",
+            UserId = Guid.NewGuid(),
+            TenantId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+            Name = $"Demo User - {username}",
             TimeZoneId = "Europe/Amsterdam",
             CountryCode = "NL",
             CultureCode = "nl-NL",
-            UserId = Guid.NewGuid(),
-            Username = username,
             Email = $"{username}@demo.com",
             Roles = new List<string> { "Administrator", "User" },
             Features = new List<string> { "Dashboard", "Settings", "Admin" },
-            Expiration = DateTimeOffset.Now.AddHours(24)
+            Expiration = DateTimeOffset.Now.AddHours(24),
+            Organizations = new List<Organization>
+            {
+                new Organization
+                {
+                    OrganizationId = Guid.Parse("{79C13C79-B50B-4BEF-B796-294DED5676BB}"),
+                    Name = "Demo Organization"
+                }
+            }
         };
 
-        // Set profile in context
-        _scopedContextService.GetRequiredService<IContext>().Profile = profile;
-
-        // Validate and raise events
-        ValidateToken(profile.Token);
+        _context.Profile = profile;
+        _messengerService.Send(new UserSignedInMessage(profile));
 
         return Task.CompletedTask;
     }
 
-    public Task SignOutAsync()
+    public Task<bool> TryRestoreSessionAsync(CancellationToken cancellationToken = default)
+        => Task.FromResult(false);
+
+    public Task SignInAsync(CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
+
+    public Task SignOutAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogTrace("Demo sign out");
-
-        _scopedContextService.CreateNewScope();
-        ValidateToken(null);
-
+        _context.Profile = null;
+        _messengerService.Send(new UserSignedOutMessage());
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Validates the token and raises appropriate authentication events.
-    /// </summary>
-    /// <param name="token">The authentication token (null if authentication failed/user logged out).</param>
-    private void ValidateToken(Token? token)
+    public Task SwitchOrganizationAsync(Guid organizationId, CancellationToken cancellationToken = default)
     {
-        if (token is not null)
-        {
-            _logger.LogTrace("Authentication succeeded, raising AuthenticationSucceeded event");
-            IsAuthenticated = true;
-            RaiseAuthenticationSucceeded();
-        }
-        else
-        {
-            _logger.LogTrace("Authentication failed, raising AuthenticationFailed event");
-            IsAuthenticated = false;
-            RaiseAuthenticationFailed();
-        }
+        if (_context.Profile is not { } profile)
+            return Task.CompletedTask;
+
+        // Validate: must be either switching to personal context (UserId) or to an org in the list
+        var isPersonalContext = organizationId == profile.UserId;
+        var isKnownOrg = profile.Organizations.Any(o => o.OrganizationId == organizationId);
+
+        if (!isPersonalContext && !isKnownOrg)
+            return Task.CompletedTask;
+
+        profile.TenantId = organizationId;
+        _messengerService.Send(new TenantSwitchedMessage(organizationId));
+
+        _logger.LogTrace("Demo tenant switched to: {TenantId}", organizationId);
+        return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Raises the AuthenticationSucceeded event and handles any exceptions from subscribers.
-    /// </summary>
-    private void RaiseAuthenticationSucceeded()
-    {
-        try
-        {
-            AuthenticationSucceeded?.Invoke(this, new AuthenticationSuccessEventArgs(shouldRemember: false));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in AuthenticationSucceeded event handlers");
-        }
-    }
-
-    /// <summary>
-    /// Raises the AuthenticationFailed event and handles any exceptions from subscribers.
-    /// </summary>
-    private void RaiseAuthenticationFailed()
-    {
-        try
-        {
-            AuthenticationFailed?.Invoke(this, EventArgs.Empty);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in AuthenticationFailed event handlers");
-        }
-    }
-
-    /// <summary>
-    /// Generates a demo token for testing purposes.
-    /// This is NOT a real JWT token, just a random string for demo use.
-    /// </summary>
-    private static string GenerateToken()
-    {
-        return Convert.ToBase64String(Guid.NewGuid().ToByteArray()) +
-          Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-    }
+    private static string GenerateToken() =>
+        Convert.ToBase64String(Guid.NewGuid().ToByteArray()) +
+        Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 }

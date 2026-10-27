@@ -33,8 +33,7 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection</param>
     /// <param name="assemblies">Assemblies to scan</param>
     /// <returns>Service collection for chaining</returns>
-    [RequiresUnreferencedCode("Assembly scanning for CQRS handlers uses reflection and is not AOT-compatible. Use the source-generated AddCQRSHandlers() extension method instead.")]
-    [RequiresDynamicCode("Assembly scanning for CQRS handlers uses reflection and is not AOT-compatible. Use the source-generated AddCQRSHandlers() extension method instead.")]
+    [RequiresUnreferencedCode("Scans assemblies with GetExportedTypes()/GetInterfaces() to find ICommandHandler/IQueryHandler implementors; not trim-compatible. Types not otherwise referenced by the application may already have been removed by the trimmer.")]
     public static IServiceCollection AddHandlers(this IServiceCollection services, params Assembly[] assemblies)
     {
         RegisterCommandHandlers(services, assemblies);
@@ -48,8 +47,15 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection</param>
     /// <returns>Service collection for chaining</returns>
-    [RequiresUnreferencedCode("Decorator registration uses runtime type manipulation and is not AOT-compatible.")]
-    [RequiresDynamicCode("Decorator registration uses MakeGenericType and is not AOT-compatible.")]
+    /// <remarks>
+    /// Not NativeAOT-compatible. Builds decorator types with MakeGenericType for whatever
+    /// ICommandHandler&lt;,&gt; instantiations happen to be registered at runtime -- an
+    /// instantiation not seen at compile time throws under NativeAOT. There is currently no
+    /// AOT-safe alternative for this method (would require a source generator that doesn't
+    /// exist yet in this repo); avoid calling it from a NativeAOT-published app.
+    /// </remarks>
+    [RequiresDynamicCode("Uses MakeGenericType to construct NotificationCommandHandlerDecorator<> instantiations at runtime; not supported under NativeAOT.")]
+    [RequiresUnreferencedCode("Reflects over registered ICommandHandler<> service descriptors; not trim-compatible.")]
     public static IServiceCollection AddCommandNotifications(this IServiceCollection services)
     {
         // Get all registered command handler types
@@ -91,8 +97,15 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection</param>
     /// <returns>Service collection for chaining</returns>
-    [RequiresUnreferencedCode("Decorator registration uses runtime type manipulation and is not AOT-compatible.")]
-    [RequiresDynamicCode("Decorator registration uses MakeGenericType and is not AOT-compatible.")]
+    /// <remarks>
+    /// Not NativeAOT-compatible. Builds decorator types with MakeGenericType for whatever
+    /// ICommandHandler&lt;&gt; instantiations happen to be registered at runtime -- an
+    /// instantiation not seen at compile time throws under NativeAOT. There is currently no
+    /// AOT-safe alternative for this method (would require a source generator that doesn't
+    /// exist yet in this repo); avoid calling it from a NativeAOT-published app.
+    /// </remarks>
+    [RequiresDynamicCode("Uses MakeGenericType to construct LoggingCommandHandlerDecorator<> instantiations at runtime; not supported under NativeAOT.")]
+    [RequiresUnreferencedCode("Reflects over registered ICommandHandler<> service descriptors; not trim-compatible.")]
     public static IServiceCollection AddCQRSLogging(this IServiceCollection services)
     {
         // Get all registered command handler types
@@ -114,16 +127,12 @@ public static class ServiceCollectionExtensions
     }
 
     // Required for decorator pattern - helper extension method
-    [RequiresUnreferencedCode("Uses ActivatorUtilities.CreateInstance which requires unreferenced code.")]
-    [RequiresDynamicCode("Uses ActivatorUtilities.CreateInstance which requires dynamic code.")]
     private static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
         return services.Decorate(typeof(TService), typeof(TDecorator));
     }
 
-    [RequiresUnreferencedCode("Uses ActivatorUtilities.CreateInstance which requires unreferenced code.")]
-    [RequiresDynamicCode("Uses ActivatorUtilities.CreateInstance which requires dynamic code.")]
     private static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
     {
         var descriptors = services.Where(s => s.ServiceType == serviceType).ToList();
@@ -167,8 +176,6 @@ public static class ServiceCollectionExtensions
         return ActivatorUtilities.GetServiceOrCreateInstance(serviceProvider, descriptor.ImplementationType);
     }
 
-    [RequiresUnreferencedCode("Assembly scanning for command handlers uses reflection and may not work after trimming.")]
-    [RequiresDynamicCode("Assembly scanning for command handlers uses reflection and is not AOT-compatible.")]
     private static void RegisterCommandHandlers(IServiceCollection services, Assembly[] assemblies)
     {
         // Find all command handler implementations
@@ -188,8 +195,6 @@ public static class ServiceCollectionExtensions
         }
     }
 
-    [RequiresUnreferencedCode("Assembly scanning for query handlers uses reflection and may not work after trimming.")]
-    [RequiresDynamicCode("Assembly scanning for query handlers uses reflection and is not AOT-compatible.")]
     private static void RegisterQueryHandlers(IServiceCollection services, Assembly[] assemblies)
     {
         // Find all query handler implementations

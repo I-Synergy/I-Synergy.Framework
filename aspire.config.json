@@ -1,5 +1,10 @@
 {
-    "appHost": {
-        "path": "samples\\Sample.AppHost\\Sample.AppHost.csproj"
-    }
+  "$schema": "https://aspire.dev/reference/cli/configuration/schema.json",
+  "appHost": {
+    "path": "samples\\Sample.AppHost\\Sample.AppHost.csproj"
+  },
+  "sdk": {
+    "version": "17.0.0-preview.1.26524.2"
+  },
+  "channel": "daily"
 }

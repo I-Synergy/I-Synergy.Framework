@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
@@ -7,7 +8,6 @@ using ISynergy.Framework.Mvvm.Extensions;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mvvm.ViewModels;
 
@@ -105,7 +105,7 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
         ILogger<ViewModel> logger)
     {
         _commonServices = commonServices;
-        _commonServices.ScopedContextService.ScopedChanged += ScopedContextService_ScopedChanged;
+        _commonServices.MessengerService.Register<UserSignedInMessage>(this, msg => { _ = OnUserSignedInAsync(msg); });
 
         _logger = logger;
 
@@ -118,21 +118,13 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
         _logger.LogTrace(GetType().Name);
     }
 
-    private async void ScopedContextService_ScopedChanged(object? sender, Core.Events.ReturnEventArgs<bool> e)
+    private async Task OnUserSignedInAsync(UserSignedInMessage message)
     {
-        if (e.Value)
-        {
-            IsInitialized = false;
+        IsInitialized = false;
+        Cleanup();
 
-            // Clear existing data
-            Cleanup();
-
-            // Reinitialize with new scope if needed
-            if (!IsDisposed)
-            {
-                await InitializeAsync();
-            }
-        }
+        if (!IsDisposed)
+            await InitializeAsync();
     }
 
     /// <summary>
@@ -157,7 +149,6 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
     /// It is not AOT-compatible. In AOT-published applications, suppress IL2026 with a justified pragma
     /// or use a static lookup dictionary for enum descriptions.
     /// </remarks>
-    [RequiresUnreferencedCode("Enum field custom attribute lookup uses runtime reflection.")]
     public string GetEnumDescription(Enum value)
     {
         Argument.IsNotNull(value);
@@ -254,9 +245,12 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
 
     protected override void Dispose(bool disposing)
     {
+        if (_disposed)
+            return;
+
         if (disposing)
         {
-            _commonServices.ScopedContextService.ScopedChanged -= ScopedContextService_ScopedChanged;
+            _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
 
             PropertyChanged -= OnPropertyChanged;
 
@@ -267,34 +261,30 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
             // Clear commands
             CloseCommand?.Dispose();
             CancelCommand?.Dispose();
-
-            base.Dispose(disposing);
         }
+
+        base.Dispose(disposing);
     }
 
     /// <summary>
     /// Called when navigating away from this ViewModel.
     /// Cancel any running commands if needed.
     /// </summary>
-    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     public virtual void OnNavigatedFrom() => CancelRunningCommands();
 
     /// <summary>
     /// Called when navigating to this ViewModel.
     /// Reset command states.
     /// </summary>
-    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     public virtual void OnNavigatedTo() => ResetCommandStates();
 
     /// <summary>
     /// Cancels all running commands in this ViewModel.
     /// </summary>
-    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     protected virtual void CancelRunningCommands() => this.CancelAllCommands();
 
     /// <summary>
     /// Resets the state of commands when returning to this ViewModel.
     /// </summary>
-    [RequiresUnreferencedCode("ViewModel command discovery uses runtime reflection over property types.")]
     protected virtual void ResetCommandStates() => this.ResetAllCommandStates();
 }

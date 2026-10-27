@@ -1,12 +1,13 @@
-using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Events;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Constants;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Controls;
+using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
 using Microsoft.Extensions.Configuration;
@@ -14,11 +15,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 #pragma warning disable IDE0130, S1200
 
@@ -36,46 +38,78 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected readonly ISettingsService _settingsService;
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly ILogger<Application> _logger;
+    protected readonly IThemeService? _themeService;
 
     protected readonly ApplicationFeatures? _features;
+    protected readonly SplashScreenOptions _splashScreenOptions;
 
+    /// <summary>
+    /// Resource key used by <see cref="LoadingView"/> and the main window for the splash/surface
+    /// background. Define it in application resources to theme the splash screen; when it is absent
+    /// the system window brush is used.
+    /// </summary>
+    public const string SplashBackgroundBrushKey = "SplashBackgroundBrush";
+
+    protected IServiceProvider? _services;
+    protected LoadingView? _loadingView;
     protected bool _isShuttingDown = false;
 
-    public event EventHandler<ReturnEventArgs<bool>>? ApplicationInitialized;
-    public event EventHandler<ReturnEventArgs<bool>>? ApplicationLoaded;
+    private Task? Initialize { get; set; }
+    private int lastErrorMessage = 0;
 
-    public virtual void RaiseApplicationInitialized() => ApplicationInitialized?.Invoke(this, new ReturnEventArgs<bool>(true));
-    public virtual void RaiseApplicationLoaded() => ApplicationLoaded?.Invoke(this, new ReturnEventArgs<bool>(true));
+    public static IServiceProvider Services
+    {
+        get
+        {
+            if (Application.Current is Application app)
+                return app._services!;
+
+            throw new InvalidOperationException("Services not available.");
+        }
+        internal set
+        {
+            if (Application.Current is Application app)
+                app._services = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the main window uses the framework's borderless
+    /// window chrome (the app renders its own header and caption buttons).
+    /// </summary>
+    protected virtual bool UseCustomWindowChrome => false;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    protected Application()
+    protected Application(SplashScreenOptions? splashScreenOptions = null)
         : base()
     {
+        _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
         var host = CreateHostBuilder() // NOSONAR
-           .Build()
-           .SetLocatorProvider();
+           .Build();
 
-        var serviceProvider = host.Services;
-        _logger = serviceProvider.GetRequiredService<ILogger<Application>>();
+        Services = host.Services;
+        _logger = Services.GetRequiredService<ILogger<Application>>();
 
         _logger.LogTrace("Setting up services and global exception handler.");
 
-        _commonServices = serviceProvider.GetRequiredService<ICommonServices>();
-        _dialogService = serviceProvider.GetRequiredService<IDialogService>();
-        _navigationService = serviceProvider.GetRequiredService<INavigationService>();
-        _exceptionHandlerService = serviceProvider.GetRequiredService<IExceptionHandlerService>();
-        _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
-        _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
-        var messengerService = serviceProvider.GetRequiredService<IMessengerService>();
+        _commonServices = Services.GetRequiredService<ICommonServices>();
+        _dialogService = Services.GetRequiredService<IDialogService>();
+        _navigationService = Services.GetRequiredService<INavigationService>();
+        _exceptionHandlerService = Services.GetRequiredService<IExceptionHandlerService>();
+        _settingsService = Services.GetRequiredService<ISettingsService>();
+        _lifecycleService = Services.GetRequiredService<IApplicationLifecycleService>();
+        _themeService = Services.GetService<IThemeService>();
+        var messengerService = Services.GetRequiredService<IMessengerService>();
 
-        _features = serviceProvider.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+        _features = Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
         AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
+        CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
         // Pass a timeout to limit the execution time.
         // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -83,7 +117,7 @@ public abstract class Application : System.Windows.Application, IDisposable
 
         _commonServices.BusyService.StartBusy();
 
-        if (_settingsService.LocalSettings is not null)
+        if (_settingsService.LocalSettings is not null && !string.IsNullOrEmpty(_settingsService.LocalSettings.Language))
             _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
         _lifecycleService.ApplicationLoaded += OnApplicationLoaded;
@@ -121,16 +155,15 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "ConfigurationBinder.GetValue<T> with a primitive string type is safe at runtime even when trimmed.")]
     protected virtual void InitializeEnvironmentVariables()
     {
         try
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+            var configuration = Services.GetRequiredService<IConfiguration>();
 
-            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+            var environmentFromConfig = configuration[nameof(Environment)];
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {
@@ -192,8 +225,6 @@ public abstract class Application : System.Windows.Application, IDisposable
     }
 
 
-    protected abstract void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e);
-
     /// <summary>
     /// Handles the dispatcher unhandled exception.
     /// </summary>
@@ -216,16 +247,18 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <param name="e"></param>
     public virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
-        // Ignore task cancellation exceptions during shutdown
-        if (e.Exception is OperationCanceledException || e.Exception is TaskCanceledException)
+        // Skip IOException wrapping SocketException with OperationAborted/ConnectionAborted,
+        // which occurs when the OS suspends in-flight socket reads while the app is backgrounded.
+        // Skip TaskCanceledException and OperationCanceledException; task/operation cancellation is routine, not an error.
+        if (e.Exception is IOException ioEx && ioEx.InnerException is SocketException socketEx
+                && (socketEx.SocketErrorCode == SocketError.OperationAborted || socketEx.SocketErrorCode == SocketError.ConnectionAborted)
+            || e.Exception is OperationCanceledException)
+            return;
+
+        if (e.Exception.HResult != lastErrorMessage)
         {
-            // Check if we're in the process of shutting down
-            if (_isShuttingDown)
-                return; // Ignore the exception
-        }
-        else
-        {
-            Debug.WriteLine(e.Exception.ToMessage(Environment.StackTrace));
+            lastErrorMessage = e.Exception.HResult;
+            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -258,6 +291,21 @@ public abstract class Application : System.Windows.Application, IDisposable
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
 
+    /// <summary>
+    /// Handles an exception thrown by a synchronous relay command's execute delegate
+    /// (e.g. a plain <c>RelayCommand</c> bound to a UI control). Routing it here instead of
+    /// letting it propagate synchronously avoids an unhandled exception on the UI thread.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void CommandExceptionDispatcher_UnhandledCommandException(object? sender, CommandExceptionEventArgs e)
+    {
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleException(e.Exception);
+        else
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+    }
+
     protected override void OnExit(ExitEventArgs e)
     {
         _isShuttingDown = true;
@@ -265,18 +313,15 @@ public abstract class Application : System.Windows.Application, IDisposable
     }
 
     /// <summary>
-    /// LoadAssembly the application.
+    /// Initializes the application asynchronously.
     /// </summary>
-    /// <example>
-    /// <code>
-    ///     await base.InitializeApplicationAsync();
-    ///     // wait 5 seconds before showing the main window...
-    ///     await Task.Delay(5000);
-    ///     await _commonServices.ScopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
-    /// </code>
-    /// </example>
+    private void InitializeApplication() => Initialize = InitializeApplicationAsync();
+
+    /// <summary>
+    /// Initializing the application.
+    /// </summary>
     /// <returns></returns>
-    public abstract Task InitializeApplicationAsync();
+    protected abstract Task InitializeApplicationAsync();
 
     /// <summary>
     /// Get a new list of additional resource dictionaries which can be merged.
@@ -286,13 +331,58 @@ public abstract class Application : System.Windows.Application, IDisposable
         new List<ResourceDictionary>();
 
     /// <summary>
+    /// Creates a loading view page and stores a reference for completion tracking.
+    /// </summary>
+    private LoadingView CreateLoadingView()
+    {
+        _loadingView = new LoadingView(_commonServices, _splashScreenOptions);
+        return _loadingView;
+    }
+
+    /// <summary>
     /// Invoked when the application is launched. Override this method to perform application initialization and to display initial content in the associated Window.
     /// </summary>
     /// <param name="e">Event data for the event.</param>
     protected override void OnStartup(StartupEventArgs e)
     {
         MainWindow = new Window();
+
+        if (UseCustomWindowChrome)
+        {
+            MainWindow.WindowStyle = WindowStyle.None;
+            MainWindow.ResizeMode = ResizeMode.CanResize;
+
+            var windowChrome = new System.Windows.Shell.WindowChrome
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(6),
+                GlassFrameThickness = new Thickness(0),
+                CornerRadius = new CornerRadius(8),
+                UseAeroCaptionButtons = false
+            };
+
+            System.Windows.Shell.WindowChrome.SetWindowChrome(MainWindow, windowChrome);
+
+            // Rounded corners only while the window is restored; maximized windows are square.
+            MainWindow.StateChanged += (_, _) =>
+            {
+                var normalMaximized = string.Equals(MainWindow.Tag as string, "NormalMaximized", StringComparison.Ordinal);
+                windowChrome.CornerRadius = MainWindow.WindowState == WindowState.Normal && !normalMaximized
+                    ? new CornerRadius(8)
+                    : new CornerRadius(0);
+            };
+        }
+
         MainWindow.Activate();
+
+        // Give the window a themed surface before the first page renders. Without this the window
+        // falls back to the system window brush and the splash (a translucent scrim page) shows up
+        // grey regardless of the selected theme. Consumers can theme the splash by defining
+        // "SplashBackgroundBrush"; otherwise the system window brush is used.
+        if (TryFindResource(SplashBackgroundBrushKey) is Brush)
+            MainWindow.SetResourceReference(System.Windows.Window.BackgroundProperty, SplashBackgroundBrushKey);
+        else
+            MainWindow.Background = SystemColors.WindowBrush;
 
         var rootFrame = MainWindow.Content as Frame;
 
@@ -311,14 +401,32 @@ public abstract class Application : System.Windows.Application, IDisposable
                 }
             }
 
+            // Apply theme colors to merged resource dictionaries
+            _themeService?.ApplyTheme();
+
             // Place the frame in the current Window
             MainWindow.Content = rootFrame;
         }
 
         rootFrame.NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden;
 
+        MainWindow.Title = _commonServices.InfoService.ProductName;
+
+        // Navigate to loading view — its Loaded event fires SignalApplicationUIReady()
+        rootFrame.Navigate(CreateLoadingView());
+
         MainWindow.Show();
         MainWindow.Activate();
+
+        // Apply RTL flow direction from saved settings so every WPF app
+        // gets correct layout from the first frame.
+        var language = _settingsService?.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
+        if (MainWindow is FrameworkElement wpfRoot)
+        {
+            wpfRoot.ApplyFlowDirection(language);
+        }
+
+        InitializeApplication();
     }
 
     /// <summary>
@@ -350,7 +458,7 @@ public abstract class Application : System.Windows.Application, IDisposable
     {
         if (disposing)
         {
-            var messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
+            var messengerService = Services.GetRequiredService<IMessengerService>();
             messengerService.Unregister<ShowInformationMessage>(this);
             messengerService.Unregister<ShowWarningMessage>(this);
             messengerService.Unregister<ShowErrorMessage>(this);
@@ -359,8 +467,9 @@ public abstract class Application : System.Windows.Application, IDisposable
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
             DispatcherUnhandledException -= BaseApplication_DispatcherUnhandledException;
+            CommandExceptionDispatcher.UnhandledCommandException -= CommandExceptionDispatcher_UnhandledCommandException;
 
-            ApplicationLoaded -= OnApplicationLoaded;
+            _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
         }
 
         // free native resources if there are any.

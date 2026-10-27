@@ -44,6 +44,8 @@ public static class {Entity}Endpoints
             .WithSummary("Create a new {entity}")
             .WithDescription("Creates a new {entity} with the provided details")
             .Accepts<{Entity}>("application/json")
+            .WithValidation<{Entity}>()
+            .Produces<Guid>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesValidationProblem();
 
@@ -51,12 +53,15 @@ public static class {Entity}Endpoints
         group.MapGet("{id}", Get{Entity}ByIdAsync)
             .WithSummary("Get {entity} by ID")
             .WithDescription("Retrieves a specific {entity} by its unique identifier")
-            .Produces(StatusCodes.Status401Unauthorized);
+            .Produces<{Entity}>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound);
 
         // GET: Get list
         group.MapGet("", Get{Entity}ListAsync)
             .WithSummary("Get all {entities}")
             .WithDescription("Retrieves a paginated list of {entities}")
+            .Produces<List<{Entity}>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized);
 
         // PUT: Update
@@ -64,6 +69,8 @@ public static class {Entity}Endpoints
             .WithSummary("Update an existing {entity}")
             .WithDescription("Updates an existing {entity} with the provided details")
             .Accepts<{Entity}>("application/json")
+            .WithValidation<{Entity}>()
+            .Produces<bool>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesValidationProblem();
 
@@ -71,7 +78,9 @@ public static class {Entity}Endpoints
         group.MapDelete("{id}", Remove{Entity}Async)
             .WithSummary("Delete a {entity}")
             .WithDescription("Deletes a {entity} by its unique identifier")
-            .Produces(StatusCodes.Status401Unauthorized);
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound);
     }
 
     #region {Entity} Methods

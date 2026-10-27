@@ -1,26 +1,236 @@
-<c:View xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.WPF"  
-        x:Class="Sample.Views.ShellView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        mc:Ignorable="d" 
-        d:DesignHeight="450" d:DesignWidth="800"
-        Title="{Binding Title}">
+<c:View
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.WPF"
+    x:Class="Sample.Views.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.WPF"
+    xmlns:models="clr-namespace:ISynergy.Framework.Core.Models;assembly=ISynergy.Framework.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    Background="{DynamicResource AppBackgroundBrush}"
+    FontFamily="{StaticResource Figtree}"
+    mc:Ignorable="d"
+    d:DesignHeight="900" d:DesignWidth="1400">
 
+    <!-- Shell layout matching Sample.Maui: permanent sidebar, breadcrumb header and a
+         content host. The Syncfusion NavigationDrawer was removed on purpose. -->
     <Grid>
-        <syncfusion:SfNavigationDrawer x:Name="NavigationView" 
-                                   ItemsSource="{Binding PrimaryItems}"
-                                   DisplayMode="Compact"
-                                   DisplayMemberPath="Name"
-                                   IconMemberPath="Symbol"
-                                   ItemClicked="NavigationView_ItemClicked">
-            <syncfusion:SfNavigationDrawer.ContentView>
-                <Frame x:Name="ContentRootControl" NavigationUIVisibility="Hidden" Margin="10"/>
-            </syncfusion:SfNavigationDrawer.ContentView>
-        </syncfusion:SfNavigationDrawer>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="1" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <c:LoadingSpinner Visibility="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Message="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" />
+        <!-- Sidebar -->
+        <Border
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Background="{DynamicResource AppSurfaceBrush}">
+            <Grid Margin="16,24">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Brand -->
+                <StackPanel Grid.Row="0" Margin="8,0" Orientation="Horizontal">
+                    <Border Style="{StaticResource AppBrandTile}">
+                        <Path
+                            Width="20"
+                            Height="20"
+                            Fill="#FFFFFF"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Data="M3,3 H11 V11 H3 Z M13,3 H21 V11 H13 Z M3,13 H11 V21 H3 Z M13,13 H21 V21 H13 Z" />
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock
+                            FontFamily="{StaticResource Figtree}" FontWeight="Bold"
+                            FontSize="17"
+                            Foreground="{DynamicResource AppTextBrush}"
+                            Text="WPF Sample" />
+                        <TextBlock
+                            Style="{StaticResource AppSidebarSubtitle}"
+                            Text="{m:GetString ApplicationTagline}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Navigation rows -->
+                <ScrollViewer
+                    Grid.Row="2"
+                    Margin="0,20,0,0"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled">
+                    <ListBox
+                        x:Name="NavigationList"
+                        ItemsSource="{Binding PrimaryItems}"
+                        SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                        SelectionChanged="NavigationList_SelectionChanged"
+                        Style="{StaticResource AppNavList}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="models:NavigationItem">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="36" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        Width="36"
+                                        Height="36"
+                                        Background="{DynamicResource AppSurface2Brush}"
+                                        CornerRadius="10"
+                                        VerticalAlignment="Center">
+                                        <Path
+                                            Width="18"
+                                            Height="18"
+                                            Fill="{DynamicResource AppMutedBrush}"
+                                            Data="{Binding Icon, Converter={StaticResource StringToGeometryConverter}}"
+                                            Stretch="Uniform"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                                    </Border>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="12,0,0,0"
+                                        Style="{StaticResource AppSidebarName}"
+                                        Text="{Binding Name}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+
+                <!-- Footer: Help + version (same styling as the navigation rows) -->
+                <StackPanel Grid.Row="3" Margin="0,16,0,16">
+                    <Button
+                        Style="{StaticResource AppFooterLink}"
+                        Margin="0,0,0,4"
+                        Command="{Binding HelpCommand}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Width="36"
+                                Height="36"
+                                Background="{DynamicResource AppSurface2Brush}"
+                                CornerRadius="10"
+                                VerticalAlignment="Center">
+                                <TextBlock
+                                    FontFamily="{StaticResource FluentUI}"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource AppMutedBrush}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Text="&#xf63e;" />
+                            </Border>
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                Style="{StaticResource AppSidebarName}"
+                                Text="{m:GetString Help}" />
+                        </Grid>
+                    </Button>
+                    <TextBlock
+                        Style="{StaticResource AppMutedLabel}"
+                        Margin="8,4,8,0"
+                        Text="{Binding Version, StringFormat=v{0}}" />
+                    <TextBlock
+                        Style="{StaticResource AppMutedLabel}"
+                        Margin="8,0,8,4"
+                        Text="{Binding CopyrightText}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Sidebar divider -->
+        <Border
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Background="{DynamicResource AppBorderBrush}" />
+
+        <!-- Header -->
+        <Grid
+            x:Name="AppTitleBar"
+            Grid.Row="0"
+            Grid.Column="2"
+            Margin="32,0,0,0"
+            Background="Transparent"
+            MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource AppBreadcrumbLink}" Text="WPF Sample" />
+                <TextBlock Style="{StaticResource AppBreadcrumbLabel}" Text="/" Margin="8,0" />
+                <TextBlock Style="{StaticResource AppBreadcrumbCurrent}" Text="{Binding SelectedItem.Name}" />
+            </StackPanel>
+
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center">
+                <Button
+                    Style="{StaticResource AppIconButton}"
+                    FontFamily="{StaticResource FluentUI}"
+                    Command="{Binding ThemeCommand}"
+                    Content="{Binding ThemeIcon}"
+                    ToolTip="{m:GetString Theme}" />
+                <Button
+                    Style="{StaticResource AppIconButton}"
+                    FontFamily="{StaticResource FluentUI}"
+                    Command="{Binding SettingsCommand}"
+                    Content="&#xf588;"
+                    Margin="4,0,0,0"
+                    ToolTip="{m:GetString Settings}" />
+
+                <Border
+                    Width="1"
+                    Height="20"
+                    Margin="10,0"
+                    Background="{DynamicResource AppBorderBrush}" />
+
+                <Button
+                    Style="{StaticResource AppCaptionButton}"
+                    Content="&#xE921;"
+                    ToolTip="Minimize"
+                    Click="MinimizeWindow_Click" />
+                <Button
+                    x:Name="MaximizeButton"
+                    Style="{StaticResource AppCaptionButton}"
+                    Content="&#xE922;"
+                    ToolTip="Maximize"
+                    Click="MaximizeWindow_Click" />
+                <Button
+                    Style="{StaticResource AppCloseButton}"
+                    Content="&#xE8BB;"
+                    ToolTip="Close"
+                    Click="CloseWindow_Click" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Content host (the navigation service resolves this Frame) -->
+        <Frame
+            x:Name="ContentRootControl"
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="32,0,32,24"
+            NavigationUIVisibility="Hidden"
+            Background="Transparent" />
+
+        <!-- Shell-owned blade pane: blades opened from the shell dock here, above the
+             content frame but below the busy overlay. -->
+        <c:BladeHostView Grid.RowSpan="2" Grid.ColumnSpan="3" />
+
+        <c:LoadingSpinner
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="3"
+            Visibility="{Binding CommonServices.BusyService.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Message="{Binding CommonServices.BusyService.BusyMessage, Mode=OneWay}" />
     </Grid>
 </c:View>

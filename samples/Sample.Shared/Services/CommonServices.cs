@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using System.Diagnostics;
 
 namespace Sample.Services;
@@ -35,11 +36,6 @@ public class CommonServices : ICommonServices
     public IExceptionHandlerService ExceptionHandlerService { get; }
 
     /// <summary>
-    /// Gets the scoped context service.
-    /// </summary>
-    public IScopedContextService ScopedContextService { get; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="CommonServices"/> class.
     /// </summary>
     /// <param name="languageService"></param>
@@ -47,21 +43,18 @@ public class CommonServices : ICommonServices
     /// <param name="busyService">The busy.</param>
     /// <param name="messengerService"></param>
     /// <param name="exceptionHandlerService"></param>
-    /// <param name="scopedContextService"></param>
     public CommonServices(
         ILanguageService languageService,
         IInfoService infoService,
         IBusyService busyService,
         IMessengerService messengerService,
-        IExceptionHandlerService exceptionHandlerService,
-        IScopedContextService scopedContextService)
+        IExceptionHandlerService exceptionHandlerService)
     {
         LanguageService = languageService;
         InfoService = infoService;
         BusyService = busyService;
         MessengerService = messengerService;
         ExceptionHandlerService = exceptionHandlerService;
-        ScopedContextService = scopedContextService;
     }
 
     /// <summary>

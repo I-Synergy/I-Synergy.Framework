@@ -1,11 +1,12 @@
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
+using ISynergy.Framework.OpenTelemetry.Sentry.Converters;
 using ISynergy.Framework.OpenTelemetry.Sentry.Processors;
+using Microsoft.Extensions.Configuration;
 using OpenTelemetry.Logs;
+using OpenTelemetry.Trace;
 using Sentry.OpenTelemetry;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.OpenTelemetry.Sentry.Extensions;
 
@@ -29,16 +30,31 @@ public static class SentryTelemetryExtensions
     /// warnings at the call site if required.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("SentrySdk.Init may use reflection internally. Verify AOT compatibility with the Sentry SDK version in use.")]
-    [RequiresDynamicCode("Sentry SDK may require dynamic code generation.")]
     public static TelemetryBuilder AddSentryExporter(
         this TelemetryBuilder telemetryBuilder,
         Action<SentryOptions>? telemetryExporterOptions = null)
     {
         Argument.IsNotNull(telemetryBuilder);
 
+        // IConfiguration.Bind(object) uses reflection over the target's property graph, which
+        // NativeAOT trimming silently breaks (properties are left at their defaults instead of
+        // throwing) -- most importantly Dsn, which then reads as null/empty below and disables
+        // Sentry entirely with no error anywhere. Read each value explicitly instead.
         var options = new SentryOptions();
-        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+        var telemetrySection = telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection);
+        options.Dsn = telemetrySection.GetValue<string?>(nameof(SentryOptions.Dsn), options.Dsn);
+        options.Environment = telemetrySection.GetValue<string?>(nameof(SentryOptions.Environment), options.Environment);
+        options.Release = telemetrySection.GetValue<string?>(nameof(SentryOptions.Release), options.Release);
+        options.SampleRate = telemetrySection.GetValue<float?>(nameof(SentryOptions.SampleRate), options.SampleRate);
+        options.TracesSampleRate = telemetrySection.GetValue<double?>(nameof(SentryOptions.TracesSampleRate), options.TracesSampleRate);
+        options.MaxBreadcrumbs = telemetrySection.GetValue(nameof(SentryOptions.MaxBreadcrumbs), options.MaxBreadcrumbs);
+        options.Debug = telemetrySection.GetValue(nameof(SentryOptions.Debug), options.Debug);
+        options.AttachStacktrace = telemetrySection.GetValue(nameof(SentryOptions.AttachStacktrace), options.AttachStacktrace);
+        options.SendDefaultPii = telemetrySection.GetValue(nameof(SentryOptions.SendDefaultPii), options.SendDefaultPii);
+        options.IsGlobalModeEnabled = telemetrySection.GetValue(nameof(SentryOptions.IsGlobalModeEnabled), options.IsGlobalModeEnabled);
+        options.DeduplicateMode = telemetrySection.GetValue(nameof(SentryOptions.DeduplicateMode), options.DeduplicateMode);
+        options.MaxQueueItems = telemetrySection.GetValue(nameof(SentryOptions.MaxQueueItems), options.MaxQueueItems);
+        options.ShutdownTimeout = telemetrySection.GetValue(nameof(SentryOptions.ShutdownTimeout), options.ShutdownTimeout);
 
         telemetryExporterOptions?.Invoke(options);
 
@@ -49,12 +65,24 @@ public static class SentryTelemetryExtensions
         {
             options.Map(sentryOptions);
 
-            sentryOptions.UseOpenTelemetry();
+            // Register a custom JSON converter for KeyValuePair<,>. System.Text.Json cannot
+            // serialize KeyValuePair natively (its constructor parameter names are null).
+            // On iOS, the device context collected by Sentry contains KeyValuePair<string, bool>
+            // values that would otherwise cause a NotSupportedException during serialization.
+            //
+            // This goes through Sentry's own registration point rather than
+            // JsonSerializerOptions.Default: that instance is created read-only, so
+            // Converters.Add on it throws InvalidOperationException ("...is read-only or has
+            // already been used in serialization or deserialization") and faults every host
+            // startup that configures a DSN.
+            sentryOptions.AddJsonConverter(new KeyValuePairJsonConverterFactory());
+
+            sentryOptions.UseOtlp();
         });
 
         telemetryBuilder.OpenTelemetryBuilder.WithTracing(tracerProviderBuilder =>
         {
-            tracerProviderBuilder.AddSentry();
+            tracerProviderBuilder.AddSentryOtlpExporter(options.Dsn!);
         });
 
         telemetryBuilder.OpenTelemetryBuilder.WithMetrics(meterProviderBuilder =>

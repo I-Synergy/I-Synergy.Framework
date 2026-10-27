@@ -1,7 +1,9 @@
 # Migration Guide: Azure DevOps to GitHub Repository
 
 ## Overview
-This guide will help you migrate the I-Synergy.Framework repository from Azure DevOps to GitHub as the primary repository, while maintaining Azure DevOps Pipelines for CI/CD with a **strict PR-based workflow**.
+This guide will help you migrate the I-Synergy.Framework repository from Azure DevOps to GitHub as the primary repository and CI/CD owner (build and NuGet publishing run in GitHub Actions).
+
+> **Note:** Parts 3–5 below describe the older Azure Pipelines setup. They are only needed during a rollback; the current CI/CD lives in `.github/workflows/ci.yml` (see Part 11).
 
 ## Prerequisites
 - Administrator access to Azure DevOps project
@@ -411,6 +413,81 @@ If you need to rollback:
 1. Update SonarCloud project settings to recognize GitHub as source
 2. Re-authenticate SonarCloud with GitHub
 3. Verify project key and organization in `azure-pipelines.yml`
+
+---
+
+## Part 11: Move CI/CD to GitHub Actions
+
+The repository is built, tested, signed and published by `.github/workflows/ci.yml`. Azure Pipelines is no longer needed once the first GitHub release succeeds.
+
+### Step 11.1: One-time GitHub setup
+1. Settings → Environments → `production`: required reviewers, restrict deployment branches to `main`.
+2. Settings → Environments → `acceptance`: no protection rules — PR builds publish automatically.
+3. Settings → Secrets and variables → Actions → secret `NUGET_USER` (the nuget.org account name).
+4. Repository variables: `BUILD_CONFIGURATION=Release`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`,
+   `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE`, `TIMESTAMP_URL`.
+   No subscription ID is needed: signing only reads the certificate and signs with the key, which the
+   vault's access policy grants to the identity directly.
+   Use environment-scoped variables only if acceptance and production must sign with different
+   identities; environment values override repository values.
+
+### Step 11.2: Azure Key Vault (OIDC, no client secret)
+1. On the signing app registration add **two** federated credentials, issuer
+   `https://token.actions.githubusercontent.com`, audience `api://AzureADTokenExchange`:
+   - `repo:I-Synergy/I-Synergy.Framework:environment:acceptance`
+   - `repo:I-Synergy/I-Synergy.Framework:environment:production`
+2. The identity needs `certificates/get`, `certificates/list` and `keys/get`, `keys/sign` on the vault
+   (the existing `DevOpsCodeSigning` access policy already grants these).
+3. The workflow exchanges GitHub's OIDC token itself (`Fetch OIDC token for Key Vault`) and hands
+   `AZURE_CLIENT_ID`/`AZURE_TENANT_ID`/`AZURE_FEDERATED_TOKEN_FILE` to
+   `AzureSignTool -act WorkloadIdentityCredential`. There is deliberately no `azure/login` step: it
+   requires a subscription (or `allow-no-subscriptions`) and only authenticates the `az` CLI, which
+   signing does not use. A subscription ID is therefore not needed at all.
+4. The tool is the `AzureSignTool.Cli` global tool (command `AzureSignTool`), installed at a pinned
+   version in the workflow — it was previously published as `I-Synergy.Tools.Azure.SignTool`.
+
+### Step 11.3: NuGet.org trusted publishing
+1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository
+   `I-Synergy.Framework`, workflow `ci.yml`:
+   - Environment `acceptance` — PR preview packages.
+   - Environment `production` — release packages.
+2. The glob pattern matches **package IDs, not versions**. Use `I-Synergy.Framework*` (or `*`) on both
+   policies. A `*-preview` glob matches no package ID and leaves the short-lived key unable to push;
+   the `-preview` suffix is decided by `scripts/Set-VersionVariables.ps1`, not by the policy.
+3. Each workflow run exchanges a GitHub OIDC token for a short-lived API key (`NuGet/login@v1`), so
+   no long-lived key is stored. The policy's environment must match the job environment, which is
+   why both policies are needed.
+4. The `NUGET_USER` secret must be the **username of the account that created the policy**, not the
+   account that owns the packages. A policy created while signed in as a personal account but scoped
+   to `I-Synergy.Framework*` still answers to that personal username; sending `I-Synergy` returns
+   `HTTP 401 … No matching trust policy owned by user`.
+
+### Step 11.4: Cut over
+1. Push all branches and tags from Azure DevOps to GitHub (`git push github --all`, `git push github --tags --force`).
+2. Open a PR: `build` and the `acceptance` publish run, producing a signed `-preview` package on
+   nuget.org.
+3. Merge to `main`, approve the `production` environment, then verify the release packages are on
+   nuget.org and the `v<version>` tag exists on GitHub.
+4. Disable the Azure DevOps pipeline, then delete `azure-pipelines.yml`.
+
+### Step 11.5: What does not move
+Build history/logs, Azure DevOps variable groups, service connections and approval history stay in
+Azure DevOps; recreate the ACC/PROD distinction as the `acceptance`/`production` environments.
+
+### Step 11.6: Documentation site
+1. `docs/` is the site and the only source. `docs/_config.yml` sets the theme and enables
+   `jekyll-optional-front-matter` (the pages have no YAML front matter) and `jekyll-relative-links`
+   (pages link to each other with relative `.md` paths), so nothing is generated or rewritten.
+   `docs/index.md` is the landing page.
+2. Enable it once: Settings → Pages → *Deploy from a branch* → `main` / `docs`. The site appears at
+   `https://i-synergy.github.io/I-Synergy.Framework/`; no workflow, no token and no secret involved.
+3. `exclude` in `docs/_config.yml` keeps the internal working documents off the site
+   (`superpowers/`, `FRAMEWORK_REVIEW_*`, `SOLID_PRINCIPLES_ANALYSIS`, `POTENTIAL_ISSUES_AND_RISKS`,
+   `MVVM_AND_UI_FRAMEWORK_ISSUES_REPORT`, `ARCHITECTURAL_ISSUES_SUMMARY`,
+   `ASYNC_EXCEPTION_ISSUES_FIXED`). Add or remove entries there to change what is published.
+4. The Wiki tab is deliberately not used: it is a separate, flat `repo.wiki.git` that needs its own
+   token and would leave a second copy to drift. A sync workflow was prototyped and dropped for that
+   reason.
 
 ---
 

@@ -1,7 +1,8 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -14,34 +15,37 @@ namespace ISynergy.Framework.UI.WinUI.Services;
 public class NavigationServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<IExceptionHandlerService> _mockExceptionHandler;
+    private Mock<ICommonServices> _mockCommonServices;
+    private Mock<ILocalSettings> _mockLocalSettings;
+    private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
     private Mock<ILogger<NavigationService>> _mockLogger;
     private NavigationService _navigationService;
 
     public NavigationServiceExceptionHandlingTests()
     {
         _mockServiceProvider = new Mock<IServiceProvider>();
-        _mockScopedContextService = new Mock<IScopedContextService>();
         _mockExceptionHandler = new Mock<IExceptionHandlerService>();
+        _mockCommonServices = new Mock<ICommonServices>();
+        _mockLocalSettings = new Mock<ILocalSettings>();
+        _mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
         _mockLogger = new Mock<ILogger<NavigationService>>();
 
         _mockServiceProvider
             .Setup(x => x.GetService(typeof(IExceptionHandlerService)))
             .Returns(_mockExceptionHandler.Object);
 
-        ServiceLocator.SetLocatorProvider(_mockServiceProvider.Object);
-
         _navigationService = new NavigationService(
-            _mockScopedContextService.Object,
             _mockExceptionHandler.Object,
+            _mockCommonServices.Object,
+            _mockLocalSettings.Object,
+            _mockServiceScopeFactory.Object,
             _mockLogger.Object);
     }
 
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default.Dispose();
     }
 
     [TestMethod]
@@ -129,7 +133,7 @@ public class NavigationServiceExceptionHandlingTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("OnNavigatedTo")),
+                It.Is<It.IsAnyType>((v, t) => v!.ToString()!.Contains("OnNavigatedTo")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Never);

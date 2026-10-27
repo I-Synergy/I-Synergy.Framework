@@ -36,7 +36,7 @@ public class CreateBudgetHandler : IRequestHandler<CreateBudgetCommand, CreateBu
 }
 
 ✅ CORRECT - Direct CQRS
-public class CreateBudgetHandler : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
+public class CreateBudgetCommandHandler : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
 {
     public async Task<CreateBudgetResponse> HandleAsync(
         CreateBudgetCommand command,

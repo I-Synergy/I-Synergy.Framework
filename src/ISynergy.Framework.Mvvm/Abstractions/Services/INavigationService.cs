@@ -7,6 +7,14 @@ public interface INavigationService
     event EventHandler? BackStackChanged;
 
     bool CanGoBack { get; }
+
+    /// <summary>
+    /// Gets the type of the view model the navigation host currently shows, or
+    /// <see langword="null"/> when nothing has been navigated to yet. Shells use it to keep a
+    /// breadcrumb, selection or title in step with the navigation stack after a back navigation.
+    /// </summary>
+    Type? CurrentViewModelType { get; }
+
     Task GoBackAsync();
     Task CleanBackStackAsync(bool suppressEvent = false);
 
@@ -64,30 +72,4 @@ public interface INavigationService
     /// <returns></returns>
     Task NavigateModalAsync<TViewModel>(object? parameter = null)
         where TViewModel : class, IViewModel;
-
-    /// <summary>
-    /// Opens blade with a view retrieved from DI.
-    /// </summary>
-    /// <param name="owner">The owner.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task.</returns>
-    Task OpenBladeAsync(IViewModelBladeView owner, IViewModel viewmodel);
-
-    /// <summary>
-    /// Opens blade with a custom defined view.
-    /// </summary>
-    /// <typeparam name="TView"></typeparam>
-    /// <param name="owner"></param>
-    /// <param name="viewmodel"></param>
-    /// <returns></returns>
-    Task OpenBladeAsync<TView>(IViewModelBladeView owner, IViewModel viewmodel)
-        where TView : IView;
-
-    /// <summary>
-    /// Removes the blade asynchronous.
-    /// </summary>
-    /// <param name="owner">The owner.</param>
-    /// <param name="viewmodel">The viewmodel.</param>
-    /// <returns>Task.</returns>
-    void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel);
 }

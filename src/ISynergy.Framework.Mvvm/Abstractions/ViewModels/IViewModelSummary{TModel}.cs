@@ -20,7 +20,7 @@ public interface IViewModelSummary<TModel> : IViewModelSelectedItem<TModel>
     /// Gets or sets the Items property value.
     /// </summary>
     /// <value>The items.</value>
-    ObservableCollection<TModel> Items { get; set; }
+    ObservableCollection<TModel>? Items { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether [refresh on initialization].

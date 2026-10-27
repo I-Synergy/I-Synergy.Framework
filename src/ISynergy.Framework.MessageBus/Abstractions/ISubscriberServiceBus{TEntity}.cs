@@ -31,6 +31,6 @@ public interface ISubscriberServiceBus<TEntity>
     /// Validates the message.
     /// </summary>
     /// <param name="message">The message.</param>
-    /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+    /// <returns><c>true</c> if <paramref name="message"/> is a valid message for the subscriber; otherwise, <c>false</c>.</returns>
     bool ValidateMessage(TEntity message);
 }

@@ -1,11 +1,12 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
+using ISynergy.Framework.UI;
+using ISynergy.Framework.UI.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sample.Models;
 using Sample.Views;
@@ -21,6 +22,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     /// <summary>
     /// Gets the title.
@@ -44,17 +46,25 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     public ObservableCollection<TestItem> SelectedTestItems { get; set; } = [];
 
     /// <summary>
+    /// The shell-level blade host, so this page's blades are rendered by the shell pane and cover the
+    /// navigation pane instead of being confined to the page.
+    /// </summary>
+    private static BladeHostViewModel ShellBladeHost =>
+        Application.Services.GetRequiredService<BladeHostViewModel>();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="SelectionTestViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="bladeService"></param>
     /// <param name="logger"></param>
-    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<SelectionTestViewModel> logger)
-        : base(commonServices, logger)
+    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<SelectionTestViewModel> logger)        : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
 
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);
         SelectMultipleCommand = new AsyncRelayCommand(SelectMultipleAsync);
@@ -76,22 +86,13 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     }
 
 
-    private async Task ShowUnitsAsync()
-    {
-        TestViewModel vm = _commonServices.ScopedContextService.GetRequiredService<TestViewModel>();
-        vm.Submitted += Vm_Submitted;
-        await _dialogService.ShowDialogAsync(typeof(TestWindow), vm);
-    }
-
-    private async void Vm_Submitted(object? sender, SubmitEventArgs<object> e)
-    {
-        if (sender is TestViewModel vm)
-            vm.Submitted -= Vm_Submitted;
-
-        CanExecuteTest = !CanExecuteTest;
-
-        await _dialogService.ShowInformationAsync($"{e.Result} selected.");
-    }
+    private Task ShowUnitsAsync() =>
+        _dialogService.ShowDialogAsync<TestWindow, TestViewModel, object>(
+            async result =>
+            {
+                CanExecuteTest = !CanExecuteTest;
+                await _dialogService.ShowInformationAsync($"{result} selected.");
+            });
 
     public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -103,7 +104,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
 
     private async Task ShowDialogAsync(MessageBoxButtons buttons)
     {
-        MessageBoxResult result = await _dialogService.ShowMessageAsync(
+        MessageBoxResults result = await _dialogService.ShowMessageAsync(
                             $"Testing {buttons} Dialog",
                             "Test",
                             buttons);
@@ -115,59 +116,26 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// Selects the multiple asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    private Task SelectMultipleAsync()
-    {
-        ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
-        selectionVm.SetSelectionMode(SelectionModes.Multiple);
-        selectionVm.SetItems(Items);
-        selectionVm.SetSelectedItems(SelectedTestItems);
+    private Task SelectMultipleAsync() =>
+        _bladeService.OpenBladeAsync<ViewModelMultipleSelectionBlade<TestItem>, List<TestItem>>(
+            ShellBladeHost,
+            async items =>
+            {
+                SelectedTestItems = new ObservableCollection<TestItem>();
+                SelectedTestItems.AddRange(items);
+                await _dialogService.ShowInformationAsync($"{string.Join(", ", items.Select(s => s.Description))} selected.");
+            },
+            initialization: vm => vm.SetItems(Items!));
 
-        selectionVm.Submitted += SelectionVm_MultipleSubmitted;
-        return _navigationService.OpenBladeAsync(this, selectionVm);
-    }
-
-    /// <summary>
-    /// Selects the single asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    private Task SelectSingleAsync()
-    {
-        ViewModelSelectionBlade<TestItem> selectionVm = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionBlade<TestItem>>();
-        selectionVm.SetSelectionMode(SelectionModes.Single);
-        selectionVm.SetItems(Items);
-        selectionVm.SetSelectedItems(SelectedTestItems);
-        selectionVm.Submitted += SelectionVm_SingleSubmitted;
-        return _navigationService.OpenBladeAsync(this, selectionVm);
-    }
-
-    /// <summary>
-    /// Selections the vm multiple submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void SelectionVm_MultipleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
-    {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVm_MultipleSubmitted;
-
-        SelectedTestItems = new ObservableCollection<TestItem>();
-        SelectedTestItems.AddRange(e.Result);
-
-        await _dialogService.ShowInformationAsync($"{string.Join(", ", e.Result.Select(s => s.Description))} selected.");
-    }
-
-    /// <summary>
-    /// Selections the vm single submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void SelectionVm_SingleSubmitted(object? sender, SubmitEventArgs<List<TestItem>> e)
-    {
-        if (sender is ViewModelSelectionBlade<TestItem> vm)
-            vm.Submitted -= SelectionVm_SingleSubmitted;
-
-        await _dialogService.ShowInformationAsync($"{e.Result.Single().Description} selected.");
-    }
+    private Task SelectSingleAsync() =>
+        _bladeService.OpenBladeAsync<ViewModelSingleSelectionBlade<TestItem>, TestItem>(
+            ShellBladeHost,
+            async item =>
+            {
+                SelectedTestItems = new ObservableCollection<TestItem> { item };
+                await _dialogService.ShowInformationAsync($"{item.Description} selected.");
+            },
+            initialization: vm => vm.SetItems(Items!));
 
     /// <summary>
     /// Adds the asynchronous.
@@ -208,7 +176,7 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// <returns>Task&lt;List&lt;TestItem&gt;&gt;.</returns>
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>()
+        Items?.AddNewRange(new List<TestItem>()
         {
             new TestItem { Id = 1, Description = "Test 1"},
             new TestItem { Id = 2, Description = "Test 2"},
@@ -253,3 +221,4 @@ public class SelectionTestViewModel : ViewModelBladeView<TestItem>
         }
     }
 }
+

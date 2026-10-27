@@ -1,7 +1,5 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
@@ -9,30 +7,16 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Tests;
 [TestClass]
 public class ViewModelSelectionTests
 {
-    private ICommonServices _commonServices;
+    private Mock<ICommonServices> _mockCommonServices;
+    private Mock<ILogger<ViewModelSingleSelectionDialog<TestEntity>>> _mockLogger;
 
     public ViewModelSelectionTests()
     {
-        var mockLogger = new Mock<ILogger<ViewModelSelectionDialog<TestEntity>>>();
+        _mockLogger = new Mock<ILogger<ViewModelSingleSelectionDialog<TestEntity>>>();
 
-        var mockScopedContextService = new Mock<IScopedContextService>();
-
-        var mockCommonServices = new Mock<ICommonServices>();
-        mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
-
-        // Configure the mock to return a new instance when GetRequiredService is called
-        mockScopedContextService
-            .Setup(s => s.GetRequiredService<ViewModelSelectionDialog<TestEntity>>())
-            .Returns(() =>
-            {
-                // Create a new instance of ViewModelSelectionBlade with required dependencies
-                var viewModel = new ViewModelSelectionDialog<TestEntity>(
-                    mockCommonServices.Object,
-                    mockLogger.Object);
-                return viewModel;
-            });
-
-        _commonServices = mockCommonServices.Object;
+        _mockCommonServices = new Mock<ICommonServices>();
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     public class TestEntity
@@ -58,17 +42,14 @@ public class ViewModelSelectionTests
         var selectedItems = new List<TestEntity> { items[0] };
 
         // Act
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestEntity>>();
-        viewModel.SetSelectionMode(SelectionModes.Single);
+        var viewModel = new ViewModelSingleSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetItems(items);
-        viewModel.SetSelectedItems(selectedItems);
+        viewModel.SetSelectedItem(selectedItems[0]);
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
         Assert.AreEqual(2, viewModel.Items.Count);
-        Assert.IsNotNull(viewModel.SelectedItems);
-        Assert.AreEqual(1, viewModel.SelectedItems.Count);
-        Assert.AreEqual(SelectionModes.Single, viewModel.SelectionMode);
+        Assert.IsNotNull(viewModel.SelectedItem);
     }
 
     [TestMethod]
@@ -82,16 +63,16 @@ public class ViewModelSelectionTests
                 new TestEntity { Id = 3, Name = "Other" }
             };
 
-        var viewModel = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<TestEntity>>();
-        viewModel.SetSelectionMode(SelectionModes.Single);
+        var viewModel = new ViewModelSingleSelectionDialog<TestEntity>(_mockCommonServices.Object, _mockLogger.Object);
         viewModel.SetItems(items);
-        viewModel.SetSelectedItems(new List<TestEntity>());
+        viewModel.SetSelectedItem(null!);
 
         // Act
         await viewModel.RefreshCommand.ExecuteAsync("Test");
 
         // Assert
-        Assert.AreEqual(2, viewModel.Items.Count);
-        Assert.IsTrue(viewModel.Items.All(i => i.Name.Contains("Test")));
+        Assert.AreEqual(2, viewModel.Items?.Count);
+        Assert.IsTrue(viewModel.Items?.All(i => i.Name.Contains("Test")));
     }
 }
+

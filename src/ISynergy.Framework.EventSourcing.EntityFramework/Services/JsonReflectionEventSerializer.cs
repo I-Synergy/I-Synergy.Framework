@@ -1,6 +1,5 @@
 using ISynergy.Framework.EventSourcing.Abstractions.Events;
 using ISynergy.Framework.EventSourcing.EntityFramework.Abstractions;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace ISynergy.Framework.EventSourcing.EntityFramework.Services;
@@ -15,8 +14,6 @@ namespace ISynergy.Framework.EventSourcing.EntityFramework.Services;
 /// For AOT/trim-safe scenarios use
 /// <see cref="JsonSourceGeneratedEventSerializer"/> instead.
 /// </remarks>
-[RequiresUnreferencedCode("Uses reflection-based JSON serialization. Use JsonSourceGeneratedEventSerializer for AOT/trim-safe scenarios.")]
-[RequiresDynamicCode("Uses reflection-based JSON serialization. Use JsonSourceGeneratedEventSerializer for AOT/trim-safe scenarios.")]
 public sealed class JsonReflectionEventSerializer : IEventSerializer
 {
     private static readonly JsonSerializerOptions s_options = new()

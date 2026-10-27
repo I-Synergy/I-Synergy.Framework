@@ -269,7 +269,7 @@ public async Task DoSomething(
 ```csharp
 // _camelCase with underscore prefix
 private readonly DataContext _dataContext;
-private readonly ILogger<BudgetHandler> _logger;
+private readonly ILogger<CreateBudgetCommandHandler> _logger;
 private readonly IMapper _mapper;
 ```
 

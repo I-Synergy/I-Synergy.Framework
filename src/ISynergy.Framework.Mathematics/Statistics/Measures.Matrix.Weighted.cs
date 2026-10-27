@@ -1,7 +1,6 @@
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
-using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -1087,8 +1086,6 @@ public static partial class Measures
         return cov;
     }
 
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Vector.Ones(int) uses double which is safe for AOT.")]
     private static double[] GetDecayWeights(int window, double alpha)
     {
         if (alpha == 0)

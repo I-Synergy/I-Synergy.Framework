@@ -1,23 +1,23 @@
-using CommunityToolkit.Maui;
 using ISynergy.Framework.Core.Abstractions;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Providers;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Options;
 using ISynergy.Framework.UI.Providers;
 using ISynergy.Framework.UI.Services;
+using ISynergy.Framework.UI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using FileResult = ISynergy.Framework.Core.Models.Results.FileResult;
 
@@ -25,96 +25,6 @@ namespace ISynergy.Framework.UI.Extensions;
 
 public static class MauiAppBuilderExtensions
 {
-    /// <summary>
-    /// Returns an instance of the <see cref="MauiAppBuilder"/> and adds logging with OpenTelemetry support.
-    /// </summary>
-    /// <param name="appBuilder"></param>
-    /// <param name="infoService"></param>
-    /// <param name="tracerProviderBuilderAction"></param>
-    /// <param name="meterProviderBuilderAction"></param>
-    /// <param name="loggerProviderBuilderAction"></param>
-    /// <returns></returns>
-    public static MauiAppBuilder ConfigureLogging(
-        this MauiAppBuilder appBuilder,
-        IInfoService infoService,
-        Action<TracerProviderBuilder>? tracerProviderBuilderAction = null,
-        Action<MeterProviderBuilder>? meterProviderBuilderAction = null,
-        Action<LoggerProviderBuilder>? loggerProviderBuilderAction = null)
-    {
-        appBuilder.Services.AddLogging(loggingBuilder =>
-        {
-            loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-
-#if DEBUG
-            loggingBuilder.AddDebug();
-#endif
-
-            // Configure OpenTelemetry
-            loggingBuilder.AddOpenTelemetry(options =>
-            {
-                options.SetResourceBuilder(
-                    ResourceBuilder.CreateDefault()
-                        .AddService(
-                            serviceName: infoService.ProductName,
-                            serviceVersion: infoService.ProductVersion.ToString())
-                        .AddTelemetrySdk()
-                        .AddEnvironmentVariableDetector());
-
-#if DEBUG
-                options.AddConsoleExporter();
-#endif
-            });
-        });
-
-        // Configure tracing
-        appBuilder.Services.AddOpenTelemetry()
-            .WithTracing(tracerProviderBuilder =>
-            {
-                tracerProviderBuilder
-                    .SetResourceBuilder(
-                        ResourceBuilder.CreateDefault()
-                            .AddService(
-                                serviceName: infoService.ProductName,
-                                serviceVersion: infoService.ProductVersion.ToString())
-                            .AddTelemetrySdk()
-                            .AddEnvironmentVariableDetector());
-
-                // Add HTTP client instrumentation
-                tracerProviderBuilder.AddHttpClientInstrumentation();
-
-#if DEBUG
-                tracerProviderBuilder.AddConsoleExporter();
-#endif
-
-                tracerProviderBuilderAction?.Invoke(tracerProviderBuilder);
-            })
-            .WithMetrics(meterProviderBuilder =>
-            {
-                meterProviderBuilder
-                    .SetResourceBuilder(
-                        ResourceBuilder.CreateDefault()
-                            .AddService(
-                                serviceName: infoService.ProductName,
-                                serviceVersion: infoService.ProductVersion.ToString())
-                            .AddTelemetrySdk()
-                            .AddEnvironmentVariableDetector());
-
-                // Add HTTP client instrumentation
-                meterProviderBuilder.AddHttpClientInstrumentation();
-
-                // Add runtime instrumentation
-                meterProviderBuilder.AddRuntimeInstrumentation();
-
-#if DEBUG
-                meterProviderBuilder.AddConsoleExporter();
-#endif
-
-                meterProviderBuilderAction?.Invoke(meterProviderBuilder);
-            });
-
-        return appBuilder;
-    }
-
     /// <summary>
     /// Returns an instance of the <see cref="MauiAppBuilder"/> and adds logging with a custom configuration action.
     /// </summary>
@@ -155,15 +65,15 @@ public static class MauiAppBuilderExtensions
     /// <param name="assembly">The assembly to scan for ViewModels and Views.</param>
     /// <param name="assemblyFilter">A filter function for assembly names.</param>
     /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
-    /// <remarks>
-    /// This overload calls <see cref="ISynergy.Framework.UI.Extensions.ServiceCollectionExtensions.RegisterAssemblies(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Reflection.Assembly, System.Func{System.Reflection.AssemblyName, System.Boolean})"/>
-    /// which performs runtime assembly scanning. This is not compatible with MAUI iOS/Android linker trimming.
-    /// Prefer using a source-generated registration (<c>services.AddUITypes()</c>) when targeting trimmed builds.
-    /// </remarks>
-    [RequiresUnreferencedCode(
-        "RegisterAssemblies performs runtime assembly scanning which is not trim-safe. " +
-        "Use AddUITypes() from ISynergy.Framework.UI.SourceGenerator for AOT-compatible registration.")]
-    public static MauiAppBuilder ConfigureServices<TApplication, TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
+    [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+        Justification = "View, ViewModel and Window types are rooted by the application XAML compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
+    public static MauiAppBuilder ConfigureServices<
+        TApplication,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>( // NOSONAR
         this MauiAppBuilder appBuilder,
         Action<MauiAppBuilder> action,
         Assembly assembly,
@@ -176,10 +86,22 @@ public static class MauiAppBuilderExtensions
         where TResource : class
     {
         appBuilder.Services.AddOptions();
-        appBuilder.Services.AddPageResolver();
 
-        appBuilder.Services.Configure<ApplicationFeatures>(appBuilder.Configuration.GetSection(nameof(ApplicationFeatures)).BindWithReload);
-        appBuilder.Services.Configure<ClientApplicationOptions>(appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
+        // Manual, trim-safe binding via the IConfigurationSection string indexer (case-insensitive,
+        // same as ConfigurationBinder.Bind). NOTE: any property added to these option types later
+        // must be bound explicitly here.
+        var featuresSection = appBuilder.Configuration.GetSection(nameof(ApplicationFeatures));
+        appBuilder.Services.Configure<ApplicationFeatures>(options =>
+            options.CheckForUpdatesInMicrosoftStore =
+                bool.TryParse(featuresSection[nameof(ApplicationFeatures.CheckForUpdatesInMicrosoftStore)], out var check) && check);
+
+        var clientSection = appBuilder.Configuration.GetSection(nameof(ClientApplicationOptions));
+        appBuilder.Services.Configure<ClientApplicationOptions>(options =>
+        {
+            options.ClientId = clientSection[nameof(ClientApplicationOptions.ClientId)];
+            options.ClientSecret = clientSection[nameof(ClientApplicationOptions.ClientSecret)];
+            options.Endpoint = clientSection[nameof(ClientApplicationOptions.Endpoint)];
+        });
 
         var mainAssembly = Assembly.GetAssembly(typeof(TApplication));
         if (mainAssembly is not null)
@@ -188,15 +110,18 @@ public static class MauiAppBuilderExtensions
             infoService.LoadAssembly(mainAssembly);
         }
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-        var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(ISynergy.Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(ISynergy.Framework.UI.Properties.Resources));
+        var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         appBuilder.Services.TryAddSingleton<IInfoService>(s => InfoService.Default);
         appBuilder.Services.TryAddSingleton<ILanguageService>(s => languageService);
+
+        // Fallback: English-only if ConfigureSupportedCultures was not called.
+        // A concrete array (not a collection expression) keeps CsWinRT's trimming/AOT analyzer
+        // quiet: a collection expression cannot infer a concrete type for IEnumerable<CultureInfo>.
+        appBuilder.Services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService(new[] { CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName) }));
+
         appBuilder.Services.TryAddSingleton<IMessengerService, MessengerService>();
         appBuilder.Services.TryAddSingleton<IPreferences>(s => Preferences.Default);
         appBuilder.Services.TryAddSingleton<IMigrationService, MigrationService>();
@@ -209,14 +134,20 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.Services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
-        appBuilder.Services.TryAddScoped<ISettingsService, TSettingsService>();
-        appBuilder.Services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
+        appBuilder.Services.TryAddSingleton<ISettingsService, TSettingsService>();
+        appBuilder.Services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        appBuilder.Services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        appBuilder.Services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
+        appBuilder.Services.TryAddSingleton<IAuthenticationProvider, AuthenticationProvider>();
 
         appBuilder.Services.TryAddSingleton<ITokenStorageService, TokenStorageService>();
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
-        appBuilder.Services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
+        appBuilder.Services.TryAddSingleton<IBladePaneHost, BladePaneHostRegistry>();
+        appBuilder.Services.TryAddSingleton<INavigationHostRegistry, NavigationHostRegistry>();
+        appBuilder.Services.TryAddSingleton<IBladeService, BladeService>();
+        appBuilder.Services.TryAddSingleton<BladeHostViewModel>();
         appBuilder.Services.TryAddSingleton<IBusyService, BusyService>();
         appBuilder.Services.TryAddSingleton<IDialogService, DialogService>();
         appBuilder.Services.TryAddSingleton<IThemeService, ThemeService>();
@@ -227,33 +158,78 @@ public static class MauiAppBuilderExtensions
 
         action.Invoke(appBuilder);
 
-        appBuilder
-            .UseMauiCommunityToolkitMediaElement(false)
-            .ConfigureFonts(fonts =>
-            {
-                fonts.AddFont("segoeui.ttf", "SegoeUI");
-                fonts.AddFont("segoesb.ttf", "SegoeSemiBold");
-                fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
-                fonts.AddFont("segoeuil.ttf", "SegoeUILight");
-                fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");
-                fonts.AddFont("segoeuisb.ttf", "SegoeUISemiBold");
-                fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
-                fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
-                fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
-                fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
-                fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
-            });
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Registers the framework's default fonts with the app builder, then invokes an optional
+    /// delegate for the consumer's own fonts. Framework fonts are registered first, so consumer
+    /// fonts passed via <paramref name="configureFonts"/> take priority when aliases overlap.
+    /// </summary>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configureFonts">Optional delegate to register additional consumer fonts.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder UseFonts(
+        this MauiAppBuilder appBuilder,
+        Action<IFontCollection>? configureFonts = null)
+    {
+        appBuilder.ConfigureFonts(fonts =>
+        {
+            fonts.AddFont("segoeui.ttf", "SegoeUI");
+            fonts.AddFont("segoeuisb.ttf", "SegoeSemiBold");
+            fonts.AddFont("segoeuib.ttf", "SegoeUIBold");
+            fonts.AddFont("segoeuil.ttf", "SegoeUILight");
+            fonts.AddFont("segoeuisl.ttf", "SegoeUISemiLight");
+            fonts.AddFont("segoeuisb.ttf", "SegoeUISemiBold");
+            fonts.AddFont("segoemdl2.ttf", "SegoeMdl2");
+            fonts.AddFont("opensans-medium.ttf", "OpenSansMedium");
+            fonts.AddFont("opensans-regular.ttf", "OpenSansRegular");
+            fonts.AddFont("opensans-semibold.ttf", "OpenSansSemibold");
+            fonts.AddFont("opendyslexic3-bold.ttf", "OpenDyslexic3-Bold");
+            fonts.AddFont("opendyslexic3-regular.ttf", "OpenDyslexic3-Regular");
+        });
+
+        if (configureFonts is not null)
+            appBuilder.ConfigureFonts(configureFonts);
 
         return appBuilder;
     }
 
     /// <summary>
-    /// Registers the action in the service collection with the page resolver
+    /// Registers the available theme colors. Each color is an option for the application's
+    /// color picker or theme switcher. The full palette (secondary, tertiary, tinted grays)
+    /// is always calculated dynamically from the color stored in <c>ILocalSettings.Color</c>,
+    /// regardless of whether it appears in this list.
     /// </summary>
-    /// <param name="services"></param>
-    public static void AddPageResolver(this IServiceCollection services)
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configure">A delegate that adds hex color strings (e.g. "#0078D7") to the available list.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder UseThemeColors(
+        this MauiAppBuilder appBuilder,
+        Action<IList<string>>? configure = null)
     {
-        services.TryAddEnumerable(ServiceDescriptor.Transient<IMauiInitializeService, MauiInitializerService>());
+        appBuilder.Services.Configure<ThemeColorOptions>(options =>
+            configure?.Invoke(options.AvailableColors));
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder ConfigureSupportedCultures(
+        this MauiAppBuilder appBuilder,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        var builder = new SupportedCulturesBuilder();
+        configure(builder);
+
+        appBuilder.Services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+            s => new SupportedCulturesService(builder.Build())));
+
+        return appBuilder;
     }
 }

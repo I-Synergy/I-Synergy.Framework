@@ -40,7 +40,7 @@ Skills have a single source of truth in `.ai/skills/` and are synced to two targ
 | **Config File** | `CLAUDE.md` | `.github/copilot-instructions.md` |
 | **Context Management** | Session-based, progress tracking | Workspace-level, file-based |
 | **Orchestration** | Multi-agent, structured tasks | Single completion context |
-| **Skills** | 17 specialized agents (via `.claude/skills/` wrappers) | 17 skills in `.github/skills/` (full copies) |
+| **Skills** | Specialized skills (via `.claude/skills/` wrappers) | Skills in `.github/skills/` (full copies) |
 | **Session State** | Persistent (session-context.md) | Ephemeral |
 
 ## Shared Resources
@@ -58,7 +58,10 @@ Both systems can reference:
 - `.ai/patterns/api-patterns.md` - API endpoint patterns
 - `.ai/patterns/testing-patterns.md` - Testing approaches
 - `.ai/patterns/mvvm.md` - MVVM for Blazor/MAUI
-- And 4 more...
+- `.ai/patterns/microservices.md` - Microservices patterns
+- `.ai/patterns/object-oriented-programming.md` - OOP principles
+- `.ai/patterns/service-oriented-architecture.md` - SOA patterns
+- `.ai/patterns/test-driven-development.md` - TDD approach
 
 **Templates:**
 - `.ai/reference/templates/*.txt` - Code templates for copy-paste
@@ -110,7 +113,7 @@ If you modify `.ai/patterns/` or `.ai/reference/`:
 
 ### Claude's Advantages
 - **Structured workflows** - Session management, progress tracking
-- **Multi-agent orchestration** - 17 specialized skills
+- **Multi-agent orchestration** - Specialized skills for each domain
 - **Long-running tasks** - Can work for hours with state preservation
 - **Quality gates** - Pre-submission checklists
 - **Architecture planning** - Can design before implementing

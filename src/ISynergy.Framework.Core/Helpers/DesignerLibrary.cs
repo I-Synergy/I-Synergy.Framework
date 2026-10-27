@@ -13,7 +13,7 @@ internal static class DesignerLibrary
     /// <value>The detected designer library.</value>
     internal static DesignerPlatformLibrary DetectedDesignerLibrary
     {
-        [RequiresUnreferencedCode("Platform detection uses Type.GetType with assembly-qualified names.")]
+        [RequiresUnreferencedCode("Calls GetCurrentPlatform(), which probes for optional third-party assemblies via Type.GetType(string).")]
         get
         {
             if (_detectedDesignerPlatformLibrary is null)
@@ -28,7 +28,15 @@ internal static class DesignerLibrary
     /// Gets the current platform.
     /// </summary>
     /// <returns>DesignerPlatformLibrary.</returns>
-    [RequiresUnreferencedCode("Platform detection uses Type.GetType with assembly-qualified names.")]
+    /// <remarks>
+    /// Type.GetType(string) here is a best-effort probe for optional third-party assemblies
+    /// (WPF's PresentationFramework, WinRT's Windows.ApplicationModel) that are never part of
+    /// this app's own compiled closure. It correctly returns null rather than throwing when
+    /// they aren't present (the 1-arg overload defaults to throwOnError: false), including
+    /// under NativeAOT/trimming -- annotated for correctness per .NET's trim-analysis rules,
+    /// not because it's known to fail here.
+    /// </remarks>
+    [RequiresUnreferencedCode("Type.GetType(string) probes for optional third-party assemblies not part of this app's compiled closure.")]
     private static DesignerPlatformLibrary GetCurrentPlatform()
     {
         // We check Silverlight first because when in the VS designer, the .NET libraries will resolve
@@ -74,184 +82,12 @@ internal static class DesignerLibrary
         {
             if (!_isInDesignMode.HasValue)
             {
-#if PORTABLE
-                _isInDesignMode = IsInDesignModePortable();
-#elif SILVERLIGHT
-                _isInDesignMode = System.ComponentModel.DesignerProperties.IsInDesignTool;
-#elif __UWP__
-                _isInDesignMode = DesignMode.DesignModeEnabled;
-#elif XAMARIN
                 _isInDesignMode = false;
-#elif WINDOWS_UWP
-                _isInDesignMode = Windows.ApplicationModel.DesignMode.DesignModeEnabled;
-
-#else
-                _isInDesignMode = false;
-#endif
             }
 
             return _isInDesignMode.Value;
         }
     }
-
-#if PORTABLE
-    private static bool IsInDesignModePortable()
-    {
-        // As a portable lib, we need see what framework we're runnign on
-        // and use reflection to get the designer value
-
-        var platform = DesignerLibrary.DetectedDesignerLibrary;
-
-        if (platform == DesignerPlatformLibrary.WinRt)
-        {
-            return IsInDesignModeMetro();
-        }
-
-        if (platform == DesignerPlatformLibrary.Silverlight)
-        {
-            var desMode = IsInDesignModeSilverlight();
-            if (!desMode)
-            {
-                desMode = IsInDesignModeNet(); // hard to tell these apart in the designer
-            }
-
-            return desMode;
-        }
-
-        if (platform == DesignerPlatformLibrary.Net)
-        {
-            return IsInDesignModeNet();
-        }
-
-        return false;
-    }
-
-    private static bool IsInDesignModeSilverlight()
-    {
-        try
-        {
-            var dm = Type.GetType("System.ComponentModel.DesignerProperties, System.Windows, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e");
-
-            if (dm is null)
-            {
-                return false;
-            }
-
-            var dme = dm.GetTypeInfo().GetDeclaredProperty("IsInDesignTool");
-
-            if (dme is null)
-            {
-                return false;
-            }
-
-            return (bool)dme.GetValue(null, null);
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static bool IsInDesignModeMetro()
-    {
-        try
-        {
-            var dm = Type.GetType("Windows.ApplicationModel.DesignMode, Windows, ContentType=WindowsRuntime");
-
-            var dme = dm.GetTypeInfo().GetDeclaredProperty("DesignModeEnabled");
-            return (bool)dme.GetValue(null, null);
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static bool IsInDesignModeNet()
-    {
-        try
-        {
-            var dm =
-                Type.GetType(
-                    "System.ComponentModel.DesignerProperties, PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
-
-            if (dm is null)
-            {
-                return false;
-            }
-
-            var dmp = dm.GetTypeInfo().GetDeclaredField("IsInDesignModeProperty").GetValue(null);
-
-            var dpd =
-                Type.GetType(
-                    "System.ComponentModel.DependencyPropertyDescriptor, WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
-            var typeFe =
-                Type.GetType("System.Windows.FrameworkElement, PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
-
-            if (dpd is null
-                || typeFe is null)
-            {
-                return false;
-            }
-
-            var fromPropertys = dpd
-                .GetTypeInfo()
-                .GetDeclaredMethods("FromProperty")
-                .ToList();
-
-            if (fromPropertys is null
-                || fromPropertys.Count == 0)
-            {
-                return false;
-            }
-
-            var fromProperty = fromPropertys
-                .FirstOrDefault(mi => mi.IsPublic && mi.IsStatic && mi.GetParameters().Length == 2);
-
-            if (fromProperty is null)
-            {
-                return false;
-            }
-
-            var descriptor = fromProperty.Invoke(null, new[] { dmp, typeFe });
-
-            if (descriptor is null)
-            {
-                return false;
-            }
-
-            var metaProp = dpd.GetTypeInfo().GetDeclaredProperty("Metadata");
-
-            if (metaProp is null)
-            {
-                return false;
-            }
-
-            var metadata = metaProp.GetValue(descriptor, null);
-            var tPropMeta = Type.GetType("System.Windows.PropertyMetadata, WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
-
-            if (metadata is null
-                || tPropMeta is null)
-            {
-                return false;
-            }
-
-            var dvProp = tPropMeta.GetTypeInfo().GetDeclaredProperty("DefaultValue");
-
-            if (dvProp is null)
-            {
-                return false;
-            }
-
-            var dv = (bool)dvProp.GetValue(metadata, null);
-            return dv;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-#endif
 }
 
 /// <summary>

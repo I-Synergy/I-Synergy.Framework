@@ -1,10 +1,10 @@
 {
   "sdk": {
-    "version": "10.0.300",
-    "rollForward": "latestFeature",
+    "version": "11.0.100-rc.3.26522.148",
+    "rollForward": "disable",
     "allowPrerelease": true
   },
   "tools": {
-    "dotnet": "10.0.300"
+    "dotnet": "11.0.100-rc.3.26522.148"
   }
 }

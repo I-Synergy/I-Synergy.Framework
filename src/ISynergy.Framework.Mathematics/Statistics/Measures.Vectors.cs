@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Exceptions;
-using System.Runtime.CompilerServices;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -1210,9 +1209,6 @@ public static partial class Measures
     ///   and a predicted value between 0 and 1.
     /// </summary>
     /// 
-#if NET45 || NET46 || NET462 || NETSTANDARD2_0
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
     public static double Entropy(bool expected, double predicted)
     {
         if (!expected)

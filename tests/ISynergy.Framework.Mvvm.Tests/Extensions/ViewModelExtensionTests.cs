@@ -10,15 +10,13 @@ namespace ISynergy.Framework.Mvvm.Extensions.Tests;
 [TestClass]
 public class ViewModelExtensionTests
 {
-    private Mock<IScopedContextService> _mockScopedContextService;
     private Mock<ICommonServices> _mockCommonServices;
 
     public ViewModelExtensionTests()
     {
-        _mockScopedContextService = new Mock<IScopedContextService>();
-
         _mockCommonServices = new Mock<ICommonServices>();
-        _mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(_mockScopedContextService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        _mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
     }
 
     // Test classes
@@ -192,8 +190,8 @@ public class ViewModelExtensionTests
     {
         // Arrange
         var mockCommonServices = new Mock<ICommonServices>();
-        var mockScopedContextService = new Mock<IScopedContextService>();
-        mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
 
         var view = new TestView
         {
@@ -212,8 +210,8 @@ public class ViewModelExtensionTests
     {
         // Arrange
         var mockCommonServices = new Mock<ICommonServices>();
-        var mockScopedContextService = new Mock<IScopedContextService>();
-        mockCommonServices.SetupGet(s => s.ScopedContextService).Returns(mockScopedContextService.Object);
+        var mockMessengerService = new Mock<IMessengerService>();
+        mockCommonServices.SetupGet(s => s.MessengerService).Returns(mockMessengerService.Object);
 
         var window = new TestWindow
         {

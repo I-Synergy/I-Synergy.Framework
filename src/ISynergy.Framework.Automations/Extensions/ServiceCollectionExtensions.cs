@@ -7,7 +7,6 @@ using ISynergy.Framework.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Automations.Extensions;
 
@@ -39,11 +38,9 @@ public static class ServiceCollectionExtensions
     /// </code>
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("Configuration binding via BindWithReload uses reflection and is not AOT-safe.")]
-    [RequiresDynamicCode("Configuration binding via BindWithReload requires dynamic code generation.")]
     public static void AddAutomationServices(this IServiceCollection services, IConfiguration configuration, string prefix = "")
     {
-        services.Configure<AutomationOptions>(configuration.GetSection($"{prefix}{nameof(AutomationOptions)}").BindWithReload);
+        services.Configure<AutomationOptions>(configuration.GetSection($"{prefix}{nameof(AutomationOptions)}").Bind);
 
         // Register compile-time action executor dispatch table (AOT-safe alternative to MakeGenericType).
         services.TryAddSingleton(sp =>

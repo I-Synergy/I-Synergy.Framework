@@ -1,3 +1,5 @@
+using ISynergy.Framework.EventSourcing.Enumerations;
+
 namespace ISynergy.Framework.EventSourcing.Models;
 
 /// <summary>
@@ -16,6 +18,10 @@ namespace ISynergy.Framework.EventSourcing.Models;
 /// The user who triggered the event, or <c>null</c> for system-generated events
 /// (e.g. background jobs, scheduled tasks, migrations).
 /// </param>
+/// <param name="RecordType">
+/// Discriminates the row kind. Defaults to <see cref="EventRecordTypes.DomainEvent"/> so existing
+/// aggregate-event rows keep their meaning while the table reserves space for future row kinds.
+/// </param>
 public record EventRecord(
     Guid EventId,
     Guid TenantId,
@@ -26,4 +32,5 @@ public record EventRecord(
     string Data,
     string? Metadata,
     DateTimeOffset Timestamp,
-    string? UserId);
+    string? UserId,
+    EventRecordTypes RecordType = EventRecordTypes.DomainEvent);

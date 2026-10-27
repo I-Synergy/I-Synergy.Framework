@@ -7,20 +7,24 @@ using Microsoft.Extensions.Logging;
 using Sample.Models;
 
 namespace Sample.ViewModels;
+
 public class PivotViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly IBladeService _bladeService;
 
     public PivotViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
+        IBladeService bladeService,
         ILogger<PivotViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _bladeService = bladeService;
     }
 
     public override Task AddAsync()
@@ -40,7 +44,7 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
 
     public override Task RetrieveItemsAsync(CancellationToken cancellationToken)
     {
-        Items.AddNewRange(new List<TestItem>
+        Items?.AddNewRange(new List<TestItem>
             {
                 new TestItem { Id = 1, Description = "Test 1"},
                 new TestItem { Id = 2, Description = "Test 2"},
@@ -60,8 +64,7 @@ public class PivotViewModel : ViewModelBladeView<TestItem>
     {
         Argument.IsNotNull(e);
 
-        var detailsVm = _commonServices.ScopedContextService.GetRequiredService<DetailViewModel>();
-        detailsVm.SetSelectedItem(e);
-        await _navigationService.OpenBladeAsync(this, detailsVm);
+        await _bladeService.OpenBladeAsync<DetailViewModel, TestItem>(this, e);
     }
 }
+

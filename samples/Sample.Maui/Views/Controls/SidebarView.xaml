@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    x:Class="Sample.Views.Controls.SidebarView"
+    x:Name="SidebarRoot"
+    x:DataType="viewmodels:ShellViewModel">
+
+    <!-- The panel carries the surface color and the right border so the sidebar
+         fills its column in the root grid. -->
+    <Grid ColumnDefinitions="*,1"
+          BackgroundColor="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}">
+
+        <Grid Grid.Column="0"
+              Padding="16,24"
+              RowDefinitions="Auto,Auto,*,Auto"
+              RowSpacing="20">
+
+            <!-- Brand tile: 40px rounded square with accent background, white icon -->
+            <HorizontalStackLayout Grid.Row="0" Padding="8,0" Spacing="12">
+                <Border WidthRequest="40" HeightRequest="40"
+                        BackgroundColor="{AppThemeBinding Light={DynamicResource AppAccentLight}, Dark={DynamicResource AppAccentDark}}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12"
+                        VerticalOptions="Center">
+                    <Label Text="&#xf0ae;"
+                           FontFamily="FluentUI"
+                           FontSize="20"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+                <VerticalStackLayout Spacing="0" VerticalOptions="Center">
+                    <Label Text="{m:LocalizedStrings Key=ApplicationName}"
+                           FontFamily="FigtreeBold"
+                           FontSize="17"
+                           TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+                    <Label Text="{m:LocalizedStrings Key=ApplicationTagline}"
+                           Style="{StaticResource AppSidebarSubtitleLabel}"
+                           TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <!-- Navigation rows: one for each shell page -->
+            <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout x:Name="NavRows" Spacing="4">
+                    <!-- Dashboard -->
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                CommandParameter="dashboard" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="dashboard">
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Grid ColumnDefinitions="36,*" ColumnSpacing="12" VerticalOptions="Center">
+                            <Border Grid.Column="0" WidthRequest="36" HeightRequest="36"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource AppSurface2Light}, Dark={StaticResource AppSurface2Dark}}"
+                                    VerticalOptions="Center">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="dashboard">
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Label Text="&#xf481;"
+                                       FontFamily="FluentUI"
+                                       FontSize="18"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="0" VerticalOptions="Center">
+                                <Label Text="{m:LocalizedStrings Key=Dashboard}"
+                                       Style="{StaticResource AppSidebarNameLabel}"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Custom Controls -->
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                CommandParameter="customcontrols" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="customcontrols">
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Grid ColumnDefinitions="36,*" ColumnSpacing="12" VerticalOptions="Center">
+                            <Border Grid.Column="0" WidthRequest="36" HeightRequest="36"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource AppSurface2Light}, Dark={StaticResource AppSurface2Dark}}"
+                                    VerticalOptions="Center">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="customcontrols">
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Label Text="&#xee66;"
+                                       FontFamily="FluentUI"
+                                       FontSize="18"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="0" VerticalOptions="Center">
+                                <Label Text="{m:LocalizedStrings Key=CustomControls}"
+                                       Style="{StaticResource AppSidebarNameLabel}"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Maui Controls -->
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                CommandParameter="mauicontrols" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="mauicontrols">
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Grid ColumnDefinitions="36,*" ColumnSpacing="12" VerticalOptions="Center">
+                            <Border Grid.Column="0" WidthRequest="36" HeightRequest="36"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource AppSurface2Light}, Dark={StaticResource AppSurface2Dark}}"
+                                    VerticalOptions="Center">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="mauicontrols">
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Label Text="&#xf138;"
+                                       FontFamily="FluentUI"
+                                       FontSize="18"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="0" VerticalOptions="Center">
+                                <Label Text="{m:LocalizedStrings Key=MauiControls}"
+                                       Style="{StaticResource AppSidebarNameLabel}"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Slide Show -->
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                CommandParameter="slideshow" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="slideshow">
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Grid ColumnDefinitions="36,*" ColumnSpacing="12" VerticalOptions="Center">
+                            <Border Grid.Column="0" WidthRequest="36" HeightRequest="36"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource AppSurface2Light}, Dark={StaticResource AppSurface2Dark}}"
+                                    VerticalOptions="Center">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding CurrentRoute}" Value="slideshow">
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource AppAccentSoftLight}, Dark={DynamicResource AppAccentSoftDark}}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Label Text="&#xf622;"
+                                       FontFamily="FluentUI"
+                                       FontSize="18"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="0" VerticalOptions="Center">
+                                <Label Text="{m:LocalizedStrings Key=SlideShow}"
+                                       Style="{StaticResource AppSidebarNameLabel}"
+                                       TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Footer: Help + version/copyright -->
+            <VerticalStackLayout x:Name="FooterRows" Grid.Row="3" Spacing="4">
+                <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding HelpCommand}" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="36,*" ColumnSpacing="12" VerticalOptions="Center">
+                        <Border Grid.Column="0" WidthRequest="36" HeightRequest="36"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource AppSurface2Light}, Dark={StaticResource AppSurface2Dark}}"
+                                VerticalOptions="Center">
+                            <Label Text="&#xf63e;"
+                                   FontFamily="FluentUI"
+                                   FontSize="18"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}" />
+                        </Border>
+                        <Label Grid.Column="1"
+                               Text="{m:LocalizedStrings Key=Help}"
+                               Style="{StaticResource AppSidebarNameLabel}"
+                               TextColor="{AppThemeBinding Light={StaticResource AppTextLight}, Dark={StaticResource AppTextDark}}"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+                <Label Text="{Binding VersionText}"
+                       Style="{StaticResource AppMutedLabel}"
+                       TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"
+                       FontSize="12"
+                       Padding="12,0" />
+                <Label Text="{Binding CopyrightText}"
+                       Style="{StaticResource AppMutedLabel}"
+                       TextColor="{AppThemeBinding Light={StaticResource AppMutedLight}, Dark={StaticResource AppMutedDark}}"
+                       FontSize="12"
+                       Padding="12,0" />
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <!-- 1px right border -->
+        <BoxView Grid.Column="1"
+                 WidthRequest="1"
+                 HorizontalOptions="Fill"
+                 VerticalOptions="Fill"
+                 Color="{AppThemeBinding Light={StaticResource AppBorderLight}, Dark={StaticResource AppBorderDark}}" />
+
+    </Grid>
+
+</ContentView>

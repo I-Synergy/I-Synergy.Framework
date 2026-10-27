@@ -1,20 +1,65 @@
+using System.Text;
+using ISynergy.Framework.AspNetCore.MultiTenancy.Extensions;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.EventSourcing.EntityFramework;
 using ISynergy.Framework.EventSourcing.EntityFramework.Extensions;
 using ISynergy.Framework.EventSourcing.Storage.Azure.Extensions;
 using ISynergy.Framework.EventSourcing.Storage.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Sample.EventSourcing.Api.Domain;
 using Sample.EventSourcing.Api.Endpoints;
-using Sample.EventSourcing.Api.Infrastructure;
+using Sample.EventSourcing.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Tenant service ───────────────────────────────────────────────────────────
-// DemoTenantService resolves tenant from X-Tenant-Id / X-User-Name request headers.
-// In production, replace with ITenantService from ISynergy.Framework.AspNetCore.MultiTenancy
-// which reads tenant from authenticated JWT claims.
-builder.Services.AddSingleton<ITenantService, DemoTenantService>();
+// ── Authentication / authorization ───────────────────────────────────────────
+// The API trusts ONLY authenticated principals. Tenant and user identity are resolved from the
+// authenticated JWT's claims (see AddMultiTenancyIntegration below) — never from a request header.
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+var jwtKey = builder.Configuration["Jwt:SymmetricKeySecret"];
+
+if (string.IsNullOrWhiteSpace(jwtKey))
+{
+    throw new InvalidOperationException(
+        "Jwt:SymmetricKeySecret is not configured. Source it from a secret store before running this " +
+        "sample — for example 'dotnet user-secrets set \"Jwt:SymmetricKeySecret\" \"<32+ char key>\"' " +
+        "or the Jwt__SymmetricKeySecret environment variable.");
+}
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+// Every endpoint requires an authenticated caller unless it explicitly opts out (e.g. /health).
+builder.Services.AddAuthorization(options =>
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build());
+
+// ── Tenant resolution ────────────────────────────────────────────────────────
+// Resolves the tenant and user from the authenticated principal's claims and stores them in the
+// ambient TenantContext. Fails closed when an authenticated principal carries no tenant claim.
+builder.Services.AddMultiTenancyIntegration(options =>
+{
+    options.TenantIdClaimType = "tenant";
+    options.UsernameClaimType = "username";
+});
 
 // ── Event Sourcing ───────────────────────────────────────────────────────────
 // Connection string is injected by Aspire: ConnectionStrings__eventsourcing
@@ -41,35 +86,22 @@ builder.Services.ConfigureHttpClientDefaults(h => h.AddServiceDiscovery());
 // ── Health checks ─────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
 
+// ── Development-only token issuer ─────────────────────────────────────────────
+// Signs local JWTs with the same key the API validates against. The /dev/token endpoint
+// that uses it is mapped only when running in Development.
+builder.Services.AddSingleton<DevTokenIssuer>();
+
 // ── OpenAPI / Swagger ─────────────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(c => c.Title = "Event Sourcing Sample API");
 
-// ── CORS (for Blazor frontend) ────────────────────────────────────────────────
+// ── CORS (for the Blazor frontend) ────────────────────────────────────────────
+// Only the explicitly configured origins may call this API — no wildcard origin.
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
 builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
-    p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())); // NOSONAR - intentionally open for demo/development purposes
+    p.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod()));
 
 var app = builder.Build();
-
-// ── Tenant resolution middleware ──────────────────────────────────────────────
-// Reads X-Tenant-Id and X-User-Name headers and sets the ambient tenant context.
-// The Blazor web app sends X-Tenant-Id to scope all operations to that tenant.
-app.Use(async (ctx, next) =>
-{
-    var tenantService = ctx.RequestServices.GetRequiredService<ITenantService>();
-
-    if (ctx.Request.Headers.TryGetValue("X-Tenant-Id", out var tenantHeader)
-        && Guid.TryParse(tenantHeader, out var tenantId))
-    {
-        var userName = ctx.Request.Headers.TryGetValue("X-User-Name", out var userHeader)
-            ? userHeader.ToString()
-            : "anonymous";
-
-        tenantService.SetTenant(tenantId, userName);
-    }
-
-    await next();
-});
 
 // ── DB schema ─────────────────────────────────────────────────────────────────
 // EnsureCreated creates tables on first run. Replace with EF migrations for production.
@@ -91,10 +123,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUi();
 }
 
-app.MapHealthChecks("/health");
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Resolves the tenant from the authenticated principal's claims (must run after UseAuthentication).
+app.UseMultiTenancyMiddleware();
+
+app.MapHealthChecks("/health").AllowAnonymous();
 
 // ── Endpoints ─────────────────────────────────────────────────────────────────
 app.MapOrderEndpoints();
 app.MapArchiveEndpoints();
+app.MapDevTokenEndpoints();
 
 await app.RunAsync();

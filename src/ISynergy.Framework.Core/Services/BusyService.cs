@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Base;
-using System.Diagnostics.CodeAnalysis;
+using ISynergy.Framework.Core.Localization;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 
 namespace ISynergy.Framework.Core.Services;
 
@@ -12,14 +13,13 @@ namespace ISynergy.Framework.Core.Services;
 public sealed class BusyService : ObservableClass, IBusyService
 {
     private readonly ILanguageService _languageService;
+    private readonly object _syncRoot = new();
     private static readonly object _creationLock = new object();
     private static IBusyService? _defaultInstance;
 
     /// <summary>
     /// Gets the LanguageService's default instance.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2112", Justification = "Default property getter creates a LanguageService which uses ResourceManager. Only called in non-AOT scenarios.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "LanguageService() uses ResourceManager. BusyService.Default is a convenience path not intended for AOT scenarios.")]
     public static IBusyService Default
     {
         get
@@ -30,7 +30,7 @@ public sealed class BusyService : ObservableClass, IBusyService
                 {
                     if (_defaultInstance is null)
                     {
-                        _defaultInstance = new BusyService(new LanguageService());
+                        _defaultInstance = new BusyService(LanguageServiceProvider.Default);
                     }
                 }
             }
@@ -88,23 +88,38 @@ public sealed class BusyService : ObservableClass, IBusyService
     /// <returns>Task.</returns>
     public void StartBusy(string? message = null)
     {
-        if (!string.IsNullOrEmpty(message))
-            BusyMessage = message;
-        else
-            BusyMessage = _languageService.GetString("PleaseWait");
+        lock (_syncRoot)
+        {
+            if (!string.IsNullOrEmpty(message))
+                BusyMessage = message;
+            else
+                BusyMessage = _languageService.GetString("PleaseWait");
 
-        IsBusy = true;
+            IsBusy = true;
+        }
     }
 
     /// <summary>
     /// Updates the busy message.
     /// </summary>
     /// <param name="message"></param>
-    public void UpdateMessage(string message) => BusyMessage = message;
+    public void UpdateMessage(string message)
+    {
+        lock (_syncRoot)
+        {
+            BusyMessage = message;
+        }
+    }
 
     /// <summary>
     /// Ends the busy asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public void StopBusy() => IsBusy = false;
+    public void StopBusy()
+    {
+        lock (_syncRoot)
+        {
+            IsBusy = false;
+        }
+    }
 }

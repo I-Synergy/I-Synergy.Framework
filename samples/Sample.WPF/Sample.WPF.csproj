@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net10.0-windows</TargetFramework>
+		<TargetFramework>$(SampleTargetFramework)-windows</TargetFramework>
 		<RootNamespace>Sample</RootNamespace>
 		<UseWPF>true</UseWPF>
 		<AssemblyName>Sample</AssemblyName>
@@ -44,11 +44,15 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Syncfusion.SfInput.WPF" />
-		<PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Resource Include="Assets\Fonts\fontawesome.otf" />
+		<Resource Include="Assets\Fonts\FluentSystemIconsRegular.ttf" />
+		<Resource Include="Assets\Fonts\Figtree-Regular.ttf" />
+		<Resource Include="Assets\Fonts\Figtree-Medium.ttf" />
+		<Resource Include="Assets\Fonts\Figtree-SemiBold.ttf" />
+		<Resource Include="Assets\Fonts\Figtree-Bold.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>

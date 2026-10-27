@@ -104,7 +104,7 @@ public abstract class BooleanConverter<T> : IValueConverter
     /// <param name="value">The value.</param>
     /// <param name="targetType">Type of the target.</param>
     /// <param name="parameter">The parameter.</param>
-    /// <param name="language">The language.</param>
+    /// <param name="culture">The language.</param>
     /// <returns>System.Object.</returns>
     public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {

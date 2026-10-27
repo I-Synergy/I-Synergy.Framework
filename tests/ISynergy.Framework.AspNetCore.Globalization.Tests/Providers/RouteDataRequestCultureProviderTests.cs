@@ -1,7 +1,6 @@
 using ISynergy.Framework.AspNetCore.Globalization.Options;
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -21,7 +20,6 @@ public class RouteDataRequestCultureProviderTests
         var services = new ServiceCollection();
         services.AddSingleton<ILanguageService, LanguageService>();
         var serviceProvider = services.BuildServiceProvider();
-        ServiceLocator.SetLocatorProvider(serviceProvider);
 
         _mockOptions = new Mock<IOptions<GlobalizationOptions>>();
         _mockOptions.Setup(o => o.Value).Returns(new GlobalizationOptions
@@ -36,7 +34,6 @@ public class RouteDataRequestCultureProviderTests
     [TestCleanup]
     public void Cleanup()
     {
-        ServiceLocator.Default?.Dispose();
     }
 
     [TestMethod]

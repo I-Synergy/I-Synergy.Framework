@@ -10,10 +10,14 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Options;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Abstractions.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 
 namespace ISynergy.Framework.AspNetCore.Blazor.Extensions;
@@ -38,14 +42,14 @@ public static class ServiceCollectionExtensions
     /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
     /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
     /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
-    /// <remarks>
-    /// This overload calls the reflection-based <c>RegisterAssemblies</c> method, which is not
-    /// AOT-compatible. Replace the <c>RegisterAssemblies</c> call with <c>AddBlazorRegistrations()</c>
-    /// (emitted by the bundled source generator) for NativeAOT and trimmed publish scenarios.
-    /// </remarks>
-    [RequiresUnreferencedCode("RegisterAssemblies uses runtime assembly scanning. Use AddBlazorRegistrations() for AOT scenarios.")]
-    [RequiresDynamicCode("BindWithReload and RegisterAssemblies use dynamic code generation which is not AOT-compatible. Use AddBlazorRegistrations() for AOT scenarios.")]
-    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
+    [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+        Justification = "View, ViewModel and Window types are rooted by the application's Razor compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
+    public static IServiceCollection ConfigureServices<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
+        TResource>( // NOSONAR
         this IServiceCollection services,
         IConfiguration configuration,
         IInfoService infoService,
@@ -60,20 +64,35 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions();
 
-        services.Configure<ClientApplicationOptions>(configuration.GetSection(nameof(ClientApplicationOptions)).BindWithReload);
-        services.Configure<AnalyticOptions>(configuration.GetSection(nameof(AnalyticOptions)).BindWithReload);
+        // Manual, trim-safe binding via the IConfigurationSection string indexer (case-insensitive,
+        // same as ConfigurationBinder.Bind). NOTE: any property added to these option types later
+        // must be bound explicitly here.
+        var clientSection = configuration.GetSection(nameof(ClientApplicationOptions));
+        services.Configure<ClientApplicationOptions>(options =>
+        {
+            options.ClientId = clientSection[nameof(ClientApplicationOptions.ClientId)];
+            options.ClientSecret = clientSection[nameof(ClientApplicationOptions.ClientSecret)];
+            options.Endpoint = clientSection[nameof(ClientApplicationOptions.Endpoint)];
+        });
 
-#pragma warning disable IL2026 // typeof() arguments are statically known; resource types are preserved at compile time
-        var languageService = new LanguageService();
-        languageService.AddResourceManager(typeof(Framework.Mvvm.Properties.Resources));
-        languageService.AddResourceManager(typeof(Framework.AspNetCore.Blazor.Properties.Resources));
+        var analyticSection = configuration.GetSection(nameof(AnalyticOptions));
+        services.Configure<AnalyticOptions>(options =>
+        {
+            options.GoogleAnalyticsMeasurementId = analyticSection[nameof(AnalyticOptions.GoogleAnalyticsMeasurementId)];
+            options.MicrosoftClarityProjectId = analyticSection[nameof(AnalyticOptions.MicrosoftClarityProjectId)];
+        });
+
+        var languageService = LanguageService.Default;
         languageService.AddResourceManager(typeof(TResource));
-#pragma warning restore IL2026
 
         services.TryAddSingleton<IInfoService>(s => infoService);
         services.TryAddSingleton<ILanguageService>(s => languageService);
+
+        // Fallback: English-only if ConfigureSupportedCultures was not called
+        services.TryAddSingleton<ISupportedCulturesService>(s =>
+            new SupportedCulturesService([CultureInfo.GetCultureInfo(GlobalizationConstants.DefaultCultureInfoName)]));
+
         services.TryAddSingleton<IMessengerService, MessengerService>();
-        services.TryAddSingleton<IScopedContextService, ScopedContextService>();
         services.TryAddSingleton<IBusyService, BusyService>();
         services.AddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
@@ -108,28 +127,32 @@ public static class ServiceCollectionExtensions
     /// and <c>IViewModel</c> implementors.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <param name="assembly">The entry assembly used to resolve referenced assemblies.</param>
-    /// <param name="assemblyFilter">An optional filter applied to referenced assembly names.</param>
+    /// <param name="assembly">Unused for discovery (kept for source compatibility); the assembly
+    /// is already part of <see cref="AppDomain.CurrentDomain"/> by the time this runs.</param>
+    /// <param name="assemblyFilter">An optional filter applied to loaded assembly names.</param>
     /// <remarks>
-    /// This overload uses runtime assembly scanning and is not AOT-compatible.
-    /// Replace with the source-generator-emitted <c>AddBlazorRegistrations()</c> extension method
-    /// for NativeAOT and trimmed publish scenarios.
+    /// Discovers candidate assemblies via <see cref="AppDomain.CurrentDomain"/>.GetAssemblies()
+    /// rather than walking the static reference graph with Assembly.GetReferencedAssemblies().
+    /// The latter throws PlatformNotSupportedException under NativeAOT (no BCL trim/AOT
+    /// analyzer warning is emitted for it, so this only surfaces as a runtime crash on
+    /// launch) -- see ISynergy.Framework.Core.Extensions.ReflectionExtensions.GetAllReferencedAssemblyNames.
+    /// Mirrors the fix applied to ISynergy.Framework.UI.Extensions.ServiceCollectionExtensions.RegisterAssemblies.
     /// </remarks>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
-    [RequiresDynamicCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
+    [RequiresUnreferencedCode("Scans loaded assemblies for IView/IWindow/IViewModel implementors; not trim-compatible. Types are only found if the application still references them.")]
     public static void RegisterAssemblies(this IServiceCollection services, Assembly assembly, Func<AssemblyName, bool> assemblyFilter)
     {
-        var referencedAssemblies = assembly.GetAllReferencedAssemblyNames();
+        var candidateAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         var assemblies = new List<Assembly>();
 
         if (assemblyFilter is not null)
-            foreach (var item in referencedAssemblies.Where(assemblyFilter).EnsureNotNull())
-                assemblies.Add(Assembly.Load(item));
+            foreach (var item in candidateAssemblies.Where(a => assemblyFilter(a.GetName())).EnsureNotNull())
+                assemblies.Add(item);
 
-        foreach (var item in referencedAssemblies.Where(x =>
-            x.Name!.StartsWith("ISynergy.Framework.AspNetCore.Blazor") ||
-            x.Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
-            assemblies.Add(Assembly.Load(item));
+        foreach (var item in candidateAssemblies.Where(a =>
+            a.GetName().Name!.StartsWith("ISynergy.Framework.AspNetCore.Blazor") ||
+            a.GetName().Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
+            if (!assemblies.Contains(item))
+                assemblies.Add(item);
 
         services.RegisterAssemblies(assemblies);
     }
@@ -140,13 +163,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="assemblies">The assemblies to scan.</param>
-    /// <remarks>
-    /// This overload uses runtime assembly scanning and is not AOT-compatible.
-    /// Replace with the source-generator-emitted <c>AddBlazorRegistrations()</c> extension method
-    /// for NativeAOT and trimmed publish scenarios.
-    /// </remarks>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
-    [RequiresDynamicCode("Assembly scanning is not AOT-compatible. Use AddBlazorRegistrations() instead.")]
+    [RequiresUnreferencedCode("Scans the supplied assemblies for IView/IWindow/IViewModel implementors; not trim-compatible.")]
     public static void RegisterAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies)
     {
         var viewTypes = assemblies.ToViewTypes();
@@ -156,5 +173,23 @@ public static class ServiceCollectionExtensions
         services.RegisterViewModels(viewModelTypes);
         services.RegisterViews(viewTypes);
         services.RegisterWindows(windowTypes);
+    }
+
+    /// <summary>
+    /// Configures the list of cultures the application supports.
+    /// English ("en") is always included automatically and serves as the default.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configure">A delegate that adds cultures using the builder.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection ConfigureSupportedCultures(
+        this IServiceCollection services,
+        Action<ISupportedCulturesBuilder> configure)
+    {
+        var builder = new SupportedCulturesBuilder();
+        configure(builder);
+        services.Replace(ServiceDescriptor.Singleton<ISupportedCulturesService>(
+            s => new SupportedCulturesService(builder.Build())));
+        return services;
     }
 }

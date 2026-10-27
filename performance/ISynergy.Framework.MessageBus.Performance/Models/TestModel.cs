@@ -1,4 +1,3 @@
-using MessagePack;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.MessageBus.Performance.Models;
@@ -7,7 +6,6 @@ namespace ISynergy.Framework.MessageBus.Performance.Models;
 /// Class TestModel.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-[MessagePackObject(keyAsPropertyName: true)]
 [Serializable]
 public class TestModel
 {

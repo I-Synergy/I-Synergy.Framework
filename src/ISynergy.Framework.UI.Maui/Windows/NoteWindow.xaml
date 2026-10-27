@@ -10,9 +10,11 @@
     x:DataType="viewmodels:NoteViewModel">
 
     <Grid>
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
-        </Grid.GestureRecognizers>
+        <Grid Background="Transparent">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CancelCommand}" NumberOfTapsRequired="1" />
+            </Grid.GestureRecognizers>
+        </Grid>
 
         <ContentView ControlTemplate="{StaticResource DefaultDialogTemplate}" MaximumWidthRequest="{OnPlatform WinUI=600, Default=400}">
 

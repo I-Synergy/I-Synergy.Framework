@@ -1,16 +1,10 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
-using ISynergy.Framework.UI.Abstractions.Windows;
-using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
@@ -27,6 +21,8 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 {
     protected readonly IDialogService _dialogService;
     protected readonly INavigationService _navigationService;
+    protected readonly ISettingsService _settingsService;
+    protected readonly IThemeService _themeService;
 
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
@@ -50,16 +46,10 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     public AsyncRelayCommand SignInCommand { get; private set; }
 
     /// <summary>
-    /// Gets or sets the language command.
+    /// Gets or sets the theme command. Toggles between light and dark.
     /// </summary>
-    /// <value>The language command.</value>
-    public AsyncRelayCommand LanguageCommand { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the color command.
-    /// </summary>
-    /// <value>The color command.</value>
-    public AsyncRelayCommand ColorCommand { get; private set; }
+    /// <value>The theme command.</value>
+    public AsyncRelayCommand ThemeCommand { get; private set; }
 
     /// <summary>
     /// Gets or sets the help command.
@@ -89,9 +79,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the PrimaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> PrimaryItems
+    public ObservableCollection<NavigationItem>? PrimaryItems
     {
-        get => GetValue<ObservableCollection<NavigationItem>>();
+        get => GetValue<ObservableCollection<NavigationItem>?>();
         set => SetValue(value);
     }
 
@@ -99,9 +89,9 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// Gets or sets the SecondaryItems property value.
     /// </summary>
     /// <value>The primary items.</value>
-    public ObservableCollection<NavigationItem> SecondaryItems
+    public ObservableCollection<NavigationItem>? SecondaryItems
     {
-        get => GetValue<ObservableCollection<NavigationItem>>();
+        get => GetValue<ObservableCollection<NavigationItem>?>();
         set => SetValue(value);
     }
 
@@ -111,12 +101,16 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="settingsService"></param>
+    /// <param name="themeService">The theme service used to toggle light/dark.</param>
     /// <param name="logger"></param>
-    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<BaseShellViewModel> logger)
+    protected BaseShellViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ISettingsService settingsService, IThemeService themeService, ILogger<BaseShellViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _navigationService = navigationService;
+        _settingsService = settingsService;
+        _themeService = themeService;
 
         _navigationService.BackStackChanged += NavigationService_BackStackChanged;
 
@@ -128,8 +122,7 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
         RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
-        LanguageCommand = new AsyncRelayCommand(OpenLanguageAsync);
-        ColorCommand = new AsyncRelayCommand(OpenColorsAsync);
+        ThemeCommand = new AsyncRelayCommand(ToggleThemeAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -220,102 +213,15 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
     }
 
     /// <summary>
-    /// Opens the language asynchronous.
+    /// Toggles between the light and dark theme and applies it immediately.
+    /// Accent color selection lives in the application's settings UI.
     /// </summary>
     /// <returns>Task.</returns>
-    protected virtual Task OpenLanguageAsync()
+    protected Task ToggleThemeAsync()
     {
-        var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
-        languageVM.Submitted += LanguageVM_Submitted;
-        return _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
-    }
-
-    /// <summary>
-    /// Languages the vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void LanguageVM_Submitted(object? sender, SubmitEventArgs<Languages> e)
-    {
-        try
-        {
-            if (sender is LanguageViewModel vm)
-                vm.Submitted -= LanguageVM_Submitted;
-
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-            _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-
-            e.Result.SetLocalizationLanguage();
-
-            if (await _dialogService.ShowMessageAsync(
-                        _commonServices.LanguageService.GetString("WarningLanguageChange") +
-                        Environment.NewLine +
-                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                        _commonServices.LanguageService.GetString("TitleQuestion"),
-                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-            {
-                _commonServices.RestartApplication();
-            }
-        }
-        catch (Exception ex)
-        {
-            // Log exception to prevent it from being swallowed in async void method
-            _logger?.LogError(ex, "Error in LanguageVM_Submitted event handler");
-            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
-            exceptionHandlerService?.HandleException(ex);
-            // Re-throw to crash the application if unhandled exception handler is configured
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Opens the colors asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    protected virtual Task OpenColorsAsync()
-    {
-        var themeVM = _commonServices.ScopedContextService.GetRequiredService<ThemeViewModel>();
-        themeVM.Submitted += ThemeVM_Submitted;
-        return _dialogService.ShowDialogAsync(typeof(IThemeWindow), themeVM);
-    }
-
-    /// <summary>
-    /// Themes the vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void ThemeVM_Submitted(object? sender, SubmitEventArgs<ThemeStyle> e)
-    {
-        try
-        {
-            if (sender is ThemeViewModel vm)
-            {
-                vm.Submitted -= ThemeVM_Submitted;
-
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Theme = e.Result.Theme;
-                _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color = (e.Result.Color ?? string.Empty).ToLowerInvariant();
-
-                if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings() &&
-                    await _dialogService.ShowMessageAsync(
-                        _commonServices.LanguageService.GetString("WarningColorChange") +
-                        Environment.NewLine +
-                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                        _commonServices.LanguageService.GetString("TitleQuestion"),
-                        MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-                {
-                    _commonServices.RestartApplication();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            // Log exception to prevent it from being swallowed in async void method
-            _logger?.LogError(ex, "Error in ThemeVM_Submitted event handler");
-            var exceptionHandlerService = _commonServices?.ScopedContextService?.GetService<IExceptionHandlerService>();
-            exceptionHandlerService?.HandleException(ex);
-            // Re-throw to crash the application if unhandled exception handler is configured
-            throw;
-        }
+        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
+        _themeService.SetTheme(nextTheme);
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -346,13 +252,12 @@ public abstract class BaseShellViewModel : ViewModel, IShellViewModel
 
             Validator = null;
 
-            PrimaryItems?.Clear();
-            SecondaryItems?.Clear();
+            PrimaryItems = null;
+            SecondaryItems = null;
 
             RestartUpdateCommand?.Dispose();
             SignInCommand?.Dispose();
-            LanguageCommand?.Dispose();
-            ColorCommand?.Dispose();
+            ThemeCommand?.Dispose();
             HelpCommand?.Dispose();
             SettingsCommand?.Dispose();
             BackgroundCommand?.Dispose();

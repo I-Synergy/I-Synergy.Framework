@@ -18,14 +18,80 @@ public class Window : ContentPage, IWindow
         }
         set
         {
+            if (BindingContext is IViewModel oldVm)
+                oldVm.Closed -= OnViewModelClosed;
+
             BindingContext = value;
+
+            if (value is not null)
+                value.Closed += OnViewModelClosed;
+
             SetBinding(View.TitleProperty, new Binding(nameof(value.Title)));
         }
+    }
+
+    private bool _isViewModelClosed;
+
+    private void OnViewModelClosed(object? sender, EventArgs e)
+    {
+        _isViewModelClosed = true;
+
+        // Break the BindingContext reference immediately to allow the ViewModel
+        // to be GC'd. Setting BindingContext to null causes all child bindings
+        // to resolve to null, which is safe.
+        //
+        // Do NOT detach Content here — it runs synchronously while MAUI's
+        // PopModalAsync is still in-flight, and the visual tree detach can
+        // trigger FireAndForget tasks that complete after the DI scope (which
+        // holds this page's ViewModel) is disposed by the Closed handler.
+        // Content detach is handled later in Dispose() as a safety net.
+        BindingContext = null;
     }
 
     public Window()
     {
         Background = new SolidColorBrush(Colors.Transparent);
+    }
+
+    /// <summary>
+    /// When the dialog window appears, automatically inherits the <see cref="FlowDirection"/>
+    /// from the application's main <see cref="Microsoft.Maui.Controls.Window"/>.
+    /// </summary>
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (Application.Current?.Windows.Count > 0)
+        {
+            var mainWindow = Application.Current.Windows[0];
+            if (mainWindow.FlowDirection != FlowDirection.MatchParent)
+            {
+                FlowDirection = mainWindow.FlowDirection;
+            }
+        }
+    }
+
+    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+    {
+        base.OnNavigatedFrom(args);
+        if (!_isViewModelClosed && ViewModel is { IsDisposed: false } vm)
+            _ = vm.CloseAsync();
+
+        // Always clear BindingContext when navigating away — releases the
+        // ViewModel reference even if CloseAsync was already called through
+        // another path (e.g. platform-initiated dismissal).
+        if (BindingContext is not null)
+            BindingContext = null;
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (ViewModel is { IsDisposed: false } vm)
+        {
+            _ = vm.CloseAsync();
+            return true;
+        }
+        return base.OnBackButtonPressed();
     }
 
     #region IDisposable
@@ -48,11 +114,17 @@ public class Window : ContentPage, IWindow
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
-        }
+            // Detach the visual tree and clear BindingContext to break all reference
+            // chains to the ViewModel. Only detach Content when the handler is still
+            // connected — during app shutdown the handler is already disconnected and
+            // MAUI handles cleanup natively. Setting Content to null during shutdown
+            // can trigger FireAndForget tasks that fail when the DI container has
+            // already been disposed.
+            BindingContext = null;
 
-        // free native resources if there are any.
+            if (Handler is not null)
+                Content = null;
+        }
     }
 
     public Task CloseAsync() => throw new NotSupportedException("Close is not supported on the .Net Maui platform.");

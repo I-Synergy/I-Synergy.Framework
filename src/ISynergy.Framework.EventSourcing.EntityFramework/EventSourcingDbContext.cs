@@ -3,7 +3,6 @@ using ISynergy.Framework.EventSourcing.EntityFramework.Configurations;
 using ISynergy.Framework.EventSourcing.EntityFramework.Entities;
 using ISynergy.Framework.EventSourcing.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.EventSourcing.EntityFramework;
 
@@ -36,8 +35,6 @@ public class EventSourcingDbContext : DbContext
     /// <param name="tenantService">
     /// Provides the current tenant identifier used to scope all read queries.
     /// </param>
-    [RequiresUnreferencedCode("EF Core isn't fully compatible with trimming. See https://aka.ms/efcore-docs-trimming for more details.")]
-    [RequiresDynamicCode("EF Core isn't fully compatible with NativeAOT.")]
     public EventSourcingDbContext(DbContextOptions<EventSourcingDbContext> options, ITenantService tenantService)
         : base(options)
     {

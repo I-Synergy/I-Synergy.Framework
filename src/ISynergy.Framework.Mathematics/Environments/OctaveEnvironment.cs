@@ -1,7 +1,6 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
@@ -150,8 +149,6 @@ public abstract class OctaveEnvironment
     /// <summary>Inverts a matrix.</summary>
     protected static mat pinv(double[,] matrix) { return Matrix.PseudoInverse(matrix); }
     /// <summary>Creates a unit matrix.</summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Matrix.Ones(int, int) uses double which is safe for AOT.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Matrix.Ones(int, int) uses double which is safe for AOT.")]
     protected static mat ones(int size) { return Matrix.Ones(size, size); }
     /// <summary>Creates a unit matrix.</summary>
     protected static mat ones(int n, int m) { return Matrix.Create(n, m, 1.0); }
@@ -572,8 +569,6 @@ public abstract class OctaveEnvironment
     ///   relying on this automatic initialisation.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("OctaveEnvironment uses reflection to initialise mat fields on derived types. Subclasses may not be AOT-compatible. Initialise mat fields explicitly for AOT-safe scenarios.")]
-    [RequiresDynamicCode("OctaveEnvironment uses reflection to set field values at runtime. This is not compatible with Native AOT.")]
     protected OctaveEnvironment()
     {
         var type = this.GetType();

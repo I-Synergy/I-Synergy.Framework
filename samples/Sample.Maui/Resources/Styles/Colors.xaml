@@ -28,4 +28,77 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}" />
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}" />
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}" />
+
+    <!-- =====================================================================
+         Sample-neutral design tokens based on reference app (The Quran).
+         Accent tokens (AppAccent, AppAccentSoft, AppBrandHero) are fixed
+         to the framework's Primary/AccentColor resource so they update when
+         IThemeService.SetAccentColor is called (live accent switching).
+         ===================================================================== -->
+
+    <!-- ── Surfaces and text (light/dark pairs) ────────────────────────── -->
+
+    <Color x:Key="AppBgLight">#F4F6F3</Color>
+    <Color x:Key="AppBgDark">#0D1614</Color>
+
+    <Color x:Key="AppSurfaceLight">#FFFFFF</Color>
+    <Color x:Key="AppSurfaceDark">#14201C</Color>
+
+    <Color x:Key="AppSurface2Light">#E8EDE9</Color>
+    <Color x:Key="AppSurface2Dark">#1C2A25</Color>
+
+    <Color x:Key="AppBorderLight">#E0E6E2</Color>
+    <Color x:Key="AppBorderDark">#26352F</Color>
+
+    <Color x:Key="AppTextLight">#14211E</Color>
+    <Color x:Key="AppTextDark">#EEF1EA</Color>
+
+    <Color x:Key="AppMutedLight">#55665F</Color>
+    <Color x:Key="AppMutedDark">#9CB0A8</Color>
+
+    <!-- ── Accents (derived from Primary, not hardcoded) ──────────────── -->
+
+    <!-- Soft accent fill for selected rows, badges. Fixed to Primary at 16% opacity (light) -->
+    <Color x:Key="AppAccentSoftLight">#E1EEEA</Color>
+    <Color x:Key="AppAccentSoftDark">#295ED3B0</Color>
+
+    <!-- Breadcrumb accent color: dark teal for light mode, light cyan for dark mode (high contrast) -->
+    <Color x:Key="AppAccentLight">#0B5D55</Color>
+    <Color x:Key="AppAccentDark">#5ED3B0</Color>
+
+    <!-- Text drawn on accent fill. -->
+    <Color x:Key="AppInkLight">#FFFFFF</Color>
+    <Color x:Key="AppInkDark">#04231A</Color>
+
+    <!-- ── Single-key dynamic theme colors (updated at runtime) ───────── -->
+
+    <!-- These are filled at app startup based on the current theme.
+         Components use DynamicResource to pick up theme changes. -->
+    <Color x:Key="AppBg">#000000</Color>
+    <Color x:Key="AppSurface">#000000</Color>
+    <Color x:Key="AppSurface2">#000000</Color>
+    <Color x:Key="AppBorder">#000000</Color>
+    <Color x:Key="AppText">#000000</Color>
+    <Color x:Key="AppMuted">#000000</Color>
+    <Color x:Key="AppInk">#000000</Color>
+
+    <!-- Accent colors: derived from Primary and updated dynamically when accent changes via ShellAccentTokens -->
+    <!-- Accent brushes: always use framework Primary (updated by IThemeService.SetAccentColor) -->
+    <SolidColorBrush x:Key="AppAccentBrush" Color="{DynamicResource Primary}" />
+    <SolidColorBrush x:Key="AppAccentSoftBrush">
+        <SolidColorBrush.Color>
+            <!-- Soft accent at low alpha; updated when theme changes via ShellAccentTokens -->
+            <Color>#295ED3B0</Color>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+    <SolidColorBrush x:Key="AppBrandHeroBrush" Color="{DynamicResource Primary}" />
+
+    <!-- ── Shadows ──────────────────────────────────────────────────── -->
+
+    <Shadow x:Key="AppSoftShadow"
+            Brush="#14211E"
+            Offset="0,3"
+            Opacity="0.18"
+            Radius="10" />
+
 </ResourceDictionary>

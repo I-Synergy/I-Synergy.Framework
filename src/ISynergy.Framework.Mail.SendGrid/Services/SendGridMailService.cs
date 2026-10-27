@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Mail.SendGrid.Services;
 
@@ -21,8 +20,6 @@ namespace ISynergy.Framework.Mail.SendGrid.Services;
 /// <c>ISynergy.Framework.Mail.Microsoft365</c> instead.
 /// </para>
 /// </remarks>
-[RequiresUnreferencedCode("SendGrid SDK uses Newtonsoft.Json for serialization, which is not AOT-compatible. Use a different mail provider for AOT publishing.")]
-[RequiresDynamicCode("Newtonsoft.Json requires dynamic code generation.")]
 internal class SendGridMailService : IMailService
 {
     private readonly SendGridClient _sendGridClient;

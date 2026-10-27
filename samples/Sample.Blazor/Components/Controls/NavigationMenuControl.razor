@@ -6,12 +6,16 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 @inject INavigationMenuService NavigationMenuService;
 
-<FluentNavMenu id="main_menu" Width="250" Title="Main menu" CustomToggle="true" Collapsible="true" CollapsedChildNavigation="true">
+@* v5: FluentNavMenu was removed and replaced by FluentNav.
+   Title / Collapsible / CollapsedChildNavigation / CustomToggle no longer exist — the collapse
+   is now owned by FluentLayout's hamburger (see Components/Layout/MainLayout.razor).
+   Width changed from int? to a CSS string. *@
+<FluentNav id="main_menu" Width="250px">
 	@foreach (var item in NavigationMenuService.MenuItems)
 	{
 		<NavigationMenuItemControl Value="item" />
 	}
-</FluentNavMenu>
+</FluentNav>
 
 @code {
 	private bool _hasNavigatedToFirstItem = false;

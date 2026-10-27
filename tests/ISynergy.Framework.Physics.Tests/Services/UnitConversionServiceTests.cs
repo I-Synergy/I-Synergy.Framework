@@ -46,7 +46,7 @@ public class UnitConversionServiceTests
     /// <param name="value"></param>
     /// <param name="targetSymbol"></param>
     /// <param name="result"></param>
-    [DataTestMethod()]
+    [TestMethod]
     [DataRow("nm", 1000000000, "m", 1)]
     [DataRow("μm", 1000000, "m", 1)]
     [DataRow("mm", 1000, "m", 1)]
@@ -88,7 +88,7 @@ public class UnitConversionServiceTests
     /// <param name="value"></param>
     /// <param name="targetSymbol"></param>
     /// <param name="result"></param>
-    [DataTestMethod()]
+    [TestMethod]
     [DataRow("nm", 1000000000, "m", 1)]
     [DataRow("μm", 1000000, "m", 1)]
     [DataRow("mm", 1000, "m", 1)]

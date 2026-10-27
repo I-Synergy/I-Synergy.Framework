@@ -1,158 +1,206 @@
-﻿@import '/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
+/* Sample.Blazor - site.css (Fluent UI Blazor v5)
+ *
+ * The app shell is owned by v5 and is deliberately NOT re-implemented here:
+ *   FluentLayout                     -> the CSS grid (header / nav / content / aside / footer)
+ *   .fluent-layout-item[area=header] -> brand-coloured header bar
+ *   .fluent-layout-item[area=nav]    -> neutral background + own scrollbar
+ *   .fluent-layout-item[area=footer] -> neutral background band
+ *   .fluent-nav / .fluent-navitem    -> navigation colours, active state, hover
+ *   FluentLayoutHamburger            -> desktop [hidden] toggle + mobile drawer
+ *   default-fuib.css                 -> body sizing, heading ramp, plain-HTML defaults
+ * Do not duplicate any of the above here.
+ *
+ * Tokens: v5 renamed the whole token system. The v4 names (--neutral-*, --accent-*,
+ * --fill-color, --type-ramp-*, --design-unit, --stroke-width) no longer resolve to anything,
+ * so they must not be reintroduced. Canonical v5 names are used below.
+ */
 
-body {
-    height: 100%;
-    overflow: hidden;
-}
+@import '/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
 
-    body:has(.loading-progress)::after {
-        content: "";
-        background-image: url("/logo.svg");
-        background-position: right bottom;
-        background-size: 50%;
-        background-repeat: no-repeat;
-        opacity: 0.2;
-        top: 0;
-        left: 0;
-        bottom: 15px;
-        right: 15px;
-        position: absolute;
-        z-index: -1;
-    }
+/* ---------------------------------------------------------------------------
+   Plain HTML
+   v5's default-fuib.css already sets `body { height: 100dvh; overflow: hidden }`; the v4
+   `height: 100%` override (which resolved to `auto`) has been removed.
+   --------------------------------------------------------------------------- */
 
 blockquote p:last-child {
     margin-bottom: 0;
 }
 
-.home div[sm="4"], .home div[sm="6"], .home div[sm="8"] {
-    border-bottom: 1px solid var(--neutral-stroke-divider-rest) !important;
-}
-
-.siteheader {
-    background-color: var(--neutral-layer-4) !important;
-    border-bottom: calc(var(--stroke-width) * 2px) solid var(--accent-fill-rest);
-    margin-bottom: 0 !important;
-}
-
-    .siteheader .logo {
-        width: 108px;
-        height: 23px;
-        grid-column: 1;
-    }
-
-    .siteheader .search {
-        display: flex;
-        align-items: center;
-        padding-right: 20px;
-    }
-
-    .siteheader .links {
-        padding-right: 10px;
-        display: flex;
-        align-items: center;
-    }
-
-    .siteheader .notifications {
-        display: flex;
-        align-items: center;
-    }
-
-    .siteheader .settings {
-        padding-right: 6px;
-        display: flex;
-        align-items: center;
-        margin-left: 0;
-        margin-right: 10px;
-    }
-
-[dir="rtl"] .siteheader .settings {
-    padding: 0 0 0 6px;
-    margin-left: 10px;
-    margin-right: 0;
-}
-
-[dir="rtl"] .siteheader .search {
-    padding-left: 20px;
-    padding-right: 0;
-}
-
-[dir="rtl"] .siteheader .links {
-    padding-left: 10px;
-}
-
-.search-result-icon {
-    vertical-align: middle;
-}
-
-.body-stack {
-    flex-direction: row;
-}
-
-.footer {
-    display: flex !important;
-    flex-direction: row !important;
-    background: var(--neutral-layer-4);
-    color: var(--neutral-foreground-rest) !important;
-    padding: 10px 10px;
-    margin-top: 0px !important;
-}
-
-    .footer .version a {
-        color: var(--neutral-foreground-rest);
-        text-decoration: none;
-    }
-
-        .footer .version a:focus {
-            outline: 1px dashed;
-            outline-offset: 3px;
-        }
-
-        .footer .version a:hover {
-            text-decoration: underline;
-        }
-
-
-nav.sitenav {
-    padding: 1.5rem 1rem;
-    height: calc(100dvh - 90px);
-    width: 20rem;
-    overflow-y: auto;
+label {
+    color: var(--colorNeutralForeground1);
+    cursor: pointer;
 }
 
 nav h2 {
-    font-size: var(--type-ramp-plus-1-font-size);
-    line-height: var(--type-ramp-plus-1-line-height);
+    font-size: var(--fontSizeBase400);
+    line-height: var(--lineHeightBase400);
     padding: 15px 0;
     margin: 0;
     pointer-events: none;
 }
 
 nav h3 {
-    font-size: var(--type-ramp-base-font-size);
-    line-height: var(--type-ramp-minus-1-line-height);
+    font-size: var(--fontSizeBase300);
+    line-height: var(--lineHeightBase200);
     padding: 10px 0;
     margin: 0;
     pointer-events: none;
 }
 
-
-nav fluent-anchor {
-    width: 100%;
-    color: var(--fill-color);
+code {
+    background: var(--colorNeutralBackground3);
 }
 
-    nav fluent-anchor::part(control) {
-        justify-content: start;
-        background: var(--accent-fill-rest);
-    }
-
-
-.fluent-nav-link.notactive .fluent-nav-text {
-    font-weight: 600 !important;
+.shell,
+.sourceCode {
+    background: var(--colorNeutralBackground3);
+    padding: 7px;
 }
+
+kbd {
+    padding: 0.10rem 0.25rem;
+    font-size: 0.875em;
+    color: var(--colorNeutralForeground1);
+    background-color: var(--colorNeutralBackground6);
+    border-radius: 0.25rem;
+    border: 1px solid var(--colorBrandBackground);
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation column
+   MainLayout configures the navigation FluentLayoutItem declaratively (Height / Sticky /
+   Style) exactly like the canonical v5 demo. This one rule cannot be expressed that way:
+   the library styles `.fluent-nav` as a flex child (`flex: 1 1 0%`, `align-self: stretch`)
+   but v5.0.0 never makes `[area="nav"]` a flex container, so those properties are inert and
+   the navigation collapses to its content height. The column then paints
+   `--colorNeutralBackground2` below the navigation's own `--colorNeutralBackground4`, which
+   shows as a two-tone band under the menu. Making the item a flex container activates the
+   library's own sizing (measured: the navigation goes from 191px to the full column height).
+   --------------------------------------------------------------------------- */
+
+.fluent-layout-item[area="nav"] {
+    display: flex;
+}
+
+/* ---------------------------------------------------------------------------
+   Content area
+   The v5 grid owns width and placement, and MainLayout sets
+   `display: flex; flex-direction: column` inline on `.content` and on <article>, so no flex
+   rules are needed here. The v4 `.with-console` / `.full-width` width math and the
+   `border-right` divider (which belonged to the old two-column layout) are gone.
+   --------------------------------------------------------------------------- */
 
 .content {
-    display: flex;
+    width: 100%;
+}
+
+article {
+    padding: var(--spacingVerticalXXL) var(--spacingHorizontalL);
+}
+
+/* ---------------------------------------------------------------------------
+   Command Binding Demo - plain HTML <button> elements
+   `#article` is a column flex container (MainLayout sets it inline), so a plain <button> - which
+   the flex layout blockifies - stretches to the full content width (measured: 989px in a 1024px
+   content column). `align-self: flex-start` shrinks it back to its content and the rest of the
+   rule gives it the face of a Fluent "default" button.
+   Pre-existing, not migration-caused: this project has never carried a `button` rule in v4 or v5,
+   and `.btn` / `.btn-outline-primary` (carried by the Increment button) have never been defined
+   either, so these buttons have always rendered with the browser defaults.
+   --------------------------------------------------------------------------- */
+
+#article > button {
+    align-self: flex-start;
+    padding: var(--spacingVerticalSNudge) var(--spacingHorizontalM);
+    font-family: var(--fontFamilyBase);
+    font-size: var(--fontSizeBase300);
+    line-height: var(--lineHeightBase300);
+    color: var(--colorNeutralForeground1);
+    background-color: var(--colorNeutralBackground1);
+    border: 1px solid var(--colorNeutralStroke1);
+    border-radius: var(--borderRadiusMedium);
+    cursor: pointer;
+}
+
+    #article > button:hover:not(:disabled) {
+        color: var(--colorNeutralForeground1Hover);
+        background-color: var(--colorNeutralBackground1Hover);
+        border-color: var(--colorNeutralStroke1Hover);
+    }
+
+    #article > button:active:not(:disabled) {
+        background-color: var(--colorNeutralBackground1Pressed);
+        border-color: var(--colorNeutralStroke1Pressed);
+    }
+
+    #article > button:focus-visible {
+        outline: 2px solid var(--colorBrandBackground);
+        outline-offset: 2px;
+    }
+
+    /* The v5 disabled tokens (--colorNeutralForegroundDisabled on --colorNeutralBackgroundDisabled)
+       measure 1.7:1, below the 3:1 floor the UI test suite enforces, so the disabled label keeps the
+       readable tertiary foreground on the disabled fill. */
+    #article > button:disabled {
+        color: var(--colorNeutralForeground3);
+        background-color: var(--colorNeutralBackgroundDisabled);
+        border-color: var(--colorNeutralStrokeDisabled);
+        cursor: default;
+    }
+
+/* ---------------------------------------------------------------------------
+   Dialog panel height
+   v5.0.0 ships no default height for a centred dialog: the library CSS only sets `height: 100%`
+   for the [position=start|end] drawers, so the shadow-DOM `<dialog part="dialog">` keeps its own
+   `position: fixed; inset: 0` box and a `height` of `auto` resolves to the full viewport height.
+   That left a centred dialog 600x900 (the whole viewport) around a 236px body.
+   DialogOptions.Height cannot fix this: it is written as an inline `height` on the <fluent-dialog>
+   *host* element, whose box is 0x0 because the panel lives in the host's shadow root. Measured:
+   inline `auto`, no height at all, `fit-content` and a concrete `320px` all leave the panel 900px.
+   `height: fit-content` on the panel does not work either - the panel is stretched by its
+   containing block, so `fit-content` resolves back to the viewport height (852px against a
+   `calc(100vh - 48px)` cap). `max-height` is the one property that clamps against the panel's
+   content, giving a content-sized panel that still caps at the viewport and scrolls beyond it.
+   The [position=start|end] drawers are excluded so they keep their 100% height.
+   --------------------------------------------------------------------------- */
+
+fluent-dialog[fuib]:not([position="start"]):not([position="end"])::part(dialog) {
+    max-height: fit-content;
+}
+
+/* ---------------------------------------------------------------------------
+   Footer content slots
+   v5 renders the footer as .fluent-layout-item[area="footer"], which already supplies the
+   background, padding and placement, so the v4 `.footer` box rules and its responsive grid
+   override are gone. Only the link treatment for the .version / .copy slots is kept.
+   --------------------------------------------------------------------------- */
+
+.version a,
+.copy a {
+    color: var(--colorNeutralForeground1);
+    text-decoration: none;
+}
+
+    .version a:focus,
+    .copy a:focus {
+        outline: 1px dashed;
+        outline-offset: 3px;
+    }
+
+    .version a:hover,
+    .copy a:hover {
+        text-decoration: underline;
+    }
+
+/* ---------------------------------------------------------------------------
+   Layout helpers
+   --------------------------------------------------------------------------- */
+
+.home div[sm="4"],
+.home div[sm="6"],
+.home div[sm="8"] {
+    border-bottom: 1px solid var(--colorNeutralStroke2) !important;
 }
 
 ul.news {
@@ -162,102 +210,53 @@ ul.news {
 
     ul.news li {
         display: flex;
-        gap: calc(var(--design-unit) * 2px);
+        gap: var(--spacingHorizontalS);
         align-items: center;
-        padding-bottom: calc(var(--design-unit) * 2px);
+        padding-bottom: var(--spacingHorizontalS);
     }
 
-.news .calendar {
-}
-
-.news a {
-    font-size: var(--type-ramp-plus-1-font-size);
-    line-height: var(--type-ramp-plus-1-line-height);
-    font-weight: 600;
-    text-decoration: none;
-}
-
-
-article {
-    padding: 1.5rem 1rem;
-    border-right: 1px solid var(--neutral-stroke-divider-rest);
-    margin: 0 0;
-    width: calc(100% - 18rem);
-}
-
-aside {
-    padding: 1.5rem 1rem;
-    top: 0px;
-    height: 100vh;
-    position: sticky;
-    width: 18rem;
-    max-height: calc(100dvh - 90px);
-    overflow-y: auto;
-}
-
-#navmenu-toggle {
-    display: none;
-}
-
-.navmenu-icon {
-    display: none;
-}
-
-#navmenu-toggle:checked > nav {
-    width: 0px;
-}
-
-[dir="rtl"] #navmenu-toggle:checked ~ nav {
-    right: 0px;
-}
-
-#color {
-    margin-right: 10px;
-    margin-left: 0;
-}
-
-[dir="rtl"] #color {
-    margin-left: 10px;
-    margin-right: 0;
-}
-
-
-label {
-    color: var(--neutral-foreground-rest);
-    cursor: pointer;
-}
-
-.shell, .sourceCode {
-    background: var(--neutral-stroke-layer-rest);
-    padding: 7px;
-}
-
-code {
-    background: var(--neutral-stroke-layer-rest);
-}
+    .news a {
+        font-size: var(--fontSizeBase400);
+        line-height: var(--lineHeightBase400);
+        font-weight: 600;
+        text-decoration: none;
+    }
 
 .demopanel {
-    border: 1px dashed var(--accent-fill-rest);
+    border: 1px dashed var(--colorBrandBackground);
     padding: 5px;
 }
 
 .highlighted {
-    background-color: var(--accent-stroke-control-active);
+    background-color: var(--colorNeutralBackground1Selected);
 }
 
+    /* v4 used the inverted (white) foreground here, which is unreadable on a light selection
+       fill. v5 keeps the normal foreground on selected rows. */
     .highlighted > td {
-        color: var(--neutral-fill-inverse-rest);
+        color: var(--colorNeutralForeground1);
     }
 
-
-kbd {
-    padding: 0.10rem 0.25rem;
-    font-size: 0.875em;
-    color: var(--neutral-foreground-rest);
-    background-color: var(--neutral-fill-secondary-rest);
-    border-radius: 0.25rem;
-    border: 1px solid var(--accent-fill-rest);
+.toolbar-style {
+    width: 100%;
+    background-color: transparent;
 }
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.page-container {
+    margin: 32px;
+}
+
+/* ---------------------------------------------------------------------------
+   Errors and loading (Blazor host hooks)
+   `--error` still resolves in v5 - the library aliases it to --colorPaletteRedForeground1.
+   --------------------------------------------------------------------------- */
 
 #blazor-error-ui {
     background: lightyellow;
@@ -270,7 +269,7 @@ kbd {
     width: 100%;
     z-index: 1000;
     margin: 20px 0;
-    color: var(--neutral-foreground-rest);
+    color: var(--colorNeutralForeground1);
 }
 
     #blazor-error-ui .dismiss {
@@ -351,229 +350,21 @@ kbd {
 }
 
     .loading-info a {
-        color: var(--neutral-foreground-rest);
+        color: var(--colorNeutralForeground1);
     }
 
         .loading-info a:hover {
-            color: var(--neutral-foreground-hover);
+            color: var(--colorNeutralForeground1Hover);
         }
 
-@media (max-width: 767px) {
-
-    .siteheader {
-        grid-area: header;
-        grid-template-columns: 150px 1fr;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-        .siteheader .search {
-            display: none;
-        }
-
-        .siteheader .logo {
-            width: 160px;
-            height: 23px;
-            /*padding: 0 25px;*/
-        }
-
-
-    .body-stack {
-        flex-direction: column !important;
-    }
-
-    nav.sitenav {
-        width: 100%;
-        height: calc(100dvh - 50px);
-    }
-
-    .navmenu {
-        width: 100%;
-    }
-
-    #navmenu-toggle {
-        appearance: none;
-    }
-
-    .navmenu-icon {
-        cursor: pointer;
-        z-index: 10;
-        display: block;
-        position: absolute;
-        top: 15px;
-        left: unset;
-        right: 20px;
-        width: 20px;
-        height: 20px;
-        border: none;
-    }
-
-    [dir="rtl"] .navmenu-icon {
-        left: 20px;
-        right: unset
-    }
-
-    #navmenu-toggle ~ nav {
-        display: none;
-    }
-
-    #navmenu-toggle:checked ~ nav {
-        display: block;
-    }
-
-    #navmenu-toggle ~ article {
-        display: block;
-    }
-
-    #navmenu-toggle:checked ~ article {
-        display: none;
-    }
-
-    .content {
-        flex-direction: column;
-    }
-
-    article {
-        padding-top: 0px;
-        width: 100%;
-    }
-
-    aside {
-        padding: 1em 0.75em;
-        width: 100%;
-    }
-
-    .footer {
-        display: grid;
-        grid-template-columns: 10px auto 10px;
-    }
-
-        .footer .version {
-            grid-column: 2;
-            justify-self: start;
-        }
-
-        .footer .copy {
-            grid-column: 2;
-            grid-row: 2;
-            justify-self: end;
-        }
-
-
-    @media screen and (max-width: 767px) and (orientation: landscape) {
-
-        nav {
-            padding: 25px 40px;
-        }
-
-            nav ul {
-                margin: 0 0;
-            }
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1279px) {
-    fluent-select::part(control) {
-        width: 150px;
-    }
-
-    .content {
-        flex-direction: column;
-    }
-
-    aside {
-        padding: 1.5em 0.75em 1em 0.75em;
-        width: 100%;
-        height: 100% !important;
-        max-height: 100% !important;
-    }
-
-    article {
-        padding-top: 0px;
-        width: 100%;
-    }
-}
-
-
-/* Surface Duo specific styling */
-@media (horizontal-viewport-segments: 2) {
-
-    .siteheader {
-        grid-area: header;
-        display: grid;
-        grid-template-columns: 150px calc(env(viewport-segment-width 0 0) - 160px) 1fr;
-        grid-template-rows: 1fr;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 12px 0;
-        background-color: var(--neutral-layer-4);
-    }
-
-        .siteheader a {
-            padding: 0px 15px;
-            color: var(--neutral-foreground-rest);
-        }
-
-        .siteheader .logo {
-            grid-column: 1;
-            width: 108px;
-            height: 23px;
-            /*padding: 0 30px;*/
-        }
-
-    main {
-        display: grid;
-        grid-template-columns: env(viewport-segment-width 0 0) 1fr;
-        grid-template-rows: repeat(0, 1fr);
-    }
-
-    nav {
-        grid-column: 1;
-        width: env(viewport-segment-width 0 0) !important;
-    }
-
-    .content {
-        display: grid;
-        grid-template-columns: auto;
-    }
-
-    aside {
-        grid-area: 2 / 2 / 3 / 3;
-        padding: 1.5em 0.75em 1em 0.75em;
-        margin-inline-start: calc(env(viewport-segment-left 1 0) - env(viewport-segment-right 0 0)); /* hinge width */
-        margin-inline-end: calc(100% - env(viewport-segment-left 1 0));
-        width: auto;
-    }
-
-    article {
-        grid-area: 1 / 2 / 2 / 3;
-        padding-top: 0px;
-        margin-inline-start: calc(env(viewport-segment-left 1 0) - env(viewport-segment-right 0 0)); /* hinge width */
-        margin-inline-end: calc(100% - env(viewport-segment-left 1 0));
-        width: auto;
-    }
-}
-
-
-@media (min-width: 800px) {
-    .fluent-dialog-main {
-        --dialog-width: 340px;
-    }
-}
-
-
-@media (max-width: 480px) {
-    .fluent-dialog-main {
-        --dialog-width: 100vw;
-    }
-}
-
-/*  Responvive Youtube Video
+/* ---------------------------------------------------------------------------
+   Responsive Youtube Video
 
     <div class="youtube-responsive">
       <iframe src="https://www.youtube.com/embed/lUZ5mrg2Q8k" frameborder="0" allowfullscreen></iframe>
     </div>
-*/
+   --------------------------------------------------------------------------- */
+
 .youtube-responsive {
     position: relative;
     height: 0;
@@ -615,6 +406,12 @@ kbd {
         width: 100%;
     }
 
+/* ---------------------------------------------------------------------------
+   Print
+   The v5 library already carries `@media print` rules that hide
+   [area=nav] / [area=header] / [area=footer] / [area=aside], so no chrome-hiding rules
+   are repeated here.
+   --------------------------------------------------------------------------- */
 
 @media print {
     pre, code {
@@ -622,41 +419,18 @@ kbd {
         word-wrap: break-word !important;
     }
 
+    /* v5 locks the body to 100dvh with hidden overflow; print needs the document to flow. */
     body {
         overflow: visible !important;
         height: auto !important;
-    }
-
-    .body-content {
-        overflow: visible !important;
-        max-height: 100% !important;
     }
 
     h2:nth-of-type(n+2) {
         page-break-before: always !important;
     }
 
-
     h3, h4, h5, h6 {
         page-break-after: avoid !important;
-    }
-
-    fluent-tab-panel {
-        page-break-inside: avoid !important;
-    }
-
-    .navmenu, .siteheader, aside {
-        visibility: hidden !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .layout > footer {
-        visibility: hidden !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
     }
 
     a {
@@ -680,23 +454,24 @@ kbd {
         display: none !important; /* Hide embedded videos */
     }
 
-    fluent-tab-panel {
+    /* v5 removed the <fluent-tab-panel> element; the panel is now the .fluent-tab-panel class. */
+    .fluent-tab-panel {
         display: block !important; /* Make all tab panels visible */
         visibility: visible !important;
         page-break-inside: avoid !important;
     }
 
-        fluent-tab-panel[hidden] {
+        .fluent-tab-panel[hidden] {
             display: block !important; /* Override hidden attribute */
         }
 
-    button, .FluentButton {
+    button,
+    fluent-button {
         display: none !important;
     }
 
     article {
         padding: 0 !important;
-        border-right: hidden !important;
     }
 
     .video-link {
@@ -712,87 +487,484 @@ kbd {
     }
 }
 
-
 @media screen {
     .video-link {
         display: none;
     }
 }
 
-.toolbar-style {
-    width: 100%;
-    background-color: transparent;
+/* ---------------------------------------------------------------------------
+   Shared sample design tokens and settings drawer (match Sample.Maui).
+   --------------------------------------------------------------------------- */
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-Regular.ttf') format('truetype');
+    font-weight: 400;
 }
 
-.header-container {
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('fonts/Figtree-Bold.ttf') format('truetype');
+    font-weight: 700;
+}
+
+:root {
+    --app-bg: #F4F6F3;
+    --app-surface: #FFFFFF;
+    --app-control: #E8EDE9;
+    --app-border: #E0E6E2;
+    --app-text: #14211E;
+    --app-muted: #55665F;
+    --app-ink: #FFFFFF;
+    --app-accent: var(--accent-color, #0B5D55);
+    /* Accent to use for text (and decorative glyphs). Lightened in the dark theme so it
+       clears the 3:1 contrast floor against the dark surfaces. --app-accent itself stays
+       untouched because --colorBrandBackground depends on it. */
+    --app-accent-text: var(--app-accent);
+    --app-accent-soft: #E1EEEA;
+
+    /* Align the Fluent UI shell with the same palette. */
+    --colorNeutralBackground1: var(--app-bg);
+    --colorNeutralBackground2: var(--app-bg);
+    --colorNeutralBackground3: var(--app-control);
+    --colorNeutralBackground4: var(--app-surface);
+    --colorNeutralForeground1: var(--app-text);
+    --colorNeutralForeground2: var(--app-muted);
+    --colorNeutralStroke1: var(--app-border);
+    --colorBrandBackground: var(--app-accent);
+}
+
+[data-theme="dark"] {
+    --app-bg: #0D1614;
+    --app-surface: #14201C;
+    --app-control: #1C2A25;
+    --app-border: #26352F;
+    --app-text: #EEF1EA;
+    --app-muted: #9CB0A8;
+    --app-ink: #04231A;
+    --app-accent-soft: rgba(94, 211, 176, 0.16);
+    --app-accent-text: #5ED3B0;
+}
+
+body {
+    background: var(--app-bg);
+    color: var(--app-text);
+    font-family: 'Figtree', var(--fontFamilyBase);
+}
+
+.app-settings-scrim {
+    position: fixed;
+    inset: 0;
+    background: #00000080;
+    z-index: 1000;
+}
+
+.app-settings-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 16px;
+    background: var(--app-surface);
+    border-left: 1.5px solid var(--app-border);
+    color: var(--app-text);
+    z-index: 1001;
+}
+
+.app-settings-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.app-settings-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-settings-label {
+    margin: 12px 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--app-muted);
+}
+
+.app-settings-select {
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    background: var(--app-control);
+    color: var(--app-text);
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.app-accent-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.app-accent-swatch {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.app-accent-swatch.selected {
+    border: 3px solid #FFFFFF;
+}
+
+.app-settings-close {
+    margin-top: auto;
+    min-height: 34px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--app-accent);
+    color: var(--app-ink);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Sidebar footer — Help + version, matching the WPF/WinUI/MAUI shells.
+   --------------------------------------------------------------------------- */
+
+.app-nav-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.app-nav-column > .fluent-nav {
+    flex: 1 1 auto;
+}
+
+.app-nav-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: auto;
+    padding: 16px 16px 20px;
+}
+
+.app-nav-help {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    padding: 0 8px;
+    border-radius: 12px;
+    color: var(--colorNeutralForeground3);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.app-nav-help:hover {
+    background: var(--colorNeutralBackground1Hover);
+    color: var(--colorNeutralForeground1);
+    text-decoration: none;
+}
+
+.app-nav-help-icon {
+    width: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.app-nav-version {
+    padding: 0 12px;
+    color: var(--colorNeutralForeground3);
+    font-size: 12px;
+}
+
+
+/* ---------------------------------------------------------------------------
+   App shell — mirrors the MAUI sample (sidebar, breadcrumb header, content).
+   Mobile (<=900px): the sidebar is an off-canvas drawer (280px, translateX) opened by the
+   header .app-nav-toggle hamburger, with div.app-nav-scrim behind it; above 900px it stays
+   the permanent 300px column and the toggle/scrim are never shown.
+   --------------------------------------------------------------------------- */
+
+.app-shell {
+    display: flex;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--app-bg);
+    color: var(--app-text);
+    font-family: 'Figtree', var(--fontFamilyBase);
+}
+
+.app-sidebar {
+    flex: 0 0 300px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px 16px;
+    background: var(--app-surface);
+    border-right: 1px solid var(--app-border);
+}
+
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px;
+}
+
+.app-brand-tile {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 12px;
+    background: var(--app-accent);
+    color: var(--app-ink);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.app-brand-name {
+    display: flex;
+    flex-direction: column;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.app-brand-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--app-muted);
+}
+
+.app-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.app-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--app-text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.app-nav-item:hover {
+    background: var(--app-control);
+    color: var(--app-text);
+    text-decoration: none;
+}
+
+.app-nav-item.active {
+    background: var(--app-accent-soft);
+}
+
+.app-nav-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border-radius: 10px;
+    background: var(--app-control);
+    color: var(--app-muted);
+    font-size: 17px;
+}
+
+.app-nav-item.active .app-nav-icon {
+    background: var(--app-accent-soft);
+    color: var(--app-accent-text);
+}
+
+.app-sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: auto;
+}
+
+.app-version {
+    padding: 0 12px;
+    color: var(--app-muted);
+    font-size: 12px;
+}
+
+.app-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--app-bg);
+}
+
+.app-header {
+    flex: 0 0 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    gap: 16px;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--app-border);
+    background: var(--app-bg);
 }
 
-.page-container {
-    margin: 32px;
-}
-
-
-.body-stack {
+.app-breadcrumb {
     display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--app-muted);
+}
+
+.app-breadcrumb a {
+    color: var(--app-accent-text);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.app-breadcrumb strong {
+    color: var(--app-text);
+    font-weight: 600;
+}
+
+.app-header-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.app-icon-button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--app-muted);
+    font-family: inherit;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.app-icon-button:hover {
+    background: var(--app-control);
+    color: var(--app-text);
+}
+
+/* Hamburger for the off-canvas navigation drawer. Desktop shows the permanent sidebar,
+   so the toggle only exists below the 900px breakpoint (see the media query below). */
+.app-nav-toggle {
+    display: none;
+}
+
+/* Drawer scrim: only ever rendered while the drawer is open, and only visible on mobile. */
+.app-nav-scrim {
+    position: fixed;
+    inset: 0;
+    background: #00000080;
+    z-index: 1050;
+}
+
+.app-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px 32px 24px;
+}
+
+.app-content article {
     width: 100%;
-    transition: grid-template-columns 0.3s ease;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0;
 }
 
-/* Make sure the content takes the remaining space */
-#body-content {
-    flex: 1;
-    overflow-x: hidden;
-    transition: width 0.3s ease;
-}
-
-.nav-expanded #body-content {
-    width: calc(100% - 250px);
-}
-
-.nav-collapsed #body-content {
-    width: calc(100% - 50px);
-}
-
-.content {
-    width: 100%;
-    transition: all 0.3s ease;
-}
-
-    .content.with-console {
-        display: flex;
+@media (max-width: 900px) {
+    /* No icon rail any more: below 900px the sidebar becomes an off-canvas drawer that the
+       header hamburger slides in. The full brand, labels and version stay in the DOM. */
+    .app-nav-toggle {
+        display: inline-flex;
     }
 
-    .content.full-width {
-        display: block;
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 280px;
+        flex: 0 0 280px;
+        z-index: 1100;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
     }
 
-article {
-    transition: width 0.3s ease;
+    .app-sidebar.is-open {
+        transform: translateX(0);
+        box-shadow: 0 0 24px rgb(0 0 0 / 35%);
+    }
+
+    .app-header,
+    .app-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* The header now has three children (toggle, breadcrumb, actions); letting the breadcrumb
+       grow keeps it next to the hamburger instead of centred by `space-between`. */
+    .app-breadcrumb {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
 }
 
-    article.with-console {
-        width: calc(100% - 18rem);
+@media (min-width: 901px) {
+    .app-nav-scrim {
+        display: none;
     }
-
-    article.full-width {
-        width: 100%;
-        border-right: none;
-    }
-
-
-.navmenu {
-    transition: width 0.3s ease;
-    overflow: hidden;
 }
-
-    .navmenu.expanded {
-        width: 250px;
-    }
-
-    .navmenu.collapsed {
-        width: 50px;
-    }

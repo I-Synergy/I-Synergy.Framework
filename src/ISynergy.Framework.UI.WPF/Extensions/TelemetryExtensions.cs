@@ -1,10 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Models;
-using System.Diagnostics.CodeAnalysis;
-using ISynergy.Framework.UI.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
@@ -29,7 +25,6 @@ public static class TelemetryExtensions
     /// <param name="meterProviderBuilderAction"></param>
     /// <param name="loggerProviderBuilderAction"></param>
     /// <returns>The service collection for chaining.</returns>
-    [RequiresUnreferencedCode("GetDefaultLogLevel uses ConfigurationBinder.Get<T> which uses reflection and may not work after trimming.")]
     public static TelemetryBuilder AddTelemetry(
         this ILoggingBuilder loggingBuilder,
         HostBuilderContext hostBuilderContext,
@@ -54,8 +49,6 @@ public static class TelemetryExtensions
         // Configure OpenTelemetry Logging
         telemetryBuilder.Services.AddLogging(loggingBuilder =>
         {
-            loggingBuilder.SetMinimumLevel(hostBuilderContext.Configuration.GetDefaultLogLevel());
-
             loggingBuilder.AddOpenTelemetry(loggerOptions =>
             {
                 // Add default console exporter in development
@@ -96,9 +89,6 @@ public static class TelemetryExtensions
         {
             loggerProviderBuilderAction?.Invoke(loggerProviderBuilder);
         });
-
-        // Register application monitor
-        loggingBuilder.Services.TryAddSingleton<ApplicationMonitor>();
 
         return new TelemetryBuilder(telemetryBuilder, hostBuilderContext.Configuration, infoService);
     }

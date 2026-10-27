@@ -3,7 +3,6 @@ using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Physics.Abstractions;
 using ISynergy.Framework.Physics.Enumerations;
 using ISynergy.Framework.Physics.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Physics.Base;
 
@@ -32,7 +31,6 @@ public abstract class UnitBase : IUnit
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="unitTypes"></param>
-    [RequiresUnreferencedCode("Calls EnumExtensions.GetSymbol which uses reflection to read SymbolAttribute from enum members.")]
     protected UnitBase(Units unit, UnitTypes[] unitTypes)
     {
         Argument.IsNotNull(unit); // NOSONAR

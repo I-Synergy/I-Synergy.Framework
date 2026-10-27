@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Events;
+using ISynergy.Framework.Core.Messages;
 using ISynergy.Framework.Core.Models.Results;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
@@ -11,15 +12,17 @@ using ISynergy.Framework.Physics.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NugetUnlister.Extensions;
-using Sample.Abstractions.Services;
+using Sample.OpenTelemetry;
 using Sample.Services;
 using Sample.ViewModels;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Sample;
 
@@ -32,6 +35,11 @@ public partial class App : Application
         : base()
     {
     }
+
+    /// <summary>
+    /// The sample renders its own header and caption buttons, so the OS title bar is removed.
+    /// </summary>
+    protected override bool UseCustomWindowChrome => true;
 
     protected override IHostBuilder CreateHostBuilder()
     {
@@ -61,38 +69,92 @@ public partial class App : Application
             })
             .ConfigureServices<Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(infoService, (configuration, environment, services) =>
             {
-                services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+                services.TryAddSingleton<ApplicationMonitor>();
+                services.TryAddSingleton<Abstractions.Services.IAuthenticationService, AuthenticationService>();
                 services.TryAddSingleton<IFileService<FileResult>, FileService>();
                 services.TryAddSingleton<IUnitConversionService, UnitConversionService>();
 
                 services.AddNugetServiceIntegrations(configuration);
             },
             mainAssembly,
-            f => f.Name!.StartsWith(typeof(App).Namespace!));
+            f => f.Name!.StartsWith(typeof(App).Namespace!))
+            .ConfigureSupportedCultures(cultures =>
+            {
+                cultures.AddCulture("nl");
+                cultures.AddCulture("de");
+                cultures.AddCulture("fr");
+                cultures.AddCulture("ar");
+            })
+            .UseThemeColors(colors => colors.Add("#0078D4"));
 
         return hostBuilder;
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        // Apply the design tokens before the framework creates the window and the splash page,
+        // so the splash surface is already themed on the first frame.
+        if (_themeService is not null)
+            ApplySampleTokens(_themeService);
+
         base.OnStartup(e);
 
-        // Subscribe to authentication events
-        var authenticationService = _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>();
-        authenticationService.AuthenticationSucceeded += async (s, args) => await OnAuthenticationSucceededAsync(args);
-        authenticationService.AuthenticationFailed += async (s, args) => await OnAuthenticationFailedAsync();
+        // Keep the shared sample design tokens in sync with the current theme/accent.
+        if (_themeService is not null)
+        {
+            _themeService.ThemeChanged += (_, _) => ApplySampleTokens(_themeService);
+        }
 
-        RaiseApplicationLoaded();
+        // Subscribe to authentication messages
+        _commonServices.MessengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+        _commonServices.MessengerService.Register<UserSignedOutMessage>(this, OnUserSignedOut, keepTargetAlive: true);
     }
 
-    protected override async void OnApplicationLoaded(object? sender, ReturnEventArgs<bool> e)
+    /// <summary>
+    /// Applies the shared sample design tokens (light/dark surfaces, text and accent).
+    /// </summary>
+    private void ApplySampleTokens(IThemeService themeService)
+    {
+        // IsLightThemeEnabled resolves Themes.Default to the operating system theme, so a settings
+        // file without an explicit choice still paints the surface the OS is actually using.
+        var isDark = !themeService.IsLightThemeEnabled;
+
+        SetBrush("AppBackgroundBrush", isDark ? "#0D1614" : "#F4F6F3");
+        SetBrush("SplashBackgroundBrush", isDark ? "#0D1614" : "#F4F6F3");
+        SetBrush("AppSurfaceBrush", isDark ? "#14201C" : "#FFFFFF");
+        SetBrush("AppSurface2Brush", isDark ? "#1C2A25" : "#E8EDE9");
+        SetBrush("AppControlBrush", isDark ? "#1C2A25" : "#E8EDE9");
+        SetBrush("AppBorderBrush", isDark ? "#26352F" : "#E0E6E2");
+        SetBrush("AppTextBrush", isDark ? "#EEF1EA" : "#14211E");
+        SetBrush("AppMutedBrush", isDark ? "#9CB0A8" : "#55665F");
+        SetBrush("AppAccentBrush", isDark ? "#5ED3B0" : themeService.AccentColor);
+        SetBrush("AppAccentSoftBrush", isDark ? "#295ED3B0" : "#E1EEEA");
+        SetBrush("AppInkBrush", isDark ? "#04231A" : "#FFFFFF");
+    }
+
+    private void SetBrush(string key, string hex)
+    {
+        try
+        {
+            if (ColorConverter.ConvertFromString(hex) is Color color)
+                Resources[key] = new SolidColorBrush(color);
+        }
+        catch
+        {
+            // Keep the previous token when a persisted color is malformed.
+        }
+    }
+
+    protected override async void OnApplicationLoaded(object? sender, EventArgs e)
     {
         try
         {
             _commonServices.BusyService.StartBusy();
 
-            _logger.LogTrace("Navigate to SignIn page");
-            await _navigationService.NavigateModalAsync<AuthenticationViewModel>();
+            // The demo sample goes straight to the shell; authentication accepts any user.
+            _logger.LogTrace("Authenticating demo user");
+            var authenticationService = Services.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>();
+            await authenticationService.AuthenticateWithUsernamePasswordAsync("admin", "Welkom01");
         }
         finally
         {
@@ -101,9 +163,9 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Called when authentication succeeds (user has logged in).
+    /// Called when a user signs in.
     /// </summary>
-    private async Task OnAuthenticationSucceededAsync(AuthenticationSuccessEventArgs e)
+    private async void OnUserSignedIn(UserSignedInMessage message)
     {
         try
         {
@@ -113,14 +175,14 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error in OnAuthenticationSucceededAsync");
+            _logger?.LogError(ex, "Error in OnUserSignedIn");
         }
     }
 
     /// <summary>
-    /// Called when authentication fails or user logs out.
+    /// Called when a user signs out.
     /// </summary>
-    private async Task OnAuthenticationFailedAsync()
+    private async void OnUserSignedOut(UserSignedOutMessage message)
     {
         try
         {
@@ -130,11 +192,11 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error in OnAuthenticationFailedAsync");
+            _logger?.LogError(ex, "Error in OnUserSignedOut");
         }
     }
 
-    public override async Task InitializeApplicationAsync()
+    protected override async Task InitializeApplicationAsync()
     {
         try
         {
@@ -164,7 +226,7 @@ public partial class App : Application
                 await _dialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
             }
 
-            RaiseApplicationInitialized();
+            _lifecycleService?.SignalApplicationInitialized();
         }
         finally
         {

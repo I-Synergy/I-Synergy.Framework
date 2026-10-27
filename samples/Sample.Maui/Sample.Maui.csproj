@@ -1,7 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0-android;net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0')) And $([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.26100.0</TargetFrameworks>
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is
@@ -12,14 +14,13 @@
 		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
 		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
-		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Sample</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-
 		<IsPackable>false</IsPackable>
-
+		<WindowsPackageType>None</WindowsPackageType>
+    
 		<!-- Display name -->
 		<ApplicationTitle>Sample</ApplicationTitle>
 		<Product>Maui Sample</Product>
@@ -31,22 +32,67 @@
 		<!-- Align Version with ApplicationDisplayVersion to prevent PackageVersion conflict across TFs -->
 		<Version>$(ApplicationDisplayVersion)</Version>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">16.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">16.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">35.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+    <!-- Workaround: multi-targeted MAUI projects don't expose GetTargetPath in the outer build,
+         which breaks VS Build Acceleration and Aspire AppHost project reference resolution. -->
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn)</GetTargetPathDependsOn>
 	</PropertyGroup>
 
-	<!-- This allows breakpoints to be hit when debugging!-->
-	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' And '$(Configuration)' == 'Debug'">
-		<MtouchDebug>true</MtouchDebug>
-	</PropertyGroup>
+  <Target Name="GetTargetPath" />
+
+  <Choose>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+      <PropertyGroup>
+        <SupportedOSPlatformVersion Condition="$(TargetFramework.StartsWith('net11.0'))">24.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="!$(TargetFramework.StartsWith('net11.0'))">21.0</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+      <PropertyGroup>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+
+        <CodesignKey>Apple Development: Created via API (Y4Q66R3GZS)</CodesignKey>
+        <CodesignProvision>VS: WildCard Development</CodesignProvision>
+      </PropertyGroup>
+
+      <!-- This allows breakpoints to be hit when debugging!-->
+      <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <MtouchDebug>true</MtouchDebug>
+      </PropertyGroup>
+
+      <PropertyGroup>
+        <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+      <PropertyGroup>
+        <SupportedOSPlatformVersion>17.0</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+      <PropertyGroup>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+
+        <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
+        <SelfContained>true</SelfContained>
+        <PublishReadyToRun>true</PublishReadyToRun>
+      </PropertyGroup>
+
+      <PropertyGroup Condition="'$(RuntimeIdentifierOverride)' != ''">
+        <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>
+      </PropertyGroup>
+    </When>
+  </Choose>
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="800,106" />
+		<!-- Splash is a PNG on purpose: the MAUI 11 RC Resizetizer crashes on SVG text (Svg.Skia/Microsoft.Maui.Resizetizer 11.0.0-rc.2 -> MAUIR0005,
+		     MissingMethodException in SKTextBlobBuilder.AddPositionedRun) and the source SVG contains the wordmarks as <text>. splash.svg is kept next to
+		     this file as the editable source; re-rendering it to splash.png is what produces the PNG. -->
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#17171a" />
+		
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
@@ -56,21 +102,25 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Compile Remove="Resources\Fonts\FluentUI.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="appsettings.json" />
-	</ItemGroup>
-	<ItemGroup>
-		<MauiFont Include="Extensions\FluentUI.cs" />
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="appsettings.Staging.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.Development.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.json" />
+    <EmbeddedResource Include="appsettings.Production.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+		<PackageReference Include="Microsoft.Maui.DevFlow.Agent" />
 		<PackageReference Include="Syncfusion.Maui.Core" />
 	</ItemGroup>
 	<ItemGroup>
@@ -97,11 +147,22 @@
 			<Alias>IWindow</Alias>
 		</Using>
 	</ItemGroup>
-	<ItemGroup>
-		<Compile Update="Views\SyncView.xaml.cs">
-			<DependentUpon>SyncView.xaml</DependentUpon>
-		</Compile>
-	</ItemGroup>
+
+  <ItemGroup>
+    <MauiFont Update="Resources\Fonts\FluentSystemIconsRegular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+    <MauiFont Update="Resources\Fonts\FontAwesomeRegular.otf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+    <MauiFont Update="Resources\Fonts\OpenSans-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+    <MauiFont Update="Resources\Fonts\OpenSans-Semibold.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MauiFont>
+  </ItemGroup>
+  
 	<ItemGroup>
 		<MauiXaml Update="Views\ControlsView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
@@ -126,9 +187,6 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\SlideShowView.xaml">
 		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\SyncView.xaml">
-			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\SettingsView.xaml">
 			<Generator>MSBuild:Compile</Generator>

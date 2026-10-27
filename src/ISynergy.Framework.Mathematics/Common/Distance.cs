@@ -82,8 +82,7 @@ public static partial class Distance
     /// <returns>
     ///     An object of the class that implements the given distance.
     /// </returns>
-    [RequiresUnreferencedCode("Uses Type.GetType(string) and Activator.CreateInstance to resolve distance types by name.")]
-    [RequiresDynamicCode("Uses Activator.CreateInstance on runtime-resolved types.")]
+    [RequiresUnreferencedCode("Resolves the ISynergy.Framework.Mathematics.Distances.* implementation class by string name via Type.GetType(); under full trimming/NativeAOT, a Distances type not otherwise referenced by the application may be removed, and Type.GetType() will return null for it (Activator.CreateInstance would then throw).")]
     public static IDistance<T> GetDistance<T>(Func<T, T, double> func)
     {
         var methods = typeof(Distance).GetMethods(BindingFlags.Public | BindingFlags.Static);

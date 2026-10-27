@@ -1,0 +1,95 @@
+# README Standards Section Template — standards compatibility
+
+A short `## Standards Compatibility` section for a generated project's `README.md`. It is the entry
+point to `COMPLIANCE.md`: the README is what a human reads first, and a full status matrix does not
+belong in a project's own narrative — a section that reads like a certification badge gets deleted,
+and then there is no honest view at all.
+
+**The section is generated, and it is fenced by markers.** `verify-config` replaces only what lies
+between `<!-- BEGIN standards-status -->` and `<!-- END standards-status -->`, so a regeneration can
+never collide with the project's own README prose. Everything outside the markers is left
+byte-identical; the markers and everything between them are rewritten wholesale. The markers are HTML
+comments, so they are invisible in a rendered README — which is why they can be typed into the
+document at all.
+
+| Marker | Meaning |
+|---|---|
+| `<!-- BEGIN standards-status -->` | First line of the generated block, on its own line. |
+| `<!-- END standards-status -->` | Last line of the generated block, on its own line. |
+
+**Do not hand-edit inside the markers.** The next regeneration overwrites it, and
+`.ai/tests/validate-standards.py` fails on a section whose values do not match the computed ones.
+
+````markdown
+<!-- BEGIN standards-status -->
+## Standards Compatibility
+
+Engineering artifacts produced by this repository correspond to published standards, and their status
+is computed from validator runs rather than asserted. The full view — what is produced, what is
+aligned in practice only, and what stays outside a code repository's reach — is in
+[`COMPLIANCE.md`](COMPLIANCE.md).
+
+| Compatibility | Meaning | Standards |
+|---|---|---|
+| **Evidence** | An artifact a certification auditor can sample directly | ISO/IEC/IEEE 29119-3:2021 |
+| **Aligned** | Engineering practice follows the standard's model; no audit artifact is produced | ISO/IEC 25010:2023 |
+| **Organizational** | Certifiable only at organization level; this repository supplies nothing for it | ISO/IEC 27001, ISO/IEC 27701 / ISO/IEC 27017 / ISO/IEC 27018, ISO 9001, ISO/IEC 15504 / ISO/IEC 33001, IEC 62304, ISO/IEC 42001 |
+
+**This is not a certification and it asserts no conformity with any standard.** Certification is
+issued by an accredited third-party body after auditing an organizational management system; it
+cannot be established by a code repository.
+
+<!-- standards-status: source=.ai/reference/standards.md generated={yyyy-mm-dd} revision={short commit or unknown} validators={filename}:{exit},… -->
+<!-- END standards-status -->
+````
+
+## How the block is filled
+
+The fenced block above is the generated section — everything between the markers, inclusive. The
+prose in this `.txt` file outside the fence is guidance for whoever implements or maintains the
+generator, and never reaches a README.
+
+- **The three rows are always written**, in the order Evidence, Aligned, Organizational. A group with
+  no standards reads `*(none)*` rather than disappearing: an empty `Evidence` row is the single most
+  important thing this section can tell a reader, and deleting the row would hide it.
+- **The standards in each row are the manifest's `Standard` cells**, copied verbatim from
+  `.ai/reference/standards.md`, in the manifest's row order, comma-separated. The designators shown
+  in the block above are illustrative — the manifest is authoritative, and the generated list is what
+  its rows currently yield. They are never abbreviated and never re-spelled: a re-spelled designator
+  no longer matches a manifest row, and the checker fails it.
+- **A row's standard moves groups when its computed value changes**, not when someone edits the
+  README. Regeneration is the only way the section changes.
+- **The provenance line is required**, in the shape fixed by `.ai/reference/standards.md` →
+  *How This File Is Parsed*, rule 8. It sits directly above the closing marker, inside the block.
+- **The link to `COMPLIANCE.md` is kept** because both surfaces are written in the same approved
+  pass. A project that removes one removes the other, or the README carries a broken link.
+- **No badge, shield, logo or image is added.** A badge is a claim with no row behind it, which is
+  the one thing this surface exists not to be.
+
+## Regeneration
+
+1. `verify-config` computes the values from `.ai/reference/standards.md` and the validator runs, as
+   it does for `COMPLIANCE.md`, in the same pass.
+2. It shows the proposed block and waits for approval. It is never a silent mutator — that contract
+   already governs the rest of the skill and this step preserves it.
+3. On approval it replaces the block in place. Regenerating with unchanged inputs produces identical
+   bytes, so the diff of a no-op run is empty and a real diff means something moved.
+4. **If the markers are absent**, the block is appended at the end of `README.md`, markers included,
+   and the run reports where it put it.
+5. **If the markers are unbalanced, duplicated or interleaved** — more than one `BEGIN`, more than one
+   `END`, or an `END` before its `BEGIN` — generation stops and reports the line numbers. That state
+   is a manual edit to resolve, not a state to guess at, and guessing is how a generator eats a
+   section of someone's README.
+6. The section is written only when a generated solution is present, the same condition that governs
+   `COMPLIANCE.md`. In the template repository, nothing is written.
+
+## What this section must not say
+
+- **No claim word replaces a token.** The vocabulary is the three manifest tokens and nothing else:
+  never an abbreviation, never a synonym, and never an adjective asserting that this project meets a
+  standard. The sentence that says what this section is not stays in.
+- **Never a conformance level**, an obligation word, or a percentage.
+- **Never a standard the manifest does not carry**, and never a value a validator run does not
+  support. A name added here without a row behind it is a claim nobody can check.
+- **Never a statement about an organization.** The `Organizational` row names what a repository
+  cannot do; it says nothing about what any organization does or does not hold.

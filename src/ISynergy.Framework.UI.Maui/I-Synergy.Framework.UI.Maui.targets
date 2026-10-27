@@ -1,0 +1,6 @@
+<Project>
+	<ItemGroup>
+		<MauiFont Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\Resources\Fonts\*.ttf" />
+		<MauiFont Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\Resources\Fonts\*.otf" />
+	</ItemGroup>
+</Project>

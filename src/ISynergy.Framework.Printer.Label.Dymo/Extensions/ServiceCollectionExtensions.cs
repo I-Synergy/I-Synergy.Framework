@@ -2,7 +2,6 @@ using ISynergy.Framework.Printer.Label.Abstractions.Services;
 using ISynergy.Framework.Printer.Label.Dymo.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ISynergy.Framework.Printer.Label.Dymo.Extensions;
 
@@ -24,8 +23,6 @@ public static class ServiceCollectionExtensions
     /// <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> cannot use this library.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("Registers LabelPrinterService which depends on DymoSDK COM interop. Not compatible with AOT publishing.")]
-    [RequiresDynamicCode("DymoSDK requires dynamic code generation.")]
     public static IServiceCollection AddDymoPrinterLabelIntegration(this IServiceCollection services)
     {
         services.TryAddSingleton<ILabelPrinterService, LabelPrinterService>();

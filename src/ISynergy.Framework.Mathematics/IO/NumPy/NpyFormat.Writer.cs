@@ -1,5 +1,4 @@
 using ISynergy.Framework.Mathematics.Matrices;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -19,7 +18,6 @@ public static partial class NpyFormat
     /// </summary>
     /// <param name="array">The array to be saved to the array of bytes.</param>
     /// <returns>A byte array containig the saved array.</returns>
-    [RequiresDynamicCode("Calls Save(Array, Stream) which requires dynamic code generation.")]
     public static byte[] Save(Array array)
     {
         using (var stream = new MemoryStream())
@@ -35,7 +33,6 @@ public static partial class NpyFormat
     /// <param name="array">The array to be saved to disk.</param>
     /// <param name="path">The disk path under which the file will be saved.</param>
     /// <returns>The number of bytes written when saving the file to disk.</returns>
-    [RequiresDynamicCode("Calls Save(Array, Stream) which requires dynamic code generation.")]
     public static ulong Save(Array array, string path)
     {
         using (var stream = new FileStream(path, FileMode.Create))
@@ -50,7 +47,6 @@ public static partial class NpyFormat
     /// <param name="array">The array to be saved to disk.</param>
     /// <param name="stream">The stream to which the file will be saved.</param>
     /// <returns>The number of bytes written when saving the file to disk.</returns>
-    [RequiresDynamicCode("Calls GetDtypeFromType which uses Marshal.SizeOf(Type) with a runtime-resolved type.")]
     public static ulong Save(Array array, Stream stream)
     {
         using (var writer = new BinaryWriter(stream, Encoding.ASCII, true))
@@ -178,7 +174,6 @@ public static partial class NpyFormat
         return headerSize;
     }
 
-    [RequiresDynamicCode("Uses Marshal.SizeOf(Type) with a runtime-resolved type.")]
     private static string GetDtypeFromType(Array array, out Type type, out int bytes)
     {
         type = array.GetInnerMostType();

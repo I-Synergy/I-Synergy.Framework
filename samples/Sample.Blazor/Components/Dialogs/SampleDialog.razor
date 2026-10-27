@@ -5,11 +5,35 @@
 
 @inherits BaseModelDialog<Budget, SampleDialogViewModel>
 
-<BaseModelDialog TModel="Budget" TViewModel="SampleDialogViewModel" Content="Content" DialogSubtitle="@($"{Content.SelectedItem?.StartingDate}")">
+@* ClosesOnViewModelClosed="false": this nested instance exists only because Razor's generated
+   BuildRenderTree on the derived SampleDialog replaces the base markup, so it is the nested one
+   that actually renders the dialog. The outer SampleDialog instance owns the close (see the remarks
+   on BaseModelDialog.ClosesOnViewModelClosed) - otherwise both instances close the dialog and the
+   second close throws, killing the Blazor circuit. *@
+<BaseModelDialog TModel="Budget" TViewModel="SampleDialogViewModel" Content="Content" DialogSubtitle="@Subtitle" ClosesOnViewModelClosed="false">
 	<DialogContent>
 		@if (Content.SelectedItem is not null)
 		{
-			<FluentTextField @bind-Value="Content.SelectedItem.Description" Label="Description" />
+			@* v5: FluentTextField was replaced by FluentTextInput. *@
+			<FluentTextInput @bind-Value="Content.SelectedItem.Description" Label="Description" />
 		}
 	</DialogContent>
 </BaseModelDialog>
+
+@code {
+	/// <summary>
+	/// Gets the subtitle rendered under the dialog title, or <c>null</c> when there is nothing
+	/// meaningful to show.
+	/// <para>
+	/// Pre-existing, not migration-caused: a freshly created <see cref="Budget"/> has a default
+	/// <see cref="DateTimeOffset"/>, which used to be interpolated directly and rendered a second
+	/// header line reading "1/1/0001 12:00:00 AM +00:00". BaseModelDialog already suppresses the
+	/// subtitle when it is empty, so mapping a default date to <c>null</c> drops the line while a
+	/// real date still renders.
+	/// </para>
+	/// </summary>
+	private string? Subtitle =>
+		Content?.SelectedItem?.StartingDate is { } startingDate && startingDate != default
+			? $"{startingDate}"
+			: null;
+}

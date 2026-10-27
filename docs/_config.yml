@@ -1,0 +1,25 @@
+# GitHub Pages configuration for the documentation folder.
+# Repository settings -> Pages -> Deploy from a branch -> main / docs.
+title: I-Synergy Framework
+description: Libraries, samples and developer guides for the I-Synergy Framework.
+theme: jekyll-theme-minimal
+
+# The pages are plain Markdown without YAML front matter and they link to each other with
+# relative ".md" paths. These two whitelisted GitHub Pages plugins make both work unchanged,
+# so docs/ stays the single source of truth — no generated copy, no rewriting step.
+plugins:
+  - jekyll-optional-front-matter
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+
+# Internal working documents stay out of the published site.
+exclude:
+  - superpowers/
+  - FRAMEWORK_REVIEW_*.md
+  - SOLID_PRINCIPLES_ANALYSIS.md
+  - POTENTIAL_ISSUES_AND_RISKS.md
+  - MVVM_AND_UI_FRAMEWORK_ISSUES_REPORT.md
+  - ARCHITECTURAL_ISSUES_SUMMARY.md
+  - ASYNC_EXCEPTION_ISSUES_FIXED.md

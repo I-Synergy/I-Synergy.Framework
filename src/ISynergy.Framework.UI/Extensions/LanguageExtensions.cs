@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Enumerations;
 using NodaTime.TimeZones;
 using System.Globalization;
 
@@ -7,37 +6,28 @@ namespace ISynergy.Framework.UI.Extensions;
 public static class LanguageExtensions
 {
     /// <summary>
-    /// Sets the localization language.
+    /// Sets the localization language using the specified culture.
+    /// Applies the culture to both the current thread and as the default for new threads.
     /// </summary>
-    /// <param name="language">The iso language.</param>
-    public static void SetLocalizationLanguage(this Languages language)
+    /// <param name="culture">The culture to apply.</param>
+    public static void SetLocalizationLanguage(this CultureInfo culture)
     {
-        var systemCulture = CultureInfo.CurrentCulture.Clone() as CultureInfo;
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+    }
 
-        if (systemCulture is not null && systemCulture.TwoLetterISOLanguageName.Equals(language))
+    /// <summary>
+    /// Sets the localization language using a culture name string.
+    /// </summary>
+    /// <param name="cultureName">The culture name (e.g., "en", "nl", "nl-NL").</param>
+    public static void SetLocalizationLanguage(this string cultureName)
+    {
+        if (!string.IsNullOrEmpty(cultureName))
         {
-            CultureInfo.DefaultThreadCurrentCulture = systemCulture;
-            CultureInfo.DefaultThreadCurrentUICulture = systemCulture;
-        }
-        else
-        {
-            CultureInfo applicationCulture;
-
-            var cultureMap = new Dictionary<Languages, string>
-            {
-                { Languages.Dutch, "nl" },
-                { Languages.German, "de" },
-                { Languages.French, "fr" },
-                { Languages.English, "en" }
-            };
-
-            if (cultureMap.TryGetValue(language, out var cultureString))
-                applicationCulture = new CultureInfo(cultureString);
-            else
-                applicationCulture = new CultureInfo("en");
-
-            CultureInfo.DefaultThreadCurrentCulture = applicationCulture;
-            CultureInfo.DefaultThreadCurrentUICulture = applicationCulture;
+            var culture = CultureInfo.GetCultureInfo(cultureName);
+            culture.SetLocalizationLanguage();
         }
     }
 

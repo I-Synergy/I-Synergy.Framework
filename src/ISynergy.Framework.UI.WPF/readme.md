@@ -435,8 +435,11 @@ public class UpdateViewModel : ViewModel
 
 ```xml
 <controls:BladeView ItemsSource="{Binding Blades}"
-                    SelectedItem="{Binding SelectedBlade}" />
+                    Anchor="Auto"
+                    BladeMaxWidth="520" />
 ```
+
+See [Blades (edge panes)](#blades-edge-panes) for the blade contract and the right-to-left rule.
 
 ### ImageBrowser
 
@@ -469,6 +472,77 @@ public class UpdateViewModel : ViewModel
                Icon="{StaticResource DashboardIcon}" />
 ```
 
+### 6. Live Localization with IndexerBinding
+
+Bind directly to `LocalizedStrings.Default` indexer for automatic language switching without page reload:
+
+```xml
+<Window xmlns:local="clr-namespace:ISynergy.Framework.Globalization.Services;assembly=ISynergy.Framework.Globalization"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Bind to indexer with string key -->
+    <TextBlock Text="{Binding [WelcomeMessage], Source={x:Static local:LocalizedStrings.Default}}" />
+    
+    <Label Content="{Binding [GreetingText], Source={x:Static local:LocalizedStrings.Default}}" />
+</Window>
+```
+
+When the application language changes, simply call:
+
+```csharp
+var newCulture = new CultureInfo("fr-FR");
+newCulture.ApplyCulture();  // Triggers PropertyChanged("Item[]") on LocalizedStrings.Default
+```
+
+All bound controls automatically update with the new translations — no page refresh needed.
+
+## Blades (edge panes)
+
+A *blade* is a card that slides in from a screen edge and stacks on top of the previous one, matching the WinUI `BladeView` interaction.
+The owning view model implements `IViewModelBladeView` and exposes the stack through `Blades` (`ObservableCollection<IView>`) plus `IsPaneVisible`.
+Blades are opened through `IBladeService.OpenBladeAsync<TBladeViewModel, TEntity>(owner, ...)`, which resolves the view and view model from a DI scope, appends the view to `owner.Blades` and disables every earlier blade; closing the newest blade removes it and re-enables the previous one.
+Derive the owner from `ViewModelBladeView<TModel>` to get `Blades` and the blade commands for free.
+
+Host the pane in the owning view:
+
+```xml
+<controls:BladeView ItemsSource="{Binding Blades}"
+                    Anchor="Start" />
+```
+
+`BladeView` properties:
+
+- `ItemsSource` — the blade views to host, in opening order. When `null`, the `Blades` of the `IViewModelBladeView` data context is used.
+- `Anchor` — the logical edge, `Auto` (default, resolves to `End`), `Start` or `End`.
+- `DisabledOpacity` — opacity of every blade except the newest one (`0.75` by default).
+- `BladeSpacing` — gap between two adjacent blades (`10` by default).
+- `BladeMaxWidth` — maximum width of a single blade card (`520` by default).
+- `InnerPadding` — padding between the blade stack and the host edges (`8` on every side by default).
+
+The pane collapses itself when there is no blade or when the owner sets `IsPaneVisible` to `false`, clicking the scrim closes the newest blade through its `CloseCommand`, and the newest blade is the only interactive one.
+
+### Shell-level pane
+
+`Controls/BladeHostView` is a self-contained host: it resolves the framework's `BladeHostViewModel` (`ISynergy.Framework.UI/ViewModels`, registered as a singleton) from `Application.Services`, sets it as its own `DataContext`, and hosts a `BladeView` bound to `Blades`.
+Because the owner belongs to the shell rather than to a page, the pane survives page navigation and a blade opened from anywhere docks into the same stack.
+When the view model cannot be resolved (design time, or a host that does not register it) the control stays collapsed and traces the failure instead of throwing.
+
+```xml
+<c:BladeHostView Grid.RowSpan="2" Grid.ColumnSpan="3" />
+```
+
+Use `BladeHostView` when the blades are shell-level, and a page-level `BladeView` when the blades belong to a page — there `ItemsSource="{Binding Blades}"` binds to that page's own `IViewModelBladeView`.
+The sample's Settings is opened this way: `ShellViewModel.OpenSettingsAsync` calls `_bladeService.OpenBladeAsync<SettingsViewModel, object>(_bladeHost)` and `ShellView` hosts `BladeHostView` above the content frame, below the busy overlay.
+
+### Right-to-left
+
+`Anchor` is *logical*: `Start` is the left edge in a left-to-right culture and the right edge in a right-to-left one, and `Auto` follows `End`.
+The edge is resolved once through `BladePlacement.IsStartSide`/`BladePlacement.HorizontalSign`, never hardcoded.
+The positioning container under the pane is deliberately forced to `LeftToRight` so `Left`/`Right` alignment stay physical, while each blade's `Frame` receives the ambient `FlowDirection` so the blade *content* mirrors; the slide-in direction uses `HorizontalSign`, because WPF never mirrors render transforms.
+The pane re-resolves both on `FlowDirectionChanged`.
+
+A blade view must derive from `c:View` — a WPF `Page` — because `BladeView` hosts it in a `Frame` (`JournalOwnership = OwnsJournal`, navigation UI hidden); any other element is rejected with a trace error instead of being added.
+
 ## Theme Support
 
 The WPF framework includes 40+ built-in theme palettes:
@@ -492,12 +566,8 @@ public void ChangeTheme(string colorHex, Themes theme)
     System.Windows.Application.Current.Shutdown();
 }
 
-// Show theme selection to users
-private async Task ShowThemeSelectionAsync()
-{
-    await CommonServices.DialogService
-        .ShowDialogAsync<ThemeWindow, ThemeViewModel, ThemeStyle>();
-}
+// Light/dark switching is built into the shell: ThemeCommand toggles through IThemeService.
+// Language, theme and accent color are selected in your own settings page.
 ```
 
 ## Behaviors

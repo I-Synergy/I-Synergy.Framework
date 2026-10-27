@@ -125,6 +125,10 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     {
         base.OnAttachedTo(entry);
 
+        // Re-read the current culture at attachment time so the behavior
+        // picks up any culture changes applied after static initialization.
+        Culture = CultureInfo.CurrentCulture;
+
         entry.Keyboard = Keyboard.Numeric;
         entry.TextChanged += OnTextChanged;
         entry.Focused += OnFocused;

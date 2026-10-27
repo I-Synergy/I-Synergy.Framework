@@ -1,7 +1,5 @@
 using BenchmarkDotNet.Attributes;
 using ISynergy.Framework.MessageBus.Performance.Models;
-using MessagePack;
-using MessagePack.Resolvers;
 using System.Text.Json;
 
 namespace ISynergy.Framework.MessageBus.Performance.Benchmarks;
@@ -12,8 +10,6 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks;
 [MemoryDiagnoser]
 public class BenchMark
 {
-    private readonly MessagePackSerializerOptions _options;
-
     /// <summary>
     /// Gets or sets the model.
     /// </summary>
@@ -26,20 +22,6 @@ public class BenchMark
     /// </summary>
     public BenchMark()
     {
-        StaticCompositeResolver.Instance.Register
-        (
-            NativeDateTimeResolver.Instance,
-            NativeGuidResolver.Instance,
-            NativeDecimalResolver.Instance,
-            TypelessObjectResolver.Instance,
-            StandardResolver.Instance
-        );
-
-        _options = MessagePackSerializerOptions.Standard
-            .WithResolver(StaticCompositeResolver.Instance)
-            .WithCompression(MessagePackCompression.None);
-
-        MessagePackSerializer.DefaultOptions = _options;
     }
 
     /// <summary>
@@ -72,15 +54,5 @@ public class BenchMark
         {
             PropertyNameCaseInsensitive = true
         });
-    }
-
-    /// <summary>
-    /// Messages the pack.
-    /// </summary>
-    [Benchmark]
-    public void MessagePack()
-    {
-        byte[] result = MessagePackSerializer.Serialize(_model, _options);
-        MessagePackSerializer.Deserialize<TestModel>(result, _options);
     }
 }

@@ -1,0 +1,16 @@
+<UserControl
+    x:Class="ISynergy.Framework.UI.Controls.BladeHostView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="BladeHostControl"
+    mc:Ignorable="d">
+
+    <!--
+        Shell-level blade pane host. The data context is the shared BladeHostViewModel, so the
+        pane survives page navigation; visibility, anchoring and the scrim are owned by BladeView.
+    -->
+    <c:BladeView ItemsSource="{Binding Blades}" />
+</UserControl>

@@ -18,6 +18,8 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Scoped)]
 public partial class Window : ContentDialog, IWindow
 {
+    private IViewModel? _viewModel;
+
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
@@ -26,13 +28,19 @@ public partial class Window : ContentDialog, IWindow
     {
         get
         {
+            if (_viewModel is not null)
+                return _viewModel;
+
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing — DataContext can be null after cleanup.
+            // Callers handle null gracefully via null checks.
+            return null!;
         }
         set
         {
+            _viewModel = value;
             DataContext = value;
         }
     }
@@ -52,11 +60,6 @@ public partial class Window : ContentDialog, IWindow
     {
         Hide();
         return Task.CompletedTask;
-    }
-
-    private static void Window_Unloaded(object? sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -144,8 +147,12 @@ public partial class Window : ContentDialog, IWindow
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // DO NOT dispose ViewModel here.
+            // The Window may be disposed by the DI scope after the dialog is shown
+            // but before it is closed. Disposing the ViewModel prematurely clears its
+            // Closed event, preventing the DialogService's close handler from firing.
+            // The ViewModel lifecycle is managed by the DialogService close handler.
+            // ViewModel?.Dispose();
         }
 
         // free native resources if there are any.
@@ -159,13 +166,11 @@ public partial class Window : ContentDialog, IWindow
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            // free managed resources
-            ViewModel?.Dispose();
-        }
-
-        // free native resources if there are any.
+        // DO NOT dispose ViewModel here.
+        // The Window may be disposed by the DI scope after the dialog is shown
+        // but before it is closed. Disposing the ViewModel prematurely clears its
+        // Closed event, preventing the DialogService's close handler from firing.
+        // The ViewModel lifecycle is managed by the DialogService close handler.
     }
 #endif
     #endregion

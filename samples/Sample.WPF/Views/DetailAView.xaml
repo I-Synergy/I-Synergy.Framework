@@ -1,0 +1,22 @@
+<c:View xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.WPF" x:Class="Sample.Views.DetailAView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignHeight="450"
+      Width="380"
+      Title="Detail A">
+
+    <Grid>
+        <StackPanel Margin="10" Orientation="Vertical">
+            <TextBlock Text="Id" FontWeight="Bold" Foreground="{DynamicResource AppTextBrush}" />
+            <TextBlock Text="{Binding SelectedItem.Id}" Margin="0,0,0,10" Foreground="{DynamicResource AppTextBrush}" />
+
+            <TextBlock Text="Description" FontWeight="Bold" Foreground="{DynamicResource AppTextBrush}" />
+            <TextBlock Text="{Binding SelectedItem.Description}" Margin="0,0,0,10" Foreground="{DynamicResource AppTextBrush}" />
+
+            <Button Content="Close" Command="{Binding CancelCommand}" />
+        </StackPanel>
+    </Grid>
+</c:View>

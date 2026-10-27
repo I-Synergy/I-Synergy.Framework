@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<c:View
+    x:Class="Sample.Views.RootView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:controls="clr-namespace:Sample.Views.Controls"
+    xmlns:viewmodels="clr-namespace:Sample.ViewModels"
+    x:Name="RootPage"
+    x:DataType="viewmodels:ShellViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}">
+
+    <!--
+        WinUI-style shell: one always-alive root. The header, the sidebar and the content host are
+        siblings, and the blade pane is the last child so it covers the whole window.
+        On phones the content host spans both columns and the sidebar is a slide-in drawer above
+        it (positioned by the code-behind, opened through the header's menu button).
+    -->
+    <Grid RowSpacing="0" ColumnSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="HeaderRow" Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <controls:AppHeaderView
+            x:Name="Header"
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
+
+        <!-- Navigated pages render here; the host registers with the navigation service. -->
+        <c:NavigationHostView
+            x:Name="ContentHost"
+            Grid.Row="1"
+            Grid.Column="1"
+            BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}" />
+
+        <!-- Drawer scrim (phones): dims the content while the sidebar is open. Driven by code-behind. -->
+        <BoxView
+            x:Name="DrawerScrim"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            IsVisible="False"
+            Color="#99000000">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ToggleMenuCommand}" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <!-- Declared after the content host so the phone drawer renders above it. -->
+        <controls:SidebarView
+            x:Name="Sidebar"
+            Grid.Row="1"
+            Grid.Column="0"
+            BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
+
+        <!-- Shell-level blade pane: last child, so it dims and blocks the sidebar and header too. -->
+        <c:BladeHostView
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="2" />
+    </Grid>
+</c:View>

@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-maccatalyst</TargetFramework>
+    <UseMaui>true</UseMaui>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>ISynergy.Framework.UI.Maui</RootNamespace>
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <ApplicationId>com.isynergy.framework.ui.maui.tests</ApplicationId>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">maccatalyst-arm64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <MtouchLink>None</MtouchLink>
+    <UseInterpreter>true</UseInterpreter>
+    <!-- Local Xcode is ahead of the MacCatalyst SDK pack's recommended version; this only skips the advisory version-match check, not an actual compatibility requirement. -->
+    <ValidateXcodeVersion>false</ValidateXcodeVersion>
+    <!-- Microsoft.Testing.Platform (MTP) mode: produces a self-running MSTest executable so the
+         MacCatalyst app bundle can execute tests directly, without VSTest's hostfxr/apphost model
+         (which doesn't work inside a self-contained mobile app bundle) and without XHarness (which
+         has no MSTest runner, only NUnit/xUnit). -->
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <OutputType>Exe</OutputType>
+    <!-- We supply our own Program.cs/AppDelegate.cs that drives the MTP test host manually,
+         since the platform requires a UIApplication-based entry point. Run tests via:
+         bin/{Configuration}/net10.0-maccatalyst/{rid}/ISynergy.Framework.UI.Maui.Tests.Mac.app/Contents/MacOS/ISynergy.Framework.UI.Maui.Tests.Mac
+         `dotnet test` does not work here: a self-contained MacCatalyst app bundle has no
+         apphost/hostpolicy layout at the output root for VSTest to launch via hostfxr.
+         On .NET 10 the SDK additionally hard-errors if `dotnet test` targets this project
+         ("Testing with VSTest target is no longer supported by Microsoft.Testing.Platform"),
+         and the documented opt-in (global.json `test.runner` = Microsoft.Testing.Platform) is
+         repo-wide and breaks every other test project, which still uses VSTest. So this project
+         is intentionally excluded from `dotnet test` runs (see azure-pipelines.yml) and is run by
+         executing the built .app bundle directly. -->
+    <GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\ISynergy.Framework.UI.Maui.Tests\Behaviors\**\*.cs" LinkBase="Behaviors" />
+    <Compile Include="..\ISynergy.Framework.UI.Maui.Tests\Extensions\**\*.cs" LinkBase="Extensions" />
+    <Compile Remove="..\ISynergy.Framework.UI.Maui.Tests\Extensions\SingleInstanceActivationTests.cs" />
+    <Compile Include="..\ISynergy.Framework.UI.Maui.Tests\Services\**\*.cs" LinkBase="Services" />
+    <Compile Include="..\ISynergy.Framework.UI.Maui.Tests\Utilities\**\*.cs" LinkBase="Utilities" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Maui.Controls" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
+  </ItemGroup>
+</Project>

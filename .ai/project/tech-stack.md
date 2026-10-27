@@ -1,100 +1,119 @@
-# Technology Stack (CUSTOMIZE THIS)
-
-**Instructions:** Replace placeholders with your actual technology choices.
-
-**Purpose:** This file defines WHAT technologies you use - concrete versions, frameworks, and libraries.
+# Technology Stack — I-Synergy Framework
 
 ## Runtime & Language
 
-- **.NET SDK:** [Version - e.g., 10.0.101]
-- **Language:** [C# version - e.g., C# 14]
-- **Nullable Reference Types:** [Enabled / Disabled]
-- **Implicit Usings:** [Enabled / Disabled]
+- **.NET SDK:** 11.0.100-rc.2.26504.105, prerelease (`global.json`, `allowPrerelease: true`)
+- **Target Frameworks:** `net10.0` (LTS) + `net11.0` (preview). Every `src/` library ships both in one package; platform projects twin their variants (`net11.0-windows*`, `net11.0-android` / `-ios` / `-maccatalyst`). `net11.0` is only added when the SDK's `BundledNETCoreAppPackageVersion` is ≥ 11, so SDK 10 builds still work.
+- **Framework-aligned packages:** split into per-TFM groups in `Directory.Packages.props` — `10.0.13` for `net10.0`, `11.0.0-rc.2.26504.105` for `net11.0`. Third-party packages stay unconditional.
+- **Language:** C# 14
+- **Nullable Reference Types:** Enabled (global in `Directory.Build.props`)
+- **Implicit Usings:** Enabled (global in `Directory.Build.props`)
 
 ## Frameworks & Libraries
 
 | Category | Technology | Version | Notes |
 |----------|-----------|---------|-------|
-| **Orchestration** | [e.g., .NET Aspire / Docker Compose] | [Version] | [Purpose/notes] |
-| **Database** | [e.g., PostgreSQL / SQL Server] | [Version] | [Cloud/local details] |
-| **ORM** | [e.g., EF Core / Dapper] | [Version] | [Migration approach] |
-| **Caching** | [e.g., Redis / Memory Cache] | [Version] | [Distributed/local] |
-| **CQRS** | [e.g., I-Synergy.Framework.CQRS / MediatR] | [Version] | [Why chosen] |
-| **Mapping** | [Your choice] | [Version] | [Approach] |
-| **Logging** | [e.g., ILogger / Serilog] | [Version] | [Sink configuration] |
-| **Testing** | [e.g., MSTest / xUnit] | [Version] | [Framework choice] |
-| **Mocking** | [e.g., Moq / NSubstitute] | [Version] | [Mocking approach] |
-| **BDD** | [e.g., Reqnroll / SpecFlow] | [Version] | [Gherkin usage] |
-| **API Docs** | [e.g., Microsoft.AspNetCore.OpenApi / Swashbuckle] | [Version] | [Documentation approach] |
-| **Resilience** | [e.g., Microsoft.Extensions.Resilience / Polly] | [Version] | [Retry/circuit breaker] |
-| **Auth** | [e.g., OpenIddict / IdentityServer] | [Version] | [OAuth2/OpenID] |
-| **Validation** | [e.g., Data Annotations / FluentValidation] | [Version] | [Validation approach] |
+| **CQRS** | I-Synergy.Framework.CQRS | In-repo | Custom CQRS with ICommand/IQuery, source-generator friendly |
+| **ORM** | Entity Framework Core 10 | 10.0.8 | Code-first; no explicit Repository pattern — DataContext primitives |
+| **Mapping** | Manual | — | Explicit projections; no AutoMapper |
+| **Logging** | Microsoft.Extensions.Logging (ILogger) | 10.0.8 | Structured logging with correlation IDs |
+| **Testing** | MSTest | 4.2.3 | MSTest.TestAdapter + MSTest.TestFramework |
+| **Mocking** | Moq | 4.20.72 | For unit test mocking |
+| **BDD** | Reqnroll | 3.3.4 | Open-source SpecFlow fork |
+| **API Docs** | NSwag.AspNetCore | 14.7.1 | OpenAPI doc generation + Swagger UI |
+| **Resilience** | Microsoft.Extensions.Http.Resilience | 10.6.0 | Standard resilience handler (retry, circuit breaker) |
+| **Auth** | JwtBearer + Microsoft.Identity.Client | 10.0.5 / 4.84.1 | OAuth2/OpenID with token management |
+| **Validation** | Data Annotations + IValidatableObject | Built-in | No FluentValidation |
+| **Serialization** | System.Text.Json + MessagePack | 3.1.6 (MsgPack) | AOT-compatible serialization; MessagePack for performance |
+| **Source Gen** | Microsoft.CodeAnalysis.CSharp | 5.3.0 | Source generators for zero-reflection registration |
 
-## UI Layer (if applicable)
+## UI Layer
 
-- **Web UI:** [e.g., Blazor Server / Blazor WebAssembly / React]
-- **Desktop/Mobile:** [e.g., MAUI / WPF / None]
-- **MVVM Framework:** [e.g., I-Synergy.Framework.Mvvm / CommunityToolkit.Mvvm]
-- **Component Library:** [e.g., Microsoft FluentUI / MudBlazor / Custom]
+| Platform | Technology | Version | Notes |
+|----------|-----------|---------|-------|
+| **Web UI** | Blazor (Server + WebAssembly) + FluentUI | 10.0.8 / 4.14.2 | Microsoft.FluentUI.AspNetCore.Components |
+| **Desktop (Windows)** | WPF + WinUI 3 | — | WindowsAppSDK 2.1.3 |
+| **Mobile** | MAUI | 10.0.70 | CommunityToolkit.Maui.MediaElement |
+| **MVVM** | I-Synergy.Framework.Mvvm | In-repo | Custom MVVM framework (base classes, ViewModels, services) |
 
 ## Data Layer
 
-- **Primary Database:** [e.g., PostgreSQL 15+ / SQL Server 2022]
-- **ORM:** [e.g., Entity Framework Core 10 with Npgsql]
-- **Caching:** [e.g., Azure Managed Redis / Local Redis]
-- **Secrets:** [e.g., Azure Key Vault / AWS Secrets Manager / Environment Variables]
-- **Data Sync:** [e.g., Dotmim.Sync / Custom] (if applicable)
-- **Offline Storage:** [e.g., SQLite / None] (if applicable)
+| Technology | Version | Notes |
+|-----------|---------|-------|
+| **SQL Server (EF Core)** | 10.0.5 | Primary relational database |
+| **PostgreSQL (EF Core)** | 10.0.2 | Via Npgsql.EntityFrameworkCore.PostgreSQL |
+| **SQLite** | — | Via Dotmim.Sync.Sqlite for offline/sync scenarios |
+| **Azure Blob Storage** | 12.28.0 | File/document storage |
+| **AWS S3** | 4.0.23.4 | Alternative cloud storage |
+| **Data Sync** | 1.3.0 | Dotmim.Sync — bidirectional sync (PostgreSQL, SQLite, Web) |
 
 ## Authentication & Authorization
 
-- **OAuth2/OpenID:** [e.g., OpenIddict 7.x / Auth0 / Okta]
-- **JWT:** [e.g., Microsoft.AspNetCore.Authentication.JwtBearer]
-- **Token Management:** [e.g., Microsoft.IdentityModel.JsonWebTokens]
-- **User Store:** [e.g., EF Core Identity / Custom / External]
+| Technology | Version | Notes |
+|-----------|---------|-------|
+| **OAuth2/OpenID** | — | JwtBearer + Microsoft.Identity.Client |
+| **Multi-Tenancy** | In-repo | ISynergy.Framework.AspNetCore.MultiTenancy |
+| **Key Vault (Azure)** | 4.11.0 | Azure.Security.KeyVault.Secrets |
+| **Key Vault (OpenBao)** | 1.17.5.1 | VaultSharp-based alternative |
+
+## Messaging & Events
+
+| Technology | Version | Notes |
+|-----------|---------|-------|
+| **Azure Service Bus** | 7.20.1 | Cloud message bus |
+| **RabbitMQ** | 7.2.1 | Self-hosted message bus |
+| **SignalR** | 10.0.8 | Real-time monitoring & client comms |
+| **Event Sourcing** | In-repo | Custom event store with EF Core, Azure, S3 backends |
 
 ## Observability
 
-- **Monitoring:** [e.g., Application Insights / Prometheus / Datadog]
-- **Distributed Tracing:** [e.g., OpenTelemetry / Jaeger]
-- **Logging:** [e.g., I-Synergy.Framework.OpenTelemetry / Serilog + Seq]
-- **Health Checks:** [e.g., Microsoft.Extensions.Diagnostics.HealthChecks]
+| Technology | Version | Notes |
+|-----------|---------|-------|
+| **OpenTelemetry** | 1.15.3 | Tracing + metrics (Console, OTLP exporters) |
+| **Application Insights** | 1.8.1 | Azure Monitor exporter + Microsoft.ApplicationInsights 3.1.1 |
+| **Sentry** | 6.6.0 | Error monitoring via Sentry.OpenTelemetry |
+| **Health Checks** | Built-in | ASP.NET Core health checks |
 
 ## Package Management
 
-- **Version Control:** [Central Package Management / Individual project versions]
-- **Package Source:** [nuget.org / Private feed / Both]
-- **Version Strategy:** [Pinned versions / Latest stable / Floating]
+- **Version control:** Central Package Management (`Directory.Packages.props`)
+- **Package source:** nuget.org (private publish for framework packages)
+- **Version strategy:** Pinned versions (all versions verified on nuget.org)
 
-## Forbidden Technologies (Customize for Your Project)
+## Cloud Services
 
-| ❌ DO NOT USE | ✅ USE INSTEAD | Reason |
-|---------------|---------------|---------|
-| [Technology] | [Replacement] | [Why forbidden] |
-| [Technology] | [Replacement] | [Why forbidden] |
-
-**Example:**
-| ❌ DO NOT USE | ✅ USE INSTEAD | Reason |
-|---------------|---------------|---------|
-| MediatR | I-Synergy.Framework.CQRS | Project standard, better performance |
-| xUnit | MSTest | Project standard, team familiarity |
-
-## Cloud Services (if applicable)
-
-- **Cloud Provider:** [Azure / AWS / GCP / On-premises]
-- **Hosting:** [Azure App Service / AWS ECS / Kubernetes]
-- **Database:** [Azure Flexible Server / AWS RDS / Self-hosted]
-- **Storage:** [Azure Blob Storage / AWS S3 / File System]
-- **Key Vault:** [Azure Key Vault / AWS Secrets Manager / HashiCorp Vault]
+| Service | Technology | Notes |
+|---------|-----------|-------|
+| **Cloud Provider** | Azure (primary) + AWS (secondary) | Multi-cloud for storage/messaging |
+| **Compute** | Azure App Service / Container Apps | — |
+| **Storage** | Azure Blob Storage / AWS S3 | Abstracted via ISynergy.Framework.Storage |
+| **Messaging** | Azure Service Bus / RabbitMQ | Abstracted via ISynergy.Framework.MessageBus |
+| **Key Vault** | Azure Key Vault / OpenBao | Abstracted via ISynergy.Framework.KeyVault |
+| **Monitoring** | Azure Monitor + Sentry | OpenTelemetry-based |
 
 ## Development Tools
 
-- **IDE:** [Visual Studio / Rider / VS Code]
-- **Version Control:** [Git / Other]
-- **CI/CD:** [Azure DevOps / GitHub Actions / GitLab CI]
-- **Container Runtime:** [Docker / Podman]
-- **Local Development:** [.NET Aspire / Docker Compose / None]
+| Tool | Details |
+|------|---------|
+| **IDE** | Visual Studio 2022+ / JetBrains Rider |
+| **Version Control** | Git (GitHub: I-Synergy/I-Synergy.Framework) |
+| **CI/CD** | GitHub Actions (`.github/workflows/ci.yml`, Windows hosted runners) |
+| **Performance** | BenchmarkDotNet (0.15.8) — in `performance/` projects |
+| **AOT/Trim** | All libraries annotated for Native AOT + trimmed deployments |
+
+## Forbidden Technologies
+
+| ❌ DO NOT USE | ✅ USE INSTEAD | Reason |
+|---------------|---------------|--------|
+| MediatR | I-Synergy.Framework.CQRS | In-repo CQRS framework, better perf, source-gen friendly |
+| xUnit / NUnit | MSTest | Project standard, consistent framework |
+| Swashbuckle | NSwag.AspNetCore | Modern Microsoft-ecosystem approach |
+| FluentValidation | Data Annotations + IValidatableObject | Built-in, no external dependency |
+| Standalone Polly | Microsoft.Extensions.Http.Resilience | Microsoft-integrated resilience library |
+| Serilog | ILogger + OpenTelemetry | Project logging abstraction |
+| SpecFlow | Reqnroll | SpecFlow requires license; Reqnroll is OSS fork |
+| AutoMapper | Manual mapping | Explicit, debuggable, no reflection overhead |
 
 ---
 
-**Remember:** This file documents your actual technology stack. Update it when technologies change. For architectural patterns, see [architecture.md](architecture.md). For workflow preferences, see [preferences.md](preferences.md).
+**Remember:** This file documents the actual technology stack. Update it when technologies change. For architecture, see [architecture.md](architecture.md). For workflow preferences, see [preferences.md](preferences.md).

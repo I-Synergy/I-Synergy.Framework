@@ -83,6 +83,8 @@ public class ValidationViewModel : ViewModelNavigation<object>
     {
         _dialogService = dialogService;
 
+        // The sample validates as the user types; the toggle in the view can still turn it off.
+        AutomaticValidationTrigger = true;
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";
         Description = _commonServices.LanguageService.GetString("ValidationDescription");

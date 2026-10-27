@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 
 namespace ISynergy.Framework.AspNetCore.Extensions;
@@ -50,8 +49,6 @@ public static class ImageHelperExtensions
     /// <param name="imagePath">The image path.</param>
     /// <param name="attributes">The attributes.</param>
     /// <returns>HtmlString.</returns>
-    [RequiresUnreferencedCode("Reflects over arbitrary attribute object type. Use the IDictionary<string, object?> overload for AOT-safe publishing.")]
-    [RequiresDynamicCode("Reflects over arbitrary attribute object type. Use the IDictionary<string, object?> overload for AOT-safe publishing.")]
     public static HtmlString InlineImageAsync(this IHtmlHelper html, string notfoundPath, string imagePath, object? attributes = null)
     {
         if (attributes is IDictionary<string, object?> dict)

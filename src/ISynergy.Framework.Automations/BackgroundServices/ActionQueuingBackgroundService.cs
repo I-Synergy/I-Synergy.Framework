@@ -22,6 +22,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
 
     private Timer? _backgroundTimer;
     private Timer? _executionTimer;
+    private readonly object _timerLock = new();
 
     /// <summary>
     /// Default constructor for the background service.
@@ -47,8 +48,8 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Starting scheduled action queuing service.");
-        await _service.RefreshTasksAsync();
-        _backgroundTimer = new Timer(RefreshQueue, null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
+        await _service.RefreshTasksAsync(cancellationToken);
+        _backgroundTimer = new Timer(_ => _ = RefreshQueueAsync(), null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
     }
 
     /// <summary>
@@ -60,7 +61,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     {
         _logger.LogInformation("Scheduled action queuing service is stopping.");
         _backgroundTimer?.Change(Timeout.Infinite, 0);
-        _executionTimer?.Change(Timeout.Infinite, 0);
+        ReplaceExecutionTimer(null);
         return Task.CompletedTask;
     }
 
@@ -69,45 +70,58 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     /// <summary>
     /// Refreshes the queue and sets the execution timer to the first available tasks.
     /// </summary>
-    /// <param name="state"></param>
-    private async void RefreshQueue(object? state)
+    private async Task RefreshQueueAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await _service.RefreshTasksAsync();
+            await _service.RefreshTasksAsync(cancellationToken);
 
-            var result = await _service.CalculateTimespanAsync();
+            var result = await _service.CalculateTimespanAsync(cancellationToken);
 
             if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
-                _executionTimer = new Timer(ExecuteTask, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration);
+                ReplaceExecutionTimer(new Timer(state => _ = ExecuteTaskAsync(state as IAction), result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration));
             else
-                _executionTimer?.Change(Timeout.Infinite, 0);
+                ReplaceExecutionTimer(null);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error refreshing automation queue");
-            // Re-throw to crash the application if unhandled exception handler is configured
-            throw;
         }
     }
 
     /// <summary>
     /// Executes task when task delay has elapsed.
     /// </summary>
-    /// <param name="state"></param>
-    private async void ExecuteTask(object? state)
+    /// <param name="action"></param>
+    /// <param name="cancellationToken"></param>
+    private async Task ExecuteTaskAsync(IAction? action, CancellationToken cancellationToken = default)
     {
         try
         {
-            if (state is IAction action)
-                await _service.ExcecuteActionAsync(action);
+            if (action is not null)
+                await _service.ExcecuteActionAsync(action, cancellationToken);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error executing automation action");
-            // Re-throw to crash the application if unhandled exception handler is configured
-            throw;
         }
+    }
+
+    /// <summary>
+    /// Atomically swaps the execution timer, disposing the previous one so it does not leak
+    /// when the queue is refreshed from a timer callback.
+    /// </summary>
+    private void ReplaceExecutionTimer(Timer? timer)
+    {
+        Timer? previous;
+
+        lock (_timerLock)
+        {
+            previous = _executionTimer;
+            _executionTimer = timer;
+        }
+
+        previous?.Dispose();
     }
 
     /// <summary>
@@ -127,7 +141,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     {
         if (disposing)
         {
-            _executionTimer?.Dispose();
+            ReplaceExecutionTimer(null);
             _backgroundTimer?.Dispose();
         }
     }

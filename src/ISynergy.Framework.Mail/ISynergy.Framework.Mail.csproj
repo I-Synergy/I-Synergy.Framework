@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFrameworks>net10.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0</TargetFrameworks>
 		<PackageId>I-Synergy.Framework.Mail</PackageId>
 		<Description>I-Synergy Framework Mail</Description>
 		<PackageTags>I-Synergy, Framework, Mail</PackageTags>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-	  <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
 	<ItemGroup>

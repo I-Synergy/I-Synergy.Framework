@@ -555,6 +555,91 @@ public static class ServiceCollectionExtensions
 
 ---
 
+## Event-Sourced Domains
+
+Some domains layer event sourcing on top of the standard CQRS pattern. These domains have `Aggregates/` and `Events/` folders alongside `Features/` and use `IAggregateRepository<TAggregate, TKey>` from `ISynergy.Framework.EventSourcing`.
+
+### Project Structure (event-sourced domain)
+
+```
+src/{ApplicationName}.Domain.{Domain}/
+  Aggregates/
+    {Entity}Aggregate.cs           (extends aggregate base, raises events)
+  Events/
+    {Entity}Events.cs              (domain event records)
+  Features/{Entity}/
+    Commands/Create{Entity}/
+      Create{Entity}CommandHandler.cs   (uses both aggregate repo + EF read model)
+    ...
+```
+
+### Command Handler Pattern (event-sourced)
+
+```csharp
+public sealed class Create{Entity}CommandHandler(
+    DataContext dataContext,
+    IAggregateRepository<{Entity}Aggregate, Guid> {entity}Repository,
+    ILogger<Create{Entity}CommandHandler> logger)
+    : ICommandHandler<Create{Entity}Command, Create{Entity}Response>
+{
+    public async Task<Create{Entity}Response> HandleAsync(
+        Create{Entity}Command command,
+        CancellationToken cancellationToken = default)
+    {
+        // 1. Create aggregate and apply domain method (raises domain event internally).
+        var aggregate = new {Entity}Aggregate();
+        aggregate.Create(Guid.NewGuid(), command.Prop1, command.Prop2);
+
+        // 2. Append domain events to event store (append-only).
+        await {entity}Repository.SaveAsync(aggregate, cancellationToken);
+
+        // 3. Project aggregate state into EF Core read model.
+        var entity = new Entities.{Domain}.{Entity}
+        {
+            {Entity}Id = aggregate.Id,
+            Prop1 = aggregate.Prop1,
+            Prop2 = aggregate.Prop2
+        };
+        dataContext.{Entities}.Add(entity);
+        await dataContext.SaveChangesAsync(cancellationToken);
+
+        return new Create{Entity}Response(aggregate.Id);
+    }
+}
+```
+
+### Delete Handler Pattern (event-sourced)
+
+```csharp
+// 1. Load aggregate from event store (replays history).
+var aggregate = await {entity}Repository.LoadAsync(command.{Entity}Id, cancellationToken)
+    ?? throw new InvalidOperationException($"{Entity} {command.{Entity}Id} not found");
+
+// 2. Apply delete method (raises domain event).
+aggregate.Delete(DateTimeOffset.UtcNow);
+
+// 3. Append event to event store.
+await {entity}Repository.SaveAsync(aggregate, cancellationToken);
+
+// 4. Remove from EF read model.
+var entity = await dataContext.{Entities}.FirstOrDefaultAsync(e => e.{Entity}Id == command.{Entity}Id, cancellationToken);
+if (entity is not null)
+{
+    dataContext.{Entities}.Remove(entity);
+    await dataContext.SaveChangesAsync(cancellationToken);
+}
+```
+
+### Key Rules for Event-Sourced Domains
+
+- **Event store is append-only** — never update or delete event records.
+- **Aggregate is the source of truth** — always load via `IAggregateRepository`, not from the EF read model.
+- **EF read model is a projection** — it exists for query performance; it mirrors the aggregate state.
+- **Query handlers** remain simple EF-only reads — they do NOT use the aggregate repository.
+- **Domain services** (e.g., `BudgetSchedulingService`) may be injected alongside the aggregate repo for side effects.
+
+---
+
 ## Common Pitfalls
 
 ### Wrong: Passing Model Objects to Commands

@@ -1,6 +1,4 @@
-using ISynergy.Framework.Automations.Abstractions;
 using ISynergy.Framework.Automations.States;
-using ISynergy.Framework.Core.Locators;
 
 namespace ISynergy.Framework.Automations.Conditions;
 
@@ -25,27 +23,7 @@ public class ConditionValue
     /// <param name="value">The value to create a condition value for.</param>
     public ConditionValue(object value)
     {
-        // Use StateTypeResolver if available, otherwise fall back to type checking
-        IStateTypeResolver? resolver = null;
-        try
-        {
-            resolver = ServiceLocator.Default.GetRequiredService<IStateTypeResolver>();
-        }
-        catch
-        {
-            // ServiceLocator not available or resolver not registered, use fallback logic
-        }
-
-        if (resolver is not null)
-        {
-            State = resolver.ResolveStateType(value);
-        }
-        else
-        {
-            // Fallback to type checking for backward compatibility
-            State = ResolveStateTypeFallback(value);
-        }
-
+        State = ResolveStateType(value);
         Value = value;
     }
 
@@ -61,11 +39,11 @@ public class ConditionValue
     }
 
     /// <summary>
-    /// Fallback method for resolving state type when resolver is not available.
+    /// Resolves the state type for the given value.
     /// </summary>
     /// <param name="value">The value to resolve.</param>
     /// <returns>The state type.</returns>
-    private static Type ResolveStateTypeFallback(object value)
+    private static Type ResolveStateType(object value)
     {
         return value switch
         {

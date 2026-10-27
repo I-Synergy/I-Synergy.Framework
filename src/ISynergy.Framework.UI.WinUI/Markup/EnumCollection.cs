@@ -1,6 +1,4 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
@@ -35,14 +33,8 @@ public class EnumCollection : MarkupExtension
     /// preserved by the IL trimmer. For AOT-safe scenarios, populate enum collections using
     /// <c>Enum.GetValues&lt;TEnum&gt;()</c> in ViewModel code.
     /// </remarks>
-    [UnconditionalSuppressMessage("Trimming", "IL2046",
-        Justification = "MarkupExtension.ProvideValue is an external WinUI SDK base method without RequiresUnreferencedCode; suppressing annotation mismatch.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026",
-        Justification = "Enum.GetValues(Type) is intentionally used for XAML markup; callers must ensure enum types are preserved.")]
     [UnconditionalSuppressMessage("Trimming", "IL2072",
-        Justification = "EnumType property holds a runtime Type for enum resolution in XAML; callers must ensure the type is preserved.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050",
-        Justification = "Enum.GetValues requires dynamic code; not AOT-safe by design.")]
+        Justification = "EnumType is set from XAML; the consuming application must preserve the enum type's fields.")]
     protected override object ProvideValue(IXamlServiceProvider serviceProvider)
     {
         Argument.IsEnumType(EnumType);

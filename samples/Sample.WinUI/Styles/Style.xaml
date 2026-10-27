@@ -18,6 +18,7 @@
     <converters:CurrencyConverter x:Key="CurrencyConverter" />
     <converters:NegativeCurrencyConverter x:Key="NegativeCurrencyConverter" />
     <converters:EnumToArrayConverter x:Key="EnumToArrayConverter" />
+    <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
     <converters:StringFormatConverter x:Key="StringFormatConverter" />
     <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
@@ -54,6 +55,10 @@
 
     <FontFamily x:Key="ContentControlThemeFontFamily">XamlAutoFontFamily</FontFamily>
     <FontFamily x:Key="FontAwesomeLight">ms-appx:///Assets/Fonts/fontawesome6free-regular-400#Font Awesome 6 Free Regular</FontFamily>
+    <FontFamily x:Key="Figtree">ms-appx:///Assets/Fonts/Figtree-Regular.ttf#Figtree</FontFamily>
+    <FontFamily x:Key="FigtreeMedium">ms-appx:///Assets/Fonts/Figtree-Medium.ttf#Figtree Medium</FontFamily>
+    <FontFamily x:Key="FigtreeSemiBold">ms-appx:///Assets/Fonts/Figtree-SemiBold.ttf#Figtree SemiBold</FontFamily>
+    <FontFamily x:Key="FluentUI">ms-appx:///Assets/Fonts/FluentSystemIconsRegular.ttf#FluentSystemIcons-Regular</FontFamily>
 
     <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
@@ -75,6 +80,19 @@
         <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
     </Style>
 
+    <!-- Tinted Gray control styles matching MAUI patterns -->
+
+    <Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
+    </Style>
+
+    <Style x:Key="DefaultTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="TextAlignment" Value="Start"/>
+    </Style>
+
     <Style
         x:Key="DefaultNoteTextBoxStyle"
         BasedOn="{StaticResource DefaultTextBoxStyle}"
@@ -84,7 +102,14 @@
         <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextAlignment" Value="Start"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style
+        x:Key="DefaultPasswordBoxStyle"
+        BasedOn="{StaticResource DefaultTextBoxStyle}"
+        TargetType="PasswordBox">
     </Style>
 
     <Style
@@ -99,5 +124,192 @@
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
         <Setter Property="MinHeight" Value="{ThemeResource ContentDialogButtonMinHeight}" />
         <Setter Property="MinWidth" Value="{ThemeResource ContentDialogButtonMinWidth}" />
+    </Style>
+
+    <Style x:Key="DefaultComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
+    <Style x:Key="DefaultDatePickerStyle" TargetType="DatePicker">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
+    <Style x:Key="DefaultTimePickerStyle" TargetType="TimePicker">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
+    <Style x:Key="DefaultAutoSuggestBoxStyle" TargetType="AutoSuggestBox">
+        <Setter Property="Background" Value="{ThemeResource TintedControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <!-- Primary Button: Uses accent color for important actions -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlBackgroundChromeWhiteBrush}" />
+        <Setter Property="Background" Value="{ThemeResource SystemAccentBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemAccentBrush}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="MinWidth" Value="120" />
+    </Style>
+
+    <!-- Secondary Button: Uses tinted gray, subtle appearance -->
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="Background" Value="{ThemeResource TintedSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TintedBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="MinWidth" Value="120" />
+    </Style>
+
+    <!-- NavigationView: Tinted background matching MAUI Shell tab bar -->
+    <Style x:Key="DefaultNavigationViewStyle" TargetType="NavigationView">
+        <Setter Property="Background" Value="{ThemeResource TintedBackgroundBrush}" />
+    </Style>
+
+    <!-- Implicit Page style: transparent so BladeView tinted background shows through -->
+    <Style TargetType="Page">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style x:Key="DefaultPageStyle" TargetType="Page">
+        <Setter Property="Background" Value="{ThemeResource TintedBackgroundBrush}" />
+    </Style>
+
+    <!-- ListView: Transparent background with tinted items -->
+    <Style x:Key="DefaultListViewStyle" TargetType="ListView">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style x:Key="DefaultListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- Shared sample settings surface styles (match Sample.Maui). -->
+    <Style x:Key="AppSettingsHeader" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FigtreeSemiBold}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Foreground" Value="{ThemeResource AppTextBrush}" />
+    </Style>
+
+    <Style x:Key="AppSettingsLabel" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FigtreeSemiBold}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource AppMutedBrush}" />
+    </Style>
+
+    <Style x:Key="AppSettingsField" TargetType="ComboBox">
+        <Setter Property="FontFamily" Value="{StaticResource Figtree}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="{ThemeResource AppControlBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource AppBorderBrush}" />
+    </Style>
+
+    <Style x:Key="AppPrimaryButton" BasedOn="{StaticResource PrimaryButton}" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource FigtreeSemiBold}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="{ThemeResource AppAccentBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource AppInkBrush}" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="14,10" />
+    </Style>
+
+    <Style x:Key="AppAccentSwatch" TargetType="Button">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <!-- Shared shell styles (match Sample.Maui). -->
+    <Style x:Key="AppBrandTile" TargetType="Border">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{ThemeResource AppAccentBrush}" />
+    </Style>
+
+    <Style x:Key="AppBrandName" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FigtreeSemiBold}" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="Foreground" Value="{ThemeResource AppTextBrush}" />
+    </Style>
+
+    <Style x:Key="AppSidebarName" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FigtreeSemiBold}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{ThemeResource AppTextBrush}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="AppSidebarSubtitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Figtree}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource AppMutedBrush}" />
+    </Style>
+
+    <Style x:Key="AppMutedLabel" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Figtree}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{ThemeResource AppMutedBrush}" />
+    </Style>
+
+    <Style x:Key="AppBreadcrumbLabel" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Figtree}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{ThemeResource AppMutedBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="AppBreadcrumbLink" BasedOn="{StaticResource AppBreadcrumbLabel}" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FigtreeSemiBold}" />
+        <Setter Property="Foreground" Value="{ThemeResource AppAccentBrush}" />
+    </Style>
+
+    <Style x:Key="AppBreadcrumbCurrent" BasedOn="{StaticResource AppBreadcrumbLabel}" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FigtreeSemiBold}" />
+        <Setter Property="Foreground" Value="{ThemeResource AppTextBrush}" />
+    </Style>
+
+    <Style x:Key="AppIconButton" TargetType="Button">
+        <Setter Property="Width" Value="44" />
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Foreground" Value="{ThemeResource AppMutedBrush}" />
+    </Style>
+    <Style x:Key="AppFooterLink" TargetType="Button">
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Foreground" Value="{ThemeResource AppMutedBrush}" />
     </Style>
 </ResourceDictionary>

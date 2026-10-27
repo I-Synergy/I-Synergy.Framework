@@ -1,3 +1,4 @@
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Geodetic;
 using ISynergy.Framework.Geography.Utm;
@@ -38,7 +39,7 @@ public class GlobalMesh
     public GlobalMesh(int meshSizeinMeters = 1000)
     {
         if (meshSizeinMeters < MinimumMeshSize)
-            throw new ArgumentOutOfRangeException(Properties.Resources.MESHSIZE_MIN_VIOLATION);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("MESHSIZE_MIN_VIOLATION"));
 
         MeshSize = meshSizeinMeters;
         var dblSquareSize = (double)meshSizeinMeters;
@@ -62,7 +63,7 @@ public class GlobalMesh
             (long)Math.Round((maxHeight + dblSquareSize - 1.0) / dblSquareSize, MidpointRounding.AwayFromZero);
 
         if (maxHorizontalMeshes < 2 || _maxVerticalMeshes < 2)
-            throw new ArgumentOutOfRangeException(Properties.Resources.MESHSIZE_TOO_BIG);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("MESHSIZE_TOO_BIG"));
 
         Count = maxHorizontalMeshes * _maxVerticalMeshes;
     }
@@ -149,7 +150,7 @@ public class GlobalMesh
     private void ValidateMeshNumber(long meshNumber)
     {
         if (meshNumber < 0 || meshNumber >= GlobalCount)
-            throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_MESH_NUMBER);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_MESH_NUMBER"));
     }
 
     /// <summary>
@@ -269,7 +270,7 @@ public class GlobalMesh
         const int maxDistance = 3;
 
         if (distance < 0 || distance > maxDistance)
-            throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_DISTANCE);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_DISTANCE"));
 
         if (distance == 0)
         {

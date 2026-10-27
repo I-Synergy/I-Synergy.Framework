@@ -17,7 +17,7 @@ public class IntPointTest
     public void EuclideanNormTest(int x, int y, double expectedNorm)
     {
         Point point = new(x, y);
-        Assert.AreEqual(point.EuclideanNorm(), expectedNorm);
+        Assert.AreEqual(expectedNorm, point.EuclideanNorm());
     }
 
     [TestMethod]

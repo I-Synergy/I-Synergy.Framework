@@ -55,15 +55,15 @@ public record NavigationItem : IDisposable
     /// Initializes a new instance of the <see cref="NavigationItem"/> class.
     /// </summary>
     /// <param name="name">The name.</param>
-    /// <param name="symbol">The symbol.</param>
+    /// <param name="icon">The symbol.</param>
     /// <param name="color">The color.</param>
     /// <param name="command">The command.</param>
     /// <param name="commandParameter">The command parameter.</param>
-    public NavigationItem(string name, object symbol, string color, ICommand command, object? commandParameter = null)
+    public NavigationItem(string name, object icon, string color, ICommand command, object? commandParameter = null)
     {
         Name = name;
         ToolTipMenu = name;
-        Icon = symbol;
+        Icon = icon;
         Color = color;
         Command = command;
         CommandParameter = commandParameter;

@@ -1,3 +1,5 @@
+using ISynergy.Framework.Globalization.Abstractions.Services;
+
 namespace ISynergy.Framework.Core.Abstractions.Services;
 
 /// <summary>
@@ -26,10 +28,6 @@ public interface ICommonServices
     /// Gets the exception handler service.
     /// </summary>
     IExceptionHandlerService ExceptionHandlerService { get; }
-    /// <summary>
-    /// Gets the scoped context service.
-    /// </summary>
-    IScopedContextService ScopedContextService { get; }
     /// <summary>
     /// Restarts application.
     /// </summary>

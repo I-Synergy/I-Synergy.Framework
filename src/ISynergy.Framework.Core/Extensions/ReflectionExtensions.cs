@@ -278,7 +278,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="_self"></param>
     /// <returns>System.Object.</returns>
-    public static bool IsFreeApplication([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] this Type _self)
+    public static bool IsFreeApplication(this Type _self)
     {
         if (Attribute.GetCustomAttribute(_self, typeof(FreeAttribute)) is FreeAttribute attribute)
             return attribute.IsFree;
@@ -290,7 +290,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="_self"></param>
     /// <returns></returns>
-    public static bool IsSingleton([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] this Type _self)
+    public static bool IsSingleton(this Type _self)
     {
         if (Attribute.GetCustomAttribute(_self, typeof(LifetimeAttribute)) is LifetimeAttribute attribute)
             return attribute.Lifetime == Lifetimes.Singleton;
@@ -302,7 +302,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="_self"></param>
     /// <returns></returns>
-    public static bool IsScoped([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] this Type _self)
+    public static bool IsScoped(this Type _self)
     {
         if (Attribute.GetCustomAttribute(_self, typeof(LifetimeAttribute)) is LifetimeAttribute attribute)
             return attribute.Lifetime == Lifetimes.Scoped;
@@ -315,7 +315,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="_self">The root assembly.</param>
     /// <returns>A list of all referenced assemblies.</returns>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible; loaded types may be trimmed.")]
+    [RequiresUnreferencedCode("Recursively loads referenced assemblies with Assembly.Load(AssemblyName); the trimmer cannot statically discover assemblies or types loaded this way.")]
     public static List<Assembly> GetAllReferencedAssemblies(this Assembly _self)
     {
         var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());
@@ -361,7 +361,7 @@ public static class ReflectionExtensions
     /// </summary>
     /// <param name="_self">The root assembly.</param>
     /// <returns>An array of all referenced assembly names.</returns>
-    [RequiresUnreferencedCode("Assembly scanning is not AOT-compatible; loaded types may be trimmed.")]
+    [RequiresUnreferencedCode("Recursively loads referenced assemblies with Assembly.Load(AssemblyName); the trimmer cannot statically discover assemblies or types loaded this way.")]
     public static AssemblyName[] GetAllReferencedAssemblyNames(this Assembly _self)
     {
         var queue = new Queue<AssemblyName>(_self.GetReferencedAssemblies());

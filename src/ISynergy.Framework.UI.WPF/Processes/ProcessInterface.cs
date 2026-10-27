@@ -212,8 +212,11 @@ public class ProcessInterface : IDisposable
         //  Disable the threads.
         OutputWorker.CancelAsync();
         ErrorWorker.CancelAsync();
+        InputWriter?.Dispose();
         InputWriter = null;
+        OutputReader?.Dispose();
         OutputReader = null;
+        ErrorReader?.Dispose();
         ErrorReader = null;
         Process = null;
         ProcessFileName = null;
@@ -320,11 +323,6 @@ public class ProcessInterface : IDisposable
     public event ProcessEventHanlder? OnProcessError;
 
     /// <summary>
-    /// Occurs when process input is produced.
-    /// </summary>
-    public event ProcessEventHanlder? OnProcessInput;
-
-    /// <summary>
     /// Occurs when the process ends.
     /// </summary>
     public event ProcessEventHanlder? OnProcessExit;
@@ -373,25 +371,18 @@ public class ProcessInterface : IDisposable
 
             if (Process is not null)
             {
+                Process.Exited -= CurrentProcess_Exited;
                 Process.Kill();
                 Process.Dispose();
                 Process = null;
             }
 
-            if (InputWriter is not null)
-            {
-                InputWriter = null;
-            }
-
-            if (OutputReader is not null)
-            {
-                OutputReader = null;
-            }
-
-            if (ErrorReader is not null)
-            {
-                ErrorReader = null;
-            }
+            InputWriter?.Dispose();
+            InputWriter = null;
+            OutputReader?.Dispose();
+            OutputReader = null;
+            ErrorReader?.Dispose();
+            ErrorReader = null;
         }
     }
 

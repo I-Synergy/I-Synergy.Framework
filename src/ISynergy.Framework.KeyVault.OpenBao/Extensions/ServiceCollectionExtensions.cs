@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.CodeAnalysis;
 using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
 
@@ -35,8 +34,6 @@ public static class ServiceCollectionExtensions
     /// credential type, which is fully AOT-safe.
     /// </para>
     /// </remarks>
-    [RequiresUnreferencedCode("VaultSharp uses reflection-based JSON serialization internally. Verify AOT compatibility with the VaultSharp version in use.")]
-    [RequiresDynamicCode("VaultSharp may require dynamic code generation for JSON deserialization.")]
     public static IServiceCollection AddOpenBaoKeyVaultIntegration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<KeyVaultOptions>(configuration.GetSection(nameof(KeyVaultOptions)));

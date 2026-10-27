@@ -3,16 +3,13 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Models;
 using ISynergy.Framework.Core.Models.Accounts;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
@@ -23,7 +20,7 @@ public class AuthenticationViewModel : ViewModel
     private const string WarningPasswordSizeKey = "WarningPasswordSize";
     private const string WarningPasswordMatchKey = "WarningPasswordMatch";
 
-    private readonly IAuthenticationService _authenticationService;
+    private readonly Sample.Abstractions.Services.IAuthenticationService _authenticationService;
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
 
@@ -149,6 +146,15 @@ public class AuthenticationViewModel : ViewModel
     }
 
     /// <summary>
+    /// Gets or sets whether the user wants to be remembered on next launch.
+    /// </summary>
+    public bool AutoLogin
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
     /// Gets or sets the ShowLogin property value.
     /// </summary>
     /// <value><c>true</c> if [login visible]; otherwise, <c>false</c>.</value>
@@ -169,7 +175,7 @@ public class AuthenticationViewModel : ViewModel
 
     public AuthenticationViewModel( // NOSONAR - high complexity is inherent in authentication validation setup
         ICommonServices commonServices,
-        IAuthenticationService authenticationService,
+        Sample.Abstractions.Services.IAuthenticationService authenticationService,
         IDialogService dialogService,
         INavigationService navigationService,
         ILogger<AuthenticationViewModel> logger)
@@ -275,32 +281,19 @@ public class AuthenticationViewModel : ViewModel
     /// Forgots the password asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
-    public Task ForgotPasswordAsync()
-    {
-        ForgotPasswordViewModel forgotPasswordVM = _commonServices.ScopedContextService.GetRequiredService<ForgotPasswordViewModel>();
-        forgotPasswordVM.Submitted += ForgotPasswordVM_Submitted;
-        return _dialogService.ShowDialogAsync(typeof(IForgotPasswordWindow), forgotPasswordVM);
-    }
+    public Task ForgotPasswordAsync() =>
+        _dialogService.ShowDialogAsync<IForgotPasswordWindow, ForgotPasswordViewModel, bool>(
+            async result =>
+            {
+                if (result)
+                {
+                    await _dialogService
+                            .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
 
-    /// <summary>
-    /// Forgots the password vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private async void ForgotPasswordVM_Submitted(object? sender, SubmitEventArgs<bool> e)
-    {
-        if (sender is ForgotPasswordViewModel vm)
-            vm.Submitted -= ForgotPasswordVM_Submitted;
-
-        if (e.Result)
-        {
-            await _dialogService
-                    .ShowInformationAsync(_commonServices.LanguageService.GetString("Warning_Reset_Password"));
-
-            if (_navigationService.CanGoBack)
-                await _navigationService.GoBackAsync();
-        }
-    }
+                    if (_navigationService.CanGoBack)
+                        await _navigationService.GoBackAsync();
+                }
+            });
 
     public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -356,3 +349,4 @@ public class AuthenticationViewModel : ViewModel
         }
     }
 }
+

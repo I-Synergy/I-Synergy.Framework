@@ -64,7 +64,10 @@ public class JaggedEigenvalueDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(expectedD, D, 0.00001));
         Assert.IsTrue(Matrix.IsEqual(A, actualA, 0.0001));
 
-        Assert.AreSame(target.DiagonalMatrix, target.DiagonalMatrix);
+        // The decomposition caches DiagonalMatrix: repeated access must return the same instance.
+        var firstAccess = target.DiagonalMatrix;
+        var secondAccess = target.DiagonalMatrix;
+        Assert.AreSame(firstAccess, secondAccess);
     }
 
 

@@ -1,8 +1,11 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Globalization.Constants;
+using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Controls;
@@ -15,23 +18,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Globalization;
-
-#if WINDOWS
-using Microsoft.UI.Xaml.Media;
-using ISynergy.Framework.UI.Helpers;
-#endif
+using System.Net.Sockets;
 
 #pragma warning disable IDE0130, S1200
-
-[assembly: ExportFont("opendyslexic3-bold.ttf", Alias = "OpenDyslexic3-Bold")]
-[assembly: ExportFont("opendyslexic3-regular.ttf", Alias = "OpenDyslexic3-Regular")]
-[assembly: ExportFont("segoemdl2.ttf", Alias = "SegoeMdl2")]
-[assembly: ExportFont("segoesb.ttf", Alias = "SegoeSemiBold")]
-[assembly: ExportFont("segoeui.ttf", Alias = "SegoeUI")]
-[assembly: ExportFont("segoeuib.ttf", Alias = "SegoeUIBold")]
-[assembly: ExportFont("segoeuil.ttf", Alias = "SegoeUILight")]
-[assembly: ExportFont("segoeuisl.ttf", Alias = "SegoeUISemiLight")]
-[assembly: ExportFont("segoeuisb.ttf", Alias = "SegoeUISemiBold")]
 
 namespace ISynergy.Framework.UI;
 
@@ -47,10 +36,54 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly ILogger<Application> _logger;
     protected readonly IMessengerService _messengerService;
 
+    protected readonly string _language;
     protected readonly ApplicationFeatures? _features;
     protected readonly SplashScreenOptions _splashScreenOptions;
+
+    protected IDispatcherTimer? _clockTimer;
     protected LoadingView? _loadingView;
     protected Microsoft.Maui.Controls.Window? _mainWindow;
+
+    /// <summary>
+    /// Gets the icon to display in the title bar. Override to provide a custom icon.
+    /// Return null or empty to omit the icon.
+    /// </summary>
+    protected virtual ImageSource? Icon => null;
+
+    /// <summary>
+    /// Creates the title bar for the main window. Override to provide a custom title bar, or
+    /// return <see langword="null"/> to let the shell header occupy the title bar area itself
+    /// (the window still extends its content into the title bar).
+    /// </summary>
+    protected virtual TitleBar? SetTitleBar(bool withClock = false)
+    {
+        var titleBar = new TitleBar();
+
+        if (Icon != null)
+            titleBar.Icon = Icon;
+
+        if (CultureInfo.GetCultureInfo(_language).TextInfo.IsRightToLeft)
+            titleBar.FlowDirection = FlowDirection.RightToLeft;
+        else
+            titleBar.FlowDirection = FlowDirection.LeftToRight;
+
+        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
+            titleBar.Title = InfoService.Default.ProductName;
+
+        if (withClock)
+        {
+            _clockTimer = Dispatcher.CreateTimer();
+            _clockTimer.Interval = TimeSpan.FromSeconds(1);
+            _clockTimer.Tick += (s, e) =>
+            {
+                titleBar.Subtitle = $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+            };
+
+            _clockTimer.Start();
+        }
+
+        return titleBar;
+    }
 
     private Task? Initialize { get; set; }
     private int lastErrorMessage = 0;
@@ -68,7 +101,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             // Get logger first for proper error tracking
             try
             {
-                _logger = ServiceLocator.Default.GetRequiredService<ILogger<Application>>();
+                _logger = IPlatformApplication.Current!.Services.GetRequiredService<ILogger<Application>>();
                 _logger.LogTrace("Application constructor started");
             }
             catch (Exception ex)
@@ -84,17 +117,18 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
                 MauiExceptions.UnhandledException += CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+                CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
-                _commonServices = ServiceLocator.Default.GetRequiredService<ICommonServices>();
-                _dialogService = ServiceLocator.Default.GetRequiredService<IDialogService>();
-                _navigationService = ServiceLocator.Default.GetRequiredService<INavigationService>();
-                _exceptionHandlerService = ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-                _settingsService = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>();
-                _themeService = ServiceLocator.Default.GetRequiredService<IThemeService>();
-                _lifecycleService = _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
-                _messengerService = ServiceLocator.Default.GetRequiredService<IMessengerService>();
+                _commonServices = IPlatformApplication.Current!.Services.GetRequiredService<ICommonServices>();
+                _dialogService = IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>();
+                _navigationService = IPlatformApplication.Current!.Services.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = IPlatformApplication.Current!.Services.GetRequiredService<IExceptionHandlerService>();
+                _settingsService = IPlatformApplication.Current!.Services.GetRequiredService<ISettingsService>();
+                _themeService = IPlatformApplication.Current!.Services.GetRequiredService<IThemeService>();
+                _lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = IPlatformApplication.Current!.Services.GetRequiredService<IMessengerService>();
 
-                _features = ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+                _features = IPlatformApplication.Current!.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
                 // Pass a timeout to limit the execution time.
                 // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -102,8 +136,15 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
                 _commonServices.BusyService.StartBusy();
 
-                if (_settingsService.LocalSettings is not null)
-                    _settingsService.LocalSettings.Language.SetLocalizationLanguage();
+                // Always initialize the culture so DefaultThreadCurrentCulture is never null.
+                // Falls back to the OS culture when no language is persisted yet.
+                _language = _settingsService.LocalSettings?.Language ?? GlobalizationConstants.DefaultCultureInfoName;
+
+                var initialCulture = !string.IsNullOrEmpty(_language)
+                    ? CultureInfo.GetCultureInfo(_language)
+                    : CultureInfo.CurrentCulture;
+
+                initialCulture.ApplyCulture(ConfigureNumberFormat);
 
                 _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional
 
@@ -181,14 +222,6 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <summary>
     /// Initializing the application.
     /// </summary>
-    /// <example>
-    /// <code>
-    ///     await base.InitializeApplicationAsync();
-    ///     // wait 5 seconds before showing the main window...
-    ///     await Task.Delay(5000);
-    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
-    /// </code>
-    /// </example>
     /// <returns></returns>
     protected abstract Task InitializeApplicationAsync();
 
@@ -207,25 +240,27 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
     protected override Microsoft.Maui.Controls.Window CreateWindow(IActivationState? activationState)
     {
-        Microsoft.Maui.Controls.Page mainPage;
+        _mainWindow = new Microsoft.Maui.Controls.Window();
+        _mainWindow.ApplyFlowDirection(_language);
+        _mainWindow.Page = CreateLoadingView();
 
-        switch (_splashScreenOptions.SplashScreenType)
-        {
-            case SplashScreenTypes.Video:
-            case SplashScreenTypes.Image:
-                mainPage = CreateLoadingView();
-                break;
-            default:
-                mainPage = new EmptyView(_commonServices);
-                break;
-        }
-
-        _mainWindow = new Microsoft.Maui.Controls.Window(mainPage);
-        _mainWindow.Title = InfoService.Default.ProductName ?? string.Empty;
+#if WINDOWS
+        _mainWindow.TitleBar = SetTitleBar();
+#endif
 
         _themeService.ApplyTheme();
 
         return _mainWindow;
+    }
+
+    /// <summary>
+    /// Override to customize the <see cref="NumberFormatInfo"/> of the application
+    /// culture (currency symbol, decimal places, negative patterns, etc.).
+    /// </summary>
+    /// <param name="culture">A mutable clone of the culture to customize.</param>
+    protected virtual void ConfigureNumberFormat(CultureInfo culture)
+    {
+        // Default: no customization. Override in derived classes.
     }
 
     /// <summary>
@@ -237,7 +272,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = ServiceLocator.Default.GetRequiredService<IConfiguration>();
+            var configuration = IPlatformApplication.Current!.Services.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
@@ -314,6 +349,22 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <param name="e"></param>
     public virtual void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
     {
+        // MAUI probes for missing image density variants and missing local settings files at
+        // startup; these exceptions are caught internally and are not fatal. Skip them here so
+        // they are not forwarded to Sentry as errors.
+        // Also skip IOException wrapping SocketException with OperationAborted/ConnectionAborted,
+        // which occurs when the OS suspends in-flight socket reads while the app is backgrounded.
+        // Skip TaskCanceledException and OperationCanceledException; task/operation cancellation is routine, not an error.
+        if (e.Exception is FileNotFoundException { Message: null or "" }
+            || e.Exception is FileNotFoundException fnfEx
+                && (fnfEx.FileName?.EndsWith(".resources", StringComparison.OrdinalIgnoreCase) == true
+                    || fnfEx.FileName?.EndsWith(".resources.dll", StringComparison.OrdinalIgnoreCase) == true)
+            || e.Exception is InvalidOperationException { Message: "Unable to load image file." }
+            || (e.Exception is IOException ioEx && ioEx.InnerException is SocketException socketEx
+                && (socketEx.SocketErrorCode == SocketError.OperationAborted || socketEx.SocketErrorCode == SocketError.ConnectionAborted))
+            || e.Exception is OperationCanceledException)
+            return;
+
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
@@ -350,6 +401,22 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
     }
 
+    /// <summary>
+    /// Handles an exception thrown by a synchronous relay command's execute delegate
+    /// (e.g. a plain <c>RelayCommand</c> bound to a UI control). Routing it here instead of
+    /// letting it propagate synchronously avoids an unhandled exception on the UI thread, which
+    /// on some platforms (e.g. Mac Catalyst) would otherwise abort the process unconditionally.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void CommandExceptionDispatcher_UnhandledCommandException(object? sender, CommandExceptionEventArgs e)
+    {
+        if (_exceptionHandlerService is not null)
+            _exceptionHandlerService.HandleException(e.Exception);
+        else
+            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+    }
+
     #region IDisposable
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -368,6 +435,8 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (disposing)
         {
+
+
             _messengerService.Unregister<ShowInformationMessage>(this);
             _messengerService.Unregister<ShowWarningMessage>(this);
             _messengerService.Unregister<ShowErrorMessage>(this);
@@ -375,13 +444,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
             MauiExceptions.UnhandledException -= CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            CommandExceptionDispatcher.UnhandledCommandException -= CommandExceptionDispatcher_UnhandledCommandException;
 
-            // Unregister lifecycle event handlers
             if (_lifecycleService is not null)
-            {
                 _lifecycleService.ApplicationLoaded -= OnApplicationLoaded;
-                _lifecycleService.Dispose();
-            }
         }
     }
     #endregion

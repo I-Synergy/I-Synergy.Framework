@@ -1,6 +1,6 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models.Results;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 using Windows.Storage;
@@ -58,7 +58,7 @@ public class FileService : IFileService<FileResult>
 
         return new FileResult(
                 createdFile.Path,
-                () => createdFile.OpenStreamForReadAsync().GetAwaiter().GetResult());
+                createdFile.OpenStreamForReadAsync);
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class FileService : IFileService<FileResult>
 
         foreach (var file in await PickFileAsync(filters.ToArray(), multiple))
         {
-            if (file.File.Length <= maxFileSize || maxFileSize == 0)
+            if ((await file.GetFileAsync()).Length <= maxFileSize || maxFileSize == 0)
             {
                 result.Add(file);
             }
@@ -132,7 +132,7 @@ public class FileService : IFileService<FileResult>
     public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
-            return result.First().File;
+            return await result.First().GetFileAsync();
 
         return null;
     }
@@ -160,7 +160,9 @@ public class FileService : IFileService<FileResult>
         };
 
 #if WINDOWS
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Application.MainWindow);
+        var mainWindow = Application.MainWindow
+            ?? throw new InvalidOperationException("Cannot open file picker: main window is not available.");
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(mainWindow);
         WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 #endif
 
@@ -196,7 +198,7 @@ public class FileService : IFileService<FileResult>
 
                     result.Add(new FileResult(
                         file.Path,
-                        () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
+                        file.OpenStreamForReadAsync));
                 }
             }
         }
@@ -210,7 +212,7 @@ public class FileService : IFileService<FileResult>
 
                 result.Add(new FileResult(
                     file.Path,
-                    () => file.OpenStreamForReadAsync().GetAwaiter().GetResult()));
+                    file.OpenStreamForReadAsync));
             }
         }
 

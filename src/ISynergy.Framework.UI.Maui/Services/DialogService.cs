@@ -1,14 +1,18 @@
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
+using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class DialogService : IDialogService
+public class DialogService : IDialogService, IDisposable
 {
     private const string ExceptionHandlerNotAvailable = "Exception handler service not available for dialog error";
     private const string ExceptionHandlerFailed = "Exception handler failed while processing dialog error";
@@ -17,7 +21,8 @@ public class DialogService : IDialogService
     private const string DialogCreationExceptionHandlerFailed = "Exception handler failed while processing dialog creation error";
     private const string DialogCreationExceptionHandlerNotAvailable = "Exception handler service not available for dialog creation error";
 
-    private readonly IScopedContextService _scopedContextService;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILocalSettings _localSettings;
     private readonly IExceptionHandlerService _exceptionHandlerService;
     private readonly ILanguageService _languageService;
     private readonly ILogger<DialogService>? _logger;
@@ -33,17 +38,20 @@ public class DialogService : IDialogService
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogService"/> class.
     /// </summary>
-    /// <param name="scopedContextService"></param>
+    /// <param name="scopeFactory"></param>
+    /// <param name="localSettings"></param>
     /// <param name="exceptionHandlerService"></param>
     /// <param name="languageService">The language service.</param>
     /// <param name="logger">Optional logger for enhanced error handling.</param>
     public DialogService(
-        IScopedContextService scopedContextService,
+        IServiceScopeFactory scopeFactory,
+        ILocalSettings localSettings,
         IExceptionHandlerService exceptionHandlerService,
         ILanguageService languageService,
         ILogger<DialogService>? logger = null)
     {
-        _scopedContextService = scopedContextService ?? throw new ArgumentNullException(nameof(scopedContextService));
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+        _localSettings = localSettings ?? throw new ArgumentNullException(nameof(localSettings));
         _exceptionHandlerService = exceptionHandlerService ?? throw new ArgumentNullException(nameof(exceptionHandlerService));
         _languageService = languageService ?? throw new ArgumentNullException(nameof(languageService));
         _logger = logger;
@@ -54,8 +62,8 @@ public class DialogService : IDialogService
     /// </summary>
     /// <param name="error">The error.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(Exception error, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(Exception error, string? title = "") =>
         ShowMessageAsync(error.ToMessage(Environment.StackTrace), !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -63,8 +71,8 @@ public class DialogService : IDialogService
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowErrorAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowErrorAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleError"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -72,8 +80,8 @@ public class DialogService : IDialogService
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowInformationAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowInformationAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleInfo"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -81,8 +89,8 @@ public class DialogService : IDialogService
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="title">The title.</param>
-    /// <returns>Task&lt;MessageBoxResult&gt;.</returns>
-    public Task<MessageBoxResult> ShowWarningAsync(string message, string? title = "") =>
+    /// <returns>Task&lt;MessageBoxResults&gt;.</returns>
+    public Task<MessageBoxResults> ShowWarningAsync(string message, string? title = "") =>
         ShowMessageAsync(message, !string.IsNullOrEmpty(title) ? title : _languageService.GetString("TitleWarning"), MessageBoxButtons.OK);
 
     /// <summary>
@@ -119,14 +127,14 @@ public class DialogService : IDialogService
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
-    /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
+    /// <returns>MessageBoxResults.</returns>
+    public async Task<MessageBoxResults> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
     {
         // Input validation
         if (string.IsNullOrWhiteSpace(message))
         {
             _logger?.LogWarning("Attempted to show dialog with empty message");
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
 
         // Circuit breaker pattern: Check if service is in cooldown
@@ -134,7 +142,7 @@ public class DialogService : IDialogService
         {
             _logger?.LogWarning("DialogService in cooldown period. Message: {Title} - {Message}", title, message);
             await TryFallbackNotificationAsync(message, title);
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
 
         // Try to recover after cooldown period
@@ -147,10 +155,9 @@ public class DialogService : IDialogService
 
         // Use semaphore to prevent multiple dialogs
         await _dialogSemaphore.WaitAsync();
+
         try
         {
-
-
             return await ShowMessageWithRetryAsync(
                 message,
                 title,
@@ -162,19 +169,12 @@ public class DialogService : IDialogService
         }
     }
 
-    private async Task<MessageBoxResult> ShowMessageWithRetryAsync(string message, string title, MessageBoxButtons buttons, int retryCount = 0)
+    private async Task<MessageBoxResults> ShowMessageWithRetryAsync(string message, string title, MessageBoxButtons buttons, int retryCount = 0)
     {
         const int maxRetries = 2;
 
         try
         {
-            // Pre-flight checks
-            if (!await ValidateApplicationStateAsync())
-            {
-                await TryFallbackNotificationAsync(message, title);
-                return MessageBoxResult.None;
-            }
-
             // Ensure we're on the main thread
             if (!MainThread.IsMainThread)
             {
@@ -198,54 +198,16 @@ public class DialogService : IDialogService
         catch (Exception ex) when (IsCriticalDialogException(ex))
         {
             await HandleCriticalDialogFailureAsync(ex, message, title);
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
         catch (Exception ex)
         {
             await HandleDialogFailureAsync(ex, message, title);
-            return MessageBoxResult.None;
+            return MessageBoxResults.None;
         }
     }
 
-    private async Task<bool> ValidateApplicationStateAsync()
-    {
-        try
-        {
-            // Additional safety check right before showing dialog
-            if (Application.Current == null ||
-                Application.Current?.Windows.Count == 0 ||
-                Application.Current?.Windows[0] == null ||
-                Application.Current?.Windows[0].Page == null)
-                throw new InvalidOperationException("Main page not available for dialog display");
-
-            // Check MainPage with timeout
-            var timeoutTask = Task.Delay(5000);
-            var checkTask = Task.Run(() => Application.Current?.Windows[0]?.Page != null);
-
-            var completedTask = await Task.WhenAny(checkTask, timeoutTask);
-            if (completedTask == timeoutTask)
-            {
-                _logger?.LogError("MainPage validation timed out");
-                return false;
-            }
-
-            var hasMainPage = await checkTask;
-            if (!hasMainPage)
-            {
-                _logger?.LogError("Application.Current.MainPage is null");
-                return false;
-            }
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error validating application state");
-            return false;
-        }
-    }
-
-    private async Task<MessageBoxResult> ShowMessageInternalAsync(string message, string title, MessageBoxButtons buttons)
+    private async Task<MessageBoxResults> ShowMessageInternalAsync(string message, string title, MessageBoxButtons buttons)
     {
         // Additional safety check right before showing dialog
         if (Application.Current == null ||
@@ -270,7 +232,7 @@ public class DialogService : IDialogService
                             _languageService.GetString("Ok"),
                             _languageService.GetString("Cancel"));
 
-                        return okCancelResult ? MessageBoxResult.OK : MessageBoxResult.Cancel;
+                        return okCancelResult ? MessageBoxResults.OK : MessageBoxResults.Cancel;
 
                     case MessageBoxButtons.YesNo:
                         var yesNoResult = await page.DisplayAlertAsync(
@@ -279,7 +241,7 @@ public class DialogService : IDialogService
                             _languageService.GetString("Yes"),
                             _languageService.GetString("No"));
 
-                        return yesNoResult ? MessageBoxResult.Yes : MessageBoxResult.No;
+                        return yesNoResult ? MessageBoxResults.Yes : MessageBoxResults.No;
 
                     default:
                         await page.DisplayAlertAsync(
@@ -287,11 +249,11 @@ public class DialogService : IDialogService
                             message,
                             _languageService.GetString("Ok"));
 
-                        return MessageBoxResult.OK;
+                        return MessageBoxResults.OK;
                 }
             }
 
-            return MessageBoxResult.Cancel;
+            return MessageBoxResults.Cancel;
         }
         catch (OperationCanceledException) when (cts.Token.IsCancellationRequested)
         {
@@ -456,127 +418,6 @@ public class DialogService : IDialogService
     /// <summary>
     /// Shows the dialog asynchronous.
     /// </summary>
-    /// <typeparam name="TWindow"></typeparam>
-    /// <typeparam name="TViewModel"></typeparam>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <returns></returns>
-    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>() // NOSONAR
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        await _dialogSemaphore.WaitAsync();
-        try
-        {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>();
-        }
-        finally
-        {
-            _dialogSemaphore.Release();
-        }
-    }
-
-    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>()
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        try
-        {
-            if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                _scopedContextService.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-                await CreateDialogAsync(dialog, viewmodel);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType}", typeof(TWindow).Name, typeof(TViewModel).Name);
-
-            bool handled = false;
-
-            try
-            {
-                _exceptionHandlerService.HandleException(ex);
-                handled = true;
-            }
-            catch (Exception handlerEx)
-            {
-                // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
-            }
-
-            // Suppress exception if it was successfully handled or if handler is not available
-            // This prevents app crashes while still allowing the handler to show user-friendly messages
-            if (!handled)
-            {
-                _logger?.LogWarning(ExceptionHandlerNotAvailable);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
-    /// <typeparam name="TWindow">The type of the t window.</typeparam>
-    /// <typeparam name="TViewModel">The type of the t view model.</typeparam>
-    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
-    /// <param name="e">The selected item.</param>
-    /// <returns>Task{TEntity}.</returns>
-    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(TEntity e)
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        await _dialogSemaphore.WaitAsync();
-        try
-        {
-            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e);
-        }
-        finally
-        {
-            _dialogSemaphore.Release();
-        }
-    }
-
-    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(TEntity e)
-        where TWindow : IWindow
-        where TViewModel : IViewModelDialog<TEntity>
-    {
-        try
-        {
-            if (_scopedContextService.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                _scopedContextService.GetRequiredService(typeof(TWindow)) is Window dialog)
-            {
-                viewmodel.SetSelectedItem(e);
-                await CreateDialogAsync(dialog, viewmodel);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
-                typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name);
-
-            bool handled = false;
-
-            try
-            {
-                _exceptionHandlerService.HandleException(ex);
-                handled = true;
-            }
-            catch (Exception handlerEx)
-            {
-                // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
-            }
-
-            // Suppress exception if it was successfully handled or if handler is not available
-            // This prevents app crashes while still allowing the handler to show user-friendly messages
-            if (!handled)
-            {
-                _logger?.LogWarning(ExceptionHandlerNotAvailable);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Shows the dialog asynchronous.
-    /// </summary>
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <param name="window">The window.</param>
     /// <param name="viewmodel">The viewmodel.</param>
@@ -595,18 +436,25 @@ public class DialogService : IDialogService
     }
 
     /// <remarks>
-    /// This overload resolves the dialog window using <c>window.GetType()</c> which is not AOT-safe.
-    /// Prefer the strongly-typed overload <c>ShowDialogAsync&lt;TWindow, TViewModel, TEntity&gt;()</c>
-    /// when the concrete window type is known at compile time.
+    /// The <paramref name="window"/> must already be resolved from the caller's DI scope together
+    /// with the <paramref name="viewmodel"/>. Both share the same scope so they are disposed
+    /// together when the dialog closes — no additional scope is created here.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "GetType() on the window instance is not trim-safe. Use ShowDialogAsync<TWindow,TViewModel,TEntity>() for AOT-safe dialog display.")]
     private async Task ShowDialogAsyncInternal<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
     {
         try
         {
-            if (_scopedContextService.GetRequiredService(window.GetType()) is Window dialog)
+            if (window is Window dialog)
+            {
+                // Window was already resolved from the caller's scope (same scope as the ViewModel).
+                // No additional scope or Closed handler is needed — the caller manages the scope
+                // lifecycle and disposes both the ViewModel and the Window when Closed fires.
                 await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                _logger?.LogError("Dialog is not of type Window: {DialogType}", window?.GetType().Name ?? "null");
+            }
         }
         catch (Exception ex)
         {
@@ -641,7 +489,7 @@ public class DialogService : IDialogService
     /// <param name="type">The type.</param>
     /// <param name="viewmodel">The viewmodel.</param>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public async Task ShowDialogAsync<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+    public async Task ShowDialogAsync<TEntity>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type, IViewModelDialog<TEntity> viewmodel)
     {
         await _dialogSemaphore.WaitAsync();
         try
@@ -654,12 +502,208 @@ public class DialogService : IDialogService
         }
     }
 
-    private async Task ShowDialogAsyncInternal<TEntity>(Type type, IViewModelDialog<TEntity> viewmodel)
+    /// <inheritdoc />
+    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        TEntity e,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        await _dialogSemaphore.WaitAsync();
+        try
+        {
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(e, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
+        }
+        finally
+        {
+            _dialogSemaphore.Release();
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task ShowDialogAsync<TWindow, TViewModel, TEntity>(
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        await _dialogSemaphore.WaitAsync();
+        try
+        {
+            await ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
+        }
+        finally
+        {
+            _dialogSemaphore.Release();
+        }
+    }
+
+    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(
+        TEntity e,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        var scope = _scopeFactory.CreateScope();
+        try
+        {
+            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                initialization?.Invoke((TViewModel)viewmodel);
+
+                viewmodel.SetSelectedItem(e);
+
+                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
+                onSubmittedHandler = (_, args) =>
+                {
+                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                };
+                viewmodel.Submitted += onSubmittedHandler;
+
+                EventHandler? onCancelledHandler = null;
+                if (cancelledEventHandler is not null)
+                {
+                    onCancelledHandler = (_, _) =>
+                    {
+                        _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                    };
+                    viewmodel.Cancelled += onCancelledHandler;
+                }
+
+                viewmodel.Closed += (_, _) =>
+                {
+                    if (onSubmittedHandler is not null)
+                        viewmodel.Submitted -= onSubmittedHandler;
+
+                    if (onCancelledHandler is not null)
+                        viewmodel.Cancelled -= onCancelledHandler;
+
+                    if (closedEventHandler is not null)
+                    {
+                        _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                    }
+
+                    scope.Dispose();
+                };
+
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
+            }
+        }
+        catch (Exception ex)
+        {
+            scope.Dispose();
+            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
+                typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name);
+
+            bool handled = false;
+            try { _exceptionHandlerService.HandleException(ex); handled = true; }
+            catch (Exception handlerEx) { _logger?.LogError(handlerEx, ExceptionHandlerFailed); }
+            if (!handled) _logger?.LogWarning(ExceptionHandlerNotAvailable);
+        }
+    }
+
+    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler = null,
+        Func<Task>? closedEventHandler = null,
+        Action<TViewModel>? initialization = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        var scope = _scopeFactory.CreateScope();
+        try
+        {
+            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
+                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
+            {
+                initialization?.Invoke((TViewModel)viewmodel);
+
+                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
+                onSubmittedHandler = (_, args) =>
+                {
+                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                };
+                viewmodel.Submitted += onSubmittedHandler;
+
+                EventHandler? onCancelledHandler = null;
+                if (cancelledEventHandler is not null)
+                {
+                    onCancelledHandler = (_, _) =>
+                    {
+                        _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                    };
+                    viewmodel.Cancelled += onCancelledHandler;
+                }
+
+                viewmodel.Closed += (_, _) =>
+                {
+                    if (onSubmittedHandler is not null)
+                        viewmodel.Submitted -= onSubmittedHandler;
+
+                    if (onCancelledHandler is not null)
+                        viewmodel.Cancelled -= onCancelledHandler;
+
+                    if (closedEventHandler is not null)
+                    {
+                        _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                    }
+
+                    scope.Dispose();
+                };
+
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                scope.Dispose();
+            }
+        }
+        catch (Exception ex)
+        {
+            scope.Dispose();
+            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType}",
+                typeof(TWindow).Name, typeof(TViewModel).Name);
+
+            bool handled = false;
+            try { _exceptionHandlerService.HandleException(ex); handled = true; }
+            catch (Exception handlerEx) { _logger?.LogError(handlerEx, ExceptionHandlerFailed); }
+            if (!handled) _logger?.LogWarning(ExceptionHandlerNotAvailable);
+        }
+    }
+
+    private async Task ShowDialogAsyncInternal<TEntity>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type, IViewModelDialog<TEntity> viewmodel)
     {
         try
         {
-            if (_scopedContextService.GetRequiredService(type) is Window dialog)
+            // Create the Window via ActivatorUtilities so it is NOT tracked by a DI
+            // scope. The ViewModel was resolved from the caller's scope (or the root)
+            // and must not be paired with a Window from a second scope. The Window
+            // lifecycle is managed explicitly by CreateDialogAsync (disposed in
+            // viewModelClosedHandler via windowRef?.Dispose()).
+            using var tempScope = _scopeFactory.CreateScope();
+            var dialog = ActivatorUtilities.CreateInstance(tempScope.ServiceProvider, type) as Window;
+
+            if (dialog is not null)
+            {
                 await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                _logger?.LogError("Failed to create dialog of type {DialogType}", type.Name);
+            }
         }
         catch (Exception ex)
         {
@@ -739,43 +783,23 @@ public class DialogService : IDialogService
         Window? windowRef = null;
         IViewModelDialog<TEntity>? viewModelRef = null;
 
-        // Define the handler in the method scope so it is accessible for both += and -=
-        async void ViewModelClosedHandler(object? sender, EventArgs e)
+        EventHandler? viewModelClosedHandler = null;
+        viewModelClosedHandler = (_, _) =>
         {
-            try
-            {
-                if (viewModelRef != null)
-                    viewModelRef.Closed -= ViewModelClosedHandler;
-
-                if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
-                {
-                    await navigation.PopModalAsync();
-                }
-                else
-                {
-                    _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
-                }
-
-                viewModelRef?.Dispose();
-                viewModelRef = null;
-
-                windowRef?.Dispose();
-                windowRef = null;
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Error in ViewModelClosedHandler");
-            }
-        }
+            _ = HandleViewModelClosedAsync(viewModelRef, windowRef, viewModelClosedHandler).SafeFireAndForget();
+        };
 
         try
         {
             windowRef = window;
             viewModelRef = viewmodel;
 
+            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                window.FlowDirection = FlowDirection.RightToLeft;
+
             window.ViewModel = viewmodel;
 
-            viewmodel.Closed += ViewModelClosedHandler;
+            viewmodel.Closed += viewModelClosedHandler;
 
             try
             {
@@ -784,7 +808,7 @@ public class DialogService : IDialogService
             catch (Exception initEx)
             {
                 _logger?.LogError(initEx, "Error initializing viewmodel");
-                viewmodel.Closed -= ViewModelClosedHandler;
+                viewmodel.Closed -= viewModelClosedHandler;
 
                 // Call the exception handler service
                 bool handled = false;
@@ -816,7 +840,7 @@ public class DialogService : IDialogService
             }
             else
             {
-                viewmodel.Closed -= ViewModelClosedHandler;
+                viewmodel.Closed -= viewModelClosedHandler;
                 throw new InvalidOperationException("Cannot show modal dialog - Navigation is not available");
             }
         }
@@ -829,7 +853,7 @@ public class DialogService : IDialogService
             {
                 if (viewModelRef != null)
                 {
-                    viewModelRef.Closed -= ViewModelClosedHandler;
+                    viewModelRef.Closed -= viewModelClosedHandler;
                     viewModelRef.Dispose();
                 }
                 windowRef?.Dispose();
@@ -860,4 +884,146 @@ public class DialogService : IDialogService
             }
         }
     }
+
+    #region Event Handlers
+
+    private async Task HandleDialogSubmittedAsync<TEntity>(
+        TEntity result,
+        Func<TEntity, Task> submittedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await submittedEventHandler(result);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Submit callback failed for {WindowType}/{ViewModelType}",
+                windowTypeName, viewModelTypeName);
+        }
+    }
+
+    private async Task HandleDialogCancelledAsync(
+        Func<Task> cancelledEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await cancelledEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Cancel callback failed for {WindowType}/{ViewModelType}",
+                windowTypeName, viewModelTypeName);
+        }
+    }
+
+    private async Task HandleDialogClosedAsync(
+        Func<Task> closedEventHandler,
+        string windowTypeName,
+        string viewModelTypeName)
+    {
+        try
+        {
+            await closedEventHandler();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Close callback failed for {WindowType}/{ViewModelType}",
+                windowTypeName, viewModelTypeName);
+        }
+    }
+
+    private async Task HandleViewModelClosedAsync<TEntity>(
+        IViewModelDialog<TEntity>? viewModel,
+        Window? window,
+        EventHandler? selfHandler)
+    {
+        // Unsubscribe first to prevent re-entrant calls
+        try
+        {
+            if (viewModel is not null && selfHandler is not null)
+                viewModel.Closed -= selfHandler;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error unsubscribing from Closed handler");
+        }
+
+        // Pop the modal. Try without animation first to avoid MAUI rendering issues
+        // (e.g. ShadowExtensions.GetAlphaMaskAsync ArgumentException on Windows).
+        // Fall back to animated pop if the first attempt fails.
+        var popped = false;
+
+        if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
+        {
+            // First attempt: no animation (avoids layout-triggered shadow computation)
+            try
+            {
+                await navigation.PopModalAsync(false);
+                popped = true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogDebug(ex, "PopModalAsync(false) failed, will try animated pop as fallback");
+            }
+
+            // Second attempt: with animation (works when the layout is in a different state)
+            if (!popped)
+            {
+                try
+                {
+                    await navigation.PopModalAsync(true);
+                    popped = true;
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "PopModalAsync(true) also failed; modal may remain visible");
+                }
+            }
+        }
+        else
+        {
+            _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
+        }
+
+        if (!popped && Application.Current?.Windows[0]?.Page?.Navigation is not null)
+        {
+            // Last resort: try to go back via the navigation service pattern
+            _logger?.LogWarning("Modal pop failed; the page may still be visible on the navigation stack");
+        }
+
+        // Always clean up window resources, even if PopModalAsync failed.
+        // The ViewModel lifecycle is managed by the DI scope (strongly-typed overloads)
+        // or the caller (Type/IWindow overloads) — do NOT dispose it here.
+
+        try
+        {
+            window?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error disposing window during dialog close");
+        }
+    }
+
+    #endregion
+
+    #region IDisposable
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _dialogSemaphore.Dispose();
+        }
+    }
+    #endregion
 }

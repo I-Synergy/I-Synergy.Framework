@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 #pragma warning disable S3172 // delegate subtraction is intentional for event handler cleanup
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -63,7 +62,6 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Equality comparison intentionally uses runtime reflection. Not safe for AOT, but this is a framework base class fallback.")]
     public override bool Equals(object? obj) // NOSONAR
     {
         if (ReferenceEquals(this, obj))
@@ -74,34 +72,12 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         if (obj is IObservableValidatedClass observable && observable.HasIdentityProperty())
             return observable.GetIdentityValue()!.Equals(this.GetIdentityValue());
 
-        var currentPropertiesToCheck = this.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals(nameof(IObservableValidatedClass.AutomaticValidationTrigger)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Error)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Errors)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.HasErrors)) &&
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsValid)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Properties)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Validator)));
+        var currentPropertiesToCheck = this.GetProperties(includeMemo: true, includeAudit: true);
 
         if (obj is null)
             return false;
 
-        var propertiesToCheck = obj.GetType()
-            .GetProperties()
-            .Where(q =>
-                !q.Name.Equals(nameof(IObservableValidatedClass.AutomaticValidationTrigger)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Error)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Errors)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.HasErrors)) &&
-                !q.Name.Equals("Item") &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsDirty)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.IsValid)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Properties)) &&
-                !q.Name.Equals(nameof(IObservableValidatedClass.Validator)));
+        var propertiesToCheck = obj.GetProperties(includeMemo: true, includeAudit: true);
 
         foreach (var property in currentPropertiesToCheck.EnsureNotNull())
         {
@@ -163,10 +139,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         if (propertyName is null)
             return;
 
-        if (!Properties.ContainsKey(propertyName))
-            Properties.Add(propertyName, new Property<T>(propertyName));
-
-        if (Properties[propertyName] is not IProperty<T> property) return;
+        if (Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is not IProperty<T> property) return;
 
         // During cleanup or when events are suppressed, just set the value
         if (!shouldRaiseEvents || IsInCleanup)
@@ -198,7 +171,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// <returns><c>true</c> if the instance is valid after clearing errors; otherwise, <c>false</c>.</returns>
     public bool ClearErrors()
     {
-        Errors.Clear();
+        Errors?.Clear();
 
         RaisePropertyChanged(nameof(IsValid));
         OnErrorsChanged(nameof(Errors));
@@ -211,7 +184,6 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// </summary>
     /// <param name="validateUnderlayingProperties">if set to <c>true</c>, validates underlying properties that implement <see cref="IObservableValidatedClass"/>.</param>
     /// <returns><c>true</c> if validation passed; otherwise, <c>false</c>.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "GetProperties() is called on 'this' type and PropertyType.GetInterfaces(). These types are preserved by the application since they are registered ObservableValidatedClass implementations.")]
     public bool Validate(bool validateUnderlayingProperties = true)
     {
         ClearErrors();
@@ -221,7 +193,9 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
             foreach (var property in this.GetType().GetProperties().Where(q => q.PropertyType.GetInterfaces().Contains(typeof(IObservableValidatedClass)) && !q.IsDefined(typeof(IgnoreValidationAttribute))).EnsureNotNull())
             {
                 if (property.GetValue(this, null) is ObservableValidatedClass observable &&
-                    !observable.Validate(validateUnderlayingProperties))
+                    !observable.Validate(validateUnderlayingProperties) &&
+                    observable.Errors is not null &&
+                    Errors is not null)
                 {
                     Errors.AddRange(observable.Errors);
                     observable.Errors.Clear();
@@ -262,7 +236,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     #region IDataErrorInfo
     public void AddValidationError(string propertyName, string errorMessage)
     {
-        Errors.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
+        Errors?.Add(new KeyValuePair<string, string>(propertyName, errorMessage));
 
         OnErrorsChanged(nameof(Errors));
         RaisePropertyChanged(nameof(IsValid));
@@ -273,7 +247,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     [DataTableIgnore]
     [XmlIgnore]
     [Display(AutoGenerateField = false)]
-    public ObservableCollection<KeyValuePair<string, string>> Errors { get; } = [];
+    public ObservableCollection<KeyValuePair<string, string>>? Errors { get; private set; } = [];
 
     [JsonIgnore]
     [DataTableIgnore]
@@ -295,7 +269,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     {
         get
         {
-            if (!string.IsNullOrEmpty(propertyName) && Errors.Any(a => a.Key.Equals(propertyName)))
+            if (!string.IsNullOrEmpty(propertyName) && Errors is not null && Errors.Any(a => a.Key.Equals(propertyName)))
                 return Errors
                     .FirstOrDefault(q => q.Key.Equals(propertyName))
                     .Value ?? propertyName;
@@ -329,7 +303,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     {
         if (!string.IsNullOrEmpty(propertyName))
         {
-            if (Errors.Any(a => a.Key.Equals(propertyName)))
+            if (Errors is not null && Errors.Any(a => a.Key.Equals(propertyName)))
             {
                 return Errors
                     .Where(q => q.Key.Equals(propertyName))
@@ -340,7 +314,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
             return Enumerable.Empty<string>();
         }
 
-        return Errors.SelectMany(m => m.Value.ToList()).ToList();
+        return Errors is not null ? Errors.SelectMany(m => m.Value.ToList()).ToList() : Enumerable.Empty<string>();
     }
 
     [JsonIgnore]
@@ -349,10 +323,10 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     [Display(AutoGenerateField = false)]
     public bool HasErrors
     {
-        get => Errors.Any(a => a.Value.Any());
+        get => Errors is not null && Errors.Any(a => a.Value.Any());
     }
 
-    public bool HasError(string property) => Errors.Any(a => a.Key.Equals(property));
+    public bool HasError(string property) => Errors is not null && Errors.Any(a => a.Key.Equals(property));
     #endregion
 
     #region IDisposable & IAsyncDisposable
@@ -362,6 +336,9 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected override void Dispose(bool disposing)
     {
+        if (_disposed)
+            return;
+
         base.Dispose(disposing);
 
         if (disposing)
@@ -369,7 +346,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
             // free managed resources
             Validator = null;
 
-            Errors?.Clear();
+            Errors = null;
 
             if (_errorsChanged is not null)
             {
@@ -380,30 +357,21 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
                 }
             }
         }
-
-        // free native resources if there are any.
-        _disposed = true;
     }
 
     protected override async ValueTask DisposeAsyncCore()
     {
+        if (_disposed)
+            return;
+
+        _errorsChanged = null;
+
         await base.DisposeAsyncCore().ConfigureAwait(false);
 
         //Async dispose of managed resources
         Validator = null;
 
         Errors?.Clear();
-
-        if (_errorsChanged is not null)
-        {
-            foreach (var @delegate in _errorsChanged.GetInvocationList())
-            {
-                if (@delegate is not null)
-                    _errorsChanged -= (EventHandler<DataErrorsChangedEventArgs>)@delegate;
-            }
-        }
-
-        _disposed = true;
     }
     #endregion
 }

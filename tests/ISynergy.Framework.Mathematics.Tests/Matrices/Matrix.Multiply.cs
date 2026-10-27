@@ -475,7 +475,7 @@ partial class MatrixTest
                 double[] actual = a.Kronecker(b, result);
 
                 Assert.IsTrue(expected.IsEqual(actual, Tolerance));
-                Assert.AreSame(actual, result);
+                Assert.AreSame(result, actual);
             }
     }
 
@@ -521,6 +521,6 @@ partial class MatrixTest
         double[] actual = Matrix.Cross(u, v, r);
 
         Assert.IsTrue(expected.IsEqual(actual));
-        Assert.AreEqual(actual, r);
+        Assert.AreSame(r, actual);
     }
 }

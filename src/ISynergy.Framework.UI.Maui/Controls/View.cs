@@ -1,6 +1,5 @@
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 
@@ -9,49 +8,7 @@ namespace ISynergy.Framework.UI.Controls;
 [Lifetime(Lifetimes.Singleton)]
 public abstract class View : ContentPage, IView
 {
-    private const string WrapperMarkerValue = "__ISynergy_View_Wrapper__";
-    
-    private Label? _titleLabel;
-    private Microsoft.Maui.Controls.View? _originalContent;
-    private bool _isWrapping = false;
-
-    /// <summary>
-    /// Attached property used internally to mark the wrapper Grid created by this View control.
-    /// </summary>
-    private static readonly BindableProperty WrapperMarkerProperty =
-        BindableProperty.CreateAttached(
-            "WrapperMarker",
-            typeof(string),
-            typeof(View),
-            defaultValue: null);
-
-    /// <summary>
-    /// Gets or sets whether the title should be displayed.
-    /// </summary>
-    public bool ShowTitle
-    {
-        get => (bool)GetValue(ShowTitleProperty);
-        set => SetValue(ShowTitleProperty, value);
-    }
-
-    /// <summary>
-    /// Bindable property for ShowTitle.
-    /// </summary>
-    public static readonly BindableProperty ShowTitleProperty =
-        BindableProperty.Create(
-            nameof(ShowTitle),
-            typeof(bool),
-            typeof(View),
-            defaultValue: true,
-            propertyChanged: OnShowTitleChanged);
-
-    private static void OnShowTitleChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        if (bindable is View view && view._titleLabel is not null)
-        {
-            view._titleLabel.IsVisible = (bool)newValue;
-        }
-    }
+    private IServiceScope? _viewModelScope;
 
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
@@ -64,17 +21,15 @@ public abstract class View : ContentPage, IView
             if (BindingContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing. BindingContext can legitimately be null
+            // or non-IViewModel when a Singleton page is reused after CleanupPage cleared
+            // its BindingContext during a prior modal navigation. Callers (e.g.
+            // CreatePage, CleanupPage) handle null gracefully via null checks.
+            return null!;
         }
         set
         {
             BindingContext = value;
-
-            // Update title label binding when ViewModel is set
-            if (_titleLabel is not null)
-            {
-                _titleLabel.SetBinding(Label.TextProperty, new Binding(nameof(IViewModel.Title), source: value));
-            }
         }
     }
 
@@ -83,95 +38,6 @@ public abstract class View : ContentPage, IView
     /// </summary>
     protected View()
     {
-        PropertyChanged += View_PropertyChanged;
-    }
-
-    private void View_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(Content) && Content is not null && !_isWrapping)
-        {
-            WrapContentWithTitleAndOverlay();
-        }
-        else if (e.PropertyName == nameof(BindingContext) && _titleLabel is not null && BindingContext is IViewModel viewModel)
-        {
-            // Update title label binding when BindingContext changes
-            _titleLabel.SetBinding(Label.TextProperty, new Binding(nameof(IViewModel.Title), source: viewModel));
-        }
-    }
-
-    private void WrapContentWithTitleAndOverlay()
-    {
-        // Store the original content
-        Microsoft.Maui.Controls.View? content = Content;
-
-        // Don't wrap if content is null
-        if (content is null)
-            return;
-
-        // Check if already wrapped by looking for our specific marker
-        if (content is Grid grid && grid.GetValue(WrapperMarkerProperty) as string == WrapperMarkerValue)
-            return;
-
-        _originalContent = content;
-
-        // Set flag to prevent recursive wrapping
-        _isWrapping = true;
-
-        try
-        {
-            // Create title label
-            _titleLabel = new Label
-            {
-                FontSize = 20,
-                FontAttributes = FontAttributes.Bold,
-                Margin = new Thickness(12, 12, 12, 8),
-                HorizontalOptions = LayoutOptions.Start,
-                VerticalOptions = LayoutOptions.Start,
-                IsVisible = ShowTitle
-            };
-
-            // Bind title label to the ViewModel's Title property
-            if (BindingContext is IViewModel viewModel)
-            {
-                _titleLabel.SetBinding(Label.TextProperty, new Binding(nameof(IViewModel.Title), source: viewModel));
-            }
-
-            _titleLabel.SetDynamicResource(Label.TextColorProperty, "Primary");
-
-            // Create vertical stack layout with title and content
-            VerticalStackLayout contentStackLayout = new VerticalStackLayout
-            {
-                Spacing = 0
-            };
-
-            contentStackLayout.Children.Add(_titleLabel);
-            contentStackLayout.Children.Add(content);
-
-            // Create the busy indicator with overlay
-            BusyIndicator indicatorControl = new BusyIndicator()
-            {
-                VerticalOptions = LayoutOptions.Fill,
-                HorizontalOptions = LayoutOptions.Fill,
-                ShowOverlay = true
-            };
-
-            // Create main grid to hold content and overlay
-            Grid mainGrid = new Grid();
-            
-            // Mark this Grid as our wrapper using the attached property
-            mainGrid.SetValue(WrapperMarkerProperty, WrapperMarkerValue);
-            
-            mainGrid.Children.Add(contentStackLayout);
-            mainGrid.Children.Add(indicatorControl);
-
-            // Set the wrapped content
-            Content = mainGrid;
-        }
-        finally
-        {
-            // Reset flag
-            _isWrapping = false;
-        }
     }
 
     /// <summary>
@@ -182,7 +48,8 @@ public abstract class View : ContentPage, IView
     : this()
     {
         Argument.IsNotNull(viewModelType);
-        ViewModel = (ServiceLocator.Default.GetRequiredService(viewModelType) as IViewModel)!;
+        _viewModelScope = IPlatformApplication.Current!.Services.CreateScope();
+        ViewModel = (_viewModelScope.ServiceProvider.GetRequiredService(viewModelType) as IViewModel)!;
     }
 
     /// <summary>
@@ -194,6 +61,57 @@ public abstract class View : ContentPage, IView
     {
         Argument.IsNotNull(viewModel);
         ViewModel = viewModel;
+    }
+
+    /// <summary>
+    /// When the page appears, automatically inherits the <see cref="FlowDirection"/>
+    /// from the application's main <see cref="Microsoft.Maui.Controls.Window"/>.
+    /// This ensures all runtime-created pages (dialogs, modal navigation, etc.)
+    /// respect the RTL/LTR setting without per-view configuration.
+    /// </summary>
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (Application.Current?.Windows.Count > 0)
+        {
+            var mainWindow = Application.Current.Windows[0];
+            if (mainWindow.FlowDirection != FlowDirection.MatchParent)
+            {
+                FlowDirection = mainWindow.FlowDirection;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Called when navigation to this page completes. Ensures the ViewModel's
+    /// <see cref="IViewModel.InitializeAsync"/> is called before
+    /// <see cref="IViewModel.OnNavigatedTo"/> — matching the lifecycle used
+    /// by the shared navigation infrastructure.
+    /// This covers Shell tab pages created via <c>DataTemplate</c> where the
+    /// programmatic navigation service is not involved.
+    /// </summary>
+    /// <param name="args">Navigation event arguments.</param>
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        if (ViewModel is { IsDisposed: false } vm)
+        {
+            try
+            {
+                if (!vm.IsInitialized)
+                    await vm.InitializeAsync();
+
+                vm.OnNavigatedTo();
+            }
+            catch (Exception)
+            {
+                // Suppress — the exception handler service is not available
+                // from within the View. The NavigationService path calls
+                // InitializeAsync with its own exception handling.
+            }
+        }
     }
 
     #region IDisposable
@@ -216,14 +134,20 @@ public abstract class View : ContentPage, IView
     {
         if (disposing)
         {
-            // Unsubscribe from property changed
-            PropertyChanged -= View_PropertyChanged;
+            _viewModelScope?.Dispose();
+            _viewModelScope = null;
 
-            // free managed resources
-            ViewModel?.Dispose();
+            // Views are Singletons — only disposed at app shutdown.
+            // Do NOT clear BindingContext or Content here. Setting
+            // BindingContext to null propagates through the entire visual
+            // tree, triggering bindings (e.g. Image.Source) that try to
+            // load resources asynchronously. Those async operations use
+            // MauiContext.WrappedServiceProvider, which is already disposed
+            // at shutdown, causing ObjectDisposedException.
+            //
+            // MAUI handles all native cleanup during teardown. The ViewModel
+            // lifecycle is managed by its own DI scope. We just let go.
         }
-
-        // free native resources if there are any.
     }
     #endregion
 }

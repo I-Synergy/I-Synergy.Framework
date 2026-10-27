@@ -4,9 +4,7 @@
 
 **On every non-trivial task (3+ steps or multi-file):**
 
-1. **Enter plan mode first** — call `EnterPlanMode`, present the plan, wait for approval before writing any code
-   - Claude Code saves the plan with a random filename. **Immediately rename it** to a meaningful slug:
-     `mv .ai/plans/<random-name>.md .ai/plans/{task-slug}.md`
+1. **Create a plan** — use your assistant's planning tool (e.g. `submit_plan` in Reasonix, plan mode in Claude Code). Name the plan with a meaningful slug in `.ai/plans/{task-slug}.md`. Wait for approval before writing any code.
    - Use the same slug for the progress file (step 2) so both files stay linked
 2. **Create a progress file** — immediately write `.ai/progress/{task-slug}.md` using this structure:
    ```
@@ -23,7 +21,7 @@
 3. **Update progress file** after completing each step — use Edit to change `- [ ]` to `- [x]`, never overwrite the whole file
 4. **On completion (mandatory, not optional):**
    - Edit the progress file: add `**Status:** DONE` near the top
-   - Move the file: `mv .ai/progress/{task-slug}.md .ai/completed/`
+   - Move the file from `.ai/progress/{task-slug}.md` to `.ai/completed/{task-slug}.md`
    - If a copy already exists in `.ai/completed/`, delete the one in `progress/` instead
    - **Do not end the session without completing this step**
 
@@ -89,7 +87,7 @@ Which approach should I take?
 
 ## Subagent Template
 
-**Code changes must be delegated.** Never use Edit or Write directly in the main conversation. All code implementation, edits, and file creation must be done by the `programmer` sub-agent (Haiku model). Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
+**Code changes must be delegated.** Never use Edit or Write directly in the main conversation. All code implementation, edits, and file creation must be done by the `programmer` sub-agent. Only use Edit/Write yourself for non-code files (progress files, session context, plans, documentation).
 
 **Valid `subagent_type` values** (skill names like `dotnet-engineer` are NOT valid agent types):
 
@@ -110,7 +108,7 @@ After completing each step, use the Edit tool to mark it done:
 Do NOT use Write on the progress file — only Edit individual lines.
 ```
 
-Subagents do not inherit this CLAUDE.md. All progress instructions must be explicit in the task prompt.
+Subagents do not inherit this project's AGENTS.md. All progress instructions must be explicit in the task prompt.
 
 ## Task Definition Template
 

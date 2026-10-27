@@ -4,7 +4,6 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Input;
 
@@ -37,8 +36,6 @@ public partial class View<TViewModel> : ComponentBase, IView
         set => ViewModel = (TViewModel)value;
     }
 
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "SubscribeToViewModelCommands is called on a known ViewModel type within the component lifecycle.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "SubscribeToViewModelCommands is called on a known ViewModel type within the component lifecycle.")]
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -68,8 +65,6 @@ public partial class View<TViewModel> : ComponentBase, IView
     /// For NativeAOT scenarios, implement explicit command subscription or introduce an
     /// <c>ICommandProvider</c> interface on ViewModels that exposes their commands directly.
     /// </remarks>
-    [RequiresUnreferencedCode("Reflects over ViewModel properties to discover ICommand instances. Not AOT-compatible.")]
-    [RequiresDynamicCode("Reflects over ViewModel properties to discover ICommand instances. Not AOT-compatible.")]
     private void SubscribeToViewModelCommands()
     {
         if (ViewModel is null)

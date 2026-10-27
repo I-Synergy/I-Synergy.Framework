@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RootNamespace>ISynergy.Framework.CQRS</RootNamespace>
-    <!-- Ensure source generators run and emit files to disk for inspection -->
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+		<RootNamespace>ISynergy.Framework.CQRS</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,11 +23,5 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.CQRS\ISynergy.Framework.CQRS.csproj" />
-		<!-- Directly reference the source generator as an Analyzer for local development.
-		     When distributed via NuGet (analyzers/dotnet/cs/ folder), this is automatic. -->
-		<ProjectReference
-		  Include="..\..\src\ISynergy.Framework.CQRS.SourceGenerator\ISynergy.Framework.CQRS.SourceGenerator.csproj"
-		  OutputItemType="Analyzer"
-		  ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>

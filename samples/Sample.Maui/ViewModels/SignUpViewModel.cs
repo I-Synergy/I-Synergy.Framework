@@ -3,16 +3,11 @@ using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Constants;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Models;
-
-#pragma warning disable S3776 // cognitive complexity is inherent in sign-up constructor
-#pragma warning disable S1066 // nested if is intentional for readability of multi-step validation
 using ISynergy.Framework.Core.Models.Accounts;
 using ISynergy.Framework.Core.Utilities;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.ViewModels;
 using ISynergy.Framework.UI.Extensions;
 using Microsoft.Extensions.Logging;
@@ -203,36 +198,11 @@ public class SignUpViewModel : ViewModel
         ArePickersAvailable = false;
     }
 
-    private Task SelectModulesAsync()
-    {
-        var selectionVM = _commonServices.ScopedContextService.GetRequiredService<ViewModelSelectionDialog<Module>>();
-        selectionVM.SetSelectionMode(SelectionModes.Multiple);
-        selectionVM.SetItems(Modules);
-        selectionVM.SetSelectedItems(SelectedModules);
-        selectionVM.Submitted += SelectionVM_Submitted;
-        return _dialogService.ShowDialogAsync(typeof(ISelectionWindow), selectionVM);
-    }
-
-    /// <summary>
-    /// Editors the vm submitted.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
-    private void SelectionVM_Submitted(object? sender, SubmitEventArgs<List<Module>> e)
-    {
-        if (sender is ViewModelSelectionDialog<Module> vm)
-            vm.Submitted -= SelectionVM_Submitted;
-
-        List<Module> selectedItems = [];
-
-        foreach (object item in e.Result.EnsureNotNull())
-        {
-            if (item is Module module)
-                selectedItems.Add(module);
-        }
-
-        SelectedModules = selectedItems;
-    }
+    private Task SelectModulesAsync() =>
+        _dialogService.ShowDialogAsync<IMultipleSelectionWindow, ViewModelMultipleSelectionDialog<Module>, List<Module>>(
+            SelectedModules,
+            selectedItems => { SelectedModules = selectedItems.ToList(); return Task.CompletedTask; },
+            initialization: vm => vm.SetItems(Modules));
 
     private Task ValidateMailAsync()
     {
@@ -259,7 +229,7 @@ public class SignUpViewModel : ViewModel
     }
 
     private Task SignInAsync() =>
-        _navigationService.NavigateModalAsync<SignInViewModel>();
+        _navigationService.GoBackAsync();
 
     public override void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -320,3 +290,4 @@ public class SignUpViewModel : ViewModel
         }
     }
 }
+

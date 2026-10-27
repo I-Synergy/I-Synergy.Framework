@@ -1,3 +1,5 @@
+using ISynergy.Framework.Core.Attributes;
+using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using System.ComponentModel;
@@ -14,6 +16,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// <seealso cref="Page" />
 /// <seealso cref="IView" />
 [Bindable(true)]
+[Lifetime(Lifetimes.Singleton)]
 public abstract partial class View : Page, IView
 {
     /// <summary>
@@ -27,7 +30,9 @@ public abstract partial class View : Page, IView
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing — DataContext can be null after cleanup.
+            // Callers handle null gracefully via null checks.
+            return null!;
         }
         set
         {
@@ -68,11 +73,11 @@ public abstract partial class View : Page, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // The ViewModel lifecycle is managed by the DI scope that created it.
+            // Do NOT dispose it here — the scope handles that. Do NOT set
+            // ViewModel/DataContext to null — it propagates through the visual tree
+            // and can trigger operations on elements whose services are already disposed.
         }
-
-        // free native resources if there are any.
     }
     #endregion
 }

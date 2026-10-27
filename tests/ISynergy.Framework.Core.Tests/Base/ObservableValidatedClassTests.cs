@@ -44,7 +44,7 @@ public class ObservableValidatedClassTests
         observable.Dispose();
 
         // Assert
-        Assert.AreEqual(0, observable.Errors.Count);
+        Assert.IsNull(observable.Errors);
     }
 
     [TestMethod]
@@ -78,7 +78,7 @@ public class ObservableValidatedClassTests
         // Arrange
         var observable = new TestObservableClass();
         var asyncProperty = new AsyncDisposableProperty("TestProperty");
-        observable.Properties.Add("TestProperty", asyncProperty);
+        observable.Properties.TryAdd("TestProperty", asyncProperty);
 
         // Act
         await observable.DisposeAsync();
@@ -144,7 +144,7 @@ public class ObservableValidatedClassTests
         // Arrange
         var observable = new TestObservableClass();
         var asyncProperty = new AsyncDisposableProperty("TestProperty");
-        observable.Properties.Add("TestProperty", asyncProperty);
+        observable.Properties.TryAdd("TestProperty", asyncProperty);
 
         // Act - Test both disposal methods
         observable.Dispose();

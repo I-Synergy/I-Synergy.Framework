@@ -1,9 +1,8 @@
-using ISynergy.Framework.Core.Abstractions.Events;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
-using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Commands.Base;
+using ISynergy.Framework.Mvvm.Events;
 using ISynergy.Framework.Mvvm.Messages;
 using ISynergy.Framework.UI.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 #pragma warning disable IDE0130, S1200
@@ -30,7 +28,7 @@ public abstract class Application : ComponentBase
     protected readonly IApplicationLifecycleService _lifecycleService;
     protected readonly ILogger<Application> _logger;
     protected readonly IMessengerService _messengerService;
-    protected readonly IConfiguration? _configuration;
+    protected readonly IConfiguration _configuration;
 
     protected readonly ApplicationFeatures? _features;
 
@@ -38,49 +36,45 @@ public abstract class Application : ComponentBase
     private bool _isDisposing = false;
 
     // Use ConcurrentDictionary for thread-safe access and limit size to prevent unbounded growth
-    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Exception> _processedExceptions = 
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Exception> _processedExceptions =
         new System.Collections.Concurrent.ConcurrentDictionary<string, Exception>();
     private const int MaxProcessedExceptions = 100;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    [RequiresUnreferencedCode("Calls InitializeEnvironmentVariables which uses ConfigurationBinder.GetValue<T> that is not trim-safe.")]
     protected Application(
         ICommonServices commonServices,
         ISettingsService settingsService,
-        ILogger<Application> logger,
-        IDialogService? dialogService = null,
-        INavigationService? navigationService = null,
-        IExceptionHandlerService? exceptionHandlerService = null,
-        IApplicationLifecycleService? lifecycleService = null,
-        IMessengerService? messengerService = null,
-        IOptions<ApplicationFeatures>? features = null,
-        IConfiguration? configuration = null)
+        IDialogService dialogService,
+        INavigationService navigationService,
+        IExceptionHandlerService exceptionHandlerService,
+        IApplicationLifecycleService lifecycleService,
+        IMessengerService messengerService,
+        IOptions<ApplicationFeatures> features,
+        IConfiguration configuration,
+        ILogger<Application> logger)
         : base()
     {
         _commonServices = commonServices;
         _settingsService = settingsService;
+        _dialogService = dialogService;
+        _navigationService = navigationService;
+        _exceptionHandlerService = exceptionHandlerService;
+        _lifecycleService = lifecycleService;
+        _messengerService = messengerService;
+        _features = features?.Value;
+        _configuration = configuration;
         _logger = logger;
 
         try
         {
             _logger.LogTrace("Setting up services and global exception handler.");
 
-            // Prefer constructor-injected services (DIP compliance)
-            // Fall back to ServiceLocator only if not provided via constructor
-            _dialogService = dialogService ?? ServiceLocator.Default.GetRequiredService<IDialogService>();
-            _navigationService = navigationService ?? ServiceLocator.Default.GetRequiredService<INavigationService>();
-            _exceptionHandlerService = exceptionHandlerService ?? ServiceLocator.Default.GetRequiredService<IExceptionHandlerService>();
-            _lifecycleService = lifecycleService ?? _commonServices.ScopedContextService.GetRequiredService<IApplicationLifecycleService>();
-            _messengerService = messengerService ?? ServiceLocator.Default.GetRequiredService<IMessengerService>();
-
-            _features = features?.Value ?? ServiceLocator.Default.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
-            _configuration = configuration;
-
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
             // Pass a timeout to limit the execution time.
             // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -88,7 +82,7 @@ public abstract class Application : ComponentBase
 
             _commonServices.BusyService.StartBusy();
 
-            if (_settingsService.LocalSettings is not null)
+            if (_settingsService.LocalSettings is not null && !string.IsNullOrEmpty(_settingsService.LocalSettings.Language))
                 _settingsService.LocalSettings.Language.SetLocalizationLanguage();
 
             _lifecycleService.ApplicationLoaded += OnApplicationLoaded; // NOSONAR - virtual member subscription is intentional
@@ -131,7 +125,6 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    [RequiresUnreferencedCode("ConfigurationBinder.GetValue<T> is not trim-safe.")]
     protected virtual void InitializeEnvironmentVariables()
     {
         try
@@ -140,9 +133,7 @@ public abstract class Application : ComponentBase
 
             // Prefer constructor-injected configuration (DIP compliance)
             // Fall back to ServiceLocator only if not provided via constructor
-            var configuration = _configuration ?? ServiceLocator.Default.GetRequiredService<IConfiguration>();
-
-            var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
+            var environmentFromConfig = _configuration.GetValue<string?>(nameof(Environment), null);
 
             if (!string.IsNullOrEmpty(environmentFromConfig))
             {
@@ -315,16 +306,36 @@ public abstract class Application : ComponentBase
     }
 
     /// <summary>
+    /// Handles an exception thrown by a synchronous relay command's execute delegate
+    /// (e.g. a plain <c>RelayCommand</c> bound to a UI control). Routing it here instead of
+    /// letting it propagate synchronously avoids an unhandled exception on the calling thread.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void CommandExceptionDispatcher_UnhandledCommandException(object? sender, CommandExceptionEventArgs e)
+    {
+        if (_isDisposing)
+            return;
+
+        if (_exceptionHandlerService is not null)
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(e.Exception);
+            }
+            catch (Exception handlerEx)
+            {
+                // If exception handler fails, log directly
+                _logger?.LogError(handlerEx, "Error in exception handler");
+            }
+        }
+        else
+            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+    }
+
+    /// <summary>
     /// Initializing the application.
     /// </summary>
-    /// <example>
-    /// <code>
-    ///     await base.InitializeApplicationAsync();
-    ///     // wait 5 seconds before showing the main window...
-    ///     await Task.Delay(5000);
-    ///     await _scopedContextService.GetService{INavigationService}().ReplaceMainWindowAsync{IShellView}();
-    /// </code>
-    /// </example>
     /// <returns></returns>
     protected abstract Task InitializeApplicationAsync();
 
@@ -388,6 +399,7 @@ public abstract class Application : ComponentBase
                 AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
                 AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
                 TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+                CommandExceptionDispatcher.UnhandledCommandException -= CommandExceptionDispatcher_UnhandledCommandException;
             }
             catch (Exception ex)
             {

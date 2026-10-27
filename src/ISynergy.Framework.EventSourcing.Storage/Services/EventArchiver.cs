@@ -8,7 +8,8 @@ using ISynergy.Framework.EventSourcing.Storage.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Concurrent;
+using System.Reflection;
 
 namespace ISynergy.Framework.EventSourcing.Storage.Services;
 
@@ -23,8 +24,6 @@ namespace ISynergy.Framework.EventSourcing.Storage.Services;
 /// <item>Deletes the archived event rows from PostgreSQL.</item>
 /// </list>
 /// </summary>
-[RequiresUnreferencedCode("Uses reflection to instantiate aggregate types by name.")]
-[RequiresDynamicCode("Uses Activator.CreateInstance to construct aggregate instances at runtime.")]
 public sealed class EventArchiver : IEventArchiver
 {
     private readonly EventSourcingDbContext _context;
@@ -63,6 +62,12 @@ public sealed class EventArchiver : IEventArchiver
             .Where(e => e.Timestamp < cutoff)
             .GroupBy(e => new { e.TenantId, e.AggregateType, e.AggregateId })
             .Select(g => new { g.Key.TenantId, g.Key.AggregateType, g.Key.AggregateId })
+            // A deterministic order is required before Take: without it EF Core raises
+            // RowLimitingOperationWithoutOrderByWarning and consecutive runs may re-select the
+            // same streams, so a backlog might never drain.
+            .OrderBy(s => s.TenantId)
+            .ThenBy(s => s.AggregateType)
+            .ThenBy(s => s.AggregateId)
             .Take(_settings.BatchSize)
             .ToListAsync(ct)
             .ConfigureAwait(false);
@@ -131,7 +136,7 @@ public sealed class EventArchiver : IEventArchiver
             return 0;
 
         var versionFrom = toArchive[0].AggregateVersion;   // list is already sorted ascending
-        var versionTo   = toArchive[^1].AggregateVersion;
+        var versionTo = toArchive[^1].AggregateVersion;
 
         // Ensure a snapshot exists at or above versionTo before deleting events.
         // If the snapshot cannot be guaranteed (e.g., aggregate type unresolvable or
@@ -159,14 +164,14 @@ public sealed class EventArchiver : IEventArchiver
         // Record the archive index entry.
         _context.ArchiveIndexes.Add(new EventArchiveIndex
         {
-            TenantId    = tenantId,
-            StreamId    = aggregateId,
-            StreamType  = aggregateType,
+            TenantId = tenantId,
+            StreamId = aggregateId,
+            StreamType = aggregateType,
             VersionFrom = versionFrom,
-            VersionTo   = versionTo,
-            EventCount  = toArchive.Count,
-            BlobPath    = blobPath,
-            ArchivedAt  = DateTimeOffset.UtcNow
+            VersionTo = versionTo,
+            EventCount = toArchive.Count,
+            BlobPath = blobPath,
+            ArchivedAt = DateTimeOffset.UtcNow
         });
 
         // Delete the archived hot-tier event rows.
@@ -259,12 +264,12 @@ public sealed class EventArchiver : IEventArchiver
 
         var snapshotData = aggregate.GetSnapshotData();
         var snapshot = new Snapshot(
-            AggregateId:   aggregateId,
-            TenantId:      tenantId,
+            AggregateId: aggregateId,
+            TenantId: tenantId,
             AggregateType: aggregateType,
-            Version:       requiredVersion,
-            Data:          snapshotData,
-            Timestamp:     DateTimeOffset.UtcNow);
+            Version: requiredVersion,
+            Data: snapshotData,
+            Timestamp: DateTimeOffset.UtcNow);
 
         if (existing is not null)
             _context.Snapshots.Remove(existing);
@@ -274,25 +279,65 @@ public sealed class EventArchiver : IEventArchiver
         return true;
     }
 
-    [RequiresUnreferencedCode("Uses Type.GetType to resolve aggregate type by short name.")]
-    [RequiresDynamicCode("Uses Activator.CreateInstance to instantiate aggregate type.")]
+    /// <summary>
+    /// Caches the aggregate type resolved from a stream type name. Resolution scans the loaded
+    /// assemblies, so the outcome (including a not-found <c>null</c>) is cached to avoid repeating the
+    /// scan for every archived stream.
+    /// </summary>
+    private static readonly ConcurrentDictionary<string, Type?> _aggregateTypeCache = new();
+
     private static AggregateRoot<Guid>? CreateAggregate(string aggregateTypeName)
     {
-        // Try to resolve the aggregate type from all loaded assemblies by short class name.
-        var type = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a =>
-            {
-                try { return a.GetTypes(); }
-                catch { return []; }
-            })
-            .FirstOrDefault(t =>
-                t.Name == aggregateTypeName
-                && !t.IsAbstract
-                && typeof(AggregateRoot<Guid>).IsAssignableFrom(t));
+        var type = _aggregateTypeCache.GetOrAdd(aggregateTypeName, static name => ResolveAggregateType(name));
 
         if (type is null)
             return null;
 
         return Activator.CreateInstance(type) as AggregateRoot<Guid>;
+    }
+
+    /// <summary>
+    /// Resolves a concrete <see cref="AggregateRoot{TId}"/> type from a stream type name by scanning the
+    /// loaded assemblies. When several aggregates share the short name the match is chosen
+    /// deterministically (ordinal order of the full name) and the ambiguity is surfaced via trace,
+    /// rather than depending on assembly load order.
+    /// </summary>
+    private static Type? ResolveAggregateType(string aggregateTypeName)
+    {
+        var matches = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(GetLoadableTypes)
+            .Where(t => t.Name == aggregateTypeName
+                && !t.IsAbstract
+                && typeof(AggregateRoot<Guid>).IsAssignableFrom(t))
+            .OrderBy(t => t.FullName, StringComparer.Ordinal)
+            .ToList();
+
+        if (matches.Count == 0)
+            return null;
+
+        if (matches.Count > 1)
+        {
+            System.Diagnostics.Trace.WriteLine(
+                $"EventArchiver: aggregate type name '{aggregateTypeName}' is ambiguous ({matches.Count} matches); " +
+                $"using '{matches[0].FullName}'.");
+        }
+
+        return matches[0];
+    }
+
+    /// <summary>
+    /// Gets the loadable types of an assembly, tolerating assemblies whose types cannot all be loaded.
+    /// </summary>
+    private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+    {
+        try
+        {
+            return assembly.GetTypes();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Trace.WriteLine($"EventArchiver.CreateAggregate could not enumerate types in '{assembly.FullName}': {ex}");
+            return [];
+        }
     }
 }

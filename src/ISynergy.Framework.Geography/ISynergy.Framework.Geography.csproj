@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-    <IsAotCompatible>true</IsAotCompatible>
+        <TargetFrameworks>net10.0</TargetFrameworks>
+	    <TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0</TargetFrameworks>
         <PackageId>I-Synergy.Framework.Geography</PackageId>
         <Description>I-Synergy Framework Geography</Description>
         <PackageTags>I-Synergy, Framework, Geography</PackageTags>
@@ -9,11 +9,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Properties\Resources.Designer.cs">
-        <DesignTime>True</DesignTime>
-      </Compile>
+        <ProjectReference Include="..\ISynergy.Framework.Globalization\ISynergy.Framework.Globalization.csproj" />
     </ItemGroup>
 </Project>

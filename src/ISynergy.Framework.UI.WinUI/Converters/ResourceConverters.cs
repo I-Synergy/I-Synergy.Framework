@@ -21,9 +21,13 @@ public class ResourceNameToGeometryConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter is string)
+        if (parameter is string resourceKey)
         {
-            return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{Application.Current.Resources[parameter]}</Geometry>");
+            if (Application.Current?.Resources.TryGetValue(resourceKey, out var geometryData) == true && geometryData is string geometryString)
+            {
+                return (Geometry)XamlReader.Load($"<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>{geometryString}</Geometry>");
+            }
+            return (Geometry)XamlReader.Load("<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'><EllipseGeometry/></Geometry>");
         }
 
         return (Geometry)XamlReader.Load("<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'></Geometry>");
@@ -61,9 +65,11 @@ public class ResourceNameToStringConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object? Convert(object value, Type targetType, object parameter, string language)
     {
-        if (parameter is string)
+        if (parameter is string resourceKey)
         {
-            return Application.Current.Resources[parameter] as string;
+            return Application.Current?.Resources.TryGetValue(resourceKey, out var resourceValue) == true
+                ? resourceValue as string
+                : null;
         }
 
         return string.Empty;

@@ -38,16 +38,23 @@ public class ActionService : IActionService
     /// <summary>
     /// Gets all tasks that are still not executed.
     /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
-    public async Task RefreshTasksAsync() =>
+    public async Task RefreshTasksAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         _tasks.AddNewRange(await _manager.GetItemsAsync());
+    }
 
     /// <summary>
     /// Calculates Schedule/Delay expiration when action is saved.
     /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
-    public async Task<(TimeSpan Expiration, IAction? UpcomingTask)?> CalculateTimespanAsync()
+    public async Task<(TimeSpan Expiration, IAction? UpcomingTask)?> CalculateTimespanAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var upcomingTask = _tasks.FirstOrDefault();
 
         if (upcomingTask is not null)
@@ -67,9 +74,12 @@ public class ActionService : IActionService
     /// Executes action.
     /// </summary>
     /// <param name="action"></param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
-    public async Task ExcecuteActionAsync(IAction action)
+    public async Task ExcecuteActionAsync(IAction action, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (action.ToTask() is { } job)
             await job
                 .Invoke()

@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<LangVersion>14.0</LangVersion>
+		<LangVersion>15.0</LangVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<DefaultLanguage>en-US</DefaultLanguage>
 		<Authors>Ismail Hassani</Authors>
@@ -12,9 +12,9 @@
 		<RepositoryUrl>https://github.com/I-Synergy/I-Synergy.Framework</RepositoryUrl>
 		<PackageProjectUrl>https://www.i-synergy.net</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageReadmeFile Condition="Exists('readme.md')">readme.md</PackageReadmeFile>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild Condition="'$(IsPackable)' != 'false'">true</GeneratePackageOnBuild>
 		<PackageOutputPath>..\..\packages</PackageOutputPath>
 		<IncludeSymbols>true</IncludeSymbols>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
@@ -25,13 +25,13 @@
 		<Version>0.0.0</Version>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<NoWarn>1701;1702;CS1591;CS8002;NETSDK1023;UXAML0002;NU5104;NETSDK1057;XC0103;NU1608;XA1023;PRI257;NETSDK1187;S107</NoWarn>
-		<SignAssembly>True</SignAssembly>
-		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
-		<AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\..\..\..\I-Synergy.Framework.snk')">..\..\..\..\..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
+		<NoWarn>1701;1702;CS1591;CS8002;NETSDK1023;UXAML0002;NU5104;NETSDK1057;XC0103;NU1608;XA1023;PRI257;NETSDK1187;S107;MAUIX2005</NoWarn>
 		<WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
 		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
-		<NuGetAuditMode>direct</NuGetAuditMode>
+		<NuGetAuditMode>all</NuGetAuditMode>
+		<!-- Target framework the sample apps run on. Override with -p:SampleTargetFramework=net11.0 (or as env var). -->
+		<SampleTargetFramework Condition="'$(SampleTargetFramework)' == ''">net11.0</SampleTargetFramework>
+		<AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)' == '' And '$(ANDROID_HOME)' != ''">$(ANDROID_HOME)</AndroidSdkDirectory>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -46,7 +46,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<None Include="..\..\icon.png" Pack="true" PackagePath="\"/>
-		<None Include="readme.md" Pack="true" PackagePath="\"/>
+		<None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" PackagePath="\" Condition="Exists('$(MSBuildThisFileDirectory)icon.png')"/>
+		<None Include="readme.md" Pack="true" PackagePath="\" Condition="Exists('readme.md')"/>
 	</ItemGroup>
 </Project>

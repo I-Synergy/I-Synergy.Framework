@@ -1,28 +1,94 @@
-using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Models;
-using ISynergy.Framework.Core.Services;
+using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
-
-#pragma warning disable S2583 // FluentUI icon constants may be null at runtime; null-coalescing guard is intentional
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
-using ISynergy.Framework.Mvvm.Abstractions.Windows;
 using ISynergy.Framework.Mvvm.Commands;
-using ISynergy.Framework.Mvvm.Enumerations;
-using ISynergy.Framework.UI.Extensions;
-using ISynergy.Framework.UI.Utilities;
 using ISynergy.Framework.UI.ViewModels;
 using ISynergy.Framework.UI.ViewModels.Base;
 using Microsoft.Extensions.Logging;
-using Sample.Abstractions.Services;
-using Sample.Extensions;
-using Timer = System.Timers.Timer;
 
 namespace Sample.ViewModels;
 
 public class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
-    private readonly Timer _clockTimer; // NOSONAR - field is needed to prevent the timer from being garbage collected
+    private readonly IBladeService _bladeService;
+
+    /// <summary>
+    /// Set while a navigation started by this shell is running, so the forward
+    /// <c>BackStackChanged</c> (raised before the new frame is active) does not reset the route.
+    /// </summary>
+    private bool _isNavigating;
+    private readonly BladeHostViewModel _bladeHost;
+
+    /// <summary>
+    /// Gets the command to navigate to a specific route.
+    /// </summary>
+    public RelayCommand<string> NavigateToCommand { get; }
+
+    /// <summary>
+    /// Gets the command that opens or closes the phone sidebar drawer.
+    /// </summary>
+    public RelayCommand ToggleMenuCommand { get; }
+
+    /// <summary>
+    /// Gets the command that navigates one step back through the navigation service's stack.
+    /// </summary>
+    public AsyncRelayCommand BackCommand { get; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the phone sidebar drawer is open.
+    /// </summary>
+    public bool IsMenuOpen
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the glyph shown on the theme toggle (moon when light, sun when dark).
+    /// </summary>
+    public string ThemeIcon
+    {
+        get => GetValue<string>() ?? "";
+        private set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current breadcrumb text (page name).
+    /// </summary>
+    public string CrumbCurrent
+    {
+        get => GetValue<string>() ?? "";
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current route for sidebar active-row detection.
+    /// </summary>
+    public string CurrentRoute
+    {
+        get => GetValue<string>() ?? "";
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the version text shown in the sidebar footer.
+    /// </summary>
+    public string VersionText
+    {
+        get => GetValue<string>() ?? "";
+        private set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the copyright text shown in the sidebar footer.
+    /// </summary>
+    public string CopyrightText
+    {
+        get => GetValue<string>() ?? "";
+        private set => SetValue(value);
+    }
 
     /// <summary>
     /// Gets or sets the Version property value.
@@ -34,157 +100,206 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         set { SetValue(value); }
     }
 
-    public AsyncRelayCommand SlideshowCommand { get; private set; }
-    public AsyncRelayCommand InfoCommand { get; private set; }
-    public AsyncRelayCommand ControlsCommand { get; private set; }
-    public AsyncRelayCommand SyncCommand { get; private set; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
+    /// <param name="settingsService"></param>
+    /// <param name="themeService">The theme service for managing theme and accent color.</param>
+    /// <param name="bladeService">The service that opens blades into the shell blade pane.</param>
+    /// <param name="bladeHost">The shell-level owner of the blade pane.</param>
     /// <param name="logger">The logger factory.</param>
     public ShellViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
+        ISettingsService settingsService,
+        IThemeService themeService,
+        IBladeService bladeService,
+        BladeHostViewModel bladeHost,
         ILogger<ShellViewModel> logger)
-        : base(commonServices, dialogService, navigationService, logger)
+        : base(commonServices, dialogService, navigationService, settingsService, themeService, logger)
     {
-        SetClock();
-
-        _clockTimer = new Timer(TimeSpan.FromSeconds(30));
-        _clockTimer.Elapsed += ClockTimerCallBack;
-        _clockTimer.Start();
-
         Title = commonServices.InfoService.ProductName;
         Version = commonServices.InfoService.ProductVersion;
 
-        InfoCommand = new AsyncRelayCommand(OpenInfoAsync);
-        ControlsCommand = new AsyncRelayCommand(OpenControlsAsync);
-        SlideshowCommand = new AsyncRelayCommand(OpenSlideshowAsync);
-        SyncCommand = new AsyncRelayCommand(OpenSyncAsync);
+        _bladeService = bladeService;
+        _bladeHost = bladeHost;
+        _themeService.ThemeChanged += OnThemeChanged;
 
-        PopulateNavigationMenuItems();
+        // Keep the breadcrumb and the sidebar selection in step when the user goes back.
+        _navigationService.BackStackChanged += OnNavigationBackStackChanged;
+
+        NavigateToCommand = new RelayCommand<string>(NavigateTo);
+        ToggleMenuCommand = new RelayCommand(() => IsMenuOpen = !IsMenuOpen);
+        BackCommand = new AsyncRelayCommand(() => _navigationService.GoBackAsync());
+
+        // Initialize breadcrumb, route, and footer text. The first navigation happens on shell load,
+        // when the navigation host exists; a navigation attempt here would find no host yet.
+        SelectRoute("dashboard");
+        VersionText = $"v{commonServices.InfoService.ProductVersion}";
+        CopyrightText = $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
+
+        // Show the icon that matches the saved theme before the shell has loaded.
+        // Moon glyph when light theme, sun glyph when dark theme
+        ThemeIcon = _themeService.Theme == Themes.Light ? "" : "";
     }
 
     public override async Task ShellLoadedAsync()
     {
-        await Task.Delay(100);
+        // Apply saved theme on shell loaded
+        _themeService.ApplyTheme();
 
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
-        {
-            if (PrimaryItems[0].Command!.CanExecute(PrimaryItems[0].CommandParameter))
-                PrimaryItems[0].Command!.Execute(PrimaryItems[0].CommandParameter);
-
-            SelectedItem = PrimaryItems[0];
-        }
+        // Show the initial section now that the shell's navigation host is attached.
+        NavigateTo(CurrentRoute);
 
         await InitializeFirstRunAsync();
     }
 
-    private void PopulateNavigationMenuItems()
+
+    private void NavigateTo(string? route)
     {
-        var primaryColor = _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Color ?? string.Empty;
+        // On phones the sidebar is a drawer: selecting a section closes it. On desktop it is a
+        // persistent column, so the menu state is left alone.
+        if (DeviceInfo.Idiom == DeviceIdiom.Phone)
+            IsMenuOpen = false;
 
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated) // NOSONAR
+        SelectRoute(route);
+
+        if (!string.IsNullOrWhiteSpace(route))
+            _ = NavigateAsync(route);
+    }
+
+    private void SelectRoute(string? route)
+    {
+        CurrentRoute = route ?? "dashboard";
+
+        // Update breadcrumb based on the route
+        CrumbCurrent = route switch
         {
-            PrimaryItems.Clear();
+            "dashboard" => LocalizedString("Dashboard"),
+            "customcontrols" => LocalizedString("CustomControls"),
+            "mauicontrols" => LocalizedString("MauiControls"),
+            "slideshow" => LocalizedString("SlideShow"),
+            _ => Title
+        };
+    }
 
-            PrimaryItems.Add(new NavigationItem("Info", FluentUI.info_20_regular ?? string.Empty, primaryColor, InfoCommand)); // NOSONAR
-            PrimaryItems.Add(new NavigationItem("Controls", FluentUI.control_button_20_regular ?? string.Empty, primaryColor, ControlsCommand)); // NOSONAR
-            PrimaryItems.Add(new NavigationItem("SlideShow", FluentUI.slide_layout_20_regular ?? string.Empty, primaryColor, SlideshowCommand)); // NOSONAR
-            PrimaryItems.Add(new NavigationItem("Sync", FluentUI.cloud_sync_20_regular ?? string.Empty, primaryColor, SyncCommand)); // NOSONAR
+    /// <summary>
+    /// Mirrors the navigation stack into the breadcrumb and the sidebar selection. Going back to a
+    /// section re-shows it without running a navigate command, so the shell has to read the current
+    /// view model type from the navigation service.
+    /// </summary>
+    /// <remarks>
+    /// Forward navigation also raises this event, but before the new frame is active, so the event
+    /// would report the section being left. Those changes are ignored while a navigation started
+    /// here is in flight; <see cref="NavigateTo"/> has already set the target route.
+    /// </remarks>
+    private void OnNavigationBackStackChanged(object? sender, EventArgs e)
+    {
+        if (_isNavigating)
+            return;
 
-            SecondaryItems.Clear();
-            SecondaryItems.Add(new NavigationItem("Help", FluentUI.chat_help_20_regular ?? string.Empty, primaryColor, HelpCommand)); // NOSONAR
-            SecondaryItems.Add(new NavigationItem("Language", FluentUI.local_language_20_regular ?? string.Empty, primaryColor, LanguageCommand)); // NOSONAR
-            SecondaryItems.Add(new NavigationItem("Theme", FluentUI.dark_theme_20_regular ?? string.Empty, primaryColor, ColorCommand)); // NOSONAR
-            SecondaryItems.Add(new NavigationItem("Settings", FluentUI.settings_20_regular ?? string.Empty, primaryColor, SettingsCommand)); // NOSONAR
+        var route = _navigationService.CurrentViewModelType switch
+        {
+            var type when type == typeof(InfoViewModel) => "dashboard",
+            var type when type == typeof(CustomControlsViewModel) => "customcontrols",
+            var type when type == typeof(MauiControlsViewModel) => "mauicontrols",
+            var type when type == typeof(SlideShowViewModel) => "slideshow",
+            _ => null
+        };
+
+        if (route is not null)
+            SelectRoute(route);
+    }
+
+    /// <summary>
+    /// Navigates the shell's content host to the section of the route, the same way the WinUI
+    /// sample navigates its content frame.
+    /// </summary>
+    private async Task NavigateAsync(string route)
+    {
+        _isNavigating = true;
+
+        try
+        {
+            await (route switch
+            {
+                "dashboard" => _navigationService.NavigateAsync<InfoViewModel>(),
+                "customcontrols" => _navigationService.NavigateAsync<CustomControlsViewModel>(),
+                "mauicontrols" => _navigationService.NavigateAsync<MauiControlsViewModel>(),
+                "slideshow" => _navigationService.NavigateAsync<SlideShowViewModel>(),
+                _ => Task.CompletedTask
+            });
         }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Trace.TraceError($"Navigation to '{route}' failed: {ex}");
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
+    }
 
-        SecondaryItems.Add(new NavigationItem(_commonServices.ScopedContextService.GetRequiredService<IContext>().IsAuthenticated ? "Logout" : "Login", ResourceUtility.FindResource<string>("user2") ?? string.Empty, primaryColor, SignInCommand));
+    private string LocalizedString(string resourceKey)
+    {
+        try
+        {
+            // Get localized string from LocalizedStrings; fallback to key if not found
+            return LocalizedStrings.Default[resourceKey] ?? resourceKey;
+        }
+        catch
+        {
+            return resourceKey;
+        }
     }
 
     protected override Task SignOutAsync() =>
-        _commonServices.ScopedContextService.GetRequiredService<IAuthenticationService>().SignOutAsync();
+        IPlatformApplication.Current!.Services.GetRequiredService<Sample.Abstractions.Services.IAuthenticationService>().SignOutAsync();
 
     public override async Task InitializeFirstRunAsync()
     {
-        if (_commonServices.ScopedContextService.GetRequiredService<ISettingsService>().GlobalSettings!.IsFirstRun)
+        if (_settingsService.GlobalSettings is { IsFirstRun: true } globalSettings)
         {
-            if (await _dialogService.ShowMessageAsync(
-                _commonServices.LanguageService.GetString("ChangeLanguage"),
-                _commonServices.LanguageService.GetString("Language"),
-                MessageBoxButtons.YesNo) == MessageBoxResult.Yes)
-            {
-                var languageVM = _commonServices.ScopedContextService.GetRequiredService<LanguageViewModel>();
-                languageVM.Submitted += (s, e) =>
-                {
-                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().LocalSettings.Language = e.Result;
-                    _commonServices.ScopedContextService.GetRequiredService<ISettingsService>().SaveLocalSettings();
-                    e.Result.SetLocalizationLanguage();
-                    _commonServices.RestartApplication();
-                };
-                await _dialogService.ShowDialogAsync(typeof(ILanguageWindow), languageVM);
-            }
+            // First run: offer language, theme and accent in the settings blade (applied live,
+            // no restart), then remember that the introduction has been shown.
+            await OpenSettingsAsync();
 
-            var wizardVM = _commonServices.ScopedContextService.GetRequiredService<SettingsViewModel>();
-            wizardVM.Submitted += (s, e) =>
-            {
-                _commonServices.RestartApplication();
-            };
-            wizardVM.Cancelled += (s, e) =>
-            {
-                _commonServices.RestartApplication();
-            };
-
-            await _navigationService.OpenBladeAsync(this, wizardVM);
+            globalSettings.IsFirstRun = false;
+            await _settingsService.AddOrUpdateGlobalSettingsAsync(globalSettings);
         }
     }
-
-    private void ClockTimerCallBack(object? sender, System.Timers.ElapsedEventArgs e) => SetClock();
-
-    private void SetClock()
-    {
-        if (_commonServices.ScopedContextService.GetRequiredService<IContext>() is not null)
-            base.Title = $"{_commonServices.InfoService.ProductName} v{_commonServices.InfoService.ProductVersion} ({Environment.GetEnvironmentVariable(nameof(Environment))}) - {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
-    }
-
-    /// <summary>
-    /// Opens the information asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    private Task OpenInfoAsync() =>
-        _navigationService.NavigateAsync<InfoViewModel>();
-
-    /// <summary>
-    /// Opens the controls page asynchronous.
-    /// </summary>
-    /// <returns></returns>
-    private Task OpenControlsAsync() =>
-        _navigationService.NavigateAsync<ControlsViewModel>();
-
-    /// <summary>
-    /// Opens the display asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    private Task OpenSlideshowAsync() =>
-        _navigationService.NavigateAsync<SlideShowViewModel>();
 
     /// <summary>
     /// Opens the settings asynchronous.
     /// </summary>
     /// <returns>Task.</returns>
     protected override Task OpenSettingsAsync() =>
-        _navigationService.NavigateModalAsync<SettingsViewModel>();
+        _bladeService.OpenBladeAsync<SettingsViewModel, object>(_bladeHost);
 
     /// <summary>
-    /// Opens the sync asynchronous.
+    /// Opens the help page as a modal.
     /// </summary>
-    /// <returns></returns>
-    private Task OpenSyncAsync() =>
-        _navigationService.NavigateAsync<SyncViewModel>();
+    protected override Task OpenHelpAsync() =>
+        _navigationService.NavigateModalAsync<HelpViewModel>();
+
+    private void OnThemeChanged(object? sender, EventArgs e) =>
+        ThemeIcon = _themeService.Theme == Themes.Light ? "" : "";
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _themeService.ThemeChanged -= OnThemeChanged;
+            _navigationService.BackStackChanged -= OnNavigationBackStackChanged;
+            NavigateToCommand?.Dispose();
+            ToggleMenuCommand?.Dispose();
+            BackCommand?.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
 }

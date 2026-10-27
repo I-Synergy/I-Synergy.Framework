@@ -2,7 +2,9 @@ using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.UI.Controls;
@@ -13,9 +15,19 @@ namespace ISynergy.Framework.UI.Controls;
 /// </summary>
 /// <seealso cref="IView" />
 [Bindable(true)]
-[Lifetime(Lifetimes.Scoped)]
+[Lifetime(Lifetimes.Singleton)]
 public abstract partial class View : Page, IView
 {
+    private IViewModel? _viewModel;
+    private bool _isWrapped;
+    private FrameworkElement? _originalContent;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the view content should be scrollable.
+    /// Default is true.
+    /// </summary>
+    public bool Scrollable { get; set; } = true;
+
     /// <summary>
     /// Gets or sets the viewmodel and data context for a view.
     /// </summary>
@@ -24,15 +36,84 @@ public abstract partial class View : Page, IView
     {
         get
         {
+            if (_viewModel is not null)
+                return _viewModel;
+
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing — DataContext can be null after cleanup.
+            // Callers handle null gracefully via null checks.
+            return null!;
         }
         set
         {
+            _viewModel = value;
             DataContext = value;
         }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the View class.
+    /// </summary>
+    protected View()
+    {
+        Loaded += OnViewLoaded;
+    }
+
+    private void OnViewLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnViewLoaded;
+
+        // A page that hosts a blade pane must not be wrapped: the pane has to fill the page (and
+        // therefore the shell) height, otherwise it scrolls with the content and sizes to content.
+        if (!_isWrapped && Content is not null && Scrollable && !ContainsBladeView(Content))
+            WrapContent();
+    }
+
+    /// <summary>
+    /// Determines whether the element tree contains a blade pane.
+    /// </summary>
+    /// <param name="element">The root element to inspect.</param>
+    /// <returns><c>true</c> when a <see cref="BladeView"/> is part of the tree.</returns>
+    private static bool ContainsBladeView(DependencyObject element)
+    {
+        if (element is BladeView)
+            return true;
+
+        var childCount = VisualTreeHelper.GetChildrenCount(element);
+        for (var index = 0; index < childCount; index++)
+        {
+            if (ContainsBladeView(VisualTreeHelper.GetChild(element, index)))
+                return true;
+        }
+
+        return false;
+    }
+
+    private void WrapContent()
+    {
+        if (_isWrapped || Content is not FrameworkElement content)
+            return;
+
+        _originalContent = content;
+
+        // Detach from Page before adding to ScrollViewer.
+        // A FrameworkElement can only have one parent in the visual tree.
+        Content = null;
+
+        _isWrapped = true;
+
+        var scrollViewer = new ScrollViewer
+        {
+            Content = _originalContent,
+            VerticalScrollMode = ScrollMode.Auto,
+            HorizontalScrollMode = ScrollMode.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+        };
+
+        Content = scrollViewer;
     }
 
     #region IDisposable
@@ -69,11 +150,10 @@ public abstract partial class View : Page, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // Release the ViewModel reference without disposing — its lifecycle
+            // is managed by the DI scope that created it.
+            _viewModel = null;
         }
-
-        // free native resources if there are any.
 
         base.Dispose(disposing);
     }
@@ -86,11 +166,10 @@ public abstract partial class View : Page, IView
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // Release the ViewModel reference without disposing — its lifecycle
+            // is managed by the DI scope that created it.
+            _viewModel = null;
         }
-
-        // free native resources if there are any.
     }
 #endif
     #endregion

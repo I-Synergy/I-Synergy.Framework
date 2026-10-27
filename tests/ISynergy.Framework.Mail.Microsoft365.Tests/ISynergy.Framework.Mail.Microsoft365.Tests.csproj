@@ -1,11 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<SignAssembly>True</SignAssembly>
-		<AssemblyOriginatorKeyFile>..\..\I-Synergy.Framework.snk</AssemblyOriginatorKeyFile>
-    <RootNamespace>ISynergy.Framework.Mail.Microsoft365</RootNamespace>
+    	<RootNamespace>ISynergy.Framework.Mail.Microsoft365</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Globalization.Services;
 using ISynergy.Framework.Geography.Common;
 using ISynergy.Framework.Geography.Global;
 using ISynergy.Framework.Geography.Projection;
@@ -101,7 +102,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     private UtmGrid(UtmProjection projection)
     {
         // Assign default values
-        Projection = projection ?? throw new ArgumentNullException(Properties.Resources.PROJECTION_NULL);
+        Projection = projection ?? throw new ArgumentNullException(LanguageService.Default.GetString("PROJECTION_NULL"));
         _origin = null;
         _mapHeight = 0.0;
         _mapWidth = 0.0;
@@ -149,7 +150,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     public UtmGrid(UtmProjection projection, int ordinal) : this(projection)
     {
         if (ordinal < 0 || ordinal >= NumberOfGrids)
-            throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_ORDINAL);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_ORDINAL"));
 
         SetZoneAndBandInConstructor(1 + ordinal / NumberOfBands, ordinal % NumberOfBands);
     }
@@ -163,7 +164,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
     public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection) // NOSONAR
     {
         if (coord.Latitude < projection.MinLatitude || coord.Latitude > projection.MaxLatitude)
-            throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_LATITUDE);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_LATITUDE"));
 
         var longitude = MercatorProjection.NormalizeLongitude(coord.Longitude).Degrees + 180.0;
         var latitude = projection.NormalizeLatitude(coord.Latitude);
@@ -255,7 +256,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
         set
         {
             if (value < MinZone || value > MaxZone)
-                throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_ZONE);
+                throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_ZONE"));
             _zone = value;
             ComputeSizes();
             if (_origin is not null)
@@ -274,7 +275,7 @@ public struct UtmGrid : IEquatable<UtmGrid>
         private set
         {
             if (value < MinBand || value > MaxBand)
-                throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_BAND);
+                throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_BAND"));
             _band = value;
             ComputeSizes();
             if (_origin is not null)
@@ -413,15 +414,15 @@ public struct UtmGrid : IEquatable<UtmGrid>
     private void SetZoneAndBandInConstructor(int zone, int band, bool noGridException = false)
     {
         if (!noGridException && band == MaxBand && (zone == 32 || zone == 34 || zone == 36))
-            throw new ArgumentOutOfRangeException(Properties.Resources.GRID_EXCEPTION);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("GRID_EXCEPTION"));
 
         if (zone < MinZone || zone > MaxZone)
-            throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_ZONE);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_ZONE"));
 
         _zone = zone;
 
         if (band < MinBand || band > MaxBand)
-            throw new ArgumentOutOfRangeException(Properties.Resources.INVALID_BAND);
+            throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_BAND"));
 
         _band = band;
         ComputeSizes();
@@ -610,12 +611,12 @@ public struct UtmGrid : IEquatable<UtmGrid>
         {
             if (Band == 'U' && _zone == 31 ||
                 Band == 'W' && (_zone == 32 || _zone == 34 || _zone == 36))
-                throw new InvalidOperationException(Properties.Resources.NO_UNIQUE_NORTH_NEIGHBOR);
+                throw new InvalidOperationException(LanguageService.Default.GetString("NO_UNIQUE_NORTH_NEIGHBOR"));
 
             var newBand = _band + 1;
 
             if (newBand > MaxBand)
-                throw new InvalidOperationException(Properties.Resources.NO_NORTH_NEIGHBOR);
+                throw new InvalidOperationException(LanguageService.Default.GetString("NO_NORTH_NEIGHBOR"));
 
             return new UtmGrid(Projection, _zone, newBand);
         }
@@ -631,12 +632,12 @@ public struct UtmGrid : IEquatable<UtmGrid>
         get
         {
             if (Band == 'W' && _zone == 31 || Band == 'X' && _zone >= 31 && _zone <= 37)
-                throw new InvalidOperationException(Properties.Resources.NO_UNIQUE_SOUTH_NEIGHBOR);
+                throw new InvalidOperationException(LanguageService.Default.GetString("NO_UNIQUE_SOUTH_NEIGHBOR"));
 
             var newBand = _band - 1;
 
             if (newBand < MinBand)
-                throw new InvalidOperationException(Properties.Resources.NO_SOUTH_NEIGHBOR);
+                throw new InvalidOperationException(LanguageService.Default.GetString("NO_SOUTH_NEIGHBOR"));
 
             return new UtmGrid(Projection, _zone, newBand);
         }

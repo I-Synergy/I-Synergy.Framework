@@ -6,7 +6,6 @@ using ISynergy.Framework.MessageBus.RabbitMQ.Options.Queue;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
@@ -63,8 +62,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
     /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.
     /// </remarks>
-    [RequiresUnreferencedCode("Serialization uses reflection. Pass a JsonTypeInfo<TQueueMessage> for AOT compatibility.")]
-    [RequiresDynamicCode("Serialization uses dynamic code generation. Pass a JsonTypeInfo<TQueueMessage> for AOT compatibility.")]
     public PublisherServiceBus(
         IOptions<TOption> options,
         ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger)
@@ -113,8 +110,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// <param name="queueMessage">The queue message.</param>
     /// <param name="sessionId">Used as CorrelationId when not <see cref="Guid.Empty"/>.</param>
     /// <returns>Task.</returns>
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresUnreferencedCode] constructor.")]
-    [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Reflection path is only reachable when _jsonTypeInfo is null, which requires the [RequiresDynamicCode] constructor.")]
     public virtual async Task SendMessageAsync(TQueueMessage queueMessage, Guid sessionId)
     {
         Argument.IsNotNull(queueMessage);

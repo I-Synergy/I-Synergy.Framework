@@ -13,7 +13,7 @@ public static class FileResultExtensions
         {
             return new ISynergy.Framework.Core.Models.Results.FileResult(
                 fileResult.FullPath,
-                () => fileResult.OpenReadAsync().GetAwaiter().GetResult());
+                fileResult.OpenReadAsync);
         }
 
         return null;

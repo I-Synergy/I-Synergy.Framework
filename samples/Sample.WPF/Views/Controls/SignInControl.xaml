@@ -10,13 +10,13 @@
         <StackPanel Margin="2,10" VerticalAlignment="Center">
             <TextBlock Text="{m:GetString SignIn}" FontSize="24" FontWeight="SemiBold" Margin ="5" Foreground="{StaticResource SystemAccentBrush}" />
 
-            <TextBlock Text="{m:GetString Username}" />
+            <TextBlock Text="{m:GetString Username}" Style="{StaticResource AppTextLabel}" />
             <TextBox 
                 x:Name="TextBox_Username" 
                 ToolTipService.ToolTip="{m:GetString Email}" 
                 Text="{Binding Username, Mode=TwoWay}"/>
 
-            <TextBlock Text="{m:GetString Password}"/>
+            <TextBlock Text="{m:GetString Password}" Style="{StaticResource AppTextLabel}"/>
             <TextBox 
                 x:Name="TextBox_Password" 
                 ToolTipService.ToolTip="{m:GetString Password}" 
@@ -25,7 +25,6 @@
                 InputScope="Password" 
                 PreviewKeyDown="TextBox_Password_PreviewKeyDown"/>    
 
-            <CheckBox Content="{m:GetString Remember}" IsChecked="{Binding AutoLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Label x:Name="Hyperlink_ForgotPassword" HorizontalAlignment="Right" Content="{m:GetString PasswordForgot}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Gray" />
             <TextBlock x:Name="TextBox_CapsLockOn" Text="{m:GetString Warning_CAPSLOCK}" Visibility="Collapsed" Foreground="Red"  HorizontalAlignment="Left" Margin="5,0,0,0" />
 

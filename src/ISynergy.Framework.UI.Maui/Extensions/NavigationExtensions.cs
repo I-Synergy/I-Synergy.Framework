@@ -1,7 +1,7 @@
-using ISynergy.Framework.Core.Locators;
+using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace ISynergy.Framework.UI.Extensions;
 
@@ -22,9 +22,6 @@ public static class NavigationExtensions
     /// This is not compatible with MAUI iOS/Android linker trimming without a source-generated view map.
     /// Ensure view/ViewModel types are preserved via a linker configuration file or source-generated registration.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
     public static IView CreatePage<TViewModel>(object? parameter = null) where TViewModel : class, IViewModel
         => CreatePage<TViewModel>(default(TViewModel), parameter);
 
@@ -43,10 +40,29 @@ public static class NavigationExtensions
     /// The view-type lookup calls <c>GetRelatedViewType()</c> which performs an assembly scan.
     /// This is not compatible with MAUI iOS/Android linker trimming without a source-generated view map.
     /// </remarks>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
+    /// <summary>
+    /// Creates or gets a view from a ViewModel instance using the root/>.
+    /// Prefer the overload that accepts an <see cref="IServiceProvider"/>
+    /// when a scoped provider is available.
+    /// </summary>
     public static IView CreatePage<TViewModel>(TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
+        => CreatePage<TViewModel>(IPlatformApplication.Current!.Services, viewModel, parameter);
+
+    /// <summary>
+    /// Creates or gets a view from a ViewModel instance using the specified
+    /// <paramref name="serviceProvider"/> for all service resolution.
+    /// Resolving from a scoped provider (created via <see cref="IServiceScopeFactory"/>)
+    /// ensures ViewModels are properly released when the scope is disposed,
+    /// rather than being permanently tracked by the root container.
+    /// </summary>
+    /// <typeparam name="TViewModel">The ViewModel type to resolve a view for.</typeparam>
+    /// <param name="serviceProvider">The service provider to resolve services from (scoped or root).</param>
+    /// <param name="viewModel">
+    /// An existing ViewModel instance, or <see langword="null"/> to resolve from the provider.
+    /// </param>
+    /// <param name="parameter">An optional navigation parameter.</param>
+    /// <returns>The resolved <see cref="IView"/> instance.</returns>
+    public static IView CreatePage<TViewModel>(IServiceProvider serviceProvider, TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var view = typeof(TViewModel).GetRelatedView();
         var viewType = view.GetRelatedViewType();
@@ -54,19 +70,25 @@ public static class NavigationExtensions
         if (viewType is null)
             throw new InvalidNavigationException($"Cannot determine view type for ViewModel: {typeof(TViewModel).Name}.");
 
-        var resolvedService = ServiceLocator.Default.GetRequiredService(viewType);
-        if (resolvedService is IView resolvedPage)
+        var resolvedService = serviceProvider.GetRequiredService(viewType);
+
+        if (resolvedService is IView resolvedView)
         {
             if (viewModel is not null)
-                resolvedPage.ViewModel = viewModel;
+                resolvedView.ViewModel = viewModel;
 
-            if (resolvedPage.ViewModel is null)
-                resolvedPage.ViewModel = ServiceLocator.Default.GetRequiredService<TViewModel>();
+            if (resolvedView.ViewModel is null)
+                resolvedView.ViewModel = (IViewModel)serviceProvider.GetRequiredService<TViewModel>();
 
-            if (parameter is not null && resolvedPage.ViewModel is not null)
-                resolvedPage.ViewModel.Parameter = parameter;
+            if (parameter is not null && resolvedView.ViewModel is not null)
+                resolvedView.ViewModel.Parameter = parameter;
 
-            return resolvedPage;
+            var language = serviceProvider.GetRequiredService<ILocalSettings>().Language;
+
+            if (resolvedView is VisualElement visualElement && CultureInfo.GetCultureInfo(language).TextInfo.IsRightToLeft)
+                visualElement.FlowDirection = FlowDirection.RightToLeft;
+
+            return resolvedView;
         }
 
         throw new InvalidNavigationException($"Cannot create or navigate to page: {view}.");
@@ -80,9 +102,6 @@ public static class NavigationExtensions
     /// <param name="viewModel">An optional ViewModel instance. When <see langword="null"/>, resolved from DI.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
     /// <returns>A task representing the asynchronous navigation operation.</returns>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
     public static async Task PushViewModelAsync<TViewModel>(this INavigation navigation, TViewModel? viewModel = null, object? parameter = null)
         where TViewModel : class, IViewModel
     {
@@ -101,9 +120,6 @@ public static class NavigationExtensions
     /// <param name="viewModel">An optional ViewModel instance. When <see langword="null"/>, resolved from DI.</param>
     /// <param name="parameter">An optional navigation parameter.</param>
     /// <returns>A task representing the asynchronous modal navigation operation.</returns>
-    [RequiresUnreferencedCode(
-        "The view-type resolution uses GetRelatedViewType() which scans loaded assemblies. " +
-        "This is not trim-safe. Ensure view/ViewModel types are preserved via linker configuration or source-generated registration.")]
     public static async Task PushModalViewModelAsync<TViewModel>(this INavigation navigation, TViewModel? viewModel = null, object? parameter = null) where TViewModel : class, IViewModel
     {
         var page = CreatePage<TViewModel>(viewModel, parameter);
@@ -129,6 +145,18 @@ public static class NavigationExtensions
         }
         else if (page is NavigationPage navigationPage)
             return (navigationPage.Navigation, navigationPage);
+        else if (page is Shell shell)
+        {
+            // Shell wraps each ShellContent in a NavigationPage internally.
+            // shell.CurrentPage returns the visible content page of the active section,
+            // and its Navigation property is the same INavigation that PushAsync
+            // operates on. Shell's renderer keeps the hamburger visible independently
+            // of the navigation stack depth.
+            if (shell.CurrentPage is not null)
+                return (shell.CurrentPage.Navigation, shell.CurrentPage as NavigationPage);
+
+            return (shell.Navigation, null);
+        }
         else
         {
             var currentApp = Application.Current;

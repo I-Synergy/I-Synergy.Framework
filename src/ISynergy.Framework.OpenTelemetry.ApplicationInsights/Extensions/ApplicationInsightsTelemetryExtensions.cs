@@ -1,9 +1,8 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using ISynergy.Framework.OpenTelemetry.Models;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 
 namespace ISynergy.Framework.OpenTelemetry.ApplicationInsights.Extensions;
 /// <summary>
@@ -17,18 +16,37 @@ public static class ApplicationInsightsTelemetryExtensions
     /// <param name="telemetryBuilder">The telemetry builder.</param>
     /// <param name="telemetryExporterOptions"></param>
     /// <returns>The telemetry builder for chaining.</returns>
-    [RequiresUnreferencedCode("Calls BindWithReload which uses ConfigurationBinder.Bind with reflection.")]
-    [RequiresDynamicCode("Calls BindWithReload which requires dynamic code generation at runtime.")]
     public static TelemetryBuilder AddApplicationInsightsExporter(
         this TelemetryBuilder telemetryBuilder,
         Action<AzureMonitorExporterOptions>? telemetryExporterOptions = null)
     {
         Argument.IsNotNull(telemetryBuilder);
 
+        // IConfiguration.Bind(object) uses reflection over the target's property graph, which
+        // NativeAOT trimming silently breaks (properties are left at their defaults instead of
+        // throwing) -- most importantly ConnectionString, which then reads as null/empty below
+        // and disables this exporter entirely with no error anywhere. Read each value explicitly
+        // instead. Credential/Transport/Diagnostics/Retry/RetryPolicy are complex Azure SDK types
+        // that IConfiguration.Bind could never populate from flat JSON config either way, so they
+        // aren't included here -- they keep whatever AzureMonitorExporterOptions defaults to.
         var options = new AzureMonitorExporterOptions();
-        telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+        var telemetrySection = telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection);
+        options.ConnectionString = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.ConnectionString), options.ConnectionString);
+        options.SamplingRatio = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.SamplingRatio), options.SamplingRatio);
+        options.TracesPerSecond = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.TracesPerSecond), options.TracesPerSecond);
+        options.Version = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.Version), options.Version);
+        options.StorageDirectory = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.StorageDirectory), options.StorageDirectory);
+        options.DisableOfflineStorage = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.DisableOfflineStorage), options.DisableOfflineStorage);
+        options.EnableLiveMetrics = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnableLiveMetrics), options.EnableLiveMetrics);
+        options.EnableTraceBasedLogsSampler = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnableTraceBasedLogsSampler), options.EnableTraceBasedLogsSampler);
+        options.EnableStandardMetrics = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnableStandardMetrics), options.EnableStandardMetrics);
+        options.EnablePerformanceCounters = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnablePerformanceCounters), options.EnablePerformanceCounters);
+
 
         telemetryExporterOptions?.Invoke(options);
+
+        if (string.IsNullOrWhiteSpace(options.ConnectionString))
+            return telemetryBuilder;
 
         // Configure all telemetry types with the same options
         telemetryBuilder
@@ -62,6 +80,8 @@ public static class ApplicationInsightsTelemetryExtensions
         target.StorageDirectory = source.StorageDirectory;
         target.DisableOfflineStorage = source.DisableOfflineStorage;
         target.EnableLiveMetrics = source.EnableLiveMetrics;
+        target.EnableStandardMetrics = source.EnableStandardMetrics;
+        target.EnablePerformanceCounters = source.EnablePerformanceCounters;
         target.EnableTraceBasedLogsSampler = source.EnableTraceBasedLogsSampler;
         target.Transport = source.Transport;
         target.RetryPolicy = source.RetryPolicy;

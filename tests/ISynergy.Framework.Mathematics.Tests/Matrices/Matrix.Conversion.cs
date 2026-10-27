@@ -104,6 +104,13 @@ public partial class MatrixTest
             [7.3, 8.7]
         ];
 
+        decimal[][] eb =
+        [
+            [0.1m],
+            [1.4m],
+            [8.7m]
+        ];
+
         for (int i = 0; i < a.GetLength()[0]; i++)
             for (int j = 0; j < a.GetLength()[1]; j++)
                 Assert.AreEqual(ea[i][j], a[i][j]);
@@ -122,7 +129,7 @@ public partial class MatrixTest
 
         for (int i = 0; i < e.GetLength()[0]; i++)
             for (int j = 0; j < e.GetLength()[1]; j++)
-                Assert.AreEqual(ea.GetColumn(1).ToDecimal().ToJagged()[i][j], e[i][j]);
+                Assert.AreEqual(eb[i][j], e[i][j]);
     }
 
     [TestMethod]
@@ -200,7 +207,7 @@ public partial class MatrixTest
         Array values = jagged.DeepFlatten();
 
         // As a result, the resulting array is a simple int[] vector:
-        Assert.AreEqual(values.GetType(), typeof(int[]));
+        Assert.AreEqual(typeof(int[]), values.GetType());
 
         // Some more checks
         int[] innerValues = values as int[];
@@ -213,7 +220,7 @@ public partial class MatrixTest
         Array matrix = jagged.DeepToMatrix();
 
         // As a result, the resulting array is a multidimensional int[,,] array:
-        Assert.AreEqual(matrix.GetType(), typeof(int[,,]));
+        Assert.AreEqual(typeof(int[,,]), matrix.GetType());
 
         // Some more checks
         int[,,] innerMatrix = matrix as int[,,];

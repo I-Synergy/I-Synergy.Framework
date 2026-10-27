@@ -1,9 +1,6 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Mvvm.Abstractions.Commands;
 using ISynergy.Framework.Mvvm.Enumerations;
-using System.Collections.Concurrent;
 using System.ComponentModel;
 
 namespace ISynergy.Framework.Mvvm.Commands.Base;
@@ -60,52 +57,6 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     private EventHandler? _canExecuteChanged;
 
     /// <summary>
-    /// Static pool for weak references to reduce allocations
-    /// </summary>
-    private static readonly ConcurrentQueue<WeakReference<BaseAsyncRelayCommand>> _weakReferencePool = new();
-
-    /// <summary>
-    /// Static pool for continuation cancellation tokens
-    /// </summary>
-    private static readonly ConcurrentQueue<CancellationTokenSource> _continuationCtsPool = new();
-
-    /// <summary>
-    /// Maximum size for object pools
-    /// </summary>
-    private const int MaxPoolSize = 50;
-
-    /// <summary>
-    /// Cache for timeout token sources to reduce allocations
-    /// </summary>
-    private static readonly ConcurrentDictionary<TimeSpan, Lazy<CancellationTokenSource>> _timeoutTokenCache =
-        new ConcurrentDictionary<TimeSpan, Lazy<CancellationTokenSource>>();
-
-    /// <summary>
-    /// Timer for cleaning up the token cache
-    /// </summary>
-    private static readonly Timer _cacheCleanupTimer;
-
-    /// <summary>
-    /// Static constructor to initialize resources
-    /// </summary>
-    static BaseAsyncRelayCommand()
-    {
-        // Create a timer to clean up the token cache every minute
-        _cacheCleanupTimer = new Timer(_ => CleanupTokenCache(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
-    }
-
-    /// <summary>
-    /// Error handling strategy for command execution.
-    /// </summary>
-    public ErrorHandlingStrategy ErrorHandlingStrategy { get; set; } = ErrorHandlingStrategy.ReThrow;
-
-    /// <summary>
-    /// Optional exception handler service. If provided, will be used instead of ServiceLocator.
-    /// This allows commands to be created with dependency injection when possible.
-    /// </summary>
-    protected readonly IExceptionHandlerService? _exceptionHandlerService;
-
-    /// <summary>
     /// Occurs when changes occur that affect whether or not the command should execute.
     /// </summary>
     public event EventHandler? CanExecuteChanged
@@ -160,11 +111,9 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Initializes a new instance of the <see cref="BaseAsyncRelayCommand"/> class.
     /// </summary>
     /// <param name="options">Command options.</param>
-    /// <param name="exceptionHandlerService">Optional exception handler service. If not provided, will use ServiceLocator when needed.</param>
-    protected BaseAsyncRelayCommand(AsyncRelayCommandOptions options, IExceptionHandlerService? exceptionHandlerService = null)
+    protected BaseAsyncRelayCommand(AsyncRelayCommandOptions options)
     {
         _options = options;
-        _exceptionHandlerService = exceptionHandlerService;
     }
 
     /// <summary>
@@ -260,32 +209,16 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         // Store a local reference to avoid race conditions
         var currentTask = task;
 
-        // Get or create a weak reference from the pool
-        WeakReference<BaseAsyncRelayCommand>? weakThis;
-
-        if (!_weakReferencePool.TryDequeue(out weakThis) || weakThis is null)
-        {
-            weakThis = new WeakReference<BaseAsyncRelayCommand>(this);
-        }
-        else
-        {
-            weakThis.SetTarget(this);
-        }
-
-        // Get or create a cancellation token source from the pool
-        CancellationTokenSource? continuationCts;
-
-        if (!_continuationCtsPool.TryDequeue(out continuationCts) || continuationCts is null)
-        {
-            continuationCts = new CancellationTokenSource();
-        }
+        // Rent pooled resources (weak reference + continuation token source)
+        var weakThis = CommandExecutionResourcePool.RentWeakReference(this);
+        var continuationCts = CommandExecutionResourcePool.RentContinuationTokenSource();
 
         lock (_syncLock)
         {
             if (_isDisposed)
             {
                 // Return resources to pool
-                ReturnToPool(weakThis, continuationCts);
+                CommandExecutionResourcePool.Return(weakThis, continuationCts);
                 return;
             }
 
@@ -297,14 +230,14 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             // Check if continuation was canceled
             if (continuationCts.IsCancellationRequested)
             {
-                ReturnToPool(weakThis, continuationCts);
+                CommandExecutionResourcePool.Return(weakThis, continuationCts);
                 return;
             }
 
             // Use weak reference to avoid keeping the command alive if it's disposed
             if (!weakThis.TryGetTarget(out var target))
             {
-                ReturnToPool(weakThis, continuationCts);
+                CommandExecutionResourcePool.Return(weakThis, continuationCts);
                 return;
             }
 
@@ -313,7 +246,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             {
                 if (target._isDisposed)
                 {
-                    ReturnToPool(weakThis, continuationCts);
+                    CommandExecutionResourcePool.Return(weakThis, continuationCts);
                     return;
                 }
 
@@ -332,7 +265,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                     {
                         if (!weakThis.TryGetTarget(out var innerTarget))
                         {
-                            ReturnToPool(weakThis, continuationCts);
+                            CommandExecutionResourcePool.Return(weakThis, continuationCts);
                             return;
                         }
 
@@ -340,7 +273,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                         {
                             if (innerTarget._isDisposed)
                             {
-                                ReturnToPool(weakThis, continuationCts);
+                                CommandExecutionResourcePool.Return(weakThis, continuationCts);
                                 return;
                             }
 
@@ -370,7 +303,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                             }
                         }
 
-                        ReturnToPool(weakThis, continuationCts);
+                        CommandExecutionResourcePool.Return(weakThis, continuationCts);
                     }, null);
                 }
                 else
@@ -380,7 +313,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                     {
                         if (target._isDisposed)
                         {
-                            ReturnToPool(weakThis, continuationCts);
+                            CommandExecutionResourcePool.Return(weakThis, continuationCts);
                             return;
                         }
 
@@ -410,41 +343,14 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
                         }
                     }
 
-                    ReturnToPool(weakThis, continuationCts);
+                    CommandExecutionResourcePool.Return(weakThis, continuationCts);
                 }
             }
             else
             {
-                ReturnToPool(weakThis, continuationCts);
+                CommandExecutionResourcePool.Return(weakThis, continuationCts);
             }
         }, continuationCts.Token, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
-    }
-
-    /// <summary>
-    /// Returns pooled resources back to their respective pools
-    /// </summary>
-    private static void ReturnToPool(WeakReference<BaseAsyncRelayCommand> weakRef, CancellationTokenSource cts)
-    {
-        // Reset the CTS if it was used
-        if (cts.IsCancellationRequested)
-        {
-            cts = new CancellationTokenSource();
-        }
-
-        // Return to pools if not too large
-        if (_weakReferencePool.Count < MaxPoolSize)
-        {
-            _weakReferencePool.Enqueue(weakRef);
-        }
-
-        if (_continuationCtsPool.Count < MaxPoolSize)
-        {
-            _continuationCtsPool.Enqueue(cts);
-        }
-        else
-        {
-            cts.Dispose();
-        }
     }
 
     /// <summary>
@@ -554,38 +460,50 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     public abstract Task ExecuteAsync(object? parameter);
 
     /// <summary>
-    /// Awaits a task and re-throws if not handled. Exceptions are assumed to be already
-    /// handled in ExecuteAsync, so this method only re-throws for FlowExceptionsToTaskScheduler scenarios.
+    /// Checks whether the execution task is already faulted immediately after starting it (i.e.
+    /// the execute delegate threw before its first "await") and, if so, routes the exception
+    /// through <see cref="CommandExceptionDispatcher"/> instead of rethrowing it synchronously.
     /// </summary>
-    /// <param name="executionTask">The task to await.</param>
-    internal static async void AwaitAndThrowIfFailed(Task executionTask)
+    /// <remarks>
+    /// A genuinely asynchronous fault (thrown after an <c>await</c>) is not observed here: the
+    /// task is not yet faulted at this point, so it is left to complete on its own and, if never
+    /// awaited, becomes an unobserved task exception that platform <c>Application</c> classes
+    /// already handle via <see cref="TaskScheduler.UnobservedTaskException"/>. But a delegate
+    /// that throws before any <c>await</c> (or a purely synchronous delegate) makes the task
+    /// already faulted by the time control returns here, on the calling (typically UI) thread.
+    /// Rethrowing synchronously in that case would become a genuine unhandled exception on that
+    /// thread, which on some platforms (e.g. Mac Catalyst) causes the native runtime to abort the
+    /// process unconditionally, regardless of the framework's global exception handling. Routing
+    /// through the dispatcher here avoids that crash while still surfacing the exception through
+    /// the same friendly-dialog path as other command failures.
+    /// </remarks>
+    /// <param name="executionTask">The task to check.</param>
+    /// <param name="sender">The command instance that started the task.</param>
+    internal static void AwaitAndThrowIfFailed(Task executionTask, object? sender = null)
     {
-        try
+        if (executionTask.IsFaulted)
         {
-            await executionTask;
-        }
-        catch
-        {
-            // Do NOT re-throw - exceptions are already handled in ExecuteAsync
-            // This method is only called from synchronous Execute() which can't properly
-            // handle async exceptions anyway. Re-throwing here would cause double handling.
+            // Accessing Exception marks it observed, preventing a duplicate report via
+            // TaskScheduler.UnobservedTaskException during finalization.
+            var exception = executionTask.Exception!.InnerException!;
+            CommandExceptionDispatcher.Raise(sender, exception);
         }
     }
 
     /// <summary>
-    /// Cleans up the token cache periodically
+    /// Logs the exception from a failed task without propagating it.
+    /// Used with AsyncRelayCommandOptions.None.
     /// </summary>
-    private static void CleanupTokenCache()
+    /// <param name="executionTask">The task that may have faulted.</param>
+    internal static void LogIfFailed(Task executionTask)
     {
-        foreach (var key in _timeoutTokenCache.Keys)
-        {
-            if (_timeoutTokenCache.TryGetValue(key, out var lazyCts) &&
-                lazyCts.IsValueCreated &&
-                lazyCts.Value.IsCancellationRequested)
-            {
-                _timeoutTokenCache.TryRemove(key, out _);
-            }
-        }
+        // Deliberately not `async void`: attach a fault-only continuation so the exception is
+        // always observed and never tears down the process.
+        _ = executionTask.ContinueWith(
+            task => System.Diagnostics.Debug.WriteLine($"Command execution failed: {task.Exception?.GetBaseException().Message}"),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
     }
 
     /// <summary>
@@ -621,15 +539,14 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         // Round the timeout to the nearest second to improve cache hits
         var roundedTimeout = TimeSpan.FromSeconds(Math.Round(timeoutDuration.TotalSeconds));
 
-        var sharedTimeoutCts = _timeoutTokenCache.GetOrAdd(roundedTimeout,
-            key => new Lazy<CancellationTokenSource>(() => new CancellationTokenSource(key)));
+        var sharedTimeoutCts = CommandExecutionResourcePool.GetOrCreateTimeoutTokenSource(roundedTimeout);
 
         try
         {
             // FIXED: Link with the command's cancellation token source directly
             // This ensures cancellation propagates correctly when Cancel() is called
             var combinedCts = CancellationTokenSource.CreateLinkedTokenSource(
-                _cancellationTokenSource!.Token, sharedTimeoutCts.Value.Token);
+                _cancellationTokenSource!.Token, sharedTimeoutCts.Token);
 
             lock (_syncLock)
             {
@@ -648,7 +565,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         catch (ObjectDisposedException)
         {
             // If the shared token was disposed, remove it from cache and try again
-            _timeoutTokenCache.TryRemove(roundedTimeout, out _);
+            CommandExecutionResourcePool.RemoveTimeoutTokenSource(roundedTimeout);
             return CreateTimeoutTokenSource(timeout);
         }
     }
@@ -894,48 +811,6 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// </summary>
     public static void CleanupStaticResources()
     {
-        _cacheCleanupTimer?.Dispose();
-
-        foreach (var entry in _timeoutTokenCache)
-        {
-            if (entry.Value.IsValueCreated)
-            {
-                try
-                {
-                    entry.Value.Value.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore disposal errors during static cleanup
-                    System.Diagnostics.Debug.WriteLine($"Error disposing timeout token: {ex.Message}");
-                }
-            }
-        }
-
-        _timeoutTokenCache.Clear();
-
-        // Clean up pooled resources
-        while (_weakReferencePool.TryDequeue(out _)) { }
-
-        while (_continuationCtsPool.TryDequeue(out var cts))
-        {
-            cts.Dispose();
-        }
+        CommandExecutionResourcePool.Cleanup();
     }
-}
-
-/// <summary>
-/// Defines error handling strategies for command execution.
-/// </summary>
-public enum ErrorHandlingStrategy
-{
-    /// <summary>
-    /// Re-throw exceptions that occur during command execution.
-    /// </summary>
-    ReThrow,
-
-    /// <summary>
-    /// Swallow exceptions that occur during command execution.
-    /// </summary>
-    Swallow
 }

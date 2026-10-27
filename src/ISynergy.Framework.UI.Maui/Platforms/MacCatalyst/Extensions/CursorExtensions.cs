@@ -37,6 +37,21 @@ public static class CursorExtensions
         }));
     }
 
+    public static void RemoveCustomCursor(this VisualElement visualElement, IMauiContext? mauiContext)
+    {
+        if (mauiContext is null) return;
+        try
+        {
+            var view = visualElement.ToPlatform(mauiContext);
+            if (view.GestureRecognizers is not null)
+            {
+                foreach (var recognizer in view.GestureRecognizers.OfType<PointerUIHoverGestureRecognizer>())
+                    view.RemoveGestureRecognizer(recognizer);
+            }
+        }
+        catch { /* best-effort cleanup */ }
+    }
+
     static NSCursor GetNSCursor(CursorIcons cursor)
     {
         return cursor switch

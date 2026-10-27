@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -462,8 +461,8 @@ public static class StringExtensions
     /// <param name="defaultValue">The default value.</param>
     /// <returns>T.</returns>
     public static T ToEnum<T>(this string? _self, T defaultValue) where T : struct, Enum =>
-        string.IsNullOrEmpty(_self) || !Enum.TryParse<T>(_self, true, out var result) 
-            ? defaultValue 
+        string.IsNullOrEmpty(_self) || !Enum.TryParse<T>(_self, true, out var result)
+            ? defaultValue
             : result;
 
     /// <summary>
@@ -613,9 +612,62 @@ public static class StringExtensions
 
             return null;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            System.Diagnostics.Trace.WriteLine($"StringExtensions parameter extraction failed: {ex}");
             return null;
         }
+    }
+
+    /// <summary>
+    /// Parses a URI query string of the form <c>?key=value&amp;key2=value2</c>
+    /// into a case-insensitive dictionary.
+    /// </summary>
+    public static Dictionary<string, string> ParseQueryString(this string? query)
+    {
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        if (string.IsNullOrEmpty(query))
+            return result;
+
+        var q = query.StartsWith('?') ? query[1..] : query;
+
+        foreach (var segment in q.Split('&', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var eq = segment.IndexOf('=');
+
+            if (eq > 0)
+                result[Uri.UnescapeDataString(segment[..eq])] = Uri.UnescapeDataString(segment[(eq + 1)..]);
+            else if (eq < 0 && segment.Length > 0)
+                result[Uri.UnescapeDataString(segment)] = string.Empty;
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Parses command-line arguments of the form <c>--key value</c> or <c>-k value</c>
+    /// into a case-insensitive dictionary.
+    /// </summary>
+    public static Dictionary<string, string> ParseCommandLineArgs(this string arguments)
+    {
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var parts = arguments.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        for (int i = 0; i < parts.Length; i++)
+        {
+            if (parts[i].StartsWith("--") && parts[i].Length > 2 && i + 1 < parts.Length && !parts[i + 1].StartsWith("-"))
+            {
+                result[parts[i][2..]] = parts[i + 1];
+                i++;
+            }
+            else if (parts[i].StartsWith("-") && parts[i].Length == 2 && i + 1 < parts.Length && !parts[i + 1].StartsWith("-"))
+            {
+                result[parts[i][1..]] = parts[i + 1];
+                i++;
+            }
+        }
+
+        return result;
     }
 }

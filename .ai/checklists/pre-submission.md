@@ -12,6 +12,22 @@ Use this checklist before considering any task complete.
 - [ ] Progress file moved to `.ai/completed/` on completion
 - [ ] Session context updated with learnings before ending
 
+## Council Gate (High-Stakes Decisions)
+
+If no trigger from *When to Convene* in `.ai/reference/council.md` fired, skip this section — the default is not to convene.
+
+- [ ] I can name the trigger from *When to Convene* in `.ai/reference/council.md` that fired — or no trigger fired and no council was required
+- [ ] Phase 0 framing written down, neutral, and predating every seat position
+- [ ] 3–5 seats with distinct mandates, none added for redundancy; the chair held no seat
+- [ ] Each seat ran as a separate invocation with a fresh context, briefed with the question and constraints only
+- [ ] Every position carries a self-objection; incomplete positions were sent back
+- [ ] At most one cross-examination round
+- [ ] Synthesis names adopted and rejected positions
+- [ ] Dissent recorded verbatim, or explicitly stated as "none"
+- [ ] Reopen conditions are specific and checkable
+- [ ] Unresolvable dissent escalated to the user, not absorbed
+- [ ] The record is written into the task's plan or progress file
+
 ## Architecture & Patterns
 
 - [ ] Follows CQRS pattern (commands/queries separated)
@@ -64,6 +80,17 @@ Use this checklist before considering any task complete.
 - [ ] Authorization checks at endpoints
 - [ ] No secrets hard-coded
 - [ ] No internal implementation details leaked
+
+## Quality Characteristics
+
+Attribution vocabulary and severity taxonomy: `.ai/reference/quality-model.md` (ISO/IEC 25010:2023). The gate is that findings are attributed — not that every characteristic produced one.
+
+- [ ] Every review finding names one characteristic and one severity (`Blocker` / `Major` / `Minor`)
+- [ ] A change to a failure path (retry, idempotency, partial write, timeout, cancellation) was reviewed for **reliability**
+- [ ] A change to a human-facing surface (UI, API errors, validation messages) was reviewed for **interaction capability**
+- [ ] A change to a hosting, provider or configuration boundary was reviewed for **flexibility**
+- [ ] **Safety** was asked once and recorded — applicable, or explicitly not applicable
+- [ ] No finding was manufactured to fill a characteristic; a clean change reports none
 
 ## Testing
 
@@ -126,3 +153,4 @@ Use this checklist before considering any task complete.
 - [ ] All files created/modified documented
 - [ ] Issues/blockers documented
 - [ ] On completion, moved to `.ai/completed/`
+- [ ] Run `python .ai/scripts/hygiene-lint.py` — no stale progress files, no duplicate slugs, no committed secrets

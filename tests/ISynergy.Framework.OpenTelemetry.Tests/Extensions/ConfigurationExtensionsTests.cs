@@ -1,8 +1,6 @@
-using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.OpenTelemetry.Abstractions.Options;
 using ISynergy.Framework.OpenTelemetry.Constants;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
 {
@@ -48,7 +46,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
                 .Build();
 
             var options = new TestTelemetryOptions();
-            configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+            configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
             // Assert
             Assert.AreEqual("http://localhost:4317", options.Endpoint);
@@ -73,7 +71,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
                 .Build();
 
             var options = new TestTelemetryOptions();
-            configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+            configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
             // Assert
             Assert.AreEqual(TimeSpan.FromSeconds(30), options.Timeout);
@@ -95,14 +93,14 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
             var options = new TestTelemetryOptions();
 
             // Act
-            configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+            configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
             // Assert
             Assert.AreEqual(42, options.NullableInt);
         }
 
         [TestMethod]
-        public void ConfigureOptions_WithInvalidValue_SkipsProperty()
+        public void ConfigureOptions_WithInvalidEnumValue_ThrowsException()
         {
             // Arrange
             var configValues = new Dictionary<string, string>
@@ -115,13 +113,10 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
                 .Build();
 
             var options = new TestTelemetryOptions();
-            options.EnumProperty = TestEnum.Value1; // Set default value
 
-            //Act
-            configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
-
-            // Assert - value should remain unchanged
-            Assert.AreEqual(TestEnum.Value1, options.EnumProperty);
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() =>
+                configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options));
         }
 
         [TestMethod]
@@ -140,7 +135,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
             var options = new TestTelemetryOptions();
 
             // Act
-            configuration.GetSection("CustomSection").BindWithReload(options);
+            configuration.GetSection("CustomSection").Bind(options);
 
             // Assert
             Assert.AreEqual("http://custom.endpoint", options.Endpoint);
@@ -165,7 +160,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
             };
 
             // Act
-            configuration.GetSection("NonExistentSection").BindWithReload(options);
+            configuration.GetSection("NonExistentSection").Bind(options);
 
             // Assert
             Assert.AreEqual("original", options.Endpoint);
@@ -190,7 +185,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
             var options = new TestTelemetryOptions();
 
             // Act
-            configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+            configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
             // Assert
             Assert.AreEqual("http://localhost:4317", options.Endpoint);
@@ -225,7 +220,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
                 var options = new TestTelemetryOptions();
 
                 // Act
-                configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+                configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
                 // Assert
                 Assert.AreEqual("http://json.endpoint", options.Endpoint);
@@ -259,7 +254,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
             var options = new TestTelemetryOptions();
 
             // Act
-            configuration.GetSection(TelemetryConstants.TelemetrySection).BindWithReload(options);
+            configuration.GetSection(TelemetryConstants.TelemetrySection).Bind(options);
 
             // Assert
             Assert.AreEqual("http://lowercase.endpoint", options.Endpoint);

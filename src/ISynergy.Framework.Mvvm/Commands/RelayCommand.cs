@@ -1,5 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
-using ISynergy.Framework.Core.Locators;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.Mvvm.Commands.Base;
 using System.Runtime.CompilerServices;
@@ -43,6 +41,15 @@ public sealed class RelayCommand : BaseRelayCommand
     {
         ThrowIfDisposed();
 
+        // A synchronous throw here would become a genuine unhandled exception on the calling
+        // thread (typically the UI thread, when invoked via ICommand.Execute from a bound
+        // control). On some platforms (e.g. Mac Catalyst) the native runtime aborts the process
+        // unconditionally after an unhandled exception, regardless of the framework's global
+        // exception handling. Catch and route through CommandExceptionDispatcher instead, so
+        // platform Application classes can forward it to IExceptionHandlerService and show the
+        // existing friendly error dialog, matching the behavior of async command failures.
+        Exception? caughtException = null;
+
         lock (_syncLock)
         {
             try
@@ -51,30 +58,11 @@ public sealed class RelayCommand : BaseRelayCommand
             }
             catch (Exception ex)
             {
-                // Try to handle exception via service
-                bool handled = false;
-                try
-                {
-                    var exceptionHandlerService = ServiceLocator.Default.GetService<IExceptionHandlerService>();
-                    if (exceptionHandlerService is not null)
-                    {
-                        exceptionHandlerService.HandleException(ex); // NOSONAR
-                        handled = true;
-                    }
-                }
-                catch
-                {
-                    // If exception handler fails, re-throw the original exception
-                    throw;
-                }
-
-                // If exception was successfully handled, suppress it to prevent app crash
-                // Otherwise, re-throw to maintain original behavior when no handler is available
-                if (!handled)
-                {
-                    throw;
-                }
+                caughtException = ex;
             }
         }
+
+        if (caughtException is not null)
+            CommandExceptionDispatcher.Raise(this, caughtException);
     }
 }

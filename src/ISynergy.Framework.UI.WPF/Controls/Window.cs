@@ -28,7 +28,9 @@ public partial class Window : System.Windows.Window, IWindow
             if (DataContext is IViewModel viewModel)
                 return viewModel;
 
-            throw new InvalidOperationException("The BindingContext is not of type IViewModel.");
+            // Return null instead of throwing — DataContext can be null after cleanup.
+            // Callers handle null gracefully via null checks.
+            return null!;
         }
         set
         {
@@ -110,8 +112,12 @@ public partial class Window : System.Windows.Window, IWindow
     {
         if (disposing)
         {
-            // free managed resources
-            ViewModel?.Dispose();
+            // DO NOT dispose ViewModel here.
+            // The Window may be disposed by the DI scope after the dialog is shown
+            // but before it is closed. Disposing the ViewModel prematurely clears its
+            // Closed event, preventing the DialogService's close handler from firing.
+            // The ViewModel lifecycle is managed by the DialogService close handler.
+            // ViewModel?.Dispose();
         }
 
         // free native resources if there are any.

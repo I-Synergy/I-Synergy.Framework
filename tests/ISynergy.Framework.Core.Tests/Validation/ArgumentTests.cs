@@ -278,7 +278,6 @@ public class ArgumentTests
         var result = Argument.IsNotNullOrEmpty(test);
 
         Assert.IsFalse(result == Guid.Empty);
-        Assert.IsNotNull(result);
     }
 
     /// <summary>
@@ -310,7 +309,7 @@ public class ArgumentTests
         var result = Argument.IsNotNullEnum(enumValue);
 
         // Assert
-        Assert.IsNotNull(result);
+        Assert.AreEqual(TestEnum.Value1, result);
     }
 
     [TestMethod]

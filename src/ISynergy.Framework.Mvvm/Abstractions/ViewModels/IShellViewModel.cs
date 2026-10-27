@@ -14,8 +14,8 @@ public interface IShellViewModel : IViewModel
     AsyncRelayCommand? SettingsCommand { get; }
     AsyncRelayCommand? SignInCommand { get; }
 
-    ObservableCollection<NavigationItem> PrimaryItems { get; }
-    ObservableCollection<NavigationItem> SecondaryItems { get; }
+    ObservableCollection<NavigationItem>? PrimaryItems { get; }
+    ObservableCollection<NavigationItem>? SecondaryItems { get; }
 
     Task ShellLoadedAsync();
     Task InitializeFirstRunAsync();

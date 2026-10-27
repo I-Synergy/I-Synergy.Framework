@@ -117,17 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccentColor" xml:space="preserve">
+    <value>Accent Color</value>
+  </data>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>Maui Sample</value>
+  </data>
+  <data name="ApplicationTagline" xml:space="preserve">
+    <value>Framework Demo</value>
+  </data>
   <data name="Colors" xml:space="preserve">
     <value>Set theme color...</value>
   </data>
   <data name="Converters" xml:space="preserve">
     <value>XAML Converters</value>
   </data>
+  <data name="CustomControls" xml:space="preserve">
+    <value>Custom Controls</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
   <data name="Local" xml:space="preserve">
     <value>Lokaal</value>
   </data>
+  <data name="MauiControls" xml:space="preserve">
+    <value>Maui Controls</value>
+  </data>
   <data name="Production" xml:space="preserve">
     <value>Productie</value>
+  </data>
+  <data name="SlideShow" xml:space="preserve">
+    <value>Slide Show</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Test</value>

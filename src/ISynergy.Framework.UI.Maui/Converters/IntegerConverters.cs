@@ -1,5 +1,4 @@
 using ISynergy.Framework.UI.Converters.Shared;
-using ISynergy.Framework.Core.Formatters;
 using System.Globalization;
 
 namespace ISynergy.Framework.UI.Converters;
