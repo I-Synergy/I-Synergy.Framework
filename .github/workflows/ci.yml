@@ -18,11 +18,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.ref }}
-  # Never cancel a run that may be mid-push to NuGet.org; a new run replaces only the pending one.
-  cancel-in-progress: false
-
 env:
   DOTNET_NOLOGO: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
@@ -34,6 +29,11 @@ env:
 jobs:
   build:
     name: Build, test and pack
+    # A superseded build has no side effects, so a new push cancels it instead of queueing
+    # behind it. The release job has its own group and is never cancelled.
+    concurrency:
+      group: ci-build-${{ github.ref }}
+      cancel-in-progress: true
     # ADO used windows-2025-vs2026; fall back to windows-2025 if the preview label is unavailable.
     runs-on: windows-2025-vs2026
     timeout-minutes: 120
@@ -186,6 +186,10 @@ jobs:
   release:
     name: Publish ${{ github.event_name == 'pull_request' && 'preview' || 'release' }} packages
     needs: build
+    # Never cancel a job that may be mid-push to NuGet.org or mid-release: queue instead.
+    concurrency:
+      group: ci-release-${{ github.ref }}
+      cancel-in-progress: false
     # PR builds publish signed -preview packages through `acceptance`; main publishes release
     # packages through `production`, which carries the approval gate. Fork PRs get no secrets.
     if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
