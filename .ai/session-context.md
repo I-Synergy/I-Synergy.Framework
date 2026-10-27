@@ -115,6 +115,23 @@ no client secret. Verified locally against a stub OIDC endpoint (four `GITHUB_EN
   push re-runs CI. Do not push to the PR branch while a run is in flight.
 - Note: unauthenticated GitHub API rate limit is 60 requests/hour here; poll the run sparsely.
 
+## Follow-up — docs published to the wiki; cutover left open
+- **Docs → wiki implemented** (`8e7a8853`, on the PR branch, pushed):
+  `scripts/Sync-DocsToWiki.ps1` + `.github/workflows/wiki.yml`. 414 pages from 464 Markdown files
+  (50 internal reports excluded), page names from the folder path, relative links → `/wiki/<Page>`,
+  unreachable targets → `blob/main`, `_Sidebar.md` in `toc.yml` order, `<!-- generated from docs/… -->`
+  ownership marker. Verified: `-Check` 8/8, `-DryRun` 0 collisions / 0 unresolved links, second render
+  byte-identical (`diff -r`), workflow YAML parses, push step passes `bash -n`. Staged against a real
+  clone of the wiki: 415 files, `Home.md` untouched.
+- **The wiki repository now exists** (`master` at `fe457293`, only `Home.md`, created by the user).
+  A manual push from here hangs (exit 124) — the stored git credential cannot write `repo.wiki.git`,
+  which is why the workflow needs the `WIKI_TOKEN` secret. **Not yet published.**
+- **Cutover left open on purpose** (user decision): run #8's re-run is green end to end and
+  `2026.11027.10205-preview` is public and author-signed, but `main` is still `8a447e03`. Remaining,
+  all user actions: add `WIKI_TOKEN`, merge PR #171 (run #9 on `8e7a8853`), approve `production`,
+  then delete `azure-pipelines.yml` and move `.ai/progress/github-actions-cutover.md` to
+  `.ai/completed/`. Record: `.ai/completed/wiki-docs-sync.md`.
+
 ---
 
 # Session Handoff - 2026-10-26 (System theme in every sample app)
