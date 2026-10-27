@@ -21,7 +21,7 @@ to GitHub Actions so that GitHub is the only place code is built and released. N
 | Runner | `windows-2025-vs2026` (build, matches ADO), `windows-2025` (release) | ADO image choice carried over; release needs no VS toolchain |
 | Version scheme | Unchanged `yyyy.1MMdd.1HHmm`; PR → `-preview` | Keeps NuGet ordering and `v<version>` tags consistent with history |
 | Signing identity | `DevOpsCodeSigning` (`6e6a6823-…`), certificate `CodeSign` in vault `I-Synergy` (access-policy model, permissions already granted) | The only I-Synergy signing identity with vault access; user confirmed the certificate |
-| Key Vault signing | `azure/login@v2` with OIDC + `-act WorkloadIdentityCredential` | No client secret; one federated credential per environment |
+| Key Vault signing | GitHub OIDC token written to `AZURE_FEDERATED_TOKEN_FILE` + `-act WorkloadIdentityCredential` | No client secret, no subscription (the identity has a vault access policy, not a role); `azure/login@v2` only authenticates the `az` CLI, so it cannot hand credentials to the signing tool |
 | NuGet.org push | `NuGet/login@v1` trusted publishing + `--skip-duplicate` | No long-lived API key; retries are idempotent |
 | Concurrency | `cancel-in-progress: false` | A run may be mid-push; only the pending run is replaced |
 | `azure-pipelines.yml` | Kept with a deprecation header; delete after the first green GitHub release | Releases must not stop before the GitHub setup is proven |

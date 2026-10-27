@@ -229,12 +229,26 @@ jobs:
           name: nupkgs
           path: packages
 
-      - name: Azure login (OIDC)
-        uses: azure/login@v2
-        with:
-          client-id: ${{ vars.AZURE_CLIENT_ID }}
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      # Signing only touches the Key Vault data plane, and the identity has a vault access policy,
+      # not a subscription role — so there is no `az login` and no subscription at all. GitHub issues
+      # the OIDC token (id-token: write) and WorkloadIdentityCredential exchanges it for a vault token.
+      - name: Fetch OIDC token for Key Vault
+        shell: pwsh
+        env:
+          CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+        run: |
+          $tokenFile = Join-Path $env:RUNNER_TEMP 'azure-federated-token'
+          $response = Invoke-RestMethod `
+            -Uri "$env:ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" `
+            -Headers @{ Authorization = "Bearer $env:ACTIONS_ID_TOKEN_REQUEST_TOKEN" }
+          Set-Content -Path $tokenFile -Value $response.value -NoNewline -Encoding utf8NoBOM
+          @(
+            "AZURE_CLIENT_ID=$env:CLIENT_ID"
+            "AZURE_TENANT_ID=$env:TENANT_ID"
+            "AZURE_AUTHORITY_HOST=https://login.microsoftonline.com/"
+            "AZURE_FEDERATED_TOKEN_FILE=$tokenFile"
+          ) | Add-Content -Path $env:GITHUB_ENV
 
       - name: Sign NuGet packages
         shell: pwsh

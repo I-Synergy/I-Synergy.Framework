@@ -425,7 +425,9 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
 2. Settings → Environments → `acceptance`: no protection rules — PR builds publish automatically.
 3. Settings → Secrets and variables → Actions → secret `NUGET_USER` (the nuget.org account name).
 4. Repository variables: `BUILD_CONFIGURATION=Release`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`,
-   `AZURE_SUBSCRIPTION_ID`, `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE`, `TIMESTAMP_URL`.
+   `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE`, `TIMESTAMP_URL`.
+   No subscription ID is needed: signing only reads the certificate and signs with the key, which the
+   vault's access policy grants to the identity directly.
    Use environment-scoped variables only if acceptance and production must sign with different
    identities; environment values override repository values.
 
@@ -436,6 +438,11 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    - `repo:I-Synergy/I-Synergy.Framework:environment:production`
 2. The identity needs `certificates/get`, `certificates/list` and `keys/get`, `keys/sign` on the vault
    (the existing `DevOpsCodeSigning` access policy already grants these).
+3. The workflow exchanges GitHub's OIDC token itself (`Fetch OIDC token for Key Vault`) and hands
+   `AZURE_CLIENT_ID`/`AZURE_TENANT_ID`/`AZURE_FEDERATED_TOKEN_FILE` to
+   `AzureSignTool -act WorkloadIdentityCredential`. There is deliberately no `azure/login` step: it
+   requires a subscription (or `allow-no-subscriptions`) and only authenticates the `az` CLI, which
+   signing does not use. A subscription ID is therefore not needed at all.
 
 ### Step 11.3: NuGet.org trusted publishing
 1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository
