@@ -93,7 +93,7 @@ at `Azure login (OIDC)`: *"No subscriptions found for ***"*. Two facts came out 
   (verified in its bundled `lib/main/index.js` — the strings are absent). It only authenticates the `az`
   CLI, so `-act WorkloadIdentityCredential` could never have found credentials through it.
 
-**Fix (commit `b2627afa`, pushed; run #7):** the `Azure login (OIDC)` step was replaced by
+**Fix (commit `b2627afa`, pushed; run #8 on `a380d494`):** the `Azure login (OIDC)` step was replaced by
 `Fetch OIDC token for Key Vault` — `Invoke-RestMethod` against `ACTIONS_ID_TOKEN_REQUEST_URL` with
 `audience=api://AzureADTokenExchange`, the token written BOM-less to `$RUNNER_TEMP/azure-federated-token`
 and `AZURE_CLIENT_ID`/`AZURE_TENANT_ID`/`AZURE_AUTHORITY_HOST`/`AZURE_FEDERATED_TOKEN_FILE` appended to
@@ -103,8 +103,11 @@ no client secret. Verified locally against a stub OIDC endpoint (four `GITHUB_EN
 
 - Docs updated to match: `docs/MIGRATION_GUIDE.md` 11.1–11.2 (subscription dropped),
   `CHANGELOG.md`, and the plan's decision row.
-- **Next:** read run #7 — it must sign and push a `-preview` package to nuget.org. Then merge to `main`,
+- **Next:** read run #8 — it must sign and push a `-preview` package to nuget.org. Then merge to `main`,
   approve `production`, and delete `azure-pipelines.yml` after that first green release.
+- Run #7 (`b2627afa`) was cancelled five minutes in by run #8 (`a380d494`, the docs-only follow-up):
+  for `pull_request` events `paths-ignore` is evaluated against the PR's whole diff, so an `*.md`-only
+  push re-runs CI. Do not push to the PR branch while a run is in flight.
 - Note: unauthenticated GitHub API rate limit is 60 requests/hour here; poll the run sparsely.
 
 ---
