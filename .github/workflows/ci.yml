@@ -1,0 +1,274 @@
+# Build, test, pack, sign and publish I-Synergy.Framework.
+# Replaces azure-pipelines.yml (Azure DevOps). See docs/MIGRATION_GUIDE.md, Part 11.
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # Never cancel a run that may be mid-push to NuGet.org; a new run replaces only the pending one.
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+  MSBUILDDISABLENODEREUSE: '1'
+  DOTNET_CLI_USE_MSBUILD_SERVER: '0'
+  BUILD_CONFIGURATION: ${{ vars.BUILD_CONFIGURATION || 'Release' }}
+
+jobs:
+  build:
+    name: Build, test and pack
+    # ADO used windows-2025-vs2026; fall back to windows-2025 if the preview label is unavailable.
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 120
+    outputs:
+      buildNumber: ${{ steps.version.outputs.buildNumber }}
+      versionPackage: ${{ steps.version.outputs.VersionPackage }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set version variables
+        id: version
+        shell: pwsh
+        env:
+          BUILD_REASON: ${{ github.event_name == 'pull_request' && 'PullRequest' || 'IndividualCI' }}
+        run: |
+          $now = Get-Date
+          $buildNumber = '{0}.1{1}.1{2}' -f $now.ToString('yyyy'), $now.ToString('MMdd'), $now.ToString('HHmm')
+          ./scripts/Set-VersionVariables.ps1 -BuildNumber $buildNumber -BuildReason $env:BUILD_REASON
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "buildNumber=$buildNumber"
+
+      - name: Install .NET SDK from global.json
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: Directory.Packages.props
+
+      # AzureSignTool targets .NET 10; keep a 10.x runtime next to the pinned .NET 11 RC SDK.
+      - name: Install .NET 10 SDK and runtime for AzureSignTool
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install MAUI workloads
+        run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
+
+      - name: Restore
+        shell: pwsh
+        run: >
+          dotnet restore I-Synergy.Framework.slnx
+          -p:GeneratePackageOnBuild=false
+          -nodeReuse:false
+
+      # Directory.Build.props pins AssemblyVersion/FileVersion to 0.0.0.0 and the Azure Pipelines
+      # Assembly-Info-NetCore task used to overwrite them from the build number. Passing the
+      # properties keeps the assemblies versioned exactly as before.
+      - name: Build
+        shell: pwsh
+        run: >
+          dotnet build I-Synergy.Framework.slnx
+          -c $env:BUILD_CONFIGURATION
+          --no-restore
+          -p:Version=${{ steps.version.outputs.VersionPackage }}
+          -p:AssemblyVersion=${{ steps.version.outputs.VersionNumber }}
+          -p:FileVersion=${{ steps.version.outputs.VersionNumber }}
+          -p:InformationalVersion=${{ steps.version.outputs.VersionInformational }}
+          -p:PackageVersion=${{ steps.version.outputs.VersionPackage }}
+          -p:ContinuousIntegrationBuild=true
+          -p:GeneratePackageOnBuild=false
+          -nodeReuse:false
+
+      - name: Audit for vulnerable packages
+        shell: pwsh
+        run: dotnet list I-Synergy.Framework.slnx package --vulnerable --include-transitive
+
+      - name: Pack
+        shell: pwsh
+        run: >
+          dotnet pack I-Synergy.Framework.slnx
+          -c $env:BUILD_CONFIGURATION
+          --no-build
+          -p:Version=${{ steps.version.outputs.VersionPackage }}
+          -p:AssemblyVersion=${{ steps.version.outputs.VersionNumber }}
+          -p:FileVersion=${{ steps.version.outputs.VersionNumber }}
+          -p:InformationalVersion=${{ steps.version.outputs.VersionInformational }}
+          -p:PackageVersion=${{ steps.version.outputs.VersionPackage }}
+          -p:ContinuousIntegrationBuild=true
+          -o packages
+
+      - name: Verify packages target .NET 10 and .NET 11
+        shell: pwsh
+        run: |
+          $packages = @(Get-ChildItem -Path 'packages' -Filter *.nupkg)
+          $expected = @(Get-ChildItem -Path 'src' -Filter *.csproj -Recurse).Count
+          $problems = @()
+          if ($packages.Count -ne $expected) {
+            $problems += "Expected $expected package(s) for $expected src project(s), found $($packages.Count)."
+          }
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          foreach ($package in $packages) {
+            $zip = [System.IO.Compression.ZipFile]::OpenRead($package.FullName)
+            try { $entries = @($zip.Entries | ForEach-Object { $_.FullName }) } finally { $zip.Dispose() }
+            foreach ($tfm in @('net10.0', 'net11.0')) {
+              if (-not ($entries | Where-Object { $_ -like "lib/$tfm*/*" })) {
+                $problems += "$($package.Name): missing lib/$tfm assets"
+              }
+            }
+          }
+          if ($problems.Count -gt 0) {
+            $problems | ForEach-Object { Write-Host "::error::$_" }
+            throw "Package verification failed with $($problems.Count) problem(s)."
+          }
+          Write-Host "Verified $($packages.Count) package(s): each contains lib/net10.0* and lib/net11.0* assets."
+
+      - name: Test
+        shell: pwsh
+        run: |
+          $failed = @()
+          $projects = Get-ChildItem -Path 'tests' -Filter *.csproj -Recurse |
+            Where-Object { $_.Name -ne 'ISynergy.Framework.UI.Maui.Mac.Tests.csproj' }
+          foreach ($project in $projects) {
+            Write-Host "::group::$($project.Name)"
+            dotnet test $project.FullName `
+              -c $env:BUILD_CONFIGURATION `
+              --no-build `
+              --collect:"XPlat Code Coverage" `
+              --results-directory TestResults `
+              -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+            if ($LASTEXITCODE -ne 0) { $failed += $project.Name }
+            Write-Host "::endgroup::"
+          }
+          if ($failed.Count -gt 0) { throw "Test failures in: $($failed -join ', ')" }
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/**
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Upload NuGet packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkgs
+          path: |
+            packages/*.nupkg
+            packages/*.snupkg
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: Publish ${{ github.event_name == 'pull_request' && 'preview' || 'release' }} packages
+    needs: build
+    # PR builds publish signed -preview packages through `acceptance`; main publishes release
+    # packages through `production`, which carries the approval gate. Fork PRs get no secrets.
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: windows-2025
+    environment: ${{ github.event_name == 'pull_request' && 'acceptance' || 'production' }}
+    timeout-minutes: 60
+    permissions:
+      contents: write   # push the release tag
+      id-token: write   # OIDC to Azure Key Vault and nuget.org
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET SDK from global.json
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Install .NET 10 SDK and runtime for AzureSignTool
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install Azure SignTool
+        shell: pwsh
+        run: |
+          dotnet tool install --global I-Synergy.Tools.Azure.SignTool
+          Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools"
+
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: nupkgs
+          path: packages
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Sign NuGet packages
+        shell: pwsh
+        env:
+          KEY_VAULT_URI: ${{ vars.AZURE_KEYVAULT_URI }}
+          SIGNING_CERTIFICATE: ${{ vars.AZURE_SIGNING_CERTIFICATE }}
+          TIMESTAMP_URL: ${{ vars.TIMESTAMP_URL }}
+        run: |
+          AzureSignTool sign `
+            -kvu "$env:KEY_VAULT_URI" `
+            -kvc "$env:SIGNING_CERTIFICATE" `
+            -act WorkloadIdentityCredential `
+            --timestamp-rfc3161 "$env:TIMESTAMP_URL" `
+            -td sha256 -v `
+            --sign-nuget-contents `
+            --sign-nuget-contents-filter "ISynergy.Framework.*" `
+            (Get-ChildItem -Path 'packages' -Filter *.nupkg).FullName
+
+      - name: NuGet login (trusted publishing)
+        id: nuget
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push packages to NuGet.org
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path 'packages' -Filter *.nupkg | ForEach-Object {
+            dotnet nuget push $_.FullName `
+              --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} `
+              --source https://api.nuget.org/v3/index.json `
+              --skip-duplicate
+            if ($LASTEXITCODE -ne 0) { throw "NuGet push failed for $($_.Name)" }
+          }
+
+      - name: Create git tag
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          BUILD_NUMBER: ${{ needs.build.outputs.buildNumber }}
+          SOURCE_VERSION: ${{ github.sha }}
+        run: >
+          ./scripts/New-GitTag.ps1
+          -BuildNumber $env:BUILD_NUMBER
+          -SourceVersion $env:SOURCE_VERSION
+          -UserEmail 'github-actions[bot]@users.noreply.github.com'
+          -UserName 'github-actions[bot]'

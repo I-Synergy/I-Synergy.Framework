@@ -1,3 +1,85 @@
+# Session Handoff - 2026-10-27 (CI/CD moved to GitHub Actions)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Ported `azure-pipelines.yml` to GitHub Actions so GitHub owns build and release. Plan:
+`.ai/plans/github-actions-cutover.md`; progress: `.ai/progress/github-actions-cutover.md`
+(IN PROGRESS — manual setup and the first green release remain).
+
+- **New `.github/workflows/ci.yml`** — two jobs on GitHub-hosted Windows runners:
+  `build` (version stamping → setup-dotnet from `global.json` → .NET 10 for AzureSignTool → MAUI
+  workloads → restore → build → vulnerability audit → pack → net10/net11 package guard → per-project
+  tests with OpenCover → test-results + nupkg artifacts) and `release`, which keeps the ADO ACC/PROD
+  split: a PR runs it in the `acceptance` environment and signs + pushes `-preview` packages to
+  NuGet.org, while a `main` push runs it in `production` (approval gate), publishes the release set
+  and creates the `v<version>` tag. Signing uses `azure/login@v2` OIDC →
+  AzureSignTool `-act WorkloadIdentityCredential`; pushing uses `NuGet/login@v1` trusted publishing.
+  Version scheme `yyyy.1MMdd.1HHmm` is unchanged.
+- **`scripts/Set-VersionVariables.ps1`** writes `GITHUB_OUTPUT` when present, otherwise the ADO
+  `##vso[task.setvariable]` command; **`scripts/New-GitTag.ps1`** emits `::error::` on GitHub,
+  otherwise `##vso[task.logissue type=error]`. Both still serve Azure Pipelines during the transition.
+- **AssemblyVersion/FileVersion** are passed as MSBuild properties (`-p:AssemblyVersion`,
+  `-p:FileVersion`, `-p:InformationalVersion`, `-p:PackageVersion`) because `Directory.Build.props`
+  pins them to `0.0.0.0` and the old `Assembly-Info-NetCore@3` task used to overwrite them.
+- **Docs**: README badges now point at the Actions workflow; `.ai/project/tech-stack.md` and
+  `architecture.md` updated; `docs/MIGRATION_GUIDE.md` gained Part 11; `CHANGELOG.md` entry added;
+  `azure-pipelines.yml` carries a deprecation header (delete after the first green GitHub release).
+
+## Decisions Made
+- **One workflow, two jobs, two publish lanes**: `build` runs for PRs and `main`; `release` signs and
+  publishes in both lanes but uses a different environment — `acceptance` (no gate) for PR previews,
+  `production` (approval) for releases. Key Vault credentials never reach `build`.
+  - **Alternatives considered**: main-only publishing (rejected: ADO signed and pushed `-preview`
+    packages from PR builds through the ACC variable group, and that behaviour had to be preserved);
+    signing in `build` (rejected: the environment gate would then apply to every build).
+- **OIDC everywhere**: `azure/login@v2` federated credential scoped to
+  `environment:production`, and `NuGet/login@v1` trusted publishing — no client secret, no API key.
+- **Keep `azure-pipelines.yml`** (deprecated, not deleted) until GitHub publishes once, so releases
+  do not stop before the GitHub environment/secrets/nuget.org policy exist.
+
+## Open Questions
+- **DONE**: `production` environment (user), 7 repository variables and the `NUGET_USER` secret —
+  all placeholders except `BUILD_CONFIGURATION=Release` and `TIMESTAMP_URL=http://timestamp.digicert.com`.
+- **TODO**: replace `NUGET_USER`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID`,
+  `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE` with real values; add the Azure federated credential
+  and `Key Vault Certificate User` role; add the nuget.org trusted-publishing policy (Part 11.2–11.3).
+- **OPEN**: `windows-2025-vs2026` is valid today (it is an alias of `windows-2025`); the comment in
+  the workflow says to fall back to `windows-2025` if the label goes away.
+- **ASSUMED**: `dotnet pack` on the `.slnx` produces exactly the 48 `src/` packages; the
+  package-count guard fails loudly if not, so the first run will prove it.
+
+## Files Modified
+- `.github/workflows/ci.yml` - Created, build + release jobs
+- `scripts/Set-VersionVariables.ps1` - `Set-PipelineVariable` (GITHUB_OUTPUT / ##vso)
+- `scripts/New-GitTag.ps1` - `Write-ErrorAnnotation` (::error:: / ##vso)
+- `azure-pipelines.yml` - Deprecation header only
+- `README.md` - Both ADO build badges → GitHub Actions
+- `.ai/project/tech-stack.md`, `.ai/project/architecture.md` - CI/CD and versioning lines
+- `docs/MIGRATION_GUIDE.md` - Overview note + Part 11
+- `CHANGELOG.md` - `#### CI/CD moved to GitHub Actions`
+- `.ai/plans/github-actions-cutover.md`, `.ai/progress/github-actions-cutover.md` - Created
+
+## Next Actions (Priority Order)
+1. Complete the manual GitHub/Azure/nuget.org setup (Part 11, steps 11.1–11.3).
+2. Push ADO history to GitHub (`git push github --all`, `git push github --tags --force`), open a PR,
+   confirm `build` is green.
+3. Merge to `main`, approve `production`, confirm signed packages on nuget.org and the tag on GitHub.
+4. Disable the Azure DevOps pipeline, delete `azure-pipelines.yml`, move the progress file to
+   `.ai/completed/`.
+5. Optional: add a `macos-*` job for `ISynergy.Framework.UI.Maui.Mac.Tests` (excluded today, as in
+   ADO).
+
+## Session Notes
+- Verified locally: workflow YAML parses (PyYAML; jobs `build`/`release`, main-only triggers),
+  both PowerShell scripts parse, and `Set-VersionVariables.ps1` writes
+  `VersionNumber=2026.11027.1123.0` / `VersionInformational` / `VersionPackage` to `GITHUB_OUTPUT`.
+- No `src/` or `tests/` change; no build was run (nothing to compile).
+- `NuGet/login@v1` inputs/outputs confirmed from its `action.yml` (`user` → `NUGET_API_KEY`).
+
+---
+
 # Session Handoff - 2026-10-26 (System theme in every sample app)
 
 **Written By:** Reasonix Code

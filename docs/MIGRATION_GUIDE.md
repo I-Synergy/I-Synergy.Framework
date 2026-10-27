@@ -1,7 +1,9 @@
 # Migration Guide: Azure DevOps to GitHub Repository
 
 ## Overview
-This guide will help you migrate the I-Synergy.Framework repository from Azure DevOps to GitHub as the primary repository, while maintaining Azure DevOps Pipelines for CI/CD with a **strict PR-based workflow**.
+This guide will help you migrate the I-Synergy.Framework repository from Azure DevOps to GitHub as the primary repository and CI/CD owner (build and NuGet publishing run in GitHub Actions).
+
+> **Note:** Parts 3–5 below describe the older Azure Pipelines setup. They are only needed during a rollback; the current CI/CD lives in `.github/workflows/ci.yml` (see Part 11).
 
 ## Prerequisites
 - Administrator access to Azure DevOps project
@@ -411,6 +413,50 @@ If you need to rollback:
 1. Update SonarCloud project settings to recognize GitHub as source
 2. Re-authenticate SonarCloud with GitHub
 3. Verify project key and organization in `azure-pipelines.yml`
+
+---
+
+## Part 11: Move CI/CD to GitHub Actions
+
+The repository is built, tested, signed and published by `.github/workflows/ci.yml`. Azure Pipelines is no longer needed once the first GitHub release succeeds.
+
+### Step 11.1: One-time GitHub setup
+1. Settings → Environments → `production`: required reviewers, restrict deployment branches to `main`.
+2. Settings → Environments → `acceptance`: no protection rules — PR builds publish automatically.
+3. Settings → Secrets and variables → Actions → secret `NUGET_USER` (the nuget.org account name).
+4. Repository variables: `BUILD_CONFIGURATION=Release`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`,
+   `AZURE_SUBSCRIPTION_ID`, `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE`, `TIMESTAMP_URL`.
+   Use environment-scoped variables only if acceptance and production must sign with different
+   identities; environment values override repository values.
+
+### Step 11.2: Azure Key Vault (OIDC, no client secret)
+1. On the signing app registration add **two** federated credentials, issuer
+   `https://token.actions.githubusercontent.com`, audience `api://AzureADTokenExchange`:
+   - `repo:I-Synergy/I-Synergy.Framework:environment:acceptance`
+   - `repo:I-Synergy/I-Synergy.Framework:environment:production`
+2. The identity needs `certificates/get`, `certificates/list` and `keys/get`, `keys/sign` on the vault
+   (the existing `DevOpsCodeSigning` access policy already grants these).
+
+### Step 11.3: NuGet.org trusted publishing
+1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository
+   `I-Synergy.Framework`, workflow `ci.yml`:
+   - Environment `acceptance` — PR preview packages.
+   - Environment `production` — release packages.
+2. Each workflow run exchanges a GitHub OIDC token for a short-lived API key (`NuGet/login@v1`), so
+   no long-lived key is stored. The policy's environment must match the job environment, which is
+   why both policies are needed.
+
+### Step 11.4: Cut over
+1. Push all branches and tags from Azure DevOps to GitHub (`git push github --all`, `git push github --tags --force`).
+2. Open a PR: `build` and the `acceptance` publish run, producing a signed `-preview` package on
+   nuget.org.
+3. Merge to `main`, approve the `production` environment, then verify the release packages are on
+   nuget.org and the `v<version>` tag exists on GitHub.
+4. Disable the Azure DevOps pipeline, then delete `azure-pipelines.yml`.
+
+### Step 11.5: What does not move
+Build history/logs, Azure DevOps variable groups, service connections and approval history stay in
+Azure DevOps; recreate the ACC/PROD distinction as the `acceptance`/`production` environments.
 
 ---
 

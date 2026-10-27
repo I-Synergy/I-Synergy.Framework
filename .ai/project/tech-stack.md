@@ -97,7 +97,7 @@
 |------|---------|
 | **IDE** | Visual Studio 2022+ / JetBrains Rider |
 | **Version Control** | Git (GitHub: I-Synergy/I-Synergy.Framework) |
-| **CI/CD** | Azure Pipelines (`azure-pipelines.yml`) |
+| **CI/CD** | GitHub Actions (`.github/workflows/ci.yml`, Windows hosted runners) |
 | **Performance** | BenchmarkDotNet (0.15.8) — in `performance/` projects |
 | **AOT/Trim** | All libraries annotated for Native AOT + trimmed deployments |
 

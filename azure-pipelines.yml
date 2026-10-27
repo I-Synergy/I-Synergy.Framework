@@ -1,3 +1,7 @@
+# DEPRECATED — superseded by .github/workflows/ci.yml (GitHub Actions).
+# Kept only until the first successful GitHub release; then disable the Azure DevOps pipeline and
+# delete this file. See docs/MIGRATION_GUIDE.md, Part 11.
+
 name: $(Date:yyyy).1$(Date:MMdd).1$(Date:HHmm)
 
 trigger:

@@ -183,8 +183,8 @@ Core (no framework dependencies)
 ## Deployment Architecture
 
 - **Library packaging:** NuGet packages built via `dotnet pack`, published to nuget.org
-- **CI/CD:** Azure Pipelines (`azure-pipelines.yml`) — build, test, pack, publish
-- **Versioning:** Date-based (`$(Date:yyyy).1$(Date:MMdd).1$(Date:HHmm)`)
+- **CI/CD:** GitHub Actions (`.github/workflows/ci.yml`) — build, test, pack, sign, publish to NuGet.org, tag
+- **Versioning:** Date-based (`yyyy.1MMdd.1HHmm`, computed by `scripts/Set-VersionVariables.ps1`; PR builds append `-preview`)
 - **Strong naming:** All assemblies strong-named with SNK file
 - **Signing:** Release builds run analyzers; Debug builds skip them for build speed
 

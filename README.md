@@ -4,7 +4,7 @@
 
 <div align="center">
 
-[![Build Status](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main)
+[![CI](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 ![.NET](https://img.shields.io/badge/.NET-10%20LTS%20%7C%2011%20preview-512BD4?logo=.net)
 
@@ -195,7 +195,7 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 
 | Component | Status |
 |:---|:---|
-| **I-Synergy.Framework** | [![Build](https://dev.azure.com/i-synergy/I-Synergy.Framework/_apis/build/status/I-Synergy.Framework?branchName=main)](https://dev.azure.com/i-synergy/I-Synergy.Framework/_build/latest?definitionId=172&branchName=main) |
+| **I-Synergy.Framework** | [![CI](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml) |
 
 ---
 

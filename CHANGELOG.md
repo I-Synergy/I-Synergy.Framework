@@ -91,6 +91,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+#### CI/CD moved to GitHub Actions
+- **.github/workflows/ci.yml** replaces `azure-pipelines.yml`: version stamping, SDK and MAUI workload installation, build, vulnerable-package audit, packing, the net10/net11 package-content guard, tests with OpenCover coverage, Key Vault signing, NuGet.org publishing and release tagging now run on GitHub-hosted Windows runners. PR builds keep the ACC/PROD split: they sign and push `-preview` packages through the `acceptance` environment, while merges to `main` publish release packages through `production`, which carries the approval gate and is the only lane that tags. Key Vault signing uses OIDC (`azure/login@v2` + `WorkloadIdentityCredential`) with one federated credential per environment, and the NuGet.org push uses trusted publishing (`NuGet/login@v1`).
+- **scripts/Set-VersionVariables.ps1 and scripts/New-GitTag.ps1** write `GITHUB_OUTPUT` and `::error::` annotations under GitHub Actions while keeping the `##vso[...]` protocol for Azure Pipelines. The version scheme (`yyyy.1MMdd.1HHmm`) and `v<version>` tags are unchanged.
+- **azure-pipelines.yml** is deprecated and will be deleted after the first successful GitHub release.
+
 #### Unified Sample Styling
 - **Samples (WPF / WinUI / MAUI / Blazor)**: Applied the `Sample.Maui` design language to every sample — Figtree typography, shared surface/border/text/muted/accent tokens, the four-color accent palette (teal / blue / green / orange) and the same settings surface layout. Only the platform entry point differs (WPF page, WinUI blade, MAUI and Blazor drawers); menu items stay platform-specific.
 - **Samples**: The default accent colour is now the MAUI teal `#0B5D55` (`Sample.Shared/Models/LocalSettings.Color`).

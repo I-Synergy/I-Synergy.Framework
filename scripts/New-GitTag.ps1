@@ -15,10 +15,24 @@ param(
 $ErrorActionPreference = 'Stop'
 $tag = "v$BuildNumber"
 
+function Write-ErrorAnnotation {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Message
+    )
+
+    if ($env:GITHUB_ACTIONS -eq 'true') {
+        Write-Host "::error::$Message"
+    }
+    else {
+        Write-Host "##vso[task.logissue type=error]$Message"
+    }
+}
+
 Write-Host "Checking if tag '$tag' already exists locally..."
 $localTagExists = git tag -l "$tag"
 if (-not [string]::IsNullOrWhiteSpace($localTagExists)) {
-    Write-Host "##vso[task.logissue type=error]Tag '$tag' already exists locally"
+    Write-ErrorAnnotation "Tag '$tag' already exists locally"
     exit 1
 }
 Write-Host "Tag does not exist locally."
@@ -26,7 +40,7 @@ Write-Host "Tag does not exist locally."
 Write-Host "Checking if tag '$tag' exists on remote origin..."
 $remoteTagExists = git ls-remote --tags origin "refs/tags/$tag"
 if (-not [string]::IsNullOrWhiteSpace($remoteTagExists)) {
-    Write-Host "##vso[task.logissue type=error]Tag '$tag' already exists on remote"
+    Write-ErrorAnnotation "Tag '$tag' already exists on remote"
     exit 1
 }
 Write-Host "Tag does not exist on remote."
