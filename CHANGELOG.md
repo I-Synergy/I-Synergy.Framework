@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-#### Documentation published to the GitHub wiki
-- **`.github/workflows/wiki.yml` + `scripts/Sync-DocsToWiki.ps1`**: every push to `main` that touches `docs/` renders the documentation into the repository wiki — 414 pages from 464 Markdown files, 50 excluded (`superpowers/` and the internal review/analysis reports). Page names are derived from the folder path (`docs/libraries/ISynergy.Framework.Core/index.md` → `Libraries-ISynergy.Framework.Core`), relative links become `/wiki/<Page>` links, links to excluded or repository-only files become `blob/main` URLs, and `_Sidebar.md` is generated in `toc.yml` order where a folder has one.
-- Each generated page ends with `<!-- generated from docs/<path> -->`, so the sync only overwrites and only deletes pages it created; hand-written wiki pages are never touched. Rendering and pushing are separate workflow steps, so a rendering failure cannot publish anything.
-- `docs/developers/maui/awesome_maui_libraries_and_samples.md`: the dead `CONTRIBUTING.md` link now points at the upstream `jsuarezruiz/awesome-dotnet-maui` file (the sync fails the build on unresolved links).
+#### Documentation published with GitHub Pages
+- **`docs/` is now a site**: `docs/_config.yml` sets `jekyll-theme-minimal` plus the whitelisted `jekyll-optional-front-matter` and `jekyll-relative-links` plugins, so the existing Markdown — no YAML front matter, relative `.md` links — renders unchanged with no generated copy and no rewriting step. `docs/index.md` is the landing page.
+- One-time setup: Settings → Pages → *Deploy from a branch* → `main` / `docs`.
+- Internal working documents stay out of the site through `exclude` (`superpowers/`, `FRAMEWORK_REVIEW_*`, `SOLID_PRINCIPLES_ANALYSIS`, `POTENTIAL_ISSUES_AND_RISKS`, `MVVM_AND_UI_FRAMEWORK_ISSUES_REPORT`, `ARCHITECTURAL_ISSUES_SUMMARY`, `ASYNC_EXCEPTION_ISSUES_FIXED`).
+- `docs/developers/maui/awesome_maui_libraries_and_samples.md`: the dead `CONTRIBUTING.md` link now points at the upstream `jsuarezruiz/awesome-dotnet-maui` file.
+- A wiki sync (`.github/workflows/wiki.yml` + `scripts/Sync-DocsToWiki.ps1`) was prototyped and dropped before release: the wiki is a separate, flat repository that needs its own token and leaves a second copy to drift, neither of which a Pages build from `docs/` has.
 
 #### System theme across every head
 - **ISynergy.Framework.UI.WPF / UI.WinUI / UI.Maui / UI.Blazor**: `IThemeService` now treats `Themes.Default` as **System**. `Theme` and `IsLightThemeEnabled` report the resolved Light/Dark theme, `SetTheme(Themes.Default)` persists the preference and applies each platform's follow-the-OS mode, and an OS theme change while the app runs re-applies the palette and raises `ThemeChanged`.

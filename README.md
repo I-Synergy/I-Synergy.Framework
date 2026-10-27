@@ -201,7 +201,7 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please refer to the [Developer Guide](https://github.com/I-Synergy/I-Synergy.Framework/wiki) for guidelines. The wiki is generated from [`docs/`](docs) on every push to `main`.
+Contributions are welcome! Please refer to the [Developer Guide](https://i-synergy.github.io/I-Synergy.Framework/developers/) for guidelines. The documentation site is built from [`docs/`](docs).
 
 ---
 

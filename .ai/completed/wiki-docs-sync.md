@@ -1,8 +1,16 @@
 # Documentation published to the GitHub wiki
 
-**Status:** DONE (first publish waits on the one-time wiki/token setup)
+**Status:** SUPERSEDED — replaced by GitHub Pages on `docs/` (2026-10-27)
 **Date:** 2026-10-27
 **Plan:** `.ai/plans/wiki-docs-sync.md`
+
+> **Superseded.** The user asked whether a repository folder could serve as the wiki without syncing.
+> It cannot — the Wiki tab is always a separate, flat `repo.wiki.git`. The decision was therefore to
+> drop the sync and publish `docs/` directly with GitHub Pages: `docs/_config.yml` (theme plus
+> `jekyll-optional-front-matter` and `jekyll-relative-links`), `docs/index.md` as the landing page, and
+> one setting (Settings → Pages → *Deploy from a branch* → `main` / `docs`).
+> `scripts/Sync-DocsToWiki.ps1` and `.github/workflows/wiki.yml` were deleted before either reached
+> `main`; nothing was ever published to the wiki. The record below documents what the sync did.
 
 ## What was built
 

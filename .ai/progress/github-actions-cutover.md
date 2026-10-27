@@ -34,7 +34,8 @@ merge; nothing further is pending from the agent side.
 
 Remaining work, all of it the user's: merge #171 once run #9 (`8e7a8853`) is green, approve the
 `production` environment, then delete `azure-pipelines.yml` and move this file to `.ai/completed/`.
-The `WIKI_TOKEN` secret is also still missing; without it the wiki workflow fails at the push step.
+Documentation is published with GitHub Pages from `docs/` (Settings → Pages → *Deploy from a branch*
+→ `main` / `docs`); no secret is needed for it — see `docs/MIGRATION_GUIDE.md` §11.6.
 
 Run #6 (`20e89cc5`) shape: `build` 43 min, all steps green. `release` job needs
 `id-token: write` (present) and, after `b2627afa`, no subscription and no `az` CLI at all.

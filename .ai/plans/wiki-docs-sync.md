@@ -1,9 +1,12 @@
 # Publish `docs/` to the GitHub wiki (generated sync)
 
-Status: IMPLEMENTED (first publish waits on the one-time wiki/token setup)
+Status: SUPERSEDED (2026-10-27) — replaced by GitHub Pages on `docs/`, see `docs/MIGRATION_GUIDE.md` §11.6
 Started: 2026-10-27
 Requested by: user — "sync docs/ into the GitHub wiki via a workflow"
 Approved by: user (plan as written; fine-grained PAT; `toc.yml` sidebar order)
+Superseded by: user decision — the Wiki tab cannot point at a repository folder, so `docs/` is
+published directly with GitHub Pages instead. `scripts/Sync-DocsToWiki.ps1` and
+`.github/workflows/wiki.yml` were deleted before either was pushed to `main`.
 
 ## Goal
 
