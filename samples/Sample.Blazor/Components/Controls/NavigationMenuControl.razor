@@ -3,7 +3,6 @@
 @using Microsoft.AspNetCore.Components.Authorization;
 @using Microsoft.FluentUI.AspNetCore.Components
 @inject NavigationManager NavigationManager;
-@inject AuthenticationStateProvider AuthenticationStateProvider;
 @inject INavigationMenuService NavigationMenuService;
 
 @* v5: FluentNavMenu was removed and replaced by FluentNav.
@@ -20,11 +19,22 @@
 @code {
 	private bool _hasNavigatedToFirstItem = false;
 
+	/// <summary>
+	/// The authentication state published by the <c>CascadingAuthenticationState</c> in App.razor.
+	/// </summary>
+	/// <remarks>
+	/// Taken from the cascading value instead of asking <c>AuthenticationStateProvider</c>
+	/// directly: a provider queried without subscribing to its <c>AuthenticationStateChanged</c>
+	/// event can hand out stale state (analyzer BL0013).
+	/// </remarks>
+	[CascadingParameter]
+	private Task<AuthenticationState>? AuthenticationState { get; set; }
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (firstRender && !_hasNavigatedToFirstItem)
+		if (firstRender && !_hasNavigatedToFirstItem && AuthenticationState is not null)
 		{
-			var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+			var authState = await AuthenticationState;
 
 			// Check if user is authenticated
 			if (authState.User?.Identity?.IsAuthenticated == true && NavigationMenuService.MenuItems.Count > 0)

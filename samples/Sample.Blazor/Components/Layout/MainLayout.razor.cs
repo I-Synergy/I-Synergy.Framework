@@ -294,7 +294,6 @@ public partial class MainLayout : IDisposable
     {
         var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
         _themeService.SetTheme(nextTheme);
-        StateHasChanged();
     }
 
     /// <summary>

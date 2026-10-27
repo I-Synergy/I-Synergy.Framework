@@ -1,3 +1,74 @@
+# Session Handoff - 2026-10-27 (Blazor component analyzer warnings)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Cleared nine .NET 11 Blazor analyzer warnings (three classes) reported by the Release build of
+`Sample.Blazor` and the two Blazor framework projects. Record:
+`.ai/completed/blazor-analyzer-warnings.md`.
+
+- **BL0012 (`UnnecessaryStateHasChangedCall`)** — removed `StateHasChanged()` from
+  `samples/Sample.Blazor/Components/Pages/Counter.razor.cs:6` (event handlers re-render anyway) and
+  from `MainLayout.ToggleTheme` (`Components/Layout/MainLayout.razor.cs:293`; the click handler
+  re-renders and `ThemeService.ThemeChanged` already calls `InvokeAsync(StateHasChanged)`).
+- **BL0013 (`AuthenticationStateProviderCachedWithoutSubscription`)** —
+  `samples/Sample.Blazor/Components/Controls/NavigationMenuControl.razor` no longer injects
+  `AuthenticationStateProvider`; it takes `[CascadingParameter] Task<AuthenticationState>?` from the
+  `CascadingAuthenticationState` already in `App.razor` and skips the first-item navigation when the
+  value is absent.
+- **BL0016 (`UnguardedJSInteropCall`)** — both `ISynergy.Framework.AspNetCore.Blazor` and
+  `ISynergy.Framework.UI.Blazor`: `JsRuntimeExtensions.FocusElementById` is best effort and now also
+  disposes the `IJSObjectReference` it used to leak; `AntiForgeryTokenControl` leaves the hidden field
+  empty when JS is unreachable (prerender/disconnected circuit); `AntiforgeryHttpClientFactory`
+  still fails loudly but throws an `InvalidOperationException` naming the cause (and rejects a
+  missing token) instead of surfacing the raw interop exception.
+
+## Verification
+`dotnet build samples/Sample.Blazor -c Release -t:Rebuild` (analyzers on): **0 warnings, 0 errors**.
+`dotnet test tests/Sample.Blazor.UI.Tests -c Release`: **36/36**. No `src/` test project was touched;
+no runtime browser session was needed beyond that suite.
+
+## Decisions Made
+- **Guard JS interop with `catch (Exception ex) when (ex is JSException or JSDisconnectedException or InvalidOperationException)`**
+  — `JSDisconnectedException` does **not** derive from `JSException` (probe: `CS0184`), and
+  `InvalidOperationException` is what interop throws while prerendering.
+  - **Alternatives considered**: catching `Exception` outright (rejected: hides programming errors in
+    published library code); `try/finally` only (rejected: the analyzer does not treat it as a guard).
+- **`AntiforgeryHttpClientFactory` keeps failing, it just fails clearer** — a client without the
+  token would only fail later as an opaque server-side 400, so the guard wraps and rethrows instead of
+  swallowing.
+  - **Rationale**: silent degradation of an antiforgery header would be a security regression.
+  - **Alternatives considered**: returning a client with an empty header (rejected: silent 400s).
+
+## Open Questions
+- **ASSUMED**: consumers that caught `JSException` from `CreateClientAsync` now see
+  `InvalidOperationException`; nothing in this repository calls the factory, so the blast radius is
+  external only.
+- **OPEN**: `Sample.Blazor`'s first-item navigation now depends on `CascadingAuthenticationState`
+  being present — a consumer copying `NavigationMenuControl` into an app without it silently skips it.
+
+## Files Modified
+- `samples/Sample.Blazor/Components/Pages/Counter.razor.cs` - Removed `StateHasChanged()`
+- `samples/Sample.Blazor/Components/Layout/MainLayout.razor.cs:293` - Removed `StateHasChanged()`
+- `samples/Sample.Blazor/Components/Controls/NavigationMenuControl.razor` - Cascading auth state
+- `src/ISynergy.Framework.AspNetCore.Blazor/Extensions/JsRuntimeExtensions.cs` - Guarded + disposes handle
+- `src/ISynergy.Framework.AspNetCore.Blazor/Security/AntiforgeryHttpClientFactory.cs` - Guarded, clearer failure
+- `src/ISynergy.Framework.AspNetCore.Blazor/Components/Controls/AntiForgeryTokenControl.razor` - Guarded
+- `src/ISynergy.Framework.UI.Blazor/Extensions/JsRuntimeExtensions.cs`, `Security/AntiforgeryHttpClientFactory.cs`,
+  `Components/Controls/AntiForgeryTokenControl.razor` - Same three fixes, UI.Blazor copies
+- `CHANGELOG.md` - Two `### Fixed` bullets
+- `.ai/completed/blazor-analyzer-warnings.md` - Record
+
+## Notes
+- Analyzers only run in `Release` (`Directory.Build.props` switches `RunAnalyzersDuringBuild` on for
+  Release), so these warnings never appear in a Debug build.
+- Builds were run with `MSBUILDDISABLENODEREUSE=1 DOTNET_CLI_USE_MSBUILD_SERVER=0 -nodeReuse:false
+  -p:UseSharedCompilation=false`, and `-p:GeneratePackageOnBuild=false` to avoid packing 0.0.0
+  packages into `packages/`.
+
+---
+
 # Session Handoff - 2026-10-27 (CI/CD moved to GitHub Actions)
 
 **Written By:** Reasonix Code

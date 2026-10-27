@@ -6,6 +6,5 @@ public partial class Counter
     private void IncrementCount()
     {
         currentCount++;
-        StateHasChanged();
     }
 }
