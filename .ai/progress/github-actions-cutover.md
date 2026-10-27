@@ -17,7 +17,13 @@ Started: 2026-10-27
      subscription and `azure/login@v2` does not export the workload-identity env vars
    - [x] Fix `b2627afa`: fetch the GitHub OIDC token into `AZURE_FEDERATED_TOKEN_FILE` instead of
      `azure/login`
-   - [ ] Confirm the PR run signs and pushes a `-preview` package to nuget.org
+   - [x] Run #8 (`a380d494`): `build` green and **`Fetch OIDC token for Key Vault` + `Sign NuGet
+     packages` green** — the Key Vault OIDC signing works
+   - [ ] `NuGet login (trusted publishing)` fails with HTTP 401: `No matching trust policy owned by
+     user '***' was found` — the `NUGET_USER` secret must be the username that **created** the
+     trusted-publishing policy, not `I-Synergy`
+   - [ ] After the secret is fixed, re-run the failed jobs of #8 (never a full rebuild) and confirm a
+     signed `-preview` package on nuget.org
 
 ## Notes
 Plan: `.ai/plans/github-actions-cutover.md`
@@ -31,3 +37,7 @@ Run #7 (`b2627afa`) was cancelled by run #8 (`a380d494`) — the build job's `ca
 Every push to the PR branch starts a new run even when the push only touches `*.md`, because for
 `pull_request` events the `paths-ignore` filter is evaluated against the PR's whole diff, not against
 the pushed files. Do not push while a run is in flight unless superseding it is intended.
+
+Run #8 = the current proof point. Build job 30 min, green. Release job: OIDC token step green, signing
+green over every `packages/*.nupkg` (`--sign-nuget-contents`), then `NuGet/login@v1` 401 at
+`https://www.nuget.org/api/v2/token`. Nothing is published yet, so the tag/release steps stayed skipped.

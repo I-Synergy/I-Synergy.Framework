@@ -455,6 +455,10 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
 3. Each workflow run exchanges a GitHub OIDC token for a short-lived API key (`NuGet/login@v1`), so
    no long-lived key is stored. The policy's environment must match the job environment, which is
    why both policies are needed.
+4. The `NUGET_USER` secret must be the **username of the account that created the policy**, not the
+   account that owns the packages. A policy created while signed in as a personal account but scoped
+   to `I-Synergy.Framework*` still answers to that personal username; sending `I-Synergy` returns
+   `HTTP 401 … No matching trust policy owned by user`.
 
 ### Step 11.4: Cut over
 1. Push all branches and tags from Azure DevOps to GitHub (`git push github --all`, `git push github --tags --force`).

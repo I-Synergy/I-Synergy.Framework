@@ -103,8 +103,13 @@ no client secret. Verified locally against a stub OIDC endpoint (four `GITHUB_EN
 
 - Docs updated to match: `docs/MIGRATION_GUIDE.md` 11.1–11.2 (subscription dropped),
   `CHANGELOG.md`, and the plan's decision row.
-- **Next:** read run #8 — it must sign and push a `-preview` package to nuget.org. Then merge to `main`,
-  approve `production`, and delete `azure-pipelines.yml` after that first green release.
+- **Next:** run #8 (`a380d494`) proved Key Vault signing — `Fetch OIDC token for Key Vault` and
+  `Sign NuGet packages` are both green. It then failed at `NuGet/login@v1` with
+  `HTTP 401 … No matching trust policy owned by user '***'`: the `NUGET_USER` secret is `I-Synergy`,
+  but a trusted-publishing policy answers to the username that **created** it. Set the secret to that
+  username (or recreate both policies under the account that will push), then re-run the **failed
+  jobs** of #8 — a full rebuild only costs 30 minutes. After a green push: merge to `main`, approve
+  `production`, delete `azure-pipelines.yml`.
 - Run #7 (`b2627afa`) was cancelled five minutes in by run #8 (`a380d494`, the docs-only follow-up):
   for `pull_request` events `paths-ignore` is evaluated against the PR's whole diff, so an `*.md`-only
   push re-runs CI. Do not push to the PR branch while a run is in flight.
