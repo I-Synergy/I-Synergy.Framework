@@ -442,7 +442,10 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    `I-Synergy.Framework`, workflow `ci.yml`:
    - Environment `acceptance` — PR preview packages.
    - Environment `production` — release packages.
-2. Each workflow run exchanges a GitHub OIDC token for a short-lived API key (`NuGet/login@v1`), so
+2. The glob pattern matches **package IDs, not versions**. Use `I-Synergy.Framework*` (or `*`) on both
+   policies. A `*-preview` glob matches no package ID and leaves the short-lived key unable to push;
+   the `-preview` suffix is decided by `scripts/Set-VersionVariables.ps1`, not by the policy.
+3. Each workflow run exchanges a GitHub OIDC token for a short-lived API key (`NuGet/login@v1`), so
    no long-lived key is stored. The policy's environment must match the job environment, which is
    why both policies are needed.
 

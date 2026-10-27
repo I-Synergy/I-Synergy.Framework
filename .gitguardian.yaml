@@ -1,0 +1,18 @@
+# GitGuardian configuration — https://docs.gitguardian.com/ggshield-docs/configuration
+#
+# Every match currently reported against this repository is fabricated test data:
+#
+# - tests/ISynergy.Framework.Core.Tests/Extensions/ExceptionExtensionsTests.cs exercises
+#   ExceptionExtensions.SanitizeSensitiveData with fake passwords ("MyP@ssw0rd!"), the
+#   jwt.io sample token (payload {"sub":"1234567890","name":"John Doe","iat":1516239022})
+#   and a base64 string that decodes to "this is a test secret key for unit testing".
+# - .ai/skills/blazor-fluentui/dotnet-framework/examples/*.example.cs are documentation
+#   snippets using localhost/postgres defaults and a "YourSecretKeyHere..." placeholder.
+#
+# Keep this list narrow: only files that cannot hold a real credential belong here.
+version: 2
+
+secret:
+  ignored_paths:
+    - 'tests/ISynergy.Framework.Core.Tests/Extensions/ExceptionExtensionsTests.cs'
+    - '.ai/skills/blazor-fluentui/dotnet-framework/examples/*.example.cs'

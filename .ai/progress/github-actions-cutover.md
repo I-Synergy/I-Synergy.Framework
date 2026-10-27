@@ -10,7 +10,8 @@ Started: 2026-10-27
 - [x] Manual: GitHub environment `production` (done by the user) and `acceptance`
 - [x] Manual: repository variables + `NUGET_USER` secret (`NUGET_USER=I-Synergy`)
 - [x] Manual: Azure federated credentials for both environments (identity already had vault access)
-- [ ] Manual: nuget.org trusted publishing policies — `acceptance` and `production` — and replace `NUGET_USER`
+- [x] Manual: nuget.org trusted publishing policies created for `acceptance` and `production`
+- [x] Both nuget.org policies use `I-Synergy.Framework*` (covers all 48 package IDs)
 - [ ] Manual: first PR run (signed preview to nuget.org), first release run, delete azure-pipelines.yml
 
 ## Notes
