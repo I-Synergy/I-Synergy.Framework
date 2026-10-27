@@ -10,7 +10,7 @@ Here you can find a curated list of **awesome** .NET MAUI libraries and resource
 	 <img alt="Last Commit" src="https://img.shields.io/github/last-commit/jsuarezruiz/awesome-dotnet-maui?style=flat-square" />
 </p>
 
-[Contributions are always welcome!](CONTRIBUTING.md)
+[Contributions are always welcome!](https://github.com/jsuarezruiz/awesome-dotnet-maui/blob/master/CONTRIBUTING.md)
 
 ## Contents
 - [Awesome .NET MAUI](#awesome-net-maui-)

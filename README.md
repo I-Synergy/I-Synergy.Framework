@@ -201,7 +201,7 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please refer to the [Developer Guide](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers) for guidelines.
+Contributions are welcome! Please refer to the [Developer Guide](https://github.com/I-Synergy/I-Synergy.Framework/wiki) for guidelines. The wiki is generated from [`docs/`](docs) on every push to `main`.
 
 ---
 

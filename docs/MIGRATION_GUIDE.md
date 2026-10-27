@@ -472,6 +472,21 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
 Build history/logs, Azure DevOps variable groups, service connections and approval history stay in
 Azure DevOps; recreate the ACC/PROD distinction as the `acceptance`/`production` environments.
 
+### Step 11.6: Documentation wiki
+1. `docs/` stays the source of truth. `.github/workflows/wiki.yml` renders it with
+   `scripts/Sync-DocsToWiki.ps1` and pushes to `I-Synergy.Framework.wiki.git` on every push to `main`
+   that touches `docs/` (or on manual dispatch).
+2. One-time setup: create the wiki's first page (`Home`) in the GitHub UI — until then the wiki
+   repository does not exist and the clone fails — and add the `WIKI_TOKEN` secret: a fine-grained
+   PAT for this repository with *Contents: read and write*. The job token cannot push to the wiki.
+3. Generated pages end with `<!-- generated from docs/<path> -->`; the sync only overwrites and
+   deletes pages carrying that marker, so hand-written wiki pages survive. Unresolved links inside
+   `docs/` fail the run instead of shipping a dead link.
+4. Excluded from the wiki: `docs/superpowers/**` and the internal reports
+   (`FRAMEWORK_REVIEW_*`, `SOLID_PRINCIPLES_ANALYSIS`, `POTENTIAL_ISSUES_AND_RISKS`,
+   `MVVM_AND_UI_FRAMEWORK_ISSUES_REPORT`, `ARCHITECTURAL_ISSUES_SUMMARY`,
+   `ASYNC_EXCEPTION_ISSUES_FIXED`). Adjust `-Exclude` in the workflow to change that.
+
 ---
 
 ## Support and Additional Resources

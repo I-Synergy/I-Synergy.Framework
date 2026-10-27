@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Documentation published to the GitHub wiki
+- **`.github/workflows/wiki.yml` + `scripts/Sync-DocsToWiki.ps1`**: every push to `main` that touches `docs/` renders the documentation into the repository wiki — 414 pages from 464 Markdown files, 50 excluded (`superpowers/` and the internal review/analysis reports). Page names are derived from the folder path (`docs/libraries/ISynergy.Framework.Core/index.md` → `Libraries-ISynergy.Framework.Core`), relative links become `/wiki/<Page>` links, links to excluded or repository-only files become `blob/main` URLs, and `_Sidebar.md` is generated in `toc.yml` order where a folder has one.
+- Each generated page ends with `<!-- generated from docs/<path> -->`, so the sync only overwrites and only deletes pages it created; hand-written wiki pages are never touched. Rendering and pushing are separate workflow steps, so a rendering failure cannot publish anything.
+- `docs/developers/maui/awesome_maui_libraries_and_samples.md`: the dead `CONTRIBUTING.md` link now points at the upstream `jsuarezruiz/awesome-dotnet-maui` file (the sync fails the build on unresolved links).
+
 #### System theme across every head
 - **ISynergy.Framework.UI.WPF / UI.WinUI / UI.Maui / UI.Blazor**: `IThemeService` now treats `Themes.Default` as **System**. `Theme` and `IsLightThemeEnabled` report the resolved Light/Dark theme, `SetTheme(Themes.Default)` persists the preference and applies each platform's follow-the-OS mode, and an OS theme change while the app runs re-applies the palette and raises `ThemeChanged`.
 - **WPF**: reads `HKCU\…\Themes\Personalize\AppsUseLightTheme` and watches `Microsoft.Win32.SystemEvents.UserPreferenceChanged`.
