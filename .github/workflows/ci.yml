@@ -76,11 +76,13 @@ jobs:
       # Restore must use the build configuration: in Release the MAUI SDK adds
       # maccatalyst-arm64 to the default runtime identifiers, so a Debug restore leaves
       # the assets file without that target and the Release build fails with NETSDK1047.
+      # `dotnet restore` has no -c switch (it would be forwarded to MSBuild and rejected
+      # with MSB1001), so the configuration goes through as an MSBuild property.
       - name: Restore
         shell: pwsh
         run: >
           dotnet restore I-Synergy.Framework.slnx
-          -c $env:BUILD_CONFIGURATION
+          -p:Configuration=$env:BUILD_CONFIGURATION
           -p:GeneratePackageOnBuild=false
           -nodeReuse:false
 
