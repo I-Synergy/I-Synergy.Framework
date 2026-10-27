@@ -7,6 +7,7 @@
 
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
+		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 
 		<PackageId>I-Synergy.Framework.UI.Maui</PackageId>
 		<Description>I-Synergy UI Framework for .Net Maui</Description>

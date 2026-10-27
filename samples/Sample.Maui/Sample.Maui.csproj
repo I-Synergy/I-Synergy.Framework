@@ -20,7 +20,8 @@
 		<SingleProject>true</SingleProject>
 		<IsPackable>false</IsPackable>
 		<WindowsPackageType>None</WindowsPackageType>
-    
+		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+
 		<!-- Display name -->
 		<ApplicationTitle>Sample</ApplicationTitle>
 		<Product>Maui Sample</Product>
@@ -32,9 +33,9 @@
 		<!-- Align Version with ApplicationDisplayVersion to prevent PackageVersion conflict across TFs -->
 		<Version>$(ApplicationDisplayVersion)</Version>
 
-    <!-- Workaround: multi-targeted MAUI projects don't expose GetTargetPath in the outer build,
-         which breaks VS Build Acceleration and Aspire AppHost project reference resolution. -->
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn)</GetTargetPathDependsOn>
+		<!-- Workaround: multi-targeted MAUI projects don't expose GetTargetPath in the outer build,
+			which breaks VS Build Acceleration and Aspire AppHost project reference resolution. -->
+		<GetTargetPathDependsOn>$(GetTargetPathDependsOn)</GetTargetPathDependsOn>
 	</PropertyGroup>
 
   <Target Name="GetTargetPath" />

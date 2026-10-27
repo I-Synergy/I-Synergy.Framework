@@ -8,7 +8,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _token = await JSRuntime.InvokeAsync<string>("getAntiForgeryToken");
+        try
+        {
+            _token = await JSRuntime.InvokeAsync<string>("getAntiForgeryToken") ?? string.Empty;
+        }
+        catch (Exception ex) when (ex is JSException or JSDisconnectedException or InvalidOperationException)
+        {
+            // Best effort: prerendering and a disconnected circuit cannot reach the page script.
+            // The hidden field then stays empty and the server-side check rejects the post.
+            _token = string.Empty;
+        }
     }
 
     public string GetToken() => _token;

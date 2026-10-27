@@ -130,7 +130,6 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 | **I-Synergy.Framework.Physics** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Physics?label=) |
 | **I-Synergy.Framework.Printer.Label** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label?label=) |
 | **I-Synergy.Framework.Printer.Label.Dymo** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Printer.Label.Dymo?label=) |
-| **I-Synergy.Framework.Synchronization** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Synchronization?label=) |
 | **I-Synergy.Framework.Mvvm** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Mvvm?label=) |
 
 ---
