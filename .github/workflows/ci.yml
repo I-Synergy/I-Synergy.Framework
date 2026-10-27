@@ -220,7 +220,10 @@ jobs:
       - name: Install Azure SignTool
         shell: pwsh
         run: |
-          dotnet tool install --global I-Synergy.Tools.Azure.SignTool
+          # Package renamed from I-Synergy.Tools.Azure.SignTool to AzureSignTool.Cli; the command is
+          # still `AzureSignTool`. Pinned, so a tool release cannot silently change what signs a
+          # published package — bump this line deliberately.
+          dotnet tool install --global AzureSignTool.Cli --version 2026.11027.11159
           Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools"
 
       - name: Download packages

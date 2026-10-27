@@ -98,6 +98,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+#### Azure signing tool renamed and pinned
+- **.github/workflows/ci.yml**: the signing tool is installed from **`AzureSignTool.Cli`** (was `I-Synergy.Tools.Azure.SignTool`) at the pinned version `2026.11027.11159`, so a tool release cannot silently change what signs a published package. The command name is unchanged (`AzureSignTool`), and so are every flag in use: `-kvu`, `-kvc`, `-act WorkloadIdentityCredential`, `--timestamp-rfc3161`, `-td`, `-v`, `--sign-nuget-contents`, `--sign-nuget-contents-filter`.
+
 #### CI/CD moved to GitHub Actions
 - **.github/workflows/ci.yml** replaces `azure-pipelines.yml`: version stamping, SDK and MAUI workload installation, build, vulnerable-package audit, packing, the net10/net11 package-content guard, tests with OpenCover coverage, Key Vault signing, NuGet.org publishing and release tagging now run on GitHub-hosted Windows runners. PR builds keep the ACC/PROD split: they sign and push `-preview` packages through the `acceptance` environment, while merges to `main` publish release packages through `production`, which carries the approval gate and is the only lane that tags. Key Vault signing uses the GitHub OIDC token directly with `WorkloadIdentityCredential` and one federated credential per environment, and the NuGet.org push uses trusted publishing (`NuGet/login@v1`).
 - **scripts/Set-VersionVariables.ps1 and scripts/New-GitTag.ps1** write `GITHUB_OUTPUT` and `::error::` annotations under GitHub Actions while keeping the `##vso[...]` protocol for Azure Pipelines. The version scheme (`yyyy.1MMdd.1HHmm`) and `v<version>` tags are unchanged.

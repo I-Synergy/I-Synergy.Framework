@@ -443,6 +443,8 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    `AzureSignTool -act WorkloadIdentityCredential`. There is deliberately no `azure/login` step: it
    requires a subscription (or `allow-no-subscriptions`) and only authenticates the `az` CLI, which
    signing does not use. A subscription ID is therefore not needed at all.
+4. The tool is the `AzureSignTool.Cli` global tool (command `AzureSignTool`), installed at a pinned
+   version in the workflow — it was previously published as `I-Synergy.Tools.Azure.SignTool`.
 
 ### Step 11.3: NuGet.org trusted publishing
 1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository
