@@ -73,10 +73,14 @@ jobs:
       - name: Install MAUI workloads
         run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
+      # Restore must use the build configuration: in Release the MAUI SDK adds
+      # maccatalyst-arm64 to the default runtime identifiers, so a Debug restore leaves
+      # the assets file without that target and the Release build fails with NETSDK1047.
       - name: Restore
         shell: pwsh
         run: >
           dotnet restore I-Synergy.Framework.slnx
+          -c $env:BUILD_CONFIGURATION
           -p:GeneratePackageOnBuild=false
           -nodeReuse:false
 
