@@ -13,6 +13,15 @@ Started: 2026-10-27
 - [x] Manual: nuget.org trusted publishing policies created for `acceptance` and `production`
 - [x] Both nuget.org policies use `I-Synergy.Framework*` (covers all 48 package IDs)
 - [ ] Manual: first PR run (signed preview to nuget.org), first release run, delete azure-pipelines.yml
+   - [x] PR run #6: `build` green (43 min); `release` failed at `azure/login` — the identity has no
+     subscription and `azure/login@v2` does not export the workload-identity env vars
+   - [x] Fix `b2627afa`: fetch the GitHub OIDC token into `AZURE_FEDERATED_TOKEN_FILE` instead of
+     `azure/login`; run #7 pushed and awaiting its result
+   - [ ] Confirm run #7 signs and pushes a `-preview` package to nuget.org
 
 ## Notes
 Plan: `.ai/plans/github-actions-cutover.md`
+
+Run #6 (`20e89cc5`) shape: `build` 43 min, all steps green. `release` job needs
+`id-token: write` (present) and, after `b2627afa`, no subscription and no `az` CLI at all.
+`AZURE_SUBSCRIPTION_ID` is no longer read; the repository variable can stay or be deleted.

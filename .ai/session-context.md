@@ -16,6 +16,8 @@ Ported `azure-pipelines.yml` to GitHub Actions so GitHub owns build and release.
   NuGet.org, while a `main` push runs it in `production` (approval gate), publishes the release set
   and creates the `v<version>` tag. Signing uses `azure/login@v2` OIDC →
   AzureSignTool `-act WorkloadIdentityCredential`; pushing uses `NuGet/login@v1` trusted publishing.
+  **Signing no longer goes through `azure/login@v2`** — see the follow-up at the end of this entry:
+  the workflow exchanges GitHub's OIDC token itself into `AZURE_FEDERATED_TOKEN_FILE`.
   Version scheme `yyyy.1MMdd.1HHmm` is unchanged.
 - **`scripts/Set-VersionVariables.ps1`** writes `GITHUB_OUTPUT` when present, otherwise the ADO
   `##vso[task.setvariable]` command; **`scripts/New-GitTag.ps1`** emits `::error::` on GitHub,
@@ -34,17 +36,19 @@ Ported `azure-pipelines.yml` to GitHub Actions so GitHub owns build and release.
   - **Alternatives considered**: main-only publishing (rejected: ADO signed and pushed `-preview`
     packages from PR builds through the ACC variable group, and that behaviour had to be preserved);
     signing in `build` (rejected: the environment gate would then apply to every build).
-- **OIDC everywhere**: `azure/login@v2` federated credential scoped to
-  `environment:production`, and `NuGet/login@v1` trusted publishing — no client secret, no API key.
+- **OIDC everywhere**: one federated credential per environment scoped to
+  `environment:acceptance` / `environment:production`, and `NuGet/login@v1` trusted publishing — no client
+  secret, no API key. No subscription either: signing only needs the vault's data plane.
 - **Keep `azure-pipelines.yml`** (deprecated, not deleted) until GitHub publishes once, so releases
   do not stop before the GitHub environment/secrets/nuget.org policy exist.
 
 ## Open Questions
 - **DONE**: `production` environment (user), 7 repository variables and the `NUGET_USER` secret —
   all placeholders except `BUILD_CONFIGURATION=Release` and `TIMESTAMP_URL=http://timestamp.digicert.com`.
-- **TODO**: replace `NUGET_USER`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID`,
-  `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE` with real values; add the Azure federated credential
-  and `Key Vault Certificate User` role; add the nuget.org trusted-publishing policy (Part 11.2–11.3).
+- **DONE**: real values for `NUGET_USER`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`,
+  `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE`, plus both federated credentials and both
+  nuget.org trusted-publishing policies. `AZURE_SUBSCRIPTION_ID` is still set in the repository but the
+  workflow no longer reads it — the identity has no subscription role and none is needed.
 - **OPEN**: `windows-2025-vs2026` is valid today (it is an alias of `windows-2025`); the comment in
   the workflow says to fall back to `windows-2025` if the label goes away.
 - **ASSUMED**: `dotnet pack` on the `.slnx` produces exactly the 48 `src/` packages; the
@@ -62,9 +66,9 @@ Ported `azure-pipelines.yml` to GitHub Actions so GitHub owns build and release.
 - `.ai/plans/github-actions-cutover.md`, `.ai/progress/github-actions-cutover.md` - Created
 
 ## Next Actions (Priority Order)
-1. Complete the manual GitHub/Azure/nuget.org setup (Part 11, steps 11.1–11.3).
-2. Push ADO history to GitHub (`git push github --all`, `git push github --tags --force`), open a PR,
-   confirm `build` is green.
+1. ~~Complete the manual GitHub/Azure/nuget.org setup~~ — done (11.1–11.3).
+2. Push the branch to GitHub, open a PR, confirm `build` is green (done: build job green twice) and the
+   `acceptance` publish signs + pushes a `-preview` package.
 3. Merge to `main`, approve `production`, confirm signed packages on nuget.org and the tag on GitHub.
 4. Disable the Azure DevOps pipeline, delete `azure-pipelines.yml`, move the progress file to
    `.ai/completed/`.
@@ -77,6 +81,31 @@ Ported `azure-pipelines.yml` to GitHub Actions so GitHub owns build and release.
   `VersionNumber=2026.11027.1123.0` / `VersionInformational` / `VersionPackage` to `GITHUB_OUTPUT`.
 - No `src/` or `tests/` change; no build was run (nothing to compile).
 - `NuGet/login@v1` inputs/outputs confirmed from its `action.yml` (`user` → `NUGET_API_KEY`).
+
+## Follow-up (same day) — first PR run, signing credentials
+Run #6 (`20e89cc5`) proved the `build` job (43 min: version, SDKs, MAUI workloads, restore, build,
+audit, pack, net10/net11 package guard, tests, artifacts) but the `Publish preview packages` job failed
+at `Azure login (OIDC)`: *"No subscriptions found for ***"*. Two facts came out of it:
+
+- The signing identity has a vault **access policy**, not a subscription role, so `azure/login@v2`
+  cannot succeed with `subscription-id`; `allow-no-subscriptions: true` would be needed.
+- `azure/login@v2` no longer exports `AZURE_CLIENT_ID` / `AZURE_TENANT_ID` / `AZURE_FEDERATED_TOKEN_FILE`
+  (verified in its bundled `lib/main/index.js` — the strings are absent). It only authenticates the `az`
+  CLI, so `-act WorkloadIdentityCredential` could never have found credentials through it.
+
+**Fix (commit `b2627afa`, pushed; run #7):** the `Azure login (OIDC)` step was replaced by
+`Fetch OIDC token for Key Vault` — `Invoke-RestMethod` against `ACTIONS_ID_TOKEN_REQUEST_URL` with
+`audience=api://AzureADTokenExchange`, the token written BOM-less to `$RUNNER_TEMP/azure-federated-token`
+and `AZURE_CLIENT_ID`/`AZURE_TENANT_ID`/`AZURE_AUTHORITY_HOST`/`AZURE_FEDERATED_TOKEN_FILE` appended to
+`GITHUB_ENV`. `-act WorkloadIdentityCredential` now does the exchange itself: no `az`, no subscription,
+no client secret. Verified locally against a stub OIDC endpoint (four `GITHUB_ENV` lines, token file
+35 bytes, no BOM, no trailing newline); YAML parses and the step body parses as PowerShell.
+
+- Docs updated to match: `docs/MIGRATION_GUIDE.md` 11.1–11.2 (subscription dropped),
+  `CHANGELOG.md`, and the plan's decision row.
+- **Next:** read run #7 — it must sign and push a `-preview` package to nuget.org. Then merge to `main`,
+  approve `production`, and delete `azure-pipelines.yml` after that first green release.
+- Note: unauthenticated GitHub API rate limit is 60 requests/hour here; poll the run sparsely.
 
 ---
 
