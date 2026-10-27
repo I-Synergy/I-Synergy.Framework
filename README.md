@@ -191,13 +191,13 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please refer to the [Developer Guide](https://i-synergy.github.io/I-Synergy.Framework/developers/) for guidelines. The documentation site is built from [`docs/`](docs).
+Contributions are welcome! Please refer to the [Developer Guide](https://i-synergy.github.io/I-Synergy.Framework/developers/) for guidelines. The documentation site is built from [`docs/`](docs/index.md).
 
 ---
 
 ## 🤖 Repository Agents
 
-Work in this repository is delegated to the agents defined in [`.ai/agents/`](.ai/agents); the main conversation plans, reviews and coordinates rather than editing code.
+Work in this repository is delegated to the agent definitions under `.ai/agents/` — one file per agent, for example [`architect.md`](.ai/agents/architect.md); the main conversation plans, reviews and coordinates rather than editing code.
 
 | Agent | Use for |
 |---|---|
