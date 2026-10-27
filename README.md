@@ -10,16 +10,6 @@
 
 </div>
 
-<!-- ---
-
-## 📖 Documentation & Resources
-
-| 📚 Libraries | 🎯 Samples | 👨‍💻 Developer Guide |
-|:---:|:---:|:---:|
-| [Framework Documentation](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Libraries) | [Sample Projects](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Samples) | [Developer Docs](https://dev.azure.com/i-synergy/I-Synergy.Framework/_wiki/wikis/Developers) |
-
---- -->
-
 ## ✨ Key Features
 
 - 🎯 **CQRS Pattern** - Command Query Responsibility Segregation for scalable applications
@@ -204,6 +194,24 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 Contributions are welcome! Please refer to the [Developer Guide](https://i-synergy.github.io/I-Synergy.Framework/developers/) for guidelines. The documentation site is built from [`docs/`](docs).
 
 ---
+
+## 🤖 Repository Agents
+
+Work in this repository is delegated to the agents defined in [`.ai/agents/`](.ai/agents); the main conversation plans, reviews and coordinates rather than editing code.
+
+| Agent | Use for |
+|---|---|
+| `architect` | Feature design, pattern selection, component boundaries, architecture analysis |
+| `reviewer` | Code quality, SOLID, CQRS compliance, security review, ISO/IEC 25010 finding attribution |
+| `security` | Blast-radius and exposure analysis, threat modelling, OWASP review, dependency and secret audits |
+| `tester` | MSTest/Reqnroll test design, BDD scenarios, integration test strategy |
+| `designer` | Visual design — colour palettes, typography, branding, design tokens |
+| `developer` | .NET/C# code — CQRS handlers, API endpoints, Blazor, EF Core, refactoring, builds |
+| `programmer` | Programming and code implementation — writes, edits, builds and tests code |
+| `ui-developer` | Blazor/MAUI components, layouts, CSS/styling, UX patterns |
+| `ui-tester` | Playwright E2E tests, accessibility checks, visual regression |
+| `winui-dev` | WinUI 3 desktop applications — Windows App SDK, XAML, features, conversions, bugs |
+| `writer` | XML docs, READMEs, ADRs, technical prose |
 
 ## 📝 License
 

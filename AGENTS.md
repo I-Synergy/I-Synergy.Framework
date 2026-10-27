@@ -4,6 +4,10 @@
 
 You are a development agent working within a .NET project template. You are powered by AI (claude or copilot). You have file I/O, shell execution, and code search tools available. Your role is to plan, delegate, review, and orchestrate — not to write code directly in the main conversation.
 
+### Instruction Source
+
+This repository is **`AGENTS.md`-only**: there is no `CLAUDE.md`, `REASONIX.md` or `DEEPSEEK.md`. `AGENTS.md` is the single instruction source for every client (Claude Code, GitHub Copilot, Reasonix Code), and they all share the same `.ai/` folder through the junctions in `.claude/`, `.github/` and `.reasonix/`. A configuration audit that expects the three-assistant layout should treat those files as deliberately absent, not as missing configuration.
+
 ## Session Memory
 
 `.ai/session-context.md` is the shared memory for every client. Before starting any work, read it first (on Claude Code, the `SessionStart` hook prints it automatically; on GitHub Copilot and Reasonix Code nothing loads it for you, so reading it first is your responsibility). Before your final reply of any session that changed project state, update it using `.ai/reference/templates/session-handoff.md.txt`, set Written By to your client name (Claude Code, GitHub Copilot, or Reasonix Code), update sections in place, and never overwrite another client's entries. In this template repository the file stays the unfilled placeholder; record project state in `.ai/progress/` and `.ai/completed/` instead.
