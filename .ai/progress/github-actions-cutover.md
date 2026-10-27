@@ -19,9 +19,11 @@ Started: 2026-10-27
      `azure/login`
    - [x] Run #8 (`a380d494`): `build` green and **`Fetch OIDC token for Key Vault` + `Sign NuGet
      packages` green** — the Key Vault OIDC signing works
-   - [ ] `NuGet login (trusted publishing)` fails with HTTP 401: `No matching trust policy owned by
+   - [x] `NuGet login (trusted publishing)` failed with HTTP 401: `No matching trust policy owned by
      user '***' was found` — the `NUGET_USER` secret must be the username that **created** the
-     trusted-publishing policy, not `I-Synergy`
+     trusted-publishing policy
+   - [x] `NUGET_USER` changed from `I-Synergy` to `ismailhassani` (the policy creator), confirmed by the
+     user on 2026-10-27; the re-run below is what proves it
    - [ ] After the secret is fixed, re-run the failed jobs of #8 (never a full rebuild) and confirm a
      signed `-preview` package on nuget.org
 
