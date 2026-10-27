@@ -5,6 +5,7 @@
     <IsPackable>false</IsPackable>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <RootNamespace>ISynergy.Framework.UI.Maui</RootNamespace>
+    <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
   </PropertyGroup>
   
   <ItemGroup>
