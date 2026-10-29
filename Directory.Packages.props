@@ -5,17 +5,17 @@
   </PropertyGroup>
   <!-- Third-party and cross-framework packages (unconditional) -->
   <ItemGroup>
-    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="17.0.0-preview.1.26526.15" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0-preview.1.26526.15" />
-    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="17.0.0-preview.1.26526.15" />
-    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0-preview.1.26526.15" />
-    <PackageVersion Include="Aspire.Hosting.Maui" Version="17.0.0-preview.1.26526.15" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0-preview.1.26526.15" />
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.104.7" />
+    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="17.0.0-preview.1.26529.1" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0-preview.1.26529.1" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="17.0.0-preview.1.26529.1" />
+    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0-preview.1.26529.1" />
+    <PackageVersion Include="Aspire.Hosting.Maui" Version="17.0.0-preview.1.26529.1" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0-preview.1.26529.1" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.104.8" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.10.0" />
-    <PackageVersion Include="Azure.Security.KeyVault.Secrets" Version="4.11.2" />
+    <PackageVersion Include="Azure.Security.KeyVault.Secrets" Version="4.12.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.30.1" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="CommunityToolkit.Maui.MediaElement" Version="10.0.0" />
@@ -30,19 +30,19 @@
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="5.0.1" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="5.0.1" />
     <PackageVersion Include="Microsoft.Graph" Version="6.9.0" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.91.1" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.92.0" />
     <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.2" />
     <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.13.26526.5" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.64.1" />
     <PackageVersion Include="Microsoft.Playwright.MSTest" Version="1.64.1" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.5.1" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.6.4" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageVersion Include="Moq" Version="4.21.0" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="4.5.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.5.1" />
-    <PackageVersion Include="NodaTime" Version="3.3.6" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.5.2" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.5.2" />
+    <PackageVersion Include="NodaTime" Version="3.3.7" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
     <PackageVersion Include="NuGet.Commands" Version="7.9.0" />
     <PackageVersion Include="OpenTelemetry" Version="1.20.1" />
@@ -111,36 +111,36 @@
   </ItemGroup>
   <!-- Framework-aligned packages for net11.0 -->
   <ItemGroup Condition="$(TargetFramework.StartsWith('net11.0'))">
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.ObjectPool" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="11.0.0-rc.2.26504.105" />
-    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="11.0.0-rc.2.26504.105" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.ObjectPool" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="11.0.0-rc.3.26522.148" />
+    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-rc.2.26505.5" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0-rc.2" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0-rc.3" />
   </ItemGroup>
 </Project>
