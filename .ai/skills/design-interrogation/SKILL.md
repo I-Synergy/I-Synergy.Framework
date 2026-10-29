@@ -148,8 +148,8 @@ BCs identified in A2 ≥ 2?
 
 Each BC agent writes immediately to:
 - `session-decisions.md` — its own BC section
-- `docs/bounded-contexts/{BC}/use-cases.md` — draft use cases as flows resolve
-- `docs/bounded-contexts/{BC}/user-stories.md` — draft stories as criteria are agreed
+- `docs/bounded-contexts/{Domain}/use-cases.md` — draft use cases as flows resolve
+- `docs/bounded-contexts/{Domain}/user-stories.md` — draft stories as criteria are agreed
 - Follows the depth-first rule within its own BC
 
 **Coordination agent** (main session) batches one open question per BC per round:
@@ -306,7 +306,7 @@ skill finalizes it):
 
 | Term | Definition | Bounded Context | Notes |
 |------|-----------|-----------------|-------|
-| {Term} | {Definition} | {BC} | [DRAFT] |
+| {Term} | {Definition} | {Domain} | [DRAFT] |
 ```
 
 ### When a Use Case Becomes Clear
@@ -380,8 +380,8 @@ the interrogation. This step **finalizes** those drafts — it is not a cold gen
 | # | Deliverable | Skill | Output File | Action |
 |---|-------------|-------|-------------|--------|
 | 1 | **Ubiquitous Language Glossary** | [`ubiquitous-language`](../ubiquitous-language/SKILL.md) | `UBIQUITOUS_LANGUAGE.md` | Complete draft — remove `[DRAFT]`, resolve ambiguities, add missing terms |
-| 2 | **Use Case Specifications** | [`usecase-specification`](../usecase-specification/SKILL.md) | `docs/bounded-contexts/{BC}/use-cases.md` | Complete draft — fill alternate flows, add Gherkin for every flow |
-| 3 | **User Stories** | [`user-story`](../user-story/SKILL.md) | `docs/bounded-contexts/{BC}/user-stories.md` | Complete draft — add Gherkin, validate INVEST, ensure ≥3 criteria per story |
+| 2 | **Use Case Specifications** | [`usecase-specification`](../usecase-specification/SKILL.md) | `docs/bounded-contexts/{Domain}/use-cases.md` | Complete draft — fill alternate flows, add Gherkin for every flow |
+| 3 | **User Stories** | [`user-story`](../user-story/SKILL.md) | `docs/bounded-contexts/{Domain}/user-stories.md` | Complete draft — add Gherkin, validate INVEST, ensure ≥3 criteria per story |
 
 #### Finalization Order
 
@@ -408,7 +408,7 @@ After completing each:
 #### Skip Only With Explicit User Consent
 
 If the user says "skip use cases" or "no stories needed", mark the deliverable as **Deferred**
-and include it in the closing summary. Never silently skip.
+and include it in the closing summary. Never skip without recording it there.
 
 ### Step 5: Solution Generation Handoff
 
@@ -418,8 +418,8 @@ The session deliverables are direct pipeline inputs for solution generation:
 |----------|-------------|------|
 | `docs/architecture/{SolutionName}-architecture.md` | [`solution-generator`](../solution-generator/SKILL.md) | Primary input — generator derives all parameters from it |
 | `UBIQUITOUS_LANGUAGE.md` | [`solution-generator`](../solution-generator/SKILL.md) | Domain naming, aggregate identification |
-| `docs/bounded-contexts/{BC}/use-cases.md` | [`vertical-slices`](../vertical-slices/SKILL.md) | Each use case → blueprint JSON + Gherkin `.feature` files |
-| `docs/bounded-contexts/{BC}/user-stories.md` | [`vertical-slices`](../vertical-slices/SKILL.md) | Each story → individual vertical slice blueprint JSON |
+| `docs/bounded-contexts/{Domain}/use-cases.md` | [`vertical-slices`](../vertical-slices/SKILL.md) | Each use case → blueprint JSON + Gherkin `.feature` files |
+| `docs/bounded-contexts/{Domain}/user-stories.md` | [`vertical-slices`](../vertical-slices/SKILL.md) | Each story → individual vertical slice blueprint JSON |
 
 **Pipeline execution order:**
 1. Run [`solution-generator`](../solution-generator/SKILL.md) — pass architecture document as input
@@ -449,8 +449,8 @@ When all branches are Resolved or Deferred, present a structured summary:
 |-------------|--------|------|
 | Architecture Document | ✅ Complete | `docs/architecture/{SolutionName}-architecture.md` |
 | Ubiquitous Language | ✅ Complete / ⏸️ Deferred | `UBIQUITOUS_LANGUAGE.md` |
-| Use Case Specifications | ✅ Complete / ⏸️ Deferred | `docs/bounded-contexts/{BC}/use-cases.md` |
-| User Stories | ✅ Complete / ⏸️ Deferred | `docs/bounded-contexts/{BC}/user-stories.md` |
+| Use Case Specifications | ✅ Complete / ⏸️ Deferred | `docs/bounded-contexts/{Domain}/use-cases.md` |
+| User Stories | ✅ Complete / ⏸️ Deferred | `docs/bounded-contexts/{Domain}/user-stories.md` |
 
 ### Recommended Next Steps
 1. Run [`solution-generator`](../solution-generator/SKILL.md) — pass architecture document as input

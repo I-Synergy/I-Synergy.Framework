@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui-tooling:dotnet-workload-info",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "3af7fa02b51c3012607dd0ef6f179fa92337e1a054753367e197861933ba4701",
+  "materialize": "copy",
+  "path": ".ai/skills/dotnet-workload-info"
+}

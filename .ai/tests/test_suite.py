@@ -140,6 +140,8 @@ def test_upgrade_script():
     assert code == 0, f"\n{output}"
 
 
+
+
 # ---------------------------------------------------------------------------
 # Suite 13 — Traceability
 # ---------------------------------------------------------------------------
@@ -153,14 +155,6 @@ def test_traceability():
 # ---------------------------------------------------------------------------
 def test_standards():
     code, output = _run_python("validate-standards.py")
-    assert code == 0, f"\n{output}"
-
-
-# ---------------------------------------------------------------------------
-# Suite 15 — DeepSeek Parity
-# ---------------------------------------------------------------------------
-def test_deepseek_parity():
-    code, output = _run_python("validate-deepseek-parity.py")
     assert code == 0, f"\n{output}"
 
 
@@ -186,58 +180,58 @@ def test_deepseek_parity():
 _TRACEABILITY_VALIDATOR = TESTS_DIR / "validate-traceability.py"
 
 _FEATURE_FILE = """\
-# File: docs/slices/Budget/Budget.Create/Budget.Create.feature
+# File: docs/slices/Widget/Widget.Create/Widget.Create.feature
 
-Feature: Record a budget
+Feature: Record a widget
 
-  @AC-Budget-014.1
-  Scenario: Create a valid budget
+  @AC-Widget-014.1
+  Scenario: Create a valid widget
     Given I am an authenticated user
-    When I record a budget of 100.00
-    Then the budget is stored
+    When I record a widget of 100.00
+    Then the widget is stored
 
-  @AC-Budget-014.2
+  @AC-Widget-014.2
   Scenario: Reject a non-positive amount
     Given I am an authenticated user
-    When I record a budget of 0.00
+    When I record a widget of 0.00
     Then the creation fails with a validation error
 """
 
 _BLUEPRINT = """\
 {
-  "slice": "Budget.Create",
-  "bounded_context": "Budget",
+  "slice": "Widget.Create",
+  "bounded_context": "Widget",
   "operation_type": "Command",
-  "entity": "Budget",
-  "handler_class": "CreateBudgetCommandHandler",
+  "entity": "Widget",
+  "handler_class": "CreateWidgetCommandHandler",
   "source": {
-    "use_cases": ["UC-Budget-007"],
-    "user_stories": ["US-Budget-014"],
-    "acceptance_criteria": ["AC-Budget-014.1", "AC-Budget-014.2"]
+    "use_cases": ["UC-Widget-007"],
+    "user_stories": ["US-Widget-014"],
+    "acceptance_criteria": ["AC-Widget-014.1", "AC-Widget-014.2"]
   }
 }
 """
 
 _SOURCE_LINK_LINES = (
-    '    "use_cases": ["UC-Budget-007"],\n'
-    '    "user_stories": ["US-Budget-014"],\n'
+    '    "use_cases": ["UC-Widget-007"],\n'
+    '    "user_stories": ["US-Widget-014"],\n'
 )
 
 # The pre-convention blueprint shape: no `source` key at all.
 _BLUEPRINT_NO_SOURCE = """\
 {
-  "slice": "Budget.Create",
-  "bounded_context": "Budget",
+  "slice": "Widget.Create",
+  "bounded_context": "Widget",
   "operation_type": "Command",
-  "entity": "Budget",
-  "handler_class": "CreateBudgetCommandHandler"
+  "entity": "Widget",
+  "handler_class": "CreateWidgetCommandHandler"
 }
 """
 
 _USE_CASES = """\
-# Use Cases — Budget
+# Use Cases — Widget
 
-### UC-Budget-007: Record a budget
+### UC-Widget-007: Record a widget
 
 **Actor:** Household planner
 """
@@ -246,54 +240,54 @@ _USE_CASES = """\
 # hold no stories, and used to be swept in by a bare `stor` substring match on the file stem --
 # `history.md` and `storage-notes.md` both warn about "0 of 1 stories" under it.
 _CONTEXT_NOTES = {
-    "docs/bounded-contexts/Budget/history.md": """\
-# Budget Context History
+    "docs/bounded-contexts/Widget/history.md": """\
+# Widget Context History
 
 ### 2026-01-01 — Extracted from the monolith
 
-The budget context was carved out of the monolith in this change.
+The widget context was carved out of the monolith in this change.
 """,
-    "docs/bounded-contexts/Budget/storage-notes.md": """\
+    "docs/bounded-contexts/Widget/storage-notes.md": """\
 # Storage Notes
 
 ### Serialization
 
-Budgets are stored as JSON.
+Widgets are stored as JSON.
 """,
 }
 
 # A real story document with no identifiers at all: the legacy mode T7 exists for.
 _LEGACY_STORY = """\
-# User Stories — Budget (pre-convention)
+# User Stories — Widget (pre-convention)
 
-### Record a budget
+### Record a widget
 
 **As a** household planner
-**I want** to record a monthly budget
+**I want** to record a monthly widget
 **So that** I can track spending against it
 """
 
 
 def _padded(text: str) -> str:
-    """`AC-Budget-014.1` -> `AC-Budget-014.01`: `{n}` is unpadded, and this is the drift."""
-    return text.replace("AC-Budget-014.1", "AC-Budget-014.01").replace(
-        "AC-Budget-014.2", "AC-Budget-014.02")
+    """`AC-Widget-014.1` -> `AC-Widget-014.01`: `{n}` is unpadded, and this is the drift."""
+    return text.replace("AC-Widget-014.1", "AC-Widget-014.01").replace(
+        "AC-Widget-014.2", "AC-Widget-014.02")
 
 
 def _story(*, duplicate_criterion: bool) -> str:
     criteria = [
-        "- [ ] AC-Budget-014.1: A budget is created and stored with a unique identifier.",
-        "- [ ] AC-Budget-014.2: A non-positive amount is rejected with a validation error.",
+        "- [ ] AC-Widget-014.1: A widget is created and stored with a unique identifier.",
+        "- [ ] AC-Widget-014.2: A non-positive amount is rejected with a validation error.",
     ]
     if duplicate_criterion:
         criteria.append(criteria[0])
     return "\n".join([
-        "# User Stories — Budget",
+        "# User Stories — Widget",
         "",
-        "### US-Budget-014: Record a budget",
+        "### US-Widget-014: Record a widget",
         "",
         "**As a** household planner",
-        "**I want** to record a monthly budget",
+        "**I want** to record a monthly widget",
         "**So that** I can track spending against it",
         "",
         "**Acceptance Criteria:**",
@@ -301,18 +295,18 @@ def _story(*, duplicate_criterion: bool) -> str:
         "",
         "**Gherkin:**",
         "```gherkin",
-        "Feature: Record a budget",
+        "Feature: Record a widget",
         "",
-        "  @AC-Budget-014.1",
-        "  Scenario: Create a valid budget",
+        "  @AC-Widget-014.1",
+        "  Scenario: Create a valid widget",
         "    Given I am an authenticated user",
-        "    When I record a budget of 100.00",
-        "    Then the budget is stored",
+        "    When I record a widget of 100.00",
+        "    Then the widget is stored",
         "",
-        "  @AC-Budget-014.2",
+        "  @AC-Widget-014.2",
         "  Scenario: Reject a non-positive amount",
         "    Given I am an authenticated user",
-        "    When I record a budget of 0.00",
+        "    When I record a widget of 0.00",
         "    Then the creation fails with a validation error",
         "```",
         "",
@@ -321,24 +315,24 @@ def _story(*, duplicate_criterion: bool) -> str:
 
 def _test_class(extra_methods: str) -> str:
     return (
-        "// File: tests/Acme.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs\n"
-        "// Traces: US-Budget-014 / AC-Budget-014.1, AC-Budget-014.2\n"
+        "// File: tests/Acme.Widget.Tests/Widget/CreateWidgetCommandHandlerTests.cs\n"
+        "// Traces: US-Widget-014 / AC-Widget-014.1, AC-Widget-014.2\n"
         "\n"
         "using Microsoft.VisualStudio.TestTools.UnitTesting;\n"
         "\n"
-        "namespace Acme.Budget.Tests.Budget;\n"
+        "namespace Acme.Widget.Tests.Widget;\n"
         "\n"
         "[TestClass]\n"
-        "public class CreateBudgetCommandHandlerTests\n"
+        "public class CreateWidgetCommandHandlerTests\n"
         "{\n"
         "    [TestMethod]\n"
-        '    [TestCategory("AC-Budget-014.1")]\n'
-        "    public void HandleAsync_ValidCommand_CreatesBudgetSuccessfully()\n"
+        '    [TestCategory("AC-Widget-014.1")]\n'
+        "    public void HandleAsync_ValidCommand_CreatesWidgetSuccessfully()\n"
         "    {\n"
         "    }\n"
         "\n"
         "    [TestMethod]\n"
-        '    [TestCategory("AC-Budget-014.2")]\n'
+        '    [TestCategory("AC-Widget-014.2")]\n'
         "    public void HandleAsync_NonPositiveAmount_ThrowsArgumentException()\n"
         "    {\n"
         "    }\n"
@@ -365,15 +359,15 @@ def _fixture_files(*, duplicate_criterion: bool = False, unknown_tag: str = "",
     blueprint = _BLUEPRINT
     if unknown_slice_ref:
         blueprint = blueprint.replace(
-            '["AC-Budget-014.1", "AC-Budget-014.2"]',
-            f'["AC-Budget-014.1", "AC-Budget-014.2", "{unknown_slice_ref}"]',
+            '["AC-Widget-014.1", "AC-Widget-014.2"]',
+            f'["AC-Widget-014.1", "AC-Widget-014.2", "{unknown_slice_ref}"]',
         )
     if unknown_story_ref:
         blueprint = blueprint.replace(
-            '["US-Budget-014"]', f'["US-Budget-014", "{unknown_story_ref}"]')
+            '["US-Widget-014"]', f'["US-Widget-014", "{unknown_story_ref}"]')
     if unknown_use_case_ref:
         blueprint = blueprint.replace(
-            '["UC-Budget-007"]', f'["UC-Budget-007", "{unknown_use_case_ref}"]')
+            '["UC-Widget-007"]', f'["UC-Widget-007", "{unknown_use_case_ref}"]')
     if drop_source_links:
         # `source` still present, naming neither a story nor a use case: untraceable by
         # construction, which T3 reports rather than passing in silence.
@@ -394,17 +388,17 @@ def _fixture_files(*, duplicate_criterion: bool = False, unknown_tag: str = "",
         )
 
     files = {
-        "docs/bounded-contexts/Budget/user-stories.md": _story(
+        "docs/bounded-contexts/Widget/user-stories.md": _story(
             duplicate_criterion=duplicate_criterion),
-        "docs/bounded-contexts/Budget/use-cases.md": _USE_CASES,
+        "docs/bounded-contexts/Widget/use-cases.md": _USE_CASES,
         **_CONTEXT_NOTES,
-        "docs/slices/Budget/Budget.Create/blueprint.json": blueprint,
-        "docs/slices/Budget/Budget.Create/Budget.Create.feature": feature,
-        "tests/Acme.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs": _test_class(
+        "docs/slices/Widget/Widget.Create/blueprint.json": blueprint,
+        "docs/slices/Widget/Widget.Create/Widget.Create.feature": feature,
+        "tests/Acme.Widget.Tests/Widget/CreateWidgetCommandHandlerTests.cs": _test_class(
             extra_methods),
     }
     if legacy_story_document:
-        files["docs/bounded-contexts/Budget/old-stories.md"] = _LEGACY_STORY
+        files["docs/bounded-contexts/Widget/old-stories.md"] = _LEGACY_STORY
     if padded:
         files = {rel: _padded(text) for rel, text in files.items()}
     return files
@@ -447,19 +441,19 @@ def test_traceability_fixture_regression(tmp_path):
     assert "ALL TRACEABILITY CHECKS PASSED" in output, f"\n{output}"
 
     defects = {
-        "t1": (dict(duplicate_criterion=True), "AC-Budget-014.1 is declared 2 times"),
-        "t2": (dict(unknown_tag="AC-Budget-099.1"),
-               "@AC-Budget-099.1 resolves to no declared criterion"),
-        "t3": (dict(unknown_slice_ref="AC-Budget-098.1"),
-               "source.acceptance_criteria value AC-Budget-098.1 resolves to no declared "
+        "t1": (dict(duplicate_criterion=True), "AC-Widget-014.1 is declared 2 times"),
+        "t2": (dict(unknown_tag="AC-Widget-099.1"),
+               "@AC-Widget-099.1 resolves to no declared criterion"),
+        "t3": (dict(unknown_slice_ref="AC-Widget-098.1"),
+               "source.acceptance_criteria value AC-Widget-098.1 resolves to no declared "
                "criterion"),
-        "t4": (dict(unknown_test_category="AC-Budget-097.1"),
-               '[TestCategory("AC-Budget-097.1")] resolves to no declared criterion'),
-        "t3-story-ref": (dict(unknown_story_ref="US-Budget-999"),
-                         "source.user_stories value US-Budget-999 resolves to no declared "
+        "t4": (dict(unknown_test_category="AC-Widget-097.1"),
+               '[TestCategory("AC-Widget-097.1")] resolves to no declared criterion'),
+        "t3-story-ref": (dict(unknown_story_ref="US-Widget-999"),
+                         "source.user_stories value US-Widget-999 resolves to no declared "
                          "identifier"),
-        "t3-use-case-ref": (dict(unknown_use_case_ref="UC-Budget-999"),
-                            "source.use_cases value UC-Budget-999 resolves to no declared "
+        "t3-use-case-ref": (dict(unknown_use_case_ref="UC-Widget-999"),
+                            "source.use_cases value UC-Widget-999 resolves to no declared "
                             "identifier"),
         "t3-no-source-link": (dict(drop_source_links=True),
                               "names neither `use_cases` nor `user_stories` in `source`"),
@@ -498,11 +492,11 @@ def test_traceability_fixture_regression(tmp_path):
     assert any("user-stories.md" in line for line in padded), (
         f"the declaration is not reported:\n{output}"
     )
-    assert any("CreateBudgetCommandHandlerTests.cs" in line for line in padded), (
+    assert any("CreateWidgetCommandHandlerTests.cs" in line for line in padded), (
         f"the test-attribute reference is not reported:\n{output}"
     )
-    assert "AC-Budget-014.01 carries a padded child number; `{n}` is unpadded " \
-           "(AC-Budget-014.1)" in output, f"\n{output}"
+    assert "AC-Widget-014.01 carries a padded child number; `{n}` is unpadded " \
+           "(AC-Widget-014.1)" in output, f"\n{output}"
 
     # T7 is scoped to the story and use-case documents. A context history and a storage note in
     # the same context hold no stories and must stay out of it; an unlabelled *story* document

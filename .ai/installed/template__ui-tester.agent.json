@@ -1,0 +1,8 @@
+{
+  "id": "template:ui-tester",
+  "kind": "agent",
+  "ref": "2026.11027.12350",
+  "sha256": "74ac3689fe56f32b6903a34ff24d9c6024b69f4888948bea24d44a1bf3ccb560",
+  "materialize": "copy",
+  "path": ".ai/agents/ui-tester.md"
+}

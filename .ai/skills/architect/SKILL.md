@@ -116,11 +116,11 @@ Infrastructure Layer (Data, External Services)
 ### Bounded Context Example
 
 ```
-Budget Context:
-  - Budget aggregate (root)
-  - Goals (child entities)
-  - Debts (child entities)
-  - Budget events
+{Entity} Context:
+  - {Entity} aggregate (root)
+  - {ChildEntity} (child entity)
+  - {ChildEntities} (child entity collection)
+  - {Entity} events
 
 Authentication Context:
   - User aggregate

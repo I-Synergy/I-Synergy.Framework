@@ -1,4 +1,4 @@
-# File: tests/{ApplicationName}.{Domain}.Tests/Features/{Entity}Management.feature
+# File: tests/I-Synergy.Framework.{Domain}.Tests/Features/{Entity}Management.feature
 
 Feature: {Entity} Management
   As a user

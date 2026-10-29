@@ -1,0 +1,8 @@
+{
+  "id": "template:verify-config",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "3f09639e9d854d6acee8170ebab4ea136599037f24e050c11b9d0653f8d1076c",
+  "materialize": "copy",
+  "path": ".ai/skills/verify-config"
+}

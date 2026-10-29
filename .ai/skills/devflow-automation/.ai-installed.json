@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui-tooling:devflow-automation",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "d0444f0a9254940edf5d796223229bd89ebd94b57cb3fd41a070ba908dfd4624",
+  "materialize": "copy",
+  "path": ".ai/skills/devflow-automation"
+}

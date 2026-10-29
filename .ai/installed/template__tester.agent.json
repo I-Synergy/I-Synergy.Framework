@@ -1,0 +1,8 @@
+{
+  "id": "template:tester",
+  "kind": "agent",
+  "ref": "2026.11027.12350",
+  "sha256": "ea8a417204f13112ea748481bbc4bb172d7a739c536275f166440379022dd1f8",
+  "materialize": "copy",
+  "path": ".ai/agents/tester.md"
+}

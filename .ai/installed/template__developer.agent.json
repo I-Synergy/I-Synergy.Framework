@@ -1,0 +1,8 @@
+{
+  "id": "template:developer",
+  "kind": "agent",
+  "ref": "2026.11027.12350",
+  "sha256": "b9c8e265c9a6f40186ae2dc31c5b5e54da4bef89696e2c57682e55a2176b6b4c",
+  "materialize": "copy",
+  "path": ".ai/agents/developer.md"
+}

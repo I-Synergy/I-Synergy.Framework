@@ -21,12 +21,17 @@ SCRIPT_DIR    = Path(__file__).parent
 TEMPLATE_ROOT = SCRIPT_DIR.parent.parent
 
 # Bootstrap folder-level junctions before running tests
-_script = str(SCRIPT_DIR.parent / "scripts" / "sync-skills.py")
+_script = str(SCRIPT_DIR.parent / "scripts" / "sync-platforms.py")
 subprocess.run([sys.executable, _script], capture_output=True)
 AI_SKILLS     = TEMPLATE_ROOT / ".ai"     / "skills"
 GITHUB_SKILLS = TEMPLATE_ROOT / ".github" / "skills"
 CLAUDE_SKILLS = TEMPLATE_ROOT / ".claude" / "skills"
 COPILOT_MD    = TEMPLATE_ROOT / ".github" / "copilot-instructions.md"
+AGENTS_MD     = TEMPLATE_ROOT / "AGENTS.md"
+
+GENERATED_MARK  = "<!-- ai-workspace-manager:generated-from-agents -->"
+LEGACY_MARK     = "<!-- ai-manager:generated-from-agents -->"
+REFERENCE_START = "<!-- ai-workspace-manager:copilot-reference:start -->"
 
 STALE_REF_PATTERN = re.compile(
     r'(?<!~/)\.claude/(?!settings\.json|settings\.local\.json)'
@@ -69,6 +74,26 @@ def test_copilot_instructions() -> bool:
         return False
 
     print("  PASS: no stale .claude/ references")
+
+    if LEGACY_MARK in content:
+        print("  FAIL: legacy ai-manager marker — run: python .ai/scripts/sync-instructions.py")
+        return False
+
+    if GENERATED_MARK in content:
+        expected = AGENTS_MD.read_text(encoding="utf-8").strip() if AGENTS_MD.is_file() else ""
+        body = content.split(GENERATED_MARK, 1)[1]
+        body = re.sub(r"<!-- Generated from AGENTS\.md\..*?-->", "", body, count=1)
+        cut = body.find(REFERENCE_START)
+        if cut != -1:
+            body = body[:cut]
+        if not expected or body.strip() != expected:
+            print("  FAIL: AGENTS.md changed without regenerating the Copilot file")
+            print("        run: python .ai/scripts/sync-instructions.py")
+            return False
+        print("  PASS: generated body matches AGENTS.md")
+    else:
+        print("  SKIP: hand-written Copilot file (not generated)")
+
     return True
 
 
@@ -77,7 +102,7 @@ def test_github_skills_exist() -> bool:
     print("-" * 40)
 
     if not GITHUB_SKILLS.exists():
-        print("  FAIL: .github/skills/ not found — run: python .ai/scripts/sync-skills.py")
+        print("  FAIL: .github/skills/ not found — run: python .ai/scripts/sync-platforms.py")
         return False
 
     count = sum(1 for d in GITHUB_SKILLS.iterdir() if d.is_dir())
@@ -95,7 +120,7 @@ def test_skills_in_sync() -> bool:
 
     if not _is_junction(GITHUB_SKILLS):
         print("  FAIL: .github/skills/ is not a folder-level junction")
-        print("  Fix: python .ai/scripts/sync-skills.py")
+        print("  Fix: python .ai/scripts/sync-platforms.py")
         return False
 
     # With a folder-level junction, content is always identical to source
@@ -115,7 +140,7 @@ def test_claude_skills() -> bool:
 
     if not _is_junction(CLAUDE_SKILLS):
         print("  FAIL: .claude/skills/ is not a folder-level junction")
-        print("  Fix: python .ai/scripts/sync-skills.py")
+        print("  Fix: python .ai/scripts/sync-platforms.py")
         return False
 
     claude_count = sum(1 for d in CLAUDE_SKILLS.iterdir() if d.is_dir())
@@ -149,7 +174,7 @@ def main():
         return 0
 
     print("  SOME COPILOT TESTS FAILED")
-    print("  Fix: python .ai/scripts/sync-skills.py")
+    print("  Fix: python .ai/scripts/sync-platforms.py")
     return 1
 
 

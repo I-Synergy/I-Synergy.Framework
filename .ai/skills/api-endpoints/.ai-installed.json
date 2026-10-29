@@ -1,0 +1,8 @@
+{
+  "id": "template:api-endpoints",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "69a80427febf163b6377f937a82cf464dea0ad042c4f0743dd62aa39665fabd9",
+  "materialize": "copy",
+  "path": ".ai/skills/api-endpoints"
+}

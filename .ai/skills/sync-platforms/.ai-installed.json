@@ -1,0 +1,8 @@
+{
+  "id": "template:sync-platforms",
+  "kind": "skill",
+  "ref": "2026.11029.12224",
+  "sha256": "26dc6d0c487d6ad9c1765fc76ad4cb059e2a268da32a532c436c6f96e7cee669",
+  "materialize": "copy",
+  "path": ".ai/skills/sync-platforms"
+}

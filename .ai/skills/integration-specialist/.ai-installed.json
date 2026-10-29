@@ -1,0 +1,8 @@
+{
+  "id": "template:integration-specialist",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "0a53efc4cceccb12f114771e428a7a57d10bc07d08b95c0c544245722d2f0e83",
+  "materialize": "copy",
+  "path": ".ai/skills/integration-specialist"
+}

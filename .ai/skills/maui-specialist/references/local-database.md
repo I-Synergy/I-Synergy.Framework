@@ -25,46 +25,46 @@ public class LocalDatabase
 
         _database = new SQLiteAsyncConnection(databasePath);
 
-        await _database.CreateTableAsync<BudgetLocal>();
-        await _database.CreateTableAsync<GoalLocal>();
+        await _database.CreateTableAsync<{Entity}Local>();
+        await _database.CreateTableAsync<{ChildEntity}Local>();
         await _database.CreateTableAsync<SyncQueue>();
     }
 
-    // Budget operations
-    public async Task<List<BudgetLocal>> GetBudgetsAsync()
+    // {Entity} operations
+    public async Task<List<{Entity}Local>> Get{Entities}Async()
     {
         await InitializeAsync();
-        return await _database!.Table<BudgetLocal>().ToListAsync();
+        return await _database!.Table<{Entity}Local>().ToListAsync();
     }
 
-    public async Task<BudgetLocal?> GetBudgetByIdAsync(Guid budgetId)
+    public async Task<{Entity}Local?> Get{Entity}ByIdAsync(Guid {entity}Id)
     {
         await InitializeAsync();
-        return await _database!.Table<BudgetLocal>()
-            .Where(b => b.BudgetId == budgetId)
+        return await _database!.Table<{Entity}Local>()
+            .Where(b => b.{Entity}Id == {entity}Id)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<int> SaveBudgetAsync(BudgetLocal budget)
+    public async Task<int> Save{Entity}Async({Entity}Local {entity})
     {
         await InitializeAsync();
 
-        if (budget.Id == 0)
+        if ({entity}.Id == 0)
         {
-            budget.CreatedDate = DateTimeOffset.UtcNow;
-            return await _database!.InsertAsync(budget);
+            {entity}.CreatedDate = DateTimeOffset.UtcNow;
+            return await _database!.InsertAsync({entity});
         }
         else
         {
-            budget.ChangedDate = DateTimeOffset.UtcNow;
-            return await _database!.UpdateAsync(budget);
+            {entity}.ChangedDate = DateTimeOffset.UtcNow;
+            return await _database!.UpdateAsync({entity});
         }
     }
 
-    public async Task<int> DeleteBudgetAsync(BudgetLocal budget)
+    public async Task<int> Delete{Entity}Async({Entity}Local {entity})
     {
         await InitializeAsync();
-        return await _database!.DeleteAsync(budget);
+        return await _database!.DeleteAsync({entity});
     }
 
     // Sync queue operations
@@ -101,19 +101,19 @@ public class LocalDatabase
 
 ### Local Entity Model
 ```csharp
-// File: Models/BudgetLocal.cs
+// File: Models/{Entity}Local.cs
 using SQLite;
 
 namespace {ApplicationName}.Mobile.Models;
 
-[Table("budgets")]
-public class BudgetLocal
+[Table("{entities}")]
+public class {Entity}Local
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
 
     [Indexed]
-    public Guid BudgetId { get; set; } = Guid.NewGuid();
+    public Guid {Entity}Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;

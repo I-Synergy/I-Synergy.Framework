@@ -1,0 +1,8 @@
+{
+  "id": "template:gap-review",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "4144a70de8c266a41cb7237f8398117ccec092d45463ec532313b0558b4a627d",
+  "materialize": "copy",
+  "path": ".ai/skills/gap-review"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-app-assets-lifecycle",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "d044aa16ce67ce27186d1c8b46369187a755957d1a991142ae22afc7a94cde97",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-app-assets-lifecycle"
+}

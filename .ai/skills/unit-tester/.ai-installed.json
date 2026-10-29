@@ -1,0 +1,8 @@
+{
+  "id": "template:unit-tester",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "17dfac46e382421d63b59f5c4a7bdc371e006588e22d6c3d41b65887cf1b4bef",
+  "materialize": "copy",
+  "path": ".ai/skills/unit-tester"
+}

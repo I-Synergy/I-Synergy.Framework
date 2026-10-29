@@ -1,0 +1,8 @@
+{
+  "id": "template:blazor-fluentui",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "1d52b03740e5841d30fecfbcb8314fbccaa21afee2a50db4cfb62b7cef69727b",
+  "materialize": "copy",
+  "path": ".ai/skills/blazor-fluentui"
+}

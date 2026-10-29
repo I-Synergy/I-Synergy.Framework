@@ -1,0 +1,11 @@
+# Ensure shell scripts always use LF so they run correctly on all platforms
+*.sh        text eol=lf
+
+# Python and config files — let git use platform defaults
+*.py        text
+*.md        text
+*.json      text
+*.ini       text
+*.txt       text
+*.yml       text
+*.yaml      text

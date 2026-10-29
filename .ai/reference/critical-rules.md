@@ -251,49 +251,49 @@ public int StatusId { get; set; }
 
 ## 13. Common Project: Centralize Shared Types
 
-Every solution MUST include a `{ApplicationName}.Common` project. Shared types — especially enumerations — MUST live in Common, never scattered across domain/data projects where they create circular or cross-dependency issues.
+Every solution MUST include a `I-Synergy.Framework.Common` project. Shared types — especially enumerations — MUST live in Common, never scattered across domain/data projects where they create circular or cross-dependency issues.
 
-All projects MUST reference `{ApplicationName}.Common` either directly or transitively (e.g., Services → Domain → Common).
+All projects MUST reference `I-Synergy.Framework.Common` either directly or transitively (e.g., Services → Domain → Common).
 
 ```
 // CORRECT — Enum defined once in Common, consumed everywhere
-// {ApplicationName}.Common/Enums/PaymentStatus.cs
+// I-Synergy.Framework.Common/Enums/PaymentStatus.cs
 public enum PaymentStatus { Pending, Succeeded, Failed }
 
-// {ApplicationName}.Domain.Payments references Common
-// {ApplicationName}.Data references Domain (transitively gets Common)
-// {ApplicationName}.Services references Domain (transitively gets Common)
+// I-Synergy.Framework.Domain.Payments references Common
+// I-Synergy.Framework.Data references Domain (transitively gets Common)
+// I-Synergy.Framework.Services references Domain (transitively gets Common)
 
 // WRONG — Enum defined in a domain project, forcing Data → Domain dependency for enums
-// {ApplicationName}.Domain.Payments/Enums/PaymentStatus.cs
+// I-Synergy.Framework.Domain.Payments/Enums/PaymentStatus.cs
 
 // WRONG — Duplicate enum definitions across projects
-// {ApplicationName}.Domain.Payments: PaymentStatus
-// {ApplicationName}.Models.Payments: PaymentStatus  (duplicate)
+// I-Synergy.Framework.Domain.Payments: PaymentStatus
+// I-Synergy.Framework.Models.Payments: PaymentStatus  (duplicate)
 ```
 
 Other types that belong in Common: shared constants, common interfaces (e.g., `IEntity`, `IAuditable`), reusable value objects, and extension methods used across multiple projects.
 
 ## 14. Entities and Models: Never Reference Each Other
 
-An entity MUST never reference a model, and a model MUST never reference an entity. If both projects need the same type, that type belongs in `{ApplicationName}.Common`.
+An entity MUST never reference a model, and a model MUST never reference an entity. If both projects need the same type, that type belongs in `I-Synergy.Framework.Common`.
 
 ```
 // CORRECT — Shared type extracted to Common
-// {ApplicationName}.Common/Enums/PaymentStatus.cs
+// I-Synergy.Framework.Common/Enums/PaymentStatus.cs
 public enum PaymentStatus { Pending, Succeeded, Failed }
 
-// {ApplicationName}.Entities.Payments/Payment.cs
+// I-Synergy.Framework.Entities.Payments/Payment.cs
 public class Payment { public PaymentStatus Status { get; set; } }
 
-// {ApplicationName}.Models.Payments/PaymentModel.cs
+// I-Synergy.Framework.Models.Payments/PaymentModel.cs
 public sealed record PaymentModel(PaymentStatus Status);
 
 // WRONG — Entity project references Models project for a shared enum
-// {ApplicationName}.Entities.Payments has a project reference to {ApplicationName}.Models.Payments
+// I-Synergy.Framework.Entities.Payments has a project reference to I-Synergy.Framework.Models.Payments
 
 // WRONG — Model project references Entities project for a shared enum
-// {ApplicationName}.Models.Payments has a project reference to {ApplicationName}.Entities.Payments
+// I-Synergy.Framework.Models.Payments has a project reference to I-Synergy.Framework.Entities.Payments
 ```
 
 A cross-reference between Entities and Models is the canary — it signals a type that should have been extracted to Common.
@@ -542,7 +542,7 @@ public sealed class GetEntityListQueryHandler(
 }
 ```
 
-The client project (`{ApplicationName}.Clients.Api` by default; `{ApplicationName}.Clients.{AppName}` for multi-app) must include:
+The client project (`I-Synergy.Framework.Clients.Api` by default; `I-Synergy.Framework.Clients.{AppName}` for multi-app) must include:
 - `Microsoft.Kiota.Bundle` and `Microsoft.Extensions.Http` NuGet packages
 - A `ServiceCollectionExtensions` that registers the client in DI with auth provider and base URL
 - Kiota-generated source files (`Api/`, `Models/`, `ApiClient.cs`) are committed — they are the source code of the client project
@@ -669,7 +669,7 @@ Before submitting code, verify you haven't violated these:
 - [ ] Progress files in current solution's `.ai/` folder
 - [ ] Plan files saved to `.ai/plans/` (not `docs/plans/`)
 - [ ] Session context read first and updated last
-- [ ] Solution includes `{ApplicationName}.Common` project with all enumerations centralized
+- [ ] Solution includes `I-Synergy.Framework.Common` project with all enumerations centralized
 - [ ] Entities and models never reference each other (cross-reference = belongs in Common)
 - [ ] Enum names are plural (except *Status suffix enums)
 - [ ] EF Core entity properties use enum types, not raw int

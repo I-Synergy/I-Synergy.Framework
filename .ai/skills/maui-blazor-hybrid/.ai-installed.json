@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-blazor-hybrid",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "808d18a9c25d59cf9db92f221be7b1f9bc8649f0509888dee21b068b02cc3fe0",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-blazor-hybrid"
+}

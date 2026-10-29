@@ -1,0 +1,8 @@
+{
+  "id": "template:maui-specialist",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "7d93e1cec23835f37572467623b9c0301c97c5af14d2a275eaccd4f93d49d7cf",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-specialist"
+}

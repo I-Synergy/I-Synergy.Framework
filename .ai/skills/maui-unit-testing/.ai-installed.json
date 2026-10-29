@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-unit-testing",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "5d95142089816e39b53975a9d236d32216c4eb31731e7374e4b8d3019bb9e792",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-unit-testing"
+}

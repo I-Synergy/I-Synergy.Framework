@@ -33,7 +33,7 @@ Validates the directory structure and presence of all required files.
 - Required reference files are present
 - Template files exist
 - The checklist file exists
-- Main documentation files (`CLAUDE.md`, `README.md`, `.ai/session-context.md`)
+- Main documentation files (`AGENTS.md`, `README.md`, `.ai/session-context.md`)
 
 **Run individually:**
 ```bash
@@ -63,7 +63,7 @@ python3 .ai/tests/validate-skills.py
 Validates file references and links throughout the documentation.
 
 **What it checks:**
-- File references in CLAUDE.md exist
+- File references in AGENTS.md exist
 - Skill references are valid
 - Pattern file references are valid
 - Template file references exist
@@ -108,9 +108,9 @@ Validates template token usage and consistency.
 bash .ai/tests/validate-tokens.sh
 ```
 
-### CLAUDE.md References (`validate-claude-md.py`)
+### AGENTS.md References (`validate-agents-md.py`)
 
-Validates every `.ai/` path referenced from `CLAUDE.md`, and flags skills and patterns that exist on disk but are referenced by no task type.
+Validates every `.ai/` path referenced from `AGENTS.md`, and flags skills and patterns that exist on disk but are referenced by no task type.
 
 **What it checks:**
 - Skill references point at an existing `.ai/skills/{name}/SKILL.md`
@@ -120,7 +120,7 @@ Validates every `.ai/` path referenced from `CLAUDE.md`, and flags skills and pa
 
 **Run individually:**
 ```bash
-python3 .ai/tests/validate-claude-md.py
+python3 .ai/tests/validate-agents-md.py
 ```
 
 ### Settings & Structure (`validate-settings.py`)
@@ -171,22 +171,6 @@ Integration tests that verify the template works as a whole.
 python3 .ai/tests/smoke-test.py
 ```
 
-### Reasonix Integration (`validate-reasonix.py`)
-
-Validates the Reasonix Code integration.
-
-**What it checks:**
-- `REASONIX.md` exists and references paths that resolve
-- `.reasonix/skills/` and `.reasonix/agents/` are folder-level junctions into `.ai/`
-- `.claude/settings.json` includes Reasonix in permissions and hooks
-- The sync scripts create and repair the `.reasonix/` junctions
-- Session-management docs mention Reasonix
-
-**Run individually:**
-```bash
-python3 .ai/tests/validate-reasonix.py
-```
-
 ### Traceability (`validate-traceability.py`)
 
 Validates the identifier chain that joins story and use-case documents to blueprints, feature files and test code.
@@ -195,7 +179,7 @@ Validates the identifier chain that joins story and use-case documents to bluepr
 - T1–T4 (failures) — duplicate `US-`/`UC-`/`AC-` identifiers, `@AC-…` scenario tags that resolve to no declared criterion, every identifier a blueprint's `source` names resolving — `use_cases` and `user_stories` as well as `acceptance_criteria`, with a `source` that names neither key failing as untraceable by construction — and `[TestCategory("AC-…")]` attributes that resolve
 - T5–T6 (advisories) — a declared criterion with no tagged scenario, and a declared criterion with no slice or no test-side reference
 - T7 (advisory) — a legacy or partly-labelled *story or use-case* document, reported once per document rather than once per entry; a context history, glossary or note beside them is out of scope
-- A padded child number (`AC-Budget-014.02`) resolves and is reported as an advisory — `{n}` is unpadded
+- A padded child number (`AC-Widget-014.02`) resolves and is reported as an advisory — `{n}` is unpadded
 - Exit code `1` only when a reference is broken; advisory warnings do not change it
 
 This tree ships no `docs/` tree and no test sources, so the suite passes here by finding nothing to check.
@@ -225,22 +209,6 @@ No solution file is present in this tree, so nothing is generated here, the evid
 python3 .ai/tests/validate-standards.py
 ```
 
-### DeepSeek Parity (`validate-deepseek-parity.py`)
-
-Validates that `DEEPSEEK.md` carries the same level-2 section structure as `CLAUDE.md`. The PowerShell profile backs up `CLAUDE.md` and copies `DEEPSEEK.md` over it for the length of a DeepSeek session, so a section one file carries and the other does not is silently erased for that session.
-
-**What it checks:**
-- Every level-2 heading in `CLAUDE.md` is present in `DEEPSEEK.md`, and every level-2 heading in `DEEPSEEK.md` is present in `CLAUDE.md`
-- The core sections both files are built on are present in both, so a section lost from both files is still caught
-- Section order differing between the files is an advisory, not a failure
-- **Structural parity, not byte equality** — the two files differ on purpose in their title, identity sentence and model-tier paragraph, and during a profile swap the working tree's `CLAUDE.md` *is* `DEEPSEEK.md`
-- An absent file is a skip, not a defect: with no `CLAUDE.md` or no `DEEPSEEK.md` there is nothing to compare, and the suite exits `0`
-
-**Run individually:**
-```bash
-python3 .ai/tests/validate-deepseek-parity.py
-```
-
 ### Upgrade Script (`validate-upgrade-script.py`) — pytest only
 
 `run-all-tests.sh` does not run this suite; `test_suite.py` does, which makes pytest the fuller run.
@@ -268,12 +236,12 @@ All test scripts follow standard Unix conventions:
 - Standard Unix tools: `grep`, `find`, `wc`
 
 ### Python Scripts
-- Python 3.8 or higher
-- `PyYAML` library
+- Python 3.10 or higher (CI runs 3.14)
+- `PyYAML` and `pytest` (pinned in `requirements-dev.txt`)
 
 Install Python dependencies:
 ```bash
-pip install pyyaml
+PIP_CONFIG_FILE=pip.ini pip install -r requirements-dev.txt
 ```
 
 ## CI/CD Integration
@@ -295,15 +263,15 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
+          python-version: '3.14'
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -r requirements-dev.txt
 
       - name: Make scripts executable
         run: chmod +x .ai/tests/*.sh
@@ -318,9 +286,9 @@ Create `.gitlab-ci.yml`:
 
 ```yaml
 validate:
-  image: python:3.11
+  image: python:3.14
   script:
-    - pip install pyyaml
+    - pip install -r requirements-dev.txt
     - chmod +x .ai/tests/*.sh
     - .ai/tests/run-all-tests.sh
 ```
@@ -422,7 +390,7 @@ chmod +x .ai/tests/*.sh
 
 Install PyYAML:
 ```bash
-pip install pyyaml
+pip install -r requirements-dev.txt
 ```
 
 ### Path issues on Windows
@@ -435,7 +403,7 @@ Use Git Bash or WSL to run the tests. The scripts use Unix-style paths.
 
 - Before committing changes to the template
 - After adding new skills or patterns
-- After modifying CLAUDE.md or other documentation
+- After modifying AGENTS.md or other documentation
 - Before creating a new template release
 - In CI/CD pipeline on every commit
 

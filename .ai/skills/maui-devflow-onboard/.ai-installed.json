@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui-tooling:maui-devflow-onboard",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "1d832134e0111e100af58b7c41f63d28296a7d017e9670a9501e78055c738dc2",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-devflow-onboard"
+}

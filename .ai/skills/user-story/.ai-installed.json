@@ -1,0 +1,8 @@
+{
+  "id": "template:user-story",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "36799764a00014f42626fcc43754f79372b1a38f44f009adc5d3f9c026bd45d0",
+  "materialize": "copy",
+  "path": ".ai/skills/user-story"
+}

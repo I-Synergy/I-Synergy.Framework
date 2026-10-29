@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-app-architecture",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "4e5589befdd08bcb3084305bcbba6290e80ab66cd7f2b70ed35854bec5aab18f",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-app-architecture"
+}

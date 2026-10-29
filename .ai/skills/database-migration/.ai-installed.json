@@ -1,0 +1,8 @@
+{
+  "id": "template:database-migration",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "dbd93be0ea87dbbd8c4a21d4c756dc91151659431c1f649667818b8cdb9de904",
+  "materialize": "copy",
+  "path": ".ai/skills/database-migration"
+}

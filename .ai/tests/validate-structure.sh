@@ -193,7 +193,7 @@ echo ""
 # Check scripts
 echo "9. Checking scripts..."
 scripts=(
-    ".ai/scripts/sync-skills.py"
+    ".ai/scripts/sync-platforms.py"
     ".ai/scripts/upgrade-template.py"
 )
 

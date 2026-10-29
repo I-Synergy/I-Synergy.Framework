@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-auth-secure-storage",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "a7ddae7b48f4463482118b46f2f2cf7fc4430642cb583bb76fb99869a2333573",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-auth-secure-storage"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-xcode27-migration",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "6dcac0813ce9931323dacbbca54df9ca5e361ab6b5cd20d34d166d9f40467fb9",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-xcode27-migration"
+}

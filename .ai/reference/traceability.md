@@ -240,7 +240,7 @@ with the scenarios; the executable copy is never stripped.
 **Test classes.** Two identifiers, two vehicles:
 
 ```csharp
-// File: tests/{ApplicationName}.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs
+// File: tests/I-Synergy.Framework.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs
 // Traces: US-Budget-014 / AC-Budget-014.1, AC-Budget-014.2
 
 [TestClass]
@@ -436,15 +436,15 @@ Feature: Record a budget
     Then the creation fails with a validation error
 ```
 
-**4 — Test class.** `tests/{ApplicationName}.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs`
+**4 — Test class.** `tests/I-Synergy.Framework.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs`
 
 ```csharp
-// File: tests/{ApplicationName}.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs
+// File: tests/I-Synergy.Framework.Budget.Tests/Budget/CreateBudgetCommandHandlerTests.cs
 // Traces: US-Budget-014 / AC-Budget-014.1, AC-Budget-014.2
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace {ApplicationName}.Budget.Tests.Budget;
+namespace I-Synergy.Framework.Budget.Tests.Budget;
 
 [TestClass]
 public class CreateBudgetCommandHandlerTests

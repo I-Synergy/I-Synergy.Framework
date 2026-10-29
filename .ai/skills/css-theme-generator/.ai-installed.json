@@ -1,0 +1,8 @@
+{
+  "id": "template:css-theme-generator",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "94fe56bde84bb66b16c67f96dcaa45834e07fbb07ffdba4c2fa8dcfde71c4259",
+  "materialize": "copy",
+  "path": ".ai/skills/css-theme-generator"
+}

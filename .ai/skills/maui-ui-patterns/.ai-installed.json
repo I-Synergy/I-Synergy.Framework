@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-ui-patterns",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "e109a2cf6fd4137da54781a7777af5ea94409239a75a113538a34b1e0d3e26aa",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-ui-patterns"
+}

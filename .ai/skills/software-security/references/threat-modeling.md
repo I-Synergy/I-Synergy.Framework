@@ -12,14 +12,14 @@ STRIDE threat modelling: assets, trust boundaries and the threat catalogue. Load
 - **D**enial of Service - Can the system be made unavailable?
 - **E**levation of Privilege - Can a user gain unauthorized access?
 
-### Example Threat Model for Budget API
+### Example Threat Model for {Entity} API
 
 ```markdown
-# Budget API Threat Model
+# {Entity} API Threat Model
 
 ### Assets
 - User data (email, password hashes)
-- Budget data (amounts, categories)
+- {Entity} data (amounts, categories)
 - Authentication tokens
 
 ### Trust Boundaries
@@ -34,15 +34,15 @@ STRIDE threat modelling: assets, trust boundaries and the threat catalogue. Load
 - **Mitigation:** Short-lived tokens, HTTPS only, secure storage
 
 ### Tampering
-- **Threat:** Attacker modifies budget amounts in transit
+- **Threat:** Attacker modifies {entity} amounts in transit
 - **Mitigation:** HTTPS, request signing, integrity checks
 
 ### Repudiation
-- **Threat:** User denies creating a budget
+- **Threat:** User denies creating a {entity}
 - **Mitigation:** Audit logging with timestamps, correlation IDs
 
 ### Information Disclosure
-- **Threat:** Attacker accesses other users' budgets
+- **Threat:** Attacker accesses other users' {entities}
 - **Mitigation:** Authorization checks, resource-based access control
 
 ### Denial of Service

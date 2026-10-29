@@ -1,0 +1,8 @@
+{
+  "id": "template:ui-core",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "719e3ba37cab6c164ed24aa434e6b213689b9bdac20073a9bb18ddd9f16d8061",
+  "materialize": "copy",
+  "path": ".ai/skills/ui-core"
+}

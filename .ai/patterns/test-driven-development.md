@@ -24,7 +24,7 @@ graph LR
 Write a test for the next bit of functionality you want to add. The test should fail because the functionality doesn't exist yet.
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/CreateBudgetCommandHandlerTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Handlers/CreateBudgetCommandHandlerTests.cs
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -53,7 +53,7 @@ public sealed class CreateBudgetCommandHandlerTests
 Write the minimum amount of code necessary to make the test pass. Don't worry about perfect code yet.
 
 ```csharp
-// File: {ApplicationName}.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommand.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommand.cs
 
 public sealed record CreateBudgetCommand(
     string Name,
@@ -63,7 +63,7 @@ public sealed record CreateBudgetCommand(
 
 public sealed record CreateBudgetResponse(Guid BudgetId);
 
-// File: {ApplicationName}.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommandHandler.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommandHandler.cs
 
 public sealed class CreateBudgetCommandHandler : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
 {
@@ -85,7 +85,7 @@ public sealed class CreateBudgetCommandHandler : ICommandHandler<CreateBudgetCom
 Now that the test passes, refactor the code to improve its design without changing its behavior.
 
 ```csharp
-// File: {ApplicationName}.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommandHandler.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/Budget/Commands/CreateBudgetCommandHandler.cs
 
 public sealed class CreateBudgetCommandHandler(
     DataContext dataContext,
@@ -288,7 +288,7 @@ public async Task CreateBudget_WhenNameIsTooShort_ThenThrowsException()
 ### Unit Test Example with Mocking
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/UpdateBudgetCommandHandlerTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Handlers/UpdateBudgetCommandHandlerTests.cs
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -386,7 +386,7 @@ public sealed class UpdateBudgetCommandHandlerTests
 ### Integration Test Example
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Integration/BudgetEndpointsTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Integration/BudgetEndpointsTests.cs
 
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -522,7 +522,7 @@ public sealed class BudgetEndpointsTests
 Gherkin provides a business-readable syntax for defining behavior.
 
 ```gherkin
-# File: tests/{ApplicationName}.{Domain}.Tests/Features/BudgetManagement.feature
+# File: tests/I-Synergy.Framework.{Domain}.Tests/Features/BudgetManagement.feature
 
 Feature: Budget Management
   As a user
@@ -584,7 +584,7 @@ Feature: Budget Management
 ### Step Definitions
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Steps/BudgetManagementSteps.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Steps/BudgetManagementSteps.cs
 
 using Reqnroll;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -1254,7 +1254,7 @@ private static void ValidateCommand(CreateBudgetCommand command)
 ### Command Handler TDD Example
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/DeleteBudgetCommandHandlerTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Handlers/DeleteBudgetCommandHandlerTests.cs
 
 [TestClass]
 public sealed class DeleteBudgetCommandHandlerTests
@@ -1318,7 +1318,7 @@ public sealed class DeleteBudgetCommandHandlerTests
 ### Query Handler TDD Example
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/GetBudgetsListQueryHandlerTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Handlers/GetBudgetsListQueryHandlerTests.cs
 
 [TestClass]
 public sealed class GetBudgetsListQueryHandlerTests

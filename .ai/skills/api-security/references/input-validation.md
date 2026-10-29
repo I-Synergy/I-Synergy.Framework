@@ -6,7 +6,7 @@ Data annotations, `IValidatableObject` custom validation, and file-upload valida
 
 ### Data Annotations
 ```csharp
-public sealed record CreateBudgetCommand(
+public sealed record Create{Entity}Command(
     [Required]
     [StringLength(100, MinimumLength = 3)]
     [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Name contains invalid characters")]
@@ -18,16 +18,16 @@ public sealed record CreateBudgetCommand(
     [DataType(DataType.EmailAddress)]
     [EmailAddress]
     string NotificationEmail
-) : ICommand<CreateBudgetResponse>;
+) : ICommand<Create{Entity}Response>;
 ```
 
 ### Custom Validation
 ```csharp
-public sealed record CreateBudgetCommand(
+public sealed record Create{Entity}Command(
     string Name,
     decimal Amount,
     DateTimeOffset StartDate
-) : ICommand<CreateBudgetResponse>, IValidatableObject
+) : ICommand<Create{Entity}Response>, IValidatableObject
 {
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

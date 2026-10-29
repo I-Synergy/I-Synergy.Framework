@@ -1,0 +1,8 @@
+{
+  "id": "template:code-reviewer",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "c6819f17c05810ba2ce0716326c56585dcf212a84a79d043e05ac3c38519d710",
+  "materialize": "copy",
+  "path": ".ai/skills/code-reviewer"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "template:usecase-specification",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "d9bce4e16eadbca6a103fbbcf9cc02968b79ffd4a0cee4380a29c82397446125",
+  "materialize": "copy",
+  "path": ".ai/skills/usecase-specification"
+}

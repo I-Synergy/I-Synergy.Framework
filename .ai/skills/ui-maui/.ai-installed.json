@@ -1,0 +1,8 @@
+{
+  "id": "template:ui-maui",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "1e356516c8cb4635de29b196ab8765d04a254d09766c9073c2465c95f52ba6c5",
+  "materialize": "copy",
+  "path": ".ai/skills/ui-maui"
+}

@@ -13,7 +13,7 @@ public abstract class TenantEntity
 }
 
 // Global query filter
-modelBuilder.Entity<Budget>()
+modelBuilder.Entity<{Entity}>()
     .HasQueryFilter(b => b.TenantId == _currentTenantId);
 
 // Index on TenantId
@@ -23,7 +23,7 @@ builder.HasIndex(e => e.TenantId);
 ### Approach 2: Shared Database, Separate Schemas
 ```csharp
 // Use different schemas per tenant
-builder.ToTable("budgets", schema: _tenantSchema);
+builder.ToTable("{entities}", schema: _tenantSchema);
 ```
 
 ### Approach 3: Separate Databases

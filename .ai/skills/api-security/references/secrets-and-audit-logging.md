@@ -36,14 +36,14 @@ var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD")
 ## Audit Logging
 
 ```csharp
-public sealed class CreateBudgetCommandHandler(
+public sealed class Create{Entity}CommandHandler(
     DataContext dataContext,
-    ILogger<CreateBudgetCommandHandler> logger,
+    ILogger<Create{Entity}CommandHandler> logger,
     IHttpContextAccessor httpContextAccessor
-) : ICommandHandler<CreateBudgetCommand, CreateBudgetResponse>
+) : ICommandHandler<Create{Entity}Command, Create{Entity}Response>
 {
-    public async Task<CreateBudgetResponse> HandleAsync(
-        CreateBudgetCommand command,
+    public async Task<Create{Entity}Response> HandleAsync(
+        Create{Entity}Command command,
         CancellationToken cancellationToken = default)
     {
         var userId = httpContextAccessor.HttpContext?.User
@@ -53,30 +53,30 @@ public sealed class CreateBudgetCommandHandler(
 
         // Audit log
         logger.LogInformation(
-            "User {UserId} from IP {IpAddress} creating Budget with Name {BudgetName}. CorrelationId: {CorrelationId}",
+            "User {UserId} from IP {IpAddress} creating {Entity} with Name {Entity}Name. CorrelationId: {CorrelationId}",
             userId, ipAddress, command.Name, Activity.Current?.Id);
 
-        // Create budget
-        var entity = new Entities.Budgets.Budget
+        // Create {entity}
+        var entity = new Entities.{Entities}.{Entity}
         {
-            BudgetId = Guid.NewGuid(),
+            {Entity}Id = Guid.NewGuid(),
             Name = command.Name,
             Amount = command.Amount,
             CreatedBy = userId
         };
 
-        dataContext.Budgets.Add(entity);
+        dataContext.{Entities}.Add(entity);
         var rowsAffected = await dataContext.SaveChangesAsync(cancellationToken);
 
         if (rowsAffected == 0)
-            throw new InvalidOperationException("Failed to create budget");
+            throw new InvalidOperationException("Failed to create {entity}");
 
         // Audit log success
         logger.LogInformation(
-            "User {UserId} successfully created Budget {BudgetId}. CorrelationId: {CorrelationId}",
-            userId, entity.BudgetId, Activity.Current?.Id);
+            "User {UserId} successfully created {Entity}Id. CorrelationId: {CorrelationId}",
+            userId, entity.{Entity}Id, Activity.Current?.Id);
 
-        return new CreateBudgetResponse(entity.BudgetId);
+        return new Create{Entity}Response(entity.{Entity}Id);
     }
 }
 ```

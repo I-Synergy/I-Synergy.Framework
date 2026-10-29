@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/I-Synergy/AI/catalog/schemas/lock.schema.json",
+  "title": "AI catalog lock",
+  "description": "Resolved selection lock (.ai/ai.lock.json). Records, per selected item, the source revision, install path and content hash so drift is detectable offline without diffing against upstream. This file is the only thing upgrade logic trusts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lockVersion",
+    "resolved"
+  ],
+  "properties": {
+    "lockVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "Lock format version. Only 1 is produced or understood in Phase 0."
+    },
+    "resolved": {
+      "type": "array",
+      "description": "Resolved items, sorted by (kind, id).",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "description": "One resolved item: where it came from, where it lives, and the hash it must have.",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ref",
+        "path",
+        "sha256",
+        "files",
+        "license",
+        "upstream"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Selection id in 'source:name' form. Unique together with 'kind' (a skill and an agent may share a name)."
+        },
+        "kind": {
+          "enum": [
+            "skill",
+            "agent",
+            "instruction",
+            "prompt",
+            "plugin",
+            "hook"
+          ],
+          "description": "Item kind, part of the entry's identity. Optional only so older lock files stay readable; catalog.py always writes it."
+        },
+        "source": {
+          "type": "string",
+          "description": "Catalog source the item was resolved from ('template' or a third-party source id). Provenance for the copy on disk."
+        },
+        "ref": {
+          "type": "string",
+          "description": "Pinned source revision the item was resolved at (copied from the manifest)."
+        },
+        "path": {
+          "type": "string",
+          "description": "Install path relative to the project root, POSIX separators (e.g. '.ai/skills/council'). The only paths prune is ever allowed to delete."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "Item hash recorded at materialisation time: sha256 over the sorted '<relpath>\\u0000<content-sha256>' lines of the item's files, excluding markers and __pycache__."
+        },
+        "files": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of files the recorded hash covers."
+        },
+        "license": {
+          "type": "string",
+          "description": "License of the item content at resolution time (MIT for the template source)."
+        },
+        "upstream": {
+          "type": "string",
+          "description": "Provenance URL: https://github.com/<repo>/tree/<ref>/<path>."
+        },
+        "materialize": {
+          "enum": [
+            "link",
+            "copy"
+          ],
+          "description": "How the item was placed on disk. A change of mode makes sync re-materialise the item."
+        }
+      }
+    }
+  }
+}

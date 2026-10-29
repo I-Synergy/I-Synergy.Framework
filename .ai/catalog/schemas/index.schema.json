@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/I-Synergy/AI/catalog/schemas/index.schema.json",
+  "title": "AI catalog index",
+  "description": "Generated, committed index of everything the catalog offers (catalog/index.json). Written by 'catalog.py index'; never hand-edited. Entries are sorted by (id, kind) so the file diffs cleanly.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "indexVersion",
+    "generatedBy",
+    "items"
+  ],
+  "properties": {
+    "indexVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "Index format version. Only 1 is produced or understood in Phase 0."
+    },
+    "generatedBy": {
+      "type": "string",
+      "description": "Command that regenerates this file, recorded for humans reading a diff."
+    },
+    "items": {
+      "type": "array",
+      "description": "Every available item, sorted by id then kind.",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "shadowed": {
+      "type": "array",
+      "description": "Items skipped because an earlier source already offers the same name for that kind. Reported, never dropped silently.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "by",
+          "path"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "by": {
+            "type": "string",
+            "description": "The id that kept the name."
+          },
+          "path": {
+            "type": "string",
+            "description": "The install path they both wanted."
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "description": "One available catalog item.",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source",
+        "kind",
+        "name",
+        "path",
+        "description",
+        "category",
+        "tags",
+        "ref",
+        "sha256",
+        "files",
+        "license",
+        "upstream",
+        "requires",
+        "sourcePath"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Namespaced selection id, always 'source:name' (the template source is written bare in the manifest but fully here)."
+        },
+        "source": {
+          "type": "string",
+          "description": "Source id this item comes from; Phase 0 has only 'template'."
+        },
+        "kind": {
+          "enum": [
+            "skill",
+            "agent",
+            "instruction",
+            "prompt",
+            "plugin",
+            "hook"
+          ],
+          "description": "Item kind. ids are unique per kind, not across kinds."
+        },
+        "name": {
+          "type": "string",
+          "description": "Item name: the skill directory name or the agent file stem."
+        },
+        "path": {
+          "type": "string",
+          "description": "Path of the item relative to the source root, POSIX separators (e.g. '.ai/skills/council')."
+        },
+        "sourcePath": {
+          "type": "string",
+          "description": "Path of the item inside its resolved source (e.g. 'skills/council' upstream, '.ai/skills/council' for the template). `path` is the installed location; the two differ for an external catalog."
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description taken from the YAML frontmatter; empty when the frontmatter has none."
+        },
+        "category": {
+          "type": "string",
+          "description": "Category id from catalog/categories.json. Declared in the item's frontmatter, or resolved from the source's keyword rules for sources that declare nothing. 'uncategorised' is the visible fallback."
+        },
+        "tags": {
+          "type": "array",
+          "description": "Extra cross-cutting tags from the item's frontmatter. A tag that names a category is promoted to the category, so `mobile` + `tags: testing` lands under Mobile and stays findable by 'testing'.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ref": {
+          "type": "string",
+          "description": "Source revision this entry was indexed at, copied from the manifest's sources.template.ref."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "Item hash: sha256 over the sorted '<relpath>\\u0000<content-sha256>' lines of every file in the item, excluding markers and __pycache__."
+        },
+        "files": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of files the item hash covers."
+        },
+        "license": {
+          "type": "string",
+          "description": "License of the source content (MIT for the template source)."
+        },
+        "upstream": {
+          "type": "string",
+          "description": "Provenance URL: https://github.com/<repo>/tree/<ref>/<path>."
+        },
+        "requires": {
+          "type": "array",
+          "description": "Ids this item depends on: an agent's declared `skills:` frontmatter, or a skill's `requires:`. Always in the same source. A reference the catalog cannot satisfy is left here verbatim and only becomes fatal when the item is selected.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

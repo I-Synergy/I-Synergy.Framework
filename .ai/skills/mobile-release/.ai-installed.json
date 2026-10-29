@@ -1,0 +1,8 @@
+{
+  "id": "template:mobile-release",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "c7b2d3596eace11236608c836d9478d2a46adf0bc14cf7f22782d8d51765cf01",
+  "materialize": "copy",
+  "path": ".ai/skills/mobile-release"
+}

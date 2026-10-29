@@ -16,8 +16,13 @@ TOKENS=(
     "{ApplicationName}"
     "{Domain}"
     "{Entity}"
+    "{Entities}"
     "{entity}"
     "{entities}"
+    "{ChildEntity}"
+    "{ChildEntities}"
+    "{childEntity}"
+    "{childEntities}"
 )
 
 # Function to check if file uses tokens properly
@@ -66,7 +71,7 @@ check_hardcoded_names() {
 
     # Check for common hardcoded names (examples that shouldn't be in templates)
     hardcoded_patterns=(
-        "BudgetTracker"
+        "ContosoApp"
         "MyApplication"
         "SampleApp"
     )

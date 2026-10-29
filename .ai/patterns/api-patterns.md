@@ -17,9 +17,9 @@ Based on the reference implementation in `ISynergy.Service.Api/Endpoints/`.
 ## Complete Endpoint Example
 
 ```csharp
-// File: {ApplicationName}.Services.{Domain}/Endpoints/v1/{Entity}Endpoints.cs
+// File: I-Synergy.Framework.Services.{Domain}/Endpoints/v1/{Entity}Endpoints.cs
 
-namespace {ApplicationName}.Services.{Domain}.Endpoints.v1;
+namespace I-Synergy.Framework.Services.{Domain}.Endpoints.v1;
 
 using Asp.Versioning;
 using Asp.Versioning.Builder;
@@ -440,7 +440,7 @@ Use Data Annotations on request models and a reusable validation filter. Every P
 **Model with validation attributes:**
 
 ```csharp
-// File: {ApplicationName}.Models.{Domain}/{Entity}.cs
+// File: I-Synergy.Framework.Models.{Domain}/{Entity}.cs
 
 using System.ComponentModel.DataAnnotations;
 
@@ -460,7 +460,7 @@ public sealed record {Entity}
 **Reusable validation filter:**
 
 ```csharp
-// File: {ApplicationName}.Service.Api/Extensions/ValidationExtensions.cs
+// File: I-Synergy.Framework.Service.Api/Extensions/ValidationExtensions.cs
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -510,7 +510,7 @@ The filter runs before the endpoint. If validation fails, it returns a 400 with 
 All API endpoints must be protected by rate limiting to prevent abuse and DoS:
 
 ```csharp
-// File: {ApplicationName}.Service.Api/Program.cs
+// File: I-Synergy.Framework.Service.Api/Program.cs
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -540,13 +540,13 @@ group.MapPost("", Add{Entity}Async)
 Cross-Origin Resource Sharing must be explicitly configured for web clients:
 
 ```csharp
-// File: {ApplicationName}.Service.Api/Program.cs
+// File: I-Synergy.Framework.Service.Api/Program.cs
 
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("https://{ApplicationName}.App.Api")
+        policy.WithOrigins("https://I-Synergy.Framework.App.Api")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -585,7 +585,7 @@ app.Run();
 HTTPS redirection is mandatory for all environments:
 
 ```csharp
-// File: {ApplicationName}.Service.Api/Program.cs
+// File: I-Synergy.Framework.Service.Api/Program.cs
 
 var app = builder.Build();
 
@@ -655,7 +655,7 @@ group.MapDelete("{id}", Remove{Entity}Async)
 Every API project `.csproj` must include the MSBuild properties and package reference to generate the OpenAPI spec at build time:
 
 ```xml
-<!-- File: {ApplicationName}.Service.Api/{ApplicationName}.Service.Api.csproj -->
+<!-- File: I-Synergy.Framework.Service.Api/I-Synergy.Framework.Service.Api.csproj -->
 
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
@@ -677,7 +677,7 @@ Every API project `.csproj` must include the MSBuild properties and package refe
 
   <!-- Generate Kiota client from OpenAPI spec on every build -->
   <Target Name="OpenAPI" AfterTargets="Build">
-    <Exec Command="dotnet kiota generate -l CSharp --output ../{ApplicationName}.Clients.Api --namespace-name {ApplicationName}.Clients.Api --class-name ApiClient --exclude-backward-compatible --openapi ../../openapi/{ApplicationName}.Api.json" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="dotnet kiota generate -l CSharp --output ../I-Synergy.Framework.Clients.Api --namespace-name I-Synergy.Framework.Clients.Api --class-name ApiClient --exclude-backward-compatible --openapi ../../openapi/I-Synergy.Framework.Api.json" WorkingDirectory="$(ProjectDir)" />
   </Target>
 
 </Project>
@@ -694,7 +694,7 @@ Every API project `.csproj` must include the MSBuild properties and package refe
 Without a `servers` entry, the generated OpenAPI spec has no base URL — Kiota clients won't know where to send requests. Always add a document transformer that sets the server URL:
 
 ```csharp
-// File: {ApplicationName}.Service.Api/Program.cs
+// File: I-Synergy.Framework.Service.Api/Program.cs
 
 builder.Services.AddOpenApi(options =>
 {
@@ -713,7 +713,7 @@ The URL uses the .NET Aspire service discovery short name — `https://api`. Asp
 **Without schema transformers, Kiota generates all model properties as `UntypedNode` instead of their actual types.** The default OpenAPI generation infers types incorrectly for many .NET primitives. Always add a schema transformer in `Program.cs` (or via `.AddOpenApi()`) that explicitly maps every .NET type to its correct JSON schema representation:
 
 ```csharp
-// File: {ApplicationName}.Service.Api/Program.cs
+// File: I-Synergy.Framework.Service.Api/Program.cs
 
 builder.Services.AddOpenApi(options =>
 {
@@ -893,53 +893,53 @@ This transformer is non-negotiable — without it, the OpenAPI spec omits type i
 
 ### Naming Convention
 
-For a **single-app** project, the client is simply `{ApplicationName}.Clients.Api`:
+For a **single-app** project, the client is simply `I-Synergy.Framework.Clients.Api`:
 
 | Consuming App | | Kiota Client |
 |---------------|---|--------------|
-| `{ApplicationName}.App.Api` | → | `{ApplicationName}.Clients.Api` |
+| `I-Synergy.Framework.App.Api` | → | `I-Synergy.Framework.Clients.Api` |
 
 For **multi-app** projects, each consuming app gets its own client by swapping `App` for `Clients`:
 
 | Consuming App | | Kiota Client |
 |---------------|---|--------------|
-| `{ApplicationName}.App.Business` | → | `{ApplicationName}.Clients.Business` |
-| `{ApplicationName}.App.Business.Web` | → | `{ApplicationName}.Clients.Business.Web` |
-| `{ApplicationName}.App.Business.Maui` | → | `{ApplicationName}.Clients.Business.Maui` |
+| `I-Synergy.Framework.App.Business` | → | `I-Synergy.Framework.Clients.Business` |
+| `I-Synergy.Framework.App.Business.Web` | → | `I-Synergy.Framework.Clients.Business.Web` |
+| `I-Synergy.Framework.App.Business.Maui` | → | `I-Synergy.Framework.Clients.Business.Maui` |
 
-Pattern: `{ApplicationName}.Clients.Api` for single-app; `{ApplicationName}.Clients.{AppName}` for multi-app.
+Pattern: `I-Synergy.Framework.Clients.Api` for single-app; `I-Synergy.Framework.Clients.{AppName}` for multi-app.
 
 ### Solution Layout
 
 ```
 solution/
 ├── openapi/                                    # Generated OpenAPI specs
-│   └── {ApplicationName}.Service.Api.json
+│   └── I-Synergy.Framework.Service.Api.json
 ├── src/
-│   ├── {ApplicationName}.Service.Api/          # API project (produces spec)
-│   │   └── {ApplicationName}.Service.Api.csproj
-│   ├── {ApplicationName}.App.Business/         # Consuming app (Blazor Server)
-│   ├── {ApplicationName}.App.Business.Web/     # Consuming app (WebAssembly)
-│   ├── {ApplicationName}.Clients.Api/          # Default client (single-app)
-│   │   ├── {ApplicationName}.Clients.Api.csproj
+│   ├── I-Synergy.Framework.Service.Api/          # API project (produces spec)
+│   │   └── I-Synergy.Framework.Service.Api.csproj
+│   ├── I-Synergy.Framework.App.Business/         # Consuming app (Blazor Server)
+│   ├── I-Synergy.Framework.App.Business.Web/     # Consuming app (WebAssembly)
+│   ├── I-Synergy.Framework.Clients.Api/          # Default client (single-app)
+│   │   ├── I-Synergy.Framework.Clients.Api.csproj
 │   │   ├── ApiClient.cs                        # Kiota-generated entry point
 │   │   ├── Api/                                # Kiota-generated request builders
 │   │   ├── Models/                             # Kiota-generated models
 │   │   └── kiota-lock.json                     # Generation lock file
-│   ├── {ApplicationName}.Clients.Business/     # Client for App.Business
-│   │   ├── {ApplicationName}.Clients.Business.csproj
+│   ├── I-Synergy.Framework.Clients.Business/     # Client for App.Business
+│   │   ├── I-Synergy.Framework.Clients.Business.csproj
 │   │   ├── ApiClient.cs
 │   │   ├── Api/
 │   │   ├── Models/
 │   │   └── kiota-lock.json
-│   └── {ApplicationName}.Clients.Business.Web/ # Client for App.Business.Web
+│   └── I-Synergy.Framework.Clients.Business.Web/ # Client for App.Business.Web
 │       └── ...
 ```
 
 ### Client Project .csproj
 
 ```xml
-<!-- File: {ApplicationName}.Clients.Api/{ApplicationName}.Clients.Api.csproj -->
+<!-- File: I-Synergy.Framework.Clients.Api/I-Synergy.Framework.Clients.Api.csproj -->
 
 <Project Sdk="Microsoft.NET.Sdk">
 
@@ -992,8 +992,8 @@ This pins the Kiota CLI version in `.config/dotnet-tools.json`:
 ### Client Project Structure
 
 ```
-{ApplicationName}.Clients.Api/
-├── {ApplicationName}.Clients.Api.csproj
+I-Synergy.Framework.Clients.Api/
+├── I-Synergy.Framework.Clients.Api.csproj
 ├── ApiClient.cs               # Kiota-generated entry point (BaseRequestBuilder)
 ├── Api/                        # Kiota-generated request builders
 ├── Models/                     # Kiota-generated models
@@ -1004,9 +1004,9 @@ This pins the Kiota CLI version in `.config/dotnet-tools.json`:
 ### Client Registration in DI
 
 ```csharp
-// File: {ApplicationName}.Clients.Api/Extensions/ServiceCollectionExtensions.cs
+// File: I-Synergy.Framework.Clients.Api/Extensions/ServiceCollectionExtensions.cs
 
-namespace {ApplicationName}.Clients.Api.Extensions;
+namespace I-Synergy.Framework.Clients.Api.Extensions;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Kiota.Abstractions.Authentication;
@@ -1061,7 +1061,7 @@ services.AddSingleton<IAuthenticationProvider>(
 ### Using the Generated Client from a Handler
 
 ```csharp
-// File: {ApplicationName}.Services.{CallerDomain}/Queries/Get{Entity}List/Get{Entity}ListQueryHandler.cs
+// File: I-Synergy.Framework.Services.{CallerDomain}/Queries/Get{Entity}List/Get{Entity}ListQueryHandler.cs
 
 public sealed class Get{Entity}ListQueryHandler(
     ApiClient client
@@ -1085,8 +1085,8 @@ public sealed class Get{Entity}ListQueryHandler(
 
 ### Key Rules
 
-- **Default client** — `{ApplicationName}.Clients.Api` is the default for single-app projects
-- **Multi-app clients** — swap `App` for `Clients`: `{ApplicationName}.App.Business` → `{ApplicationName}.Clients.Business`
+- **Default client** — `I-Synergy.Framework.Clients.Api` is the default for single-app projects
+- **Multi-app clients** — swap `App` for `Clients`: `I-Synergy.Framework.App.Business` → `I-Synergy.Framework.Clients.Business`
 - **Kiota version pinned in `dotnet-tools.json`** — `rollForward: false` ensures every developer and CI uses the exact same version
 - **Client generated via MSBuild target** — the API project's `.csproj` includes an `OpenAPI` target that runs `dotnet kiota generate` after every build
 - **Client source is committed** — `Api/`, `Models/`, `ApiClient.cs`, and `kiota-lock.json` are all committed as the client project's source code
@@ -1128,9 +1128,9 @@ public static async Task<Results<FileContentHttpResult, NotFound>> Download{Enti
 ## Endpoint Registration in Program.cs
 
 ```csharp
-// File: {ApplicationName}.Service.Api/Program.cs
+// File: I-Synergy.Framework.Service.Api/Program.cs
 
-using {ApplicationName}.Services.{Domain}.Endpoints.v1;
+using I-Synergy.Framework.Services.{Domain}.Endpoints.v1;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -1150,9 +1150,9 @@ app.Run();
 ## Service Registration
 
 ```csharp
-// File: {ApplicationName}.Services.{Domain}/Extensions/ServiceCollectionExtensions.cs
+// File: I-Synergy.Framework.Services.{Domain}/Extensions/ServiceCollectionExtensions.cs
 
-namespace {ApplicationName}.Services.{Domain}.Extensions;
+namespace I-Synergy.Framework.Services.{Domain}.Extensions;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -1236,6 +1236,6 @@ public static class BudgetEndpoints
 13. **Explicit `.Produces<T>()` on every route** — always declare both success and error response types; never rely on inference
 14. **OpenAPI document generation in `.csproj`** — every API project includes `OpenApiGenerateDocumentsOnBuild`, `OpenApiDocumentsDirectory`, and the `Microsoft.Extensions.ApiDescription.Server` package reference
 15. **Document + schema transformers in `AddOpenApi()`** — always register a document transformer (servers URL) and a schema transformer (type mapping); missing either breaks Kiota client generation
-16. **Kiota client per application** — `{ApplicationName}.Clients.Api` by default; `{ApplicationName}.Clients.{AppName}` for multi-app; never use raw `HttpClient` to call an internal API
+16. **Kiota client per application** — `I-Synergy.Framework.Clients.Api` by default; `I-Synergy.Framework.Clients.{AppName}` for multi-app; never use raw `HttpClient` to call an internal API
 17. **Data Annotations validation** — every POST/PUT route uses `.WithValidation<T>()` with `[Required]`, `[MaxLength]`, `[Range]` on request models
 18. **Rate limiting + CORS + HTTPS** — every API project configures `AddRateLimiter` + `UseCors` + `UseHttpsRedirection`

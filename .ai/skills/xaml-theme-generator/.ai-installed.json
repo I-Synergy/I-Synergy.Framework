@@ -1,0 +1,8 @@
+{
+  "id": "template:xaml-theme-generator",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "b624959046eec3753e1808a3504cc6e016b2ba49028fd6c40044a80674937523",
+  "materialize": "copy",
+  "path": ".ai/skills/xaml-theme-generator"
+}

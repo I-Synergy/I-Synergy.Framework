@@ -1,0 +1,8 @@
+{
+  "id": "template:security",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "54d8cd64d9c6259bb10dea89968a41b23be829f9d1f495f760ade1f1a0a60797",
+  "materialize": "copy",
+  "path": ".ai/skills/security"
+}

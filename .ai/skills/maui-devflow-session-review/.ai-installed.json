@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui-tooling:maui-devflow-session-review",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "2a3ad892cba8a7dfe3a2f6a02e10c3148d00af08ac9be9149bb3f0da45376c7d",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-devflow-session-review"
+}

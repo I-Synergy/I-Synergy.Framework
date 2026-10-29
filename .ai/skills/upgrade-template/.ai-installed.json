@@ -1,0 +1,8 @@
+{
+  "id": "template:upgrade-template",
+  "kind": "skill",
+  "ref": "2026.11029.12224",
+  "sha256": "fa8b047da22b6eb52abf0ec2e07abbf2a42d939126fe6952091480fa214a70a9",
+  "materialize": "copy",
+  "path": ".ai/skills/upgrade-template"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui-tooling:ios-slim-bindings",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "1cf9155123e696e7c2807426b9db1a43b840973cf04d8f257d4f3bf82fad23d4",
+  "materialize": "copy",
+  "path": ".ai/skills/ios-slim-bindings"
+}

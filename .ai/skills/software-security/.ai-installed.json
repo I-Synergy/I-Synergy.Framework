@@ -1,0 +1,8 @@
+{
+  "id": "template:software-security",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "76b03fde4a95404ee9d18efb4d56a6bd9ef9674dfcb8832aaec7a169836bbac2",
+  "materialize": "copy",
+  "path": ".ai/skills/software-security"
+}

@@ -1,6 +1,6 @@
 ---
 name: upgrade-template
-description: Upgrades an existing project with improvements from the CLAUDE.MD template. Use when the user says "upgrade the template", "sync template changes to a project", "update project X with new skills", or wants to apply template improvements without losing project-specific context. Runs upgrade-template.py which copies new files and diffs changed ones, never touching project-owned paths.
+description: Upgrades an existing project with improvements from the template. Use when the user says "upgrade the template", "sync template changes to a project", "update project X with new skills", or wants to apply template improvements without losing project-specific context. Runs upgrade-template.py which copies new files and diffs changed ones, never touching project-owned paths.
 ---
 
 # Upgrade Template
@@ -13,7 +13,7 @@ Applies template improvements to an existing project without overwriting project
 |--------|---------|
 | `ADDED` | New file — does not exist in the project yet. Copied automatically. |
 | `CHANGED` | File exists in both. Shows a diff. You choose: accept (overwrite) or skip (keep yours). |
-| `UNCHANGED` | Identical in both. Silently skipped. |
+| `UNCHANGED` | Identical in both. No action needed. |
 | `MERGED` | `.claude/settings.json` — new hooks/permissions added, project keys preserved. |
 | `SKIPPED (project-owned)` | Never touched — see list below. |
 
@@ -79,9 +79,7 @@ python .ai/scripts/upgrade-template.py \
 
 | Path | Behaviour |
 |------|-----------|
-| `REASONIX.md` | Diffed if changed |
-| `.reasonix/` | New files copied; changed diffed |
-| `CLAUDE.md` | Diffed if changed |
+| `AGENTS.md` | Copied if the project has none; diffed if changed in target |
 | `.ai/skills/` | New skill dirs copied; changed skills diffed |
 | `.ai/patterns/` | New pattern files copied; changed diffed |
 | `.ai/reference/templates/` | New templates copied; changed diffed |
@@ -93,9 +91,24 @@ python .ai/scripts/upgrade-template.py \
 | `.ai/scripts/` | New scripts copied (including this one); changed diffed |
 | `.claude/settings.json` | `ADDED` (new file): created from template, `enabledPlugins` excluded. `MERGED` (existing file): new hooks and permissions added, existing config (including `enabledPlugins`) preserved. |
 
+## Migrating from CLAUDE.md, REASONIX.md, or DEEPSEEK.md
+
+If your project has a legacy CLAUDE.md, REASONIX.md, or DEEPSEEK.md from an earlier template version, the upgrade script will NOT touch these files — they remain untouched so you don't lose project-specific customizations.
+
+**To complete the migration:**
+
+1. After upgrading, review any project-specific content in the old file (CLAUDE.md, etc.)
+2. Merge custom sections into the new `AGENTS.md` (the master file for all AI clients)
+3. Delete the old file once migration is complete
+4. Run `python .ai/scripts/sync-platforms.py` to synchronize all skills
+
+**Example:** If your CLAUDE.md has custom agent definitions or work-type mappings, copy those sections into AGENTS.md, adapt them to the new structure, then delete the old file.
+
+For help migrating old `.claude/` layouts, `.reasonix/`, or other client-specific folders, use: `python .ai/scripts/migrate-to-ai.py`
+
 ## After Upgrade
 
-The script automatically runs `sync-skills.py` and `sync-agents.py` in the target project after every upgrade,
+The script automatically runs `sync-platforms.py` and `sync-agents.py` in the target project after every upgrade,
 syncing all skills to Claude Code, GitHub Copilot, and Reasonix Code targets.
 
 ## Running This as Claude

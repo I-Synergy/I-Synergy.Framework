@@ -1,0 +1,8 @@
+{
+  "id": "template:documentation-writer",
+  "kind": "prompt",
+  "ref": "2026.11029.12236",
+  "sha256": "f5f94855448e4b0fa7414b0c72017455eeeb128fa8398150ce5835ed37e9376c",
+  "materialize": "copy",
+  "path": ".ai/prompts/documentation-writer.prompt.md"
+}

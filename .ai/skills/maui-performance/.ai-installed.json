@@ -1,0 +1,8 @@
+{
+  "id": "dotnet-maui:maui-performance",
+  "kind": "skill",
+  "ref": "main",
+  "sha256": "66f00774dd1fb7980063452e269dee66677258b93b942480060403c28892ff26",
+  "materialize": "copy",
+  "path": ".ai/skills/maui-performance"
+}

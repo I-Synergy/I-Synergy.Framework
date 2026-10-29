@@ -1,0 +1,8 @@
+{
+  "id": "template:create-unittest",
+  "kind": "prompt",
+  "ref": "2026.11029.12236",
+  "sha256": "90a19c980b864292d298909fb15b15dee614410352c94b650d4dabc3b9746c58",
+  "materialize": "copy",
+  "path": ".ai/prompts/create-unittest.prompt.md"
+}

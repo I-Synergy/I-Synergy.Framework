@@ -14,7 +14,7 @@ Service-Oriented Architecture is an architectural pattern where functionality is
 
 ```csharp
 // ✅ CORRECT - Well-defined service contract
-namespace {ApplicationName}.Contracts.Budgets;
+namespace I-Synergy.Framework.Contracts.Budgets;
 
 /// <summary>
 /// Service contract for budget management operations.
@@ -79,7 +79,7 @@ public interface IBudgetService
 
 ```csharp
 // ✅ CORRECT - Loosely coupled services
-namespace {ApplicationName}.Services.Budgets;
+namespace I-Synergy.Framework.Services.Budgets;
 
 public sealed class BudgetService : IBudgetService
 {
@@ -142,7 +142,7 @@ public sealed class BudgetService
 
 ```csharp
 // ✅ CORRECT - Well-abstracted service
-namespace {ApplicationName}.Services.Budgets;
+namespace I-Synergy.Framework.Services.Budgets;
 
 public sealed class BudgetCalculationService : IBudgetCalculationService
 {
@@ -208,7 +208,7 @@ public interface IBudgetCalculationService
 
 ```csharp
 // ✅ CORRECT - Reusable service design
-namespace {ApplicationName}.Services.Common;
+namespace I-Synergy.Framework.Services.Common;
 
 /// <summary>
 /// Reusable validation service for multiple domains.
@@ -281,7 +281,7 @@ public sealed class GoalValidationService : IValidationService<Goal>
 
 ```csharp
 // ✅ CORRECT - Autonomous service with own data store
-namespace {ApplicationName}.Services.Budgets;
+namespace I-Synergy.Framework.Services.Budgets;
 
 public sealed class BudgetService : IBudgetService
 {
@@ -360,7 +360,7 @@ public sealed class BudgetService
 
 ```csharp
 // ✅ CORRECT - Stateless service
-namespace {ApplicationName}.Services.Budgets;
+namespace I-Synergy.Framework.Services.Budgets;
 
 public sealed class BudgetService : IBudgetService
 {
@@ -430,7 +430,7 @@ public sealed class BudgetService
 
 ```csharp
 // ✅ CORRECT - Discoverable service with metadata
-namespace {ApplicationName}.Services.Budgets;
+namespace I-Synergy.Framework.Services.Budgets;
 
 [ServiceContract(
     Name = "BudgetService",
@@ -510,7 +510,7 @@ public record EndpointMetadata(
 
 ```csharp
 // ✅ CORRECT - Message-based communication
-namespace {ApplicationName}.Services.Messaging;
+namespace I-Synergy.Framework.Services.Messaging;
 
 // Message contract
 public sealed record BudgetCreatedMessage
@@ -592,7 +592,7 @@ public sealed class NotificationService : IMessageHandler<BudgetCreatedMessage>
 
 ```csharp
 // ✅ CORRECT - Request-reply pattern
-namespace {ApplicationName}.Services.Budgets;
+namespace I-Synergy.Framework.Services.Budgets;
 
 // Request
 public sealed record CalculateBudgetSummaryRequest
@@ -675,7 +675,7 @@ public sealed class BudgetQueryService : IBudgetQueryService
 
 ```csharp
 // ✅ CORRECT - Service orchestration
-namespace {ApplicationName}.Services.Orchestration;
+namespace I-Synergy.Framework.Services.Orchestration;
 
 /// <summary>
 /// Orchestrator for budget creation workflow.
@@ -778,7 +778,7 @@ public sealed class BudgetCreationOrchestrator : IBudgetCreationOrchestrator
 
 ```csharp
 // ✅ CORRECT - Service choreography
-namespace {ApplicationName}.Services.Events;
+namespace I-Synergy.Framework.Services.Events;
 
 // Budget service publishes event (doesn't know about consumers)
 public sealed class BudgetService : IBudgetService
@@ -866,7 +866,7 @@ public sealed class AuditEventHandler : IEventHandler<BudgetCreatedEvent>
 
 ```csharp
 // ✅ CORRECT - URL versioning
-namespace {ApplicationName}.Services.Budgets.V1;
+namespace I-Synergy.Framework.Services.Budgets.V1;
 
 public static class BudgetEndpointsV1
 {
@@ -902,7 +902,7 @@ public static class BudgetEndpointsV1
     }
 }
 
-namespace {ApplicationName}.Services.Budgets.V2;
+namespace I-Synergy.Framework.Services.Budgets.V2;
 
 public static class BudgetEndpointsV2
 {
@@ -985,7 +985,7 @@ public sealed class BudgetService : IBudgetService
 
 ```csharp
 // ✅ CORRECT - Idempotent service operations
-namespace {ApplicationName}.Services.Budgets;
+namespace I-Synergy.Framework.Services.Budgets;
 
 public sealed class BudgetService : IBudgetService
 {
@@ -1055,7 +1055,7 @@ public sealed record CreateBudgetRequest
 
 ```csharp
 // ✅ CORRECT - Saga pattern for distributed transactions
-namespace {ApplicationName}.Services.Sagas;
+namespace I-Synergy.Framework.Services.Sagas;
 
 public sealed class BudgetCreationSaga : ISaga
 {

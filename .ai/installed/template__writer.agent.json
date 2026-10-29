@@ -1,0 +1,8 @@
+{
+  "id": "template:writer",
+  "kind": "agent",
+  "ref": "2026.11027.12350",
+  "sha256": "e8fec71105b11eb1c6da506b83ae27e99d3f49660e635fc625cbeef6e7864eab",
+  "materialize": "copy",
+  "path": ".ai/agents/writer.md"
+}

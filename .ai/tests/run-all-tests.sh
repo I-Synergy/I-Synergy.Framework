@@ -15,7 +15,7 @@ echo ""
 # Pre-step: ensure folder-level junctions/symlinks exist
 # (CI checkouts have real directories; this converts them)
 echo "--- Pre-step: Syncing platform junctions ---"
-python3 "$SCRIPT_DIR/../scripts/sync-skills.py" 2>&1
+python3 "$SCRIPT_DIR/../scripts/sync-platforms.py" 2>&1
 echo ""
 echo "--- Validation tests follow ---"
 echo ""
@@ -53,9 +53,9 @@ run_test "6. AGENTS.md References" "python3 '$SCRIPT_DIR/validate-agents-md.py'"
 run_test "7. Settings & Structure" "python3 '$SCRIPT_DIR/validate-settings.py'"
 run_test "8. Copilot Integration" "python3 '$SCRIPT_DIR/validate-copilot.py'"
 run_test "9. Integration Smoke Tests" "python3 '$SCRIPT_DIR/smoke-test.py'"
-run_test "12. Traceability" "python3 '$SCRIPT_DIR/validate-traceability.py'"
-run_test "13. Standards" "python3 '$SCRIPT_DIR/validate-standards.py'"
-run_test "14. DeepSeek Parity" "python3 '$SCRIPT_DIR/validate-deepseek-parity.py'"
+run_test "10. Traceability" "python3 '$SCRIPT_DIR/validate-traceability.py'"
+run_test "11. Standards" "python3 '$SCRIPT_DIR/validate-standards.py'"
+run_test "12. Release Versioning" "python3 '$SCRIPT_DIR/validate-release.py'"
 
 # Final Summary
 echo "========================================="

@@ -1,0 +1,8 @@
+{
+  "id": "template:architect",
+  "kind": "skill",
+  "ref": "2026.11028.11637",
+  "sha256": "3f8dcdcc5ed2aada4e34b89e8292c35806ba22c478e92f37e6c1a9efc054794d",
+  "materialize": "copy",
+  "path": ".ai/skills/architect"
+}

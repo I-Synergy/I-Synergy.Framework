@@ -1,0 +1,8 @@
+{
+  "id": "template:refactor",
+  "kind": "skill",
+  "ref": "2026.11027.12350",
+  "sha256": "6ca2020efba537fae779cb816595ad47dd095d0b4be56d375e723937c7890cd0",
+  "materialize": "copy",
+  "path": ".ai/skills/refactor"
+}

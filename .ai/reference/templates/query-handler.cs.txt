@@ -2,11 +2,11 @@
 // GET BY ID QUERY
 // =============================================================================
 
-// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdQuery.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdQuery.cs
 
 using ISynergy.Framework.CQRS.Queries;
 
-namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
+namespace I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
 
 /// <summary>
 /// Query to retrieve a {entity} by its identifier.
@@ -15,11 +15,11 @@ namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity
 public sealed record Get{Entity}ByIdQuery(Guid {Entity}Id) : IQuery<Get{Entity}ByIdResponse>;
 
 
-// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdResponse.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdResponse.cs
 
-using {ApplicationName}.Domain.{Domain}.Models;
+using I-Synergy.Framework.Domain.{Domain}.Models;
 
-namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
+namespace I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
 
 /// <summary>
 /// Response containing the requested {entity}.
@@ -28,15 +28,15 @@ namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity
 public sealed record Get{Entity}ByIdResponse({Entity}? {Entity});
 
 
-// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdQueryHandler.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/{Entity}/Queries/Get{Entity}ById/Get{Entity}ByIdQueryHandler.cs
 
 using ISynergy.Data;
-using {ApplicationName}.Domain.{Domain}.Models;
+using I-Synergy.Framework.Domain.{Domain}.Models;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
+namespace I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries.Get{Entity}ById;
 
 /// <summary>
 /// Handles retrieving a {entity} by its identifier.
@@ -74,11 +74,11 @@ public sealed class Get{Entity}ByIdQueryHandler(
 // GET LIST QUERY
 // =============================================================================
 
-// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListQuery.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListQuery.cs
 
 using ISynergy.Framework.CQRS.Queries;
 
-namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
+namespace I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
 
 /// <summary>
 /// Query to retrieve all {entities}.
@@ -86,11 +86,11 @@ namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entiti
 public sealed record Get{Entities}ListQuery() : IQuery<Get{Entities}ListResponse>;
 
 
-// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListResponse.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListResponse.cs
 
-using {ApplicationName}.Domain.{Domain}.Models;
+using I-Synergy.Framework.Domain.{Domain}.Models;
 
-namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
+namespace I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
 
 /// <summary>
 /// Response containing the list of {entities}.
@@ -99,15 +99,15 @@ namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entiti
 public sealed record Get{Entities}ListResponse(IReadOnlyList<{Entity}> {Entities});
 
 
-// File: {ApplicationName}.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListQueryHandler.cs
+// File: I-Synergy.Framework.Domain.{Domain}/Features/{Entity}/Queries/Get{Entities}List/Get{Entities}ListQueryHandler.cs
 
 using ISynergy.Data;
-using {ApplicationName}.Domain.{Domain}.Models;
+using I-Synergy.Framework.Domain.{Domain}.Models;
 using ISynergy.Framework.CQRS.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
+namespace I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries.Get{Entities}List;
 
 /// <summary>
 /// Handles retrieving all {entities}.

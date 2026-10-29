@@ -190,14 +190,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // 2. Use Least Privilege - Fine-grained authorization
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ReadBudgets", policy =>
-        policy.RequireClaim("permission", "budgets:read"));
+    options.AddPolicy("Read{Entities}", policy =>
+        policy.RequireClaim("permission", "{entities}:read"));
 
-    options.AddPolicy("WriteBudgets", policy =>
-        policy.RequireClaim("permission", "budgets:write"));
+    options.AddPolicy("Write{Entities}", policy =>
+        policy.RequireClaim("permission", "{entities}:write"));
 
-    options.AddPolicy("DeleteBudgets", policy =>
-        policy.RequireClaim("permission", "budgets:delete")
+    options.AddPolicy("Delete{Entities}", policy =>
+        policy.RequireClaim("permission", "{entities}:delete")
               .RequireRole("Admin"));
 });
 
@@ -219,11 +219,11 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 // Require authentication for all endpoints
-app.MapGet("/api/budgets", async (IQueryHandler handler) =>
+app.MapGet("/api/{entities}", async (IQueryHandler handler) =>
 {
     // Handler implementation
 })
-.RequireAuthorization("ReadBudgets");
+.RequireAuthorization("Read{Entities}");
 
 app.Run();
 ```
