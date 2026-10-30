@@ -117,7 +117,6 @@ public partial class Window : System.Windows.Window, IWindow
             // but before it is closed. Disposing the ViewModel prematurely clears its
             // Closed event, preventing the DialogService's close handler from firing.
             // The ViewModel lifecycle is managed by the DialogService close handler.
-            // ViewModel?.Dispose();
         }
 
         // free native resources if there are any.

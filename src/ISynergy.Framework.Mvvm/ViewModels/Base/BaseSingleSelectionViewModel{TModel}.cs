@@ -32,12 +32,12 @@ public abstract class BaseSingleSelectionViewModel<TModel> : ViewModelSelectable
     }
 
     /// <inheritdoc />
-    public virtual void SetItems(IEnumerable<object> e)
+    public virtual void SetItems(IEnumerable<object> items)
     {
         RawItems = new List<TModel>();
         Items = new ObservableCollection<TModel>();
 
-        foreach (TModel item in e.EnsureNotNull())
+        foreach (TModel item in items.EnsureNotNull())
         {
             RawItems.Add(item);
             Items.Add(item);
@@ -59,7 +59,7 @@ public abstract class BaseSingleSelectionViewModel<TModel> : ViewModelSelectable
     /// </summary>
     protected BaseSingleSelectionViewModel(
         ICommonServices commonServices,
-        ILogger<ViewModelSelectable<TModel>> logger)
+        ILogger<BaseSingleSelectionViewModel<TModel>> logger)
         : base(commonServices, logger)
     {
         RawItems = new List<TModel>();
@@ -67,7 +67,7 @@ public abstract class BaseSingleSelectionViewModel<TModel> : ViewModelSelectable
 
         Validator = new Action<IObservableValidatedClass>(_ =>
         {
-            if (SelectedItem == null)
+            if (SelectedItem is null)
                 AddValidationError(nameof(SelectedItem), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 

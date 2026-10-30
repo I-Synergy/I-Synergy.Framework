@@ -696,7 +696,8 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                 if (Diagonal[i] > tol)
                     r++;
 
-            return (int)(rank = r);
+            rank = r;
+            return r;
         }
     }
 

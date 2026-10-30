@@ -29,11 +29,10 @@ public class LoadingView : Page
         InitializeContent(splashScreenOptions);
         SetupEventHandlers();
 
-        if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
-        {
-            if (FindName("BackgroundImage") is Image backgroundImage)
-                backgroundImage.Source = new BitmapImage(new Uri(splashScreenOptions.Resource));
-        }
+        if (!string.IsNullOrEmpty(splashScreenOptions.Resource)
+            && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image
+            && FindName("BackgroundImage") is Image backgroundImage)
+            backgroundImage.Source = new BitmapImage(new Uri(splashScreenOptions.Resource));
     }
 
     public bool IsSignInButtonEnabled

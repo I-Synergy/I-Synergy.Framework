@@ -57,7 +57,6 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        //        _logger.Starting();
 
         using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _applicationLifetime.ApplicationStopping);
         var combinedCancellationToken = combinedCancellationTokenSource.Token;
@@ -217,10 +216,8 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
                 return;
             }
 
-            //_logger.BackgroundServiceFaulted(ex);
             if (_options.BackgroundServiceExceptionBehavior == BackgroundServiceExceptionBehavior.StopHost)
             {
-                //_logger.BackgroundServiceStoppingHost(ex);
                 _applicationLifetime.StopApplication();
             }
         }
@@ -229,7 +226,6 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     public async Task StopAsync(CancellationToken cancellationToken = default)
     {
         _stopCalled = true;
-        //_logger.Stopping();
 
         using var cts = new CancellationTokenSource(_options.ShutdownTimeout);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, cancellationToken);
@@ -270,11 +266,9 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         if (exceptions.Count > 0)
         {
             var ex = new AggregateException("One or more hosted services failed to stop.", exceptions);
-            //_logger.StoppedWithException(ex);
             throw ex;
         }
 
-        //_logger.Stopped();
     }
 
     /// <summary>

@@ -266,7 +266,6 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         setulb(n, m, x, 0, l, 0, u, 0, nbd, 0, ref f, g, 0,
             factr, GradientTolerance, work, 0, iwa, 0, ref task, iprint, ref csave,
             lsave, 0, isave, 0, dsave, 0);
-        // 
         if (task.StartsWith("FG", StringComparison.OrdinalIgnoreCase))
         {
             newF = Function(x);

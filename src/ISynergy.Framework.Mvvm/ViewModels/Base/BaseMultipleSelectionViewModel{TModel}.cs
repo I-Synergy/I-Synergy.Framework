@@ -32,12 +32,12 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
     }
 
     /// <inheritdoc />
-    public virtual void SetItems(IEnumerable<object> e)
+    public virtual void SetItems(IEnumerable<object> items)
     {
         RawItems = new List<TModel>();
         Items = new ObservableCollection<TModel>();
 
-        foreach (TModel item in e.EnsureNotNull())
+        foreach (TModel item in items.EnsureNotNull())
         {
             RawItems.Add(item);
             Items.Add(item);
@@ -47,11 +47,11 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
     List<object>? IMultipleSelectionViewModel.SelectedItem => SelectedItem?.Cast<object>().ToList();
 
     /// <inheritdoc />
-    public virtual void SetSelectedItem(IEnumerable<object>? e)
+    public virtual void SetSelectedItem(IEnumerable<object>? items)
     {
         SelectedItem = new List<TModel>();
 
-        foreach (var item in e.EnsureNotNull())
+        foreach (var item in items.EnsureNotNull())
             SelectedItem.Add((TModel)item!);
     }
 
@@ -64,7 +64,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
     /// </summary>
     protected BaseMultipleSelectionViewModel(
         ICommonServices commonServices,
-        ILogger<ViewModelSelectable<List<TModel>>> logger)
+        ILogger<BaseMultipleSelectionViewModel<TModel>> logger)
         : base(commonServices, logger)
     {
         RawItems = new List<TModel>();
@@ -78,7 +78,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
         });
 
         RefreshCommand = new AsyncRelayCommand<string>(e => QueryItemsAsync(e));
-        SelectCommand = new AsyncRelayCommand<object>(e => SelectAsync(e), _ => SelectedItem is not null && SelectedItem.Count > 0);
+        SelectCommand = new AsyncRelayCommand<object>(_ => SelectAsync(), _ => SelectedItem is not null && SelectedItem.Count > 0);
 
         IsInitialized = true;
     }
@@ -112,7 +112,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : ViewModelSelectab
     /// <summary>
     /// Validates and submits the selected items via <see cref="SelectCommand"/>.
     /// </summary>
-    private async Task SelectAsync(object e)
+    private async Task SelectAsync()
     {
         if (Validate())
         {

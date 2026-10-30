@@ -16,6 +16,35 @@ public class ThemeColorCalculatorTests
     private static float Luminosity(float red, float green, float blue) =>
         (MathF.Max(red, MathF.Max(green, blue)) + MathF.Min(red, MathF.Min(green, blue))) / 2f;
 
+    // ── WCAG 2.1 contrast helpers (used by the HTML preview generator) ───────
+
+    private static float RelativeLuminance(float red, float green, float blue)
+    {
+        static float Channel(float value) =>
+            value <= 0.03928f ? value / 12.92f : MathF.Pow((value + 0.055f) / 1.055f, 2.4f);
+
+        return 0.2126f * Channel(red) + 0.7152f * Channel(green) + 0.0722f * Channel(blue);
+    }
+
+    private static float ContrastRatio(float red, float green, float blue, float otherRed, float otherGreen, float otherBlue)
+    {
+        float first = RelativeLuminance(red, green, blue);
+        float second = RelativeLuminance(otherRed, otherGreen, otherBlue);
+
+        return first > second
+            ? (first + 0.05f) / (second + 0.05f)
+            : (second + 0.05f) / (first + 0.05f);
+    }
+
+    /// <summary>
+    /// Picks black or white — whichever yields the higher WCAG 2.1 contrast ratio against the
+    /// supplied background. One of the two always reaches at least 4.5:1.
+    /// </summary>
+    private static string ContrastingTextColor(float red, float green, float blue) =>
+        ContrastRatio(red, green, blue, 0f, 0f, 0f) >= ContrastRatio(red, green, blue, 1f, 1f, 1f)
+            ? "#000"
+            : "#fff";
+
     // ── WhiteBlend ───────────────────────────────────────────────────────────
 
     [TestMethod]
@@ -423,7 +452,7 @@ public class ThemeColorCalculatorTests
                     var (name, red, green, blue) = palettes[j];
                     var pid = name.TrimStart('#').ToLowerInvariant();
                     var hex = RgbToHex(red, green, blue);
-                    sb.Append($"<div class=\"nav-dot\" style=\"background:{hex}\" onclick=\"go('{pid}')\" title=\"{name}\"></div>\n");
+                    sb.Append($"<button type=\"button\" class=\"nav-dot\" style=\"background:{hex}\" onclick=\"go('{pid}')\" aria-label=\"{name}\" title=\"{name}\"></button>\n");
                 }
                 sb.Append("</div>\n");
             }
@@ -434,7 +463,7 @@ public class ThemeColorCalculatorTests
             {
                 var pid = name.TrimStart('#').ToLowerInvariant();
                 var hex = RgbToHex(red, green, blue);
-                sb.Append($"<div class=\"nav-dot\" style=\"background:{hex}\" onclick=\"go('{pid}')\" title=\"{name}\"></div>\n");
+                sb.Append($"<button type=\"button\" class=\"nav-dot\" style=\"background:{hex}\" onclick=\"go('{pid}')\" aria-label=\"{name}\" title=\"{name}\"></button>\n");
             }
         }
 
@@ -465,19 +494,23 @@ public class ThemeColorCalculatorTests
           .nav-title{font-size:11px;font-weight:700;color:#555;margin-right:4px;white-space:nowrap;}
           .nav-group{display:flex;gap:4px;}
           .nav-dot{
-            width:22px;height:22px;border-radius:5px;cursor:pointer;
-            transition:transform .12s,box-shadow .12s;
-            border:1px solid rgba(255,255,255,.07);
+            width:22px;height:22px;border-radius:5px;cursor:pointer;padding:0;
+            border:1px solid rgba(255,255,255,.07);appearance:none;
           }
           .nav-dot:hover{transform:scale(1.35);box-shadow:0 3px 10px rgba(0,0,0,.5);}
+          @media (prefers-reduced-motion: no-preference){
+            .nav-dot{transition:transform .12s,box-shadow .12s;}
+          }
           .palette{background:#1a1a1a;border-radius:14px;padding:26px;margin-bottom:24px;border:1px solid #242424;scroll-margin-top:62px;}
           .row{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap;}
           .swatch{min-width:52px;flex:1;height:64px;border-radius:8px;display:flex;flex-direction:column;
-                  justify-content:flex-end;padding:5px 7px;font-size:9px;font-weight:600;cursor:default;
-                  transition:transform .1s;}
+                  justify-content:flex-end;padding:5px 7px;font-size:9px;font-weight:600;cursor:default;}
           .swatch:hover{transform:scale(1.06) translateY(-2px);}
-          .swatch .name{opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-          .swatch .hex{opacity:.55;font-size:8px;margin-top:2px;font-family:monospace;}
+          @media (prefers-reduced-motion: no-preference){
+            .swatch{transition:transform .1s;}
+          }
+          .swatch .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+          .swatch .hex{font-size:8px;margin-top:2px;font-family:monospace;}
           .themes{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
           .theme-panel{border-radius:10px;padding:18px;}
           .theme-panel .row{margin-bottom:0;}
@@ -577,7 +610,7 @@ public class ThemeColorCalculatorTests
         float red, float green, float blue, string? theme = null)
     {
         var hex = RgbToHex(red, green, blue);
-        var textColor = Luminosity(red, green, blue) > 0.45f ? "#000" : "#fff";
+        var textColor = ContrastingTextColor(red, green, blue);
         var themeAttr = theme is null ? "" : $" data-theme=\"{theme}\"";
         return $"<div class=\"swatch\" data-palette=\"{paletteId}\" data-key=\"{key}\" data-hex=\"{hex}\"{themeAttr} style=\"background:{hex};color:{textColor}\" title=\"{key}\"><span class=\"name\">{label}</span><span class=\"hex\">{hex}</span></div>\n";
     }

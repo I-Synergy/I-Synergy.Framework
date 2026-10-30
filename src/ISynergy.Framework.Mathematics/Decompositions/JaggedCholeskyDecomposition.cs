@@ -417,7 +417,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
 
         var B = inPlace ? value : value.MemberwiseClone();
 
-        // Solve L*Y = B;
         for (var k = 0; k < n; k++)
             for (var j = 0; j < B[k].Length; j++)
             {
@@ -431,7 +430,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
                 for (var j = 0; j < B[k].Length; j++)
                     B[k][j] /= Diagonal[k];
 
-        // Solve L'*X = Y;
         for (var k = n - 1; k >= 0; k--)
             for (var j = 0; j < B[k].Length; j++)
             {
@@ -473,7 +471,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
 
         var B = inPlace ? value : value.Copy();
 
-        // Solve L*Y = B;
         for (var k = 0; k < n; k++)
         {
             for (var i = 0; i < k; i++)
@@ -485,7 +482,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
             for (var k = 0; k < Diagonal.Length; k++)
                 B[k] /= Diagonal[k];
 
-        // Solve L'*X = Y;
         for (var k = n - 1; k >= 0; k--)
         {
             for (var i = k + 1; i < n; i++)

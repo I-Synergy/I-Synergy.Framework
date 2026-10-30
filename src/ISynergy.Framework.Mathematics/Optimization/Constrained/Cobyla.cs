@@ -931,7 +931,6 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
         //     This subroutine calculates an N-component vector DX by applying the
         //     following two stages. In the first stage, DX is set to the shortest
         //     vector that minimizes the greatest violation of the constraints
-        //       A(1,K)*DX(1)+A(2,K)*DX(2)+...+A(N,K)*DX(N) .GE. B(K), K = 2,3,...,M,
         //     subject to the Euclidean length of DX being at most RHO. If its length is
         //     strictly less than RHO, then we use the resultant freedom in DX to
         //     minimize the objective function

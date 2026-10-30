@@ -294,11 +294,11 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
     /// </summary>
     protected override bool Optimize()
     {
-        if (LineSearch == LineSearch.RegularWolfe ||
-            LineSearch == LineSearch.StrongWolfe)
-            if (wolfe <= ftol || 1.0 <= wolfe)
-                throw OperationException("Wolfe tolerance must be between 'ParameterTolerance' and 1.",
-                    "LBFGSERR_INVALID_WOLFE");
+        if ((LineSearch == LineSearch.RegularWolfe ||
+             LineSearch == LineSearch.StrongWolfe) &&
+            (wolfe <= ftol || 1.0 <= wolfe))
+            throw OperationException("Wolfe tolerance must be between 'ParameterTolerance' and 1.",
+                "LBFGSERR_INVALID_WOLFE");
 
         if (OrthantwiseC != 0.0 && linesearch != LineSearch.RegularWolfe)
             throw OperationException("Orthant-wise updates are only available with Regular Wolfe line search.",

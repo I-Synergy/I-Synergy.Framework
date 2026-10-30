@@ -118,9 +118,11 @@ public static class AppWindowExtensions
         var exStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 
         if (isRightToLeft)
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle |= WS_EX_LAYOUTRTL);
+            exStyle |= WS_EX_LAYOUTRTL;
         else
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle &= ~WS_EX_LAYOUTRTL);
+            exStyle &= ~WS_EX_LAYOUTRTL;
+
+        SetWindowLong(hWnd, GWL_EXSTYLE, exStyle);
     }
 
     // ──────────────────────────────────────────────
