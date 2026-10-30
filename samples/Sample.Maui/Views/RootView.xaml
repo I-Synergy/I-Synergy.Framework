@@ -28,6 +28,7 @@
 
         <controls:AppHeaderView
             x:Name="Header"
+            x:DataType="{x:Null}"
             Grid.Row="0"
             Grid.ColumnSpan="2"
             BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
@@ -54,6 +55,7 @@
         <!-- Declared after the content host so the phone drawer renders above it. -->
         <controls:SidebarView
             x:Name="Sidebar"
+            x:DataType="{x:Null}"
             Grid.Row="1"
             Grid.Column="0"
             BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
