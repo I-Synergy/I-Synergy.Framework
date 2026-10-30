@@ -130,17 +130,9 @@ public class ThemeService : IThemeService, IDisposable
             application.SetApplicationColor(_color, _logger);
 
             // Set the accent color from the loaded theme
-            if (ResourceUtility.FindResource<Color>(Primary) is Color primaryColor)
-            {
-                Application.AccentColor = primaryColor;
-                _logger.LogTrace("AccentColor set to {Color}", primaryColor);
-            }
-            else
-            {
-                // Fallback to parsing the color from settings
-                Application.AccentColor = Color.FromArgb(_color);
-                _logger.LogTrace("AccentColor set to {Color} from settings", _color);
-            }
+            var primaryColor = ResourceUtility.FindResource<Color>(Primary);
+            Application.AccentColor = primaryColor;
+            _logger.LogTrace("AccentColor set to {Color}", primaryColor);
 
             // Update platform-specific color resources
             UpdatePlatformColors(application);

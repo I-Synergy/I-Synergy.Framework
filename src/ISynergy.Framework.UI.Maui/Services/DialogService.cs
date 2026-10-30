@@ -955,44 +955,32 @@ public class DialogService : IDialogService, IDisposable
         // Pop the modal. Try without animation first to avoid MAUI rendering issues
         // (e.g. ShadowExtensions.GetAlphaMaskAsync ArgumentException on Windows).
         // Fall back to animated pop if the first attempt fails.
-        var popped = false;
-
         if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
         {
             // First attempt: no animation (avoids layout-triggered shadow computation)
             try
             {
                 await navigation.PopModalAsync(false);
-                popped = true;
             }
             catch (Exception ex)
             {
                 _logger?.LogDebug(ex, "PopModalAsync(false) failed, will try animated pop as fallback");
-            }
 
-            // Second attempt: with animation (works when the layout is in a different state)
-            if (!popped)
-            {
+                // Second attempt: with animation (works when the layout is in a different state)
                 try
                 {
                     await navigation.PopModalAsync(true);
-                    popped = true;
                 }
-                catch (Exception ex)
+                catch (Exception fallbackEx)
                 {
-                    _logger?.LogError(ex, "PopModalAsync(true) also failed; modal may remain visible");
+                    _logger?.LogError(fallbackEx, "PopModalAsync(true) also failed; modal may remain visible");
+                    _logger?.LogWarning("Modal pop failed; the page may still be visible on the navigation stack");
                 }
             }
         }
         else
         {
             _logger?.LogWarning("Cannot close modal dialog - Navigation is not available");
-        }
-
-        if (!popped && Application.Current?.Windows[0]?.Page?.Navigation is not null)
-        {
-            // Last resort: try to go back via the navigation service pattern
-            _logger?.LogWarning("Modal pop failed; the page may still be visible on the navigation stack");
         }
 
         // Always clean up window resources, even if PopModalAsync failed.
