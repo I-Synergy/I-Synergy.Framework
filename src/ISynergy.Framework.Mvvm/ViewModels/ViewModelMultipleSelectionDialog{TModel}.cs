@@ -13,7 +13,12 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// A multiple-selection dialog ViewModel. The user can pick multiple items at once.
 /// </summary>
 /// <typeparam name="TModel">The model type.</typeparam>
-public class ViewModelMultipleSelectionDialog<TModel> : BaseMultipleSelectionViewModel<TModel>, IViewModelDialog<List<TModel>>, ISearchableSelectionViewModel
+/// <remarks>
+/// The inheritance tree is six levels deep on purpose: <c>BaseSelectionViewModel</c> carries the
+/// shared item/filter/command logic, and inlining it back into the single/multiple bases would
+/// re-introduce the duplicated code that SonarCloud reports separately (copy-paste detection).
+/// </remarks>
+public class ViewModelMultipleSelectionDialog<TModel> : BaseMultipleSelectionViewModel<TModel>, IViewModelDialog<List<TModel>>, ISearchableSelectionViewModel // NOSONAR
 {
     /// <summary>
     /// Gets or sets the CanSubmit property value.
