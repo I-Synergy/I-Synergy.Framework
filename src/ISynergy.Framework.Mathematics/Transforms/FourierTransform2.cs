@@ -431,27 +431,27 @@ public static class FourierTransform2
         var m = HighestOneBit(n * 2 + 1) << 1;
 
         // Trigonometric tables.
-        var cosTable = ExpCosTable(n);
-        var sinTable = ExpSinTable(n);
+        var cosineTable = ExpCosTable(n);
+        var sineTable = ExpSinTable(n);
 
         // Temporary vectors and preprocessing
         var areal = new double[m];
         var aimag = new double[m];
         for (var i = 0; i < real.Length; i++)
         {
-            areal[i] = +real[i] * cosTable[i] + imag[i] * sinTable[i];
-            aimag[i] = -real[i] * sinTable[i] + imag[i] * cosTable[i];
+            areal[i] = +real[i] * cosineTable[i] + imag[i] * sineTable[i];
+            aimag[i] = -real[i] * sineTable[i] + imag[i] * cosineTable[i];
         }
 
         var breal = new double[m];
         var bimag = new double[m];
-        breal[0] = cosTable[0];
-        bimag[0] = sinTable[0];
+        breal[0] = cosineTable[0];
+        bimag[0] = sineTable[0];
 
-        for (var i = 1; i < cosTable.Length; i++)
+        for (var i = 1; i < cosineTable.Length; i++)
         {
-            breal[i] = breal[m - i] = cosTable[i];
-            bimag[i] = bimag[m - i] = sinTable[i];
+            breal[i] = breal[m - i] = cosineTable[i];
+            bimag[i] = bimag[m - i] = sineTable[i];
         }
 
         // Convolution
@@ -462,8 +462,8 @@ public static class FourierTransform2
         // Postprocessing
         for (var i = 0; i < n; i++)
         {
-            real[i] = +creal[i] * cosTable[i] + cimag[i] * sinTable[i];
-            imag[i] = -creal[i] * sinTable[i] + cimag[i] * cosTable[i];
+            real[i] = +creal[i] * cosineTable[i] + cimag[i] * sineTable[i];
+            imag[i] = -creal[i] * sineTable[i] + cimag[i] * cosineTable[i];
         }
     }
 
@@ -473,8 +473,8 @@ public static class FourierTransform2
         var m = HighestOneBit(n * 2 + 1) << 1;
 
         // Trigonometric tables.
-        var cosTable = ExpCosTable(n);
-        var sinTable = ExpSinTable(n);
+        var cosineTable = ExpCosTable(n);
+        var sineTable = ExpSinTable(n);
 
         // Temporary vectors and preprocessing
         var areal = new double[m];
@@ -485,19 +485,19 @@ public static class FourierTransform2
             var re = data[i].Real;
             var im = data[i].Imaginary;
 
-            areal[i] = +re * cosTable[i] + im * sinTable[i];
-            aimag[i] = -re * sinTable[i] + im * cosTable[i];
+            areal[i] = +re * cosineTable[i] + im * sineTable[i];
+            aimag[i] = -re * sineTable[i] + im * cosineTable[i];
         }
 
         var breal = new double[m];
         var bimag = new double[m];
-        breal[0] = cosTable[0];
-        bimag[0] = sinTable[0];
+        breal[0] = cosineTable[0];
+        bimag[0] = sineTable[0];
 
-        for (var i = 1; i < cosTable.Length; i++)
+        for (var i = 1; i < cosineTable.Length; i++)
         {
-            breal[i] = breal[m - i] = cosTable[i];
-            bimag[i] = bimag[m - i] = sinTable[i];
+            breal[i] = breal[m - i] = cosineTable[i];
+            bimag[i] = bimag[m - i] = sineTable[i];
         }
 
         // Convolution
@@ -508,8 +508,8 @@ public static class FourierTransform2
         // Postprocessing
         for (var i = 0; i < data.Length; i++)
         {
-            var re = +creal[i] * cosTable[i] + cimag[i] * sinTable[i];
-            var im = -creal[i] * sinTable[i] + cimag[i] * cosTable[i];
+            var re = +creal[i] * cosineTable[i] + cimag[i] * sineTable[i];
+            var im = -creal[i] * sineTable[i] + cimag[i] * cosineTable[i];
             data[i] = new Complex(re, im);
         }
     }

@@ -36,3 +36,28 @@ Plan: `.ai/plans/sonarcloud-backlog-2026-10-30.md`
 - `dotnet test Mvvm.Tests` 262 passed
 - `dotnet build` Core, CQRS, EventSourcing, IO, Physics, RabbitMQ, Sentry, AspNetCore,
   AspNetCore.Blazor, UI, UI.Maui (windows), UI.WPF, UI.WinUI — all succeed
+
+## Batch 2 (2026-10-30, after commit 1d352c7d)
+
+- [x] S4136 overload adjacency: 5 of 115 (Point.cs, ViewModelExtensions.cs,
+      SettingsStorageExtensions.cs) — the other 42 files wrap members in
+      `#region`/`#if` blocks; automated reordering breaks the directive nesting,
+      so those need a manual, region-aware pass.
+- [x] S1117 local hides field (4) — FourierTransform2 Bluestein locals renamed.
+- [x] S2933 readonly field (5) — AugmentedLagrangian thresholds.
+- [x] S1172 unused parameter (1) — ViewModel.OnUserSignedInAsync.
+
+## Known false positives (do not "fix")
+
+- S1172 / S4487 in `TokenStorageService`, `NpyFormat.Reader`, and the cross-platform
+  UI services: the members are used only inside `#if WINDOWS` / `#elif ANDROID` /
+  `#elif IOS` branches, so the compiled TFM sees them as unused.
+- S1172 on delegate/override signatures (property-changed handlers, MAUI
+  `UIPointerInteraction` overrides) cannot be removed without breaking the contract.
+- S8970 null-forgiving operator (229).
+
+## Remaining by size
+
+S4136 110 (manual) · S2325 ~18 real (private/internal only) · S3267 17 · S1854 13 ·
+S3241 15 · S8949 12 · S3776 9 · S3881 9 · S3358 done · S2589 8 · site.css S9423 40 ·
+long tail ~600 across 100+ rules.

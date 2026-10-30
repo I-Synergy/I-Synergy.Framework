@@ -41,6 +41,21 @@ public static class SettingsStorageExtensions
     }
 
     /// <summary>
+    /// save as an asynchronous operation.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="settings">The settings.</param>
+    /// <param name="key">The key.</param>
+    /// <param name="value">The value.</param>
+    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
+    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
+    public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value) // NOSONAR
+    {
+        settings.SaveString(key, JsonSerializer.Serialize(value));
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// read as an asynchronous operation.
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -66,32 +81,6 @@ public static class SettingsStorageExtensions
     }
 
     /// <summary>
-    /// save as an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="settings">The settings.</param>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value.</param>
-    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
-    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
-    public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value) // NOSONAR
-    {
-        settings.SaveString(key, JsonSerializer.Serialize(value));
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Saves the string.
-    /// </summary>
-    /// <param name="settings">The settings.</param>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value.</param>
-    public static void SaveString(this ApplicationDataContainer settings, string key, string value)
-    {
-        settings.Values[key] = value;
-    }
-
-    /// <summary>
     /// read as an asynchronous operation.
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -111,6 +100,17 @@ public static class SettingsStorageExtensions
         }
 
         return Task.FromResult<T?>(default);
+    }
+
+    /// <summary>
+    /// Saves the string.
+    /// </summary>
+    /// <param name="settings">The settings.</param>
+    /// <param name="key">The key.</param>
+    /// <param name="value">The value.</param>
+    public static void SaveString(this ApplicationDataContainer settings, string key, string value)
+    {
+        settings.Values[key] = value;
     }
 
     /// <summary>

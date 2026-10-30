@@ -87,8 +87,8 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
     IConstraint[] greaterThanConstraints;
     IConstraint[] equalityConstraints;
     private double rho;
-    private double rhoMax = 1e+1;
-    private double rhoMin = 1e-6;
+    private readonly double rhoMax = 1e+1;
+    private readonly double rhoMin = 1e-6;
 
     private double[] lambda; // equality multipliers
     private double[] mu;     // "lesser than"  inequality multipliers
@@ -97,9 +97,9 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
     private double[] g;
 
     // Stopping criteria
-    private double ftol_abs = 0;
-    private double ftol_rel = 1e-10;
-    private double xtol_rel = 1e-10;
+    private readonly double ftol_abs = 0;
+    private readonly double ftol_rel = 1e-10;
+    private readonly double xtol_rel = 1e-10;
 
     private int functionEvaluations;
     private int maxEvaluations;
