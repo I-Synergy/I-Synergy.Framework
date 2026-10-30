@@ -47,10 +47,10 @@
             <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
                 <VerticalStackLayout x:Name="NavRows" Spacing="4">
                     <!-- Dashboard -->
-                    <Border x:DataType="{x:Null}" Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="dashboard" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
@@ -84,10 +84,10 @@
                     </Border>
 
                     <!-- Custom Controls -->
-                    <Border x:DataType="{x:Null}" Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="customcontrols" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
@@ -121,10 +121,10 @@
                     </Border>
 
                     <!-- Maui Controls -->
-                    <Border x:DataType="{x:Null}" Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="mauicontrols" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
@@ -158,10 +158,10 @@
                     </Border>
 
                     <!-- Slide Show -->
-                    <Border x:DataType="{x:Null}" Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
+                    <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="slideshow" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>

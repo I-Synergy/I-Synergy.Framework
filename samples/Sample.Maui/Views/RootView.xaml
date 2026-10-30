@@ -28,10 +28,8 @@
 
         <controls:AppHeaderView
             x:Name="Header"
-            x:DataType="{x:Null}"
             Grid.Row="0"
-            Grid.ColumnSpan="2"
-            BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
+            Grid.ColumnSpan="2" />
 
         <!-- Navigated pages render here; the host registers with the navigation service. -->
         <c:NavigationHostView
@@ -55,10 +53,8 @@
         <!-- Declared after the content host so the phone drawer renders above it. -->
         <controls:SidebarView
             x:Name="Sidebar"
-            x:DataType="{x:Null}"
             Grid.Row="1"
-            Grid.Column="0"
-            BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
+            Grid.Column="0" />
 
         <!-- Shell-level blade pane: last child, so it dims and blocks the sidebar and header too. -->
         <c:BladeHostView
