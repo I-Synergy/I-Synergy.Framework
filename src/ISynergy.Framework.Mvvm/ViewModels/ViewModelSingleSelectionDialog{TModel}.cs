@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// A single-selection dialog ViewModel. The user picks exactly one item.
 /// </summary>
 /// <typeparam name="TModel">The model type.</typeparam>
-public class ViewModelSingleSelectionDialog<TModel> : BaseSingleSelectionViewModel<TModel>, IViewModelDialog<TModel>
+public class ViewModelSingleSelectionDialog<TModel> : BaseSingleSelectionViewModel<TModel>, IViewModelDialog<TModel>, ISearchableSelectionViewModel
 {
     /// <summary>
     /// Gets or sets the CanSubmit property value.

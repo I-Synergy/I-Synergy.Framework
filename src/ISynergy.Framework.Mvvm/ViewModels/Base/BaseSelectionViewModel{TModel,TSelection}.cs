@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -12,8 +13,20 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Base;
 /// </summary>
 /// <typeparam name="TModel">The model type shown in the list.</typeparam>
 /// <typeparam name="TSelection">The selection type: a single model or a list of models.</typeparam>
-public abstract class BaseSelectionViewModel<TModel, TSelection> : ViewModelSelectable<TSelection>
+public abstract class BaseSelectionViewModel<TModel, TSelection> : ViewModelSelectable<TSelection>, ISelectionViewModel
 {
+    /// <inheritdoc />
+    System.Collections.IEnumerable? ISelectionViewModel.Items => Items;
+
+    /// <inheritdoc />
+    object? ISelectionViewModel.SelectedItem => SelectedItem;
+
+    /// <inheritdoc />
+    System.Windows.Input.ICommand? ISelectionViewModel.SelectCommand => SelectCommand;
+
+    /// <inheritdoc />
+    System.Windows.Input.ICommand? ISelectionViewModel.RefreshCommand => RefreshCommand;
+
     /// <inheritdoc/>
     public override string Title => _commonServices.LanguageService.GetString("Selection");
 

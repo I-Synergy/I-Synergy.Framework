@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
-    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui">
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:vm="clr-namespace:ISynergy.Framework.Mvvm.Abstractions.ViewModels;assembly=ISynergy.Framework.Mvvm">
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
@@ -66,7 +67,7 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}" />
             </Border.StrokeShape>
-            <Grid Margin="10">
+            <Grid Margin="10" x:DataType="vm:IDialogViewModel">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -117,7 +118,7 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}" />
             </Border.StrokeShape>
-            <Grid Margin="10">
+            <Grid Margin="10" x:DataType="vm:ISelectionViewModel">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -168,7 +169,7 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="{DynamicResource DefaultCornerRadius}" />
             </Border.StrokeShape>
-            <Grid Margin="10">
+            <Grid Margin="10" x:DataType="vm:ISelectionViewModel">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />

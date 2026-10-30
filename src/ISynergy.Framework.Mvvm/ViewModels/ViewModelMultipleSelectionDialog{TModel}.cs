@@ -13,7 +13,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// A multiple-selection dialog ViewModel. The user can pick multiple items at once.
 /// </summary>
 /// <typeparam name="TModel">The model type.</typeparam>
-public class ViewModelMultipleSelectionDialog<TModel> : BaseMultipleSelectionViewModel<TModel>, IViewModelDialog<List<TModel>>
+public class ViewModelMultipleSelectionDialog<TModel> : BaseMultipleSelectionViewModel<TModel>, IViewModelDialog<List<TModel>>, ISearchableSelectionViewModel
 {
     /// <summary>
     /// Gets or sets the CanSubmit property value.
