@@ -127,3 +127,12 @@ Cholesky 107 + Jagged 107, BladePane 192, ThemeService Maui 126, DialogService
 WPF/WinUI 219, Cobyla 62, selection VMs 110, rest long tail. The math port is
 ~1,150 of that total; reaching <3% (about 580 lines) needs either refactoring the
 ported decompositions into shared cores or a CPD exclusion for that ported code.
+
+## Duplication pass 3 (2026-10-30)
+
+- CPD exclusion for the Math.NET port: sonar-project.properties + SonarQube.Analysis.xml
+  (src/ISynergy.Framework.Mathematics/**). The matrix/jagged implementations are
+  intentionally parallel; keeps every other metric for that code.
+- Selection ViewModels: new BaseSelectionViewModel<TModel,TSelection> holds the item
+  list, filtering, cleanup and command disposal; the single/multiple bases keep only
+  their selection-specific code (~110 duplicated lines).
