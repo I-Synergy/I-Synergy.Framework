@@ -133,6 +133,13 @@ The frontmatter `description` is the primary mechanism a client uses to decide w
 - The combined text of `description` plus (for skills) `when_to_use` contains an explicit trigger clause — one of `use when`, `use for`, `use before`, `use after`, `trigger when`, `trigger whenever`, `trigger on`, `call this when`, `invoke when`, or `when to use` (case-insensitive, on word boundaries)
 - Fails on a missing frontmatter, a missing/empty description, or a description with no trigger clause
 
+**Scope:** only this repository's own items are checked. Third-party skills and agents
+installed from another catalog source (`dotnet-maui`, `aspire-skills`, `awesome-copilot`)
+keep their upstream descriptions, which need not carry a trigger clause, so they are
+reported as `⏭ … skipped` instead of failing. Provenance comes from `.ai/ai.lock.json`
+(gitignored, absent in CI): entries whose `source` is not `template` are skipped. If the
+lock is missing or unreadable, every item is checked.
+
 **Run individually:**
 ```bash
 python3 .ai/tests/validate-triggers.py

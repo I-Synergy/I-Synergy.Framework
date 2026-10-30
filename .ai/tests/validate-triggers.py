@@ -6,8 +6,15 @@ The frontmatter `description` is the primary trigger mechanism a client uses to 
 whether to load a skill or delegate to an agent, so it must state *when* to invoke it.
 A file passes when the combined text of its `description` plus (for skills) `when_to_use`
 matches, case-insensitively, one of the recognised trigger phrases.
+
+Only this repository's own skills and agents are checked. Third-party items installed
+from another catalog source keep their upstream descriptions, which need not carry a
+trigger clause, so they are skipped: `.ai/ai.lock.json` records each installed item's
+source, and any entry whose source is not `template` is left alone.
 """
 
+import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -30,6 +37,11 @@ SCRIPT_DIR = Path(__file__).parent
 TEMPLATE_ROOT = SCRIPT_DIR.parent.parent
 SKILLS_DIR = TEMPLATE_ROOT / ".ai/skills"
 AGENTS_DIR = TEMPLATE_ROOT / ".ai/agents"
+LOCK_FILE = TEMPLATE_ROOT / ".ai/ai.lock.json"
+
+# The catalog source this repository *is*. Everything else in the lock was
+# installed from a third-party source and is not ours to police.
+TEMPLATE_SOURCE = "template"
 
 # Recognised trigger phrases. Matched on whole-word boundaries so that, for example,
 # "Use whenever" does not silently count as "use when".
@@ -70,6 +82,61 @@ def _safe_load(text: str) -> dict:
 
 def _has_trigger(text: str) -> bool:
     return bool(_TRIGGER_RE.search(text or ""))
+
+
+def _abs_key(path: Path) -> str:
+    """Absolute, normalised path string that does not follow junctions or links."""
+    return os.path.normcase(os.path.abspath(str(path)))
+
+
+def _is_within(path: Path, root: str) -> bool:
+    try:
+        return os.path.commonpath([_abs_key(path), root]) == root
+    except ValueError:  # different drives on Windows
+        return False
+
+
+def _third_party_paths() -> List[Tuple[str, str]]:
+    """Absolute paths and source ids of items not installed from the template.
+
+    `.ai/ai.lock.json` is written by AI Workspace Manager and gitignored, so it is
+    absent in CI and in the template repository itself — nothing is excluded there.
+    When it exists, it is the record of provenance: entries whose `source` is not
+    `template` are third-party copies whose upstream descriptions we do not own.
+    """
+    try:
+        with LOCK_FILE.open(encoding='utf-8') as handle:
+            lock = json.load(handle)
+    except (OSError, ValueError):
+        return []
+
+    entries = lock.get('resolved') if isinstance(lock, dict) else None
+    if not isinstance(entries, list):
+        return []
+
+    paths: List[Tuple[str, str]] = []
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        rel = entry.get('path')
+        source = entry.get('source')
+        if not isinstance(rel, str) or not rel.strip():
+            continue
+        if not isinstance(source, str) or source == TEMPLATE_SOURCE:
+            continue
+        candidate = Path(rel)
+        if not candidate.is_absolute():
+            candidate = TEMPLATE_ROOT / candidate
+        paths.append((_abs_key(candidate), source))
+    return paths
+
+
+def _source_of(path: Path, third_party: List[Tuple[str, str]]) -> str:
+    """The third-party source `path` was installed from, or '' when it is ours."""
+    for root, source in third_party:
+        if _is_within(path, root):
+            return source
+    return ""
 
 
 def _validate_file(path: Path, *, is_skill: bool) -> Tuple[bool, str]:
@@ -116,15 +183,22 @@ def main() -> int:
     failures: List[Tuple[str, str]] = []
     skills_checked = 0
     agents_checked = 0
+    third_party = _third_party_paths()
+    skipped = 0
 
     if SKILLS_DIR.exists():
         for skill_dir in sorted([d for d in SKILLS_DIR.iterdir() if d.is_dir()]):
             skill_file = skill_dir / "SKILL.md"
             if not skill_file.exists():
                 continue
+            rel = skill_file.relative_to(TEMPLATE_ROOT).as_posix()
+            source = _source_of(skill_file, third_party)
+            if source:
+                print(f"⏭  {rel} — third-party source '{source}', skipped")
+                skipped += 1
+                continue
             skills_checked += 1
             valid, reason = _validate_file(skill_file, is_skill=True)
-            rel = skill_file.relative_to(TEMPLATE_ROOT).as_posix()
             if valid:
                 print(f"✅ {rel}")
             else:
@@ -136,9 +210,14 @@ def main() -> int:
 
     if AGENTS_DIR.exists():
         for agent_file in sorted(AGENTS_DIR.glob("*.md")):
+            rel = agent_file.relative_to(TEMPLATE_ROOT).as_posix()
+            source = _source_of(agent_file, third_party)
+            if source:
+                print(f"⏭  {rel} — third-party source '{source}', skipped")
+                skipped += 1
+                continue
             agents_checked += 1
             valid, reason = _validate_file(agent_file, is_skill=False)
-            rel = agent_file.relative_to(TEMPLATE_ROOT).as_posix()
             if valid:
                 print(f"✅ {rel}")
             else:
@@ -150,8 +229,11 @@ def main() -> int:
 
     print()
     print("=========================================")
-    print(f"{skills_checked} skill(s) and {agents_checked} agent(s) checked, "
-          f"{len(failures)} failure(s)")
+    summary = (f"{skills_checked} skill(s) and {agents_checked} agent(s) checked, "
+               f"{len(failures)} failure(s)")
+    if skipped:
+        summary += f", {skipped} third-party item(s) skipped"
+    print(summary)
     print("=========================================")
 
     if failures:

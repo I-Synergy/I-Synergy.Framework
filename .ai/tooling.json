@@ -79,7 +79,7 @@
     },
     {
       "path": ".ai/tests/README.md",
-      "sha256": "0fc25d327cb82325ff23b9a2cee1a1cb3d7837ec16850526c763c981c84fd4a5",
+      "sha256": "6a88bb1ee79036f0a3fffda684783942b50ddc2f04eb614f1e4959ceb83769e6",
       "origin": "template"
     },
     {
@@ -179,14 +179,14 @@
     },
     {
       "path": ".ai/tests/validate-triggers.py",
-      "sha256": "faabba765fd1eaa558def6b1af0452bf1134ff3c8322f423503ca6eba03a6538",
+      "sha256": "589c67b2a90f22f408954193381c59ed65dcb3bd5672aaead522e32c673d82ec",
       "origin": "template"
     },
     {
       "path": ".ai/tests/validate-upgrade-script.py",
-      "sha256": "3028394ac9afa683439d7056f38d4401aa88bc7159fc50fabd415fd4fdb9567c",
+      "sha256": "04649e2bae7895d8702d5873f41c136947871757b1192122e42d040c5fb983bb",
       "origin": "template"
     }
   ],
-  "ref": "2026.11030.11314"
+  "ref": "2026.11030.11923"
 }

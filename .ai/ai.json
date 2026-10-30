@@ -3,7 +3,7 @@
   "sources": {
     "template": {
       "repo": "I-Synergy/AI",
-      "ref": "2026.11030.11314",
+      "ref": "2026.11030.11923",
       "resolve": "remote"
     },
     "awesome-copilot": {
@@ -64,7 +64,6 @@
     "council",
     "css-theme-generator",
     "database-migration",
-    "design-interrogation",
     "devops-engineer",
     "dotnet-engineer",
     "gap-review",
