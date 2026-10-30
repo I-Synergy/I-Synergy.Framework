@@ -3,6 +3,7 @@ using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Options;
+using ISynergy.Framework.UI.Services.Base;
 using ISynergy.Framework.UI.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,7 +18,7 @@ namespace ISynergy.Framework.UI.Services;
 /// It then applies the theme via Application.UserAppTheme and sets the global Application.AccentColor.
 /// Platform-specific resources (Android, Windows) are updated to keep native UI elements in sync.
 /// </remarks>
-public class ThemeService : IThemeService, IDisposable
+public class ThemeService : BaseThemeService
 {
     private const string Primary = nameof(Primary);
     private const string Secondary = nameof(Secondary);
@@ -25,73 +26,20 @@ public class ThemeService : IThemeService, IDisposable
     private const string TintedGray050 = nameof(TintedGray050);
     private const string TintedGray900 = nameof(TintedGray900);
 
-    private Themes _theme;
-    private string _color;
-    private Themes _resolvedSystemTheme;
-    private readonly ISettingsService _settingsService;
-    private readonly ILogger<ThemeService> _logger;
     private bool _isListeningToSystemTheme;
-    private bool _disposed;
-
-    /// <summary>
-    /// Gets a value that indicates whether the light theme is enabled.
-    /// </summary>
-    /// <value><see langword="true"/> if the resolved theme is light; otherwise, <see langword="false"/>.</value>
-    public bool IsLightThemeEnabled => Theme == Themes.Light;
-
-    /// <summary>
-    /// Gets the current application theme.
-    /// </summary>
-    /// <remarks>
-    /// <see cref="Themes.Default"/> is resolved to the platform theme, so consumers never have to
-    /// interpret it themselves. The resolved value is refreshed when the OS theme changes.
-    /// </remarks>
-    public Themes Theme => _theme == Themes.Default ? _resolvedSystemTheme : _theme;
-
-    /// <summary>
-    /// Gets the current accent color as a hex string.
-    /// </summary>
-    public string AccentColor => _color;
-
-    /// <summary>
-    /// Occurs when the theme or accent color changes.
-    /// </summary>
-    public event EventHandler? ThemeChanged;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeService"/> class.
     /// </summary>
     /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
-    /// <param name="logger">A logger used for diagnostics and structured logging.</param>
     /// <param name="themeColorOptions">Theme color options providing available colors and defaults.</param>
+    /// <param name="logger">A logger used for diagnostics and structured logging.</param>
     public ThemeService(
         ISettingsService settingsService,
         IOptions<ThemeColorOptions> themeColorOptions,
         ILogger<ThemeService> logger)
+        : base(settingsService, themeColorOptions, logger)
     {
-        _settingsService = settingsService;
-        _logger = logger;
-
-        _theme = settingsService.LocalSettings.Theme;
-        _color = settingsService.LocalSettings.Color;
-        _resolvedSystemTheme = ResolveSystemTheme();
-
-        var opts = themeColorOptions.Value;
-
-        if (opts.AvailableColors.Count == 1)
-        {
-            _color = opts.AvailableColors[0];
-
-            settingsService.LocalSettings.Color = _color;
-            settingsService.SaveLocalSettings();
-        }
-        else if (string.IsNullOrEmpty(_color))
-        {
-            _color = opts.AvailableColors.Count > 0 ? opts.AvailableColors[0] : ThemeColors.Default;
-
-            settingsService.LocalSettings.Color = _color;
-            settingsService.SaveLocalSettings();
-        }
     }
 
     /// <summary>
@@ -101,14 +49,14 @@ public class ThemeService : IThemeService, IDisposable
     /// The method safely handles a missing Application.Current instance and logs diagnostics.
     /// For Windows, it updates the title bar colors; for Android, it updates common color resources.
     /// </remarks>
-    public void ApplyTheme()
+    public override void ApplyTheme()
     {
-        _logger.LogInformation("Setting application style with color {Color} and theme {Theme}",
-            _color, _theme);
+        Logger.LogInformation("Setting application style with color {Color} and theme {Theme}",
+            SelectedColor, SelectedTheme);
 
         if (Application.Current is not Application application)
         {
-            _logger.LogWarning("Application.Current is not available");
+            Logger.LogWarning("Application.Current is not available");
             return;
         }
 
@@ -116,81 +64,38 @@ public class ThemeService : IThemeService, IDisposable
         {
             // Themes.Default means "follow the platform": leaving UserAppTheme unspecified is what
             // lets MAUI track the operating system, including runtime changes.
-            Application.Current.UserAppTheme = _theme switch
+            Application.Current.UserAppTheme = SelectedTheme switch
             {
                 Themes.Light => AppTheme.Light,
                 Themes.Dark => AppTheme.Dark,
                 _ => AppTheme.Unspecified
             };
 
-            _resolvedSystemTheme = ResolveSystemTheme();
+            ResolvedSystemTheme = ResolveSystemTheme();
             UpdateSystemThemeSubscription();
 
             // Use the new ApplicationExtensions to dynamically load the theme
-            application.SetApplicationColor(_color, _logger);
+            application.SetApplicationColor(SelectedColor, Logger);
 
             // Set the accent color from the loaded theme
             var primaryColor = ResourceUtility.FindResource<Color>(Primary);
             Application.AccentColor = primaryColor;
-            _logger.LogTrace("AccentColor set to {Color}", primaryColor);
+            Logger.LogTrace("AccentColor set to {Color}", primaryColor);
 
             // Update platform-specific color resources
             UpdatePlatformColors(application);
 
-            _logger.LogInformation("Application style successfully applied");
+            Logger.LogInformation("Application style successfully applied");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to set application style");
+            Logger.LogError(ex, "Failed to set application style");
         }
     }
 
-    /// <summary>
-    /// Sets the application theme and applies it immediately.
-    /// </summary>
-    /// <remarks>
-    /// This method updates the theme, applies it live, persists the change, and raises the <see cref="ThemeChanged"/> event.
-    /// It is safe to call on the UI thread.
-    /// </remarks>
-    /// <param name="theme">The theme to apply.</param>
-    public void SetTheme(Themes theme)
+    /// <inheritdoc />
+    protected override void OnAccentColorApplied(string hexColor)
     {
-        // An explicit choice is persisted even when it matches the resolved platform theme, so the
-        // application stops following the OS once the user has picked light or dark.
-        if (_theme == theme && theme != Themes.Default)
-            return;
-
-        _theme = theme;
-        _settingsService.LocalSettings.Theme = theme;
-        _settingsService.SaveLocalSettings();
-
-        ApplyTheme();
-        ThemeChanged?.Invoke(this, EventArgs.Empty);
-
-        _logger.LogInformation("Theme changed to {Theme}", theme);
-    }
-
-    /// <summary>
-    /// Sets the accent color and applies it immediately.
-    /// </summary>
-    /// <remarks>
-    /// This method updates the accent color, applies it live, persists the change, and raises the <see cref="ThemeChanged"/> event.
-    /// It is safe to call on the UI thread.
-    /// </remarks>
-    /// <param name="hexColor">The hex color string (e.g., "#0078D7" or "0078D7").</param>
-    public void SetAccentColor(string hexColor)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(hexColor);
-
-        if (string.Equals(_color, hexColor, StringComparison.OrdinalIgnoreCase))
-            return;
-
-        _color = hexColor;
-        _settingsService.LocalSettings.Color = hexColor;
-        _settingsService.SaveLocalSettings();
-
-        ApplyTheme();
-
         // Ensure live updates for DynamicResource bindings by directly updating resource values
         // in the owning dictionary (following the AccentPalette pattern).
         if (Application.Current is { } application)
@@ -201,11 +106,8 @@ public class ThemeService : IThemeService, IDisposable
             UpdateResourceInOwningDictionary(application.Resources, Tertiary, newColor);
             UpdateResourceInOwningDictionary(application.Resources, "AccentColor", newColor);
         }
-
-        ThemeChanged?.Invoke(this, EventArgs.Empty);
-
-        _logger.LogInformation("Accent color changed to {Color}", hexColor);
     }
+
 
     /// <summary>
     /// Updates platform-specific color resources.
@@ -216,7 +118,7 @@ public class ThemeService : IThemeService, IDisposable
         if (Application.AccentColor is not null)
         {
 #if ANDROID
-            _logger.LogTrace("Updating Android-specific colors");
+            Logger.LogTrace("Updating Android-specific colors");
 
             UpdateOrAddResource(application, "colorPrimary", Application.AccentColor);
             UpdateOrAddResource(application, "colorAccent", Application.AccentColor);
@@ -224,7 +126,7 @@ public class ThemeService : IThemeService, IDisposable
 #endif
 
 #if IOS
-            _logger.LogTrace("Updating iOS-specific colors");
+            Logger.LogTrace("Updating iOS-specific colors");
 
             UIKit.UIView.Appearance.TintColor = new UIKit.UIColor(
                 (nfloat)Application.AccentColor.Red,
@@ -234,7 +136,7 @@ public class ThemeService : IThemeService, IDisposable
 #endif
 
 #if WINDOWS
-            _logger.LogTrace("Updating Windows-specific colors");
+            Logger.LogTrace("Updating Windows-specific colors");
 
             UpdateOrAddResource(application, "SystemAccentColor", Application.AccentColor);
             UpdateOrAddResource(application, "SystemColorControlAccentColor", Application.AccentColor);
@@ -251,7 +153,7 @@ public class ThemeService : IThemeService, IDisposable
             // Update Windows title bar colors
             UpdateWindowsTitleBar();
 #endif
-            _logger.LogTrace("Platform-specific colors updated");
+            Logger.LogTrace("Platform-specific colors updated");
         }
     }
 
@@ -267,7 +169,7 @@ public class ThemeService : IThemeService, IDisposable
 
             if (window?.AppWindow?.TitleBar is null)
             {
-                _logger.LogTrace("Windows title bar not available for customization");
+                Logger.LogTrace("Windows title bar not available for customization");
                 return;
             }
 
@@ -312,13 +214,13 @@ public class ThemeService : IThemeService, IDisposable
                     mauiTitleBar.ForegroundColor = IsLightThemeEnabled ? Colors.Black : Colors.White;
                 }
 
-                _logger.LogTrace("Windows title bar colors updated to page background ({Theme})",
+                Logger.LogTrace("Windows title bar colors updated to page background ({Theme})",
                     IsLightThemeEnabled ? "Light" : "Dark");
             }
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to update Windows title bar colors");
+            Logger.LogWarning(ex, "Failed to update Windows title bar colors");
         }
     }
 #endif
@@ -394,7 +296,7 @@ public class ThemeService : IThemeService, IDisposable
         if (Application.Current is not { } application)
             return;
 
-        var shouldListen = _theme == Themes.Default;
+        var shouldListen = SelectedTheme == Themes.Default;
 
         if (shouldListen == _isListeningToSystemTheme)
             return;
@@ -402,7 +304,7 @@ public class ThemeService : IThemeService, IDisposable
         if (shouldListen)
         {
             application.RequestedThemeChanged += OnRequestedThemeChanged;
-            _logger.LogDebug("Watching platform theme changes");
+            Logger.LogDebug("Watching platform theme changes");
         }
         else
         {
@@ -417,25 +319,25 @@ public class ThemeService : IThemeService, IDisposable
     /// </summary>
     private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
     {
-        if (_theme != Themes.Default)
+        if (SelectedTheme != Themes.Default)
             return;
 
         var resolvedTheme = e.RequestedTheme == AppTheme.Dark ? Themes.Dark : Themes.Light;
 
-        if (resolvedTheme == _resolvedSystemTheme)
+        if (resolvedTheme == ResolvedSystemTheme)
             return;
 
-        _resolvedSystemTheme = resolvedTheme;
-        _logger.LogInformation("Platform theme changed to {Theme}", resolvedTheme);
+        ResolvedSystemTheme = resolvedTheme;
+        Logger.LogInformation("Platform theme changed to {Theme}", resolvedTheme);
 
         ApplyTheme();
-        ThemeChanged?.Invoke(this, EventArgs.Empty);
+        RaiseThemeChanged();
     }
 
     /// <summary>
     /// Reads the theme the operating system is using, independently of the application's user theme.
     /// </summary>
-    private static Themes ResolveSystemTheme()
+    protected override Themes ResolveSystemTheme()
     {
         try
         {
@@ -449,30 +351,13 @@ public class ThemeService : IThemeService, IDisposable
         }
     }
 
-    /// <summary>
-    /// Stops watching the platform theme and releases the subscription.
-    /// </summary>
-    public void Dispose()
+    /// <inheritdoc />
+    protected override void OnDispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Releases the platform theme subscription.
-    /// </summary>
-    /// <param name="disposing"><see langword="true"/> when called from <see cref="Dispose()"/>.</param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed)
-            return;
-
-        if (disposing && _isListeningToSystemTheme && Application.Current is { } application)
+        if (_isListeningToSystemTheme && Application.Current is { } application)
         {
             application.RequestedThemeChanged -= OnRequestedThemeChanged;
             _isListeningToSystemTheme = false;
         }
-
-        _disposed = true;
     }
 }

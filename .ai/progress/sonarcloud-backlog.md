@@ -136,3 +136,11 @@ ported decompositions into shared cores or a CPD exclusion for that ported code.
 - Selection ViewModels: new BaseSelectionViewModel<TModel,TSelection> holds the item
   list, filtering, cleanup and command disposal; the single/multiple bases keep only
   their selection-specific code (~110 duplicated lines).
+
+## Duplication pass 4 (2026-10-30)
+
+- ThemeService: new BaseThemeService (ISynergy.Framework.UI) owns theme state, persistence,
+  SetTheme/SetAccentColor and the dispose skeleton. UI.Maui and UI.WinUI keep only
+  ApplyTheme, ResolveSystemTheme and their native resource updates (~173 duplicated lines).
+- Coverlet verified after the refactors: Core 572, Mvvm 262, UI 90, Mathematics 954 tests
+  pass with --collect:"XPlat Code Coverage" and opencover reports are produced.
