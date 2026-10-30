@@ -226,17 +226,15 @@ public sealed class MessengerService : IMessengerService
         // Handle subclass/interface recipients
         if (_registry.HasSubclassRecipients)
         {
-            foreach (var type in _registry.GetSubclassIndexKeys())
+            foreach (var type in _registry.GetSubclassIndexKeys().Where(type =>
+                         messageType == type
+                         || messageType.IsSubclassOf(type)
+                         || type.IsAssignableFrom(messageType)))
             {
-                if (messageType == type
-                    || messageType.IsSubclassOf(type)
-                    || type.IsAssignableFrom(messageType))
+                var list = _registry.GetSubclassRecipients(type);
+                if (list is not null)
                 {
-                    var list = _registry.GetSubclassRecipients(type);
-                    if (list is not null)
-                    {
-                        SendToList(message, list, targetType, token);
-                    }
+                    SendToList(message, list, targetType, token);
                 }
             }
         }

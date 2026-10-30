@@ -72,3 +72,13 @@ long tail ~600 across 100+ rules.
 - [ ] S2589 in UI.Maui/UI.WinUI DialogService and the WinUI semaphore guard were
       reverted: `_logger` is `ILogger?` (CS8604) and the semaphore flag is real —
       releasing after a failed WaitAsync would throw. Sonar's dataflow is wrong there.
+
+## Batch 4 (2026-10-30)
+
+- [x] S3267 loop simplification (6): BladePane, BladePaneHostRegistry (2),
+      MessengerService, CommandExecutionResourcePool, RequestCancellationService.
+- [ ] S3267 in Mathematics deliberately skipped: converting hot numeric loops to
+      LINQ adds allocations in performance-sensitive paths.
+
+### Totals so far
+~330 findings addressed across 4 commits (1d352c7d, 805f5ac3, ea37ebe5, +this one).

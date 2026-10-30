@@ -20,13 +20,7 @@ public sealed class BladePaneHostRegistry : IBladePaneHost
             {
                 PruneDeadEntries();
 
-                foreach (var reference in _hosts)
-                {
-                    if (reference.Target is not null)
-                        return true;
-                }
-
-                return false;
+                return _hosts.Any(reference => reference.Target is not null);
             }
         }
     }
@@ -41,11 +35,8 @@ public sealed class BladePaneHostRegistry : IBladePaneHost
             PruneDeadEntries();
 
             // Avoid duplicate registrations of the same instance.
-            foreach (var reference in _hosts)
-            {
-                if (ReferenceEquals(reference.Target, host))
-                    return;
-            }
+            if (_hosts.Any(reference => ReferenceEquals(reference.Target, host)))
+                return;
 
             _hosts.Add(new WeakReference(host));
         }

@@ -591,10 +591,10 @@ public class BladePane : ContentView, IDisposable
     {
         // Dim every hosted card first: no blade stays interactive unless the blade list and
         // the hosted cards agree on which one is the newest.
-        foreach (var card in _cards.Values)
+        foreach (var card in _cards.Values.Select(entry => entry.Card))
         {
-            card.Card.IsEnabled = false;
-            card.Card.Opacity = DisabledOpacity;
+            card.IsEnabled = false;
+            card.Opacity = DisabledOpacity;
         }
 
         var blades = ResolveBlades();
