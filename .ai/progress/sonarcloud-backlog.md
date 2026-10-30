@@ -158,3 +158,14 @@ Dialog_RepeatedOpenAndCloseCycles_LeaveTheCircuitInteractive.
 Fix: added a RegisterViewModel(IServiceCollection, Type, ServiceLifetime) overload to
 the shared extensions; the Blazor RegisterAssemblies path now registers view models as
 transient again, while the UI platforms keep their scoped registration.
+
+## CI: Sample.AppHost and the Aspire CLI bundle (2026-10-30)
+
+Aspire 17 (Aspire.Hosting.AppHost 17.0.0-preview.1.26530.1) resolves its CLI bundle
+during the build and fails with ASPIRE009 when no Aspire CLI is present; on the CI
+agent the automatic `dnx aspire.cli@... setup` timed out after 120 s. Setting
+AspireUseCliBundle=false is not an option (hard ASPIRE010 error).
+
+Sample.AppHost is a local orchestration sample, not part of the test pipeline, so its
+csproj sets IsAspireHost=false when CI=true: CI compiles it as a plain console app,
+local runs keep the Aspire orchestration tooling.

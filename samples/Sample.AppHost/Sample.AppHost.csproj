@@ -6,6 +6,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(CI)' == 'true'">
+    <!--
+      This AppHost is a local orchestration sample and is not part of the unit-test pipeline.
+      Aspire 17 resolves its CLI bundle during the build (ASPIRE009) and CI agents have no
+      Aspire CLI, so the orchestration host tooling is skipped on CI. Local runs still use it.
+    -->
+    <IsAspireHost>false</IsAspireHost>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" />
     <PackageReference Include="Aspire.Hosting.Azure.Storage" />
