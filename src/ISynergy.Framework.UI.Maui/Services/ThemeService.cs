@@ -38,7 +38,7 @@ public class ThemeService : BaseThemeService
         ISettingsService settingsService,
         IOptions<ThemeColorOptions> themeColorOptions,
         ILogger<ThemeService> logger)
-        : base(settingsService, themeColorOptions, logger)
+        : base(settingsService, themeColorOptions, logger, ResolveSystemTheme)
     {
     }
 
@@ -315,7 +315,7 @@ public class ThemeService : BaseThemeService
     }
 
     /// <summary>
-    /// Re-applies the palette and raises <see cref="ThemeChanged"/> when the platform theme changes.
+    /// Re-applies the palette and raises <see cref="BaseThemeService.ThemeChanged"/> when the platform theme changes.
     /// </summary>
     private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
     {
@@ -337,7 +337,7 @@ public class ThemeService : BaseThemeService
     /// <summary>
     /// Reads the theme the operating system is using, independently of the application's user theme.
     /// </summary>
-    protected override Themes ResolveSystemTheme()
+    private static Themes ResolveSystemTheme()
     {
         try
         {

@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Services.Base;
 
 /// <summary>
 /// Shared theme state and persistence for the platform theme services. Platform subclasses provide
-/// <see cref="ApplyTheme"/> and <see cref="ResolveSystemTheme"/> plus any native resource updates.
+/// <see cref="ApplyTheme"/>, a system theme resolver and any native resource updates.
 /// </summary>
 /// <remarks>
 /// The service reads the persisted <see cref="Themes"/> and color value from <see cref="ISettingsService"/>
@@ -19,7 +19,6 @@ public abstract class BaseThemeService : IThemeService, IDisposable
 {
     private Themes _theme;
     private string _color;
-    private Themes _resolvedSystemTheme;
 
     private readonly ISettingsService _settingsService;
     private readonly ILogger _logger;
@@ -37,7 +36,7 @@ public abstract class BaseThemeService : IThemeService, IDisposable
     /// <see cref="Themes.Default"/> is resolved to the platform theme, so consumers never have to
     /// interpret it themselves. The resolved value is refreshed when the operating system theme changes.
     /// </remarks>
-    public Themes Theme => _theme == Themes.Default ? _resolvedSystemTheme : _theme;
+    public Themes Theme => _theme == Themes.Default ? ResolvedSystemTheme : _theme;
 
     /// <summary>
     /// Gets the current accent color as a hex string.
@@ -72,11 +71,7 @@ public abstract class BaseThemeService : IThemeService, IDisposable
     /// <summary>
     /// Gets or sets the theme the platform currently resolves for <see cref="Themes.Default"/>.
     /// </summary>
-    protected Themes ResolvedSystemTheme
-    {
-        get => _resolvedSystemTheme;
-        set => _resolvedSystemTheme = value;
-    }
+    protected Themes ResolvedSystemTheme { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether the service has been disposed.
@@ -89,17 +84,22 @@ public abstract class BaseThemeService : IThemeService, IDisposable
     /// <param name="settingsService">An application settings service that provides persisted theme and color values.</param>
     /// <param name="themeColorOptions">Theme color options providing available colors and defaults.</param>
     /// <param name="logger">A logger used for diagnostics and structured logging.</param>
+    /// <param name="resolveSystemTheme">
+    /// Platform resolver for the operating system theme. Passed as a delegate instead of calling an
+    /// overridable member from the constructor.
+    /// </param>
     protected BaseThemeService(
         ISettingsService settingsService,
         IOptions<ThemeColorOptions> themeColorOptions,
-        ILogger logger)
+        ILogger logger,
+        Func<Themes> resolveSystemTheme)
     {
         _settingsService = settingsService;
         _logger = logger;
 
         _theme = settingsService.LocalSettings.Theme;
         _color = settingsService.LocalSettings.Color;
-        _resolvedSystemTheme = ResolveSystemTheme();
+        ResolvedSystemTheme = resolveSystemTheme();
 
         var opts = themeColorOptions.Value;
 
@@ -121,11 +121,6 @@ public abstract class BaseThemeService : IThemeService, IDisposable
     /// Applies the configured theme and accent color to the platform application.
     /// </summary>
     public abstract void ApplyTheme();
-
-    /// <summary>
-    /// Reads the theme the operating system is currently using.
-    /// </summary>
-    protected abstract Themes ResolveSystemTheme();
 
     /// <summary>
     /// Sets the application theme and applies it immediately.

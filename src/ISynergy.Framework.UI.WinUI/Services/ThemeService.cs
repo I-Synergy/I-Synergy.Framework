@@ -36,7 +36,7 @@ public class ThemeService : BaseThemeService
         ISettingsService settingsService,
         IOptions<ThemeColorOptions> themeColorOptions,
         ILogger<ThemeService> logger)
-        : base(settingsService, themeColorOptions, logger)
+        : base(settingsService, themeColorOptions, logger, ResolveSystemTheme)
     {
     }
 
@@ -196,7 +196,7 @@ public class ThemeService : BaseThemeService
     /// <summary>
     /// Reads the theme Windows is currently using for applications.
     /// </summary>
-    protected override Themes ResolveSystemTheme()
+    private static Themes ResolveSystemTheme()
     {
         try
         {
