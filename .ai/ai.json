@@ -109,7 +109,9 @@
     "ui-tester",
     "writer"
   ],
-  "instructions": [],
+  "instructions": [
+    "sonarqube_mcp"
+  ],
   "plugins": [],
   "hooks": [],
   "materialize": "copy",

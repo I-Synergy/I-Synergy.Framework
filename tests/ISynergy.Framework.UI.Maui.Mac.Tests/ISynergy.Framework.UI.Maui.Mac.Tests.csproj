@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0-maccatalyst</TargetFramework>
+    <TargetFramework>net11.0-maccatalyst</TargetFramework>
     <UseMaui>true</UseMaui>
     <IsPackable>false</IsPackable>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
@@ -10,7 +10,6 @@
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">maccatalyst-arm64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
     <MtouchLink>None</MtouchLink>
-    <UseInterpreter>true</UseInterpreter>
     <!-- Local Xcode is ahead of the MacCatalyst SDK pack's recommended version; this only skips the advisory version-match check, not an actual compatibility requirement. -->
     <ValidateXcodeVersion>false</ValidateXcodeVersion>
     <!-- Microsoft.Testing.Platform (MTP) mode: produces a self-running MSTest executable so the
@@ -49,7 +48,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Maui.Controls" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj" />
