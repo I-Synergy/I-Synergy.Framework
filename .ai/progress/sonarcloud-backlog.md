@@ -100,3 +100,9 @@ Consolidated:
 Remaining duplication hotspots (not yet touched): BaseShellViewModel (WPF/Maui/
 WinUI ~489), DialogService (~480), Application (~487), SingularValueDecomposition
 and Jagged counterparts (~800), BladeView/BladePane (~383), ThemeService (~254).
+
+## Duplication pass 2 (2026-10-30)
+
+- DialogService: the entity and no-entity ShowDialogAsync overloads were duplicated
+  within each platform file. Merged into one private core with `entity`/`hasEntity`
+  in UI.WinUI, UI.WPF and UI.Maui (public API unchanged, ~390 duplicated lines).
