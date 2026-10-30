@@ -1,8 +1,0 @@
-{
-  "id": "template:playwright-tester",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "2a1609179967c05a5f6d5724166370a3ea51ad5a7da115f7ea33b6613e40b274",
-  "materialize": "copy",
-  "path": ".ai/skills/playwright-tester"
-}

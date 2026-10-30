@@ -1,8 +1,0 @@
-{
-  "id": "template:devops-engineer",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "1e3a720a2352f21d99139a5c7b4fb2894eee9e137096838d898c29695c457545",
-  "materialize": "copy",
-  "path": ".ai/skills/devops-engineer"
-}

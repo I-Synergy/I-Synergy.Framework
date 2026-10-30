@@ -2,12 +2,19 @@
 # -*- coding: utf-8 -*-
 """Validate the release-versioning job in .github/workflows/ci.yml.
 
-Checks:
+In the template repository, checks:
   1. ci.yml, the inline version step and CHANGELOG.md exist; the old scripts are gone
   2. ci.yml triggers on push to main only
   3. ci.yml requests contents: write and wires changelog, tag and release steps
   4. the tag is the plain build number (no `v` prefix)
   5. the inline version step derives the documented values for merge and PR builds
+
+In an implementing repository, the template's release layout does not apply.
+The same test then checks the project's own release contract instead:
+  * a workflow that tags or publishes a release,
+  * every `scripts/...` path that workflow references exists,
+  * the releasing workflow names a version/build source it uses.
+A repository with no release workflow is reported as not applicable, not failed.
 """
 
 import io
@@ -232,11 +239,107 @@ def test_version_outputs(doc: dict) -> bool:
     return valid
 
 
+WORKFLOWS = TEMPLATE_ROOT / ".github" / "workflows"
+SCRIPT_REF = re.compile(
+    r"(?:\./)?scripts/[A-Za-z0-9._/-]+\.(?:ps1|sh|py|js|mjs|ts)")
+RELEASE_MARKERS = ("gh release create", "action-gh-release", "git tag ")
+VERSION_MARKERS = (
+    "VersionNumber",
+    "BuildNumber",
+    "Set-VersionVariables",
+    "steps.version.outputs",
+    "require('./package.json').version",
+    'require("./package.json").version',
+    "git describe",
+    "run_number",
+    "GITHUB_RUN_NUMBER",
+)
+
+
+def workflow_texts() -> dict:
+    """Every GitHub workflow body in this repository, by filename."""
+    if not WORKFLOWS.is_dir():
+        return {}
+    files = sorted([*WORKFLOWS.glob("*.yml"), *WORKFLOWS.glob("*.yaml")])
+    return {path.name: read(path) for path in files}
+
+
+def validate_project_release() -> bool:
+    """Check a derived project's own release contract.
+
+    The template's release policy (inline version step, no root `scripts/`)
+    does not apply here. What does apply is that a project which tags or
+    publishes a release has a version source and that every script its
+    workflows invoke exists.
+    """
+    print("TEST 1: project release assets")
+    print("-" * 40)
+
+    texts = workflow_texts()
+    if not texts:
+        print("  SKIP: no GitHub workflows in this repository")
+        return True
+
+    releasing = {name: text for name, text in texts.items()
+                 if any(marker in text for marker in RELEASE_MARKERS)}
+    if not releasing:
+        print("  SKIP: no workflow tags or publishes a release")
+        return True
+
+    valid = True
+    references = set()
+    for text in texts.values():
+        references.update(SCRIPT_REF.findall(text))
+    missing = sorted(rel for rel in references
+                     if not (TEMPLATE_ROOT / rel).is_file())
+    if missing:
+        fail("workflow references missing script(s): " + ", ".join(missing))
+        valid = False
+    else:
+        ok(f"{len(references)} referenced script(s) present")
+
+    for name, text in sorted(releasing.items()):
+        if not any(marker in text for marker in VERSION_MARKERS):
+            fail(f"{name} tags or publishes without a visible version/build source")
+            valid = False
+        else:
+            ok(f"{name} derives or reads a version before releasing")
+
+    # An unrelated `scripts/` directory is not an error: only referenced files
+    # matter, so a project is free to organise its own tooling.
+    return valid
+
+
+def uses_template_release() -> bool:
+    """Whether this repository uses the template's inline release workflow.
+
+    Implementing repositories copy `.ai/tests` but keep their own CI. A project
+    may legitimately version releases in `scripts/` or a separate workflow, so
+    this template-only check must not fail there.
+    """
+    if not WORKFLOW.exists():
+        return False
+    text = read(WORKFLOW)
+    return "VersionNumber=" in text and "gh release create" in text
+
+
 def main() -> int:
     print("=" * 45)
     print("Release Versioning Validation")
     print("=" * 45)
     print()
+
+    if not uses_template_release():
+        print("This repository does not use the template's inline release workflow;")
+        print("validating its own release contract instead.")
+        print()
+        valid = validate_project_release()
+        print()
+        if valid:
+            print("✅ PROJECT RELEASE TESTS PASSED")
+        else:
+            print("\n❌ PROJECT RELEASE VALIDATION FAILED")
+        return 0 if valid else 1
 
     if not test_files_exist():
         print("\n❌ RELEASE VALIDATION FAILED")

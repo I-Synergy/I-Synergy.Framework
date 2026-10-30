@@ -6,7 +6,7 @@ description: >
   resolved. Use whenever a user says "grill me", "stress-test my plan", "poke holes
   in this", "challenge my design", "interview me about this design", or wants a
   rigorous review of any design, architecture, or technical proposal — even if they
-  don't use these exact words. When in doubt, trigger this skill.
+  don't use these exact words. Use when a plan, architecture, or technical decision needs pressure-testing before you commit to it. When in doubt, trigger this skill.
 ---
 
 # Design Interrogation

@@ -1,8 +1,0 @@
-{
-  "id": "template:reviewer",
-  "kind": "agent",
-  "ref": "2026.11027.12350",
-  "sha256": "301315f64f3c00e82d7f2356891f188a7b91be8a4d0c7e74e567c25f7a304f30",
-  "materialize": "copy",
-  "path": ".ai/agents/reviewer.md"
-}

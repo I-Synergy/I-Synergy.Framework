@@ -1,8 +1,0 @@
-{
-  "id": "template:blazor-specialist",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "b2fedd9c2d285e22485d9c6a218d7c09f38a4fb1edd8a33de934bb284cd1c9d5",
-  "materialize": "copy",
-  "path": ".ai/skills/blazor-specialist"
-}

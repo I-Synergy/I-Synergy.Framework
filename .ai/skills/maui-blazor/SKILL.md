@@ -1,7 +1,7 @@
 ---
 name: maui-blazor
 description: >-
-  I-Synergy MVVM patterns for .NET MAUI + Blazor Hybrid shells (shared ViewModels, ConfigureServices bootstrapper, BlazorWebView orchestration).
+  I-Synergy MVVM patterns for .NET MAUI + Blazor Hybrid shells (shared ViewModels, ConfigureServices bootstrapper, BlazorWebView orchestration). Use when wiring a .NET MAUI + Blazor Hybrid shell with shared ViewModels and BlazorWebView orchestration.
 version: 2026.02.10
 sources:
   - samples/Sample.Maui

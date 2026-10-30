@@ -1,26 +1,24 @@
 #!/usr/bin/env python3
 """
 Ensure folder-level junctions exist from .ai/skills/, .ai/agents/,
-.ai/instructions/ and .ai/prompts/ to:
-  - .claude/skills/  (junction -> .ai/skills/)
-  - .github/skills/  (junction -> .ai/skills/)
-  - .reasonix/skills/  (junction -> .ai/skills/)
-  - .claude/agents/  (junction -> .ai/agents/)
-  - .github/agents/  (junction -> .ai/agents/)
-  - .reasonix/agents/  (junction -> .ai/agents/)
-  - .claude/commands/  (junction -> .ai/prompts/)
-  - .github/prompts/  (junction -> .ai/prompts/)
-  - .claude/instructions/  (junction -> .ai/instructions/)
-  - .github/instructions/  (junction -> .ai/instructions/)
+.ai/instructions/ and .ai/prompts/ to the folders of the clients selected in
+`.ai/ai.json`:
 
-Everything else reads the canonical source through junctions.
+  claude     .claude/skills, .claude/agents, .claude/commands, .claude/instructions
+  copilot    .github/skills, .github/agents, .github/prompts, .github/instructions
+  reasonix   .reasonix/skills, .reasonix/agents
+
+Disabling a client removes only its junctions. A real directory is never
+deleted, and `.github` is never removed because it also holds workflows. A
+manifest without `clients` keeps every client (backward compatible).
 
 Usage:
-    python sync-platforms.py              # ensure junctions exist
+    python sync-platforms.py              # reconcile the selected clients
     python sync-platforms.py --dry-run    # show what would change without writing
 """
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -28,13 +26,50 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent.parent.parent  # .ai/scripts/ -> .ai/ -> repo root
 
-# Source → [target junctions]
-JUNCTIONS = {
-    ".ai/skills": [".claude/skills", ".github/skills", ".reasonix/skills"],
-    ".ai/agents": [".claude/agents", ".github/agents", ".reasonix/agents"],
-    ".ai/instructions": [".claude/instructions", ".github/instructions"],
-    ".ai/prompts": [".claude/commands", ".github/prompts"],
-}
+CLIENTS = ("claude", "copilot", "reasonix")
+# (client, source, target)
+JUNCTIONS = (
+    ("claude", ".ai/skills", ".claude/skills"),
+    ("copilot", ".ai/skills", ".github/skills"),
+    ("reasonix", ".ai/skills", ".reasonix/skills"),
+    ("claude", ".ai/agents", ".claude/agents"),
+    ("copilot", ".ai/agents", ".github/agents"),
+    ("reasonix", ".ai/agents", ".reasonix/agents"),
+    ("claude", ".ai/instructions", ".claude/instructions"),
+    ("copilot", ".ai/instructions", ".github/instructions"),
+    ("claude", ".ai/prompts", ".claude/commands"),
+    ("copilot", ".ai/prompts", ".github/prompts"),
+)
+# Client roots. Removed only when empty, so `.github/workflows` and project
+# files always keep their folder alive.
+CLIENT_DIRS = (".claude", ".github", ".reasonix")
+
+
+def _manifest_clients() -> set:
+    """Clients selected in .ai/ai.json; missing field means all (legacy).
+
+    The resolver passes `AI_CLIENTS` when it runs this script, which also
+    covers a first sync on a repository that has no manifest yet.
+    """
+    override = os.environ.get("AI_CLIENTS")
+    if override is not None:
+        names = {value.strip().lower() for value in override.split(",") if value.strip()}
+        return names & set(CLIENTS)
+
+    path = SCRIPT_DIR / ".ai" / "ai.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set(CLIENTS)
+    if not isinstance(data, dict):
+        return set(CLIENTS)
+    raw = data.get("clients")
+    if raw is None:
+        return set(CLIENTS)
+    if not isinstance(raw, list):
+        return set(CLIENTS)
+    names = {str(value).strip().lower() for value in raw if str(value).strip()}
+    return names & set(CLIENTS)
 
 
 def _is_junction(path: Path) -> bool:
@@ -117,18 +152,50 @@ def sync_junction(source_rel: str, target_rel: str, dry_run: bool) -> str:
             _rmdir(target)
         ok = _create_link(target, source)
         if not ok:
-            return f"FAIL — could not create junction/symlink"
+            return "FAIL — could not create junction/symlink"
 
     return action
 
 
+def remove_junction(target_rel: str, dry_run: bool) -> str:
+    """Remove a disabled client's junction; never delete a real directory."""
+    target = SCRIPT_DIR / target_rel
+    if not (target.exists() or target.is_symlink() or _is_junction(target)):
+        return "ABSENT"
+    if _is_junction(target) or target.is_symlink():
+        if not dry_run:
+            _rmdir(target)
+        return "REMOVED"
+    return "KEEP"
+
+
+def prune_empty_client_dirs(dry_run: bool) -> list:
+    """Remove `.claude`/`.reasonix` only when nothing else lives there."""
+    removed = []
+    for rel in CLIENT_DIRS:
+        path = SCRIPT_DIR / rel
+        if not path.is_dir() or _is_junction(path):
+            continue
+        try:
+            if any(path.iterdir()):
+                continue
+            if not dry_run:
+                path.rmdir()
+            removed.append(rel)
+        except OSError:
+            continue
+    return removed
+
+
 def sync_all(dry_run: bool = False) -> int:
     prefix = "[DRY RUN] " if dry_run else ""
-    print(f"{prefix}Ensuring folder-level junctions...")
+    clients = _manifest_clients()
+    print(f"{prefix}Ensuring folder-level junctions for: "
+          f"{', '.join(name for name in CLIENTS if name in clients) or '(no clients)'}")
 
     changed = 0
-    for source_rel, targets in JUNCTIONS.items():
-        for target_rel in targets:
+    for client, source_rel, target_rel in JUNCTIONS:
+        if client in clients:
             result = sync_junction(source_rel, target_rel, dry_run)
             if result == "OK":
                 print(f"  OK   {target_rel} -> {source_rel}")
@@ -138,6 +205,18 @@ def sync_all(dry_run: bool = False) -> int:
                 label = f"WOULD {result}" if dry_run else result
                 print(f"  {label} {target_rel} -> {source_rel}")
                 changed += 1
+        else:
+            result = remove_junction(target_rel, dry_run)
+            if result == "REMOVED":
+                label = "WOULD REMOVE" if dry_run else "REMOVED"
+                print(f"  {label} {target_rel} ({client} disabled)")
+                changed += 1
+            elif result == "KEEP":
+                print(f"  KEEP {target_rel} (not a junction; {client} disabled)")
+
+    for rel in prune_empty_client_dirs(dry_run):
+        label = "WOULD REMOVE" if dry_run else "REMOVED"
+        print(f"  {label} {rel} (empty)")
 
     print(f"\n{changed} item(s) {'would be ' if dry_run else ''}changed.")
     return 0
@@ -145,7 +224,7 @@ def sync_all(dry_run: bool = False) -> int:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Ensure junctions from .ai/skills/ and .ai/agents/ to Claude, Copilot and Reasonix platforms"
+        description="Ensure junctions for the clients selected in .ai/ai.json"
     )
     parser.add_argument("--dry-run", action="store_true", help="Show changes without writing")
     args = parser.parse_args()

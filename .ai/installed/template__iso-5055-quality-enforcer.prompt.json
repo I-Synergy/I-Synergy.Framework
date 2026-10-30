@@ -1,8 +1,0 @@
-{
-  "id": "template:iso-5055-quality-enforcer",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "4dac75c86b14020ca90918d6fd1a849c9b02af9dcdbe790366ae7bb2f6afd02f",
-  "materialize": "copy",
-  "path": ".ai/prompts/iso-5055-quality-enforcer.prompt.md"
-}

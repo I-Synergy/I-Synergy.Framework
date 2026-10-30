@@ -1,8 +1,0 @@
-{
-  "id": "template:designer",
-  "kind": "agent",
-  "ref": "2026.11027.12350",
-  "sha256": "eb4606125d20e6ceb155fcbc3a9ab31b51085624c6676952d0b1fd8c42afca79",
-  "materialize": "copy",
-  "path": ".ai/agents/designer.md"
-}

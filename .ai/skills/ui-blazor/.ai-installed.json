@@ -1,8 +1,0 @@
-{
-  "id": "template:ui-blazor",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "d115d6192bbb16609c961e3cc115778178db817ecef71cd7fe4dc7f53710995f",
-  "materialize": "copy",
-  "path": ".ai/skills/ui-blazor"
-}

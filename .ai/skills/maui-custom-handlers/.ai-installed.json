@@ -1,8 +1,0 @@
-{
-  "id": "dotnet-maui:maui-custom-handlers",
-  "kind": "skill",
-  "ref": "main",
-  "sha256": "b0e8b8c960db8bb7969f692497d3c283360a8486d2b1cfd5508f9fc97bc68dc0",
-  "materialize": "copy",
-  "path": ".ai/skills/maui-custom-handlers"
-}

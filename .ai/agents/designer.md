@@ -1,6 +1,6 @@
 ---
 name: designer
-description: Visual/graphical design — color palettes, typography, spacing, branding, iconography, accessibility contrast, and visual hierarchy
+description: Visual/graphical design — color palettes, typography, spacing, branding, iconography, accessibility contrast, and visual hierarchy. Use for visual design — color palettes, typography, branding, design tokens, and accessibility contrast.
 runAs: subagent
 model: haiku
 tools: Read, Write, Edit, Bash, Grep, Glob

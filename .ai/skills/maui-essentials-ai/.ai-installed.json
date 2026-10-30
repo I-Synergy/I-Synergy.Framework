@@ -1,8 +1,0 @@
-{
-  "id": "dotnet-maui:maui-essentials-ai",
-  "kind": "skill",
-  "ref": "main",
-  "sha256": "a7f49601ad483b19db8b58f586fe59e3cae9f72282625bc63be4788215f0152d",
-  "materialize": "copy",
-  "path": ".ai/skills/maui-essentials-ai"
-}

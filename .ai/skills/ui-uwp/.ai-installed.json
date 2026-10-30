@@ -1,8 +1,0 @@
-{
-  "id": "template:ui-uwp",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "822183ec3cbf37cebb189430beaf3f7a15c1e8a22c95b55c61abc1b01bab2947",
-  "materialize": "copy",
-  "path": ".ai/skills/ui-uwp"
-}

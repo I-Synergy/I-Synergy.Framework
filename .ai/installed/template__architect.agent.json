@@ -1,8 +1,0 @@
-{
-  "id": "template:architect",
-  "kind": "agent",
-  "ref": "2026.11027.12350",
-  "sha256": "4f5447b44153af3a9e712b3e2773469449d2ea6ada2530179b352d07731ece1f",
-  "materialize": "copy",
-  "path": ".ai/agents/architect.md"
-}

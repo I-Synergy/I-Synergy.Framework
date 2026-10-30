@@ -1,6 +1,6 @@
 ---
 name: sync-platforms
-description: Syncs the platform junctions for skills, agents, prompts and instructions from .ai/ to .claude/, .github/ and .reasonix/. Run after adding, editing, or removing an item in .ai/skills/, .ai/agents/, .ai/prompts/ or .ai/instructions/.
+description: Syncs the platform junctions for skills, agents, prompts and instructions from .ai/ to .claude/, .github/ and .reasonix/. Run after adding, editing, or removing an item in .ai/skills/, .ai/agents/, .ai/prompts/ or .ai/instructions/. Use when every client (.claude/, .github/, .reasonix/) must pick up a change made under .ai/.
 ---
 
 # Sync Platforms

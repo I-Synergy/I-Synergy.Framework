@@ -5,7 +5,7 @@ catalog.py — per-repo skill/agent selection resolver (Phase 0: offline, no net
 A merged catalog can offer hundreds of skills and agents; a project should only
 materialise the handful it selects. This CLI owns that contract:
 
-    catalog/index.json     generated index over the available items (committed)
+    .ai/tmp/catalog-index.json  generated index (local cache, gitignored)
     .ai/ai.json            project-owned selection (committed, reviewable)
     .ai/ai.lock.json       resolved refs + per-item sha256 (committed)
     .ai/skills/<name>/     installed skills
@@ -17,9 +17,14 @@ Selection ids are 'source:id'. Ids from the 'template' source may be written bar
 git command is used.
 
 Usage:
-    python catalog.py index [--out catalog/index.json] [--verify]
+    python catalog.py index [--out .ai/tmp/catalog-index.json] [--verify]
     python catalog.py add <id...> [--kind skill|agent]
     python catalog.py remove <id...> [--kind skill|agent] [--prune]
+    python catalog.py lock <id...> / unlock <id...>
+    python catalog.py scaffold
+    python catalog.py clients [--set claude copilot reasonix]
+    python catalog.py preset add|remove <name...>
+    python catalog.py presets [--json]
     python catalog.py list [--installed] [--available]
     python catalog.py sync [--check] [--frozen] [--prune] [--dry-run] [--materialize copy|link]
     python catalog.py status
@@ -27,18 +32,14 @@ Usage:
 
 Every subcommand also accepts --json.
 
-Marker location (so a half-finished materialisation is recoverable)
-------------------------------------------------------------------
-Each installed item carries a marker with its id, ref, sha256 and materialize mode:
-
-  * materialize=copy     -> .ai-installed.json inside the item directory.
-  * materialize=copy     -> a copied *agent* is a single file, so the marker goes
-                            to .ai/installed/<id>.<kind>.json instead.
-  * materialize=link     -> the target is a junction/symlink onto the source
-                            directory, so writing inside it would edit the source:
-                            the marker goes to .ai/installed/<id>.<kind>.json.
-
-Marker files are excluded from the item hash, so adding one never changes it.
+Installed state
+---------------
+`.ai/ai.lock.json` is the single record of what is materialised: id, kind,
+source, ref, path, sha256, file count, licence, upstream and materialize mode.
+Older versions also wrote a marker file per item (`.ai-installed.json` inside
+copy-mode items, `.ai/installed/<id>.<kind>.json` otherwise). Nothing reads
+those markers, and they duplicated the lock, so they are no longer written;
+`sync` cleans up any it finds.
 
 Prune safety
 ------------
@@ -89,6 +90,9 @@ DEFAULT_REF = "local"
 LICENSE = "MIT"
 
 KINDS = ("skill", "agent", "instruction", "prompt", "plugin", "hook")
+# AI clients whose platform folders are materialised. A manifest without
+# `clients` predates the setting, so it keeps every client it may already have.
+CLIENTS = ("claude", "copilot", "reasonix")
 MANIFEST_KEYS = {
     "skill": "skills",
     "agent": "agents",
@@ -220,7 +224,28 @@ def catalog_dir() -> Path:
 
 
 def _index_path() -> Path:
-    return catalog_dir() / "index.json"
+    """Where `catalog.py index` writes by default.
+
+    Generated, local-only: the vocabulary under `.ai/catalog/` is committed,
+    but the index is a cache. `.ai/tmp/` is gitignored, so rebuilding it never
+    dirties the repository.
+    """
+    return _ai_dir() / "tmp" / "catalog-index.json"
+
+
+def legacy_index() -> Path | None:
+    """An index written to the old committed location, if it is ours.
+
+    Only a payload with our `indexVersion` is removed: a hand-written file at
+    that path is left alone.
+    """
+    path = _ai_dir() / "catalog" / "index.json"
+    if not path.is_file():
+        return None
+    data = _read_json(path)
+    if isinstance(data, dict) and data.get("indexVersion") == 1 and "items" in data:
+        return path
+    return None
 
 
 def _installed_dir() -> Path:
@@ -561,6 +586,9 @@ def default_manifest(repo: str = DEFAULT_REPO, ref: str = DEFAULT_REF) -> dict:
         "$schema": manifest_schema(),
         "version": 1,
         "sources": {DEFAULT_SOURCE: {"repo": repo, "ref": ref}},
+        # New projects start with Claude only; Copilot/Reasonix are opt-in.
+        "clients": ["claude"],
+        "presets": [],
         "skills": [],
         "agents": [],
         "instructions": [],
@@ -569,6 +597,7 @@ def default_manifest(repo: str = DEFAULT_REPO, ref: str = DEFAULT_REF) -> dict:
         "hooks": [],
         "materialize": "link",
         "exclude": [],
+        "locked": [],
     }
 
 
@@ -660,6 +689,14 @@ def starter_manifest() -> dict:
 
 # The resolver and vocabulary a repository needs to run the catalog itself:
 # platform mirrors, CI, and agents working in a terminal.
+# The extension's bundled copy wins over a pinned template's older copy for
+# files whose behaviour must match the installed extension (client selection
+# and the corrected release validator).
+BUNDLED_PREFERRED = {
+    ".ai/scripts/sync-platforms.py",
+    ".ai/tests/validate-release.py",
+}
+
 TOOLING_FILES = (
     ".ai/scripts/catalog.py",
     ".ai/scripts/sync-platforms.py",
@@ -668,6 +705,9 @@ TOOLING_FILES = (
     ".ai/scripts/upgrade-template.py",
     ".ai/scripts/hygiene-lint.py",
     ".ai/scripts/migrate-to-ai.py",
+    # A template-only check the extension can correct even when a project's
+    # pinned template predates the fix.
+    ".ai/tests/validate-release.py",
     "catalog/presets.json",
     "catalog/categories.json",
     "catalog/schemas/ai.schema.json",
@@ -789,6 +829,24 @@ def migrate_catalog_dir() -> bool:
     return True
 
 
+def _template_scaffold_files(source_root: Path) -> list:
+    """Every supporting `.ai/` file the template ships, in a stable order."""
+    files = []
+    for name in TEMPLATE_DIRS:
+        source_dir = source_root / ".ai" / name
+        if not source_dir.is_dir():
+            continue
+        for source in sorted(source_dir.rglob("*")):
+            if (source.is_file() and "__pycache__" not in source.parts
+                    and source.suffix != ".pyc"):
+                files.append(source)
+    for rel in TEMPLATE_FILES:
+        source = source_root / rel
+        if source.is_file():
+            files.append(source)
+    return files
+
+
 def install_scaffold(source_root: Path) -> dict:
     """Copy the template's supporting `.ai/` folders when a project lacks them.
 
@@ -811,22 +869,38 @@ def install_scaffold(source_root: Path) -> dict:
         shutil.copy2(str(source), str(target))
         summary["copied"].append(key)
 
-    for name in TEMPLATE_DIRS:
-        source_dir = source_root / ".ai" / name
-        if not source_dir.is_dir():
-            continue
-        for source in sorted(source_dir.rglob("*")):
-            if (source.is_file() and "__pycache__" not in source.parts
-                    and source.suffix != ".pyc"):
-                copy_file(source)
-    for rel in TEMPLATE_FILES:
-        source = source_root / rel
-        if source.is_file():
-            copy_file(source)
+    for source in _template_scaffold_files(source_root):
+        copy_file(source)
+    return summary
+
+
+def install_agent_config(source_root: Path, manifest: dict | None = None) -> dict:
+    """Write the missing client-facing files for the selected clients.
+
+    `AGENTS.md` and `.gitattributes` are shared and always written. Claude
+    settings and Copilot instructions are written only when that client is
+    selected, so disabling a client does not re-create its folder.
+    """
+    summary = {"copied": [], "skipped": []}
+    if _same_path(source_root, _root()):
+        return summary
+    clients = _clients(manifest or load_manifest() or {})
     for rel in AGENT_FILES:
+        if rel == ".claude/settings.json" and "claude" not in clients:
+            continue
+        if rel == ".github/copilot-instructions.md" and "copilot" not in clients:
+            continue
         source = source_root / rel
-        if source.is_file():
-            copy_file(source)
+        if not source.is_file():
+            continue
+        key = str(rel).replace(os.sep, "/")
+        target = _root() / rel
+        if target.exists():
+            summary["skipped"].append(key)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(str(source), str(target))
+        summary["copied"].append(key)
     return summary
 
 
@@ -890,6 +964,14 @@ def install_tooling(source_root: Path, overwrite: bool = False, ref: str | None 
         target = _root() / dest
         source = source_root / rel
         origin = "template"
+        # The extension ships the corrected release validator. Prefer its copy
+        # over an older one from the project's pinned template so implementing
+        # repositories stop failing a template-only assertion after upgrading.
+        if rel in BUNDLED_PREFERRED and bundled is not None:
+            fallback = bundled / rel
+            if fallback.is_file():
+                source = fallback
+                origin = "bundled"
         if not source.is_file():
             fallback = bundled / rel if bundled is not None else None
             if fallback is not None and fallback.is_file():
@@ -983,18 +1065,24 @@ def ensure_gitignore() -> str:
     return "updated"
 
 
-def sync_platform_mirrors() -> None:
+def sync_platform_mirrors(manifest: dict | None = None) -> None:
     """Run the workspace's mirror script, if it has one.
 
     Delegated rather than duplicated: the junction rules live in one script.
+    `AI_CLIENTS` carries the selection explicitly so a first `sync` on a
+    repository that has no manifest yet still defaults to Claude only.
     """
     script = _root() / ".ai" / "scripts" / "sync-platforms.py"
     if not script.is_file():
         # A project that predates the rename.
         script = _root() / ".ai" / "scripts" / "sync-skills.py"
     if script.is_file():
+        env = dict(os.environ)
+        if manifest is not None:
+            env["AI_CLIENTS"] = ",".join(
+                name for name in CLIENTS if name in _clients(manifest))
         subprocess.run([sys.executable, str(script)], cwd=str(_root()),
-                       capture_output=True, text=True, errors="replace")
+                       capture_output=True, text=True, errors="replace", env=env)
 
 
 def load_manifest(required: bool = False) -> dict | None:
@@ -1624,43 +1712,108 @@ def classify(source_name: str, name: str, meta: dict, description: str) -> tuple
     return str(rules.get("default") or "uncategorised"), tags
 
 
+PRESET_ALIASES = {"full": "Everything"}
+
+
+def _canonical_preset_name(name) -> str:
+    text = str(name).strip()
+    return PRESET_ALIASES.get(text, text)
+
+
+def _preset_names(manifest: dict) -> list:
+    """The active presets, in order: legacy `preset` first, then `presets`.
+
+    Presets compose. The old singleton field is still read so existing
+    manifests keep working, and it is folded into the array on the first write.
+    Names are canonicalised and de-duplicated, so both can coexist during that
+    migration without selecting anything twice.
+    """
+    raw = []
+    legacy = manifest.get("preset")
+    if legacy:
+        raw.append(legacy)
+    for name in manifest.get("presets") or []:
+        if isinstance(name, str) and name.strip():
+            raw.append(name)
+    names = []
+    for name in raw:
+        canonical = _canonical_preset_name(name)
+        if canonical not in names:
+            names.append(canonical)
+    return names
+
+
+def _known_presets() -> dict:
+    return (_load_presets() or {}).get("presets") or {}
+
+
+def _clients(manifest: dict) -> set:
+    """The selected AI clients; a missing field means every legacy client."""
+    raw = manifest.get("clients")
+    if raw is None:
+        return set(CLIENTS)
+    if not isinstance(raw, list):
+        _die("clients must be a list of 'claude', 'copilot' and/or 'reasonix'")
+    names = {str(value).strip().lower() for value in raw if str(value).strip()}
+    unknown = sorted(names - set(CLIENTS))
+    if unknown:
+        _die(f"unknown client(s): {', '.join(unknown)} — "
+             f"choose from {', '.join(CLIENTS)}")
+    return names
+
+
+def _locked_ids(manifest: dict) -> set:
+    """Selection ids the user froze: update and sync never overwrite them."""
+    return {soft_canonical(raw) for raw in manifest.get("locked") or []
+            if soft_canonical(raw)}
+
+
+def _validate_preset_names(names, known: dict) -> list:
+    """Canonicalise preset names, dying on an unknown one with a suggestion."""
+    canonical = []
+    for raw in names:
+        name = _canonical_preset_name(raw)
+        if name not in known:
+            close = difflib.get_close_matches(name, list(known), n=3)
+            hint = f" (did you mean: {', '.join(close)})" if close else ""
+            _die(f"unknown preset '{name}'{hint} — see catalog/presets.json")
+        if name not in canonical:
+            canonical.append(name)
+    return canonical
+
+
 def _preset_selection(manifest: dict, index_by_key: dict, strict: bool = True) -> dict:
-    """Expand manifest['preset'] into {kind: [id, ...]}.
+    """Expand every active preset into one {kind: [id, ...]} selection.
 
     A preset name is resolved against catalog/presets.json. An entry may be a
     bare id or {"all": true}, which pulls in every catalog item of that kind.
+    Presets are additive: their ids are unioned with each other (and later with
+    the manifest's explicit lists), never replaced.
     """
-    name = manifest.get("preset")
-    if not name:
+    names = _preset_names(manifest)
+    if not names:
         return {}
 
-    # The preset used to be called `full`. Keep existing manifests working
-    # after the rename to `Everything`.
-    name = {"full": "Everything"}.get(str(name), name)
-
-    presets = (_load_presets() or {}).get("presets") or {}
-    if name not in presets:
-        close = difflib.get_close_matches(str(name), list(presets), n=3)
-        hint = f" (did you mean: {', '.join(close)})" if close else ""
-        _die(f"unknown preset '{name}'{hint} — see catalog/presets.json")
-
-    body = presets[name] if isinstance(presets[name], dict) else {}
-    expanded = {}
-    for kind in KINDS:
-        ids = []
-        for entry in body.get(MANIFEST_KEYS[kind]) or []:
-            if isinstance(entry, dict):
-                if not entry.get("all"):
-                    _die(f"preset '{name}' has an unsupported entry in "
-                         f"{MANIFEST_KEYS[kind]}: {entry!r}")
-                ids.extend(item_id for (item_kind, item_id) in sorted(index_by_key)
-                           if item_kind == kind)
-                continue
-            item_id = canonical_id(entry)
-            if strict and (kind, item_id) not in index_by_key:
-                _die(f"preset '{name}' references unknown {kind} '{entry}'")
-            ids.append(item_id)
-        expanded[kind] = ids
+    presets = _known_presets()
+    expanded = {kind: [] for kind in KINDS}
+    for name in _validate_preset_names(names, presets):
+        body = presets[name] if isinstance(presets[name], dict) else {}
+        for kind in KINDS:
+            ids = expanded[kind]
+            for entry in body.get(MANIFEST_KEYS[kind]) or []:
+                if isinstance(entry, dict):
+                    if not entry.get("all"):
+                        _die(f"preset '{name}' has an unsupported entry in "
+                             f"{MANIFEST_KEYS[kind]}: {entry!r}")
+                    for (item_kind, item_id) in sorted(index_by_key):
+                        if item_kind == kind and item_id not in ids:
+                            ids.append(item_id)
+                    continue
+                item_id = canonical_id(entry)
+                if strict and (kind, item_id) not in index_by_key:
+                    _die(f"preset '{name}' references unknown {kind} '{entry}'")
+                if item_id not in ids:
+                    ids.append(item_id)
     return expanded
 
 
@@ -1794,28 +1947,8 @@ def save_lock(entries: list) -> None:
 
 # ─── Markers ─────────────────────────────────────────────────────────────────
 
-def marker_path(kind: str, item_id: str, target: Path, mode: str) -> Path:
-    """Where the install marker for this item lives (see module docstring)."""
-    if mode == "copy" and Path(target).is_dir() and not _is_link(Path(target)):
-        return Path(target) / MARKER
-    return _installed_dir() / f"{_slug(item_id)}.{kind}.json"
-
-
-def write_marker(kind: str, item: dict, target: Path, mode: str) -> Path:
-    path = marker_path(kind, item["id"], target, mode)
-    payload = {
-        "id": item["id"],
-        "kind": kind,
-        "ref": item.get("ref"),
-        "sha256": item.get("sha256"),
-        "materialize": mode,
-        "path": item.get("path"),
-    }
-    _write_json(path, payload)
-    return path
-
-
 def remove_markers(kind: str, item_id: str) -> list:
+    """Delete legacy marker files for one item (kept for prune/upgrade cleanup)."""
     removed = []
     directory = _installed_dir()
     if directory.is_dir():
@@ -1823,6 +1956,48 @@ def remove_markers(kind: str, item_id: str) -> list:
             candidate.unlink()
             removed.append(candidate)
     return removed
+
+
+def legacy_markers(targets) -> list:
+    """Marker files left by older versions: the lock already records this state.
+
+    Shared `.ai/installed/` markers are all ours; a marker inside a target only
+    counts for that target, so a stray project file with the same name is never
+    touched elsewhere.
+    """
+    found = []
+    directory = _installed_dir()
+    if directory.is_dir():
+        found.extend(sorted(path for path in directory.glob("*.json") if path.is_file()))
+    for target in targets:
+        target = Path(target)
+        # A link resolves into the source tree; never delete a file there.
+        if _is_link(target):
+            continue
+        marker = target / MARKER
+        if marker.is_file():
+            found.append(marker)
+    return found
+
+
+def remove_legacy_artifacts(targets) -> dict:
+    """Delete state files older versions wrote (markers and the old index)."""
+    removed = []
+    paths = legacy_markers(targets)
+    old_index = legacy_index()
+    if old_index is not None:
+        paths.append(old_index)
+    for path in paths:
+        try:
+            path.unlink()
+            removed.append(str(path.relative_to(_root())).replace(os.sep, "/"))
+        except OSError:
+            pass
+    try:
+        _installed_dir().rmdir()
+    except OSError:
+        pass
+    return {"removed": removed}
 
 
 # ─── Materialisation ─────────────────────────────────────────────────────────
@@ -1867,7 +2042,6 @@ def materialize_item(kind: str, item: dict, source: Path, target: Path, mode: st
     except OSError as exc:
         print(f"ERROR: could not materialize {target}: {exc}", file=sys.stderr)
         return False
-    write_marker(kind, item, target, mode)
     return True
 
 
@@ -2128,12 +2302,38 @@ def cmd_remove(args) -> int:
             ]
             if len(kept) != len(selection):
                 manifest[key] = kept
-                removed.append({"id": item_id, "kind": kind})
+                removed.append({"id": item_id, "kind": kind, "via": "list"})
+
+    # A preset can contribute an id the manifest never lists. Opting one out
+    # is what `exclude` is for, so removing a preset-declared item records the
+    # exclusion instead of failing with "not declared". Items that are only
+    # present as a dependency keep the old, safer answer: remove the dependent.
+    index_by_key = _index_map(build_index(manifest))
+    declared = {
+        (kind, item_id)
+        for kind in KINDS
+        for item_id in (_preset_selection(manifest, index_by_key, strict=False).get(kind) or [])
+    }
+    selected = _selection(manifest, index_by_key, strict=False)
+    for raw in args.ids:
+        item_id = canonical_id(raw)
+        match = next(((kind, item_id) for kind, _id in selected
+                      if _id == item_id and (kind, item_id) in declared), None)
+        if match is None or (args.kind and match[0] != args.kind):
+            continue
+        kind = match[0]
+        excludes = manifest.get("exclude")
+        if not isinstance(excludes, list):
+            excludes = []
+        if all(soft_canonical(value) != item_id for value in excludes):
+            excludes.append(display_id(item_id))
+            manifest["exclude"] = excludes
+            if not any(entry["id"] == item_id for entry in removed):
+                removed.append({"id": item_id, "kind": kind, "via": "exclude"})
 
     if not removed:
         # The id may exist only as a dependency someone else pulled in: that is
         # not a manifest entry, so say why instead of "nothing to remove".
-        index_by_key = _index_map(build_index(manifest))
         installed = {item_id for _kind, item_id
                      in _closure(
                          _selection(manifest, index_by_key, strict=False), index_by_key)}
@@ -2147,9 +2347,9 @@ def cmd_remove(args) -> int:
 
     # Block orphaning: if something still selected requires one of these, the
     # closure would put it straight back on the next sync, so say that here
-    # rather than reporting a removal that does not stick.
+    # rather than reporting a removal that does not stick. An exclusion is not
+    # put back by the closure, so check requirements directly for that case.
     if removed and not args.force:
-        index_by_key = _index_map(build_index(manifest))
         remaining = _closure(
             _selection(manifest, index_by_key, strict=False), index_by_key)
         required_by: dict = {}
@@ -2161,17 +2361,27 @@ def cmd_remove(args) -> int:
             (entry, required_by.get((entry["kind"], entry["id"]), []))
             for entry in removed
             if (entry["kind"], entry["id"]) in remaining
+            or required_by.get((entry["kind"], entry["id"]))
         ]
         if blocked:
             detail = "; ".join(
                 f"{display_id(entry['id'])} ({entry['kind']}) is required by "
                 f"{', '.join(display_id(who) for who in sorted(set(who))) or 'another selected item'}"
                 for entry, who in blocked)
+            forced = ("the dependent will be installed without it"
+                      if any(entry.get("via") == "exclude" for entry, _who in blocked)
+                      else "a later sync will restore it")
             _die(f"refusing to orphan — {detail}. Remove the dependent first, "
-                 f"or pass --force to edit the manifest anyway "
-                 f"(a later sync will restore it)")
+                 f"or pass --force to edit the manifest anyway ({forced})")
 
     if removed:
+        # A lock on an item that is no longer selected has nothing to protect.
+        locks = manifest.get("locked")
+        if isinstance(locks, list):
+            dropped = {entry["id"] for entry in removed}
+            manifest["locked"] = [
+                value for value in locks if soft_canonical(value) not in dropped
+            ]
         save_manifest(manifest)
 
     pruned = []
@@ -2214,6 +2424,76 @@ def cmd_remove(args) -> int:
     return 0
 
 
+def _edit_locks(args, adding: bool) -> int:
+    """Freeze or thaw selected items in the manifest.
+
+    A lock is a user decision, not a detected state: `update` and `sync` never
+    overwrite a locked item that is already on disk, `--force` included. It is
+    how an item you edited stops being treated as something to fix.
+    """
+    manifest = load_manifest()
+    if manifest is None:
+        _die(f"no manifest at {_manifest_path()} — nothing to lock")
+
+    index_by_key = _index_map(build_index(manifest))
+    selected = {item_id for _kind, item_id
+                in _effective_selection(manifest, index_by_key, strict=False)}
+    entries = manifest.get("locked")
+    if not isinstance(entries, list):
+        entries = []
+    current = {soft_canonical(value) for value in entries}
+    changed = []
+
+    for raw in args.ids:
+        item_id = canonical_id(raw)
+        if adding:
+            if item_id not in selected:
+                _die(f"'{display_id(item_id)}' is not selected — lock an item "
+                     f"this project installs")
+            if item_id in current:
+                continue
+            entries.append(display_id(item_id))
+            current.add(item_id)
+            changed.append(item_id)
+        else:
+            kept = [value for value in entries
+                    if soft_canonical(value) != item_id]
+            if len(kept) != len(entries):
+                entries = kept
+                current.discard(item_id)
+                changed.append(item_id)
+
+    manifest["locked"] = entries
+    save_manifest(manifest)
+
+    if args.json:
+        print(_dumps({"command": "lock" if adding else "unlock",
+                      "locked": [display_id(soft_canonical(value)) for value in entries],
+                      "changed": [display_id(item_id) for item_id in changed]}))
+        return 0
+
+    verb = "locked" if adding else "unlocked"
+    if changed:
+        print(f"{verb}: {', '.join(display_id(item_id) for item_id in changed)}")
+    else:
+        print(f"nothing to {('lock' if adding else 'unlock')} — "
+              f"{'already locked' if adding else 'not locked'}")
+    if adding:
+        print("locked items are never overwritten by update or sync; "
+              "unlock to resume updates")
+    else:
+        print("unlocked items follow the catalog again on the next update")
+    return 0
+
+
+def cmd_lock(args) -> int:
+    return _edit_locks(args, True)
+
+
+def cmd_unlock(args) -> int:
+    return _edit_locks(args, False)
+
+
 # ─── Commands: list ──────────────────────────────────────────────────────────
 
 # ─── Commands: browse / presets / init / update ──────────────────────────────
@@ -2239,13 +2519,18 @@ def _preset_cards(index_by_key: dict) -> list:
         if resolved:
             counts = {kind: sum(1 for item_kind, _id in resolved if item_kind == kind)
                       for kind in KINDS}
+            ids = [item_id for _kind, item_id in resolved]
         else:
             counts = {kind: len(declared.get(kind) or []) for kind in KINDS}
+            ids = [item_id for kind in KINDS for item_id in (declared.get(kind) or [])]
         cards.append({
             "name": name,
             "description": str(body.get("description") or ""),
             "skills": counts["skill"],
             "agents": counts["agent"],
+            # The resolved ids let the UI say exactly what applying this preset
+            # would add, instead of comparing counts that may hide a swap.
+            "ids": ids,
             "recommended": bool(body.get("recommended")),
         })
     return cards
@@ -2325,6 +2610,7 @@ def cmd_browse(args) -> int:
     roots = {name: _source_root_for(name, entry) for name, entry in sources.items()}
     lock = load_lock()
     locked = {_lock_key(entry): entry for entry in lock.get("resolved") or []}
+    frozen = _locked_ids(manifest)
     mode = _materialize_mode(manifest)
     template_root = roots.get(DEFAULT_SOURCE, _root())
 
@@ -2351,13 +2637,16 @@ def cmd_browse(args) -> int:
 
         if is_selected:
             state = evaluate_status(kind, item, target, entry, same_dir)
+            if item_id in frozen and state in ("upstream-changed", "local-modified", "both"):
+                # A lock says the local content is intentional; it is not drift.
+                state = "locked"
         else:
             state = "available"
         exists = target.exists() or _is_link(target)
         local_modified = bool(entry) and exists and installed_hash(item, target) != entry.get("sha256")
         moved = bool(entry) and upstream_changed(item, entry)
 
-        if state == "ok":
+        if state in ("ok", "locked"):
             summary["installed"] += 1
         elif state == "available":
             pass
@@ -2388,6 +2677,7 @@ def cmd_browse(args) -> int:
             "selected": is_selected,
             "status": state,
             "installed": exists and is_selected,
+            "locked": item_id in frozen,
             "localModified": local_modified,
             "upstreamChanged": moved,
         })
@@ -2402,6 +2692,7 @@ def cmd_browse(args) -> int:
             "remote": any(is_remote(entry) for _name, entry in _sources(manifest)),
         },
         "materialize": mode,
+        "clients": [name for name in CLIENTS if name in _clients(manifest)],
         "summary": summary,
         "sources": _source_rows(manifest),
         "presets": _preset_cards(index_by_key),
@@ -2418,17 +2709,81 @@ def cmd_browse(args) -> int:
     return 0
 
 
+def cmd_preset(args) -> int:
+    """Add or remove presets without touching the rest of the selection.
+
+    `init --preset` replaces the selection: it is the bootstrap command. This
+    one composes presets. Adding keeps every explicit item and every other
+    preset; removing drops only that preset's contribution. Neither deletes
+    files from disk — deselected items stay until `sync --prune` removes them.
+    """
+    adding = args.preset_action == "add"
+    existing = load_manifest()
+    if existing is None:
+        if not adding:
+            _die(f"no manifest at {_manifest_path()} — nothing to remove")
+        manifest = starter_manifest()
+    else:
+        manifest = existing
+
+    names = _preset_names(manifest)
+    requested = _validate_preset_names(args.names, _known_presets())
+    changed = []
+    if adding:
+        for name in requested:
+            if name not in names:
+                names.append(name)
+                changed.append(name)
+    else:
+        for name in requested:
+            if name in names:
+                names.remove(name)
+                changed.append(name)
+
+    # Fold the legacy singleton into the additive list on the first write.
+    manifest["presets"] = names
+    manifest.pop("preset", None)
+    save_manifest(manifest)
+
+    if args.json:
+        print(_dumps({"command": "preset", "action": args.preset_action,
+                      "changed": changed, "presets": names,
+                      "manifest": str(_manifest_path())}))
+        return 0
+    if adding:
+        if changed:
+            print(f"added preset(s): {', '.join(changed)}")
+        else:
+            print("nothing to add — already applied")
+    else:
+        if changed:
+            print(f"removed preset(s): {', '.join(changed)}")
+        else:
+            print("nothing to remove — not applied")
+        if changed:
+            print("installed files were left alone: add --prune to the next sync "
+                  "to delete lock-recorded paths")
+    print(f"presets: {', '.join(names) or '(none)'}")
+    if adding:
+        print("run 'python .ai/scripts/catalog.py sync' to materialise the added items")
+    return 0
+
+
 def cmd_presets(args) -> int:
     manifest = load_manifest() or starter_manifest()
     index_by_key = _index_map(build_index(manifest))
     cards = _preset_cards(index_by_key)
-    current = manifest.get("preset")
+    active = _preset_names(manifest)
+    # `current` is the old singleton shape, kept for callers that only need
+    # one name; `active` is the full additive list.
+    current = active[0] if active else None
 
     if args.json:
-        print(_dumps({"command": "presets", "current": current, "presets": cards}))
+        print(_dumps({"command": "presets", "current": current, "active": active,
+                      "presets": cards}))
         return 0
     for card in cards:
-        marker = "*" if card["name"] == current else " "
+        marker = "*" if card["name"] in active else " "
         print(f"{marker} {card['name']:<12} {card['skills']:>3} skill(s) "
               f"{card['agents']:>2} agent(s)  {card['description']}")
     return 0
@@ -2475,7 +2830,10 @@ def cmd_pin(args) -> int:
     entry.pop("path", None)
     sources[DEFAULT_SOURCE] = entry
     manifest.update(lists)
+    # Freeze the selection: pinning rewrites it as explicit ids, so no preset
+    # may expand (or be added) against a catalog that just changed.
     manifest.pop("preset", None)
+    manifest.pop("presets", None)
     # When the old source was this tree, its items are real files in the
     # repository. Linking them to the fetch cache would move the content out of
     # version control, so such a tree is copied instead.
@@ -2582,7 +2940,8 @@ def cmd_release(args) -> int:
 def cmd_init(args) -> int:
     """Bootstrap a project's selection — the 'install everything' entry point."""
     manifest_path = _manifest_path()
-    if manifest_path.is_file() and not args.force:
+    fresh = not manifest_path.is_file()
+    if not fresh and not args.force:
         _die(f"{manifest_path.name} already exists — use --force to replace it")
 
     preset = "Everything" if args.all else args.preset
@@ -2631,6 +2990,14 @@ def cmd_init(args) -> int:
     data["materialize"] = args.materialize or default_mode
     _write_json(manifest_path, data)
 
+    if fresh:
+        # A brand-new project gets the supporting folders and agent files in
+        # full. Existing files are never overwritten; this only fills in what
+        # is absent, and nothing is ever pruned.
+        source_root = _source_root(data)
+        install_scaffold(source_root)
+        install_agent_config(source_root, data)
+
     if not args.json:
         print(f"wrote: {manifest_path} (preset: {preset or 'explicit list'})")
 
@@ -2666,6 +3033,7 @@ def cmd_update(args) -> int:
 
     UPDATABLE = ("upstream-changed", "not-installed", "missing")
     CONFLICT = ("local-modified", "both")
+    frozen = _locked_ids(manifest)
 
     rows = []
     for kind, item_id in selected:
@@ -2682,18 +3050,28 @@ def cmd_update(args) -> int:
             "displayId": display_id(item_id),
             "kind": kind,
             "status": state,
+            "locked": item_id in frozen,
             "path": (item or {}).get("path") or (entry or {}).get("path") or "",
             "source": source_name,
         })
 
-    ready = [row for row in rows if row["status"] in UPDATABLE]
-    blocked = [row for row in rows if row["status"] in CONFLICT]
+    # A locked item is never overwritten, `--force` included. The one exception
+    # is content that is not there at all: installing it back is not an update,
+    # and a fresh clone still needs its locked items materialised.
+    ready = [row for row in rows
+             if not row["locked"] and row["status"] in UPDATABLE]
+    ready += [row for row in rows
+              if row["locked"] and row["status"] in ("not-installed", "missing")]
+    blocked = [row for row in rows
+               if not row["locked"] and row["status"] in CONFLICT]
+    held = [row for row in rows
+            if row["locked"] and row["status"] not in ("not-installed", "missing")]
     chosen = ready + (blocked if args.force else [])
 
     if not args.apply:
         if args.json:
             print(_dumps({"command": "update", "applied": False, "dryRun": True,
-                          "ready": ready, "blocked": blocked,
+                          "ready": ready, "blocked": blocked, "locked": held,
                           "remoteSelected": remote_selected,
                           "remote": any(is_remote(entry) for _n, entry in _sources(manifest))}))
         else:
@@ -2702,10 +3080,13 @@ def cmd_update(args) -> int:
             for row in ready:
                 print(f"  {'UPDATE' if row['status'] != 'not-installed' else 'INSTALL':<8} "
                       f"{row['displayId']} ({row['kind']}) — {row['status']}")
+            for row in held:
+                print(f"  {'LOCKED':<8} {row['displayId']} ({row['kind']}) — "
+                      f"{row['status']}; unlock to let an update touch it")
             for row in blocked:
                 print(f"  {'SKIP':<8} {row['displayId']} ({row['kind']}) — {row['status']}"
                       f"{'' if args.force else ' (use --force to overwrite local changes)'}")
-            print(f"\n{len(ready)} ready, {len(blocked)} blocked. "
+            print(f"\n{len(ready)} ready, {len(blocked)} blocked, {len(held)} locked. "
                   f"Run with --apply to take the ready ones.")
         return 0
 
@@ -2734,18 +3115,20 @@ def cmd_update(args) -> int:
         migrate_catalog_dir()
         source_root = _source_root(manifest)
         install_tooling(source_root, overwrite=True, ref=_source_ref(manifest))
-        install_scaffold(source_root)
+        install_agent_config(source_root, manifest)
         ensure_gitignore()
-        sync_platform_mirrors()
+        sync_platform_mirrors(manifest)
 
     if args.json:
         print(_dumps({"command": "update", "applied": True, "dryRun": False,
-                      "appliedItems": applied, "blocked": blocked,
+                      "appliedItems": applied, "blocked": blocked, "locked": held,
                       "remoteSelected": remote_selected}))
     else:
         for entry in applied:
             print(f"  {'OK' if entry['ok'] else 'FAILED':<8} {display_id(entry['id'])}")
-        print(f"\n{len(applied)} item(s) updated.")
+        for row in held:
+            print(f"  {'LOCKED':<8} {row['displayId']} ({row['kind']}) — left untouched")
+        print(f"\n{len(applied)} item(s) updated, {len(held)} locked and left untouched.")
     return 0 if all(entry["ok"] for entry in applied) else 1
 
 
@@ -3199,6 +3582,14 @@ def ensure_readme() -> str:
 # `AGENTS.md` is the source of truth; the Copilot file is generated from it.
 AGENTS_ANCHOR = ".ai/session-context.md"
 COPILOT_FILE = ".github/copilot-instructions.md"
+# Copilot reads `.github/`, not Claude's `.claude/`. AGENTS.md is shared, so a
+# platform path in it is rewritten only in the generated Copilot copy. The
+# Claude settings file is a real Claude-only path and stays as written.
+_CLAUDE_PATH = re.compile(r"\.claude/(?!settings\.json|settings\.local\.json)")
+
+
+def _copilot_paths(text: str) -> str:
+    return _CLAUDE_PATH.sub(".github/", text)
 # HTML-comment markers that identify generated regions. The namespace was
 # renamed for this release; LEGACY_MARKER_PREFIX below is the only place the old
 # spelling survives, so files written by an older version can be migrated.
@@ -3362,9 +3753,10 @@ def _copilot_document(agents_text: str, existing: str | None, names: dict) -> st
         reference = _filter_item_refs(_copilot_reference(existing), names).strip()
     parts = ["# GitHub Copilot Instructions", "", COPILOT_GENERATED,
              "<!-- Generated from AGENTS.md. Edit AGENTS.md, not this file. -->", "",
-             agents_text.strip()]
+             _copilot_paths(agents_text.strip())]
     if reference:
-        parts += ["", COPILOT_REFERENCE_START, reference, COPILOT_REFERENCE_END]
+        parts += ["", COPILOT_REFERENCE_START, _copilot_paths(reference),
+                  COPILOT_REFERENCE_END]
     return "\n".join(parts).rstrip() + "\n"
 
 
@@ -3412,6 +3804,20 @@ def update_instruction_docs() -> dict:
             results["AGENTS.md"] = "unchanged"
 
     copilot_path = _root() / COPILOT_FILE
+    if "copilot" not in _clients(manifest):
+        if copilot_path.is_file():
+            existing = copilot_path.read_text(encoding="utf-8")
+            if COPILOT_GENERATED in existing or LEGACY_MARKER_PREFIX in existing:
+                copilot_path.unlink()
+                try:
+                    copilot_path.parent.rmdir()
+                except OSError:
+                    pass
+                results[COPILOT_FILE] = "removed"
+            else:
+                results[COPILOT_FILE] = "kept"
+        return results
+
     if agents_text:
         existing = copilot_path.read_text(encoding="utf-8") if copilot_path.is_file() else None
         document = _copilot_document(agents_text, existing, names)
@@ -3424,15 +3830,71 @@ def update_instruction_docs() -> dict:
     return results
 
 
+def cmd_clients(args) -> int:
+    """Show or set which AI clients get platform folders.
+
+    The selection is stored in `.ai/ai.json` so it is committed and shared.
+    `--set` takes the complete list; an empty list disables every client while
+    leaving the `.ai/` source untouched.
+    """
+    manifest = load_manifest() or starter_manifest()
+
+    if args.set_clients is None:
+        names = [name for name in CLIENTS if name in _clients(manifest)]
+        if args.json:
+            print(_dumps({"command": "clients", "clients": names}))
+        else:
+            print(f"clients: {', '.join(names) or '(none)'}")
+        return 0
+
+    names = []
+    for raw in args.set_clients:
+        name = str(raw).strip().lower()
+        if name not in CLIENTS:
+            _die(f"unknown client '{raw}' — choose from {', '.join(CLIENTS)}")
+        if name not in names:
+            names.append(name)
+    manifest["clients"] = names
+    save_manifest(manifest)
+
+    if args.json:
+        print(_dumps({"command": "clients", "clients": names}))
+    else:
+        print(f"clients: {', '.join(names) or '(none)'}")
+        print("run 'python .ai/scripts/catalog.py sync' to add or remove the folders")
+    return 0
+
+
+def cmd_scaffold(args) -> int:
+    """Copy any missing supporting `.ai/` files on request.
+
+    A new project gets these during setup. This command exists for an existing
+    project that wants a missing file back. Existing files are never changed or
+    removed — only absent ones are written.
+    """
+    manifest = load_manifest() or starter_manifest()
+    source_root = _source_root(manifest)
+
+    summary = install_scaffold(source_root)
+    install_agent_config(source_root, manifest)
+    if args.json:
+        print(_dumps({"command": "scaffold", **summary}))
+    else:
+        print(f"scaffold: {len(summary['copied'])} copied, "
+              f"{len(summary['skipped'])} kept")
+    return 0
+
+
 def cmd_bootstrap(args) -> int:
     """Set a repository up from the template: manifest, resolver, scaffold.
 
     One call for a brand-new folder. It writes `.ai/ai.json` when missing,
     fetches the template, installs the resolver and vocabulary under `.ai/`,
-    and copies the supporting `.ai/` folders (plans, progress, patterns,
-    reference, checklists, completed, analysis, project, session-context.md)
-    when they are missing. It never overwrites project content and never
-    selects items — choosing skills is what presets are for.
+    and — on a project that had no manifest yet — copies the supporting `.ai/`
+    folders (plans, progress, patterns, reference, checklists, completed,
+    analysis, project, session-context.md). Existing projects are not re-seeded;
+    `catalog.py scaffold` does that on request. It never overwrites project
+    content and never selects items — choosing skills is what presets are for.
     """
     existing = load_manifest()
     manifest = existing or starter_manifest()
@@ -3449,6 +3911,13 @@ def cmd_bootstrap(args) -> int:
     migrate_catalog_dir()
     manifest = load_manifest() or manifest
     source_root = _source_root(manifest)
+    # Activation is also the upgrade path: drop state files an older version
+    # wrote, even if the user never runs sync.
+    legacy = {"removed": []}
+    if not _same_path(source_root, _root()):
+        installed = [_root() / str(entry.get("path")) for entry
+                     in (load_lock().get("resolved") or []) if entry.get("path")]
+        legacy = remove_legacy_artifacts(installed)
     # Setup brings an existing project up to the files its pin (or the
     # extension bundle, for files the template no longer ships) provides.
     # A file the project edited no longer matches its recorded hash and is
@@ -3456,14 +3925,19 @@ def cmd_bootstrap(args) -> int:
     # what makes a new preset or category appear without asking the user to
     # re-run anything.
     tooling = install_tooling(source_root, overwrite=True, ref=_source_ref(manifest))
-    scaffold = install_scaffold(source_root)
+    install_agent_config(source_root, manifest)
+    # Seeding the supporting `.ai/` folders is a setup step, not something to
+    # repeat on every activation: projects that predate this change keep what
+    # they have, and `catalog.py scaffold` is there when they want the rest.
+    scaffold = (install_scaffold(source_root) if existing is None
+                else {"copied": [], "skipped": []})
     gitignore = ensure_gitignore()
     readme = ensure_readme()
     if is_remote(_source_entry(manifest)) and not project_info_path().is_file():
         # A project starts with its folder/solution name filled in; the form
         # supplies the intention later.
         _describe_project(detected_project_name(), "")
-    sync_platform_mirrors()
+    sync_platform_mirrors(manifest)
     instructions = update_instruction_docs()
 
     selected = sum(len(manifest.get(key) or []) for key in MANIFEST_KEYS.values())
@@ -3476,6 +3950,7 @@ def cmd_bootstrap(args) -> int:
             "sourcesAdded": added_sources,
             "tooling": tooling,
             "scaffold": scaffold,
+            "legacyRemoved": legacy["removed"],
             "gitignore": gitignore,
             "readme": readme,
             "instructions": instructions,
@@ -3488,12 +3963,16 @@ def cmd_bootstrap(args) -> int:
               f"{len(tooling['missing'])} missing")
         print(f"scaffold: {len(scaffold['copied'])} copied, "
               f"{len(scaffold['skipped'])} kept")
+        if legacy["removed"]:
+            print(f"legacy state: {len(legacy['removed'])} file(s) removed")
     return 0
 
 
 def cmd_sync(args) -> int:
     migrate_catalog_dir()
-    manifest = load_manifest() or starter_manifest()
+    existing_manifest = load_manifest()
+    fresh = existing_manifest is None
+    manifest = existing_manifest or starter_manifest()
     mode = _materialize_mode(manifest, args.materialize)
     source_root = _source_root(manifest)
     same_dir = _same_path(source_root, _root())
@@ -3504,15 +3983,18 @@ def cmd_sync(args) -> int:
     _hook_install_gate(manifest, selected, index_by_key)
     lock = load_lock()
     locked = {_lock_key(entry): entry for entry in lock.get("resolved") or []}
+    frozen = _locked_ids(manifest)
     ref = _source_ref(manifest)
 
     actions = []
     conflicts = []
     entries = []
+    targets = []
 
     for kind, item_id in selected:
         item = index_by_key[(kind, item_id)]
         target = _target_path(kind, item["name"])
+        targets.append(target)
         item_source = item.get("source") or DEFAULT_SOURCE
         item_source_root = _source_root_for(item_source,
                                             _source_entry_named(manifest, item_source))
@@ -3547,6 +4029,12 @@ def cmd_sync(args) -> int:
             actions.append(_action("conflict", kind, item_id, item["path"],
                                    "untracked path exists"))
             conflicts.append(f"{item['path']} exists but is not recorded in the lock")
+        elif item_id in frozen:
+            # The user froze this content. Keep the previous lock entry so a
+            # later unlock still compares against the pristine hash instead of
+            # adopting the edit as the new baseline.
+            entries.append(previous)
+            actions.append(_action("ok", kind, item_id, item["path"], "locked"))
         elif _same_path(source, target):
             # A healthy link resolves to the source, so its content cannot drift.
             # Verify it instead of reporting a no-op: only source == target (this
@@ -3562,6 +4050,11 @@ def cmd_sync(args) -> int:
                 or (previous.get("materialize") or "link") != mode
             )
             actions.append(_action("update" if needs else "ok", kind, item_id, item["path"]))
+
+    # Legacy install markers are redundant with the lock. Report them as drift
+    # so a `--check` does not call a tree clean while they are still there.
+    marker_files = [] if same_dir else legacy_markers(targets)
+    old_index = None if same_dir else legacy_index()
 
     selected_keys = set(selected)
     known_kinds = set(KINDS)
@@ -3594,7 +4087,8 @@ def cmd_sync(args) -> int:
     lock_changed = (not same_dir) and lock_signature(new_lock) != lock_signature(lock)
 
     changes = [a for a in actions if a["action"] in ("create", "update", "conflict")]
-    drift = bool(changes) or bool(pending_prune) or lock_changed
+    drift = (bool(changes) or bool(pending_prune) or lock_changed
+             or bool(marker_files) or old_index is not None)
 
     if args.check:
         report = {
@@ -3605,12 +4099,18 @@ def cmd_sync(args) -> int:
             "actions": actions,
             "pendingPrune": [entry.get("path") for entry in pending_prune],
             "preservedUnknown": [entry.get("id") for entry in preserved_unknown],
+            "legacyMarkers": [str(path.relative_to(_root())) for path in marker_files],
+            "legacyIndex": str(old_index.relative_to(_root())) if old_index else None,
             "lockChanged": lock_changed,
         }
         if args.json:
             print(_dumps(report))
         else:
             _print_sync_actions(actions, pending_prune, same_dir)
+            if marker_files:
+                print(f"{len(marker_files)} legacy marker(s) to clean")
+            if old_index:
+                print(f"legacy index to remove: {old_index.relative_to(_root())}")
             if drift:
                 print("drift detected")
             else:
@@ -3627,7 +4127,26 @@ def cmd_sync(args) -> int:
         return 1
 
     performed = []
+    markers_removed = 0
     if not args.dry_run:
+        for marker in marker_files:
+            try:
+                marker.unlink()
+                markers_removed += 1
+            except OSError:
+                # Already gone with a directory replaced by materialize.
+                pass
+        if old_index is not None:
+            try:
+                old_index.unlink()
+            except OSError:
+                pass
+        if marker_files:
+            try:
+                # Remove `.ai/installed/` itself when nothing else lives there.
+                _installed_dir().rmdir()
+            except OSError:
+                pass
         for action in actions:
             if action["action"] not in ("create", "update"):
                 continue
@@ -3663,12 +4182,16 @@ def cmd_sync(args) -> int:
         # the platform mirrors) without the extension. Missing files only here;
         # an explicit update to a release refreshes existing ones.
         install_tooling(source_root, overwrite=False, ref=_source_ref(manifest))
-        install_scaffold(source_root)
+        install_agent_config(source_root, manifest)
+        if fresh:
+            # A repository with no manifest is a new project: give it the full
+            # supporting set. Once a manifest exists, sync leaves it alone.
+            install_scaffold(source_root)
         ensure_gitignore()
 
         # Installing a kind for the first time creates `.ai/<kind>/`, which the
         # platform mirrors need to see.
-        sync_platform_mirrors()
+        sync_platform_mirrors(manifest)
 
     update_instruction_docs()
 
@@ -3681,6 +4204,9 @@ def cmd_sync(args) -> int:
             "performed": performed,
             "pendingPrune": [entry.get("path") for entry in pending_prune],
             "preservedUnknown": [entry.get("id") for entry in preserved_unknown],
+            "legacyMarkers": [str(path.relative_to(_root())) for path in marker_files],
+            "markersRemoved": markers_removed,
+            "legacyIndexRemoved": old_index is not None and not old_index.exists(),
             "pruned": bool(args.prune),
             "lockChanged": lock_changed,
             "conflicts": conflicts,
@@ -3696,6 +4222,12 @@ def cmd_sync(args) -> int:
     if preserved_unknown:
         print(f"{prefix}{len(preserved_unknown)} lock entry/entries of an unknown "
               f"kind preserved (not pruned)")
+    if marker_files:
+        verb = "would be cleaned" if args.dry_run else f"cleaned ({markers_removed})"
+        print(f"{prefix}{len(marker_files)} legacy marker(s) {verb}")
+    if old_index is not None:
+        verb = "would be removed" if args.dry_run else "removed"
+        print(f"{prefix}legacy index {verb}: {old_index.relative_to(_root())}")
     if args.dry_run:
         print(f"{prefix}{touched} item(s) would change; nothing written")
     else:
@@ -3734,10 +4266,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     index_parser = subparsers.add_parser("index", help="Build the catalog index")
     index_parser.add_argument("--out", default=None,
-                              help="Where to write the index (default: .ai/catalog/index.json "
-                                   "in a project, catalog/index.json in the template)")
+                              help="Where to write the index (default: "
+                                   ".ai/tmp/catalog-index.json, a gitignored cache)")
     index_parser.add_argument("--verify", action="store_true",
-                              help="Exit non-zero if the committed index is stale")
+                              help="Exit non-zero if the generated index is stale")
     index_parser.add_argument("--compact", action="store_true",
                               help="Also write a one-line-per-item markdown index next to it")
     index_parser.add_argument("--compact-out", default=None,
@@ -3763,6 +4295,18 @@ def build_parser() -> argparse.ArgumentParser:
                                     "(a later sync restores it as a dependency)")
     _common(remove_parser)
     remove_parser.set_defaults(handler=cmd_remove)
+
+    lock_parser = subparsers.add_parser(
+        "lock", help="Freeze selected items so update and sync never overwrite them")
+    lock_parser.add_argument("ids", nargs="+", help="Selection ids to lock")
+    _common(lock_parser)
+    lock_parser.set_defaults(handler=cmd_lock)
+
+    unlock_parser = subparsers.add_parser(
+        "unlock", help="Let a locked item follow the catalog again")
+    unlock_parser.add_argument("ids", nargs="+", help="Selection ids to unlock")
+    _common(unlock_parser)
+    unlock_parser.set_defaults(handler=cmd_unlock)
 
     list_parser = subparsers.add_parser("list", help="List installed and available items")
     list_parser.add_argument("--installed", action="store_true", help="Only selected items")
@@ -3790,6 +4334,20 @@ def build_parser() -> argparse.ArgumentParser:
     _common(presets_parser)
     presets_parser.set_defaults(handler=cmd_presets)
 
+    preset_parser = subparsers.add_parser(
+        "preset", help="Add or remove presets without replacing the selection")
+    preset_sub = preset_parser.add_subparsers(dest="preset_action", required=True)
+    preset_add = preset_sub.add_parser(
+        "add", help="Add presets to the current selection (keeps existing items)")
+    preset_add.add_argument("names", nargs="+", metavar="name")
+    _common(preset_add)
+    preset_add.set_defaults(handler=cmd_preset)
+    preset_remove = preset_sub.add_parser(
+        "remove", help="Remove presets from the current selection (keeps other items)")
+    preset_remove.add_argument("names", nargs="+", metavar="name")
+    _common(preset_remove)
+    preset_remove.set_defaults(handler=cmd_preset)
+
     release_parser = subparsers.add_parser(
         "release", help="Report newer release tags for the declared sources")
     _common(release_parser)
@@ -3813,6 +4371,19 @@ def build_parser() -> argparse.ArgumentParser:
         "bootstrap", help="Set this repository up from the template in one call")
     _common(bootstrap_parser)
     bootstrap_parser.set_defaults(handler=cmd_bootstrap)
+
+    scaffold_parser = subparsers.add_parser(
+        "scaffold", help="Copy any missing template .ai/ folders and files")
+    _common(scaffold_parser)
+    scaffold_parser.set_defaults(handler=cmd_scaffold)
+
+    clients_parser = subparsers.add_parser(
+        "clients", help="Show or set the AI clients (Claude, Copilot, Reasonix)")
+    clients_parser.add_argument(
+        "--set", dest="set_clients", nargs="*", default=None, metavar="client",
+        help="Set the complete list: claude, copilot, reasonix")
+    _common(clients_parser)
+    clients_parser.set_defaults(handler=cmd_clients)
 
     project_parser = subparsers.add_parser(
         "project", help="Read or write the project name and intention")

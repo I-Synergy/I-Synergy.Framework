@@ -1,8 +1,0 @@
-{
-  "id": "template:maui-blazor",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "3d17dc75ae98ce0b29cc315ac38a0e75454a40494c1b740a615c02e2e7255a10",
-  "materialize": "copy",
-  "path": ".ai/skills/maui-blazor"
-}

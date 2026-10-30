@@ -1,8 +1,0 @@
-{
-  "id": "dotnet-maui:maui-aspire-client",
-  "kind": "skill",
-  "ref": "main",
-  "sha256": "f4606ac91edf1f95ffe4f9aaadfd57a37722d8ea7084d4571b94cf94db724496",
-  "materialize": "copy",
-  "path": ".ai/skills/maui-aspire-client"
-}

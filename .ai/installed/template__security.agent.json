@@ -1,8 +1,0 @@
-{
-  "id": "template:security",
-  "kind": "agent",
-  "ref": "2026.11027.12350",
-  "sha256": "3176460ea835f13bb72c52b5b7294a2d7ac4456e1b899b27a0e4a4e5db7d6a25",
-  "materialize": "copy",
-  "path": ".ai/agents/security.md"
-}

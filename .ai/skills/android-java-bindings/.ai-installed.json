@@ -1,8 +1,0 @@
-{
-  "id": "dotnet-maui-tooling:android-java-bindings",
-  "kind": "skill",
-  "ref": "main",
-  "sha256": "7486ae4746f35c906cc16bab679033dd097b6ff5ebd812072a78c03a8dfa33e8",
-  "materialize": "copy",
-  "path": ".ai/skills/android-java-bindings"
-}

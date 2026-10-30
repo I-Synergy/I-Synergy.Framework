@@ -1,8 +1,0 @@
-{
-  "id": "template:dotnet-best-practices",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "1598fb398f52ed97ee2af0e8e44a91a4d73eda3a59236eab23caab55f0f3b4ac",
-  "materialize": "copy",
-  "path": ".ai/prompts/dotnet-best-practices.prompt.md"
-}

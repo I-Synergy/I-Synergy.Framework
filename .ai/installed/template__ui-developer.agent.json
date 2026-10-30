@@ -1,8 +1,0 @@
-{
-  "id": "template:ui-developer",
-  "kind": "agent",
-  "ref": "2026.11027.12350",
-  "sha256": "d2b631e7b44b8f97ea6d2fd429c827405b941b94f2c17bf2ded261f9fc1e3143",
-  "materialize": "copy",
-  "path": ".ai/agents/ui-developer.md"
-}

@@ -37,6 +37,12 @@ STALE_REF_PATTERN = re.compile(
     r'(?<!~/)\.claude/(?!settings\.json|settings\.local\.json)'
 )
 
+# The Copilot copy is written by `.ai/scripts/catalog.py`, which rewrites a
+# Claude-only path to `.github/` (catalog._copilot_paths). The generated body is
+# therefore AGENTS.md *after* that transform, so the comparison below has to
+# apply the same substitution or every regeneration is reported as stale.
+COPILOT_CLAUDE_PATH = re.compile(r'\.claude/(?!settings\.json|settings\.local\.json)')
+
 
 def _is_junction(path: Path) -> bool:
     """Check if a directory is a Windows junction (reparse point)."""
@@ -81,6 +87,7 @@ def test_copilot_instructions() -> bool:
 
     if GENERATED_MARK in content:
         expected = AGENTS_MD.read_text(encoding="utf-8").strip() if AGENTS_MD.is_file() else ""
+        expected = COPILOT_CLAUDE_PATH.sub(".github/", expected)
         body = content.split(GENERATED_MARK, 1)[1]
         body = re.sub(r"<!-- Generated from AGENTS\.md\..*?-->", "", body, count=1)
         cut = body.find(REFERENCE_START)
@@ -88,7 +95,7 @@ def test_copilot_instructions() -> bool:
             body = body[:cut]
         if not expected or body.strip() != expected:
             print("  FAIL: AGENTS.md changed without regenerating the Copilot file")
-            print("        run: python .ai/scripts/sync-instructions.py")
+            print("        run: python .ai/scripts/catalog.py sync")
             return False
         print("  PASS: generated body matches AGENTS.md")
     else:

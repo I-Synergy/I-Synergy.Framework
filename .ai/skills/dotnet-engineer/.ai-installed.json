@@ -1,8 +1,0 @@
-{
-  "id": "template:dotnet-engineer",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "c5bf02a3bc23c63d13104a2d036e09054814f902d74a0fef0dfa252b347d7950",
-  "materialize": "copy",
-  "path": ".ai/skills/dotnet-engineer"
-}

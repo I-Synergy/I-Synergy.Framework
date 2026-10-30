@@ -1,8 +1,0 @@
-{
-  "id": "template:prompt-builder",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "54591888f9ba5ebd32c16dc98785668324cef0cace3267fa1bca2e04ba734735",
-  "materialize": "copy",
-  "path": ".ai/prompts/prompt-builder.prompt.md"
-}

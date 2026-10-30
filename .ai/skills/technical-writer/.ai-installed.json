@@ -1,8 +1,0 @@
-{
-  "id": "template:technical-writer",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "27d554ba55c0a5eda8419a4c0672c024ae526a3fca1afae84b02b4f79948e28b",
-  "materialize": "copy",
-  "path": ".ai/skills/technical-writer"
-}

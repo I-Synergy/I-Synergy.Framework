@@ -1,8 +1,0 @@
-{
-  "id": "template:csharp-async",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "1ceb05e07d8edcd063cd14c2a158067f2160aa612ca95be9f028ea605cb58af1",
-  "materialize": "copy",
-  "path": ".ai/prompts/csharp-async.prompt.md"
-}

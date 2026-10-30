@@ -1,8 +1,0 @@
-{
-  "id": "template:performance-engineer",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "08e3454a902243ecf9b0d06f462515325d6952d348548e3d8d64019f18aab1b2",
-  "materialize": "copy",
-  "path": ".ai/skills/performance-engineer"
-}

@@ -1,8 +1,0 @@
-{
-  "id": "template:council",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "addc9beb7e537046eb6170800fc5b444cd4317444d8fde2786bbdb155dea6df1",
-  "materialize": "copy",
-  "path": ".ai/skills/council"
-}

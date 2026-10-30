@@ -1,8 +1,0 @@
-{
-  "id": "template:update-markdown-file-index",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "b86c3b9d6c19621ddf1de20651e1f36969d173c8a0b591c13510a7132a732c65",
-  "materialize": "copy",
-  "path": ".ai/prompts/update-markdown-file-index.prompt.md"
-}

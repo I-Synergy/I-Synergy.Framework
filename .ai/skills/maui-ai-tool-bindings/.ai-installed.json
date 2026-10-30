@@ -1,8 +1,0 @@
-{
-  "id": "dotnet-maui:maui-ai-tool-bindings",
-  "kind": "skill",
-  "ref": "main",
-  "sha256": "371005763f187cb397694b86a93f16c194814672daa87ed0407c6308f72f1dda",
-  "materialize": "copy",
-  "path": ".ai/skills/maui-ai-tool-bindings"
-}

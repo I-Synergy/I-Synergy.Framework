@@ -1,8 +1,0 @@
-{
-  "id": "template:usecases-gherkin-specs",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "feacfbbefd6acc40754058dc1412ab5763a02cac71174c7c74601b38239bbee7",
-  "materialize": "copy",
-  "path": ".ai/prompts/usecases-gherkin-specs.prompt.md"
-}

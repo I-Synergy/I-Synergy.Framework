@@ -123,6 +123,35 @@ Validates every `.ai/` path referenced from `AGENTS.md`, and flags skills and pa
 python3 .ai/tests/validate-agents-md.py
 ```
 
+### Trigger Lines (`validate-triggers.py`)
+
+The frontmatter `description` is the primary mechanism a client uses to decide whether to load a skill or delegate to an agent, so it must state *when* to invoke it.
+
+**What it checks:**
+- Every `.ai/skills/*/SKILL.md` and `.ai/agents/*.md` carries parseable YAML frontmatter
+- The `description` field exists and is non-empty
+- The combined text of `description` plus (for skills) `when_to_use` contains an explicit trigger clause — one of `use when`, `use for`, `use before`, `use after`, `trigger when`, `trigger whenever`, `trigger on`, `call this when`, `invoke when`, or `when to use` (case-insensitive, on word boundaries)
+- Fails on a missing frontmatter, a missing/empty description, or a description with no trigger clause
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-triggers.py
+```
+
+### Prose To Skills (`validate-prose.py`)
+
+`AGENTS.md` is the always-loaded entry point, so long prose must point at the skill or reference that carries the detail.
+
+**What it checks:**
+- Splits `AGENTS.md` on blank lines into blocks, skipping blocks that are only table rows or headings, and skipping everything inside fenced code blocks
+- Any remaining block over 100 words must carry a `.ai/` pointer — a reference matching `.ai/skills/`, `.ai/reference/`, `.ai/patterns/` or `.ai/agents/`
+- Fails when `AGENTS.md` is missing or an over-threshold block has no such pointer, naming the block's first line and its word count
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-prose.py
+```
+
 ### Settings & Structure (`validate-settings.py`)
 
 Validates Claude Code's configuration and the overall directory layout.
@@ -221,6 +250,44 @@ python3 .ai/tests/validate-standards.py
 **Run individually:**
 ```bash
 python3 .ai/tests/validate-upgrade-script.py
+```
+
+### Harness Health Score (`score-harness.py`)
+
+A reporting layer over every suite above, not another suite. `score-harness.py` runs each
+validator as a subprocess and weights the result into a single 0–100 score:
+
+- `1.0` — exit `0`, no advisory lines
+- `0.8` — exit `0`, at least one advisory line (`⚠️`)
+- `0.0` — non-zero exit
+
+The 17 weights sum to exactly 100 and are grouped into five categories — Integrity 40,
+Platform 15, Quality 15, Standards 14, Release 16. Lines marked `⚠️ SKIP:` mean "not
+applicable here" (the standards and traceability suites skip work in a tree with no solution
+file and no test sources) and cost no points. The report gives the total, a letter grade
+(`A+` ≥ 95, `A` ≥ 90, `B` ≥ 80, `C` ≥ 70, `D` ≥ 60, `F` below), a per-category breakdown,
+and every deduction named with its reason.
+
+Options: `--json PATH` writes the machine-readable document, `--badge PATH` writes a
+shields.io SVG (label `harness`, message `<score>/100 <grade>`), `--from-json PATH` re-renders
+a saved document without running a single check, `--fail-under N` exits `1` below a threshold,
+`--timeout SECONDS` caps each check (default 300), `--list` prints the checks and weights, and
+`--quiet` prints only `96.4/100 A+`-style output.
+
+`run-all-tests.sh` does **not** run it, and `test_suite.py` has no wrapper for it: the scorer
+re-invokes the same validators those runners already execute, so adding it would double the
+runtime without adding a single new check. It is a convenience and reporting entry point, not
+part of the pass/fail gate.
+
+The release workflow (`.github/workflows/ci.yml`) does run it on every release: the score is
+appended to the GitHub Release notes, and `harness-score.json` plus `harness-score.svg` are
+uploaded as release assets. The README badges read the latest release's JSON, so a release
+publishes its own score without committing anything to `main`.
+
+**Run individually:**
+```bash
+python .ai/tests/score-harness.py
+python .ai/tests/score-harness.py --json harness-score.json --badge harness-score.svg --fail-under 90
 ```
 
 ## Exit Codes

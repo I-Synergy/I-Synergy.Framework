@@ -1,8 +1,0 @@
-{
-  "id": "template:create-readme",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "c788b088d667478c543cbe85b84a0b6a4f60f56225b71efb108d4ef8c65eb362",
-  "materialize": "copy",
-  "path": ".ai/prompts/create-readme.prompt.md"
-}

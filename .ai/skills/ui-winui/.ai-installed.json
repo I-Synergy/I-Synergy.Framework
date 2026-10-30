@@ -1,8 +1,0 @@
-{
-  "id": "template:ui-winui",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "551734df958ea0fb4bebf9b9779c4901a7d079bec6ff93e96f5387ec2fae66d9",
-  "materialize": "copy",
-  "path": ".ai/skills/ui-winui"
-}

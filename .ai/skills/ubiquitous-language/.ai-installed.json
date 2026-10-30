@@ -1,8 +1,0 @@
-{
-  "id": "template:ubiquitous-language",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "4e1d7001f2ed8ab63c4eb7e738c3976a42e3f78cac8c35169d8443c175a65d76",
-  "materialize": "copy",
-  "path": ".ai/skills/ubiquitous-language"
-}

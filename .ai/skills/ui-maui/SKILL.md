@@ -1,7 +1,7 @@
 ---
 name: ui-maui
 description: >-
-  .NET MAUI implementation of the I-Synergy UI stack: ConfigureServices bootstrapper, cross-platform dialog/navigation/theme/file/camera services, NavigationMenu controls, and dynamic theme system.
+  .NET MAUI implementation of the I-Synergy UI stack: ConfigureServices bootstrapper, cross-platform dialog/navigation/theme/file/camera services, NavigationMenu controls, and dynamic theme system. Use when implementing .NET MAUI dialog/navigation/theme/file/camera services, NavigationMenu controls, or the dynamic theme system.
 version: 2026.02.10
 sources:
   - src/ISynergy.Framework.UI.Maui

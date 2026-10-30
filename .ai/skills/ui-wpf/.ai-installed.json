@@ -1,8 +1,0 @@
-{
-  "id": "template:ui-wpf",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "d5f7a76a0e75f94ef7f74754f491041089bad1cbed04a509131ee775e92f9493",
-  "materialize": "copy",
-  "path": ".ai/skills/ui-wpf"
-}

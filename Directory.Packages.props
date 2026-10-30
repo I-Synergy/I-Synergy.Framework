@@ -5,12 +5,12 @@
   </PropertyGroup>
   <!-- Third-party and cross-framework packages (unconditional) -->
   <ItemGroup>
-    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="17.0.0-preview.1.26529.1" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0-preview.1.26529.1" />
-    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="17.0.0-preview.1.26529.1" />
-    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0-preview.1.26529.1" />
-    <PackageVersion Include="Aspire.Hosting.Maui" Version="17.0.0-preview.1.26529.1" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0-preview.1.26529.1" />
+    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="17.0.0-preview.1.26530.1" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0-preview.1.26530.1" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="17.0.0-preview.1.26530.1" />
+    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0-preview.1.26530.1" />
+    <PackageVersion Include="Aspire.Hosting.Maui" Version="17.0.0-preview.1.26530.1" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0-preview.1.26530.1" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.104.8" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />

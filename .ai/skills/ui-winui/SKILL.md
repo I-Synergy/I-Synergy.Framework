@@ -1,7 +1,7 @@
 ---
 name: ui-winui
 description: >-
-  WinUI 3 implementation details: Fluent Design shell, ContentDialog service, camera/file integrations, title bar customization, Windows 11 accent sync.
+  WinUI 3 implementation details: Fluent Design shell, ContentDialog service, camera/file integrations, title bar customization, Windows 11 accent sync. Use when implementing a WinUI 3 Fluent Design shell, ContentDialog service, camera/file integration, title bar customization, or Windows 11 accent sync.
 version: 2026.02.10
 sources:
   - src/ISynergy.Framework.UI.WinUI

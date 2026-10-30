@@ -1,8 +1,0 @@
-{
-  "id": "template:blazor-theme-generator",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "1060848aea99151e36996d5ea90fd7c69bdd0c4891595f45a14aa974b8f38603",
-  "materialize": "copy",
-  "path": ".ai/skills/blazor-theme-generator"
-}

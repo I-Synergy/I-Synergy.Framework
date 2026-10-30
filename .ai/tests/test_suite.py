@@ -117,7 +117,23 @@ def test_settings_and_structure():
 
 
 # ---------------------------------------------------------------------------
-# Suite 8 — Copilot Integration
+# Suite 8 — Trigger Lines
+# ---------------------------------------------------------------------------
+def test_validate_triggers():
+    code, output = _run_python("validate-triggers.py")
+    assert code == 0, f"\n{output}"
+
+
+# ---------------------------------------------------------------------------
+# Suite 9 — Prose To Skills
+# ---------------------------------------------------------------------------
+def test_validate_prose():
+    code, output = _run_python("validate-prose.py")
+    assert code == 0, f"\n{output}"
+
+
+# ---------------------------------------------------------------------------
+# Suite 10 — Copilot Integration
 # ---------------------------------------------------------------------------
 def test_copilot_integration():
     code, output = _run_python("validate-copilot.py")
@@ -125,7 +141,7 @@ def test_copilot_integration():
 
 
 # ---------------------------------------------------------------------------
-# Suite 9 — Integration Smoke Tests
+# Suite 11 — Integration Smoke Tests
 # ---------------------------------------------------------------------------
 def test_smoke():
     code, output = _run_python("smoke-test.py")
@@ -133,7 +149,7 @@ def test_smoke():
 
 
 # ---------------------------------------------------------------------------
-# Suite 10 — Upgrade Script
+# Suite 12 — Upgrade Script
 # ---------------------------------------------------------------------------
 def test_upgrade_script():
     code, output = _run_python("validate-upgrade-script.py")

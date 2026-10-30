@@ -1,8 +1,0 @@
-{
-  "id": "template:design-interrogation",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "e9af29ec50ea6ae3d9e16b1dbef34e628d98b534e7e00e8169674e70f8e986ef",
-  "materialize": "copy",
-  "path": ".ai/skills/design-interrogation"
-}

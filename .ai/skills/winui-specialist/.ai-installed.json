@@ -1,8 +1,0 @@
-{
-  "id": "template:winui-specialist",
-  "kind": "skill",
-  "ref": "2026.11027.12350",
-  "sha256": "44c626aa8422e3412dfbe8046af89e243a95a2221e3676c572417fa361fc0025",
-  "materialize": "copy",
-  "path": ".ai/skills/winui-specialist"
-}

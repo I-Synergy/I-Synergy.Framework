@@ -1,6 +1,6 @@
 ---
 name: verify-config
-description: Audits AGENTS.md and .ai/ reference files against actual codebase patterns and hard requirements. Use to detect configuration drift and ensure documentation stays in sync.
+description: Audits AGENTS.md and .ai/ reference files against actual codebase patterns and hard requirements. Use to detect configuration drift and ensure documentation stays in sync. Use when you need to verify AGENTS.md and .ai/ references still match the codebase, or to compute the standards compatibility manifest.
 ---
 
 # Verify Configuration Skill

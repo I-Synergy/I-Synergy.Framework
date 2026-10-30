@@ -1,8 +1,0 @@
-{
-  "id": "template:skill-creator",
-  "kind": "skill",
-  "ref": "2026.11029.12224",
-  "sha256": "d4bd1e2aaf6e7d58f528e0450f92e381ddea0b63a49d5533a156b12009ac0148",
-  "materialize": "copy",
-  "path": ".ai/skills/skill-creator"
-}

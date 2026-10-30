@@ -1,8 +1,0 @@
-{
-  "id": "template:solution-generator",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "53afe3eae5ece9d7780792a34069864e9847529759706559c837118c247cab40",
-  "materialize": "copy",
-  "path": ".ai/skills/solution-generator"
-}

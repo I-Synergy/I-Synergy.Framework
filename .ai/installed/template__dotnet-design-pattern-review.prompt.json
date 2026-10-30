@@ -1,8 +1,0 @@
-{
-  "id": "template:dotnet-design-pattern-review",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "af4ba286c4b439b3304f2d6c010c4797291299662218833e0a7a9f600f7b8dba",
-  "materialize": "copy",
-  "path": ".ai/prompts/dotnet-design-pattern-review.prompt.md"
-}

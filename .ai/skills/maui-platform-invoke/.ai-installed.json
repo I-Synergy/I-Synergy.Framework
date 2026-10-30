@@ -1,8 +1,0 @@
-{
-  "id": "dotnet-maui:maui-platform-invoke",
-  "kind": "skill",
-  "ref": "main",
-  "sha256": "280a9f670c07546fa2f7d56339be3942416d99bee34bc17d7508d4700450768d",
-  "materialize": "copy",
-  "path": ".ai/skills/maui-platform-invoke"
-}

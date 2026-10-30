@@ -1,8 +1,0 @@
-{
-  "id": "template:vertical-slices",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "76c3ff6ee56a911d5e93eb32cb4bafbd5b51d175ae5ce48c1a6ec34bec4416b9",
-  "materialize": "copy",
-  "path": ".ai/skills/vertical-slices"
-}

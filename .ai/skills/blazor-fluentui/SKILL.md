@@ -1,7 +1,7 @@
 ---
 name: blazor-fluentui
 description: >-
-  Production-ready Blazor patterns exactly as implemented inside the I-Synergy Framework UI (View<TViewModel>, ConfigureServices bootstrapper, CommonServices, Dialog/Navigation services).
+  Production-ready Blazor patterns exactly as implemented inside the I-Synergy Framework UI (View<TViewModel>, ConfigureServices bootstrapper, CommonServices, Dialog/Navigation services). Use when building or debugging I-Synergy Blazor UI with View<TViewModel>, the ConfigureServices bootstrapper, CommonServices, or the Dialog/Navigation services.
 version: 2026.02.10
 sources:
   - src/ISynergy.Framework.UI.Blazor

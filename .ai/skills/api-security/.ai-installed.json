@@ -1,8 +1,0 @@
-{
-  "id": "template:api-security",
-  "kind": "skill",
-  "ref": "2026.11028.11637",
-  "sha256": "433be98440215343adce1df1095c23326e7e2b2a02cef6bcb40990c3a000df37",
-  "materialize": "copy",
-  "path": ".ai/skills/api-security"
-}

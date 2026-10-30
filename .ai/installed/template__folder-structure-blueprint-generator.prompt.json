@@ -1,8 +1,0 @@
-{
-  "id": "template:folder-structure-blueprint-generator",
-  "kind": "prompt",
-  "ref": "2026.11029.12236",
-  "sha256": "a8b7c976e314ad7160c3865a3808c526b660f4e62513853973fc5f83bd1b7424",
-  "materialize": "copy",
-  "path": ".ai/prompts/folder-structure-blueprint-generator.prompt.md"
-}

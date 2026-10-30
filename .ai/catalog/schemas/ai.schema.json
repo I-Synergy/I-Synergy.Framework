@@ -24,7 +24,23 @@
         "string",
         "null"
       ],
-      "description": "Named bundle of selections (minimal, dotnet-web, maui-mobile, blazor, full). Accepted but IGNORED in Phase 0; preset expansion lands with catalog/presets.json."
+      "description": "Legacy single preset. Read as one entry of `presets`; new writes use the array so presets can be combined."
+    },
+    "presets": {
+      "type": "array",
+      "description": "Preset names applied additively. Their items are unioned with each other and with the explicit skills/agents lists; `exclude` opts an individual item back out. `init --preset` replaces this list, `preset add/remove` edits it.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "clients": {
+      "type": "array",
+      "description": "AI clients whose platform folders are generated: 'claude', 'copilot', 'reasonix'. New manifests default to ['claude']; a manifest without this field keeps every client for backward compatibility. Disabling a client removes only its junctions/generated instructions, never real directories or .github/workflows.",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["claude", "copilot", "reasonix"]
+      }
     },
     "sources": {
       "type": "object",
@@ -64,7 +80,15 @@
     },
     "exclude": {
       "type": "array",
-      "description": "Selection ids to remove after preset expansion. Accepted and honoured for explicit lists in Phase 0; its main use is opting out of an item a preset brings in.",
+      "description": "Selection ids to drop after preset expansion. This is how an individual item a preset brings in is deselected; adding the same item explicitly clears its exclusion.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "locked": {
+      "type": "array",
+      "description": "Selection ids frozen by the user. Update and sync never overwrite an installed locked item, even with --force; edit it, lock it, and it stops being treated as drift. A missing locked item may still be materialised, and unlocking resumes normal updates.",
       "uniqueItems": true,
       "items": {
         "$ref": "#/$defs/selectionId"

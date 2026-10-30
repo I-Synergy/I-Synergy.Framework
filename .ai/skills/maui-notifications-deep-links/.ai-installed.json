@@ -1,8 +1,0 @@
-{
-  "id": "dotnet-maui:maui-notifications-deep-links",
-  "kind": "skill",
-  "ref": "main",
-  "sha256": "3350031b0ed3f1217ef7411ceb01cecf7873d6b65c66ed9fd434e615b8fef241",
-  "materialize": "copy",
-  "path": ".ai/skills/maui-notifications-deep-links"
-}
