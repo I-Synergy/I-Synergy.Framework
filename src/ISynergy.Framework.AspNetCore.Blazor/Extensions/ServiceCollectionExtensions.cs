@@ -171,7 +171,10 @@ public static class ServiceCollectionExtensions
         var windowTypes = assemblies.ToWindowTypes();
         var viewModelTypes = assemblies.ToViewModelTypes();
 
-        services.RegisterViewModels(viewModelTypes);
+        // Blazor resolves dialogs from the circuit scope: view models must be transient so that
+        // reopening a dialog gets a fresh instance instead of the one the previous dialog closed.
+        foreach (var viewModelType in viewModelTypes.Distinct().EnsureNotNull())
+            services.RegisterViewModel(viewModelType, ServiceLifetime.Transient);
         services.RegisterViews(viewTypes);
         services.RegisterWindows(windowTypes);
     }

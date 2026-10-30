@@ -144,3 +144,17 @@ ported decompositions into shared cores or a CPD exclusion for that ported code.
   ApplyTheme, ResolveSystemTheme and their native resource updates (~173 duplicated lines).
 - Coverlet verified after the refactors: Core 572, Mvvm 262, UI 90, Mathematics 954 tests
   pass with --collect:"XPlat Code Coverage" and opencover reports are produced.
+
+## Fix: Blazor dialog liveness regression (2026-10-30)
+
+Consolidating AspNetCore.Blazor's ReflectionExtensions into the UI copy changed the
+Blazor view-model lifetime: the UI RegisterViewModel hard-codes TryAddScoped, while
+the Blazor copy routed through Register() (transient when no [Lifetime] attribute).
+Blazor resolves dialogs from the circuit scope, so the reused view model closed an
+already-removed dialog ("ID doesn't exist in the DialogServiceProvider"), which put
+the circuit into the error state and failed
+Dialog_RepeatedOpenAndCloseCycles_LeaveTheCircuitInteractive.
+
+Fix: added a RegisterViewModel(IServiceCollection, Type, ServiceLifetime) overload to
+the shared extensions; the Blazor RegisterAssemblies path now registers view models as
+transient again, while the UI platforms keep their scoped registration.
