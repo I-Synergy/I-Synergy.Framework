@@ -72,7 +72,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<LocalDatabase>();
 
         // API client
-        builder.Services.AddHttpClient<IBudgetApiClient, BudgetApiClient>(client =>
+        builder.Services.AddHttpClient<I{Entity}ApiClient, {Entity}ApiClient>(client =>
         {
             client.BaseAddress = new Uri(DeviceInfo.Platform == DevicePlatform.Android
                 ? "http://10.0.2.2:5000" // Android emulator
@@ -83,8 +83,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<ISyncService, SyncService>();
 
         // ViewModels
-        builder.Services.AddTransient<BudgetListViewModel>();
-        builder.Services.AddTransient<BudgetDetailViewModel>();
+        builder.Services.AddTransient<{Entity}ListViewModel>();
+        builder.Services.AddTransient<{Entity}DetailViewModel>();
 
         return builder.Build();
     }

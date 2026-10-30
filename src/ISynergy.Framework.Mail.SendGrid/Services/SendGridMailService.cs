@@ -84,7 +84,7 @@ internal class SendGridMailService : IMailService
                 Personalizations = [personalization]
             };
 
-            var response = await _sendGridClient.SendEmailAsync(msg).ConfigureAwait(false);
+            var response = await _sendGridClient.SendEmailAsync(msg, cancellationToken).ConfigureAwait(false);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {

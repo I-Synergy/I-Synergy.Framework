@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/I-Synergy/AI/catalog/schemas/ai.schema.json",
+  "title": "AI skill/agent/instruction/prompt selection manifest",
+  "description": "Project-owned selection manifest (.ai/ai.json). Lists the skills, agents, instructions, prompts, plugins and hooks a project installs from the catalog. Ids are namespaced 'source:id'; ids from the 'template' source may be written bare.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "sources"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional JSON Schema reference for editor validation, e.g. '../catalog/schemas/ai.schema.json'."
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Manifest format version. Only 1 is understood by catalog.py in Phase 0."
+    },
+    "preset": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Legacy single preset. Read as one entry of `presets`; new writes use the array so presets can be combined."
+    },
+    "presets": {
+      "type": "array",
+      "description": "Preset names applied additively. Their items are unioned with each other and with the explicit skills/agents lists; `exclude` opts an individual item back out. `init --preset` replaces this list, `preset add/remove` edits it.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "clients": {
+      "type": "array",
+      "description": "AI clients whose platform folders are generated: 'claude', 'copilot', 'reasonix'. New manifests default to ['claude']; a manifest without this field keeps every client for backward compatibility. Disabling a client removes only its junctions/generated instructions, never real directories or .github/workflows.",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["claude", "copilot", "reasonix"]
+      }
+    },
+    "sources": {
+      "type": "object",
+      "description": "Catalog sources this manifest can draw from, keyed by source id. Phase 0 understands only the 'template' source.",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z0-9][a-z0-9-]*$",
+        "description": "Lowercase source id used as the namespace prefix of selection ids."
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "skills": {
+      "type": "array",
+      "description": "Selection ids of skills to install into .ai/skills/.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "agents": {
+      "type": "array",
+      "description": "Selection ids of agents to install into .ai/agents/.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "materialize": {
+      "enum": [
+        "link",
+        "copy"
+      ],
+      "default": "link",
+      "description": "How selected items are placed on disk: 'link' creates a per-item junction (Windows) or relative symlink (POSIX), 'copy' writes a plain copy. Defaults to 'link'."
+    },
+    "exclude": {
+      "type": "array",
+      "description": "Selection ids to drop after preset expansion. This is how an individual item a preset brings in is deselected; adding the same item explicitly clears its exclusion.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "locked": {
+      "type": "array",
+      "description": "Selection ids frozen by the user. Update and sync never overwrite an installed locked item, even with --force; edit it, lock it, and it stops being treated as drift. A missing locked item may still be materialised, and unlocking resumes normal updates.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "description": "Selection ids of instructions to install into .ai/instructions/.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "prompts": {
+      "type": "array",
+      "description": "Selection ids of prompt files to install into .ai/prompts/.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "plugins": {
+      "type": "array",
+      "description": "Selection ids of plugins to install into .ai/plugins/.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    },
+    "hooks": {
+      "type": "array",
+      "description": "Selection ids of hooks to install into .ai/hooks/.",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selectionId"
+      }
+    }
+  },
+  "$defs": {
+    "selectionId": {
+      "type": "string",
+      "description": "Selection id in 'source:id' form. The 'template:' prefix may be omitted, so 'council' and 'template:council' select the same skill.",
+      "pattern": "^([a-z0-9][a-z0-9-]*:)?[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "source": {
+      "type": "object",
+      "description": "One catalog source: where items come from and which revision is pinned.",
+      "additionalProperties": false,
+      "required": [
+        "repo",
+        "ref"
+      ],
+      "properties": {
+        "repo": {
+          "type": "string",
+          "description": "Repository that hosts the source, as 'owner/name' (e.g. 'I-Synergy/AI'). Used to build the 'upstream' provenance URL recorded in the lock."
+        },
+        "ref": {
+          "type": "string",
+          "description": "Pinned revision of the source: a tag, branch or commit (e.g. 'v1.5.0'). Phase 0 resolves it offline against the local tree only."
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Optional local checkout of this source, absolute or relative to the project root. When omitted the source is read from the project's own tree, which makes source and target the same directory (a no-op sync)."
+        },
+        "resolve": {
+          "enum": [
+            "local",
+            "remote"
+          ],
+          "default": "local",
+          "description": "'local' (default) reads the source from a path or from the project's own tree, which is what makes source == target a no-op. 'remote' fetches the pinned ref into .ai/tmp/catalog-cache/ and resolves against that snapshot, which is what gives the lock something to pin and makes upstream updates detectable."
+        },
+        "license": {
+          "type": "string",
+          "description": "License recorded for every item resolved from this source (e.g. 'MIT'). Defaults to MIT for the template source. Carried into the lock and NOTICE.md."
+        },
+        "allowHooks": {
+          "type": "boolean",
+          "description": "Opt in to third-party hooks, MCP servers and workflows. A source that ships hooks/, mcp.json or workflows/ is refused unless this is true; skills and agents are prose, those three are executable-adjacent."
+        },
+        "paths": {
+          "type": "object",
+          "description": "Optional directories to read each kind from, relative to the source root. Most sources keep items at `skills/`, `agents/` and `instructions/`, so this is omitted. A source with a nested layout (for example MAUI Labs' `plugins/<plugin>/skills`) lists every directory for that kind.",
+          "propertyNames": {
+            "enum": [
+              "skill",
+              "agent",
+              "instruction",
+              "prompt",
+              "plugin",
+              "hook"
+            ]
+          },
+          "additionalProperties": {
+            "type": [
+              "string",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "One directory, or a list of directories, holding that kind inside the source."
+          }
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Set false to declare a source (keeping its pin reviewable) without reading or fetching it."
+        }
+      }
+    }
+  }
+}

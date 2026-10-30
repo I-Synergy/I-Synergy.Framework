@@ -50,7 +50,7 @@
                     <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="dashboard" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
@@ -87,7 +87,7 @@
                     <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="customcontrols" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
@@ -124,7 +124,7 @@
                     <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="mauicontrols" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>
@@ -161,7 +161,7 @@
                     <Border Style="{StaticResource AppSidebarRowBorder}" HeightRequest="52" StyleId="SidebarRow">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference SidebarRoot}, Path=BindingContext.NavigateToCommand}"
+                                Command="{Binding NavigateToCommand}"
                                 CommandParameter="slideshow" />
                         </Border.GestureRecognizers>
                         <Border.Triggers>

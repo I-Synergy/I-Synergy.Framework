@@ -57,11 +57,12 @@ public class LoadingView : Page
                     UriSource = new Uri(splashScreenOptions.Resource)
                 };
         }
-        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
+        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource)
+            && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video
+            && _backgroundMediaElement is not null)
         {
             // Use MediaElement for video resources
-            if (_backgroundMediaElement is not null)
-                _backgroundMediaElement.Source = Windows.Media.Core.MediaSource.CreateFromUri(new Uri(splashScreenOptions.Resource));
+            _backgroundMediaElement.Source = Windows.Media.Core.MediaSource.CreateFromUri(new Uri(splashScreenOptions.Resource));
         }
     }
 

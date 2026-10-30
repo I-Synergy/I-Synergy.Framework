@@ -1,26 +1,23 @@
 ---
 name: verify-config
-description: Audits CLAUDE.md, REASONIX.md, DEEPSEEK.md, and .ai/ reference files against actual codebase patterns and hard requirements. Use to detect configuration drift and ensure documentation stays in sync.
+description: Audits AGENTS.md and .ai/ reference files against actual codebase patterns and hard requirements. Use to detect configuration drift and ensure documentation stays in sync. Use when you need to verify AGENTS.md and .ai/ references still match the codebase, or to compute the standards compatibility manifest.
 ---
 
 # Verify Configuration Skill
 
 Audits project documentation against actual codebase conventions and enforces hard requirements
-(task execution protocol, subagent delegation, multi-assistant sync integrity, session management).
+(task execution protocol, subagent delegation, session management).
 
 ## Steps
 
 ### 1. Read current documentation
-   - Read `CLAUDE.md`
-   - Read `REASONIX.md` (if exists)
-   - Read `DEEPSEEK.md` (if exists)
+   - Read `AGENTS.md` (master orchestration file)
    - Read `.ai/reference/critical-rules.md`
    - Read `.ai/reference/task-execution.md`
    - Read `.ai/reference/session-management.md`
    - Read `.ai/reference/templates/session-handoff.md.txt`
    - Read `.ai/session-context.md`
    - Read `.ai/patterns/cqrs-patterns.md`
-   - Read `.claude/settings.json`
 
 ### 2. Codebase pattern audit (existing)
    - Pick a representative domain from `{ApplicationName}.Domain.*` as the reference implementation
@@ -38,58 +35,37 @@ Audits project documentation against actual codebase conventions and enforces ha
    - `.ai/progress/` folder exists
    - `.ai/completed/` folder exists
    - `.ai/plans/` folder exists
-   - `CLAUDE.md` Task Execution section explicitly says progress files are MANDATORY
-   - `REASONIX.md` (if exists) Task Execution section explicitly says progress files are MANDATORY
-   - `DEEPSEEK.md` (if exists) Task Execution section explicitly says progress files are MANDATORY
-   - `.ai/reference/task-execution.md` is tool-agnostic (no `EnterPlanMode` / `mv` references)
+   - `AGENTS.md` Task Execution section explicitly says progress files are MANDATORY
+   - `.ai/reference/task-execution.md` is tool-agnostic (no tool-specific references)
 
 #### 3b. Subagent delegation
-   - `CLAUDE.md` has a HARD RULE subagent delegation section naming what the main conversation may/may not do
-   - `REASONIX.md` (if exists) has the same HARD RULE section
-   - `DEEPSEEK.md` (if exists) has the same HARD RULE section
-   - Agent rosters in `CLAUDE.md`, `DEEPSEEK.md`, and `README.md` list every agent in `.ai/agents/` — no Model column; the tier lives in the agent's own frontmatter
+   - `AGENTS.md` has a HARD RULE subagent delegation section naming what the main conversation may/may not do
+   - Agent rosters in `AGENTS.md` and `README.md` list every agent in `.ai/agents/` — no Model column; the tier lives in the agent's own frontmatter
    - `model:` frontmatter in `.ai/agents/*.md` is always a tier alias (`sonnet` or `haiku`) — never a concrete model name
-   - Shared docs (`CLAUDE.md`, `REASONIX.md`, `DEEPSEEK.md`, `README.md`) hardcode no concrete DeepSeek model names — the per-slot mapping is defined only by `powershell/Microsoft.PowerShell_profile.ps1`
+   - Docs (`AGENTS.md`, `README.md`) hardcode no concrete model names — the `model:` tier alias in each agent's frontmatter names a tier slot (e.g., `sonnet` or `haiku`), and the concrete model bound to that tier is chosen by the backend runtime outside this repository
 
-#### 3c. Multi-assistant sync integrity
-   - `DEEPSEEK.md` (if exists) exists alongside `CLAUDE.md` and `REASONIX.md`
-   - Sync is folder-level junctions (Windows) / symlinks (Unix) from `.ai/skills/` and `.ai/agents/` — there is no
-     per-target file content (no thin wrappers, no full copies). All platforms read the identical files through
-     the link; content drift between platforms is structurally impossible, so do not diff file contents across
-     `.claude/`, `.github/`, `.reasonix/`, `.pi/` — verify the *links* instead:
-   - `.claude/skills/`, `.github/skills/`, `.reasonix/skills/`, `.pi/skills/` are each a junction/symlink resolving to `.ai/skills/`
-   - `.claude/agents/`, `.github/agents/`, `.reasonix/agents/`, `.pi/agents/` are each a junction/symlink resolving to `.ai/agents/`
-   - `.pi/chains/` is a junction/symlink resolving to `.ai/chains/`
-   - Agent files reached via any of these junctions have `runAs: subagent` (check the `.ai/agents/` source directly — it's the same file)
-   - No broken junctions: every target above exists and is reachable (a missing or dangling link means `sync-skills.py` hasn't been run, not "drift")
-   - `.gitignore` excludes all 9 junction target dirs (`.claude/skills/`, `.claude/agents/`, `.github/skills/`, `.github/agents/`, `.reasonix/skills/`, `.reasonix/agents/`, `.pi/skills/`, `.pi/agents/`, `.pi/chains/`) so they're never accidentally committed as real directories
-   - `.claude/settings.json` has `./.reasonix` in `additionalDirectories`
-   - `.claude/settings.json` has a `SessionStart` hook running `python .ai/scripts/sync-skills.py` — this is what bootstraps a fresh clone, since git cannot track junctions (`core.symlinks=false` is common on Windows) and a clean checkout has none of the 9 target dirs until something creates them
-   - `.claude/settings.json` also has PostToolUse hooks that re-run `python .ai/scripts/sync-skills.py` / `sync-agents.py` on changes under `.ai/skills/**` and `.ai/agents/**` (self-heal on edit, not "sync content" — the link IS the content)
-   - Copilot/Reasonix/pi have no session-start hook of their own; README's "run once after cloning" manual step is required for those tools even though Claude Code self-heals
-   - `.claude/settings.json` has a DEEPSEEK.md sync hook triggering on `.ai/reference/critical-rules.md`, `.ai/reference/task-execution.md`, `.ai/agents/**`, and `CLAUDE.md` (currently absent — flag as **Missing**, not drift, since `DEEPSEEK.md` is hand-maintained and can go stale silently)
-   - `.gitignore` includes `CLAUDE.md.deepseek-backup`
+#### 3c. Junctions to supported tools
+   - `.ai/skills/` and `.ai/agents/` are mirrored by junctions (Windows) / symlinks (Unix) into `.claude/`, `.reasonix/`, and `.github/`
+   - Junction targets (`.claude/skills/`, `.claude/agents/`, `.reasonix/skills/`, `.reasonix/agents/`, `.github/skills/`) exist and resolve correctly
+   - Agent files have `runAs: subagent` when needed (check `.ai/agents/` source)
+   - `.gitignore` excludes all junction targets
 
 #### 3d. Session management
+   - `.claude/settings.json` has a `SessionStart` hook (on all sources: startup, resume, clear, compact) that prints `.ai/session-context.md` when it exists and its first line is not `# Session Context Template`, preceded by a one-line header, and lists the 5 newest files in `.ai/completed/`; exits 0 always
+   - `AGENTS.md` Section 2 is titled `## Session Memory` and contains these exact strings:
+     - "`.ai/session-context.md` is the shared memory for every client"
+     - "In this template repository the file stays the unfilled placeholder"
+   - `.github/copilot-instructions.md` Section titled `## Session Memory` is identical to the `AGENTS.md` section (word-for-word, no divergence)
+   - `.ai/reference/session-management.md` reconciles with `AGENTS.md` (contains same core rules, longer-form detail)
+   - `.ai/reference/templates/session-handoff.md.txt` includes all supported clients in pick-lists (Claude Code, GitHub Copilot, Reasonix Code)
+   - `.ai/session-context.md` is the unfilled placeholder (first line is `# Session Context Template`); in this template repo, it never contains project state
    - `.ai/reference/session-management.md` has generic `[assistant name]` Written By (not hardcoded to one assistant)
    - `.ai/reference/session-management.md` lists all assistants that share the session context
-   - `.ai/reference/templates/session-handoff.md.txt` includes all assistants in the pick-lists
-   - `.ai/session-context.md` has no stale `[Claude Code | GitHub Copilot]`-only references
 
-#### 3e. DEEPSEEK.md content integrity
-   - `DEEPSEEK.md` inlines the subagent delegation table (the same agent types as `CLAUDE.md`)
-   - `DEEPSEEK.md` inlines the most critical coding rules as direct content (not cross-references to `.ai/reference/critical-rules.md`)
-   - `DEEPSEEK.md` inlines the task execution protocol (plan → progress file → complete cycle)
-   - `DEEPSEEK.md` is self-contained — a DeepSeek model can follow it without resolving nested file references
-   - `DEEPSEEK.md` structure is flatter than `CLAUDE.md` (fewer levels of indirection, fewer cross-references)
-   - `DEEPSEEK.md` is ~180-220 lines (concise enough for DeepSeek context but comprehensive)
-   - `DEEPSEEK.md` references `.ai/` folder only as an appendix for deep dives, not as required reading
-   - `DEEPSEEK.md` acknowledges it runs inside Claude Code's runtime (tools available: Agent, Skill, Read, Write, Edit, Bash, Glob, Grep, EnterPlanMode, TaskCreate, etc.)
-
-### 4. .ai/ folder structure
-   - Verify `.claude/settings.json` has `plansDirectory` pointing to local `.ai/plans`
-   - Verify `.ai/progress/` and `.ai/plans/` folders exist
-   - Check that no project-specific config leaked to global `~/.claude/` or `~/.reasonix/`
+### 4. Tool-specific configuration
+   - `.claude/settings.json` exists with `plansDirectory` pointing to `.ai/plans`, `SessionStart` hook, and `PostToolUse` re-sync hooks
+   - `.ai/progress/` and `.ai/plans/` folders exist
+   - Check that no project-specific config leaked to global `~/.claude/`, `~/.reasonix/`, etc.
 
 ### 5. Present findings
    - Show a summary table of all checks with their status
@@ -113,7 +89,7 @@ Audits project documentation against actual codebase conventions and enforces ha
    - Compute each row's status: an `Evidence` row keeps `Evidence` only when its validator exits `0`,
      every path in its `Implementing artifact` cell exists, and at least one pattern in its `Evidence a
      project produces` cell matches something the project produced — substitute `*` for each `{…}` and
-     glob it against the working tree, so `docs/slices/{BC}/{Entity}.{Operation}/test-plan.md` is
+     glob it against the working tree, so `docs/slices/{Domain}/{Entity}.{Operation}/test-plan.md` is
      tested as `docs/slices/*/*/test-plan.md`. Where a pattern matches nothing, the row is naming a
      file this project does not hold, and it renders one step lower — `Aligned` — with the cause in the
      generated `Note` column, naming what was not found. One step, never a fourth value, never a silent
@@ -154,17 +130,15 @@ Audits project documentation against actual codebase conventions and enforces ha
 
 | # | Check | Status | Details |
 |---|-------|--------|---------|
-| 1 | Progress files mandatory in CLAUDE.md | PASS/FAIL | ... |
-| 2 | Subagent delegation HARD RULE in REASONIX.md | PASS/FAIL | ... |
+| 1 | Progress files mandatory in AGENTS.md | PASS/FAIL | ... |
+| 2 | Subagent delegation HARD RULE in AGENTS.md | PASS/FAIL | ... |
 | 3 | Agent rosters list every `.ai/agents/` agent (no Model column) | PASS/FAIL | ... |
 | 4 | Agent `model:` frontmatter uses tier aliases (`sonnet`/`haiku`) | PASS/FAIL | ... |
-| 5 | Shared docs hardcode no concrete model names | PASS/FAIL | ... |
-| 6 | .claude/settings.json includes ./.reasonix | PASS/FAIL | ... |
-| 7 | .reasonix/skills/, .reasonix/agents/ resolve as junctions | PASS/FAIL | ... |
-| 8 | .ai/agents/ files have runAs: subagent | PASS/FAIL | ... |
-| 9 | Session management is assistant-agnostic | PASS/FAIL | ... |
-| 10 | Handoff template includes all assistants | PASS/FAIL | ... |
-| ... | ... | ... | ... |
+| 5 | Docs hardcode no concrete model names | PASS/FAIL | ... |
+| 6 | .claude/settings.json has hooks and plansDirectory | PASS/FAIL | ... |
+| 7 | Junctions to .ai/skills/ and .ai/agents/ resolve correctly | PASS/FAIL | ... |
+| 8 | Session management is tool-agnostic | PASS/FAIL | ... |
+| 9 | .gitignore excludes all junction targets | PASS/FAIL | ... |
 
 ### Codebase Pattern Audit
 

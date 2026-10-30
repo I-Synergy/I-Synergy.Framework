@@ -1,6 +1,6 @@
 ---
 name: security
-description: Security reviewer and blast-radius analyst — reviews authentication, authorization, secrets handling, data exposure, and dependency risk, and reports severity-ranked findings without editing code
+description: Security reviewer and blast-radius analyst — reviews authentication, authorization, secrets handling, data exposure, and dependency risk, and reports severity-ranked findings without editing code. Use for blast-radius and exposure analysis, threat modelling, OWASP review, and dependency and secret audits.
 runAs: subagent
 model: sonnet
 tools: Read, Grep, Glob, Bash

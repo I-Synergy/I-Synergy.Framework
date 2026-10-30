@@ -10,7 +10,7 @@ The `dotnet ef` command set for this solution's layout, and the Fluent API entit
 dotnet ef migrations add {MigrationName} --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
 
 # Example
-dotnet ef migrations add AddBudgetTable --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
+dotnet ef migrations add Add{Entity}Table --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
 ```
 
 ### Apply Migration
@@ -93,9 +93,9 @@ public class {Entity}Configuration : IEntityTypeConfiguration<{Entity}>
             .HasDatabaseName("idx_{entity}_created_date");
 
         // Relationships
-        builder.HasMany(e => e.Goals)
-            .WithOne(g => g.Budget)
-            .HasForeignKey(g => g.BudgetId)
+        builder.HasMany(e => e.{ChildEntities})
+            .WithOne(g => g.{Entity})
+            .HasForeignKey(g => g.{Entity}Id)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

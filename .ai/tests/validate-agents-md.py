@@ -194,7 +194,7 @@ def main():
 
     # Utility skills are user-invoked directly (/skill-name) — not loaded by task type.
     # They are intentionally absent from Work-Type Context Mapping.
-    UTILITY_SKILLS = {"update-skills", "upgrade-template", "verify-config"}
+    UTILITY_SKILLS = {"sync-platforms", "upgrade-template", "verify-config"}
 
     # Normalize existing skills to skill names
     existing_skill_names = set()

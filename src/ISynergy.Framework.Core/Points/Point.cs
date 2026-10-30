@@ -186,7 +186,7 @@ public class Point : IComparable<Point>
     /// <returns>Returns new point which coordinates equal to coordinates of
     /// the specified point increased by specified value.</returns>
     ///
-    public static Point operator +(Point point, double valueToAdd)
+    public static Point Add(Point point, double valueToAdd)
     {
         return new Point(point.X + valueToAdd, point.Y + valueToAdd);
     }
@@ -201,7 +201,7 @@ public class Point : IComparable<Point>
     /// <returns>Returns new point which coordinates equal to coordinates of
     /// the specified point increased by specified value.</returns>
     ///
-    public static Point Add(Point point, double valueToAdd)
+    public static Point operator +(Point point, double valueToAdd)
     {
         return new Point(point.X + valueToAdd, point.Y + valueToAdd);
     }
@@ -246,7 +246,7 @@ public class Point : IComparable<Point>
     /// <returns>Returns new point which coordinates equal to coordinates of
     /// the specified point decreased by specified value.</returns>
     ///
-    public static Point operator -(Point point, double valueToSubtract)
+    public static Point Subtract(Point point, double valueToSubtract)
     {
         return new Point(point.X - valueToSubtract, point.Y - valueToSubtract);
     }
@@ -261,7 +261,7 @@ public class Point : IComparable<Point>
     /// <returns>Returns new point which coordinates equal to coordinates of
     /// the specified point decreased by specified value.</returns>
     ///
-    public static Point Subtract(Point point, double valueToSubtract)
+    public static Point operator -(Point point, double valueToSubtract)
     {
         return new Point(point.X - valueToSubtract, point.Y - valueToSubtract);
     }

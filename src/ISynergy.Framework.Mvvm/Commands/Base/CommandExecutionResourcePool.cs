@@ -99,19 +99,16 @@ internal static class CommandExecutionResourcePool
     {
         _cacheCleanupTimer?.Dispose();
 
-        foreach (var entry in _timeoutTokenCache)
+        foreach (var entry in _timeoutTokenCache.Where(entry => entry.Value.IsValueCreated))
         {
-            if (entry.Value.IsValueCreated)
+            try
             {
-                try
-                {
-                    entry.Value.Value.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore disposal errors during static cleanup
-                    System.Diagnostics.Debug.WriteLine($"Error disposing timeout token: {ex.Message}");
-                }
+                entry.Value.Value.Dispose();
+            }
+            catch (Exception ex)
+            {
+                // Ignore disposal errors during static cleanup
+                System.Diagnostics.Debug.WriteLine($"Error disposing timeout token: {ex.Message}");
             }
         }
 

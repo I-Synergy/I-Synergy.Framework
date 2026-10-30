@@ -34,10 +34,10 @@
 
 | Layer | Purpose | Example Projects |
 |-------|---------|------------------|
-| **Presentation** | User interface (Blazor, MAUI, etc.) | `{ApplicationName}.UI.Web`, `{ApplicationName}.App.Mobile` |
-| **Application** | API endpoints, orchestration | `{ApplicationName}.Services.{Domain}` |
-| **Domain** | Business logic, CQRS handlers | `{ApplicationName}.Domain.{Domain}` |
-| **Infrastructure** | Data access, external integrations | `{ApplicationName}.Data`, `{ApplicationName}.Entities.{Domain}` |
+| **Presentation** | User interface (Blazor, MAUI, etc.) | `I-Synergy.Framework.UI.Web`, `I-Synergy.Framework.App.Mobile` |
+| **Application** | API endpoints, orchestration | `I-Synergy.Framework.Services.{Domain}` |
+| **Domain** | Business logic, CQRS handlers | `I-Synergy.Framework.Domain.{Domain}` |
+| **Infrastructure** | Data access, external integrations | `I-Synergy.Framework.Data`, `I-Synergy.Framework.Entities.{Domain}` |
 
 ## CQRS Terms
 

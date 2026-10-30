@@ -225,7 +225,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
             }
 
             var result = await OpenDialogAsync(dialog);
-            dialog?.Dispose();
+            dialog.Dispose();
 
             switch (buttons)
             {
@@ -339,63 +339,9 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        Argument.IsNotNull(submittedEventHandler);
-
-        try
-        {
-            var scope = _scopeFactory.CreateScope();
-            try
-            {
-                if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                    scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-                {
-                    initialization?.Invoke((TViewModel)viewmodel);
-                    viewmodel.SetSelectedItem(e);
-
-                    EventHandler<SubmitEventArgs<TEntity>>? OnSubmitted = null;
-                    OnSubmitted = (_, args) =>
-                        _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-                    viewmodel.Submitted += OnSubmitted;
-
-                    EventHandler? onCancelledHandler = null;
-                    if (cancelledEventHandler is not null)
-                    {
-                        onCancelledHandler = (_, _) =>
-                            _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-                        viewmodel.Cancelled += onCancelledHandler;
-                    }
-
-                    viewmodel.Closed += (_, _) =>
-                    {
-                        viewmodel.Submitted -= OnSubmitted;
-
-                        if (onCancelledHandler is not null)
-                            viewmodel.Cancelled -= onCancelledHandler;
-
-                        if (closedEventHandler is not null)
-                            _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-
-                        scope.Dispose();
-                    };
-
-                    await CreateDialogAsync(dialog, viewmodel);
-                }
-                else
-                {
-                    scope.Dispose();
-                }
-            }
-            catch
-            {
-                scope.Dispose();
-                throw;
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
-                typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name);
-        }
+        await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
+            viewModel => viewModel.SetSelectedItem(e),
+            submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hasEntity: true);
     }
 
     /// <inheritdoc />
@@ -404,6 +350,23 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
         Func<Task>? cancelledEventHandler = null,
         Func<Task>? closedEventHandler = null,
         Action<TViewModel>? initialization = null)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
+            null, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hasEntity: false);
+    }
+
+    /// <summary>
+    /// Shared implementation for the entity and no-entity dialog overloads.
+    /// </summary>
+    private async Task ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
+        Action<IViewModelDialog<TEntity>>? configure,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler,
+        Func<Task>? closedEventHandler,
+        Action<TViewModel>? initialization,
+        bool hasEntity)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -418,32 +381,10 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
                 {
                     initialization?.Invoke((TViewModel)viewmodel);
+                    configure?.Invoke(viewmodel);
 
-                    EventHandler<SubmitEventArgs<TEntity>>? OnSubmitted = null;
-                    OnSubmitted = (_, args) =>
-                        _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-                    viewmodel.Submitted += OnSubmitted;
-
-                    EventHandler? onCancelledHandler = null;
-                    if (cancelledEventHandler is not null)
-                    {
-                        onCancelledHandler = (_, _) =>
-                            _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-                        viewmodel.Cancelled += onCancelledHandler;
-                    }
-
-                    viewmodel.Closed += (_, _) =>
-                    {
-                        viewmodel.Submitted -= OnSubmitted;
-
-                        if (onCancelledHandler is not null)
-                            viewmodel.Cancelled -= onCancelledHandler;
-
-                        if (closedEventHandler is not null)
-                            _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-
-                        scope.Dispose();
-                    };
+                    AttachDialogCallbacks<TWindow, TViewModel, TEntity>(
+                        viewmodel, submittedEventHandler, cancelledEventHandler, closedEventHandler, scope);
 
                     await CreateDialogAsync(dialog, viewmodel);
                 }
@@ -460,9 +401,62 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
         }
         catch (Exception ex)
         {
+            LogDialogError<TWindow, TViewModel, TEntity>(ex, hasEntity);
+        }
+    }
+
+    /// <summary>
+    /// Wires the submitted, cancelled and closed handlers and disposes the dialog scope when it closes.
+    /// </summary>
+    private void AttachDialogCallbacks<TWindow, TViewModel, TEntity>(
+        IViewModelDialog<TEntity> viewmodel,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler,
+        Func<Task>? closedEventHandler,
+        IServiceScope scope)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        EventHandler<SubmitEventArgs<TEntity>>? onSubmitted = null;
+        onSubmitted = (_, args) =>
+            _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+        viewmodel.Submitted += onSubmitted;
+
+        EventHandler? onCancelledHandler = null;
+        if (cancelledEventHandler is not null)
+        {
+            onCancelledHandler = (_, _) =>
+                _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+            viewmodel.Cancelled += onCancelledHandler;
+        }
+
+        viewmodel.Closed += (_, _) =>
+        {
+            viewmodel.Submitted -= onSubmitted;
+
+            if (onCancelledHandler is not null)
+                viewmodel.Cancelled -= onCancelledHandler;
+
+            if (closedEventHandler is not null)
+                _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+
+            scope.Dispose();
+        };
+    }
+
+    /// <summary>
+    /// Logs a dialog failure, including the entity type when one was supplied.
+    /// </summary>
+    private void LogDialogError<TWindow, TViewModel, TEntity>(Exception ex, bool hasEntity)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
+        if (hasEntity)
+            _logger.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
+                typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name);
+        else
             _logger.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType}",
                 typeof(TWindow).Name, typeof(TViewModel).Name);
-        }
     }
 
     /// <summary>

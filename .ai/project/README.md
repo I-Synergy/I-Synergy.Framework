@@ -122,7 +122,7 @@ edit domains.md          # Your business domains
 ### 2. Replace Tokens
 
 Throughout your customized files, replace:
-- `{ApplicationName}` → Your application name
+- `I-Synergy.Framework` → Your application name
 - `{Domain}` → Your domain names
 - `{Entity}` → Your entity names
 

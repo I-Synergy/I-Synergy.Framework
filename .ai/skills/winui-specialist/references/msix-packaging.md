@@ -40,7 +40,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: microsoft/setup-WinAppCli@v0.1
       - name: Build
         run: dotnet build -c Release -p:Platform=x64
@@ -49,7 +49,7 @@ jobs:
           winapp cert generate --if-exists skip --quiet
           winapp package ./bin/x64/Release/ --cert ./devcert.pfx --quiet
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: msix-package
           path: "*.msix"

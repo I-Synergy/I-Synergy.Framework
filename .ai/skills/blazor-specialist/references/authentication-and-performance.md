@@ -67,8 +67,8 @@ The login page and `AuthorizeView` usage, plus virtualization and lazy-loading. 
 ```razor
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 
-<Virtualize Items="@budgets" Context="budget">
-    <BudgetCard Budget="@budget" />
+<Virtualize Items="@({entities})" Context="{entity}">
+    <{Entity}Card {Entity}="@({entity})" />
 </Virtualize>
 ```
 

@@ -597,21 +597,19 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         for (var t = 0; t < active_size; t++)
             if (y[t] == +1)
             {
-                if (!is_upper_bound(t))
-                    if (-G[t] >= Gmax)
-                    {
-                        Gmax = -G[t];
-                        Gmax_idx = t;
-                    }
+                if (!is_upper_bound(t) && -G[t] >= Gmax)
+                {
+                    Gmax = -G[t];
+                    Gmax_idx = t;
+                }
             }
             else
             {
-                if (!is_lower_bound(t))
-                    if (G[t] >= Gmax)
-                    {
-                        Gmax = G[t];
-                        Gmax_idx = t;
-                    }
+                if (!is_lower_bound(t) && G[t] >= Gmax)
+                {
+                    Gmax = G[t];
+                    Gmax_idx = t;
+                }
             }
 
         var i = Gmax_idx;
@@ -730,21 +728,17 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         for (var i = 0; i < active_size; i++)
             if (y[i] == +1)
             {
-                if (!is_upper_bound(i))
-                    if (-G[i] >= Gmax1)
-                        Gmax1 = -G[i];
-                if (!is_lower_bound(i))
-                    if (G[i] >= Gmax2)
-                        Gmax2 = G[i];
+                if (!is_upper_bound(i) && -G[i] >= Gmax1)
+                    Gmax1 = -G[i];
+                if (!is_lower_bound(i) && G[i] >= Gmax2)
+                    Gmax2 = G[i];
             }
             else
             {
-                if (!is_upper_bound(i))
-                    if (-G[i] >= Gmax2)
-                        Gmax2 = -G[i];
-                if (!is_lower_bound(i))
-                    if (G[i] >= Gmax1)
-                        Gmax1 = G[i];
+                if (!is_upper_bound(i) && -G[i] >= Gmax2)
+                    Gmax2 = -G[i];
+                if (!is_lower_bound(i) && G[i] >= Gmax1)
+                    Gmax1 = G[i];
             }
 
         if (!unshrink && Gmax1 + Gmax2 <= Tolerance * 10)

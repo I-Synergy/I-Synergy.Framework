@@ -271,10 +271,10 @@ internal static class LBFGS
         cd.proc_progress = proc_progress;
         if (param.max_step < param.min_step) return Code.LBFGSERR_INVALID_MAXSTEP;
         if (param.ftol < 0.0) return Code.LBFGSERR_INVALID_FTOL;
-        if (param.linesearch == LineSearch.RegularWolfe ||
-            param.linesearch == LineSearch.StrongWolfe)
-            if (param.wolfe <= param.ftol || 1.0 <= param.wolfe)
-                return Code.LBFGSERR_INVALID_WOLFE;
+        if ((param.linesearch == LineSearch.RegularWolfe ||
+             param.linesearch == LineSearch.StrongWolfe) &&
+            (param.wolfe <= param.ftol || 1.0 <= param.wolfe))
+            return Code.LBFGSERR_INVALID_WOLFE;
 
         if (param.orthantwise_start < 0 || n < param.orthantwise_start)
             return Code.LBFGSERR_INVALID_ORTHANTWISE_START;
@@ -442,10 +442,10 @@ internal static class LBFGS
                 vec2norm(out gnorm, pg, n);
 
             /* Report the progress. */
-            if (cd.proc_progress is not null)
-                if ((ret = cd.proc_progress(cd.instance, x, g, fx, xnorm,
+            if (cd.proc_progress is not null
+                && (ret = cd.proc_progress(cd.instance, x, g, fx, xnorm,
                     gnorm, step, cd.n, k, ls)) != 0)
-                    goto lbfgs_exit;
+                goto lbfgs_exit;
 
             /*
                 Convergence test.

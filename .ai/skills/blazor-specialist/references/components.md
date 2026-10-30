@@ -1,18 +1,18 @@
 # Blazor Component Patterns
 
-The basic `BudgetCard` component with `EventCallback` outputs, and the code-behind page pattern with loading/error/empty states. Load this when creating or reviewing a component.
+The basic `{Entity}Card` component with `EventCallback` outputs, and the code-behind page pattern with loading/error/empty states. Load this when creating or reviewing a component.
 
 ## Component Patterns
 
 ### Basic Component
 ```razor
-@* File: Components/BudgetCard.razor *@
+@* File: Components/{Entity}Card.razor *@
 @namespace {ApplicationName}.UI.Components
 
-<div class="budget-card">
-    <h3>@Budget.Name</h3>
-    <p class="amount">@Budget.Amount.ToString("C")</p>
-    <p class="created">Created: @Budget.CreatedDate.ToString("d")</p>
+<div class="{entity}-card">
+    <h3>@({Entity}.Name)</h3>
+    <p class="amount">@({Entity}.Amount.ToString("C"))</p>
+    <p class="created">Created: @({Entity}.CreatedDate.ToString("d"))</p>
 
     <button @onclick="OnEditClicked">Edit</button>
     <button @onclick="OnDeleteClicked" class="danger">Delete</button>
@@ -20,10 +20,10 @@ The basic `BudgetCard` component with `EventCallback` outputs, and the code-behi
 
 @code {
     [Parameter, EditorRequired]
-    public BudgetResponse Budget { get; set; } = default!;
+    public {Entity}Response {Entity} { get; set; } = default!;
 
     [Parameter]
-    public EventCallback<BudgetResponse> OnEdit { get; set; }
+    public EventCallback<{Entity}Response> OnEdit { get; set; }
 
     [Parameter]
     public EventCallback<Guid> OnDelete { get; set; }
@@ -31,98 +31,98 @@ The basic `BudgetCard` component with `EventCallback` outputs, and the code-behi
     private async Task OnEditClicked()
     {
         if (OnEdit.HasDelegate)
-            await OnEdit.InvokeAsync(Budget);
+            await OnEdit.InvokeAsync({Entity});
     }
 
     private async Task OnDeleteClicked()
     {
         if (OnDelete.HasDelegate)
-            await OnDelete.InvokeAsync(Budget.BudgetId);
+            await OnDelete.InvokeAsync({Entity}.{Entity}Id);
     }
 }
 ```
 
 ### Component with Code-Behind
 ```razor
-@* File: Pages/Budgets/BudgetList.razor *@
-@page "/budgets"
-@namespace {ApplicationName}.UI.Pages.Budgets
-@inherits BudgetListBase
+@* File: Pages/{Entities}/{Entity}List.razor *@
+@page "/{entities}"
+@namespace {ApplicationName}.UI.Pages.{Entities}
+@inherits {Entity}ListBase
 
-<PageTitle>Budgets</PageTitle>
+<PageTitle>{Entities}</PageTitle>
 
-<div class="budget-list-page">
-    <h1>Budgets</h1>
+<div class="{entity}-list-page">
+    <h1>{Entities}</h1>
 
     @if (IsLoading)
     {
-        <p>Loading budgets...</p>
+        <p>Loading {entities}...</p>
     }
     else if (ErrorMessage is not null)
     {
         <div class="error">@ErrorMessage</div>
     }
-    else if (!Budgets.Any())
+    else if (!{Entities}.Any())
     {
-        <p>No budgets found. Create your first budget!</p>
+        <p>No {entities} found. Create your first {entity}!</p>
     }
     else
     {
-        <div class="budget-grid">
-            @foreach (var budget in Budgets)
+        <div class="{entity}-grid">
+            @foreach (var {entity} in {Entities})
             {
-                <BudgetCard
-                    Budget="@budget"
-                    OnEdit="@HandleEditBudget"
-                    OnDelete="@HandleDeleteBudget" />
+                <{Entity}Card
+                    {Entity}="@({entity})"
+                    OnEdit="@HandleEdit{Entity}"
+                    OnDelete="@HandleDelete{Entity}" />
             }
         </div>
     }
 
-    <button @onclick="HandleCreateBudget" class="primary">Create Budget</button>
+    <button @onclick="HandleCreate{Entity}" class="primary">Create {Entity}</button>
 </div>
 ```
 
 ```csharp
-// File: Pages/Budgets/BudgetList.razor.cs
+// File: Pages/{Entities}/{Entity}List.razor.cs
 using Microsoft.AspNetCore.Components;
 using {ApplicationName}.UI.Services;
 
-namespace {ApplicationName}.UI.Pages.Budgets;
+namespace {ApplicationName}.UI.Pages.{Entities};
 
-public class BudgetListBase : ComponentBase, IDisposable
+public class {Entity}ListBase : ComponentBase, IDisposable
 {
     [Inject]
-    protected IBudgetService BudgetService { get; set; } = default!;
+    protected I{Entity}Service {Entity}Service { get; set; } = default!;
 
     [Inject]
     protected NavigationManager Navigation { get; set; } = default!;
 
     [Inject]
-    protected ILogger<BudgetListBase> Logger { get; set; } = default!;
+    protected ILogger<{Entity}ListBase> Logger { get; set; } = default!;
 
-    protected List<BudgetResponse> Budgets { get; set; } = new();
+    protected List<{Entity}Response> {Entities} { get; set; } = new();
     protected bool IsLoading { get; set; }
     protected string? ErrorMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadBudgetsAsync();
+        await Load{Entities}Async();
     }
 
-    protected async Task LoadBudgetsAsync()
+    protected async Task Load{Entities}Async()
     {
         IsLoading = true;
         ErrorMessage = null;
 
         try
         {
-            Budgets = await BudgetService.GetBudgetsAsync();
+            {Entities} = await {Entity}Service.Get{Entities}Async();
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error loading budgets");
-            ErrorMessage = "Failed to load budgets. Please try again.";
+            Logger.LogError(ex, "Error loading {entities}");
+            ErrorMessage = "Failed to load {entities}. Please try again.";
         }
         finally
         {
@@ -130,27 +130,27 @@ public class BudgetListBase : ComponentBase, IDisposable
         }
     }
 
-    protected void HandleCreateBudget()
+    protected void HandleCreate{Entity}()
     {
-        Navigation.NavigateTo("/budgets/create");
+        Navigation.NavigateTo("/{entities}/create");
     }
 
-    protected void HandleEditBudget(BudgetResponse budget)
+    protected void HandleEdit{Entity}({Entity}Response {entity})
     {
-        Navigation.NavigateTo($"/budgets/{budget.BudgetId}/edit");
+        Navigation.NavigateTo($"/{entities}/{entity}.{Entity}Id}/edit");
     }
 
-    protected async Task HandleDeleteBudget(Guid budgetId)
+    protected async Task HandleDelete{Entity}(Guid {entity}Id)
     {
         try
         {
-            await BudgetService.DeleteBudgetAsync(budgetId);
-            await LoadBudgetsAsync(); // Reload list
+            await {Entity}Service.Delete{Entity}Async({entity}Id);
+            await Load{Entities}Async(); // Reload list
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error deleting budget {BudgetId}", budgetId);
-            ErrorMessage = "Failed to delete budget. Please try again.";
+            Logger.LogError(ex, "Error deleting {entity} {Entity}Id", {entity}Id);
+            ErrorMessage = "Failed to delete {entity}. Please try again.";
         }
     }
 

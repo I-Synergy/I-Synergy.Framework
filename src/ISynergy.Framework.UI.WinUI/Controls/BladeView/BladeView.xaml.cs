@@ -250,9 +250,10 @@ public partial class BladeView : UserControl, IDisposable
 
         var isRtl = FlowDirection == FlowDirection.RightToLeft;
 
-        BladeAlignment = Anchor == BladePaneAnchor.Auto
-            ? (isRtl ? Mirror(HorizontalBladeAlignment) : HorizontalBladeAlignment)
-            : (BladePlacement.IsStartSide(Anchor, isRtl) ? HorizontalAlignment.Left : HorizontalAlignment.Right);
+        if (Anchor == BladePaneAnchor.Auto)
+            BladeAlignment = isRtl ? Mirror(HorizontalBladeAlignment) : HorizontalBladeAlignment;
+        else
+            BladeAlignment = BladePlacement.IsStartSide(Anchor, isRtl) ? HorizontalAlignment.Left : HorizontalAlignment.Right;
     }
 
     /// <summary>

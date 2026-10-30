@@ -5,13 +5,13 @@ Complete patterns for MSTest, Moq, and Reqnroll testing.
 ## MSTest Unit Test Pattern
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/Create{Entity}CommandHandlerTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Handlers/Create{Entity}CommandHandlerTests.cs
 
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace {ApplicationName}.{Domain}.Tests.Handlers;
+namespace I-Synergy.Framework.{Domain}.Tests.Handlers;
 
 [TestClass]
 public class Create{Entity}CommandHandlerTests
@@ -92,7 +92,7 @@ public class Create{Entity}CommandHandlerTests
 ## Reqnroll Feature File Pattern
 
 ```gherkin
-# File: tests/{ApplicationName}.{Domain}.Tests/Features/{Entity}Management.feature
+# File: tests/I-Synergy.Framework.{Domain}.Tests/Features/{Entity}Management.feature
 
 Feature: {Entity} Management
   As a user
@@ -161,12 +161,12 @@ The MSTest side carries the same link: one `[TestCategory("AC-…")]` per test m
 ## Reqnroll Step Definitions Pattern
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/Steps/{Entity}ManagementSteps.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Steps/{Entity}ManagementSteps.cs
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reqnroll;
 
-namespace {ApplicationName}.{Domain}.Tests.Steps;
+namespace I-Synergy.Framework.{Domain}.Tests.Steps;
 
 [Binding]
 public class {Entity}ManagementSteps
@@ -319,7 +319,7 @@ _dataContextMock.Setup(x => x.Budgets).Returns(emptyBudgetsMock.Object);
 
 ```
 tests/
-  {ApplicationName}.{Domain}.Tests/
+  I-Synergy.Framework.{Domain}.Tests/
     Features/
       {Entity}Management.feature
     Steps/

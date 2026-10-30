@@ -8,6 +8,16 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+		<!--
+			XC0022: reported for {TemplateBinding} inside the ControlTemplates in Resources/Styles/Generic.xaml
+			        (MAUI 11 flags TemplateBinding as "could be compiled"), and for item templates whose item
+			        type is a generic parameter that cannot be named in XAML.
+			XC0023: reported when such a generic item template opts out of the inherited x:DataType with
+			        x:DataType="{x:Null}"; without the opt-out the binding would be compiled against the
+			        outer ViewModel type and break at runtime (XC0024/XC0045).
+			Every remaining binding in this project declares its data type, so these two are noise.
+		-->
+		<NoWarn>$(NoWarn);XC0022;XC0023</NoWarn>
 
 		<PackageId>I-Synergy.Framework.UI.Maui</PackageId>
 		<Description>I-Synergy UI Framework for .Net Maui</Description>
@@ -38,6 +48,7 @@
 		<!-- Ship MSBuild targets so fonts are added as MauiFont items in consuming apps -->
 		<None Include="I-Synergy.Framework.UI.Maui.targets" Pack="true" PackagePath="buildTransitive\%(Filename)%(Extension)" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
@@ -48,6 +59,10 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
+	</ItemGroup>
+
+	<!-- Microsoft.Maui.Controls.Compatibility is only shipped for .NET 10; MAUI 11 no longer needs it. -->
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net10.0'))">
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 	</ItemGroup>
 

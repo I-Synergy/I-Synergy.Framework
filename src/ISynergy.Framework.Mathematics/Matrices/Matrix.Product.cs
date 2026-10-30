@@ -724,14 +724,14 @@ public static partial class Matrix
                     {
                         double aval = a[k, i];
                         for (int j = 0; j < p; j++)
-                            *pt++ += (double)((double)aval * (double)(*pb++));
+                            *pt++ += (aval * (*pb++));
                         pt = ptemp;
                     }
 
                     // Update the results row and clear the cache
                     for (int j = 0; j < p; j++)
                     {
-                        *pr++ = (double)*pt;
+                        *pr++ = *pt;
                         *pt++ = 0;
                     }
                 }
@@ -1164,8 +1164,8 @@ public static partial class Matrix
             {
                 double s = (double)0;
                 for (int k = 0; k < Bcolj.Length; k++)
-                    s += (double)((double)a[k][j] * (double)Bcolj[k]);
-                result[j][i] = (double)s;
+                    s += (a[k][j] * Bcolj[k]);
+                result[j][i] = s;
             }
         }
 #if DEBUG

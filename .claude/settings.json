@@ -38,7 +38,7 @@
           {
             "type": "agent",
             "if": "Write(src/**/*.csproj)|Edit(src/**/*.csproj)",
-            "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* → Data & Persistence; Storage.* → Data & Persistence; KeyVault.* → Key Vault & Secrets; MessageBus.* → Communication & Messaging; Mail.* → Communication & Messaging; Monitoring.* / OpenTelemetry.* → Monitoring & Observability; UI.* → UI & Client Frameworks; AspNetCore.* → Web & API Development or Enterprise Features; CQRS / Core / Automations → Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm → Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
+            "prompt": "A .csproj file in src/ was just written or edited. Reconcile README.md with the actual library projects: (1) Extract PackageId from every .csproj under src/ that has one. (2) Compare against all package entries in the README.md tables. (3) Add any missing packages to the correct section using the badge format `![Version](https://img.shields.io/nuget/vpre/{PackageId}?label=)`. (4) Remove rows for packages that no longer exist. (5) Section placement rules: EventSourcing.* \u2192 Data & Persistence; Storage.* \u2192 Data & Persistence; KeyVault.* \u2192 Key Vault & Secrets; MessageBus.* \u2192 Communication & Messaging; Mail.* \u2192 Communication & Messaging; Monitoring.* / OpenTelemetry.* \u2192 Monitoring & Observability; UI.* \u2192 UI & Client Frameworks; AspNetCore.* \u2192 Web & API Development or Enterprise Features; CQRS / Core / Automations \u2192 Application Architecture; Financial/Geography/Mathematics/Physics/IO/Documents/Printer/Synchronization/Mvvm \u2192 Specialized Libraries. Only edit README.md if changes are actually needed. Do not commit.",
             "timeout": 120,
             "statusMessage": "Syncing README package tables..."
           }
@@ -49,9 +49,9 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Write(.ai/skills/**/*)|Edit(.ai/skills/**/*)",
-            "command": "python .ai/scripts/sync-skills.py",
-            "statusMessage": "Syncing skills to Claude Code, GitHub Copilot, and Reasonix..."
+            "if": "Write(.ai/skills/**/*)|Edit(.ai/skills/**/*)|Write(.ai/prompts/**/*)|Edit(.ai/prompts/**/*)|Write(.ai/instructions/**/*)|Edit(.ai/instructions/**/*)",
+            "command": "python .ai/scripts/sync-platforms.py",
+            "statusMessage": "Syncing skills, prompts and instructions..."
           }
         ]
       },
@@ -83,8 +83,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .ai/scripts/sync-skills.py",
-            "statusMessage": "Ensuring skill/agent junctions exist..."
+            "command": "python .ai/scripts/sync-platforms.py",
+            "statusMessage": "Syncing skills, prompts and instructions..."
           }
         ]
       },

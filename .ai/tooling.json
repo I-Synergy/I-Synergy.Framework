@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "source": "template",
+  "files": [
+    {
+      "path": ".ai/catalog/categories.json",
+      "sha256": "02cc8255341548a932530dc51c531bd63ab6d186053f4eb3a649c6b15ec29525",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/catalog/presets.json",
+      "sha256": "e8d4528803111daa1bec5f1b99e61e7b537ec1bc0f69bbeca8b7ee7051470abb",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/catalog/schemas/ai.schema.json",
+      "sha256": "d7154bb9170643c336053d8b39ae69c34cbc38d4adf89b345f13824d6922e285",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/catalog/schemas/index.schema.json",
+      "sha256": "550fd527011cf2b1a06b82a7f67d86f3d17faa05122264c78e44a381b14c84a5",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/catalog/schemas/lock.schema.json",
+      "sha256": "316b2f798058d693e87200932add5af49778d3f9aec3085915881718b142b218",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/scripts/catalog.py",
+      "sha256": "ce949701658731242d10db1c6a2160f3dcb0d7651921cdb82db42f9c3a4a5b58",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/scripts/hygiene-lint.py",
+      "sha256": "3c546f8d3aa7027f3152153767eed4ee799a2c5483ae58acd3eda27cce95c50b",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/scripts/migrate-to-ai.py",
+      "sha256": "0d85f5ffb38c4bcc88056cd2869fe9f257d22c641bfc6e397e7bb932efe7b5ee",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/scripts/sync-agents.py",
+      "sha256": "8280c4f5325da67c7e261d8c3613f3d48c398968ffafb0990787404f1b3e1429",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/scripts/sync-instructions.py",
+      "sha256": "4df0067c1d63a459ac2ed8c0dfaf5a0f15977de4934845d9e7ccd7cabcf6b491",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/scripts/sync-platforms.py",
+      "sha256": "f7d00ed45acdc620beb831ace16e8cf01bd2e072c84a047263feee82c220f491",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/scripts/sync-skills.py",
+      "sha256": "14261cbf1f20e8ba9c555c6a475c25103504f172b84bcbb1fbae8b4c8cc4b47c",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/scripts/upgrade-template.py",
+      "sha256": "3515329171e3fc8c4d882a415fc13004191cf6d911d582a85b1cb76c7fd2a8fc",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/QUICK-REFERENCE.md",
+      "sha256": "9e2456373bd3c74c356bef72cc4b15a61d4941619607218eb1aba522431a5be8",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/README.md",
+      "sha256": "6a88bb1ee79036f0a3fffda684783942b50ddc2f04eb614f1e4959ceb83769e6",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/TESTING-GUIDE.md",
+      "sha256": "aad41cabc969cfcb3bea67b0cf56b7a80f0f221a8c3e6a1902afa26fb1de2c21",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/conftest.py",
+      "sha256": "07a71f4d5dd7666e4d60fc68df451d54a64ea55a348c64b6c789028d12d4c21c",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/run-all-tests.sh",
+      "sha256": "8517de78c12fca8b66d8f2dfcf836df08c24a9bf68e6b88a8c4bc4a85f39816a",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/score-harness.py",
+      "sha256": "63e2d874c4c7243a9d19d7b261c7a8272cb7402f94c1e1fb640ca44f8893a876",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/smoke-test.py",
+      "sha256": "e90052cb00675feab21cb049de81aadf64ef0a800801b4a86faaa87a6cc4d679",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/test_score_harness.py",
+      "sha256": "303bfac9baa01b3b9e670f99a0695154b5ad6e1b6e43137aa24a5f0c653b5bdf",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/test_suite.py",
+      "sha256": "6c52d39e127e4fec3a4f89eb75b405038522957be61527712767bb06d27bc62e",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-agents-md.py",
+      "sha256": "0dcd68931eb16749a5e2306c6a9d0c5547e7e2e07a9a61cdeaeb9a81f2fd5ac7",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-content.py",
+      "sha256": "6fa24c459eb45683df4de0b50f53dd29adc7f62bb6e9e6aee6bc53505dc2ca63",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-copilot.py",
+      "sha256": "f625f97dc1e1ab6c07457b38d0bb7c3a65b002df9f824e3a1a9220e445c4797e",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-prose.py",
+      "sha256": "c6c0bb28a144a845d70d06d1d3b3fb0bacbf8f060311c978773e66472e7e532a",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-references.sh",
+      "sha256": "fb03bea26f0b8a289f64e16853751ad921b685718234b53471510a77278f1361",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-release.py",
+      "sha256": "e2bdcf333c48457d90894032d09ddb2e33bb6aa61d68f471a8557ba60fdeac80",
+      "origin": "bundled"
+    },
+    {
+      "path": ".ai/tests/validate-settings.py",
+      "sha256": "e4e3d88e5eb925483b08ce2079bcb23fede7704ac6ee94fef82a084b648a7618",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-skills.py",
+      "sha256": "88f8782cd6c276fe00c511a89cbe1fca10a756572e26c33577ca0ae01ca79b52",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-standards.py",
+      "sha256": "487e9105fe280ca1c73e30c1f0ebca7406b776ff84a3bccf89091fdbbb98b852",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-structure.sh",
+      "sha256": "3f1be77c6bfebe1a277e8244c88219ccdc77acd445ab80844aed46d408d09b44",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-tokens.sh",
+      "sha256": "0df7475207e89acadf79365351bb6ca8c7453065cef36fe7cc440aaa9a2b67bd",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-traceability.py",
+      "sha256": "9c381dc821c2d69053494480d848da4e45bbd62494b7d550465ce5ad7e38f009",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-triggers.py",
+      "sha256": "589c67b2a90f22f408954193381c59ed65dcb3bd5672aaead522e32c673d82ec",
+      "origin": "template"
+    },
+    {
+      "path": ".ai/tests/validate-upgrade-script.py",
+      "sha256": "04649e2bae7895d8702d5873f41c136947871757b1192122e42d040c5fb983bb",
+      "origin": "template"
+    }
+  ],
+  "ref": "2026.11030.11923"
+}

@@ -1,7 +1,7 @@
 ---
 name: maui-blazor
 description: >-
-  I-Synergy MVVM patterns for .NET MAUI + Blazor Hybrid shells (shared ViewModels, ConfigureServices bootstrapper, BlazorWebView orchestration).
+  I-Synergy MVVM patterns for .NET MAUI + Blazor Hybrid shells (shared ViewModels, ConfigureServices bootstrapper, BlazorWebView orchestration). Use when wiring a .NET MAUI + Blazor Hybrid shell with shared ViewModels and BlazorWebView orchestration.
 version: 2026.02.10
 sources:
   - samples/Sample.Maui
@@ -76,7 +76,7 @@ public static MauiApp CreateMauiApp()
 | Scenario | Pattern | Reference |
 | --- | --- | --- |
 | Navigate between native MAUI pages | `await Shell.Current.GoToAsync("//settings");` | [samples/Sample.Maui/AppShell.xaml](samples/Sample.Maui/AppShell.xaml) |
-| Navigate within embedded Blazor UI | `NavigationManager.NavigateTo("/budgets");` | [samples/Sample.Blazor/Components/Pages](samples/Sample.Blazor/Components/Pages) |
+| Navigate within embedded Blazor UI | `NavigationManager.NavigateTo("/{entities}");` | [samples/Sample.Blazor/Components/Pages](samples/Sample.Blazor/Components/Pages) |
 | Launch dialog with shared ViewModel | `_dialogService.ShowDialogAsync<SampleDialog>(viewModel, options);` | [samples/Sample.Maui/ViewModels/Dialogs](samples/Sample.Maui/ViewModels) |
 | Bridge MAUI -> Blazor command | Use `BlazorWebView.Dispatcher.DispatchAsync(() => command.Execute(parameter));` | [src/ISynergy.Framework.UI.Maui/Extensions/BlazorWebViewExtensions.cs](src/ISynergy.Framework.UI.Maui/Extensions/BlazorWebViewExtensions.cs) |
 

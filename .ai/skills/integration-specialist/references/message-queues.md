@@ -83,7 +83,7 @@ public class ServiceBusMessageConsumer(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var processor = serviceBusClient.CreateProcessor(
-            "budget-events",
+            "{entity}-events",
             new ServiceBusProcessorOptions
             {
                 MaxConcurrentCalls = 5,
@@ -157,10 +157,10 @@ public class ServiceBusMessageConsumer(
 
         switch (messageType)
         {
-            case "BudgetCreatedEvent":
-                var budgetEvent = JsonSerializer.Deserialize<BudgetCreatedEvent>(messageBody);
-                var budgetHandler = scope.ServiceProvider.GetRequiredService<IBudgetEventHandler>();
-                await budgetHandler.HandleAsync(budgetEvent!, cancellationToken);
+            case "{Entity}CreatedEvent":
+                var {entity}Event = JsonSerializer.Deserialize<{Entity}CreatedEvent>(messageBody);
+                var {entity}Handler = scope.ServiceProvider.GetRequiredService<I{Entity}EventHandler>();
+                await {entity}Handler.HandleAsync({entity}Event!, cancellationToken);
                 break;
 
             default:

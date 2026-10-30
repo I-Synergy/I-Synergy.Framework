@@ -179,57 +179,9 @@ public class DialogService : BaseDialogService, IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
-        var scope = _scopeFactory.CreateScope();
-        try
-        {
-            if (scope.ServiceProvider.GetRequiredService(typeof(TViewModel)) is IViewModelDialog<TEntity> viewmodel &&
-                scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
-            {
-                initialization?.Invoke((TViewModel)viewmodel);
-                viewmodel.SetSelectedItem(e);
-
-                var windowTypeName = typeof(TWindow).Name;
-                var viewModelTypeName = typeof(TViewModel).Name;
-
-                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
-                onSubmittedHandler = (_, args) =>
-                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, windowTypeName, viewModelTypeName)
-                        .SafeFireAndForget();
-                viewmodel.Submitted += onSubmittedHandler;
-
-                EventHandler? onCancelledHandler = null;
-                if (cancelledEventHandler is not null)
-                {
-                    onCancelledHandler = (_, _) =>
-                        _ = HandleDialogCancelledAsync(cancelledEventHandler, windowTypeName, viewModelTypeName)
-                            .SafeFireAndForget();
-                    viewmodel.Cancelled += onCancelledHandler;
-                }
-
-                viewmodel.Closed += (_, _) =>
-                {
-                    viewmodel.Submitted -= onSubmittedHandler;
-                    if (onCancelledHandler is not null) viewmodel.Cancelled -= onCancelledHandler;
-
-                    if (closedEventHandler is not null)
-                        _ = HandleDialogClosedAsync(closedEventHandler, windowTypeName, viewModelTypeName)
-                            .SafeFireAndForget();
-
-                    scope.Dispose();
-                };
-
-                await CreateDialogAsync(dialog, viewmodel);
-            }
-            else
-            {
-                scope.Dispose();
-            }
-        }
-        catch
-        {
-            scope.Dispose();
-            throw;
-        }
+        await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
+            viewModel => viewModel.SetSelectedItem(e),
+            submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
     }
 
     /// <inheritdoc />
@@ -241,6 +193,22 @@ public class DialogService : BaseDialogService, IDialogService
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
+        await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
+            null, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
+    }
+
+    /// <summary>
+    /// Shared implementation for the entity and no-entity dialog overloads.
+    /// </summary>
+    private async Task ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
+        Action<IViewModelDialog<TEntity>>? configure,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler,
+        Func<Task>? closedEventHandler,
+        Action<TViewModel>? initialization)
+        where TWindow : IWindow
+        where TViewModel : IViewModelDialog<TEntity>
+    {
         var scope = _scopeFactory.CreateScope();
         try
         {
@@ -248,6 +216,7 @@ public class DialogService : BaseDialogService, IDialogService
                 scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             {
                 initialization?.Invoke((TViewModel)viewmodel);
+                configure?.Invoke(viewmodel);
 
                 var windowTypeName = typeof(TWindow).Name;
                 var viewModelTypeName = typeof(TViewModel).Name;

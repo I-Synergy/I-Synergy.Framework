@@ -29,8 +29,7 @@
         <controls:AppHeaderView
             x:Name="Header"
             Grid.Row="0"
-            Grid.ColumnSpan="2"
-            BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
+            Grid.ColumnSpan="2" />
 
         <!-- Navigated pages render here; the host registers with the navigation service. -->
         <c:NavigationHostView
@@ -55,8 +54,7 @@
         <controls:SidebarView
             x:Name="Sidebar"
             Grid.Row="1"
-            Grid.Column="0"
-            BindingContext="{Binding BindingContext, Source={x:Reference RootPage}}" />
+            Grid.Column="0" />
 
         <!-- Shell-level blade pane: last child, so it dims and blocks the sidebar and header too. -->
         <c:BladeHostView

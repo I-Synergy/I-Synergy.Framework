@@ -5,10 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FAILED=0
 PASSED=0
+SEPARATOR="========================================="
 
-echo "========================================="
+echo "$SEPARATOR"
 echo "  Token Consistency Validation"
-echo "========================================="
+echo "$SEPARATOR"
 echo ""
 
 # Define expected tokens
@@ -16,8 +17,13 @@ TOKENS=(
     "{ApplicationName}"
     "{Domain}"
     "{Entity}"
+    "{Entities}"
     "{entity}"
     "{entities}"
+    "{ChildEntity}"
+    "{ChildEntities}"
+    "{childEntity}"
+    "{childEntities}"
 )
 
 # Function to check if file uses tokens properly
@@ -25,7 +31,7 @@ check_token_usage() {
     local file="$1"
     local file_name=$(basename "$file")
 
-    if [ ! -f "$file" ]; then
+    if [[ ! -f "$file" ]]; then
         return
     fi
 
@@ -38,7 +44,7 @@ check_token_usage() {
             token_count=$((token_count + count))
         done
 
-        if [ $token_count -gt 0 ]; then
+        if [[ $token_count -gt 0 ]]; then
             echo "✅ $file_name uses tokens ($token_count occurrences)"
             PASSED=$((PASSED + 1))
         else
@@ -55,7 +61,7 @@ check_hardcoded_names() {
     local file="$1"
     local file_name=$(basename "$file")
 
-    if [ ! -f "$file" ]; then
+    if [[ ! -f "$file" ]]; then
         return
     fi
 
@@ -66,7 +72,7 @@ check_hardcoded_names() {
 
     # Check for common hardcoded names (examples that shouldn't be in templates)
     hardcoded_patterns=(
-        "BudgetTracker"
+        "ContosoApp"
         "MyApplication"
         "SampleApp"
     )
@@ -80,7 +86,7 @@ check_hardcoded_names() {
 }
 
 echo "1. Checking template files for token usage..."
-if [ -d "$TEMPLATE_ROOT/.ai/reference/templates" ]; then
+if [[ -d "$TEMPLATE_ROOT/.ai/reference/templates" ]]; then
     for template in "$TEMPLATE_ROOT/.ai/reference/templates"/*; do
         check_token_usage "$template"
     done
@@ -92,12 +98,10 @@ fi
 echo ""
 
 echo "2. Checking skills for token usage..."
-if [ -d "$TEMPLATE_ROOT/.ai/skills" ]; then
+if [[ -d "$TEMPLATE_ROOT/.ai/skills" ]]; then
     for skill_dir in "$TEMPLATE_ROOT/.ai/skills"/*; do
-        if [ -d "$skill_dir" ]; then
-            if [ -f "$skill_dir/SKILL.md" ]; then
-                check_token_usage "$skill_dir/SKILL.md"
-            fi
+        if [[ -d "$skill_dir" && -f "$skill_dir/SKILL.md" ]]; then
+            check_token_usage "$skill_dir/SKILL.md"
         fi
     done
 else
@@ -109,14 +113,14 @@ echo ""
 
 echo "3. Checking for hardcoded project names..."
 # Check templates
-if [ -d "$TEMPLATE_ROOT/.ai/reference/templates" ]; then
+if [[ -d "$TEMPLATE_ROOT/.ai/reference/templates" ]]; then
     for template in "$TEMPLATE_ROOT/.ai/reference/templates"/*; do
         check_hardcoded_names "$template"
     done
 fi
 
 # Check patterns
-if [ -d "$TEMPLATE_ROOT/.ai/patterns" ]; then
+if [[ -d "$TEMPLATE_ROOT/.ai/patterns" ]]; then
     for pattern in "$TEMPLATE_ROOT/.ai/patterns"/*.md; do
         check_hardcoded_names "$pattern"
     done
@@ -125,7 +129,7 @@ fi
 echo ""
 
 echo "4. Verifying token definitions exist..."
-if [ -f "$TEMPLATE_ROOT/.ai/reference/tokens.md" ]; then
+if [[ -f "$TEMPLATE_ROOT/.ai/reference/tokens.md" ]]; then
     echo "✅ Token definitions file exists"
     PASSED=$((PASSED + 1))
 
@@ -148,14 +152,14 @@ fi
 echo ""
 
 echo "5. Checking token usage in AGENTS.md..."
-if [ -f "$TEMPLATE_ROOT/AGENTS.md" ]; then
+if [[ -f "$TEMPLATE_ROOT/AGENTS.md" ]]; then
     token_count=0
     for token in "${TOKENS[@]}"; do
         count=$(grep -o "$token" "$TEMPLATE_ROOT/AGENTS.md" 2>/dev/null | wc -l)
         token_count=$((token_count + count))
     done
 
-    if [ $token_count -gt 0 ]; then
+    if [[ $token_count -gt 0 ]]; then
         echo "✅ AGENTS.md uses tokens ($token_count occurrences)"
         PASSED=$((PASSED + 1))
     else
@@ -167,14 +171,14 @@ else
 fi
 
 echo ""
-echo "========================================="
+echo "$SEPARATOR"
 echo "Token Validation Summary"
-echo "========================================="
+echo "$SEPARATOR"
 echo "✅ Passed: $PASSED"
 echo "❌ Failed: $FAILED"
-echo "========================================="
+echo "$SEPARATOR"
 
-if [ $FAILED -eq 0 ]; then
+if [[ $FAILED -eq 0 ]]; then
     echo "✅ ALL TOKEN TESTS PASSED"
     exit 0
 else

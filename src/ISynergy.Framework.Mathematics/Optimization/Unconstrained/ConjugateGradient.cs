@@ -447,9 +447,8 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
             }
 
             // Stopping criteria by max iterations
-            if (MaxIterations > 0)
-                if (Iterations > MaxIterations)
-                    finish = true;
+            if (MaxIterations > 0 && Iterations > MaxIterations)
+                finish = true;
 
             if (Progress is not null)
                 Progress(this, new OptimizationProgressEventArgs(Iterations,

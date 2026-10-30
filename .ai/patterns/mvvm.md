@@ -40,9 +40,9 @@ The **Model** represents the application's data and business logic. It knows not
 
 **Example:**
 ```csharp
-// File: {ApplicationName}.Entities.{Domain}/{Entity}.cs
+// File: I-Synergy.Framework.Entities.{Domain}/{Entity}.cs
 
-namespace {ApplicationName}.Entities.{Domain};
+namespace I-Synergy.Framework.Entities.{Domain};
 
 /// <summary>
 /// Domain entity representing a {entity}.
@@ -77,13 +77,13 @@ The **View** is the user interface layer. It displays data and captures user int
 
 **MAUI Example:**
 ```xml
-<!-- File: {ApplicationName}.UI.MAUI/Views/{Entity}ListView.xaml -->
+<!-- File: I-Synergy.Framework.UI.MAUI/Views/{Entity}ListView.xaml -->
 
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:{ApplicationName}.ViewModels.{Domain}"
-             x:Class="{ApplicationName}.UI.MAUI.Views.{Entity}ListView"
+             xmlns:vm="clr-namespace:I-Synergy.Framework.ViewModels.{Domain}"
+             x:Class="I-Synergy.Framework.UI.MAUI.Views.{Entity}ListView"
              x:DataType="vm:{Entity}ListViewModel"
              Title="{Binding Title}">
 
@@ -130,10 +130,10 @@ The **View** is the user interface layer. It displays data and captures user int
 
 **Blazor Example:**
 ```razor
-@* File: {ApplicationName}.UI.Blazor/Pages/{Entity}List.razor *@
+@* File: I-Synergy.Framework.UI.Blazor/Pages/{Entity}List.razor *@
 
 @page "/{entities}"
-@using {ApplicationName}.ViewModels.{Domain}
+@using I-Synergy.Framework.ViewModels.{Domain}
 @inject {Entity}ListViewModel ViewModel
 
 <PageTitle>@ViewModel.Title</PageTitle>
@@ -201,15 +201,15 @@ The **ViewModel** is the intermediary between View and Model. It exposes data an
 
 **Example:**
 ```csharp
-// File: {ApplicationName}.ViewModels.{Domain}/{Entity}ListViewModel.cs
+// File: I-Synergy.Framework.ViewModels.{Domain}/{Entity}ListViewModel.cs
 
-namespace {ApplicationName}.ViewModels.{Domain};
+namespace I-Synergy.Framework.ViewModels.{Domain};
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using I.Synergy.Framework.Core.Abstractions;
-using {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries;
+using I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries;
 
 /// <summary>
 /// ViewModel for the {entity} list view.
@@ -469,14 +469,14 @@ Commands encapsulate actions that the user can trigger from the UI.
 
 **Using CommunityToolkit.Mvvm:**
 ```csharp
-// File: {ApplicationName}.ViewModels.{Domain}/{Entity}DetailViewModel.cs
+// File: I-Synergy.Framework.ViewModels.{Domain}/{Entity}DetailViewModel.cs
 
-namespace {ApplicationName}.ViewModels.{Domain};
+namespace I-Synergy.Framework.ViewModels.{Domain};
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using I.Synergy.Framework.Core.Abstractions;
-using {ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands;
+using I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Commands;
 
 public sealed partial class {Entity}DetailViewModel : ObservableObject
 {
@@ -834,7 +834,7 @@ ViewModels should be registered in the DI container and receive dependencies thr
 ### Registration
 
 ```csharp
-// File: {ApplicationName}.UI.MAUI/MauiProgram.cs (or Startup.cs for Blazor)
+// File: I-Synergy.Framework.UI.MAUI/MauiProgram.cs (or Startup.cs for Blazor)
 
 public static class MauiProgram
 {
@@ -896,7 +896,7 @@ public sealed partial class {Entity}DetailViewModel : ObservableObject
 ### Service-Based Navigation
 
 ```csharp
-// File: {ApplicationName}.UI.MAUI/Services/INavigationService.cs
+// File: I-Synergy.Framework.UI.MAUI/Services/INavigationService.cs
 
 public interface INavigationService
 {
@@ -1069,12 +1069,12 @@ else
 ### Unit Testing Pattern
 
 ```csharp
-// File: tests/{ApplicationName}.{Domain}.Tests/ViewModels/{Entity}ListViewModelTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/ViewModels/{Entity}ListViewModelTests.cs
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using {ApplicationName}.ViewModels.{Domain};
-using {ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries;
+using I-Synergy.Framework.ViewModels.{Domain};
+using I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries;
 
 [TestClass]
 public sealed class {Entity}ListViewModelTests
@@ -1261,7 +1261,7 @@ public sealed partial class {Entity}DetailViewModel : ObservableObject
 @* File: {Entity}List.razor *@
 
 @page "/{entities}"
-@using {ApplicationName}.ViewModels.{Domain}
+@using I-Synergy.Framework.ViewModels.{Domain}
 @inject {Entity}ListViewModel ViewModel
 @implements IDisposable
 

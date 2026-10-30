@@ -688,7 +688,8 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 if (Diagonal[i] > tol)
                     r++;
 
-            return (int)(rank = r);
+            rank = r;
+            return r;
         }
     }
 

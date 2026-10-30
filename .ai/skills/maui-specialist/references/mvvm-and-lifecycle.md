@@ -5,7 +5,7 @@ CommunityToolkit.Mvvm ViewModels, commands and bindings, plus MAUI app lifecycle
 
 ### ViewModel
 ```csharp
-// File: ViewModels/BudgetListViewModel.cs
+// File: ViewModels/{Entity}ListViewModel.cs
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using {ApplicationName}.Mobile.Data;
@@ -13,13 +13,13 @@ using {ApplicationName}.Mobile.Models;
 
 namespace {ApplicationName}.Mobile.ViewModels;
 
-public partial class BudgetListViewModel : ObservableObject
+public partial class {Entity}ListViewModel : ObservableObject
 {
     private readonly LocalDatabase _database;
     private readonly ISyncService _syncService;
 
     [ObservableProperty]
-    private ObservableCollection<BudgetLocal> budgets = new();
+    private ObservableCollection<{Entity}Local> {entities} = new();
 
     [ObservableProperty]
     private bool isLoading;
@@ -30,7 +30,7 @@ public partial class BudgetListViewModel : ObservableObject
     [ObservableProperty]
     private string errorMessage = string.Empty;
 
-    public BudgetListViewModel(
+    public {Entity}ListViewModel(
         LocalDatabase database,
         ISyncService syncService)
     {
@@ -39,19 +39,19 @@ public partial class BudgetListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task LoadBudgetsAsync()
+    private async Task Load{Entities}Async()
     {
         IsLoading = true;
         ErrorMessage = string.Empty;
 
         try
         {
-            var budgets = await _database.GetBudgetsAsync();
-            Budgets = new ObservableCollection<BudgetLocal>(budgets);
+            var {entities} = await _database.Get{Entities}Async();
+            {Entities} = new ObservableCollection<{Entity}Local>({entities});
         }
         catch (Exception ex)
         {
-            ErrorMessage = "Failed to load budgets";
+            ErrorMessage = "Failed to load {entities}";
         }
         finally
         {
@@ -69,7 +69,7 @@ public partial class BudgetListViewModel : ObservableObject
             if (_syncService.IsOnline)
             {
                 await _syncService.SyncDataAsync();
-                await LoadBudgetsAsync();
+                await Load{Entities}Async();
             }
             else
             {
@@ -83,32 +83,32 @@ public partial class BudgetListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task DeleteBudgetAsync(BudgetLocal budget)
+    private async Task Delete{Entity}Async({Entity}Local {entity})
     {
-        await _database.DeleteBudgetAsync(budget);
+        await _database.Delete{Entity}Async({entity});
 
         if (_syncService.IsOnline)
         {
             // Queue for sync
-            await _database.QueueOperationAsync("Delete", "Budget", budget.BudgetId);
+            await _database.QueueOperationAsync("Delete", "{Entity}", {entity}.{Entity}Id);
         }
 
-        await LoadBudgetsAsync();
+        await Load{Entities}Async();
     }
 }
 ```
 
 ### Blazor Component Using ViewModel
 ```razor
-@page "/budgets"
-@inject BudgetListViewModel ViewModel
+@page "/{entities}"
+@inject {Entity}ListViewModel ViewModel
 @implements IDisposable
 
-<h1>Budgets</h1>
+<h1>{Entities}</h1>
 
 @if (ViewModel.IsLoading)
 {
-    <p>Loading budgets...</p>
+    <p>Loading {entities}...</p>
 }
 else if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
 {
@@ -116,13 +116,13 @@ else if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
 }
 else
 {
-    <div class="budget-list">
-        @foreach (var budget in ViewModel.Budgets)
+    <div class="{entity}-list">
+        @foreach (var {entity} in ViewModel.{Entities})
         {
-            <div class="budget-card">
-                <h3>@budget.Name</h3>
-                <p>@budget.Amount.ToString("C")</p>
-                <button @onclick="() => DeleteBudget(budget)">Delete</button>
+            <div class="{entity}-card">
+                <h3>@({entity}.Name)</h3>
+                <p>@({entity}.Amount.ToString("C"))</p>
+                <button @onclick="() => Delete{Entity}({entity})">Delete</button>
             </div>
         }
     </div>
@@ -135,12 +135,12 @@ else
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await ViewModel.LoadBudgetsCommand.ExecuteAsync(null);
+        await ViewModel.Load{Entities}Command.ExecuteAsync(null);
     }
 
-    private async Task DeleteBudget(BudgetLocal budget)
+    private async Task Delete{Entity}({Entity}Local {entity})
     {
-        await ViewModel.DeleteBudgetCommand.ExecuteAsync(budget);
+        await ViewModel.Delete{Entity}Command.ExecuteAsync({entity});
     }
 
     private async Task Refresh()

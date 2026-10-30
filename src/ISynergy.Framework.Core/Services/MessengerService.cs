@@ -226,17 +226,15 @@ public sealed class MessengerService : IMessengerService
         // Handle subclass/interface recipients
         if (_registry.HasSubclassRecipients)
         {
-            foreach (var type in _registry.GetSubclassIndexKeys())
+            foreach (var type in _registry.GetSubclassIndexKeys().Where(type =>
+                         messageType == type
+                         || messageType.IsSubclassOf(type)
+                         || type.IsAssignableFrom(messageType)))
             {
-                if (messageType == type
-                    || messageType.IsSubclassOf(type)
-                    || type.IsAssignableFrom(messageType))
+                var list = _registry.GetSubclassRecipients(type);
+                if (list is not null)
                 {
-                    var list = _registry.GetSubclassRecipients(type);
-                    if (list is not null)
-                    {
-                        SendToList(message, list, targetType, token);
-                    }
+                    SendToList(message, list, targetType, token);
                 }
             }
         }
@@ -292,7 +290,7 @@ public sealed class MessengerService : IMessengerService
                     // This allows debugging while maintaining message delivery to other recipients
                     _logger?.LogWarning(ex,
                         "Exception occurred while executing message handler. MessageType: {MessageType}, RecipientType: {RecipientType}",
-                        message?.GetType().Name ?? "Unknown",
+                        message.GetType().Name,
                         item.Action?.Target?.GetType().Name ?? "Unknown");
                 }
             }

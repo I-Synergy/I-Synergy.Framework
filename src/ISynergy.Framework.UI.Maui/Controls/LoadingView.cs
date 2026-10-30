@@ -57,10 +57,11 @@ public class LoadingView : ContentPage
                 _backgroundImage.Source = ImageSource.FromResource(splashScreenOptions.Resource);
         }
         // Override with custom video if explicitly specified
-        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
+        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource)
+            && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video
+            && _backgroundMediaElement is not null)
         {
-            if (_backgroundMediaElement is not null)
-                _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
+            _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
         }
     }
 

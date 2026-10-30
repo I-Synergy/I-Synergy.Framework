@@ -182,41 +182,41 @@ public static class OutputEncoder
 ```csharp
 // ✅ CORRECT - EF Core uses parameterized queries automatically
 
-public async Task<List<Budget>> GetBudgetsByUserAsync(
+public async Task<List<{Entity}>> Get{Entities}ByUserAsync(
     Guid userId,
     CancellationToken cancellationToken = default)
 {
     // EF Core parameterizes this automatically - SAFE
-    return await _dbContext.Budgets
+    return await _dbContext.{Entities}
         .Where(b => b.UserId == userId)
         .ToListAsync(cancellationToken);
 }
 
 // ✅ CORRECT - Even with string parameters
-public async Task<List<Budget>> SearchBudgetsAsync(
+public async Task<List<{Entity}>> Search{Entities}Async(
     string searchTerm,
     CancellationToken cancellationToken = default)
 {
     // EF Core parameterizes the searchTerm - SAFE
-    return await _dbContext.Budgets
+    return await _dbContext.{Entities}
         .Where(b => b.Name.Contains(searchTerm))
         .ToListAsync(cancellationToken);
 }
 
 // ❌ WRONG - Raw SQL concatenation (NEVER DO THIS)
-public async Task<List<Budget>> SearchBudgetsUnsafe(string searchTerm)
+public async Task<List<{Entity}>> Search{Entities}Unsafe(string searchTerm)
 {
     // SQL Injection vulnerability!
-    var sql = $"SELECT * FROM Budgets WHERE Name LIKE '%{searchTerm}%'";
-    return await _dbContext.Budgets.FromSqlRaw(sql).ToListAsync();
+    var sql = $"SELECT * FROM {Entities} WHERE Name LIKE '%{searchTerm}%'";
+    return await _dbContext.{Entities}.FromSqlRaw(sql).ToListAsync();
 }
 
 // ✅ CORRECT - Raw SQL with parameters
-public async Task<List<Budget>> SearchBudgetsSafe(string searchTerm)
+public async Task<List<{Entity}>> Search{Entities}Safe(string searchTerm)
 {
     // Parameterized raw SQL - SAFE
-    return await _dbContext.Budgets
-        .FromSqlRaw("SELECT * FROM Budgets WHERE Name LIKE {0}", $"%{searchTerm}%")
+    return await _dbContext.{Entities}
+        .FromSqlRaw("SELECT * FROM {Entities} WHERE Name LIKE {0}", $"%{searchTerm}%")
         .ToListAsync();
 }
 ```
@@ -316,20 +316,20 @@ var app = builder.Build();
 app.UseAntiforgery();
 
 // Endpoint with anti-forgery validation
-app.MapPost("/api/budgets", async (
-    [FromBody] BudgetModel model,
+app.MapPost("/api/{entities}", async (
+    [FromBody] {Entity}Model model,
     [FromHeader(Name = "X-CSRF-TOKEN")] string csrfToken,
-    ICommandHandler<CreateBudgetCommand, CreateBudgetResponse> handler,
+    ICommandHandler<Create{Entity}Command, Create{Entity}Response> handler,
     IAntiforgery antiforgery,
     HttpContext httpContext) =>
 {
     // Validate anti-forgery token
     await antiforgery.ValidateRequestAsync(httpContext);
 
-    var command = new CreateBudgetCommand(model.Name, model.Amount, model.StartDate);
+    var command = new Create{Entity}Command(model.Name, model.Amount, model.StartDate);
     var result = await handler.HandleAsync(command);
 
-    return Results.Created($"/api/budgets/{result.BudgetId}", result);
+    return Results.Created($"/api/{entities}/{result.{Entity}Id}", result);
 })
 .RequireAuthorization();
 

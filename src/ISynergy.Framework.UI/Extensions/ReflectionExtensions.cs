@@ -195,6 +195,24 @@ public static class ReflectionExtensions
         services.TryAddScoped(viewmodel);
     }
 
+    /// <summary>
+    /// Register a view model type with an explicit service lifetime.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="viewmodel">The viewmodel type to register.</param>
+    /// <param name="lifetime">The lifetime to use for the type and its abstraction.</param>
+    public static void RegisterViewModel(this IServiceCollection services,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicConstructors)] Type viewmodel,
+        ServiceLifetime lifetime)
+    {
+        var abstraction = FindAbstraction(viewmodel, typeof(IViewModel), nameof(IViewModel));
+
+        if (abstraction is not null)
+            services.TryAdd(new ServiceDescriptor(abstraction, viewmodel, lifetime));
+
+        services.TryAdd(new ServiceDescriptor(viewmodel, viewmodel, lifetime));
+    }
+
     [UnconditionalSuppressMessage("Trimming", "IL2070:UnrecognizedReflectionPattern",
         Justification = "Interface types returned by GetInterfaces() are preserved together with the implementing type, and the marker interfaces (IView/IWindow/IViewModel) are statically referenced here, so their interface hierarchies survive trimming.")]
     private static Type? FindAbstraction(

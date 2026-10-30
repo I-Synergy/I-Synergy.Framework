@@ -1,7 +1,7 @@
 ---
 name: ui-uwp
 description: >-
-  UWP implementation of the ISynergy UI stack (Frame navigation, ContentDialog service, adaptive layouts, WinUI 2 controls).
+  UWP implementation of the ISynergy UI stack (Frame navigation, ContentDialog service, adaptive layouts, WinUI 2 controls). Use when implementing UWP Frame navigation, the ContentDialog service, adaptive layouts, or WinUI 2 controls.
 version: 2026.02.10
 sources:
   - src/ISynergy.Framework.UI.UWP

@@ -190,7 +190,7 @@ internal class AzureStorageService : IStorageService
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
-            return await blobClient.DeleteIfExistsAsync()
+            return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 

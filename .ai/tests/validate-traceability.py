@@ -47,13 +47,13 @@ def get_template_root() -> Path:
 # Identifier grammar -- `.ai/reference/traceability.md` -> "The Format"
 #
 # Identifiers are matched literally and case-sensitively and must be complete tokens:
-# `ac-budget-014.2` is a typo, `AC-Budget-14` is malformed (`{NNN}` is exactly three digits)
-# and `AC-Budget-014.2.1` is not a longer form of anything. The lookarounds are what make
-# that literal: without the trailing `(?![\w.-])`, `AC-Budget-014.2.1` would silently match
-# the prefix `AC-Budget-014.2` and the check would pass on an identifier nobody declared.
+# `ac-widget-014.2` is a typo, `AC-Widget-14` is malformed (`{NNN}` is exactly three digits)
+# and `AC-Widget-014.2.1` is not a longer form of anything. The lookarounds are what make
+# that literal: without the trailing `(?![\w.-])`, `AC-Widget-014.2.1` would silently match
+# the prefix `AC-Widget-014.2` and the check would pass on an identifier nobody declared.
 # --------------------------------------------------------------------------------------
 
-_BC = r'[A-Z][A-Za-z0-9]*'   # one PascalCase token: `Budget`, `HouseholdPlanning`
+_BC = r'[A-Z][A-Za-z0-9]*'   # one PascalCase token: `Widget`, `HouseholdPlanning`
 _NNN = r'\d{3}'              # exactly three digits, zero-padded
 
 _PARENT_SCAN = re.compile(rf'(?<![\w.-])(US|UC)-{_BC}-{_NNN}(?![\w-])(?!\.\d)')
@@ -65,7 +65,7 @@ _AC_FULL = re.compile(rf'AC-{_BC}-{_NNN}\.\d+')
 # a zero. The match above stays tolerant on purpose -- tightening it to `[1-9]\d*` would drop
 # the *declaration* of a padded criterion, turning a formatting slip into a coverage hole. A
 # padded number therefore resolves, and is reported as an advisory warning instead. Only a
-# leading zero is flagged: `AC-Budget-014.10` is the tenth criterion, unpadded and correct.
+# leading zero is flagged: `AC-Widget-014.10` is the tenth criterion, unpadded and correct.
 _PADDED_CHILD = re.compile(r'\.0\d')
 
 
@@ -80,12 +80,12 @@ def is_ac_id(value: str) -> bool:
 
 
 def parent_story_of(ac_id: str) -> str:
-    """`AC-Budget-014.2` -> `US-Budget-014` (the criterion's parent number, same context)."""
+    """`AC-Widget-014.2` -> `US-Widget-014` (the criterion's parent number, same context)."""
     return 'US-' + ac_id[3:].split('.', 1)[0]
 
 
 def unpadded(identifier: str) -> str:
-    """`AC-Budget-014.02` -> `AC-Budget-014.2`: the form the convention defines, for the hint."""
+    """`AC-Widget-014.02` -> `AC-Widget-014.2`: the form the convention defines, for the hint."""
     return re.sub(r'\.0+(\d)', r'.\1', identifier)
 
 

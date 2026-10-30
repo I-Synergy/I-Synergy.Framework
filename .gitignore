@@ -353,3 +353,13 @@ CLAUDE.md.deepseek-backup
 
 # Agent scratch area (probes, screenshots, throwaway scripts)
 .ai/tmp/
+
+# AI Workspace Manager: resolver cache and platform junctions
+*.py[cod]
+.pytest_cache/
+
+# AI Workspace Manager: resolver cache and platform junctions
+.github/instructions/
+.github/prompts/
+.claude/commands/
+.claude/instructions/

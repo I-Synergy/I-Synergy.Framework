@@ -140,9 +140,9 @@ Bounded Contexts:
 ### Context Mapping
 
 ```csharp
-// File: {ApplicationName}.Services.Budget/Domain/Budget.cs
+// File: I-Synergy.Framework.Services.Budget/Domain/Budget.cs
 
-namespace {ApplicationName}.Services.Budget.Domain;
+namespace I-Synergy.Framework.Services.Budget.Domain;
 
 /// <summary>
 /// Budget aggregate in Budget Management context.
@@ -156,9 +156,9 @@ public sealed class Budget
     // Budget-specific properties and behavior
 }
 
-// File: {ApplicationName}.Services.Goal/Domain/Goal.cs
+// File: I-Synergy.Framework.Services.Goal/Domain/Goal.cs
 
-namespace {ApplicationName}.Services.Goal.Domain;
+namespace I-Synergy.Framework.Services.Goal.Domain;
 
 /// <summary>
 /// Goal aggregate in Goal Management context.
@@ -182,7 +182,7 @@ public sealed class Goal
 API Gateway aggregates requests from clients and routes them to appropriate microservices.
 
 ```csharp
-// File: {ApplicationName}.Gateway/Program.cs
+// File: I-Synergy.Framework.Gateway/Program.cs
 
 using Yarp.ReverseProxy.Configuration;
 
@@ -277,9 +277,9 @@ app.Run();
 ### Request Aggregation
 
 ```csharp
-// File: {ApplicationName}.Gateway/Services/DashboardAggregationService.cs
+// File: I-Synergy.Framework.Gateway/Services/DashboardAggregationService.cs
 
-namespace {ApplicationName}.Gateway.Services;
+namespace I-Synergy.Framework.Gateway.Services;
 
 /// <summary>
 /// Aggregates data from multiple microservices for dashboard.
@@ -367,9 +367,9 @@ public sealed class DashboardAggregationService
 ### Synchronous Communication (REST)
 
 ```csharp
-// File: {ApplicationName}.Services.Goal/Services/BudgetServiceClient.cs
+// File: I-Synergy.Framework.Services.Goal/Services/BudgetServiceClient.cs
 
-namespace {ApplicationName}.Services.Goal.Services;
+namespace I-Synergy.Framework.Services.Goal.Services;
 
 /// <summary>
 /// Client for communicating with Budget Service.
@@ -432,11 +432,11 @@ builder.Services.AddHttpClient<BudgetServiceClient>(client =>
 ### Synchronous Communication (gRPC)
 
 ```csharp
-// File: {ApplicationName}.Services.Budget/Protos/budget.proto
+// File: I-Synergy.Framework.Services.Budget/Protos/budget.proto
 
 syntax = "proto3";
 
-option csharp_namespace = "{ApplicationName}.Services.Budget.Grpc";
+option csharp_namespace = "I-Synergy.Framework.Services.Budget.Grpc";
 
 package budget;
 
@@ -480,12 +480,12 @@ message UpdateBudgetResponse {
 
 **gRPC Service Implementation:**
 ```csharp
-// File: {ApplicationName}.Services.Budget/GrpcServices/BudgetGrpcService.cs
+// File: I-Synergy.Framework.Services.Budget/GrpcServices/BudgetGrpcService.cs
 
 using Grpc.Core;
-using {ApplicationName}.Services.Budget.Grpc;
+using I-Synergy.Framework.Services.Budget.Grpc;
 
-namespace {ApplicationName}.Services.Budget.GrpcServices;
+namespace I-Synergy.Framework.Services.Budget.GrpcServices;
 
 public sealed class BudgetGrpcService : BudgetService.BudgetServiceBase
 {
@@ -540,11 +540,11 @@ public sealed class BudgetGrpcService : BudgetService.BudgetServiceBase
 
 **gRPC Client:**
 ```csharp
-// File: {ApplicationName}.Services.Goal/Services/BudgetGrpcClient.cs
+// File: I-Synergy.Framework.Services.Goal/Services/BudgetGrpcClient.cs
 
-using {ApplicationName}.Services.Budget.Grpc;
+using I-Synergy.Framework.Services.Budget.Grpc;
 
-namespace {ApplicationName}.Services.Goal.Services;
+namespace I-Synergy.Framework.Services.Goal.Services;
 
 public sealed class BudgetGrpcClient
 {
@@ -586,9 +586,9 @@ builder.Services.AddGrpcClient<BudgetService.BudgetServiceClient>(options =>
 ### Asynchronous Communication (Message Queue)
 
 ```csharp
-// File: {ApplicationName}.Services.Budget/Events/BudgetCreatedEvent.cs
+// File: I-Synergy.Framework.Services.Budget/Events/BudgetCreatedEvent.cs
 
-namespace {ApplicationName}.Services.Budget.Events;
+namespace I-Synergy.Framework.Services.Budget.Events;
 
 /// <summary>
 /// Event published when a budget is created.
@@ -605,7 +605,7 @@ public sealed record BudgetCreatedEvent
 
 **Publishing Events (using MassTransit):**
 ```csharp
-// File: {ApplicationName}.Services.Budget/Handlers/CreateBudgetCommandHandler.cs
+// File: I-Synergy.Framework.Services.Budget/Handlers/CreateBudgetCommandHandler.cs
 
 using MassTransit;
 
@@ -657,12 +657,12 @@ public sealed class CreateBudgetCommandHandler(
 
 **Consuming Events:**
 ```csharp
-// File: {ApplicationName}.Services.Notification/Consumers/BudgetCreatedEventConsumer.cs
+// File: I-Synergy.Framework.Services.Notification/Consumers/BudgetCreatedEventConsumer.cs
 
 using MassTransit;
-using {ApplicationName}.Services.Budget.Events;
+using I-Synergy.Framework.Services.Budget.Events;
 
-namespace {ApplicationName}.Services.Notification.Consumers;
+namespace I-Synergy.Framework.Services.Notification.Consumers;
 
 /// <summary>
 /// Consumes BudgetCreatedEvent and sends notification.
@@ -774,7 +774,7 @@ public sealed class NotificationDbContext
 Services communicate through events without a central coordinator.
 
 ```csharp
-// File: {ApplicationName}.Services.Order/Events/OrderCreatedEvent.cs
+// File: I-Synergy.Framework.Services.Order/Events/OrderCreatedEvent.cs
 
 public sealed record OrderCreatedEvent
 {
@@ -783,7 +783,7 @@ public sealed record OrderCreatedEvent
     public decimal TotalAmount { get; init; }
 }
 
-// File: {ApplicationName}.Services.Payment/Consumers/OrderCreatedEventConsumer.cs
+// File: I-Synergy.Framework.Services.Payment/Consumers/OrderCreatedEventConsumer.cs
 
 public sealed class OrderCreatedEventConsumer : IConsumer<OrderCreatedEvent>
 {
@@ -816,7 +816,7 @@ public sealed class OrderCreatedEventConsumer : IConsumer<OrderCreatedEvent>
     }
 }
 
-// File: {ApplicationName}.Services.Order/Consumers/PaymentFailedEventConsumer.cs
+// File: I-Synergy.Framework.Services.Order/Consumers/PaymentFailedEventConsumer.cs
 
 public sealed class PaymentFailedEventConsumer : IConsumer<PaymentFailedEvent>
 {
@@ -833,11 +833,11 @@ public sealed class PaymentFailedEventConsumer : IConsumer<PaymentFailedEvent>
 A central orchestrator manages the saga workflow.
 
 ```csharp
-// File: {ApplicationName}.Services.Orchestrator/Sagas/OrderSaga.cs
+// File: I-Synergy.Framework.Services.Orchestrator/Sagas/OrderSaga.cs
 
 using MassTransit;
 
-namespace {ApplicationName}.Services.Orchestrator.Sagas;
+namespace I-Synergy.Framework.Services.Orchestrator.Sagas;
 
 public sealed class OrderState : SagaStateMachineInstance
 {
@@ -933,9 +933,9 @@ public sealed class OrderSaga : MassTransitStateMachine<OrderState>
 ## Event-Driven Architecture with Domain Events
 
 ```csharp
-// File: {ApplicationName}.Common/Events/IDomainEvent.cs
+// File: I-Synergy.Framework.Common/Events/IDomainEvent.cs
 
-namespace {ApplicationName}.Common.Events;
+namespace I-Synergy.Framework.Common.Events;
 
 /// <summary>
 /// Marker interface for domain events.
@@ -946,7 +946,7 @@ public interface IDomainEvent
     DateTimeOffset OccurredAt { get; init; }
 }
 
-// File: {ApplicationName}.Services.Budget/Events/BudgetUpdatedEvent.cs
+// File: I-Synergy.Framework.Services.Budget/Events/BudgetUpdatedEvent.cs
 
 public sealed record BudgetUpdatedEvent : IDomainEvent
 {
@@ -959,7 +959,7 @@ public sealed record BudgetUpdatedEvent : IDomainEvent
     public Guid UserId { get; init; }
 }
 
-// File: {ApplicationName}.Services.Reporting/Consumers/BudgetUpdatedEventConsumer.cs
+// File: I-Synergy.Framework.Services.Reporting/Consumers/BudgetUpdatedEventConsumer.cs
 
 public sealed class BudgetUpdatedEventConsumer : IConsumer<BudgetUpdatedEvent>
 {
@@ -997,7 +997,7 @@ public sealed class BudgetUpdatedEventConsumer : IConsumer<BudgetUpdatedEvent>
 ### Using .NET Aspire Service Discovery
 
 ```csharp
-// File: {ApplicationName}.AppHost/Program.cs (Aspire orchestration)
+// File: I-Synergy.Framework.AppHost/Program.cs (Aspire orchestration)
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -1018,7 +1018,7 @@ builder.Build().Run();
 
 **Service Discovery in Consumer:**
 ```csharp
-// File: {ApplicationName}.Services.Goal/Program.cs
+// File: I-Synergy.Framework.Services.Goal/Program.cs
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -1043,7 +1043,7 @@ app.Run();
 ## Circuit Breaker and Resilience Patterns
 
 ```csharp
-// File: {ApplicationName}.Services.Goal/Program.cs
+// File: I-Synergy.Framework.Services.Goal/Program.cs
 
 using Microsoft.Extensions.Http.Resilience;
 
@@ -1081,7 +1081,7 @@ app.Run();
 ## Distributed Tracing with OpenTelemetry
 
 ```csharp
-// File: {ApplicationName}.Services.Budget/Program.cs
+// File: I-Synergy.Framework.Services.Budget/Program.cs
 
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -1107,7 +1107,7 @@ app.Run();
 
 **Correlation ID Propagation:**
 ```csharp
-// File: {ApplicationName}.Common/Middleware/CorrelationIdMiddleware.cs
+// File: I-Synergy.Framework.Common/Middleware/CorrelationIdMiddleware.cs
 
 public sealed class CorrelationIdMiddleware
 {
@@ -1140,7 +1140,7 @@ public sealed class CorrelationIdMiddleware
 ## .NET Aspire for Microservices Orchestration
 
 ```csharp
-// File: {ApplicationName}.AppHost/Program.cs
+// File: I-Synergy.Framework.AppHost/Program.cs
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -1203,7 +1203,7 @@ version: '3.8'
 services:
   budget-service:
     build:
-      context: ./src/{ApplicationName}.Services.Budget
+      context: ./src/I-Synergy.Framework.Services.Budget
       dockerfile: Dockerfile
     ports:
       - "8081:8080"
@@ -1218,7 +1218,7 @@ services:
 
   goal-service:
     build:
-      context: ./src/{ApplicationName}.Services.Goal
+      context: ./src/I-Synergy.Framework.Services.Goal
       dockerfile: Dockerfile
     ports:
       - "8082:8080"
@@ -1235,7 +1235,7 @@ services:
 
   transaction-service:
     build:
-      context: ./src/{ApplicationName}.Services.Transaction
+      context: ./src/I-Synergy.Framework.Services.Transaction
       dockerfile: Dockerfile
     ports:
       - "8083:8080"
@@ -1250,7 +1250,7 @@ services:
 
   gateway:
     build:
-      context: ./src/{ApplicationName}.Gateway
+      context: ./src/I-Synergy.Framework.Gateway
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -1314,7 +1314,7 @@ spec:
     spec:
       containers:
       - name: budget-service
-        image: {registry}/{ApplicationName}/budget-service:latest
+        image: {registry}/I-Synergy.Framework/budget-service:latest
         ports:
         - containerPort: 8080
         env:
@@ -1412,7 +1412,7 @@ spec:
     spec:
       containers:
       - name: budget-service
-        image: {registry}/{ApplicationName}/budget-service:v1.0.0
+        image: {registry}/I-Synergy.Framework/budget-service:v1.0.0
 
 ---
 # Green deployment (new version)
@@ -1434,7 +1434,7 @@ spec:
     spec:
       containers:
       - name: budget-service
-        image: {registry}/{ApplicationName}/budget-service:v2.0.0
+        image: {registry}/I-Synergy.Framework/budget-service:v2.0.0
 
 ---
 # Service pointing to blue initially
@@ -1472,7 +1472,7 @@ spec:
     spec:
       containers:
       - name: budget-service
-        image: {registry}/{ApplicationName}/budget-service:v1.0.0
+        image: {registry}/I-Synergy.Framework/budget-service:v1.0.0
 
 ---
 # Canary version (10% of traffic)
@@ -1494,7 +1494,7 @@ spec:
     spec:
       containers:
       - name: budget-service
-        image: {registry}/{ApplicationName}/budget-service:v2.0.0
+        image: {registry}/I-Synergy.Framework/budget-service:v2.0.0
 
 ---
 # Service distributes traffic across both
@@ -1516,7 +1516,7 @@ spec:
 ### Health Checks
 
 ```csharp
-// File: {ApplicationName}.Services.Budget/Program.cs
+// File: I-Synergy.Framework.Services.Budget/Program.cs
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -1577,7 +1577,7 @@ public sealed class BudgetServiceHealthCheck : IHealthCheck
 ### Application Insights / Sentry
 
 ```csharp
-// File: {ApplicationName}.Services.Budget/Program.cs
+// File: I-Synergy.Framework.Services.Budget/Program.cs
 
 using I.Synergy.Framework.OpenTelemetry.Extensions;
 

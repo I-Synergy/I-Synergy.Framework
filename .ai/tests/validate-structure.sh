@@ -5,10 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FAILED=0
 PASSED=0
+SEPARATOR="========================================="
 
-echo "========================================="
+echo "$SEPARATOR"
 echo "  Template Structure Validation"
-echo "========================================="
+echo "$SEPARATOR"
 echo ""
 
 # Check required directories
@@ -25,7 +26,7 @@ required_dirs=(
 )
 
 for dir in "${required_dirs[@]}"; do
-    if [ ! -d "$TEMPLATE_ROOT/$dir" ]; then
+    if [[ ! -d "$TEMPLATE_ROOT/$dir" ]]; then
         echo "❌ Missing directory: $dir"
         FAILED=$((FAILED + 1))
     else
@@ -41,17 +42,17 @@ echo "2. Checking skill SKILL.md files..."
 skill_count=0
 missing_count=0
 for skill_dir in "$TEMPLATE_ROOT/.ai/skills"/*/; do
-    if [ -d "$skill_dir" ]; then
+    if [[ -d "$skill_dir" ]]; then
         skill_name=$(basename "$skill_dir")
         skill_count=$((skill_count + 1))
-        if [ ! -f "$skill_dir/SKILL.md" ]; then
+        if [[ ! -f "$skill_dir/SKILL.md" ]]; then
             echo "❌ Missing SKILL.md for: $skill_name"
             FAILED=$((FAILED + 1))
             missing_count=$((missing_count + 1))
         fi
     fi
 done
-if [ $missing_count -eq 0 ] && [ $skill_count -gt 0 ]; then
+if [[ $missing_count -eq 0 && $skill_count -gt 0 ]]; then
     echo "✅ All $skill_count skills have SKILL.md"
     PASSED=$((PASSED + 1))
 fi
@@ -72,7 +73,7 @@ patterns=(
 )
 
 for pattern in "${patterns[@]}"; do
-    if [ ! -f "$TEMPLATE_ROOT/.ai/patterns/$pattern" ]; then
+    if [[ ! -f "$TEMPLATE_ROOT/.ai/patterns/$pattern" ]]; then
         echo "❌ Missing pattern: $pattern"
         FAILED=$((FAILED + 1))
     else
@@ -99,7 +100,7 @@ reference_files=(
 )
 
 for ref in "${reference_files[@]}"; do
-    if [ ! -f "$TEMPLATE_ROOT/.ai/reference/$ref" ]; then
+    if [[ ! -f "$TEMPLATE_ROOT/.ai/reference/$ref" ]]; then
         echo "❌ Missing reference: $ref"
         FAILED=$((FAILED + 1))
     else
@@ -120,7 +121,7 @@ project_files=(
 )
 
 for proj in "${project_files[@]}"; do
-    if [ ! -f "$TEMPLATE_ROOT/.ai/project/$proj" ]; then
+    if [[ ! -f "$TEMPLATE_ROOT/.ai/project/$proj" ]]; then
         echo "❌ Missing project file: $proj"
         FAILED=$((FAILED + 1))
     else
@@ -133,7 +134,7 @@ echo ""
 
 # Check checklist files
 echo "6. Checking checklist files..."
-if [ ! -f "$TEMPLATE_ROOT/.ai/checklists/pre-submission.md" ]; then
+if [[ ! -f "$TEMPLATE_ROOT/.ai/checklists/pre-submission.md" ]]; then
     echo "❌ Missing pre-submission checklist"
     FAILED=$((FAILED + 1))
 else
@@ -159,7 +160,7 @@ template_files=(
 )
 
 for tmpl in "${template_files[@]}"; do
-    if [ ! -f "$TEMPLATE_ROOT/.ai/reference/templates/$tmpl" ]; then
+    if [[ ! -f "$TEMPLATE_ROOT/.ai/reference/templates/$tmpl" ]]; then
         echo "❌ Missing template: $tmpl"
         FAILED=$((FAILED + 1))
     else
@@ -179,7 +180,7 @@ main_files=(
 )
 
 for main in "${main_files[@]}"; do
-    if [ ! -f "$TEMPLATE_ROOT/$main" ]; then
+    if [[ ! -f "$TEMPLATE_ROOT/$main" ]]; then
         echo "❌ Missing main file: $main"
         FAILED=$((FAILED + 1))
     else
@@ -193,12 +194,12 @@ echo ""
 # Check scripts
 echo "9. Checking scripts..."
 scripts=(
-    ".ai/scripts/sync-skills.py"
+    ".ai/scripts/sync-platforms.py"
     ".ai/scripts/upgrade-template.py"
 )
 
 for script in "${scripts[@]}"; do
-    if [ ! -f "$TEMPLATE_ROOT/$script" ]; then
+    if [[ ! -f "$TEMPLATE_ROOT/$script" ]]; then
         echo "❌ Missing script: $script"
         FAILED=$((FAILED + 1))
     else
@@ -208,14 +209,14 @@ for script in "${scripts[@]}"; do
 done
 
 echo ""
-echo "========================================="
+echo "$SEPARATOR"
 echo "Structure Validation Summary"
-echo "========================================="
+echo "$SEPARATOR"
 echo "✅ Passed: $PASSED"
 echo "❌ Failed: $FAILED"
-echo "========================================="
+echo "$SEPARATOR"
 
-if [ $FAILED -eq 0 ]; then
+if [[ $FAILED -eq 0 ]]; then
     echo "✅ ALL STRUCTURE TESTS PASSED"
     exit 0
 else

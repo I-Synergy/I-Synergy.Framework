@@ -116,6 +116,9 @@ public static class ViewModelExtensions
         return result;
     }
 
+    public static string GetRelatedView(this IViewModel viewModel) =>
+        viewModel.GetType().GetRelatedView();
+
     public static string GetRelatedWindow(this Type viewModelType)
     {
         var result = viewModelType.Name;
@@ -127,9 +130,6 @@ public static class ViewModelExtensions
 
         return result;
     }
-
-    public static string GetRelatedView(this IViewModel viewModel) =>
-        viewModel.GetType().GetRelatedView();
 
     public static string GetRelatedWindow(this IViewModel viewModel) =>
         viewModel.GetType().GetRelatedWindow();

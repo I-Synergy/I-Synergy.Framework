@@ -16,7 +16,7 @@ internal class NugetService(IHttpClientFactory httpClientFactory, IOptions<Nuget
         using HttpClient client = httpClientFactory.CreateClient();
         Uri url = new Uri($"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json");
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
-        HttpResponseMessage response = await client.SendAsync(request);
+        HttpResponseMessage response = await client.SendAsync(request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {

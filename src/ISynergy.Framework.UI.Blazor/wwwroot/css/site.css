@@ -524,7 +524,6 @@ kbd {
     main {
         display: grid;
         grid-template-columns: env(viewport-segment-width 0 0) 1fr;
-        grid-template-rows: repeat(0, 1fr);
     }
 
     nav {

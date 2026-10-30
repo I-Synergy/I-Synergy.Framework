@@ -407,7 +407,6 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         var B = inPlace ? value : value.MemberwiseClone();
         int m = B.Columns();
 
-        // Solve L*Y = B;
         for (var k = 0; k < n; k++)
             for (var j = 0; j < m; j++)
             {
@@ -421,7 +420,6 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
                 for (var j = 0; j < m; j++)
                     B[k, j] /= Diagonal[k];
 
-        // Solve L'*X = Y;
         for (var k = n - 1; k >= 0; k--)
             for (var j = 0; j < m; j++)
             {
@@ -463,7 +461,6 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
 
         var B = inPlace ? value : value.Copy();
 
-        // Solve L*Y = B;
         for (var k = 0; k < n; k++)
         {
             for (var i = 0; i < k; i++)
@@ -475,7 +472,6 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             for (var k = 0; k < Diagonal.Length; k++)
                 B[k] /= Diagonal[k];
 
-        // Solve L'*X = Y;
         for (var k = n - 1; k >= 0; k--)
         {
             for (var i = k + 1; i < n; i++)

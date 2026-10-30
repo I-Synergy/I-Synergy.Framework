@@ -1,0 +1,10 @@
+<AnalysisSettings>
+  <!--
+    Settings for the SonarScanner for .NET (`dotnet sonarscanner begin /s:SonarQube.Analysis.xml`).
+    Keep in sync with sonar-project.properties.
+
+    src/ISynergy.Framework.Mathematics is a port of Math.NET Numerics whose matrix and jagged
+    implementations are intentionally parallel; exclude it from copy-paste detection only.
+  -->
+  <Property Name="sonar.cpd.exclusions">src/ISynergy.Framework.Mathematics/**</Property>
+</AnalysisSettings>
