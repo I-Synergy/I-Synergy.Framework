@@ -48,6 +48,9 @@ public abstract class BaseSelectionViewModel<TModel, TSelection> : ViewModelSele
     {
         RawItems = new List<TModel>();
         Items = new ObservableCollection<TModel>();
+
+        RefreshCommand = new AsyncRelayCommand<string>(query => QueryItemsAsync(query));
+        SelectCommand = new AsyncRelayCommand<object>(_ => Task.CompletedTask, _ => false);
     }
 
     /// <inheritdoc />
@@ -78,7 +81,7 @@ public abstract class BaseSelectionViewModel<TModel, TSelection> : ViewModelSele
 
             foreach (var item in RawItems.EnsureNotNull())
             {
-                if (item!.ToString()?.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                if (item is not null && item.ToString()?.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
                     filteredList.Add(item);
             }
 

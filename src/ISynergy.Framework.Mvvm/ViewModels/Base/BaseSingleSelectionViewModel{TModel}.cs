@@ -35,7 +35,6 @@ public abstract class BaseSingleSelectionViewModel<TModel> : BaseSelectionViewMo
                 AddValidationError(nameof(SelectedItem), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
-        RefreshCommand = new AsyncRelayCommand<string>(e => QueryItemsAsync(e));
         SelectCommand = new AsyncRelayCommand<object>(e => SelectAsync(e), s => s is not null);
 
         IsInitialized = true;

@@ -181,7 +181,7 @@ public class DialogService : BaseDialogService, IDialogService
     {
         await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
             viewModel => viewModel.SetSelectedItem(e),
-            submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hasEntity: true);
+            submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
     }
 
     /// <inheritdoc />
@@ -194,7 +194,7 @@ public class DialogService : BaseDialogService, IDialogService
         where TViewModel : IViewModelDialog<TEntity>
     {
         await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
-            null, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hasEntity: false);
+            null, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
     }
 
     /// <summary>
@@ -205,8 +205,7 @@ public class DialogService : BaseDialogService, IDialogService
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler,
         Func<Task>? closedEventHandler,
-        Action<TViewModel>? initialization,
-        bool hasEntity)
+        Action<TViewModel>? initialization)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {

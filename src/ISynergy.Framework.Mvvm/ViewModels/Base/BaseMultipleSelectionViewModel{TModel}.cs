@@ -43,7 +43,6 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : BaseSelectionView
                 AddValidationError(nameof(SelectedItem), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
-        RefreshCommand = new AsyncRelayCommand<string>(e => QueryItemsAsync(e));
         SelectCommand = new AsyncRelayCommand<object>(_ => SelectAsync(), _ => SelectedItem is not null && SelectedItem.Count > 0);
 
         IsInitialized = true;
