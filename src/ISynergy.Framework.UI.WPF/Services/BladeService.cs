@@ -28,37 +28,7 @@ public class BladeService : BaseBladeService
     }
 
     /// <inheritdoc />
-    protected override async Task SetupAndOpenBladeAsync(
-        IViewModelBladeView owner,
-        IViewModelBlade bladeVm,
-        IServiceProvider serviceProvider)
-    {
-        var viewType = ResolveViewType(bladeVm);
-
-        if (viewType is null || serviceProvider.GetRequiredService(viewType) is not IView view)
-            throw new InvalidOperationException($"Cannot resolve view for blade: {bladeVm.GetType().Name}");
-
-        view.ViewModel = bladeVm;
-
-        PrepareOwnerForBlade(owner, bladeVm);
-
-        // Wait for the view to finish loading
-        var loadTask = MonitorViewLoadAsync(view);
-
-        if (!bladeVm.IsInitialized)
-            await bladeVm.InitializeAsync();
-
-        await loadTask;
-
-        SafeOnNavigatedTo(bladeVm);
-        AddBladeToOwner(owner, view);
-    }
-
-    /// <summary>
-    /// Resolves the view type for a blade ViewModel. Selection ViewModels get
-    /// their known selection views; others use reflection-based naming convention.
-    /// </summary>
-    private static Type? ResolveViewType(IViewModel bladeVm)
+    protected override Type? ResolveViewType(IViewModel bladeVm)
     {
         if (bladeVm is ISingleSelectionViewModel)
             return typeof(SingleSelectionView);

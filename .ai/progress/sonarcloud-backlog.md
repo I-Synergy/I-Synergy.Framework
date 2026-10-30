@@ -82,3 +82,21 @@ long tail ~600 across 100+ rules.
 
 ### Totals so far
 ~330 findings addressed across 4 commits (1d352c7d, 805f5ac3, ea37ebe5, +this one).
+
+## Duplication / quality-gate pass (2026-10-30)
+
+Gate after the first push: new-code duplication 3.4% (limit 3), new reliability C.
+Findings in new-code files: 5,173 duplicated lines; top blocks are parallel
+platform implementations and ported math code.
+
+Consolidated:
+- ReflectionExtensions: deleted the AspNetCore.Blazor copy (97% identical to the
+  UI one); the project now references ISynergy.Framework.UI (~213 lines).
+- TelemetryExtensions: Maui and WinUI copies were identical; one shared
+  implementation now lives in ISynergy.Framework.UI (~130 lines).
+- BladeService: SetupAndOpenBladeAsync + ResolveViewType moved into
+  BaseBladeService; WPF/WinUI/Maui override only ResolveViewType (~121 lines).
+
+Remaining duplication hotspots (not yet touched): BaseShellViewModel (WPF/Maui/
+WinUI ~489), DialogService (~480), Application (~487), SingularValueDecomposition
+and Jagged counterparts (~800), BladeView/BladePane (~383), ThemeService (~254).

@@ -120,7 +120,7 @@ public class BladeService : BaseBladeService
     /// Resolves the view type for a blade ViewModel. Selection ViewModels get
     /// their known selection views; others use reflection-based naming convention.
     /// </summary>
-    private static Type? ResolveViewType(IViewModel bladeVm)
+    protected override Type? ResolveViewType(IViewModel bladeVm)
     {
         if (bladeVm is ISingleSelectionViewModel)
             return typeof(SingleSelectionView);

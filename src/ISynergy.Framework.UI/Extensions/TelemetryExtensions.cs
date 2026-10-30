@@ -11,12 +11,12 @@ using OpenTelemetry.Trace;
 namespace ISynergy.Framework.UI.Extensions;
 
 /// <summary>
-/// Extension methods for adding OpenTelemetry to a WinUI application.
+/// Extension methods for adding OpenTelemetry to an application, shared by every UI shell.
 /// </summary>
 public static class TelemetryExtensions
 {
     /// <summary>
-    /// Adds OpenTelemetry to the service collection with WinUI specific defaults.
+    /// Adds OpenTelemetry to the service collection with shared defaults.
     /// </summary>
     /// <param name="loggingBuilder"></param>
     /// <param name="builder"></param>
