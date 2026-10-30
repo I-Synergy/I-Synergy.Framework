@@ -30,6 +30,6 @@ public static class HttpContextExtensions
 
         response.Headers.Remove("transfer-encoding");
 
-        return responseMessage.Content.CopyToAsync(response.Body);
+        return responseMessage.Content.CopyToAsync(response.Body, context.RequestAborted);
     }
 }

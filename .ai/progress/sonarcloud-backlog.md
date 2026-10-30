@@ -61,3 +61,14 @@ Plan: `.ai/plans/sonarcloud-backlog-2026-10-30.md`
 S4136 110 (manual) · S2325 ~18 real (private/internal only) · S3267 17 · S1854 13 ·
 S3241 15 · S8949 12 · S3776 9 · S3881 9 · S3358 done · S2589 8 · site.css S9423 40 ·
 long tail ~600 across 100+ rules.
+
+## Batch 3 (2026-10-30)
+
+- [x] S8949 cancellation propagation (7): SendGrid SendEmailAsync, Azure
+      DeleteIfExistsAsync, HttpContext CopyToAsync(RequestAborted), NuGet SendAsync,
+      Service Bus CloseAsync / CompleteMessageAsync / DeadLetterMessageAsync.
+- [x] S2589 unnecessary null check (3): WinUI dialog.Dispose(), RelayCommand
+      `parameter is T` pattern, MessengerService message type name.
+- [ ] S2589 in UI.Maui/UI.WinUI DialogService and the WinUI semaphore guard were
+      reverted: `_logger` is `ILogger?` (CS8604) and the semaphore flag is real —
+      releasing after a failed WaitAsync would throw. Sonar's dataflow is wrong there.

@@ -225,7 +225,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
             }
 
             var result = await OpenDialogAsync(dialog);
-            dialog?.Dispose();
+            dialog.Dispose();
 
             switch (buttons)
             {

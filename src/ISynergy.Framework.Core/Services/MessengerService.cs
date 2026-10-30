@@ -292,7 +292,7 @@ public sealed class MessengerService : IMessengerService
                     // This allows debugging while maintaining message delivery to other recipients
                     _logger?.LogWarning(ex,
                         "Exception occurred while executing message handler. MessageType: {MessageType}, RecipientType: {RecipientType}",
-                        message?.GetType().Name ?? "Unknown",
+                        message.GetType().Name,
                         item.Action?.Target?.GetType().Name ?? "Unknown");
                 }
             }
