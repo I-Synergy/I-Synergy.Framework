@@ -83,7 +83,6 @@ export async function removeAll(storageName) {
     if (cache != null) {
         const names = await cache.keys();
 
-        for (const name of names)
-            await cache.delete(name);
+        await Promise.all(names.map(name => cache.delete(name)));
     }
 }

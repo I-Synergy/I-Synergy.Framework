@@ -225,7 +225,7 @@ public sealed class AsyncRelayCommand<T> : BaseAsyncRelayCommand, IAsyncRelayCom
 
             // Handle null parameter safely
             // If parameter is null and we can't handle it, return early
-            if (parameter == null && typeof(T).IsValueType && !typeof(T).IsGenericType)
+            if (parameter is null && typeof(T).IsValueType && !typeof(T).IsGenericType)
             {
                 System.Diagnostics.Debug.WriteLine($"Cannot execute command with null parameter for non-nullable value type {typeof(T).Name}");
                 return;

@@ -180,7 +180,8 @@ public class DialogService : BaseDialogService, IDialogService
         where TViewModel : IViewModelDialog<TEntity>
     {
         await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
-            e, hasEntity: true, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
+            viewModel => viewModel.SetSelectedItem(e),
+            submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hasEntity: true);
     }
 
     /// <inheritdoc />
@@ -193,19 +194,19 @@ public class DialogService : BaseDialogService, IDialogService
         where TViewModel : IViewModelDialog<TEntity>
     {
         await ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
-            default, hasEntity: false, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization);
+            null, submittedEventHandler, cancelledEventHandler, closedEventHandler, initialization, hasEntity: false);
     }
 
     /// <summary>
     /// Shared implementation for the entity and no-entity dialog overloads.
     /// </summary>
     private async Task ShowDialogCoreAsync<TWindow, TViewModel, TEntity>(
-        TEntity? entity,
-        bool hasEntity,
+        Action<IViewModelDialog<TEntity>>? configure,
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler,
         Func<Task>? closedEventHandler,
-        Action<TViewModel>? initialization)
+        Action<TViewModel>? initialization,
+        bool hasEntity)
         where TWindow : IWindow
         where TViewModel : IViewModelDialog<TEntity>
     {
@@ -216,9 +217,7 @@ public class DialogService : BaseDialogService, IDialogService
                 scope.ServiceProvider.GetRequiredService(typeof(TWindow)) is Window dialog)
             {
                 initialization?.Invoke((TViewModel)viewmodel);
-
-                if (hasEntity)
-                    viewmodel.SetSelectedItem(entity!);
+                configure?.Invoke(viewmodel);
 
                 var windowTypeName = typeof(TWindow).Name;
                 var viewModelTypeName = typeof(TViewModel).Name;

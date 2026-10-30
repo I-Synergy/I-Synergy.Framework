@@ -106,3 +106,24 @@ and Jagged counterparts (~800), BladeView/BladePane (~383), ThemeService (~254).
 - DialogService: the entity and no-entity ShowDialogAsync overloads were duplicated
   within each platform file. Merged into one private core with `entity`/`hasEntity`
   in UI.WinUI, UI.WPF and UI.Maui (public API unchanged, ~390 duplicated lines).
+
+## PR #173 gate (2026-10-30)
+
+PR analysis is available now. Gate: new_duplicated_lines_density 10.2% (limit 3),
+new_reliability_rating 2 (B). Only 11 open issues on the PR scope.
+
+Fixed all 11:
+- S8970 x3 (entity! in the three DialogService cores) -> the overloads now pass an
+  Action<IViewModelDialog<TEntity>> configure delegate instead
+- S3776 WinUI core complexity -> callback wiring and error logging extracted
+- S2325 x2 (Maui pass-through wrappers removed; public overloads call the core)
+- S4136 x2 ViewModelExtensions overloads reordered into adjacent groups
+- S125 Cobyla commented-out pseudo-code reworded
+- S9382 unawaited JS awaits -> Promise.all
+- S2955 bug: AsyncRelayCommand `parameter == null` -> `is null`
+
+PR-scope duplication (1,970 duplicated lines of ~19k): SVD 420 + JaggedSVD 376,
+Cholesky 107 + Jagged 107, BladePane 192, ThemeService Maui 126, DialogService
+WPF/WinUI 219, Cobyla 62, selection VMs 110, rest long tail. The math port is
+~1,150 of that total; reaching <3% (about 580 lines) needs either refactoring the
+ported decompositions into shared cores or a CPD exclusion for that ported code.
