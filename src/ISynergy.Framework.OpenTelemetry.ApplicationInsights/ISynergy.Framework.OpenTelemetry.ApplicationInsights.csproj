@@ -9,7 +9,6 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
 	  <PackageReference Include="Microsoft.ApplicationInsights" />
 	</ItemGroup>
 	<ItemGroup>

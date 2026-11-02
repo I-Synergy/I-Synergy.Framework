@@ -14,10 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Syncfusion.DocIO.Net.Core" />
 		<PackageReference Include="Syncfusion.DocIORenderer.Net.Core" />
-		<PackageReference Include="Syncfusion.Licensing" />
-		<PackageReference Include="Syncfusion.Pdf.Net.Core" />
 		<PackageReference Include="Syncfusion.XlsIO.Net.Core" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />

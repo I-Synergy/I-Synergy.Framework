@@ -32,16 +32,14 @@
     <PackageVersion Include="Microsoft.Graph" Version="6.9.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.92.0" />
     <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.2" />
-    <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.13.26526.5" />
+    <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.14.26531.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
-    <PackageVersion Include="Microsoft.Playwright" Version="1.64.1" />
     <PackageVersion Include="Microsoft.Playwright.MSTest" Version="1.64.1" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.6.4" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageVersion Include="Moq" Version="4.21.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="4.5.2" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.5.2" />
     <PackageVersion Include="NodaTime" Version="3.3.7" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
     <PackageVersion Include="NuGet.Commands" Version="7.9.0" />
@@ -55,21 +53,15 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.20.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.20.1" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.2" />
-    <PackageVersion Include="Reqnroll" Version="3.3.4" />
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.4" />
-    <PackageVersion Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.4" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry" Version="6.12.1" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.12.1" />
     <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.12.1" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.DocIO.Net.Core" Version="35.1.42" />
     <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.42" />
     <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.42" />
     <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.Licensing" Version="35.1.42" />
     <PackageVersion Include="Syncfusion.Maui.Core" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.Pdf.Net.Core" Version="35.1.42" />
     <PackageVersion Include="Syncfusion.SfInput.WPF" Version="35.1.42" />
     <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="35.1.42" />
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
@@ -90,12 +82,10 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.14" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.14" />
@@ -124,12 +114,10 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="11.0.0-rc.3.26522.148" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-rc.3.26522.148" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="11.0.0-rc.3.26522.148" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="11.0.0-rc.3.26522.148" />
