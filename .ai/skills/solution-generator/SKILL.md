@@ -96,6 +96,9 @@ Key rules (from AGENTS.md Critical Coding Rules):
 - All mapping is manual — use `/* map entity to {Entity} model */` placeholders
 - Always include `CancellationToken` on all async methods
 - Responses wrap model types — never return domain entities directly
+- Interfaces live in `Abstractions/` folders in the highest shared project — not the implementing project
+- One type per file — model, response and request types are never merged into one file
+- Models are named after the concept — never a `Dto` suffix
 
 ## Service Registration Stub
 

@@ -26,6 +26,8 @@ Audits project documentation against actual codebase conventions and enforces ha
    - Read 2-3 Model records from `Models/`
    - Read 2-3 Response records
    - Check `Extensions/ServiceCollectionExtensions.cs`
+   - List every `Abstractions/` folder and verify each interface sits in the highest project that both its consumers and its implementation already reference — an interface buried in the implementing project is **Drift**, an interface used only inside one internal implementation may sit beside it (`.ai/reference/critical-rules.md` rule 27)
+   - Confirm each file declares a single top-level type, and that no model type or model file carries a `Dto` suffix (`.ai/reference/critical-rules.md` rules 10 and 28)
    - For each documented convention, verify it matches actual code
    - Categorize: **Correct** / **Drift** / **Missing** / **Stale**
 

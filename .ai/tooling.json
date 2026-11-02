@@ -54,8 +54,8 @@
     },
     {
       "path": ".ai/scripts/sync-platforms.py",
-      "sha256": "f7d00ed45acdc620beb831ace16e8cf01bd2e072c84a047263feee82c220f491",
-      "origin": "bundled"
+      "sha256": "33f20f8f67383bd31e3c031c391a36cdcc956e44a43897f4b1cfb8ebd04f5136",
+      "origin": "template"
     },
     {
       "path": ".ai/scripts/sync-skills.py",
@@ -144,8 +144,8 @@
     },
     {
       "path": ".ai/tests/validate-release.py",
-      "sha256": "e2bdcf333c48457d90894032d09ddb2e33bb6aa61d68f471a8557ba60fdeac80",
-      "origin": "bundled"
+      "sha256": "5397048115c4a9d274bb84e9bf5ad11633aed2881a140c20ffa965ffca1d2eb4",
+      "origin": "template"
     },
     {
       "path": ".ai/tests/validate-settings.py",
