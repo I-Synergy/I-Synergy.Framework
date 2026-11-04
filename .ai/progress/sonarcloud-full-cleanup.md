@@ -21,8 +21,11 @@ Commit: `084e0ed1c`
 - [x] Batch 2 — mechanical C# smells (S2971, S6608/S6610, S3236, S1118,
       S3442, S3260, S3247, S1481, S2933, S1125, S4201, S3878, S927, S108)
 - [x] Batch 5 — web assets (theme-color-preview.html 200, site.css 48, JS 16)
-- [ ] Batch 3 — structural smells (S2325, S4136, S3267, S1192, S4144, …)
-- [ ] Batch 4 — design/complexity (S3776, S107, S3881, S3971, S2699, …)
+- [x] Batch 3a — mechanical C# (S1854 discards, S1192, S3246, S3928, S127,
+      S2589 logger, S3971, S3881)
+- [ ] Batch 3b — structural (S4136 region-aware, S3267 remaining; S3241/S1450
+      deferred: ported routine signatures and DI-injected fields)
+- [ ] Batch 4 — design/complexity (S3776, S107, S2699, S1944)
 - [ ] Batch 6 — suppress documented false positives
 - [ ] Fresh SonarCloud analysis to re-measure
 
@@ -56,6 +59,11 @@ Builds (Release, analyzers on, `CI=true` to skip the Aspire CLI bundle):
 5. `MaskValidator` passed its arguments to `Argument.IsNotNullOrEmpty` in the
    wrong order (it checked the literal `"PlaceHolder"` and used the value as the
    parameter name). Fixed as part of S3236.
+6. `theme-color-preview.html` is **generated** by
+   `ThemeColorCalculatorTests.GenerateColorPreviewHtml`; editing the artifact is
+   overwritten by the next test run. The contrast/reduced-motion fixes now live in
+   the generator (`ContrastingHeadingColor` + the page CSS template), and the test
+   regenerates the committed page.
 
 ## Remaining by size (after this commit)
 
