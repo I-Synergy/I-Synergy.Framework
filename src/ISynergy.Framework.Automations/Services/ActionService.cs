@@ -88,6 +88,6 @@ public class ActionService : IActionService
                     if (x.IsCompleted)
                         await _manager.SetActionExcecutedAsync(action.ActionId);
                     _logger.LogInformation("Task with {ActionId} executed", action.ActionId);
-                });
+                }, cancellationToken);
     }
 }

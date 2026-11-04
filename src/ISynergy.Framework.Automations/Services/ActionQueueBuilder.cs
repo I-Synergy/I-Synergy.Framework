@@ -97,7 +97,7 @@ public class ActionQueueBuilder : IActionQueueBuilder
             var taskFunc = executor.CreateTaskAsync(action, value, cancellationTokenSource, _automationService);
             if (taskFunc is not null)
             {
-                queue.Add(taskFunc);
+                queue.Add(taskFunc, cancellationTokenSource.Token);
             }
         }
 
