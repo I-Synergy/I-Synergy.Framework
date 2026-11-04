@@ -305,7 +305,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
 
     private ILocator NavToggle() => Page.Locator(SampleDom.NavToggle);
 
-    private Task WaitForDrawerOpenAsync() =>
+    private Task<IJSHandle> WaitForDrawerOpenAsync() =>
         Page.WaitForFunctionAsync(
             """
             () => {
@@ -323,7 +323,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
     /// Waits until the drawer is closed: the class is gone, the scrim is unrendered and the CSS
     /// transition (0.2s <c>transform</c>) has finished, i.e. the drawer is fully off-canvas again.
     /// </summary>
-    private Task WaitForDrawerClosedAsync() =>
+    private Task<IJSHandle> WaitForDrawerClosedAsync() =>
         Page.WaitForFunctionAsync(
             """
             () => {

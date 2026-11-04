@@ -1,3 +1,4 @@
+#pragma warning disable CA1861 // expected values in assertions stay inline
 
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Matrices;

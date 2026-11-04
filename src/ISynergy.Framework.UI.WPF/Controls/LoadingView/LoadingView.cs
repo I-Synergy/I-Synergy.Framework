@@ -158,7 +158,7 @@ public class LoadingView : Page
     /// <summary>
     /// Returns black or white, whichever stays readable on <paramref name="background"/>.
     /// </summary>
-    private static Brush GetContrastingBrush(Color background)
+    private static SolidColorBrush GetContrastingBrush(Color background)
     {
         static double Linearize(byte channel)
         {

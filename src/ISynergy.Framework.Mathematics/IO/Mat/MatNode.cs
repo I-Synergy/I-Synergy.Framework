@@ -438,7 +438,7 @@ public class MatNode : IEnumerable<MatNode>
             reader.ReadBytes(8 - mod);
     }
 
-    private object read()
+    private Array read()
     {
         var reader = this.reader;
 

@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Services;
 public class ApplicationLifecycleServiceTests
 {
     private Mock<ILogger<ApplicationLifecycleService>> _mockLogger = null!;
-    private IApplicationLifecycleService _service = null!;
+    private ApplicationLifecycleService? _service;
 
     [TestInitialize]
     public void Initialize()

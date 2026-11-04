@@ -233,7 +233,7 @@ internal sealed partial class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         // Trigger IHostApplicationLifetime.ApplicationStopping
         _applicationLifetime.StopApplication();
 
-        IList<Exception> exceptions = new List<Exception>();
+        List<Exception> exceptions = new List<Exception>();
         if (_hostedServices != null) // Started?
         {
             foreach (var hostedService in _hostedServices.Reverse().EnsureNotNull())

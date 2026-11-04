@@ -8,7 +8,7 @@ namespace ISynergy.Framework.Core.Messaging;
 [TestClass]
 public class MessengerSendWithTokenTest
 {
-    private readonly IMessengerService _messenger;
+    private readonly MessengerService _messenger;
     private readonly ILogger<MessengerService> _logger;
 
     public MessengerSendWithTokenTest()

@@ -27,7 +27,7 @@ public class ProfileTests
     public void Organization_AsInterface_ExposesName()
     {
         // Arrange
-        IOrganization org = new TestOrganization
+        TestOrganization org = new TestOrganization
         {
             OrganizationId = Guid.NewGuid(),
             Name = "My Org"

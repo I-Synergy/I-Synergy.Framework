@@ -16,7 +16,7 @@ public class MessengerRegisterUnregisterTest
     public string? ReceivedContentStringA2 { get; set; }
     public string? ReceivedContentStringB { get; set; }
 
-    private readonly IMessengerService _messenger;
+    private readonly MessengerService _messenger;
     private readonly ILogger<MessengerService> _logger;
 
     public MessengerRegisterUnregisterTest()
@@ -717,7 +717,7 @@ public class MessengerRegisterUnregisterTest
             private set;
         }
 
-        internal void RegisterWith(IMessengerService _messenger)
+        internal void RegisterWith(MessengerService _messenger)
         {
             _messenger.Register<TestMessageA>(this, m => ReceivedContentA = m.Content);
             _messenger.Register<TestMessageB>(this, m => ReceivedContentB = m.Content);

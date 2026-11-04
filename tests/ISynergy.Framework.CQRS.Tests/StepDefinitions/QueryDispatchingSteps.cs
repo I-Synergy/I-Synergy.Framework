@@ -18,7 +18,7 @@ public class QueryDispatchingSteps
 {
     private readonly ILogger<QueryDispatchingSteps> _logger;
     private IServiceProvider? _serviceProvider;
-    private IQueryDispatcher? _queryDispatcher;
+    private QueryDispatcher? _queryDispatcher;
     private TestQuery? _query;
     private string? _result;
     private Exception? _caughtException;

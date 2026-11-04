@@ -11,7 +11,7 @@ public class MonitorServiceTests
 {
     private const string _channel = "channel";
 
-    private readonly IMonitorService<object> _monitorService;
+    private readonly MonitorService<object> _monitorService;
 
     public MonitorServiceTests()
     {
@@ -24,7 +24,7 @@ public class MonitorServiceTests
             .Returns(() => new Mock<IClientProxy>().Object);
 
         IHubContext<MonitorHub> context = contextMock.Object;
-        context.Groups.AddToGroupAsync("0", _channel, TestContext.CancellationToken);
+        context.Groups.AddToGroupAsync("0", _channel);
 
         _monitorService = new MonitorService<object>(context);
     }

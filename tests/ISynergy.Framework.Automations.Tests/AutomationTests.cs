@@ -25,7 +25,7 @@ public class AutomationTests
 {
     private Customer _defaultCustomer;
     private Automation _defaultAutomation;
-    private IAutomationService? _automationService;
+    private AutomationService? _automationService;
     private Stopwatch _stopwatch = new Stopwatch();
 
     // Configuration for environment-aware testing

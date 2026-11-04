@@ -20,7 +20,7 @@ public class MessengerSendToAllTest
         private set;
     }
 
-    private readonly IMessengerService _messenger;
+    private readonly MessengerService _messenger;
     private readonly ILogger<MessengerService> _logger;
 
     public MessengerSendToAllTest()
@@ -88,7 +88,7 @@ public class MessengerSendToAllTest
             private set;
         }
 
-        internal void RegisterWith(IMessengerService _messenger)
+        internal void RegisterWith(MessengerService _messenger)
         {
             _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
         }

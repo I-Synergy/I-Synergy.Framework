@@ -168,12 +168,12 @@ public class GeneratorTest
         return v;
     }
 
-    private static int count(IList<double[]> l)
+    private static int count(double[][] l)
     {
         int sameCount = 0;
-        for (int i = 0; i < l.Count; i++)
+        for (int i = 0; i < l.Length; i++)
         {
-            for (int j = 0; j < l.Count; j++)
+            for (int j = 0; j < l.Length; j++)
             {
                 double[] li = l[i];
                 double[] lj = l[j];

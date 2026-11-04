@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Physics.Services.Tests;
 [TestClass()]
 public class UnitConversionServiceTests
 {
-    private IUnitConversionService? _unitConversionService;
+    private UnitConversionService? _unitConversionService;
 
     /// <summary>
     /// Initializes tests

@@ -19,7 +19,7 @@ public class ErrorHandlingSteps
     private readonly ILogger<ErrorHandlingSteps> _logger;
     private readonly Mock<ILogger<ErrorHandlingSteps>> _mockLogger;
     private IServiceProvider? _serviceProvider;
-    private ICommandDispatcher? _commandDispatcher;
+    private CommandDispatcher? _commandDispatcher;
     private TestCommand? _command;
     private Exception? _caughtException;
     private bool _errorLogged;

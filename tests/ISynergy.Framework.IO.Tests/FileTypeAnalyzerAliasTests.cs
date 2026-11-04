@@ -6,7 +6,7 @@ namespace ISynergy.Framework.IO.Tests;
 
 public partial class FileTypeAnalyzerTests
 {
-    private readonly IFileTypeAnalyzer _fileTypeAnalyzer;
+    private readonly FileTypeAnalyzer _fileTypeAnalyzer;
 
     public FileTypeAnalyzerTests()
     {

@@ -47,7 +47,7 @@ public class UtmProjection : MercatorProjection
     /// <param name="scaleFactor">The scale factor.</param>
     /// <param name="meridianConvergence">The meridian convergence.</param>
     /// <returns>EuclidianCoordinate.</returns>
-    private EuclidianCoordinate ToUtmCoordinates(
+    private UtmCoordinate ToUtmCoordinates(
         GlobalCoordinates coordinates,
         out double scaleFactor,
         out double meridianConvergence)

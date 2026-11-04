@@ -14,7 +14,7 @@ public class MessengerCreationDeletionTest
         private set;
     }
 
-    private readonly IMessengerService _messenger;
+    private readonly MessengerService _messenger;
     private readonly ILogger<MessengerService> _logger;
 
     public MessengerCreationDeletionTest()

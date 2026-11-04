@@ -175,7 +175,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <param name="input">The input.</param>
     /// <param name="type">The type.</param>
     /// <returns><c>true</c> if [is matching type] [the specified input]; otherwise, <c>false</c>.</returns>
-    private static bool IsMatchingType(IList<byte> input, FileTypeInfo type)
+    private static bool IsMatchingType(byte[] input, FileTypeInfo type)
     {
         // find an initial match based on the header and offset
         var isMatch = FindMatch(input, type.Header, type.Offset);
@@ -186,7 +186,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
         {
             // find all indices of matching the 1st byte of the additional sequence
             var matchingIndices = new List<int>();
-            for (int i = 0; i < input.Count; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 if (input[i] == type.SubHeader[0])
                     matchingIndices.Add(i);
@@ -212,19 +212,19 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <param name="searchArray">The search array.</param>
     /// <param name="offset">The offset.</param>
     /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-    private static bool FindMatch(IList<byte> input, IList<byte> searchArray, int offset = 0)
+    private static bool FindMatch(byte[] input, byte[] searchArray, int offset = 0)
     {
         // file isn't long enough to even search the proper index, not a match
-        if (input.Count <= offset)
+        if (input.Length <= offset)
             return false;
 
         int matchingCount = 0;
-        for (var i = 0; i < searchArray.Count; i++)
+        for (var i = 0; i < searchArray.Length; i++)
         {
             // set the offset location
             var calculatedOffset = i + offset;
 
-            if (input.Count <= calculatedOffset)
+            if (input.Length <= calculatedOffset)
                 break;
 
             // if file offset is not set to zero, we need to take this into account when comparing.
@@ -237,7 +237,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
             }
             matchingCount++;
         }
-        return matchingCount == searchArray.Count;
+        return matchingCount == searchArray.Length;
     }
 
     /// <summary>
