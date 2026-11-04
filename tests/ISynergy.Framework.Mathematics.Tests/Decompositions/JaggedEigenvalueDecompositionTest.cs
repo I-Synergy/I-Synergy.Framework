@@ -22,6 +22,7 @@ public class JaggedEigenvalueDecompositionTest
                 value[i][j] = double.NaN;
 
                 JaggedEigenvalueDecomposition target = new(value);
+                Assert.IsNotNull(target);
             }
         }
     }

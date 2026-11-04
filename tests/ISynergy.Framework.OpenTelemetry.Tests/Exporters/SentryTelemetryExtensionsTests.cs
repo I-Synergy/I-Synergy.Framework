@@ -66,8 +66,11 @@ public class SentryTelemetryExtensionsTests
         // single process, so registration must tolerate repeat calls.
         var builder = CreateBuilder(TestDsn);
 
-        builder.AddSentryExporter();
-        builder.AddSentryExporter();
+        var first = builder.AddSentryExporter();
+        var second = builder.AddSentryExporter();
+
+        Assert.IsNotNull(first);
+        Assert.IsNotNull(second);
     }
 
     [TestMethod]

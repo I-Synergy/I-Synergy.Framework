@@ -58,6 +58,9 @@ public class UuidExtensionsTests
         // Attempting to form a Id25 from a Uuid 4 fails
         var g = new Guid(); // UUID v4
         string s = g.ToId25();
+
+        Assert.AreEqual(25, s.Length);
+        Assert.AreEqual(new string('0', 25), s);
     }
 
     [TestMethod]
