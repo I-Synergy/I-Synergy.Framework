@@ -74,7 +74,7 @@ public class BladeService : BaseBladeService
 
             try
             {
-                await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                try { await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs)); } catch (TimeoutException) { }
             }
             finally
             {

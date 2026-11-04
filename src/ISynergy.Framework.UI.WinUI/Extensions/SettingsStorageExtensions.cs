@@ -16,6 +16,11 @@ public static class SettingsStorageExtensions
     /// </summary>
     private const string _jsonExtension = ".json";
 
+    private static readonly JsonSerializerOptions CachedJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     /// <summary>
     /// Gets the name of the file.
     /// </summary>
@@ -74,10 +79,7 @@ public static class SettingsStorageExtensions
         var file = await folder.GetFileAsync(GetJsonFileName(name));
         var fileContent = await FileIO.ReadTextAsync(file);
 
-        return JsonSerializer.Deserialize<T>(fileContent, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        return JsonSerializer.Deserialize<T>(fileContent, CachedJsonOptions);
     }
 
     /// <summary>
@@ -93,10 +95,7 @@ public static class SettingsStorageExtensions
     {
         if (settings.Values.TryGetValue(key, out var obj))
         {
-            return Task.FromResult(JsonSerializer.Deserialize<T>((string)obj, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            }));
+            return Task.FromResult(JsonSerializer.Deserialize<T>((string)obj, CachedJsonOptions));
         }
 
         return Task.FromResult<T?>(default);

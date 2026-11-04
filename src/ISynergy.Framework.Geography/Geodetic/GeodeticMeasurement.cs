@@ -91,7 +91,6 @@ public struct GeodeticMeasurement : IEquatable<GeodeticMeasurement>
     /// <summary>
     /// Test wether another measurement is the same
     /// </summary>
-    /// <param name="other">Another measurement</param>
     /// <returns>True if both are the same</returns>
     public override int GetHashCode() => HashCode.Combine(ElevationChange, AverageCurve);
 
@@ -101,7 +100,7 @@ public struct GeodeticMeasurement : IEquatable<GeodeticMeasurement>
                AverageCurve.Equals(other.AverageCurve);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is GeodeticMeasurement && Equals((GeodeticMeasurement)obj);
     }

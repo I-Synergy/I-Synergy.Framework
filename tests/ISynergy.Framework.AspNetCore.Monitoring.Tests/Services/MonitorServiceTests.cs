@@ -24,7 +24,6 @@ public class MonitorServiceTests
             .Returns(() => new Mock<IClientProxy>().Object);
 
         IHubContext<MonitorHub> context = contextMock.Object;
-        context.Groups.AddToGroupAsync("0", _channel);
 
         _monitorService = new MonitorService<object>(context);
     }

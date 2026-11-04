@@ -165,7 +165,7 @@ public partial class ThemeService : BaseThemeService
     {
         try
         {
-            var window = Microsoft.Maui.Controls.Application.Current?.Windows?.FirstOrDefault()?.Handler?.PlatformView as Microsoft.UI.Xaml.Window;
+            var window = (Microsoft.Maui.Controls.Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Handler?.PlatformView : null) as Microsoft.UI.Xaml.Window;
 
             if (window?.AppWindow?.TitleBar is null)
             {
@@ -207,7 +207,7 @@ public partial class ThemeService : BaseThemeService
 
                 // Also set the MAUI TitleBar colors, which renders
                 // the title bar area when Window.TitleBar is assigned.
-                if (Microsoft.Maui.Controls.Application.Current?.Windows?.FirstOrDefault() is Microsoft.Maui.Controls.Window mauiWindow
+                if (Microsoft.Maui.Controls.Application.Current?.Windows is { Count: > 0 } titleBarWindows && titleBarWindows[0] is Microsoft.Maui.Controls.Window mauiWindow
                     && mauiWindow.TitleBar is Microsoft.Maui.Controls.TitleBar mauiTitleBar)
                 {
                     mauiTitleBar.BackgroundColor = pageBackgroundColor;

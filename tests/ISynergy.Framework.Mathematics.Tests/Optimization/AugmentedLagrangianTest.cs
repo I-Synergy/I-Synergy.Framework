@@ -713,11 +713,11 @@ public class AugmentedLagrangianTest
         }
 
         Assert.IsNotNull(solverTest.Solution);
-        Assert.AreEqual(nVariablesTest, solverTest.Solution.Length);
+        Assert.HasCount(nVariablesTest, solverTest.Solution);
     }
 
     //[TestMethod]
-    public void constructorTest5()
+    public static void constructorTest5()
     {
         // AugmentedLagrangian with NonlinearConstraints
         // have a Gradient NullReferenceException issue 

@@ -13,7 +13,7 @@ public class AggregateRepositoryTests
     private EventStore _store = null!;
     private DefaultEventTypeResolver _resolver = null!;
     private JsonReflectionEventSerializer _serializer = null!;
-    private AggregateRepository<OrderAggregate, Guid>? _repository;
+    private AggregateRepository<OrderAggregate, Guid> _repository = null!;
 
     [TestInitialize]
     public void Setup()

@@ -526,7 +526,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
     public static QuadraticObjectiveFunction operator +(QuadraticObjectiveFunction a, QuadraticObjectiveFunction b)
     {
         if (a.NumberOfVariables != b.NumberOfVariables)
-            throw new DimensionMismatchException("NumberOfVariables",
+            throw new DimensionMismatchException(nameof(a),
                 "The quadratic objective functions must have the same number of variables.");
 
         double[] linearTerms = a.LinearTerms.Add(b.LinearTerms);

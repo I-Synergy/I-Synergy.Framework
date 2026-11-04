@@ -84,7 +84,6 @@ public struct GeodeticCurve : IEquatable<GeodeticCurve>
     /// <summary>
     /// Test another curve for equality
     /// </summary>
-    /// <param name="other">The other geodetic curve</param>
     /// <returns>True if they are the same</returns>
     public override int GetHashCode() => HashCode.Combine(EllipsoidalDistance, Azimuth, Calculator);
 
@@ -94,7 +93,7 @@ public struct GeodeticCurve : IEquatable<GeodeticCurve>
                Calculator.Equals(other.Calculator);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is GeodeticCurve && Equals((GeodeticCurve)obj);
     }

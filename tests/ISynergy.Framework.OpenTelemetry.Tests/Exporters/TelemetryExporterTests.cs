@@ -27,7 +27,7 @@ public class TelemetryExporterTests
         Assert.IsNotNull(_openTelemetryBuilder);
     }
 
-    private static IConfiguration CreateTestConfiguration()
+    private static ConfigurationRoot CreateTestConfiguration()
     {
         // Create configuration sources
         var configSource = new MemoryConfigurationSource

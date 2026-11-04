@@ -1,3 +1,4 @@
+#pragma warning disable SYSLIB1054 // manual marshalling is required for the credential structs
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Win32.SafeHandles;

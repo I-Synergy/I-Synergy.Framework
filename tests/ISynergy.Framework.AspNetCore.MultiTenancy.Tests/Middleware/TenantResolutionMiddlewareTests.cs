@@ -24,7 +24,7 @@ public class TenantResolutionMiddlewareTests
             Microsoft.Extensions.Options.Options.Create(options ?? new TenantResolutionOptions()),
             NullLogger<TenantResolutionMiddleware>.Instance);
 
-    private static HttpContext CreateAuthenticatedContext(Guid? tenantId, string? userName = null)
+    private static DefaultHttpContext CreateAuthenticatedContext(Guid? tenantId, string? userName = null)
     {
         var claims = new List<Claim>();
 

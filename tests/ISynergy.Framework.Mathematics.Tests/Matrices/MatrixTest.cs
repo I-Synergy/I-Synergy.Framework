@@ -2356,7 +2356,7 @@ public partial class MatrixTest
 
         actual = Matrix.Apply(data, func);
         Assert.AreSequenceEqual(expected, actual);
-        CollectionAssert.AreNotEqual(actual, data);
+        Assert.AreNotSequenceEqual(actual, data);
 
         Matrix.Apply(data, func);
 
@@ -2384,7 +2384,7 @@ public partial class MatrixTest
 
         actual = Matrix.Apply(data, func);
         Assert.AreSequenceEqual(expected, actual);
-        CollectionAssert.AreNotEqual(actual, data);
+        Assert.AreNotSequenceEqual(actual, data);
 
         Matrix.Apply(data, func);
 
@@ -2404,7 +2404,7 @@ public partial class MatrixTest
 
         actual = Matrix.Apply(data, func);
         Assert.AreSequenceEqual(expected, actual);
-        CollectionAssert.AreNotEqual(actual, data);
+        Assert.AreNotSequenceEqual(actual, data);
     }
 
     [TestMethod]
@@ -2427,7 +2427,7 @@ public partial class MatrixTest
 
         actual = Matrix.Apply(data, func);
         Assert.AreSequenceEqual(expected, actual);
-        CollectionAssert.AreNotEqual(actual, data);
+        Assert.AreNotSequenceEqual(actual, data);
     }
 
     [TestMethod]

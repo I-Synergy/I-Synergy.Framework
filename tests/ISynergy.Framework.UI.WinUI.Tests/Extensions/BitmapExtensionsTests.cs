@@ -1,3 +1,4 @@
+#pragma warning disable CsWinRT1030 // WinRT byte[] marshalling in tests
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Globalization.Services;

@@ -163,7 +163,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (rowVector.Length != matrix.Rows() || matrix.Columns() != columnVector.Length)
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException("Matrices must have compatible dimensions.");
 #endif
         double sum = 0;
 

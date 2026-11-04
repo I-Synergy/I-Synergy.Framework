@@ -46,13 +46,15 @@ public class BenchMark
     /// <summary>
     /// Jsons this instance.
     /// </summary>
+    private static readonly JsonSerializerOptions CachedJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     [Benchmark(Baseline = true)]
     public void Json()
     {
         string result = JsonSerializer.Serialize(_model);
-        JsonSerializer.Deserialize<TestModel>(result, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        JsonSerializer.Deserialize<TestModel>(result, CachedJsonOptions);
     }
 }

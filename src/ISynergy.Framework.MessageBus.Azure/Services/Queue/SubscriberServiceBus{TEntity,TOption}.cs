@@ -31,6 +31,11 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// </summary>
     protected readonly JsonTypeInfo<TEntity>? _jsonTypeInfo;
 
+    private static readonly JsonSerializerOptions CachedJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     /// <summary>
     /// ServiceBus client.
     /// </summary>
@@ -165,10 +170,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
 
         var data = _jsonTypeInfo is not null
             ? JsonSerializer.Deserialize(body, _jsonTypeInfo)
-            : JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            : JsonSerializer.Deserialize<TEntity>(body, CachedJsonOptions);
 
         if (data is not null && ValidateMessage(data))
         {

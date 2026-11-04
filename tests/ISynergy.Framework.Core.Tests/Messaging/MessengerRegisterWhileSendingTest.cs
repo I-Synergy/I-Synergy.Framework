@@ -1,3 +1,4 @@
+#pragma warning disable CA1859 // the field intentionally holds an interface-backed test double
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Fixtures;
 using ISynergy.Framework.Core.Messages;

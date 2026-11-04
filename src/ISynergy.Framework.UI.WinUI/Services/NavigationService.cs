@@ -139,10 +139,14 @@ public partial class NavigationService : BaseNavigationService
 
             platformView.Loaded += OnViewLoaded;
 
-            var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
-
-            if (completedTask != tcs.Task)
+            try
+            {
+                await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs));
+            }
+            catch (TimeoutException)
+            {
                 platformView.Loaded -= OnViewLoaded;
+            }
         }
     }
 

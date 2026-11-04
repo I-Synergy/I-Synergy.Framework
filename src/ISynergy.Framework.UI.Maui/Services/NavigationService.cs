@@ -71,7 +71,7 @@ public partial class NavigationService : BaseNavigationService
     // Abstract: Window content accessors
     // -----------------------------------------------------------------------
     protected override object? GetWindowContent()
-        => Application.Current?.Windows.FirstOrDefault()?.Page;
+        => (Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Page : null);
 
     protected override void SetWindowContent(IView page)
     {
@@ -254,7 +254,7 @@ public partial class NavigationService : BaseNavigationService
     // -----------------------------------------------------------------------
 
     private static Page? GetMainPage() =>
-        Application.Current?.Windows.FirstOrDefault()?.Page;
+        (Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Page : null);
 
     /// <summary>
     /// Clears MAUI-specific resources (BindingContext, Handler) on a popped modal page.

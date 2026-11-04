@@ -26,6 +26,8 @@ namespace ISynergy.Framework.OpenTelemetry.Exporters.Tests;
 [TestClass]
 public class SentryTelemetryExtensionsTests
 {
+    private static readonly JsonSerializerOptions CachedJsonOptions = new();
+
     private const string TestDsn = "https://test@sentry.io/1";
 
     private static TelemetryBuilder CreateBuilder(string? dsn)
@@ -110,7 +112,7 @@ public class SentryTelemetryExtensionsTests
     [TestMethod]
     public void KeyValuePairJsonConverterFactory_SerializesKeyValuePair()
     {
-        var options = new JsonSerializerOptions();
+        var options = CachedJsonOptions;
         options.Converters.Add(new KeyValuePairJsonConverterFactory());
 
         var json = JsonSerializer.Serialize(new KeyValuePair<string, bool>("simulator", true), options);

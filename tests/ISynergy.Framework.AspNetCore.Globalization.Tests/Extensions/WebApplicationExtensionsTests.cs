@@ -239,7 +239,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
             Assert.AreEqual("en-US", capturedOptions.DefaultRequestCulture.Culture.Name);
 
             // Check that supported cultures are set correctly
-            Assert.HasCount(3, capturedOptions.SupportedCultures);
+            Assert.HasCount(3, capturedOptions.SupportedCultures!);
             Assert.Contains(c => c.Name == "en-US", capturedOptions.SupportedCultures);
             Assert.Contains(c => c.Name == "nl-NL", capturedOptions.SupportedCultures);
             Assert.Contains(c => c.Name == "fr-FR", capturedOptions.SupportedCultures);

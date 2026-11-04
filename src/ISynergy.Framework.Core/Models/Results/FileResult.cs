@@ -66,8 +66,7 @@ public sealed class FileResult : IDisposable
     {
         get
         {
-            if (_isDisposed)
-                throw new ObjectDisposedException(null);
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
 
             return _fileName;
         }
@@ -109,8 +108,7 @@ public sealed class FileResult : IDisposable
     [Obsolete("Use GetStreamAsync() instead. This method can block the calling thread and deadlock when the file was supplied through an async getter.")] // NOSONAR - deprecated public API kept for binary compatibility
     public Stream GetStream()
     {
-        if (_isDisposed)
-            throw new ObjectDisposedException(null);
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
 
         return GetStreamCore();
     }
@@ -135,8 +133,7 @@ public sealed class FileResult : IDisposable
     /// <exception cref="ObjectDisposedException">null</exception>
     public async Task<Stream> GetStreamAsync()
     {
-        if (_isDisposed)
-            throw new ObjectDisposedException(null);
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
 
         if (_asyncStreamGetter is not null)
             return await _asyncStreamGetter();
@@ -157,8 +154,7 @@ public sealed class FileResult : IDisposable
     {
         get
         {
-            if (_isDisposed)
-                throw new ObjectDisposedException(null);
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
 
             return _filePath;
         }

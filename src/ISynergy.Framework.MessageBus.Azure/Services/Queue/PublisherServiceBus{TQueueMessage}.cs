@@ -47,6 +47,7 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// Constructor of service bus. Uses reflection-based JSON serialization.
     /// </summary>
     /// <param name="options">The options.</param>
+    /// <param name="logger">The logger.</param>
     /// <remarks>
     /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
     /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.

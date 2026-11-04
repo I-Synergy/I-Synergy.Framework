@@ -215,7 +215,7 @@ public partial class SplashScreenViewModel : ObservableValidatedClass, IViewMode
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            _logger.LogTrace("{0} initialized.", GetType().Name);
+            _logger.LogTrace("{TypeName} initialized.", GetType().Name);
 
         return Task.CompletedTask;
     }

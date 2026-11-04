@@ -1,3 +1,4 @@
+#pragma warning disable SYSLIB1045 // test-local regexes do not benefit from source generation
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;

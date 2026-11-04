@@ -83,7 +83,7 @@ public class BladeService : BaseBladeService
             return;
         }
 
-        var rootPage = Application.Current?.Windows.FirstOrDefault()?.Page;
+        var rootPage = (Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Page : null);
 
         if (rootPage is null)
         {
@@ -188,7 +188,7 @@ public class BladeService : BaseBladeService
 
             try
             {
-                await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                try { await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs)); } catch (TimeoutException) { }
             }
             finally
             {

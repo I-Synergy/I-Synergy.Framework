@@ -50,7 +50,10 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     {
         _logger.LogInformation("Starting scheduled action queuing service.");
         await _service.RefreshTasksAsync(cancellationToken);
-        _backgroundTimer = new Timer(_ => RefreshQueueAsync(_stoppingCts.Token), null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
+        _backgroundTimer = new Timer(_ =>
+        {
+            _ = RefreshQueueAsync(_stoppingCts.Token); // NOSONAR - fire-and-forget timer callback
+        }, null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
     }
 
     /// <summary>
@@ -81,7 +84,10 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
             var result = await _service.CalculateTimespanAsync(cancellationToken);
 
             if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
-                ReplaceExecutionTimer(new Timer(state => ExecuteTaskAsync(state as IAction, _stoppingCts.Token), result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration));
+                ReplaceExecutionTimer(new Timer(state =>
+                {
+                    _ = ExecuteTaskAsync(state as IAction, _stoppingCts.Token); // NOSONAR - fire-and-forget timer callback
+                }, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration));
             else
                 ReplaceExecutionTimer(null);
         }

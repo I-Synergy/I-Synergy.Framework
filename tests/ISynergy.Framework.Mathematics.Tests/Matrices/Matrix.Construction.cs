@@ -16,7 +16,7 @@ public partial class MatrixTest
     [TestMethod]
     public void CreateJaggedTest()
     {
-        Array jagged = Jagged.Zeros<int>();
+        Array jagged = Jagged.Zeros<int>(2, 3, 1);
 
         foreach (int[] idx in jagged.GetIndices(deep: true))
         {
@@ -36,7 +36,7 @@ public partial class MatrixTest
     [TestMethod]
     public void CreateMatrixTest()
     {
-        Array matrix = Matrix.Zeros<int>();
+        Array matrix = Matrix.Zeros<int>(2, 3, 1);
 
         foreach (int[] idx in matrix.GetIndices())
         {
