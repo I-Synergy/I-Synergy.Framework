@@ -119,7 +119,7 @@ public class ThemeService : IThemeService, IDisposable
                 "import", "./_content/I-Synergy.Framework.UI.Blazor/js/theme_service_interop.js");
 
             // Normalize the color to ensure it has a # prefix
-            var accentColor = _color.StartsWith("#") ? _color : "#" + _color;
+            var accentColor = _color.StartsWith('#') ? _color : "#" + _color;
 
             // Apply theme via JS interop. "system" makes the document follow the browser/OS
             // color scheme; the module resolves it and returns the concrete theme it applied.

@@ -166,7 +166,7 @@ public static class MaskValidator
         else
             placeHolderValue = _control.GetValue(MaskPlaceholderProperty).ToString();
 
-        Argument.IsNotNullOrEmpty("PlaceHolder", placeHolderValue);
+        Argument.IsNotNullOrEmpty(placeHolderValue);
 
         var escapedChars = new List<int>();
 

@@ -115,7 +115,7 @@ internal static class CommandExecutionResourcePool
         _timeoutTokenCache.Clear();
 
         // Clean up pooled resources
-        while (_weakReferencePool.TryDequeue(out _)) { }
+        while (_weakReferencePool.TryDequeue(out _)) { /* drain the pool */ }
 
         while (_continuationCtsPool.TryDequeue(out var cts))
         {

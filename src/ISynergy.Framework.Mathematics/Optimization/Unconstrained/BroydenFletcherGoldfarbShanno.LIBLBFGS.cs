@@ -1555,7 +1555,7 @@ internal static class LBFGS
         Code ls
     );
 
-    private class callback_data_t
+    private sealed class callback_data_t
     {
         public object instance;
         public int n;
@@ -1563,7 +1563,7 @@ internal static class LBFGS
         public lbfgs_progress_t proc_progress;
     }
 
-    private class iteration_data_t
+    private sealed class iteration_data_t
     {
         public double alpha;
         public double[] s; /* [n] */

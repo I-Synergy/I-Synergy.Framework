@@ -366,7 +366,7 @@ public class Point : IComparable<Point>
     /// 
     public override bool Equals(object? obj)
     {
-        return (obj is Point) ? (this == (Point)obj) : false;
+        return obj is Point point && this == point;
     }
 
     /// <summary>

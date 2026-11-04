@@ -391,7 +391,7 @@ public static partial class NpyFormat
             return typeof(float);
         if (typeCode == "f8")
             return typeof(double);
-        if (typeCode.StartsWith("S"))
+        if (typeCode.StartsWith('S'))
             return typeof(string);
 
         throw new NotSupportedException();

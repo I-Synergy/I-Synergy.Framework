@@ -133,7 +133,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     int maxfun = 3500;
     int iterations;
 
-    NonlinearConstraint[] constraints;
+    readonly NonlinearConstraint[] constraints;
     /// <summary>
     ///   Gets the number of iterations performed in the last
     ///   call to <see cref="IOptimizationMethod{TInput, TOutput}.Minimize()"/>.

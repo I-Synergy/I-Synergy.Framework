@@ -410,8 +410,8 @@ public class MatNode : IEnumerable<MatNode>
     /// <returns>The object stored at this node.</returns>
     public T GetValue<T>()
     {
-        if (Value is T)
-            return (T)Value;
+        if (Value is T value)
+            return value;
 
         if (typeof(T).IsArray)
         {

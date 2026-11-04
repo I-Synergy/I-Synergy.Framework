@@ -26,7 +26,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
     /// <summary>
     ///     Initializes a new instance of the <see cref="BaseLeastSquaresMethod" /> class.
     /// </summary>
-    public BaseLeastSquaresMethod()
+    protected BaseLeastSquaresMethod()
     {
         Convergence = new RelativeConvergence(0, 1e-5);
     }

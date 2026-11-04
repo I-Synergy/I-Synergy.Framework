@@ -172,7 +172,7 @@ public partial class BladeView : UserControl, IDisposable
     private bool _isDisposed;
     private long _flowDirectionCallbackToken;
 
-    private class BladeState
+    private sealed class BladeState
     {
         public bool IsRemoving { get; set; }
         public Guid MessageToken { get; set; }

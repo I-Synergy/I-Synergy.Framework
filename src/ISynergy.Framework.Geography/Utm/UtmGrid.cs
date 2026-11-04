@@ -457,9 +457,8 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
     public override bool Equals(object? obj)
     {
-        if (obj is null || !(obj is UtmGrid))
+        if (obj is not UtmGrid other)
             return false;
-        var other = (UtmGrid)obj;
         return ((IEquatable<UtmGrid>)this).Equals(other);
     }
 

@@ -20,7 +20,7 @@ public class DispatcherService : IDispatcherService
     {
         get
         {
-            if (Application.Current is Application baseApplication && Application.MainWindow?.DispatcherQueue is { } dispatcherQueue)
+            if (Application.Current is Application && Application.MainWindow?.DispatcherQueue is { } dispatcherQueue)
                 return dispatcherQueue;
             return DispatcherQueue.GetForCurrentThread();
         }
@@ -33,7 +33,7 @@ public class DispatcherService : IDispatcherService
     /// <returns></returns>
     public bool Invoke(Action action)
     {
-        if (Application.Current is Application baseApplication && Application.MainWindow?.DispatcherQueue is { } dispatcherQueue)
+        if (Application.Current is Application && Application.MainWindow?.DispatcherQueue is { } dispatcherQueue)
             return dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () => action());
         if (DispatcherQueue.GetForCurrentThread() is { } dispatcher)
             return dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () => action());

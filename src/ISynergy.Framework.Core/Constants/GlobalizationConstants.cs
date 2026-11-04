@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace ISynergy.Framework.Globalization.Constants;
 
-public class GlobalizationConstants
+public static class GlobalizationConstants
 {
     public const string IsoDateTimeFormat = "O";
 

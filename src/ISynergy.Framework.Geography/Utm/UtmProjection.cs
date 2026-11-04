@@ -220,7 +220,7 @@ public class UtmProjection : MercatorProjection
     /// <summary>
     /// Class MathConsts.
     /// </summary>
-    private class MathConsts
+    private sealed class MathConsts
     {
         /// <summary>
         /// The alpha

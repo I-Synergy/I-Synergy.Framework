@@ -356,7 +356,7 @@ public abstract class BaseNavigationService : INavigationService
             // Trim backstack if over capacity — dispose oldest frames
             while (_backStack.Count > MaxBackstackSize)
             {
-                var oldest = _backStack.ToArray().Last();
+                var oldest = _backStack.ToArray()[^1];
                 _backStack = new Stack<NavigationFrame>(_backStack.Where(f => f != oldest).Reverse());
                 try { oldest.Dispose(); }
                 catch (Exception ex) { _logger.LogError(ex, "Error disposing oldest backstack frame"); }

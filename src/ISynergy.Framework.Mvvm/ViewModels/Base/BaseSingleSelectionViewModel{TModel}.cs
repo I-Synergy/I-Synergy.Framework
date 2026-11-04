@@ -35,7 +35,7 @@ public abstract class BaseSingleSelectionViewModel<TModel> : BaseSelectionViewMo
                 AddValidationError(nameof(SelectedItem), _commonServices.LanguageService.GetString("WarningSelectItem"));
         });
 
-        SelectCommand = new AsyncRelayCommand<object>(e => SelectAsync(e), s => s is not null);
+        SelectCommand = new AsyncRelayCommand<object>(items => SelectAsync(items), s => s is not null);
 
         IsInitialized = true;
     }
@@ -43,11 +43,11 @@ public abstract class BaseSingleSelectionViewModel<TModel> : BaseSelectionViewMo
     /// <summary>
     /// Validates and submits the selected item via <see cref="BaseSelectionViewModel{TModel,TSelection}.SelectCommand"/>.
     /// </summary>
-    private async Task SelectAsync(object e)
+    private async Task SelectAsync(object items)
     {
         if (Validate())
         {
-            OnSubmitted(new SubmitEventArgs<TModel>((TModel)e));
+            OnSubmitted(new SubmitEventArgs<TModel>((TModel)items));
             await CloseAsync();
         }
     }

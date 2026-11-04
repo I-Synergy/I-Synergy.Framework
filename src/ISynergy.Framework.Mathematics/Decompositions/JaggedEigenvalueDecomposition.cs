@@ -501,7 +501,7 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
                         H[i][j] -= f * ort[j];
                 }
 
-                ort[m] = scale * ort[m];
+                ort[m] = scale * ort[m]; // NOSONAR - self-referential update
                 H[m][m - 1] = scale * g;
             }
         }

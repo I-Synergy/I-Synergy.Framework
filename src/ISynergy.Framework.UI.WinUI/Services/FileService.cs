@@ -109,7 +109,7 @@ public class FileService : IFileService<FileResult>
 
             foreach (var item in array.EnsureNotNull())
             {
-                if (item.Trim().StartsWith("*") && !item.Trim().Equals("*.*"))
+                if (item.Trim().StartsWith('*') && !item.Trim().Equals("*.*"))
                 {
                     result.Add(item.Trim().Replace("*", string.Empty));
                 }
@@ -132,7 +132,7 @@ public class FileService : IFileService<FileResult>
     public async Task<byte[]?> BrowseImageAsync(string[] filter, long maxFileSize = 1 * 1024 * 1024)
     {
         if (await BrowseFileAsync(string.Join(";", filter), false, maxFileSize) is { } result)
-            return await result.First().GetFileAsync();
+            return await result[0].GetFileAsync();
 
         return null;
     }
@@ -170,7 +170,7 @@ public class FileService : IFileService<FileResult>
         {
             var hasAtleastOneType = false;
 
-            foreach (var type in allowedTypes.Where(q => q.StartsWith(".")).EnsureNotNull())
+            foreach (var type in allowedTypes.Where(q => q.StartsWith('.')).EnsureNotNull())
             {
                 picker.FileTypeFilter.Add(type);
                 hasAtleastOneType = true;

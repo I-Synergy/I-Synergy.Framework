@@ -8,7 +8,7 @@ namespace ThemeGrayGenerator;
 /// <summary>
 /// Utility to generate tinted grays for all theme files
 /// </summary>
-public class TintedGrayGenerator
+public static class TintedGrayGenerator
 {
     private static readonly Dictionary<string, int[]> BaseGrays = new()
     {

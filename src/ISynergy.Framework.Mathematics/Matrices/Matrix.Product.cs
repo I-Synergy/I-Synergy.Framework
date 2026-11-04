@@ -1213,7 +1213,7 @@ public static partial class Matrix
     /// 
     public static double[][] TransposeAndDot(this double[] rowVector, double[][] b, double[][] result)
     {
-        return rowVector.Transpose(out double[][] t).Dot(b, result);
+        return rowVector.Transpose(out _).Dot(b, result);
     }
     #endregion
 

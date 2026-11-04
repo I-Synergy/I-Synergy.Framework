@@ -78,8 +78,8 @@ public partial class UnitConversionService : IUnitConversionService
         if (targetSymbol.Equals(sourceSymbol))
             return value;
 
-        if (Units.Where(q => q.Symbol.Equals(sourceSymbol)).Single() is { } source &&
-            Units.Where(q => q.Symbol.Equals(targetSymbol)).Single() is { } target)
+        if (Units.Single(q => q.Symbol.Equals(sourceSymbol)) is { } source &&
+            Units.Single(q => q.Symbol.Equals(targetSymbol)) is { } target)
             return Convert(source, value, target);
 
         throw new ArgumentException("Converter failed to get the corresponding units.", nameof(sourceSymbol));
@@ -101,8 +101,8 @@ public partial class UnitConversionService : IUnitConversionService
         if (targetUnit.Equals(sourceUnit))
             return value;
 
-        if (Units.Where(q => q.Symbol.Equals(sourceUnit.GetSymbol())).Single() is { } source &&
-            Units.Where(q => q.Symbol.Equals(targetUnit.GetSymbol())).Single() is { } target)
+        if (Units.Single(q => q.Symbol.Equals(sourceUnit.GetSymbol())) is { } source &&
+            Units.Single(q => q.Symbol.Equals(targetUnit.GetSymbol())) is { } target)
             return Convert(source, value, target);
 
         throw new ArgumentException("Converter failed to get the corresponding units.", nameof(sourceUnit));

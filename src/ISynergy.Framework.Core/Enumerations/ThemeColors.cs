@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Core.Enumerations;
 /// Theme colors.
 /// </summary>
 [Bindable(BindableSupport.Yes)]
-public class ThemeColors
+public static class ThemeColors
 {
     /// <summary>
     /// 42 accent colors arranged as 6 hue families × 7 shades (light → dark).
