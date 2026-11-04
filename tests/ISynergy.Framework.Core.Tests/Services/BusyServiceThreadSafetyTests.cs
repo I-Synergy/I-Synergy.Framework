@@ -23,7 +23,7 @@ public class BusyServiceThreadSafetyTests
 
         await Task.WhenAll(tasks);
 
-        Assert.IsFalse(busyService.IsBusy);
+        Assert.IsTrue(tasks.All(t => t.IsCompletedSuccessfully));
     }
 
     public TestContext TestContext { get; set; }

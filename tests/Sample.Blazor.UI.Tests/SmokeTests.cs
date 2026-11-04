@@ -78,13 +78,12 @@ public class SmokeTests : SamplePageTest
             """);
         Log($"shell: {shell}");
 
-        var state = System.Text.Json.JsonDocument.Parse(shell).RootElement;
+        var state = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(shell);
 
         // The shell fills the viewport (100dvh) and is themed through a data attribute.
         Assert.AreEqual(state.GetProperty("viewportHeight").GetInt32(), state.GetProperty("shellHeight").GetInt32(),
             $"The shell must fill the viewport. Observed: {shell}");
-        CollectionAssert.Contains(collection, state.GetProperty("shellTheme").GetString(),
-            $"The shell must declare its theme. Observed: {shell}");
+        Assert.Contains(state.GetProperty("shellTheme").GetString(), collection, $"The shell must declare its theme. Observed: {shell}");
 
         // Desktop shape: permanent 300px sidebar column, no hamburger.
         Assert.AreEqual("flex", state.GetProperty("headerDisplay").GetString(), $"header.app-header must be laid out. Observed: {shell}");

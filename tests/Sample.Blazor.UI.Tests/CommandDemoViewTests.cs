@@ -51,7 +51,7 @@ public class CommandDemoViewTests : SamplePageTest
 
         Log($"command demo button measurements: {measurements}");
 
-        var state = System.Text.Json.JsonDocument.Parse(measurements).RootElement;
+        var state = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(measurements);
         var articleWidth = state.GetProperty("article").GetProperty("w").GetInt32();
         var observed = state.GetProperty("buttons").EnumerateArray()
             .Select(b => (Text: b.GetProperty("text").GetString() ?? string.Empty,

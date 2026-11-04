@@ -103,7 +103,7 @@ public class Startup(IStorageService storageService)
     /// </summary>
     /// <param name="content">Optional content for the file.</param>
     /// <returns>Path to the temporary file.</returns>
-    public string CreateTempFile(string content = SampleFileContent)
+    public static string CreateTempFile(string content = SampleFileContent)
     {
         string path = CreateTempPath();
         File.WriteAllText(path, content);

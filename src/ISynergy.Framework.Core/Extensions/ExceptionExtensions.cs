@@ -101,7 +101,7 @@ public static class ExceptionExtensions
                     var colonOrEqualsIndex = matchValue.IndexOfAny(anyOf);
                     if (colonOrEqualsIndex > 0 && colonOrEqualsIndex < matchValue.Length - 1)
                     {
-                        return matchValue.Substring(0, colonOrEqualsIndex + 1) + " " + SanitizedValue;
+                        return string.Concat(matchValue.AsSpan(0, colonOrEqualsIndex + 1), " ", SanitizedValue);
                     }
                     return SanitizedValue;
                 });

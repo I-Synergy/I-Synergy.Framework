@@ -39,7 +39,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
 
         var beforeClick = await DescribeResponsiveStateAsync();
         Log($"mobile @480px before toggle click: {beforeClick}");
-        var before = System.Text.Json.JsonDocument.Parse(beforeClick).RootElement;
+        var before = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(beforeClick);
 
         // The navigation exists exactly once and is off-canvas until the toggle is used: a translated
         // element still has a box, so "off-canvas" is asserted on the geometry (its right edge is at or
@@ -65,7 +65,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
 
         var afterClick = await DescribeResponsiveStateAsync();
         Log($"mobile @480px after toggle click: {afterClick}");
-        var after = System.Text.Json.JsonDocument.Parse(afterClick).RootElement;
+        var after = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(afterClick);
 
         Assert.IsTrue(after.GetProperty("sidebarOpen").GetBoolean(),
             $"The drawer did not get the is-open class. Observed DOM: {afterClick}");
@@ -88,7 +88,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
 
         var afterScrimClick = await DescribeResponsiveStateAsync();
         Log($"mobile @480px after scrim click: {afterScrimClick}");
-        var closed = System.Text.Json.JsonDocument.Parse(afterScrimClick).RootElement;
+        var closed = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(afterScrimClick);
         Assert.IsFalse(closed.GetProperty("sidebarOpen").GetBoolean(),
             $"Clicking the scrim must close the drawer. Observed DOM: {afterScrimClick}");
         Assert.IsFalse(closed.GetProperty("scrimPresent").GetBoolean(),
@@ -115,7 +115,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
         await NavigateAsync(SampleDom.HomeRoute);
         await WaitForShellReadyAsync();
 
-        var desktop = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var desktop = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Log($"diagnosis: loaded at desktop width: {await DescribeResponsiveStateAsync()}");
         Assert.AreEqual("static", desktop.GetProperty("sidebarPosition").GetString(),
             "At desktop width the sidebar must be a permanent (static) column.");
@@ -138,7 +138,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
             null,
             new() { Timeout = 15_000 });
 
-        var mobile = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var mobile = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         var mobileJson = await DescribeResponsiveStateAsync();
         Log($"diagnosis: after crossing the breakpoint at runtime: {mobileJson}");
 
@@ -152,7 +152,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
         // The drawer must still work after the transition, not just on a fresh mobile load.
         await NavToggle().ClickAsync();
         await WaitForDrawerOpenAsync();
-        var opened = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var opened = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Assert.AreEqual(4, opened.GetProperty("onscreenNavItems").GetInt32(),
             "The drawer must expose the 4 navigation items after the runtime breakpoint change.");
 
@@ -209,7 +209,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
         await Expect(toggle).ToBeHiddenAsync();
         await Expect(Page.Locator(SampleDom.NavScrim)).ToHaveCountAsync(0);
 
-        var desktop = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var desktop = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Log($"desktop state: {await DescribeResponsiveStateAsync()}");
         Assert.AreEqual("static", desktop.GetProperty("sidebarPosition").GetString(),
             "The desktop sidebar must be a permanent (static) column, not a fixed drawer.");
@@ -225,7 +225,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
         await Expect(sidebar).ToBeVisibleAsync();
         await Expect(toggle).ToBeHiddenAsync();
         await Expect(Page.Locator(SampleDom.NavScrim)).ToHaveCountAsync(0);
-        var afterNavigation = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var afterNavigation = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Assert.AreEqual("static", afterNavigation.GetProperty("sidebarPosition").GetString(),
             "The sidebar must still be the permanent desktop column after navigating.");
 
@@ -276,7 +276,7 @@ public partial class ResponsiveLayoutTests : SamplePageTest
 
         Log($"sidebar column measurements: {measurements}");
 
-        var state = System.Text.Json.JsonDocument.Parse(measurements).RootElement;
+        var state = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(measurements);
         Assert.AreNotEqual(System.Text.Json.JsonValueKind.Null, state.GetProperty("column").ValueKind, "The sidebar column must exist.");
         Assert.AreNotEqual(System.Text.Json.JsonValueKind.Null, state.GetProperty("nav").ValueKind, "The navigation must exist.");
 

@@ -101,7 +101,7 @@ public static class CredentialManager
             for (int n = 0; n < count; n++)
             {
                 var credentialPtr = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf<nint>());
-                var credential = ReadCredential(Marshal.PtrToStructure<CREDENTIAL>(credentialPtr)!);
+                var credential = ReadCredential(Marshal.PtrToStructure<CREDENTIAL>(credentialPtr));
 
                 if (credential is not null)
                     result.Add(credential);
@@ -154,7 +154,7 @@ public static class CredentialManager
         {
             if (!IsInvalid)
             {
-                var credential = Marshal.PtrToStructure<CREDENTIAL>(handle)!;
+                var credential = Marshal.PtrToStructure<CREDENTIAL>(handle);
                 return credential;
             }
 

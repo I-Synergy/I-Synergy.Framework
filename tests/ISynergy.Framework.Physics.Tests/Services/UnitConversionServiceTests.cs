@@ -36,7 +36,7 @@ public class UnitConversionServiceTests
     [TestMethod()]
     public void UnitConversionServiceGetSIUnitsTest()
     {
-        Assert.AreEqual(15, _unitConversionService!.Units.Where(q => q is SIUnit).Count());
+        Assert.HasCount(15, _unitConversionService!.Units.Where(q => q is SIUnit));
     }
 
     /// <summary>

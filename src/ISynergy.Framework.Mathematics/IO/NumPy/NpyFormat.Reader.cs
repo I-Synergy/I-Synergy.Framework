@@ -349,7 +349,7 @@ public static partial class NpyFormat
         mark = "'fortran_order': ";
         s = header.IndexOf(mark) + mark.Length;
         e = header.IndexOf(",", s + 1);
-        var fortran = bool.Parse(header.Substring(s, e - s));
+        var fortran = bool.Parse(header.AsSpan(s, e - s));
 
         if (fortran)
             throw new NotSupportedException("Fortran-order (column-major) NumPy format is not supported.");

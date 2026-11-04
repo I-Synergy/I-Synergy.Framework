@@ -152,7 +152,7 @@ public class DialogTests : SamplePageTest
         var measurements = await Page.Locator(SampleDom.Dialog).EvaluateAsync<string>(DialogPanelMetricsScript);
         Log($"dialog panel measurements: {measurements}");
 
-        var state = System.Text.Json.JsonDocument.Parse(measurements).RootElement;
+        var state = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(measurements);
         Assert.IsFalse(
             state.TryGetProperty("error", out var probeError),
             $"The dialog panel could not be measured: {probeError}. Measurements: {measurements}");

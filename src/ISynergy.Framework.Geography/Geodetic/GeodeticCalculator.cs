@@ -423,6 +423,8 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
     /// </summary>
     /// <param name="other">The other calculator</param>
     /// <returns>True if they are the same (means have the same reference globe)</returns>
+    public override int GetHashCode() => ReferenceGlobe.GetHashCode();
+
     public bool Equals(GeodeticCalculator other)
     {
         return ReferenceGlobe.Equals(other.ReferenceGlobe);
@@ -431,5 +433,15 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
     public override bool Equals(object obj)
     {
         return obj is GeodeticCalculator && Equals((GeodeticCalculator)obj);
+    }
+
+    public static bool operator ==(GeodeticCalculator left, GeodeticCalculator right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(GeodeticCalculator left, GeodeticCalculator right)
+    {
+        return !(left == right);
     }
 }

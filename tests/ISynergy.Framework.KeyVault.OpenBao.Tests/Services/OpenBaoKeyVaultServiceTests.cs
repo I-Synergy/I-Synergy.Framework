@@ -91,8 +91,8 @@ public class OpenBaoKeyVaultServiceTests
         var paths = await _service.ListPathsAsync("base/path", "mymount", TestContext.CancellationToken);
 
         Assert.HasCount(2, paths);
-        CollectionAssert.Contains(paths.ToList(), "key1");
-        CollectionAssert.Contains(paths.ToList(), "key2");
+        Assert.Contains("key1", paths.ToList());
+        Assert.Contains("key2", paths.ToList());
     }
 
     public TestContext TestContext { get; set; }

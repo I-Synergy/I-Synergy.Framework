@@ -461,7 +461,7 @@ public class JaggedQrDecompositionTest
     }
 
 
-    private void decompose(ref double[][] a, out double[][] q)
+    private static void decompose(ref double[][] a, out double[][] q)
     {
         int m = a.Rows();
         int n = a.Columns();

@@ -13,12 +13,7 @@ public static class BinaryConverter
             int size = Marshal.SizeOf<T>();
             ptr = Marshal.AllocHGlobal(size);
             Marshal.Copy(bytes, 0, ptr, size);
-            object? obj = Marshal.PtrToStructure<T>(ptr);
-
-            if (obj is null)
-                throw new InvalidOperationException("Failed to convert byte array to structure.");
-
-            return (T)obj;
+            return Marshal.PtrToStructure<T>(ptr);
         }
         finally
         {

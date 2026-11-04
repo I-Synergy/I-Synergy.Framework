@@ -74,6 +74,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
         set
         {
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
+            numberOfParameters = value;
             init(value);
         }
     }

@@ -26,7 +26,7 @@ public static class ClaimsPrincipalExtensions
         if (claimSet is not null)
         {
             var claims = claimSet.FindValues(claimType).ToList();
-            if (claims.Any()) return claims;
+            if (claims.Count != 0) return claims;
         }
         throw new ClaimNotFoundException(claimType);
     }

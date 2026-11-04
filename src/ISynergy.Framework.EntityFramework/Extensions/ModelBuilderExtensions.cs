@@ -195,7 +195,7 @@ public static class ModelBuilderExtensions
         // Get the expressions list and ensure it's not null
         var filterExpressions = expressions.EnsureNotNull().ToList();
 
-        if (!filterExpressions.Any())
+        if (filterExpressions.Count == 0)
             return Expression.Lambda(Expression.Constant(true), parameter);
 
         // Start with the first expression

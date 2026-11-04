@@ -3584,9 +3584,9 @@ public partial class MatrixTest
                 double[] expectedBottom = values.Get(0, k);
 
                 Assert.HasCount(k, actualTop);
-                Assert.AreEqual(k, actualBottom.Length);
-                Assert.AreEqual(expectedTop.Length, actualTop.Length);
-                Assert.AreEqual(expectedBottom.Length, actualBottom.Length);
+                Assert.HasCount(k, actualBottom);
+                Assert.HasCount(expectedTop.Length, actualTop);
+                Assert.HasCount(expectedBottom.Length, actualBottom);
 
                 foreach (double v in actualTop)
                     Assert.IsTrue(expectedTop.Contains(v));

@@ -1,3 +1,4 @@
+#pragma warning disable CA1861 // constant arrays must stay inline inside expression trees
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -185,8 +186,6 @@ public class AugmentedLagrangianTest
 
     }
 
-    private static readonly double[] gradient = new[] { 1.0, 1.0, 0.0 };
-
     [TestMethod]
     public void AugmentedLagrangianSolverConstructorTest4()
     {
@@ -232,7 +231,7 @@ public class AugmentedLagrangianTest
             new NonlinearConstraint(f,
 
                 function: () => x + y,
-                gradient: () => gradient,
+                gradient: () => new[] { 1.0, 1.0, 0.0 },
 
                 shouldBe: ConstraintType.EqualTo, value: 1
             ),
@@ -257,9 +256,6 @@ public class AugmentedLagrangianTest
         Assert.IsFalse(double.IsNaN(solver.Solution[1]));
         Assert.IsFalse(double.IsNaN(solver.Solution[2]));
     }
-
-    private static readonly double[] gradientArray = new[] { 1.0, 0.0 };
-    private static readonly double[] gradientArray0 = new[] { 0.0, 1.0 };
 
     [TestMethod]
     public void AugmentedLagrangianSolverConstructorTest5()
@@ -301,7 +297,8 @@ public class AugmentedLagrangianTest
                 function: () => x,
                 shouldBe: ConstraintType.GreaterThanOrEqualTo,
                 value: 0,
-                gradient: () => gradientArray),
+                gradient: () => new[] { 1.0, 0.0 }
+            ),
 
             // Add the non-negativity constraint for y
             new NonlinearConstraint(f,
@@ -309,7 +306,8 @@ public class AugmentedLagrangianTest
                 function: () => y,
                 shouldBe: ConstraintType.GreaterThanOrEqualTo,
                 value: 0,
-                gradient: () => gradientArray0)
+                gradient: () => new[] { 0.0, 1.0 }
+            )
         ];
 
         // Finally, we create the non-linear programming solver
@@ -715,11 +713,11 @@ public class AugmentedLagrangianTest
         }
 
         Assert.IsNotNull(solverTest.Solution);
-        Assert.HasCount(nVariablesTest, solverTest.Solution);
+        Assert.AreEqual(nVariablesTest, solverTest.Solution.Length);
     }
 
     //[TestMethod]
-    public static void constructorTest5()
+    public void constructorTest5()
     {
         // AugmentedLagrangian with NonlinearConstraints
         // have a Gradient NullReferenceException issue 

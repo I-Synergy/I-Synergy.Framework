@@ -200,7 +200,7 @@ public abstract class SamplePageTest
     {
         await Page.WaitForFunctionAsync("() => !!window.Blazor", null, new() { Timeout = 30_000 });
 
-        var completed = await Task.WhenAny(_circuitFrame.Task, Task.Delay(TimeSpan.FromSeconds(30), TestContext.CancellationToken));
+        var completed = await Task.WhenAny(_circuitFrame.Task, Task.Delay(TimeSpan.FromSeconds(30)));
         if (completed != _circuitFrame.Task)
             throw new TimeoutException(
                 $"No frame was received on the /_blazor WebSocket within 30s for {Page.Url}; " +

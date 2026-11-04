@@ -83,7 +83,7 @@ public class ModelBuilderExtensionsTests
 
         // Validate filter structure
         var lambda = (LambdaExpression)filter.Expression;
-        Assert.AreEqual(1, lambda.Parameters.Count);
+        Assert.HasCount(1, lambda.Parameters);
         Assert.AreEqual(ExpressionType.Equal, lambda.Body.NodeType);
     }
 
@@ -99,7 +99,7 @@ public class ModelBuilderExtensionsTests
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestEntity));
         var filters = entity!.GetDeclaredQueryFilters();
-        Assert.IsTrue(filters is null || !filters.Any());
+        Assert.IsTrue(filters is null || filters.Count == 0);
     }
 
     [TestMethod]
@@ -125,7 +125,7 @@ public class ModelBuilderExtensionsTests
 
         // Validate filter structure
         var lambda = (LambdaExpression)filter.Expression;
-        Assert.AreEqual(1, lambda.Parameters.Count);
+        Assert.HasCount(1, lambda.Parameters);
         Assert.AreEqual(ExpressionType.Not, lambda.Body.NodeType);
     }
 
@@ -170,7 +170,7 @@ public class ModelBuilderExtensionsTests
 
         // Validate combined filter structure
         var lambda = (LambdaExpression)filter.Expression;
-        Assert.AreEqual(1, lambda.Parameters.Count);
+        Assert.HasCount(1, lambda.Parameters);
         Assert.AreEqual(ExpressionType.AndAlso, lambda.Body.NodeType);
     }
 
@@ -231,7 +231,7 @@ public class ModelBuilderExtensionsTests
 
         // Validate combined filter structure
         var lambda = (LambdaExpression)filter.Expression;
-        Assert.AreEqual(1, lambda.Parameters.Count);
+        Assert.HasCount(1, lambda.Parameters);
         Assert.AreEqual(ExpressionType.AndAlso, lambda.Body.NodeType);
 
         // Check both parts of the combined filter
@@ -264,7 +264,7 @@ public class ModelBuilderExtensionsTests
 
         // Validate combined filter structure
         var lambda = (LambdaExpression)filter.Expression;
-        Assert.AreEqual(1, lambda.Parameters.Count);
+        Assert.HasCount(1, lambda.Parameters);
         Assert.AreEqual(ExpressionType.AndAlso, lambda.Body.NodeType);
 
         // Check both parts of the combined filter
@@ -285,7 +285,7 @@ public class ModelBuilderExtensionsTests
         // Assert
         var entity = _modelBuilder.Model.FindEntityType(typeof(TestTenantEntityWithIgnoreSoftDelete));
         var filters = entity!.GetDeclaredQueryFilters();
-        Assert.IsTrue(filters is null || !filters.Any());
+        Assert.IsTrue(filters is null || filters.Count == 0);
     }
 
     [TestMethod]
