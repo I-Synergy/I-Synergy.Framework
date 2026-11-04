@@ -22,7 +22,6 @@ internal class AzureStorageService : IStorageService
     /// Initializes a new instance of the <see cref="AzureStorageService"/> class.
     /// </summary>
     /// <param name="options">The Azure storage options.</param>
-    /// <param name="logger">The logger.</param>
     public AzureStorageService(
         IOptions<AzureStorageOptions> options)
     {

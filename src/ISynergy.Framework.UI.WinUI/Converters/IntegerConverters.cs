@@ -123,7 +123,7 @@ public partial class IntegerToStringConverter : IValueConverter
 
         if (value is not null)
         {
-            int.TryParse(value.ToString(), out result);
+            _ = int.TryParse(value.ToString(), out result);
         }
 
         return result;

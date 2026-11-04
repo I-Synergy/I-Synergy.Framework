@@ -1,3 +1,4 @@
+#pragma warning disable CA1069 // intentional enum aliases
 
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;

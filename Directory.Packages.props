@@ -5,12 +5,12 @@
   </PropertyGroup>
   <!-- Third-party and cross-framework packages (unconditional) -->
   <ItemGroup>
-    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="17.0.0-preview.1.26530.1" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0-preview.1.26530.1" />
-    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="17.0.0-preview.1.26530.1" />
-    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0-preview.1.26530.1" />
-    <PackageVersion Include="Aspire.Hosting.Maui" Version="17.0.0-preview.1.26530.1" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0-preview.1.26530.1" />
+    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.Dotnet" Version="13.6.4-preview.1.26523.11" />
+    <PackageVersion Include="Aspire.Hosting.Maui" Version="13.6.4-preview.1.26523.11" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.4" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.104.8" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
@@ -31,12 +31,12 @@
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="5.0.1" />
     <PackageVersion Include="Microsoft.Graph" Version="6.9.0" />
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.92.0" />
-    <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.2" />
+    <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.6" />
     <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.14.26531.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="Microsoft.Playwright.MSTest" Version="1.64.1" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.6.4" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.6.5" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageVersion Include="Moq" Version="4.21.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="4.5.2" />
@@ -57,13 +57,13 @@
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.12.1" />
     <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.12.1" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="35.1.42" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="35.1.42" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.43" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.43" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.43" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="35.1.43" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="35.1.43" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="35.1.43" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="35.1.43" />
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
   </ItemGroup>

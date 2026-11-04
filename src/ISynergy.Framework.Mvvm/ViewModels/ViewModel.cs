@@ -115,7 +115,7 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
         CloseCommand = new AsyncRelayCommand(CloseAsync);
         CancelCommand = new AsyncRelayCommand(CancelAsync);
 
-        _logger.LogTrace(GetType().Name);
+        _logger.LogTrace("{TypeName}", GetType().Name);
     }
 
     private async Task OnUserSignedInAsync()

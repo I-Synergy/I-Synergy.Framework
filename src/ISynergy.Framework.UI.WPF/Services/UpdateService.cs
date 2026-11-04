@@ -30,7 +30,6 @@ internal class UpdateService : IUpdateService
     /// <param name="dialogService">The dialog service.</param>
     /// <param name="languageService">The language service.</param>
     /// <param name="options"></param>
-    /// <param name="logger"></param>
     public UpdateService(
         IHttpClientFactory httpClientFactory,
         IInfoService infoService,

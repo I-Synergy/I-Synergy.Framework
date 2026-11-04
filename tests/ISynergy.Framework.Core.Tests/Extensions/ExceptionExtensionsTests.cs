@@ -9,6 +9,7 @@ namespace ISynergy.Framework.Core.Extensions
         public void ToMessage_ReturnsCorrectLogMessage()
         {
             string? logMessage = null;
+            string? stackTrace = null;
 
             // Arrange
             try
@@ -17,12 +18,14 @@ namespace ISynergy.Framework.Core.Extensions
             }
             catch (Exception ex)
             {
-                logMessage = ex.ToMessage(Environment.StackTrace);
-
-                Assert.Contains(ex.Message, logMessage);
-                Assert.IsNotNull(Environment.StackTrace);
-                Assert.Contains(Environment.StackTrace, logMessage);
+                stackTrace = Environment.StackTrace;
+                logMessage = ex.ToMessage(stackTrace);
             }
+
+            Assert.IsNotNull(logMessage);
+            Assert.Contains("Test Exception", logMessage);
+            Assert.IsNotNull(stackTrace);
+            Assert.Contains(stackTrace, logMessage);
         }
 
         [TestMethod]

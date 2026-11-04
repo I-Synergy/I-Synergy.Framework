@@ -28,7 +28,6 @@ internal class SendGridMailService : IMailService
     /// Constructor of Email Service.
     /// </summary>
     /// <param name="sendGridOptions">The configuration.</param>
-    /// <param name="logger">The logger.</param>
     public SendGridMailService(
         IOptions<SendGridMailOptions> sendGridOptions)
     {

@@ -21,7 +21,6 @@ public class ActionService : IActionService
     /// Default constructor for the background service.
     /// </summary>
     /// <param name="manager"></param>
-    /// <param name="options"></param>
     /// <param name="logger"></param>
     public ActionService(
         IActionManager manager,

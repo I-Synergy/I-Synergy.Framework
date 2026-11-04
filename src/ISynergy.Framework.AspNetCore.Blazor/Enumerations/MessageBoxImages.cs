@@ -1,3 +1,4 @@
+#pragma warning disable CA1069 // intentional enum aliases
 namespace ISynergy.Framework.AspNetCore.Blazor.Enumerations;
 
 /// <summary>

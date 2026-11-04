@@ -282,3 +282,14 @@ insert_final_newline = true
 dotnet_diagnostic.IL2026.severity = none
 dotnet_diagnostic.IL2067.severity = none
 dotnet_diagnostic.IL2075.severity = none
+
+# CA1873 flags the implicit `params object?[]` array that every ILogger.LogX call
+# creates (143 of 172 sites) and simple property reads. Guarding each log site with
+# IsEnabled would add hundreds of branches for no measurable benefit; the logger
+# already short-circuits disabled levels internally.
+[*.cs]
+dotnet_diagnostic.CA1873.severity = none
+# CA1816 asks Dispose() to call GC.SuppressFinalize, but Sonar S3971 forbids it for
+# finalizer-free types (and every type here is finalizer-free). Keep the S3971 policy.
+[*.cs]
+dotnet_diagnostic.CA1816.severity = none

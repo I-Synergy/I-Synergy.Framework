@@ -32,15 +32,6 @@ public class ListExtensionsTests
     [TestMethod]
     public void NullListFailableTest()
     {
-        Assert.ThrowsAsync<NullReferenceException>(() =>
-        {
-            List<object>? list = null;
-
-            foreach (object item in list!)
-            {
-            }
-
-            return Task.CompletedTask;
-        });
+        Assert.ThrowsAsync<NullReferenceException>(() => Task.FromResult(((List<object>?)null)!.GetEnumerator()));
     }
 }

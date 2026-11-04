@@ -241,7 +241,7 @@ public abstract class Application : ComponentBase, IDisposable // NOSONAR - fina
             if (e.Exception.HResult != _lastErrorMessage)
             {
                 _lastErrorMessage = e.Exception.HResult;
-                _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+                _logger?.LogCritical(e.Exception, "{ExceptionMessage}", e.Exception.ToMessage(Environment.StackTrace));
             }
         }
     }
@@ -272,7 +272,7 @@ public abstract class Application : ComponentBase, IDisposable // NOSONAR - fina
             }
         }
         else
-            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger?.LogCritical(e.Exception, "{ExceptionMessage}", e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -302,7 +302,7 @@ public abstract class Application : ComponentBase, IDisposable // NOSONAR - fina
                 }
             }
             else
-                _logger?.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger?.LogCritical(exception, "{ExceptionMessage}", exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -331,7 +331,7 @@ public abstract class Application : ComponentBase, IDisposable // NOSONAR - fina
             }
         }
         else
-            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger?.LogCritical(e.Exception, "{ExceptionMessage}", e.Exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>

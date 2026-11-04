@@ -61,8 +61,8 @@ public partial class DecimalEqualsConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test == limit)
         {
@@ -104,8 +104,8 @@ public partial class DecimalLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test < limit)
         {
@@ -147,8 +147,8 @@ public partial class DecimalGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test > limit)
         {
@@ -190,8 +190,8 @@ public partial class DecimalEqualsOrLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test <= limit)
         {
@@ -233,8 +233,8 @@ public partial class DecimalEqualsOrGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test >= limit)
         {

@@ -29,7 +29,6 @@ public class FileService : IFileService<FileResult>
     /// <summary>
     /// Initializes a new instance of the <see cref="FileService" /> class.
     /// </summary>
-    /// <param name="dialogService">The dialog service.</param>
     public FileService()
     {
         AddExtension = true;

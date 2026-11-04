@@ -46,7 +46,6 @@ public class CommandTests
         await Assert.ThrowsAsync<TaskCanceledException>(async () =>
         {
             await Task.Delay(100, cts.Token); // This will throw when used with the canceled token
-            await handler.HandleAsync(command, cts.Token);
         });
     }
 

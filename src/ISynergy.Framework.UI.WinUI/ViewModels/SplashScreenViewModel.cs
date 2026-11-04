@@ -121,7 +121,7 @@ public partial class SplashScreenViewModel : ObservableValidatedClass, IViewMode
         CloseCommand = new AsyncRelayCommand(CloseAsync);
         CancelCommand = new AsyncRelayCommand(CancelAsync);
 
-        _logger.LogTrace(GetType().Name);
+        _logger.LogTrace("{TypeName}", GetType().Name);
     }
 
     public void Initialize(DispatcherQueue dispatcherQueue, Action onLoadingComplete, SplashScreenOptions splashScreenOptions, params Func<DispatcherQueue, Task>[] tasks)

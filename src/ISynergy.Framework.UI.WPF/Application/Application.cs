@@ -235,7 +235,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, "{ExceptionMessage}", e.Exception.ToMessage(Environment.StackTrace));
 
         e.Handled = true;
     }
@@ -258,7 +258,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
-            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogError(e.Exception, "{ExceptionMessage}", e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -272,7 +272,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, "{ExceptionMessage}", e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -288,7 +288,7 @@ public abstract class Application : System.Windows.Application, IDisposable
             if (_exceptionHandlerService is not null)
                 _exceptionHandlerService.HandleException(exception);
             else
-                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger.LogCritical(exception, "{ExceptionMessage}", exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -303,7 +303,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, "{ExceptionMessage}", e.Exception.ToMessage(Environment.StackTrace));
     }
 
     protected override void OnExit(ExitEventArgs e)

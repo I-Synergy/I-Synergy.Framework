@@ -103,8 +103,8 @@ public partial class DoubleIsLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test < limit)
         {
@@ -146,8 +146,8 @@ public partial class DoubleIsLesserOrEqualThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test <= limit)
         {
@@ -189,8 +189,8 @@ public partial class DoubleIsGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test > limit)
         {
@@ -232,8 +232,8 @@ public partial class DoubleIsGreaterOrEqualThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test >= limit)
         {

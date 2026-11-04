@@ -330,5 +330,4 @@ public class DialogTests : SamplePageTest
         }
         """;
 
-    public TestContext TestContext { get; set; }
 }

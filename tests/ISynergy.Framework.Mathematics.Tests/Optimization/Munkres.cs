@@ -7,19 +7,19 @@ namespace ISynergy.Framework.Mathematics.Optimization;
 public static class MunkresProgram
 {
     const int MAX = 35;
-    public static double[,] C = new double[MAX, MAX];
-    public static double[,] C_orig = new double[MAX, MAX];
-    public static double[,] M = new double[MAX, MAX];
-    public static int[,] path = new int[2 * MAX + 1, 2];
-    public static int[] RowCover = new int[MAX];
-    public static int[] ColCover = new int[MAX];
-    public static int nrow;
-    public static int ncol;
-    public static int path_count = 0;
-    public static int path_row_0;
-    public static int path_col_0;
-    public static int asgn = 0;
-    public static int step;
+    internal static double[,] C = new double[MAX, MAX];
+    internal static double[,] C_orig = new double[MAX, MAX];
+    internal static double[,] M = new double[MAX, MAX];
+    internal static int[,] path = new int[2 * MAX + 1, 2];
+    internal static int[] RowCover = new int[MAX];
+    internal static int[] ColCover = new int[MAX];
+    internal static int nrow;
+    internal static int ncol;
+    internal static int path_count = 0;
+    internal static int path_row_0;
+    internal static int path_col_0;
+    internal static int asgn = 0;
+    internal static int step;
 
     private static void resetMaskandCovers()
     {

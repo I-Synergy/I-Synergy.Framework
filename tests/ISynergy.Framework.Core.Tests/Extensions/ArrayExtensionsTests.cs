@@ -32,15 +32,6 @@ public class ArrayExtensionsTests
     [TestMethod]
     public void NullArrayFailableTest()
     {
-        Assert.ThrowsAsync<NullReferenceException>(() =>
-        {
-            object[]? list = null;
-
-            foreach (object item in list!)
-            {
-            }
-
-            return Task.CompletedTask;
-        });
+        Assert.ThrowsAsync<NullReferenceException>(() => Task.FromResult(((object[]?)null)!.Length));
     }
 }

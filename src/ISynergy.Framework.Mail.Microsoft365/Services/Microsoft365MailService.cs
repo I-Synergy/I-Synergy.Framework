@@ -40,7 +40,6 @@ internal class Microsoft365MailService : IMailService
     /// Constructor of Email Service.
     /// </summary>
     /// <param name="mailOptions">The configuration.</param>
-    /// <param name="logger">The logger.</param>
     public Microsoft365MailService(
         IOptions<Microsoft365MailOptions> mailOptions)
     {

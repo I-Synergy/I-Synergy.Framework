@@ -8,6 +8,6 @@
   "files.autoGuessEncoding": false,
   "sonarlint.connectedMode.project": {
     "connectionId": "i-synergy-github",
-    "projectKey": "I-Synergy.Framework"
+    "projectKey": "I-Synergy_I-Synergy.Framework"
   }
 }

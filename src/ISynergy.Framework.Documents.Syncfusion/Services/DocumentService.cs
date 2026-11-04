@@ -30,7 +30,6 @@ internal class DocumentService : IDocumentService
     /// Default constructor.
     /// </summary>
     /// <param name="options"></param>
-    /// <param name="logger"></param>
     public DocumentService(
         IOptions<SyncfusionLicenseOptions> options)
     {

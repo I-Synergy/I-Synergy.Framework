@@ -1,3 +1,4 @@
+#pragma warning disable CA1069 // intentional enum aliases
 /*
  *      Limited memory BFGS (L-BFGS).
  *
