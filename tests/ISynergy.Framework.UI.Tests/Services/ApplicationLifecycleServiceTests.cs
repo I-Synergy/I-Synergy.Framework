@@ -533,6 +533,7 @@ public class ApplicationLifecycleServiceTests
         // Act & Assert - Should not throw
         _service.SignalApplicationUIReady();
         _service.SignalApplicationInitialized();
+        Assert.IsNotNull(_service);
     }
 
     [TestMethod]

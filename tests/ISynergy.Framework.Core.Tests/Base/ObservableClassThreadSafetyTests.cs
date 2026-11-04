@@ -38,5 +38,7 @@ public class ObservableClassThreadSafetyTests
             .ToList();
 
         await Task.WhenAll(tasks);
+
+        Assert.IsTrue(tasks.All(t => t.IsCompletedSuccessfully));
     }
 }

@@ -32,7 +32,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailAsyncTest()
     {
-        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions));
         MailMessage message = new(
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
@@ -46,7 +46,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithCopyAsyncTest()
     {
-        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions));
         MailMessage message = new(
             ["ismail.hassani@i-synergy.nl"],
             "Test subject",
@@ -60,7 +60,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithFromAsyncTest()
     {
-        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions));
         MailMessage message = new(
             ["support@i-synergy.nl"],
             "Test subject",
@@ -74,7 +74,7 @@ public class MailServiceTests
     [TestMethod()]
     public async Task SendEmailWithFromAndCopyAsyncTest()
     {
-        Microsoft365MailService service = new(OptionsX.Create(_mailOptions), _mockLogger.Object);
+        Microsoft365MailService service = new(OptionsX.Create(_mailOptions));
         MailMessage message = new(
             ["support@i-synergy.nl"],
             "Test subject",

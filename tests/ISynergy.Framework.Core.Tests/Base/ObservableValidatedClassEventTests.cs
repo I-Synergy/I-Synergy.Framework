@@ -160,8 +160,10 @@ public class ObservableValidatedClassEventTests
         // Act
         observable.Dispose();
 
-        // Assert - Should not throw
+        // Assert
         observable.PropertyChanged -= handler;
+        observable.ErrorsChanged -= errorHandler;
+        Assert.IsTrue(observable.IsDisposed);
         observable.ErrorsChanged -= errorHandler;
     }
 
