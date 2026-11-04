@@ -102,7 +102,6 @@ public class Window : ContentPage, IWindow
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     // The bulk of the clean-up code is implemented in Dispose(bool)

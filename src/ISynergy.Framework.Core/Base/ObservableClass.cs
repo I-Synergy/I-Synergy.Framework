@@ -249,7 +249,6 @@ public abstract class ObservableClass : IObservableClass
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
@@ -290,7 +289,6 @@ public abstract class ObservableClass : IObservableClass
         await DisposeAsyncCore().ConfigureAwait(false);
 
         Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 
     protected virtual async ValueTask DisposeAsyncCore()

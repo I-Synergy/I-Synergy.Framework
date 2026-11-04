@@ -62,7 +62,13 @@ public abstract class BaseNavigationService : INavigationService
         public Type ViewModelType { get; init; } = null!;
         public object? Parameter { get; set; }
 
-        public void Dispose() => Scope.Dispose();
+        public void Dispose() => Dispose(true);
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+                Scope.Dispose();
+        }
     }
 
     /// <summary>
@@ -708,7 +714,6 @@ public abstract class BaseNavigationService : INavigationService
         catch (Exception ex) { _logger.LogError(ex, "Error disposing modal scope during shutdown"); }
         _modalScope = null;
 
-        GC.SuppressFinalize(this);
     }
 
     #endregion

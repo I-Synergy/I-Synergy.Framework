@@ -17,5 +17,14 @@ public class NullScope : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Dispose(true);
+    }
+
+    /// <summary>
+    /// Releases resources. This scope owns none.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release managed resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
     }
 }
