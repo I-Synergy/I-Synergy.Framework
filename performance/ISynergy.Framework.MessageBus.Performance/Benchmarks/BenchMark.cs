@@ -29,7 +29,7 @@ public class BenchMark
     /// </summary>
     /// <param name="file">The file.</param>
     /// <returns>TestModel.</returns>
-    public TestModel GetTestObject(byte[] file)
+    public static TestModel GetTestObject(byte[] file)
     {
         TestModel result = new()
         {
