@@ -137,3 +137,37 @@ the scanner with `/d:sonar.cs.roslyn.ignoreIssues=true`.
 Remaining Sonar-native work is dominated by S4136 (108, almost all the ported
 Mathematics layout), S2699 (19), S107 (17), S3241 (15) and S4487 (13) — the last
 three are documented in `.ai/reference/sonarcloud-known-false-positives.md`.
+
+## Second sweep — non-Mathematics native findings
+
+Starting point: the 2026-11-04 scan showed 352 Sonar-native issues, 184 of them in
+`ISynergy.Framework.Mathematics`. Per decision, the Mathematics port is ignored via
+`sonar.issue.ignore.multicriteria` (`csharpsquid:*` on `src/ISynergy.Framework.Mathematics/**`)
+in both `sonar-project.properties` and `SonarQube.Analysis.xml`.
+
+Fixed in the remaining 168:
+
+- S8969 (24): removed redundant `!` operators where the compiler already knows non-null.
+- S6966 (5): `SuccessAsync`, `ToByteArrayAsync`, `CancelAsync`.
+- S6610/S3973/S3963/S4220/S3358/S2223/S1104/S6667/S2737/S2094/S3267/S127/S4035/
+  S6561/S4144/S4136/S1144/S2436/S1871/S4200/S3398/S2187: corrected, simplified or
+  documented individually.
+- S1699 (3): non-virtual environment init; sealed `OnParentSet` override.
+- S6612 (3): lambda parameters replace captured arguments.
+- S3217 (3): generic invocation-list iteration.
+- S2953 (2): explicit `IDisposable` on the navigation base and Blazor application.
+- S2325 (8): static where safe; interface/platform members annotated.
+- S3881 (8): documented conflict with S3971 (finalizer-free types).
+- S3776 (7): annotated as algorithmic/UI-orchestration complexity for a focused refactor.
+- S4487 (13): removed unused fields and constructor parameters.
+- S2139 (12): log-and-rethrow boundary annotations.
+- S1450 (4): fields converted to locals.
+- S1172 (6): removed parameter or marked platform-only use.
+- S2326/S1133: removed unsupported obsolete navigation overloads.
+- S8949 (3): `GetAwaiter().GetResult()` and `Task.Run` token.
+- S2589/S2365/S3264: documented false positives.
+- S2699 (18): real assertions added; MessageBus placeholder removed.
+
+Verification: all touched projects build; Core, Mvvm, UI, UI.WinUI, Automations,
+UI.Maui.Windows, Storage.Azure, MessageBus, CQRS, Geography, Globalization,
+OpenTelemetry and the changed test suites pass.
