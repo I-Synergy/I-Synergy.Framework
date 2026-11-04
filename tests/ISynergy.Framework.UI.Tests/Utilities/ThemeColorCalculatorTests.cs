@@ -45,6 +45,32 @@ public class ThemeColorCalculatorTests
             ? "#000"
             : "#fff";
 
+    /// <summary>
+    /// Lightens a palette heading until it reaches WCAG 2.1 AA (4.5:1) against the
+    /// dark palette card (#1a1a1a). The swatches still show the unmodified colour.
+    /// </summary>
+    private static string ContrastingHeadingColor(float red, float green, float blue)
+    {
+        const float card = 26f / 255f;
+        const float minimum = 4.5f;
+
+        if (ContrastRatio(red, green, blue, card, card, card) >= minimum)
+            return RgbToHex(red, green, blue);
+
+        for (var step = 1; step <= 100; step++)
+        {
+            var factor = step / 100f;
+            var r = red + (1f - red) * factor;
+            var g = green + (1f - green) * factor;
+            var b = blue + (1f - blue) * factor;
+
+            if (ContrastRatio(r, g, b, card, card, card) >= minimum)
+                return RgbToHex(r, g, b);
+        }
+
+        return "#FFFFFF";
+    }
+
     // ── WhiteBlend ───────────────────────────────────────────────────────────
 
     [TestMethod]
@@ -483,7 +509,7 @@ public class ThemeColorCalculatorTests
           body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI Variable","Segoe UI",sans-serif;background:#111;color:#fff;padding:32px;}
           h1{font-size:20px;font-weight:600;color:#e0e0e0;letter-spacing:-0.02em;margin:0;}
           h2{font-size:15px;font-weight:600;margin:0 0 18px;}
-          h3{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:0 0 7px;}
+          h3{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#9a9a9a;margin:0 0 7px;}
           #color-nav{
             position:sticky;top:0;z-index:100;
             background:rgba(17,17,17,.97);backdrop-filter:blur(10px);
@@ -491,22 +517,22 @@ public class ThemeColorCalculatorTests
             border-bottom:1px solid #242424;
             display:flex;flex-wrap:wrap;gap:8px;align-items:center;
           }
-          .nav-title{font-size:11px;font-weight:700;color:#555;margin-right:4px;white-space:nowrap;}
+          .nav-title{font-size:11px;font-weight:700;color:#9a9a9a;margin-right:4px;white-space:nowrap;}
           .nav-group{display:flex;gap:4px;}
           .nav-dot{
             width:22px;height:22px;border-radius:5px;cursor:pointer;padding:0;
             border:1px solid rgba(255,255,255,.07);appearance:none;
           }
-          .nav-dot:hover{transform:scale(1.35);box-shadow:0 3px 10px rgba(0,0,0,.5);}
           @media (prefers-reduced-motion: no-preference){
+            .nav-dot:hover{transform:scale(1.35);box-shadow:0 3px 10px rgba(0,0,0,.5);}
             .nav-dot{transition:transform .12s,box-shadow .12s;}
           }
           .palette{background:#1a1a1a;border-radius:14px;padding:26px;margin-bottom:24px;border:1px solid #242424;scroll-margin-top:62px;}
           .row{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap;}
           .swatch{min-width:52px;flex:1;height:64px;border-radius:8px;display:flex;flex-direction:column;
                   justify-content:flex-end;padding:5px 7px;font-size:9px;font-weight:600;cursor:default;}
-          .swatch:hover{transform:scale(1.06) translateY(-2px);}
           @media (prefers-reduced-motion: no-preference){
+            .swatch:hover{transform:scale(1.06) translateY(-2px);}
             .swatch{transition:transform .1s;}
           }
           .swatch .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -514,6 +540,7 @@ public class ThemeColorCalculatorTests
           .themes{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
           .theme-panel{border-radius:10px;padding:18px;}
           .theme-panel .row{margin-bottom:0;}
+          .theme-panel[data-theme="light"] h3{color:#555;}
           .theme-panel .swatch{height:52px;min-width:40px;}
         </style>
         <script>function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}</script>
@@ -529,10 +556,11 @@ public class ThemeColorCalculatorTests
         var tertiary = ThemeColorCalculator.CalculateTertiary(red, green, blue);
         var pid = name.TrimStart('#').ToLowerInvariant();
         var hex = RgbToHex(red, green, blue);
+        var heading = ContrastingHeadingColor(red, green, blue);
 
         var sb = new System.Text.StringBuilder();
         sb.Append($"<section class=\"palette\" id=\"{pid}\" data-palette=\"{pid}\">\n");
-        sb.Append($"<h2 style=\"color:{hex}\">{name}</h2>\n");
+        sb.Append($"<h2 style=\"color:{heading}\">{name}</h2>\n");
 
         // Primary palette
         sb.Append("<h3>Primary Palette</h3>\n<div class=\"row\">\n");
