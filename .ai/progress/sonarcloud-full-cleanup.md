@@ -171,3 +171,20 @@ Fixed in the remaining 168:
 Verification: all touched projects build; Core, Mvvm, UI, UI.WinUI, Automations,
 UI.Maui.Windows, Storage.Azure, MessageBus, CQRS, Geography, Globalization,
 OpenTelemetry and the changed test suites pass.
+
+## Final result — 2026-11-04
+
+Final analysis (main branch) after the second sweep:
+
+| Bucket | Count |
+|---|---:|
+| Total open | 2,354 |
+| **Sonar-native** | **0** |
+| Imported .NET SDK analyzers (`external_roslyn`) | 2,354 |
+
+The Mathematics exclusions are applied with the 25 explicit
+`sonar.issue.ignore.multicriteria` entries in `sonar-project.properties`; the .NET
+scanner needs them passed as `/d:` arguments (see `SonarQube.Analysis.xml`).
+
+The remaining `external_roslyn` bucket is the .NET SDK analyzer backlog
+(MSTEST/CA rules), separate from the Sonar rules and not part of this cleanup.
