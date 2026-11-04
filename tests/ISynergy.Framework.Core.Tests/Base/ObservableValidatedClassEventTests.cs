@@ -39,6 +39,8 @@ public class ObservableValidatedClassEventTests
         // Act
         observable.Dispose();
 
+        Assert.IsTrue(observable.IsDisposed);
+
         // Assert
         Assert.Throws<ObjectDisposedException>(() => observable.TestProperty = "New Value");
         Assert.IsFalse(eventFired);

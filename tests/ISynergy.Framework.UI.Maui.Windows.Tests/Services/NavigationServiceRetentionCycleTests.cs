@@ -56,7 +56,10 @@ public class NavigationServiceRetentionCycleTests
     public void CleanupPageResources_WithNullPage_IsNoOp()
     {
         // Act & Assert — should not throw for null input
-        _cleanupMethod.Invoke(null, new object?[] { null });
+        Exception? observed = null;
+        try { _cleanupMethod.Invoke(null, new object?[] { null }); } catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     [TestMethod]

@@ -22,5 +22,7 @@ public class BusyServiceThreadSafetyTests
         }
 
         await Task.WhenAll(tasks);
+
+        Assert.IsFalse(busyService.IsBusy);
     }
 }

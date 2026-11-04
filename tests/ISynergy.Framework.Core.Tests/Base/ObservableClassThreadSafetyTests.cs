@@ -22,6 +22,8 @@ public class ObservableClassThreadSafetyTests
         }
 
         await Task.WhenAll(tasks);
+
+        Assert.IsTrue(tasks.All(t => t.IsCompletedSuccessfully));
         Assert.AreEqual(10, obj.Properties.Count);
     }
 

@@ -54,8 +54,15 @@ public class ObservableValidatedClassTests
         var observable = new TestObservableClass();
 
         // Act & Assert - should not throw
-        observable.Dispose();
-        observable.Dispose();
+        Exception? observed = null;
+        try
+        {
+            observable.Dispose();
+            observable.Dispose();
+        }
+        catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     [TestMethod]
@@ -97,6 +104,8 @@ public class ObservableValidatedClassTests
         // Act & Assert - should not throw
         await observable.DisposeAsync();
         await observable.DisposeAsync();
+
+        Assert.IsTrue(observable.IsDisposed);
     }
 
     [TestMethod]

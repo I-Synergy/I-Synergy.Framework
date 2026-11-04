@@ -59,7 +59,10 @@ public class NavigationServiceCleanupTests
     public void CleanupPageResources_WithNullPage_DoesNotThrow()
     {
         // Act & Assert — should not throw
-        _cleanupMethod.Invoke(null, new object?[] { null });
+        Exception? observed = null;
+        try { _cleanupMethod.Invoke(null, new object?[] { null }); } catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     /// <summary>

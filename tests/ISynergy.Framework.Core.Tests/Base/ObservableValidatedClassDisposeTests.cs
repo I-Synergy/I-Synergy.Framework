@@ -21,6 +21,8 @@ public class ObservableValidatedClassDisposeTests
             Task.Run(() => obj.Dispose()),
             Task.Run(async () => await obj.DisposeAsync())
         );
+
+        Assert.IsTrue(obj.IsDisposed);
     }
 
     [TestMethod]

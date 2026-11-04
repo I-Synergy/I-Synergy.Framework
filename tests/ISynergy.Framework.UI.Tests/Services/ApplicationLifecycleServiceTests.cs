@@ -415,9 +415,16 @@ public class ApplicationLifecycleServiceTests
     public void Dispose_CanBeCalledMultipleTimes()
     {
         // Act & Assert - Should not throw
-        _service.Dispose();
-        _service.Dispose();
-        _service.Dispose();
+        Exception? observed = null;
+        try
+        {
+            _service.Dispose();
+            _service.Dispose();
+            _service.Dispose();
+        }
+        catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     #endregion

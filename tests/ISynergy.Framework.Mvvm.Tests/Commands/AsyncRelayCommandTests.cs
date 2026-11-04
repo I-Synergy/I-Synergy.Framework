@@ -260,8 +260,15 @@ public class AsyncRelayCommandTests
         var command = new AsyncRelayCommand(() => Task.CompletedTask);
 
         // Act & Assert - should not throw
-        command.Dispose();
-        command.Dispose(); // Second dispose should be safe
+        Exception? observed = null;
+        try
+        {
+            command.Dispose();
+            command.Dispose(); // Second dispose should be safe
+        }
+        catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     [TestMethod]

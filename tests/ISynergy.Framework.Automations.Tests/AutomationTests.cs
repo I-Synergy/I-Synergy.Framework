@@ -92,7 +92,6 @@ public class AutomationTests
 
         _automationService = new AutomationService(
         Mock.Of<IAutomationManager>(),
-      Mock.Of<IOptions<AutomationOptions>>(),
    conditionValidator,
     queueBuilder,
           Mock.Of<ILogger<AutomationService>>());

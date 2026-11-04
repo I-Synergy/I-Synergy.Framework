@@ -92,7 +92,9 @@ public class ExceptionHandlingTests
         var command = new RelayCommand(() => throw expectedException);
 
         // Act & Assert - should not throw
-        command.Execute(null);
+        Exception? observed = null;
+        try { command.Execute(null); } catch (Exception ex) { observed = ex; }
+        Assert.IsNull(observed);
     }
 
     #endregion
@@ -172,7 +174,9 @@ public class ExceptionHandlingTests
         var command = new AsyncRelayCommand(() => throw new InvalidOperationException("Test exception"), AsyncRelayCommandOptions.None);
 
         // Should not throw - exception is logged via Debug.WriteLine
-        command.Execute(null);
+        Exception? observed = null;
+        try { command.Execute(null); } catch (Exception ex) { observed = ex; }
+        Assert.IsNull(observed);
     }
 
     #endregion

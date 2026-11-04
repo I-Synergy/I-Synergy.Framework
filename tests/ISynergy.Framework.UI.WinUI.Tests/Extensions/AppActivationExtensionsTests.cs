@@ -264,14 +264,23 @@ public class AppActivationExtensionsTests
     {
         Assert.IsNotNull(s_targetType, "Target type must be available");
         var field = s_targetType!.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-        return field?.GetValue(null);
+        if (field is not null)
+            return field.GetValue(null);
+
+        return s_targetType.GetProperty(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)?.GetValue(null);
     }
 
     private static void SetStaticField(string fieldName, object? value)
     {
         Assert.IsNotNull(s_targetType, "Target type must be available");
         var field = s_targetType!.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-        field?.SetValue(null, value);
+        if (field is not null)
+        {
+            field.SetValue(null, value);
+            return;
+        }
+
+        s_targetType.GetProperty(fieldName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)?.SetValue(null, value);
     }
 
     private static void InvokeStatic(string methodName, params object?[] args)
