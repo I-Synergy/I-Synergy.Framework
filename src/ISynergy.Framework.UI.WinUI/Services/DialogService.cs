@@ -20,6 +20,7 @@ namespace ISynergy.Framework.UI.Services;
 
 public class DialogService : BaseDialogService, IDialogService, IDisposable
 {
+    private const string ButtonStyleErrorMessage = "Failed to set button styles";
     private const string DefaultDialogButtonStyleKey = "DefaultDialogButtonStyle";
 
     private readonly IServiceScopeFactory _scopeFactory;
@@ -177,7 +178,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning(ex, "Failed to set button styles");
+                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
                     }
                     break;
                 case MessageBoxButtons.YesNoCancel:
@@ -193,7 +194,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning(ex, "Failed to set button styles");
+                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
                     }
                     break;
                 case MessageBoxButtons.YesNo:
@@ -207,7 +208,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning(ex, "Failed to set button styles");
+                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
                     }
                     break;
                 default:
@@ -219,7 +220,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning(ex, "Failed to set button styles");
+                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
                     }
                     break;
             }
@@ -419,14 +420,14 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
     {
         EventHandler<SubmitEventArgs<TEntity>>? onSubmitted = null;
         onSubmitted = (_, args) =>
-            _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+            HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
         viewmodel.Submitted += onSubmitted;
 
         EventHandler? onCancelledHandler = null;
         if (cancelledEventHandler is not null)
         {
             onCancelledHandler = (_, _) =>
-                _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
             viewmodel.Cancelled += onCancelledHandler;
         }
 
@@ -438,7 +439,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                 viewmodel.Cancelled -= onCancelledHandler;
 
             if (closedEventHandler is not null)
-                _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
 
             scope.Dispose();
         };
@@ -504,7 +505,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning(ex, "Failed to set button styles");
+                    _logger.LogWarning(ex, ButtonStyleErrorMessage);
                 }
 
                 EventHandler? viewModelClosedHandler = null;
@@ -513,7 +514,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     if (sender is IViewModelDialog<TEntity> vm)
                         vm.Closed -= viewModelClosedHandler;
 
-                    _ = HandleViewModelClosedAsync(window).SafeFireAndForget();
+                    HandleViewModelClosedAsync(window).SafeFireAndForget();
                 };
 
                 viewmodel.Closed += viewModelClosedHandler;

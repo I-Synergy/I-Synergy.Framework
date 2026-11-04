@@ -10,6 +10,7 @@ namespace ISynergy.Framework.UI.Extensions;
 /// </summary>
 public static class DispatcherQueueExtensions
 {
+    private const string TaskCannotBeNullMessage = "The Task returned by function cannot be null.";
     private const string FailedToEnqueueMessage = "Failed to enqueue the operation";
 
     /// <summary>
@@ -140,7 +141,7 @@ public static class DispatcherQueueExtensions
                     return awaitableResult;
                 }
 
-                return Task.FromException(GetEnqueueException("The Task returned by function cannot be null."));
+                return Task.FromException(GetEnqueueException(TaskCannotBeNullMessage));
             }
             catch (Exception e)
             {
@@ -164,7 +165,7 @@ public static class DispatcherQueueExtensions
                     }
                     else
                     {
-                        taskCompletionSource.SetException(GetEnqueueException("The Task returned by function cannot be null."));
+                        taskCompletionSource.SetException(GetEnqueueException(TaskCannotBeNullMessage));
                     }
                 }
                 catch (Exception e)
@@ -203,7 +204,7 @@ public static class DispatcherQueueExtensions
                     return awaitableResult;
                 }
 
-                return Task.FromException<T>(GetEnqueueException("The Task returned by function cannot be null."));
+                return Task.FromException<T>(GetEnqueueException(TaskCannotBeNullMessage));
             }
             catch (Exception e)
             {
@@ -227,7 +228,7 @@ public static class DispatcherQueueExtensions
                     }
                     else
                     {
-                        taskCompletionSource.SetException(GetEnqueueException("The Task returned by function cannot be null."));
+                        taskCompletionSource.SetException(GetEnqueueException(TaskCannotBeNullMessage));
                     }
                 }
                 catch (Exception e)

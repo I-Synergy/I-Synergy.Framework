@@ -627,7 +627,7 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
             case BrentSearchStatus.MaxIterationsReached:
                 throw new ConvergenceException("The maximum number of iterations was reached.");
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(result), result.Status, "Unexpected search status.");
         }
     }
 

@@ -168,7 +168,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
 
             var f = Function(sample);
 
-            count++;
+            count++; // NOSONAR - intentional: samples pairs of points
             sum += f;
             sum2 += f * f;
         }
@@ -272,7 +272,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
 
             var f = func(u);
 
-            count++;
+            count++; // NOSONAR - intentional: samples pairs of points
             sum += f;
         }
 

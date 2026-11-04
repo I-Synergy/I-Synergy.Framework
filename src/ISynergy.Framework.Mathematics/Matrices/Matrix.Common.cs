@@ -1079,7 +1079,7 @@ public static partial class Matrix
             default:
                 throw new ArgumentException(
                     "Only LowerTriangular, UpperTriangular and Diagonal matrices are supported at this time.",
-                    "matrixType");
+                    nameof(from));
         }
 
         return result;
@@ -1107,7 +1107,7 @@ public static partial class Matrix
             default:
                 throw new ArgumentException(
                     "Only LowerTriangular, UpperTriangular and Diagonal matrices are supported at this time.",
-                    "matrixType");
+                    nameof(from));
         }
 
         return result;
@@ -1135,7 +1135,7 @@ public static partial class Matrix
             default:
                 throw new ArgumentException(
                     "Only LowerTriangular, UpperTriangular and Diagonal matrices are supported at this time.",
-                    "matrixType");
+                    nameof(from));
         }
 
         return result;
@@ -1163,7 +1163,7 @@ public static partial class Matrix
             default:
                 throw new ArgumentException(
                     "Only LowerTriangular, UpperTriangular and Diagonal matrices are supported at this time.",
-                    "matrixType");
+                    nameof(from));
         }
 
         return result;

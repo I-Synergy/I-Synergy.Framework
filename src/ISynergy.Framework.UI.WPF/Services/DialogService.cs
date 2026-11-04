@@ -223,7 +223,7 @@ public class DialogService : BaseDialogService, IDialogService
 
                 EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
                 onSubmittedHandler = (_, args) =>
-                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, windowTypeName, viewModelTypeName)
+                    HandleDialogSubmittedAsync(args.Result, submittedEventHandler, windowTypeName, viewModelTypeName)
                         .SafeFireAndForget();
                 viewmodel.Submitted += onSubmittedHandler;
 
@@ -231,7 +231,7 @@ public class DialogService : BaseDialogService, IDialogService
                 if (cancelledEventHandler is not null)
                 {
                     onCancelledHandler = (_, _) =>
-                        _ = HandleDialogCancelledAsync(cancelledEventHandler, windowTypeName, viewModelTypeName)
+                        HandleDialogCancelledAsync(cancelledEventHandler, windowTypeName, viewModelTypeName)
                             .SafeFireAndForget();
                     viewmodel.Cancelled += onCancelledHandler;
                 }
@@ -242,7 +242,7 @@ public class DialogService : BaseDialogService, IDialogService
                     if (onCancelledHandler is not null) viewmodel.Cancelled -= onCancelledHandler;
 
                     if (closedEventHandler is not null)
-                        _ = HandleDialogClosedAsync(closedEventHandler, windowTypeName, viewModelTypeName)
+                        HandleDialogClosedAsync(closedEventHandler, windowTypeName, viewModelTypeName)
                             .SafeFireAndForget();
 
                     scope.Dispose();

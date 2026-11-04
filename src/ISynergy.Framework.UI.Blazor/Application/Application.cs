@@ -20,6 +20,7 @@ namespace ISynergy.Framework.UI;
 
 public abstract class Application : ComponentBase
 {
+    private const string ExceptionHandlerErrorMessage = "Error in exception handler";
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
@@ -232,7 +233,7 @@ public abstract class Application : ComponentBase
             catch (Exception handlerEx)
             {
                 // If exception handler fails, log directly
-                _logger?.LogError(handlerEx, "Error in exception handler");
+                _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
             }
         }
         else
@@ -267,7 +268,7 @@ public abstract class Application : ComponentBase
             catch (Exception handlerEx)
             {
                 // If exception handler fails, log directly
-                _logger?.LogError(handlerEx, "Error in exception handler");
+                _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
             }
         }
         else
@@ -297,7 +298,7 @@ public abstract class Application : ComponentBase
                 catch (Exception handlerEx)
                 {
                     // If exception handler fails, log directly
-                    _logger?.LogError(handlerEx, "Error in exception handler");
+                    _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
                 }
             }
             else
@@ -326,7 +327,7 @@ public abstract class Application : ComponentBase
             catch (Exception handlerEx)
             {
                 // If exception handler fails, log directly
-                _logger?.LogError(handlerEx, "Error in exception handler");
+                _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
             }
         }
         else
@@ -349,7 +350,6 @@ public abstract class Application : ComponentBase
     public new void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 #else
     /// <summary>
@@ -358,7 +358,6 @@ public abstract class Application : ComponentBase
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 #endif
 

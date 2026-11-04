@@ -14,6 +14,7 @@ namespace ISynergy.Framework.UI.Services;
 
 public class DialogService : IDialogService, IDisposable
 {
+    private const string TitleWelcomeKey = "TitleWelcome";
     private const string ExceptionHandlerNotAvailable = "Exception handler service not available for dialog error";
     private const string ExceptionHandlerFailed = "Exception handler failed while processing dialog error";
     private const string ViewModelInitExceptionHandlerFailed = "Exception handler failed while processing viewmodel initialization error";
@@ -103,21 +104,21 @@ public class DialogService : IDialogService, IDisposable
         if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 6)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Night"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
         }
 
         if (DateTime.Now.Hour >= 6 && DateTime.Now.Hour < 12)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Morning"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
         }
         if (DateTime.Now.Hour >= 12 && DateTime.Now.Hour < 18)
         {
             return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Afternoon"), name),
-                _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+                _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
         }
         return ShowMessageAsync(string.Format(_languageService.GetString("Greeting_Evening"), name),
-            _languageService.GetString("TitleWelcome"), MessageBoxButtons.OK);
+            _languageService.GetString(TitleWelcomeKey), MessageBoxButtons.OK);
     }
 
     /// <summary>
@@ -571,7 +572,7 @@ public class DialogService : IDialogService, IDisposable
                 EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
                 onSubmittedHandler = (_, args) =>
                 {
-                    _ = HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                    HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                 };
                 viewmodel.Submitted += onSubmittedHandler;
 
@@ -580,7 +581,7 @@ public class DialogService : IDialogService, IDisposable
                 {
                     onCancelledHandler = (_, _) =>
                     {
-                        _ = HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                        HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     };
                     viewmodel.Cancelled += onCancelledHandler;
                 }
@@ -595,7 +596,7 @@ public class DialogService : IDialogService, IDisposable
 
                     if (closedEventHandler is not null)
                     {
-                        _ = HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
+                        HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
                     }
 
                     scope.Dispose();
@@ -728,7 +729,7 @@ public class DialogService : IDialogService, IDisposable
         EventHandler? viewModelClosedHandler = null;
         viewModelClosedHandler = (_, _) =>
         {
-            _ = HandleViewModelClosedAsync(viewModelRef, windowRef, viewModelClosedHandler).SafeFireAndForget();
+            HandleViewModelClosedAsync(viewModelRef, windowRef, viewModelClosedHandler).SafeFireAndForget();
         };
 
         try

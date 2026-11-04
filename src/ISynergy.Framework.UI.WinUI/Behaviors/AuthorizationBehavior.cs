@@ -84,7 +84,7 @@ public class Authorization : Behavior<Control>
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Action));
+                    throw new InvalidOperationException($"Unsupported authentication action: {Action}.");
             }
         }
     }

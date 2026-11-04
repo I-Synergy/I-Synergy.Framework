@@ -93,7 +93,7 @@ public abstract class BaseBladeService : IBladeService
             {
                 var submittedVmTypeName = typeof(TBladeViewModel).Name;
                 bladeVm.Submitted += (_, args) =>
-                    _ = HandleBladeSubmittedAsync(args.Result, submittedEventHandler, submittedVmTypeName).SafeFireAndForget();
+                    HandleBladeSubmittedAsync(args.Result, submittedEventHandler, submittedVmTypeName).SafeFireAndForget();
             }
 
             if (cancelledEventHandler is not null)

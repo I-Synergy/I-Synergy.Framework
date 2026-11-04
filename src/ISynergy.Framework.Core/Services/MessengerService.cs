@@ -288,7 +288,7 @@ public sealed class MessengerService : IMessengerService
                 {
                     // Log exceptions to prevent one failing recipient from affecting others
                     // This allows debugging while maintaining message delivery to other recipients
-                    _logger?.LogWarning(ex,
+                    _logger.LogWarning(ex,
                         "Exception occurred while executing message handler. MessageType: {MessageType}, RecipientType: {RecipientType}",
                         message.GetType().Name,
                         item.Action?.Target?.GetType().Name ?? "Unknown");
