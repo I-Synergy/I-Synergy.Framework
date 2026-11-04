@@ -34,14 +34,14 @@ public static class ServiceCollectionExtensions
         var assemblies = new List<Assembly>();
 
         if (assemblyFilter is not null)
-            foreach (var item in candidateAssemblies.Where(a => assemblyFilter(a.GetName())).EnsureNotNull())
-                assemblies.Add(item);
+            assemblies.AddRange(candidateAssemblies.Where(a => assemblyFilter(a.GetName())).EnsureNotNull());
 
-        foreach (var item in candidateAssemblies.Where(a =>
-            a.GetName().Name!.StartsWith("ISynergy.Framework.UI") ||
-            a.GetName().Name!.StartsWith("ISynergy.Framework.Mvvm")).EnsureNotNull())
-            if (!assemblies.Contains(item))
-                assemblies.Add(item);
+        assemblies.AddRange(candidateAssemblies
+            .Where(a =>
+                a.GetName().Name!.StartsWith("ISynergy.Framework.UI") ||
+                a.GetName().Name!.StartsWith("ISynergy.Framework.Mvvm"))
+            .EnsureNotNull()
+            .Where(item => !assemblies.Contains(item)));
 
         services.RegisterAssemblies(assemblies);
     }

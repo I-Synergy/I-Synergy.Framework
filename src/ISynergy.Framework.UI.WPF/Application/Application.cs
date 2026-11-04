@@ -394,10 +394,11 @@ public abstract class Application : System.Windows.Application, IDisposable
             // Add custom resourcedictionaries from code.
             if (Current.Resources?.MergedDictionaries is not null)
             {
-                foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
+                foreach (var item in GetAdditionalResourceDictionaries()
+                    .EnsureNotNull()
+                    .Where(item => !Current.Resources.MergedDictionaries.Contains(item)))
                 {
-                    if (!Current.Resources.MergedDictionaries.Contains(item))
-                        Current.Resources.MergedDictionaries.Add(item);
+                    Current.Resources.MergedDictionaries.Add(item);
                 }
             }
 

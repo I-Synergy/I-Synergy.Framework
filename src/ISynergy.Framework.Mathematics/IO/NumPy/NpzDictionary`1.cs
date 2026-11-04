@@ -105,13 +105,8 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
     ///     true if <paramref name="item" /> is found in the <see cref="T:System.Collections.Generic.ICollection`1" />;
     ///     otherwise, false.
     /// </returns>
-    public bool Contains(T item)
-    {
-        foreach (var v in this)
-            if (Equals(v.Value, item))
-                return true;
-        return false;
-    }
+    public bool Contains(T item) =>
+        ((IEnumerable<KeyValuePair<string, T>>)this).Any(v => Equals(v.Value, item));
 
     /// <summary>
     ///     Throws a <see cref="ReadOnlyException" />.
