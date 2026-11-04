@@ -25,10 +25,12 @@ function injectMCScript(projectId) {
             if (l.getElementById("clarity-script")) {
                 return;
             }
-            c[a] = c[a] ||
-                function () {
-                    (c[a].q = c[a].q || []).push(arguments);
+            if (!c[a]) {
+                c[a] = function () {
+                    c[a].q = c[a].q || [];
+                    c[a].q.push(arguments);
                 };
+            }
             const script = l.createElement(r);
             script.async = 1;
             script.src = "https://www.clarity.ms/tag/" + i + "?ref=npm";
@@ -39,7 +41,7 @@ function injectMCScript(projectId) {
         console.log('Microsoft Clarity initialized successfully');
         return;
     } catch (error) {
-        console.error('Failed to load Microsoft Clarity');
+        console.error('Failed to load Microsoft Clarity', error);
         return;
     }
 };
@@ -85,8 +87,8 @@ export async function initAnalytics(GAmeasurementId, MCprojectId) {
     injectGAScript(GAmeasurementId);
 
     // Microsoft Clarity initialization
-    Clarity.init(MCprojectId)
-    Clarity.consent()
+    Clarity.init(MCprojectId);
+    Clarity.consent();
 
     console.log("Analytics initialized")
 }

@@ -25,13 +25,13 @@ blockquote p:last-child {
 }
 
 .home div[sm="4"], .home div[sm="6"], .home div[sm="8"] {
-    border-bottom: 1px solid var(--neutral-stroke-divider-rest) !important;
+    border-bottom: 1px solid var(--neutral-stroke-divider-rest);
 }
 
 .siteheader {
-    background-color: var(--neutral-layer-4) !important;
+    background-color: var(--neutral-layer-4);
     border-bottom: calc(var(--stroke-width) * 2px) solid var(--accent-fill-rest);
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
 }
 
     .siteheader .logo {
@@ -84,17 +84,14 @@ blockquote p:last-child {
     vertical-align: middle;
 }
 
-.body-stack {
-    flex-direction: row;
-}
 
 .footer {
-    display: flex !important;
-    flex-direction: row !important;
+    display: flex;
+    flex-direction: row;
     background: var(--neutral-layer-4);
-    color: var(--neutral-foreground-rest) !important;
+    color: var(--neutral-foreground-rest);
     padding: 10px 10px;
-    margin-top: 0px !important;
+    margin-top: 0px;
 }
 
     .footer .version a {
@@ -148,12 +145,9 @@ nav fluent-anchor {
 
 
 .fluent-nav-link.notactive .fluent-nav-text {
-    font-weight: 600 !important;
+    font-weight: 600;
 }
 
-.content {
-    display: flex;
-}
 
 ul.news {
     padding-left: 0;
@@ -167,8 +161,6 @@ ul.news {
         padding-bottom: calc(var(--design-unit) * 2px);
     }
 
-.news .calendar {
-}
 
 .news a {
     font-size: var(--type-ramp-plus-1-font-size);
@@ -183,6 +175,7 @@ article {
     border-right: 1px solid var(--neutral-stroke-divider-rest);
     margin: 0 0;
     width: calc(100% - 18rem);
+    transition: width 0.3s ease;
 }
 
 aside {
@@ -374,12 +367,11 @@ kbd {
         .siteheader .logo {
             width: 160px;
             height: 23px;
-            /*padding: 0 25px;*/
         }
 
 
     .body-stack {
-        flex-direction: column !important;
+        flex-direction: column;
     }
 
     nav.sitenav {
@@ -484,8 +476,8 @@ kbd {
     aside {
         padding: 1.5em 0.75em 1em 0.75em;
         width: 100%;
-        height: 100% !important;
-        max-height: 100% !important;
+        height: 100%;
+        max-height: 100%;
     }
 
     article {
@@ -518,7 +510,6 @@ kbd {
             grid-column: 1;
             width: 108px;
             height: 23px;
-            /*padding: 0 30px;*/
         }
 
     main {
@@ -526,9 +517,9 @@ kbd {
         grid-template-columns: env(viewport-segment-width 0 0) 1fr;
     }
 
-    nav {
+    nav.sitenav {
         grid-column: 1;
-        width: env(viewport-segment-width 0 0) !important;
+        width: env(viewport-segment-width 0 0);
     }
 
     .content {
@@ -592,7 +583,7 @@ kbd {
     }
 
     .youtube-responsive .fluid-vids {
-        position: initial !important
+        position: initial
     }
 
 .youtube-title {
@@ -617,45 +608,42 @@ kbd {
 
 @media print {
     pre, code {
-        white-space: pre-wrap !important;
-        word-wrap: break-word !important;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
 
     body {
-        overflow: visible !important;
-        height: auto !important;
+        overflow: visible;
+        height: auto;
     }
 
     .body-content {
-        overflow: visible !important;
-        max-height: 100% !important;
+        overflow: visible;
+        max-height: 100%;
     }
 
     h2:nth-of-type(n+2) {
-        page-break-before: always !important;
+        page-break-before: always;
     }
 
 
     h3, h4, h5, h6 {
-        page-break-after: avoid !important;
+        page-break-after: avoid;
     }
 
-    fluent-tab-panel {
-        page-break-inside: avoid !important;
-    }
 
     .navmenu, .siteheader, aside {
-        visibility: hidden !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        visibility: hidden;
+        height: 0;
+        margin: 0;
+        padding: 0;
     }
 
     .layout > footer {
-        visibility: hidden !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        visibility: hidden;
+        height: 0;
+        margin: 0;
+        padding: 0;
     }
 
     a {
@@ -676,26 +664,26 @@ kbd {
     }
 
     .youtube-responsive {
-        display: none !important; /* Hide embedded videos */
+        display: none; /* Hide embedded videos */
     }
 
     fluent-tab-panel {
-        display: block !important; /* Make all tab panels visible */
-        visibility: visible !important;
-        page-break-inside: avoid !important;
+        display: block; /* Make all tab panels visible */
+        visibility: visible;
+        page-break-inside: avoid;
     }
 
         fluent-tab-panel[hidden] {
-            display: block !important; /* Override hidden attribute */
+            display: block; /* Override hidden attribute */
         }
 
     button, .FluentButton {
-        display: none !important;
+        display: none;
     }
 
     article {
-        padding: 0 !important;
-        border-right: hidden !important;
+        padding: 0;
+        border-right: none;
     }
 
     .video-link {
@@ -705,8 +693,8 @@ kbd {
     }
 
     img {
-        width: auto !important; /* Shrinks oversized images */
-        max-height: 250px !important; /* Limits vertical size */
+        width: auto; /* Shrinks oversized images */
+        max-height: 250px; /* Limits vertical size */
         display: block; /* Prevents inline scaling issues */
     }
 }
@@ -737,6 +725,7 @@ kbd {
 
 .body-stack {
     display: flex;
+    flex-direction: row;
     width: 100%;
     transition: grid-template-columns 0.3s ease;
 }
@@ -757,8 +746,9 @@ kbd {
 }
 
 .content {
+    display: flex;
     width: 100%;
-    transition: all 0.3s ease;
+    transition: width 0.3s ease;
 }
 
     .content.with-console {
@@ -768,10 +758,6 @@ kbd {
     .content.full-width {
         display: block;
     }
-
-article {
-    transition: width 0.3s ease;
-}
 
     article.with-console {
         width: calc(100% - 18rem);

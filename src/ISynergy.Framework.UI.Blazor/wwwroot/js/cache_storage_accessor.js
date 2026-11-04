@@ -22,7 +22,7 @@ function createRequest(url, method, body = "") {
     return request;
 }
 
-export async function put(storageName, url, method, body = "", responseString) {
+export async function put(storageName, url, method, responseString, body = "") {
     const CACHING_DURATION = 7 * 24 * 3600;
 
     const expires = new Date();

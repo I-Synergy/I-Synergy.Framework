@@ -8,7 +8,7 @@
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI Variable","Segoe UI",sans-serif;background:#111;color:#fff;padding:32px;}
   h1{font-size:20px;font-weight:600;color:#e0e0e0;letter-spacing:-0.02em;margin:0;}
   h2{font-size:15px;font-weight:600;margin:0 0 18px;}
-  h3{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:0 0 7px;}
+  h3{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#9a9a9a;margin:0 0 7px;}
   #color-nav{
     position:sticky;top:0;z-index:100;
     background:rgba(17,17,17,.97);backdrop-filter:blur(10px);
@@ -16,22 +16,22 @@
     border-bottom:1px solid #242424;
     display:flex;flex-wrap:wrap;gap:8px;align-items:center;
   }
-  .nav-title{font-size:11px;font-weight:700;color:#555;margin-right:4px;white-space:nowrap;}
+  .nav-title{font-size:11px;font-weight:700;color:#9a9a9a;margin-right:4px;white-space:nowrap;}
   .nav-group{display:flex;gap:4px;}
   .nav-dot{
     width:22px;height:22px;border-radius:5px;cursor:pointer;padding:0;
     border:1px solid rgba(255,255,255,.07);appearance:none;
   }
-  .nav-dot:hover{transform:scale(1.35);box-shadow:0 3px 10px rgba(0,0,0,.5);}
   @media (prefers-reduced-motion: no-preference){
+    .nav-dot:hover{transform:scale(1.35);box-shadow:0 3px 10px rgba(0,0,0,.5);}
     .nav-dot{transition:transform .12s,box-shadow .12s;}
   }
   .palette{background:#1a1a1a;border-radius:14px;padding:26px;margin-bottom:24px;border:1px solid #242424;scroll-margin-top:62px;}
   .row{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap;}
   .swatch{min-width:52px;flex:1;height:64px;border-radius:8px;display:flex;flex-direction:column;
           justify-content:flex-end;padding:5px 7px;font-size:9px;font-weight:600;cursor:default;}
-  .swatch:hover{transform:scale(1.06) translateY(-2px);}
   @media (prefers-reduced-motion: no-preference){
+    .swatch:hover{transform:scale(1.06) translateY(-2px);}
     .swatch{transition:transform .1s;}
   }
   .swatch .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -39,6 +39,7 @@
   .themes{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .theme-panel{border-radius:10px;padding:18px;}
   .theme-panel .row{margin-bottom:0;}
+  .theme-panel[data-theme="light"] h3{color:#555;}
   .theme-panel .swatch{height:52px;min-width:40px;}
 </style>
 <script>function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}</script>
@@ -351,7 +352,7 @@
 </div>
 </section>
 <section class="palette" id="dc2626" data-palette="dc2626">
-<h2 style="color:#DC2626">#DC2626</h2>
+<h2 style="color:#E34F4F">#DC2626</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="dc2626" data-key="tertiary" data-hex="#A51D1D" style="background:#A51D1D;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#A51D1D</span></div>
@@ -434,7 +435,7 @@
 </div>
 </section>
 <section class="palette" id="b91c1c" data-palette="b91c1c">
-<h2 style="color:#B91C1C">#B91C1C</h2>
+<h2 style="color:#CE6060">#B91C1C</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="b91c1c" data-key="tertiary" data-hex="#8B1515" style="background:#8B1515;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#8B1515</span></div>
@@ -517,7 +518,7 @@
 </div>
 </section>
 <section class="palette" id="991b1b" data-palette="991b1b">
-<h2 style="color:#991B1B">#991B1B</h2>
+<h2 style="color:#BD6B6B">#991B1B</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="991b1b" data-key="tertiary" data-hex="#731414" style="background:#731414;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#731414</span></div>
@@ -600,7 +601,7 @@
 </div>
 </section>
 <section class="palette" id="7f1d1d" data-palette="7f1d1d">
-<h2 style="color:#7F1D1D">#7F1D1D</h2>
+<h2 style="color:#B07373">#7F1D1D</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="7f1d1d" data-key="tertiary" data-hex="#5F1616" style="background:#5F1616;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#5F1616</span></div>
@@ -1015,7 +1016,7 @@
 </div>
 </section>
 <section class="palette" id="c2410c" data-palette="c2410c">
-<h2 style="color:#C2410C">#C2410C</h2>
+<h2 style="color:#CD6338">#C2410C</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="c2410c" data-key="tertiary" data-hex="#923109" style="background:#923109;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#923109</span></div>
@@ -1098,7 +1099,7 @@
 </div>
 </section>
 <section class="palette" id="9a3412" data-palette="9a3412">
-<h2 style="color:#9A3412">#9A3412</h2>
+<h2 style="color:#B87159">#9A3412</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="9a3412" data-key="tertiary" data-hex="#74270E" style="background:#74270E;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#74270E</span></div>
@@ -1181,7 +1182,7 @@
 </div>
 </section>
 <section class="palette" id="7c2d12" data-palette="7c2d12">
-<h2 style="color:#7C2D12">#7C2D12</h2>
+<h2 style="color:#AA7665">#7C2D12</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="7c2d12" data-key="tertiary" data-hex="#5D220E" style="background:#5D220E;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#5D220E</span></div>
@@ -1596,7 +1597,7 @@
 </div>
 </section>
 <section class="palette" id="a16207" data-palette="a16207">
-<h2 style="color:#A16207">#A16207</h2>
+<h2 style="color:#AE782A">#A16207</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="a16207" data-key="tertiary" data-hex="#794A05" style="background:#794A05;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#794A05</span></div>
@@ -1679,7 +1680,7 @@
 </div>
 </section>
 <section class="palette" id="854d0e" data-palette="854d0e">
-<h2 style="color:#854D0E">#854D0E</h2>
+<h2 style="color:#A47A4A">#854D0E</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="854d0e" data-key="tertiary" data-hex="#643A0A" style="background:#643A0A;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#643A0A</span></div>
@@ -1762,7 +1763,7 @@
 </div>
 </section>
 <section class="palette" id="713f12" data-palette="713f12">
-<h2 style="color:#713F12">#713F12</h2>
+<h2 style="color:#9E7C5E">#713F12</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="713f12" data-key="tertiary" data-hex="#552F0E" style="background:#552F0E;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#552F0E</span></div>
@@ -2177,7 +2178,7 @@
 </div>
 </section>
 <section class="palette" id="15803d" data-palette="15803d">
-<h2 style="color:#15803D">#15803D</h2>
+<h2 style="color:#38935A">#15803D</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="15803d" data-key="tertiary" data-hex="#10602E" style="background:#10602E;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#10602E</span></div>
@@ -2260,7 +2261,7 @@
 </div>
 </section>
 <section class="palette" id="166534" data-palette="166534">
-<h2 style="color:#166534">#166534</h2>
+<h2 style="color:#558F6B">#166534</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="166534" data-key="tertiary" data-hex="#104C27" style="background:#104C27;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#104C27</span></div>
@@ -2343,7 +2344,7 @@
 </div>
 </section>
 <section class="palette" id="14532d" data-palette="14532d">
-<h2 style="color:#14532D">#14532D</h2>
+<h2 style="color:#628C72">#14532D</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="14532d" data-key="tertiary" data-hex="#0F3E22" style="background:#0F3E22;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#0F3E22</span></div>
@@ -2675,7 +2676,7 @@
 </div>
 </section>
 <section class="palette" id="2563eb" data-palette="2563eb">
-<h2 style="color:#2563EB">#2563EB</h2>
+<h2 style="color:#4A7EEE">#2563EB</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="2563eb" data-key="tertiary" data-hex="#1C4AB0" style="background:#1C4AB0;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#1C4AB0</span></div>
@@ -2758,7 +2759,7 @@
 </div>
 </section>
 <section class="palette" id="1d4ed8" data-palette="1d4ed8">
-<h2 style="color:#1D4ED8">#1D4ED8</h2>
+<h2 style="color:#5A7EE3">#1D4ED8</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="1d4ed8" data-key="tertiary" data-hex="#163BA2" style="background:#163BA2;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#163BA2</span></div>
@@ -2841,7 +2842,7 @@
 </div>
 </section>
 <section class="palette" id="1e40af" data-palette="1e40af">
-<h2 style="color:#1E40AF">#1E40AF</h2>
+<h2 style="color:#687FC9">#1E40AF</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="1e40af" data-key="tertiary" data-hex="#163083" style="background:#163083;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#163083</span></div>
@@ -2924,7 +2925,7 @@
 </div>
 </section>
 <section class="palette" id="1e3a8a" data-palette="1e3a8a">
-<h2 style="color:#1E3A8A">#1E3A8A</h2>
+<h2 style="color:#6F81B4">#1E3A8A</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="1e3a8a" data-key="tertiary" data-hex="#162C68" style="background:#162C68;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#162C68</span></div>
@@ -3173,7 +3174,7 @@
 </div>
 </section>
 <section class="palette" id="8b5cf6" data-palette="8b5cf6">
-<h2 style="color:#8B5CF6">#8B5CF6</h2>
+<h2 style="color:#9266F7">#8B5CF6</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="8b5cf6" data-key="tertiary" data-hex="#6845B8" style="background:#6845B8;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#6845B8</span></div>
@@ -3256,7 +3257,7 @@
 </div>
 </section>
 <section class="palette" id="7c3aed" data-palette="7c3aed">
-<h2 style="color:#7C3AED">#7C3AED</h2>
+<h2 style="color:#9965F1">#7C3AED</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="7c3aed" data-key="tertiary" data-hex="#5D2CB2" style="background:#5D2CB2;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#5D2CB2</span></div>
@@ -3339,7 +3340,7 @@
 </div>
 </section>
 <section class="palette" id="6d28d9" data-palette="6d28d9">
-<h2 style="color:#6D28D9">#6D28D9</h2>
+<h2 style="color:#9968E4">#6D28D9</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="6d28d9" data-key="tertiary" data-hex="#521EA3" style="background:#521EA3;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#521EA3</span></div>
@@ -3422,7 +3423,7 @@
 </div>
 </section>
 <section class="palette" id="5b21b6" data-palette="5b21b6">
-<h2 style="color:#5B21B6">#5B21B6</h2>
+<h2 style="color:#946FD0">#5B21B6</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="5b21b6" data-key="tertiary" data-hex="#441988" style="background:#441988;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#441988</span></div>
@@ -3505,7 +3506,7 @@
 </div>
 </section>
 <section class="palette" id="4c1d95" data-palette="4c1d95">
-<h2 style="color:#4C1D95">#4C1D95</h2>
+<h2 style="color:#9275BE">#4C1D95</h2>
 <h3>Primary Palette</h3>
 <div class="row">
 <div class="swatch" data-palette="4c1d95" data-key="tertiary" data-hex="#391670" style="background:#391670;color:#fff" title="tertiary"><span class="name">Tertiary</span><span class="hex">#391670</span></div>

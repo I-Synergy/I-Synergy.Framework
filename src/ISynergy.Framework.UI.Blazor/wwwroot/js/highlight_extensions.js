@@ -13,7 +13,7 @@ const highlight = hljs_addJavaScript('https://cdn.jsdelivr.net/npm/@highlightjs/
 
 // Add custom code
 highlight.onload = () => {
-    const hljsRazor = hljs_addJavaScript('https://cdn.jsdelivr.net/npm/highlightjs-cshtml-razor@2.1.1/dist/cshtml-razor.min.js');
+    hljs_addJavaScript('https://cdn.jsdelivr.net/npm/highlightjs-cshtml-razor@2.1.1/dist/cshtml-razor.min.js');
 
     // Switch highlight Dark/Light theme
     const theme = document.querySelector('loading-theme > fluent-design-theme');
@@ -39,7 +39,8 @@ highlight.onload = () => {
 function hljs_ColorSystem() {
     const theme = document.querySelector('loading-theme > fluent-design-theme');
     if (theme != null) {
-        if (theme.getAttribute('mode') == 'null' || theme.getAttribute('mode') == null || theme.getAttribute('mode').value === undefined) {
+        const mode = theme.getAttribute('mode');
+        if (mode == null || mode === 'null') {
             const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             hljs_ColorSwitcher(isSystemDark);
         }
