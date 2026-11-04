@@ -710,6 +710,9 @@ public class AugmentedLagrangianTest
         {
             errorConstraintsTest[i] = nonlinearConstraintsTest[i].Function(solverTest.Solution);
         }
+
+        Assert.IsNotNull(solverTest.Solution);
+        Assert.AreEqual(nVariablesTest, solverTest.Solution.Length);
     }
 
     //[TestMethod]
