@@ -139,7 +139,7 @@ public class DialogService : IDialogService, IDisposable
         }
 
         // Circuit breaker pattern: Check if service is in cooldown
-        if (!_dialogServiceAvailable && DateTime.Now - _lastFailureTime < _cooldownPeriod)
+        if (!_dialogServiceAvailable && DateTime.UtcNow - _lastFailureTime < _cooldownPeriod)
         {
             _logger?.LogWarning("DialogService in cooldown period. Message: {Title} - {Message}", title, message);
             await TryFallbackNotificationAsync(message, title);
@@ -147,7 +147,7 @@ public class DialogService : IDialogService, IDisposable
         }
 
         // Try to recover after cooldown period
-        if (!_dialogServiceAvailable && DateTime.Now - _lastFailureTime >= _cooldownPeriod)
+        if (!_dialogServiceAvailable && DateTime.UtcNow - _lastFailureTime >= _cooldownPeriod)
         {
             _logger?.LogInformation("Attempting to recover DialogService after cooldown period");
             _dialogServiceAvailable = true;
@@ -256,9 +256,9 @@ public class DialogService : IDialogService, IDisposable
 
             return MessageBoxResults.Cancel;
         }
-        catch (OperationCanceledException) when (cts.Token.IsCancellationRequested)
+        catch (OperationCanceledException ex) when (cts.Token.IsCancellationRequested)
         {
-            _logger?.LogWarning("Dialog operation timed out after 30 seconds");
+            _logger?.LogWarning(ex, "Dialog operation timed out after 30 seconds");
             throw new TimeoutException("Dialog operation timed out");
         }
     }
@@ -291,7 +291,7 @@ public class DialogService : IDialogService, IDisposable
     {
         _consecutiveFailures = _maxConsecutiveFailures; // Immediately disable service
         _dialogServiceAvailable = false;
-        _lastFailureTime = DateTime.Now;
+        _lastFailureTime = DateTime.UtcNow;
 
         _logger?.LogCritical(ex, "Critical dialog service failure. Service disabled. Message: {Title} - {Message}", title, message);
 
@@ -306,7 +306,7 @@ public class DialogService : IDialogService, IDisposable
         if (_consecutiveFailures >= _maxConsecutiveFailures)
         {
             _dialogServiceAvailable = false;
-            _lastFailureTime = DateTime.Now;
+            _lastFailureTime = DateTime.UtcNow;
             _logger?.LogError(ex, "DialogService disabled after {FailureCount} consecutive failures. Message: {Title} - {Message}", // NOSONAR
                 _consecutiveFailures, title, message);
         }
@@ -436,53 +436,6 @@ public class DialogService : IDialogService, IDisposable
         }
     }
 
-    /// <remarks>
-    /// The <paramref name="window"/> must already be resolved from the caller's DI scope together
-    /// with the <paramref name="viewmodel"/>. Both share the same scope so they are disposed
-    /// together when the dialog closes — no additional scope is created here.
-    /// </remarks>
-    private async Task ShowDialogAsyncInternal<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
-    {
-        try
-        {
-            if (window is Window dialog)
-            {
-                // Window was already resolved from the caller's scope (same scope as the ViewModel).
-                // No additional scope or Closed handler is needed — the caller manages the scope
-                // lifecycle and disposes both the ViewModel and the Window when Closed fires.
-                await CreateDialogAsync(dialog, viewmodel);
-            }
-            else
-            {
-                _logger?.LogError("Dialog is not of type Window: {DialogType}", window?.GetType().Name ?? "null");
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Error showing dialog for window type {WindowType}", window.GetType().Name);
-
-            bool handled = false;
-
-            try
-            {
-                _exceptionHandlerService.HandleException(ex);
-                handled = true;
-            }
-            catch (Exception handlerEx)
-            {
-                // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
-            }
-
-            // Suppress exception if it was successfully handled or if handler is not available
-            // This prevents app crashes while still allowing the handler to show user-friendly messages
-            if (!handled)
-            {
-                _logger?.LogWarning(ExceptionHandlerNotAvailable);
-            }
-        }
-    }
-
     /// <summary>
     /// Shows the dialog asynchronous.
     /// </summary>
@@ -547,10 +500,57 @@ public class DialogService : IDialogService, IDisposable
         }
     }
 
+    /// <remarks>
+    /// The <paramref name="window"/> must already be resolved from the caller's DI scope together
+    /// with the <paramref name="viewmodel"/>. Both share the same scope so they are disposed
+    /// together when the dialog closes — no additional scope is created here.
+    /// </remarks>
+    private async Task ShowDialogAsyncInternal<TEntity>(IWindow window, IViewModelDialog<TEntity> viewmodel)
+    {
+        try
+        {
+            if (window is Window dialog)
+            {
+                // Window was already resolved from the caller's scope (same scope as the ViewModel).
+                // No additional scope or Closed handler is needed — the caller manages the scope
+                // lifecycle and disposes both the ViewModel and the Window when Closed fires.
+                await CreateDialogAsync(dialog, viewmodel);
+            }
+            else
+            {
+                _logger?.LogError("Dialog is not of type Window: {DialogType}", window?.GetType().Name ?? "null");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error showing dialog for window type {WindowType}", window.GetType().Name);
+
+            bool handled = false;
+
+            try
+            {
+                _exceptionHandlerService.HandleException(ex);
+                handled = true;
+            }
+            catch (Exception handlerEx)
+            {
+                // Log failure of exception handler but suppress original exception to prevent app crash
+                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
+            }
+
+            // Suppress exception if it was successfully handled or if handler is not available
+            // This prevents app crashes while still allowing the handler to show user-friendly messages
+            if (!handled)
+            {
+                _logger?.LogWarning(ExceptionHandlerNotAvailable);
+            }
+        }
+    }
+
     /// <summary>
     /// Shared implementation for the entity and no-entity dialog overloads.
     /// </summary>
-    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(
+    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>( // NOSONAR - dialog orchestration
         Action<IViewModelDialog<TEntity>>? configure,
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler,

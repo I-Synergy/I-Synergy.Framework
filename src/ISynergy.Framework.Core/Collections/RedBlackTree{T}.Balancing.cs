@@ -25,7 +25,7 @@ public partial class RedBlackTree<T>
         /// <param name="tree">The tree being modified.</param>
         /// <param name="item">The freshly inserted node.</param>
         /// <param name="parent">The node under which <paramref name="item"/> was inserted.</param>
-        public static void FixAfterInsert(RedBlackTree<T> tree, RedBlackTreeNode<T> item, RedBlackTreeNode<T> parent)
+        public static void FixAfterInsert(RedBlackTree<T> tree, RedBlackTreeNode<T> item, RedBlackTreeNode<T> parent) // NOSONAR - red-black balancing algorithm
         {
             var p = parent;
 
@@ -78,7 +78,7 @@ public partial class RedBlackTree<T>
         /// <param name="tree">The tree being modified.</param>
         /// <param name="m">The node that replaced the removed node (may be <c>null</c>).</param>
         /// <param name="mp">The parent of <paramref name="m"/> (may be <c>null</c>).</param>
-        public static void FixAfterRemove(RedBlackTree<T> tree, RedBlackTreeNode<T>? m, RedBlackTreeNode<T>? mp)
+        public static void FixAfterRemove(RedBlackTree<T> tree, RedBlackTreeNode<T>? m, RedBlackTreeNode<T>? mp) // NOSONAR - red-black balancing algorithm
         {
         deleteblack:
             if (mp is not null)

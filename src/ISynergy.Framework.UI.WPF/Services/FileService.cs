@@ -16,7 +16,6 @@ public class FileService : IFileService<FileResult>
     /// <summary>
     /// The dialog service.
     /// </summary>
-    private readonly IDialogService _dialogService;
 
     public string Filter { get; set; } = string.Empty;
     public bool AddExtension { get; set; }
@@ -31,10 +30,8 @@ public class FileService : IFileService<FileResult>
     /// Initializes a new instance of the <see cref="FileService" /> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    public FileService(IDialogService dialogService)
+    public FileService()
     {
-        _dialogService = dialogService;
-
         AddExtension = true;
         CheckFileExists = false;
         CheckPathExists = true;

@@ -165,7 +165,7 @@ public class NavigationService : BaseNavigationService
     // -----------------------------------------------------------------------
     // Override: NavigateModalAsync — native MAUI modal stack
     // -----------------------------------------------------------------------
-    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null)
+    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null) // NOSONAR - native modal-stack orchestration
     {
         if (Application.Current is null)
             return;
@@ -248,17 +248,6 @@ public class NavigationService : BaseNavigationService
     // -----------------------------------------------------------------------
     // Obsolete: Typed-view navigation overloads (not supported in MAUI)
     // -----------------------------------------------------------------------
-    [Obsolete("Not supported!", true)]
-    public new Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView
-        => throw new NotImplementedException();
-
-    [Obsolete("Not supported!", true)]
-    public new Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView
-        => throw new NotImplementedException();
 
     // -----------------------------------------------------------------------
     // Private helpers

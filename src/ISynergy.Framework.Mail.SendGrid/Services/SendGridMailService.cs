@@ -23,7 +23,6 @@ namespace ISynergy.Framework.Mail.SendGrid.Services;
 internal class SendGridMailService : IMailService
 {
     private readonly SendGridClient _sendGridClient;
-    private readonly ILogger _logger;
 
     /// <summary>
     /// Constructor of Email Service.
@@ -31,12 +30,9 @@ internal class SendGridMailService : IMailService
     /// <param name="sendGridOptions">The configuration.</param>
     /// <param name="logger">The logger.</param>
     public SendGridMailService(
-        IOptions<SendGridMailOptions> sendGridOptions,
-        ILogger<SendGridMailService> logger)
+        IOptions<SendGridMailOptions> sendGridOptions)
     {
         var options = sendGridOptions.Value;
-        _logger = logger;
-
         Argument.IsNotNullOrEmpty(options.EmailAddress);
         Argument.IsNotNullOrEmpty(options.Sender);
         Argument.IsNotNullOrEmpty(options.Key);
@@ -53,8 +49,6 @@ internal class SendGridMailService : IMailService
     /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
     public async Task<bool> SendEmailAsync(MailMessage emailMessage, CancellationToken cancellationToken = default)
     {
-        try
-        {
             var personalization = new Personalization();
 
             if (emailMessage.EmailAddressesTo.Count > 0)
@@ -92,10 +86,5 @@ internal class SendGridMailService : IMailService
             }
 
             return false;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 }

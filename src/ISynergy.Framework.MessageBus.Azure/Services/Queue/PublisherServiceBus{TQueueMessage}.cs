@@ -21,7 +21,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     where TOption : class, IQueueOption, new()
 {
     private readonly TOption _option;
-    private readonly ILogger _logger;
     private readonly JsonTypeInfo<TQueueMessage>? _jsonTypeInfo;
 
     /// <summary>
@@ -35,7 +34,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     /// </param>
     public PublisherServiceBus(
         IOptions<TOption> options,
-        ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger,
         JsonTypeInfo<TQueueMessage> jsonTypeInfo)
     {
         _option = options.Value;
@@ -43,7 +41,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
         Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
 
-        _logger = logger;
         _jsonTypeInfo = jsonTypeInfo;
     }
 
@@ -65,7 +62,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
         Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
 
-        _logger = logger;
     }
 
     /// <summary>

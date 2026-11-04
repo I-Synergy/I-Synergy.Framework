@@ -101,16 +101,16 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
             throw new ArgumentException("input must not be empty", nameof(fileContent));
 
         // iterate over each type and determine if we have a match based on file signature.
-        foreach (var fileTypeInfo in AvailableTypes
+        var matchedType = AvailableTypes
             .Where(q =>
                 q.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
                 !string.IsNullOrEmpty(q.Alias) && q.Alias.IndexOf(extension, 0, StringComparison.OrdinalIgnoreCase) != -1)
-            .ToList().EnsureNotNull())
-        {
-            // if we found a match return the matching filetypeinfo
-            if (IsMatchingType(fileContent, fileTypeInfo))
-                return fileTypeInfo;
-        }
+            .ToList()
+            .EnsureNotNull()
+            .FirstOrDefault(fileTypeInfo => IsMatchingType(fileContent, fileTypeInfo));
+
+        if (matchedType is not null)
+            return matchedType;
 
         if (IsAscii(fileContent))
             return asciiFileType;

@@ -36,7 +36,7 @@ public class LoadingView : ContentPage
 
         _applicationLifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
 
-        InitializeContent(commonServices, splashScreenOptions);
+        InitializeContent(splashScreenOptions);
 
         SetupEventHandlers();
 
@@ -138,7 +138,7 @@ public class LoadingView : ContentPage
     /// <summary>
     /// Initializes the view content and layout.
     /// </summary>
-    private void InitializeContent(ICommonServices _, SplashScreenOptions splashScreenOptions)
+    private void InitializeContent(SplashScreenOptions splashScreenOptions)
     {
         // Always create background image for the default splash
         _backgroundImage = new Image

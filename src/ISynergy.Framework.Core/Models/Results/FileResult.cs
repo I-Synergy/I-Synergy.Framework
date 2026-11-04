@@ -96,7 +96,7 @@ public sealed class FileResult : IDisposable
     public async Task<byte[]> GetFileAsync()
     {
         using var stream = await GetStreamAsync().ConfigureAwait(false);
-        return stream.ToByteArray();
+        return await stream.ToByteArrayAsync().ConfigureAwait(false);
     }
 
     /// <summary>

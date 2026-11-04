@@ -44,7 +44,7 @@ public static class WindowsAppBuilderExtensions
     /// <returns></returns>
     [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
         Justification = "View, ViewModel and Window types are rooted by the application XAML compilation (XamlTypeInfo) and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
-    public static IHostApplicationBuilder ConfigureServices<
+    public static IHostApplicationBuilder ConfigureServices< // NOSONAR - DI composition root
         TApplication,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,

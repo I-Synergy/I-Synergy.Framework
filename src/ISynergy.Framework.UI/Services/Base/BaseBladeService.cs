@@ -185,7 +185,7 @@ public abstract class BaseBladeService : IBladeService
     protected abstract Task MonitorViewLoadAsync(IView view, int timeoutMs = 500);
 
     /// <inheritdoc />
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR - removal orchestration
     {
         if (viewmodel is not IViewModelBlade bladeVm)
             return;
@@ -206,7 +206,8 @@ public abstract class BaseBladeService : IBladeService
             }
 
             if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
-            {                if (owner.Blades.Count < 1)
+            {
+                if (owner.Blades.Count < 1)
                     owner.IsPaneVisible = false;
                 else if (owner.Blades[^1] is { } blade)
                 {

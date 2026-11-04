@@ -11,7 +11,9 @@ namespace ISynergy.Framework.UI.Options;
 public partial class HostOptions
 {
     [LibraryImport("microsoft.ui.xaml.dll")]
-    public static partial void XamlCheckProcessRequirements();
+    private static partial void XamlCheckProcessRequirements();
+
+    internal static void EnsureXamlProcessRequirements() => XamlCheckProcessRequirements();
 
     /// <summary>
     /// The default timeout for <see cref="IHost.StopAsync(System.Threading.CancellationToken)"/>.

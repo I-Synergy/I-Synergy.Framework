@@ -6,7 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Singleton)]
-public abstract class TabbedView : TabbedPage, IView
+public abstract class TabbedView : TabbedPage, IView // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     private IServiceScope? _viewModelScope;
 

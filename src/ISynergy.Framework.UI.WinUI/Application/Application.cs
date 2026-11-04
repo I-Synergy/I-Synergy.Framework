@@ -190,7 +190,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 // Initialize environment variables from configuration and command-line parameters
                 InitializeEnvironmentVariables(); // NOSONAR
             }
-            catch (Exception ex)
+            catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
             {
                 _logger?.LogCritical(ex, "Critical error during application initialization");
                 throw;
@@ -574,7 +574,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected virtual Task HandleApplicationInitializedAsync() =>
         Task.CompletedTask;
 
-    public bool _isClosing = false;
+    private bool _isClosing;
 
     protected void ExitSuccess()
     {

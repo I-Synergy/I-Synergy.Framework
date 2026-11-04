@@ -331,7 +331,7 @@ public partial class BladeView : UserControl, IDisposable
     /// into the already disposed view model and throw <see cref="ObjectDisposedException"/> on the
     /// next open of the same page.
     /// </remarks>
-    private void DetachBladeView(IView view)
+    private static void DetachBladeView(IView view)
     {
         if (view is FrameworkElement element)
             element.DataContext = null;

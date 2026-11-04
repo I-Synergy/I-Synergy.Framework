@@ -42,14 +42,14 @@ public static class ViewModelExtensions
     private static Func<Assembly, bool> assemblyFilter => // NOSONAR
         (x =>
         !x.IsDynamic &&
-        !x.FullName!.StartsWith("System", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("WinRT", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Microsoft", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Syncfusion", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Snippets", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Xamarin", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("netstandard", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("mscorlib", StringComparison.Ordinal));
+        !x.FullName.StartsWith("System", StringComparison.Ordinal) &&
+        !x.FullName.StartsWith("WinRT", StringComparison.Ordinal) &&
+        !x.FullName.StartsWith("Microsoft", StringComparison.Ordinal) &&
+        !x.FullName.StartsWith("Syncfusion", StringComparison.Ordinal) &&
+        !x.FullName.StartsWith("Snippets", StringComparison.Ordinal) &&
+        !x.FullName.StartsWith("Xamarin", StringComparison.Ordinal) &&
+        !x.FullName.StartsWith("netstandard", StringComparison.Ordinal) &&
+        !x.FullName.StartsWith("mscorlib", StringComparison.Ordinal));
 
     /// <summary>
     /// In case of an generic viewmodel, this function returns the base name from IViewModel. 

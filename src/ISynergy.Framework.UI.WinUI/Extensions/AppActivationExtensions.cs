@@ -14,7 +14,7 @@ namespace ISynergy.Framework.UI.Extensions;
 internal static class AppActivationExtensions
 {
     // Single-instance flag — set by ConfigureSingleInstance()
-    internal static bool IsSingleInstanceEnabled;
+    internal static bool IsSingleInstanceEnabled { get; set; }
 
     private static Action<string[]>? s_defaultAction;
     private static Action<ProtocolActivatedEventArgs>? s_protocolAction;

@@ -43,10 +43,10 @@ public class ClipboardService : IClipboardService
             if (contentType == "image/bmp")
             {
                 var pngBytes = await ConvertBmpToPngAsync(imageBytes);
-                return ImageResult.Success(pngBytes, "image/png");
+                return await ImageResult.SuccessAsync(pngBytes, "image/png");
             }
 
-            return ImageResult.Success(imageBytes, contentType);
+            return await ImageResult.SuccessAsync(imageBytes, contentType);
         }
         return null;
     }

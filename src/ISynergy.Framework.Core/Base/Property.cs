@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Core.Base;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <seealso cref="IProperty{T}" />
-public class Property<T> : IProperty<T>, IDisposable
+public class Property<T> : IProperty<T>, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     /// <summary>
     /// Occurs when [value changed].

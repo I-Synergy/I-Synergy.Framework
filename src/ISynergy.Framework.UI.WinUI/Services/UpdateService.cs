@@ -10,7 +10,6 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 internal class UpdateService : IUpdateService
 {
-    private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
     private readonly ILanguageService _languageService;
 
@@ -31,8 +30,7 @@ internal class UpdateService : IUpdateService
         _dialogService = dialogService;
         _languageService = languageService;
 
-        _logger = logger;
-        _logger.LogTrace("UpdateService instance created with ID: {InstanceId}", Guid.NewGuid());
+        logger.LogTrace("UpdateService instance created with ID: {InstanceId}", Guid.NewGuid());
 
 
     }

@@ -120,9 +120,6 @@ public static class CredentialManager
     [DllImport("advapi32", SetLastError = true, CharSet = CharSet.Unicode)]
     static extern bool CredEnumerate(string? filter, int flag, out int count, out IntPtr pCredentials);
 
-    [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
-    static extern bool CredFree([In] IntPtr cred);
-
     [DllImport("Advapi32.dll", EntryPoint = "CredDeleteW", CharSet = CharSet.Unicode, SetLastError = true)]
     static extern bool CredDelete(string target, CredentialTypes type, int reservedFlag);
 
@@ -145,6 +142,9 @@ public static class CredentialManager
 
     sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
     {
+        [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
+        static extern bool CredFree([In] IntPtr cred);
+
         public CriticalCredentialHandle(IntPtr preexistingHandle)
         {
             SetHandle(preexistingHandle);

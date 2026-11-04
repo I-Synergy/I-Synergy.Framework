@@ -19,7 +19,7 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class TokenStorageService : ITokenStorageService
 {
-    private readonly IInfoService _infoService;
+    private readonly IInfoService _infoService; // NOSONAR - used in platform-specific branches
     private readonly ILogger<TokenStorageService> _logger;
 
     private const string AccessTokenKey = "access_token";
@@ -87,7 +87,7 @@ public class TokenStorageService : ITokenStorageService
 
             _logger.LogDebug("Tokens saved successfully");
         }
-        catch (Exception ex)
+        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
         {
             _logger.LogError(ex, "Failed to save tokens");
             throw;
@@ -106,14 +106,14 @@ public class TokenStorageService : ITokenStorageService
 
             _logger.LogDebug("Tokens cleared successfully");
         }
-        catch (Exception ex)
+        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
         {
             _logger.LogError(ex, "Failed to clear tokens");
             throw;
         }
     }
 
-    private Task<string?> GetSecureValueAsync(string key)
+    private Task<string?> GetSecureValueAsync(string key) // NOSONAR - uses platform-specific instance state
     {
 #if WINDOWS
         try
@@ -146,11 +146,12 @@ public class TokenStorageService : ITokenStorageService
         }
         return Task.FromResult<string?>(null);
 #else
+        _ = key;
         return Task.FromResult<string?>(null);
 #endif
     }
 
-    private Task SetSecureValueAsync(string key, string value)
+    private Task SetSecureValueAsync(string key, string value) // NOSONAR - uses platform-specific instance state
     {
 #if WINDOWS
         try
@@ -168,7 +169,7 @@ public class TokenStorageService : ITokenStorageService
 
             vault.Add(new PasswordCredential(_infoService.ProductName, key, value));
         }
-        catch (Exception ex)
+        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
         {
             _logger.LogError(ex, "Failed to store value in Windows PasswordVault");
             throw;
@@ -188,11 +189,14 @@ public class TokenStorageService : ITokenStorageService
         
         SecKeyChain.Remove(record);
         SecKeyChain.Add(record);
+#else
+        _ = key;
+        _ = value;
 #endif
         return Task.CompletedTask;
     }
 
-    private Task DeleteSecureValueAsync(string key)
+    private Task DeleteSecureValueAsync(string key) // NOSONAR - uses platform-specific instance state
     {
 #if WINDOWS
         try
@@ -217,6 +221,8 @@ public class TokenStorageService : ITokenStorageService
             Account = key
         };
         SecKeyChain.Remove(record);
+#else
+        _ = key;
 #endif
         return Task.CompletedTask;
     }

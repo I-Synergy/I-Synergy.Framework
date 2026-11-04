@@ -126,7 +126,7 @@ public class LoadingView : Page
         loadingSpinner.SetBinding(LoadingSpinner.MessageProperty, new Binding
         {
             Source = _commonServices.BusyService,
-            Path = new PropertyPath(nameof(IBusyService.BusyMessage))
+            Path = new PropertyPath((object)nameof(IBusyService.BusyMessage))
         });
 
         mainGrid.Children.Add(loadingSpinner);

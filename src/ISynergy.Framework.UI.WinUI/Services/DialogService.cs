@@ -541,7 +541,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     throw;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
             {
                 _logger.LogError(ex, "Error creating dialog");
                 throw;
@@ -602,7 +602,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                         else
                         {
                             // Cancel the timeout task since dialog closed successfully
-                            cts.Cancel();
+                            await cts.CancelAsync();
                         }
                     }
                 }
@@ -631,7 +631,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                     }
 
                     // Cancel the timeout task since dialog completed successfully
-                    cts.Cancel();
+                    await cts.CancelAsync();
                     return await showTask;
                 }
             }
@@ -652,7 +652,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
         finally
         {
             // Only release if we successfully acquired the semaphore
-            if (semaphoreAcquired)
+            if (semaphoreAcquired) // NOSONAR - releasing an unacquired semaphore would throw
             {
                 try
                 {

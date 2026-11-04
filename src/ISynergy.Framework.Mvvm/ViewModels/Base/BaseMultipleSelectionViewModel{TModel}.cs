@@ -16,7 +16,7 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Base;
 /// <typeparam name="TModel">The model type.</typeparam>
 public abstract class BaseMultipleSelectionViewModel<TModel> : BaseSelectionViewModel<TModel, List<TModel>>, IMultipleSelectionViewModel
 {
-    List<object>? IMultipleSelectionViewModel.SelectedItem => SelectedItem?.Cast<object>().ToList();
+    List<object>? IMultipleSelectionViewModel.SelectedItem => SelectedItem?.Cast<object>().ToList(); // NOSONAR - interface property, cannot be a method
 
     /// <inheritdoc />
     public virtual void SetSelectedItem(IEnumerable<object>? items)
@@ -24,7 +24,7 @@ public abstract class BaseMultipleSelectionViewModel<TModel> : BaseSelectionView
         SelectedItem = new List<TModel>();
 
         foreach (var item in items.EnsureNotNull())
-            SelectedItem.Add((TModel)item!);
+            SelectedItem.Add((TModel)item);
     }
 
     /// <summary>

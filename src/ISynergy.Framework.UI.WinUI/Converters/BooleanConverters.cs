@@ -242,13 +242,8 @@ public sealed class InverseBooleanConverter : IValueConverter
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="InvalidOperationException">The target must be a boolean</exception>
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        if (value is bool x)
-            return !x;
-
-        throw new InvalidOperationException("The target must be a boolean");
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
+        Convert(value, targetType, parameter, language);
 }
 
 /// <summary>

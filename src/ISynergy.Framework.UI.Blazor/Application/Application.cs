@@ -18,7 +18,7 @@ using System.Globalization;
 
 namespace ISynergy.Framework.UI;
 
-public abstract class Application : ComponentBase
+public abstract class Application : ComponentBase, IDisposable
 {
     private const string ExceptionHandlerErrorMessage = "Error in exception handler";
     protected readonly IExceptionHandlerService _exceptionHandlerService;
@@ -126,7 +126,7 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    protected void InitializeEnvironmentVariables()
     {
         try
         {

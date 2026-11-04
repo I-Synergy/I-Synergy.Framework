@@ -5,7 +5,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Scoped)]
-public class Window : ContentPage, IWindow
+public class Window : ContentPage, IWindow // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     public IViewModel ViewModel
     {

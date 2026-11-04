@@ -17,7 +17,6 @@ namespace ISynergy.Framework.Storage.Azure.Services;
 internal class AzureStorageService : IStorageService
 {
     private readonly AzureStorageOptions _options;
-    private readonly ILogger<AzureStorageService> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AzureStorageService"/> class.
@@ -25,14 +24,11 @@ internal class AzureStorageService : IStorageService
     /// <param name="options">The Azure storage options.</param>
     /// <param name="logger">The logger.</param>
     public AzureStorageService(
-        IOptions<AzureStorageOptions> options,
-        ILogger<AzureStorageService> logger)
+        IOptions<AzureStorageOptions> options)
     {
         Argument.IsNotNull(options);
-        Argument.IsNotNull(logger);
 
         _options = options.Value;
-        _logger = logger;
     }
 
     /// <summary>

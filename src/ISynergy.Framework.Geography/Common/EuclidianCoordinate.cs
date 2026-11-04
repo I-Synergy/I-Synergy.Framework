@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Geography.Common;
 /// <summary>
 /// This class specifically models two-dimensional points in a flat plane
 /// </summary>
-public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
+public class EuclidianCoordinate : IEquatable<EuclidianCoordinate> // NOSONAR - public base type; sealing would break consumers
 {
     /// <summary>
     /// The default precision

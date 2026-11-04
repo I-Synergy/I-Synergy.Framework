@@ -101,7 +101,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             // Get logger first for proper error tracking
             try
             {
-                _logger = IPlatformApplication.Current!.Services.GetRequiredService<ILogger<Application>>();
+                _logger = IPlatformApplication.Current.Services.GetRequiredService<ILogger<Application>>();
                 _logger.LogTrace("Application constructor started");
             }
             catch (Exception ex)
@@ -119,16 +119,16 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
                 CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
-                _commonServices = IPlatformApplication.Current!.Services.GetRequiredService<ICommonServices>();
-                _dialogService = IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>();
-                _navigationService = IPlatformApplication.Current!.Services.GetRequiredService<INavigationService>();
-                _exceptionHandlerService = IPlatformApplication.Current!.Services.GetRequiredService<IExceptionHandlerService>();
-                _settingsService = IPlatformApplication.Current!.Services.GetRequiredService<ISettingsService>();
-                _themeService = IPlatformApplication.Current!.Services.GetRequiredService<IThemeService>();
-                _lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
-                _messengerService = IPlatformApplication.Current!.Services.GetRequiredService<IMessengerService>();
+                _commonServices = IPlatformApplication.Current.Services.GetRequiredService<ICommonServices>();
+                _dialogService = IPlatformApplication.Current.Services.GetRequiredService<IDialogService>();
+                _navigationService = IPlatformApplication.Current.Services.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = IPlatformApplication.Current.Services.GetRequiredService<IExceptionHandlerService>();
+                _settingsService = IPlatformApplication.Current.Services.GetRequiredService<ISettingsService>();
+                _themeService = IPlatformApplication.Current.Services.GetRequiredService<IThemeService>();
+                _lifecycleService = IPlatformApplication.Current.Services.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = IPlatformApplication.Current.Services.GetRequiredService<IMessengerService>();
 
-                _features = IPlatformApplication.Current!.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+                _features = IPlatformApplication.Current.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
                 // Pass a timeout to limit the execution time.
                 // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -166,7 +166,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 // Initialize environment variables from configuration and command-line parameters
                 InitializeEnvironmentVariables();
             }
-            catch (Exception ex)
+            catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
             {
                 _logger?.LogCritical(ex, "Critical error during application initialization"); // NOSONAR
                 throw;
@@ -266,13 +266,13 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    protected void InitializeEnvironmentVariables()
     {
         try
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = IPlatformApplication.Current!.Services.GetRequiredService<IConfiguration>();
+            var configuration = IPlatformApplication.Current.Services.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 

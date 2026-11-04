@@ -485,7 +485,7 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
         {
             // Accessing Exception marks it observed, preventing a duplicate report via
             // TaskScheduler.UnobservedTaskException during finalization.
-            var exception = executionTask.Exception!.InnerException!;
+            var exception = executionTask.Exception.InnerException!;
             CommandExceptionDispatcher.Raise(sender, exception);
         }
     }

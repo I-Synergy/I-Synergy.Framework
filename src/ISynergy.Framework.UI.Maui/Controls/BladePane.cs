@@ -154,9 +154,7 @@ public class BladePane : ContentView, IDisposable
     private const uint SlideDurationMilliseconds = 200u;
     private const double CardCornerRadius = 8d;
 
-    private readonly Grid _rootGrid;
     private readonly BoxView _scrim;
-    private readonly Grid _positioningRoot;
     private readonly HorizontalStackLayout _bladesPanel;
 
     private readonly Dictionary<IView, BladeCard> _cards = [];
@@ -212,19 +210,19 @@ public class BladePane : ContentView, IDisposable
             Spacing = BladeSpacing
         };
 
-        _positioningRoot = new Grid
+        var positioningRoot = new Grid
         {
             FlowDirection = FlowDirection.LeftToRight,
             InputTransparent = true,
             CascadeInputTransparent = false
         };
-        _positioningRoot.Children.Add(_bladesPanel);
+        positioningRoot.Children.Add(_bladesPanel);
 
-        _rootGrid = new Grid();
-        _rootGrid.Children.Add(_scrim);
-        _rootGrid.Children.Add(_positioningRoot);
+        var rootGrid = new Grid();
+        rootGrid.Children.Add(_scrim);
+        rootGrid.Children.Add(positioningRoot);
 
-        Content = _rootGrid;
+        Content = rootGrid;
 
         BindingContextChanged += BladePane_BindingContextChanged;
         HandlerChanged += BladePane_HandlerChanged;

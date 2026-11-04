@@ -55,7 +55,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         get;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken = default)
+    public async Task StartAsync(CancellationToken cancellationToken = default) // NOSONAR - host startup orchestration // NOSONAR - host startup orchestration
     {
 
         using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _applicationLifetime.ApplicationStopping);
@@ -64,7 +64,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         await _hostLifetime.WaitForStartAsync(combinedCancellationToken).ConfigureAwait(false);
 
         combinedCancellationToken.ThrowIfCancellationRequested();
-        _hostedServices = Services.GetRequiredService<IEnumerable<IHostedService>>()!;
+        _hostedServices = Services.GetRequiredService<IEnumerable<IHostedService>>();
 
         foreach (var hostedService in _hostedServices.EnsureNotNull())
         {
@@ -77,7 +77,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
             }
         }
 
-        HostOptions.XamlCheckProcessRequirements();
+        HostOptions.EnsureXamlProcessRequirements();
 
         ComWrappersSupport.InitializeComWrappers();
 
@@ -109,7 +109,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
                 try
                 {
-                    existing.RedirectActivationToAsync(activationArgs).AsTask().Wait();
+                    existing.RedirectActivationToAsync(activationArgs).AsTask().GetAwaiter().GetResult();
                     Debug.WriteLine("[SingleInstance] Redirect completed.");
                 }
                 catch (Exception ex)

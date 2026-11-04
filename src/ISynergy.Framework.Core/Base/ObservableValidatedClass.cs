@@ -139,7 +139,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         if (propertyName is null)
             return;
 
-        if (Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is not IProperty<T> property) return;
+        if (Properties.GetOrAdd(propertyName, key => new Property<T>(key)) is not IProperty<T> property) return;
 
         // During cleanup or when events are suppressed, just set the value
         if (!shouldRaiseEvents || IsInCleanup)

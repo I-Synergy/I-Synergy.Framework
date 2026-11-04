@@ -37,7 +37,7 @@ public class NavigationHostView : ContentView, INavigationHost
     }
 
     /// <inheritdoc />
-    protected override void OnParentSet()
+    protected override sealed void OnParentSet()
     {
         base.OnParentSet();
 

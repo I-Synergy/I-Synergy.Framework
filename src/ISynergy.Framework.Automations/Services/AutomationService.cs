@@ -14,7 +14,6 @@ namespace ISynergy.Framework.Automations.Services;
 public class AutomationService : IAutomationService
 {
     private readonly ILogger _logger;
-    private readonly AutomationOptions _options;
     private readonly IAutomationManager _manager;
     private readonly IAutomationConditionValidator _conditionValidator;
     private readonly IActionQueueBuilder _queueBuilder;
@@ -30,14 +29,12 @@ public class AutomationService : IAutomationService
     /// <param name="logger">The logger.</param>
     public AutomationService(
         IAutomationManager manager,
-        IOptions<AutomationOptions> options,
         IAutomationConditionValidator conditionValidator,
         IActionQueueBuilder queueBuilder,
         ILogger<AutomationService> logger)
     {
         _automations = new List<Automation>();
         _manager = manager;
-        _options = options.Value;
         _conditionValidator = conditionValidator;
         _queueBuilder = queueBuilder;
         _logger = logger;

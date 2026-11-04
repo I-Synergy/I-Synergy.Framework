@@ -35,7 +35,6 @@ internal class Microsoft365MailService : IMailService
     /// <summary>
     /// The logger
     /// </summary>
-    private readonly ILogger _logger;
 
     /// <summary>
     /// Constructor of Email Service.
@@ -43,11 +42,9 @@ internal class Microsoft365MailService : IMailService
     /// <param name="mailOptions">The configuration.</param>
     /// <param name="logger">The logger.</param>
     public Microsoft365MailService(
-        IOptions<Microsoft365MailOptions> mailOptions,
-        ILogger<Microsoft365MailService> logger)
+        IOptions<Microsoft365MailOptions> mailOptions)
     {
         _mailOptions = mailOptions.Value;
-        _logger = logger;
 
         Argument.IsNotNullOrEmpty(_mailOptions.EmailAddress);
         Argument.IsNotNullOrEmpty(_mailOptions.Sender);

@@ -661,7 +661,7 @@ public static class StringExtensions
                 result[parts[i][2..]] = parts[i + 1];
                 i++; // NOSONAR - consume the value paired with the flag
             }
-            else if (parts[i].StartsWith("-") && parts[i].Length == 2 && i + 1 < parts.Length && !parts[i + 1].StartsWith('-'))
+            else if (parts[i].StartsWith('-') && parts[i].Length == 2 && i + 1 < parts.Length && !parts[i + 1].StartsWith('-'))
             {
                 result[parts[i][1..]] = parts[i + 1];
                 i++; // NOSONAR - consume the value paired with the flag

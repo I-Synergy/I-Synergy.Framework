@@ -38,7 +38,7 @@ public class LoadingView : Page
         _commonServices = commonServices;
         _applicationLifecycleService = Application.Services.GetRequiredService<IApplicationLifecycleService>();
 
-        InitializeContent(commonServices, splashScreenOptions);
+        InitializeContent(splashScreenOptions);
 
         SetupEventHandlers();
 
@@ -139,7 +139,7 @@ public class LoadingView : Page
     /// <summary>
     /// Initializes the view content and layout.
     /// </summary>
-    private void InitializeContent(ICommonServices _, SplashScreenOptions splashScreenOptions)
+    private void InitializeContent(SplashScreenOptions splashScreenOptions)
     {
         // Create background element based on splash screen type
         if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)

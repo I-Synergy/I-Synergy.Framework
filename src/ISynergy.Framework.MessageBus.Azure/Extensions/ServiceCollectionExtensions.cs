@@ -39,7 +39,6 @@ public static class ServiceCollectionExtensions
         services.AddPublishingQueueMessageBus<TQueuePublishMessage, PublisherServiceBus<TQueuePublishMessage, AzurePublisherOptions>>(
             sp => new PublisherServiceBus<TQueuePublishMessage, AzurePublisherOptions>(
                 sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<AzurePublisherOptions>>(),
-                sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<PublisherServiceBus<TQueuePublishMessage, AzurePublisherOptions>>>(),
                 jsonTypeInfo));
         return services;
     }

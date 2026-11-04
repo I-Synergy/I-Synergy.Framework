@@ -20,16 +20,8 @@ internal static class CommandExecutionResourcePool
 
     private static readonly ConcurrentDictionary<TimeSpan, Lazy<CancellationTokenSource>> _timeoutTokenCache = new();
 
-    private static readonly Timer _cacheCleanupTimer;
-
-    static CommandExecutionResourcePool()
-    {
-        // Create a timer to clean up the token cache every minute
-        _cacheCleanupTimer = new Timer(_ => CleanupTokenCache(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
-
-        // Ensure static resources are cleaned up when the process exits
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => Cleanup();
-    }
+    // Cleans up the token cache every minute.
+    private static readonly Timer _cacheCleanupTimer = new Timer(_ => CleanupTokenCache(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
 
     /// <summary>
     /// Rents a weak reference that tracks <paramref name="command"/>.

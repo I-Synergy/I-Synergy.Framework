@@ -3,7 +3,7 @@ namespace ISynergy.Framework.Core.Helpers;
 /// <summary>
 /// An empty scope without any logic
 /// </summary>
-public class NullScope : IDisposable
+public class NullScope : IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     public static NullScope Instance { get; } = new NullScope();
 

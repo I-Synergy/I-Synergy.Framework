@@ -25,7 +25,7 @@ public abstract class ViewModelSelectable<TModel> : ViewModel, IDialogViewModel
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TModel>>? Submitted;
+    public event EventHandler<SubmitEventArgs<TModel>>? Submitted; // NOSONAR - raised via OnSubmitted by derived view models
 
     /// <summary>
     /// Called when [submitted].
@@ -37,7 +37,7 @@ public abstract class ViewModelSelectable<TModel> : ViewModel, IDialogViewModel
         {
             Exception? capturedException = null;
 
-            foreach (EventHandler<SubmitEventArgs<TModel>> handler in Submitted.GetInvocationList())
+            foreach (var handler in Submitted.GetInvocationList().Cast<EventHandler<SubmitEventArgs<TModel>>>())
             {
                 try
                 {

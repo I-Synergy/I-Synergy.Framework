@@ -29,7 +29,7 @@ public sealed class IntegerEntryBehavior : NumericEntryBehaviorBase
             return false;
 
         _formatter ??= new IntegerFormatter(Culture);
-        return _formatter.IsInteger(value);
+        return IntegerFormatter.IsInteger(value);
     }
 
     protected override string FormatValue(decimal value)

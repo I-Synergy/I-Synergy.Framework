@@ -34,5 +34,5 @@ public static class CommandExceptionDispatcher
     /// <param name="sender">The command instance that caught the exception.</param>
     /// <param name="exception">The exception thrown by the command's execute delegate.</param>
     internal static void Raise(object? sender, Exception exception) =>
-        UnhandledCommandException?.Invoke(sender, new CommandExceptionEventArgs(exception));
+        UnhandledCommandException?.Invoke(sender, new CommandExceptionEventArgs(exception)); // NOSONAR - sender identifies the failing command
 }
