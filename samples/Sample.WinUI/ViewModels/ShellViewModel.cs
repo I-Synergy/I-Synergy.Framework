@@ -53,7 +53,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <summary>
     /// Gets the copyright text shown in the sidebar footer, matching the MAUI shell.
     /// </summary>
-    public string CopyrightText => $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
+    public static string CopyrightText => $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.

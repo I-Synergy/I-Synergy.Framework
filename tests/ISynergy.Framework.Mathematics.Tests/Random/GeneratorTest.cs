@@ -114,7 +114,7 @@ public class GeneratorTest
         {
             t[i] = new Thread(() =>
             {
-                int threadId = Thread.CurrentThread.ManagedThreadId;
+                int threadId = System.Environment.CurrentManagedThreadId;
                 List<int> vd = values.GetOrAdd(threadId, []);
                 List<int?> sd = seeds.GetOrAdd(threadId, []);
 

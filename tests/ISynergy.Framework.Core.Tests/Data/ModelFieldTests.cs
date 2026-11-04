@@ -20,7 +20,7 @@ public class ModelFieldTests
 
         ModelFixture<string> instance = new(originalValue);
 
-        Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
+        Assert.IsInstanceOfType<INotifyPropertyChanged>(instance);
 
         bool gotEvent = false;
 
@@ -47,7 +47,7 @@ public class ModelFieldTests
 
         ModelFixture<string> instance = new(originalValue);
 
-        Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
+        Assert.IsInstanceOfType<INotifyPropertyChanged>(instance);
 
         bool gotEvent = false;
 

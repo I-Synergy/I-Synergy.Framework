@@ -185,6 +185,8 @@ public class AugmentedLagrangianTest
 
     }
 
+    private static readonly double[] gradient = new[] { 1.0, 1.0, 0.0 };
+
     [TestMethod]
     public void AugmentedLagrangianSolverConstructorTest4()
     {
@@ -230,7 +232,7 @@ public class AugmentedLagrangianTest
             new NonlinearConstraint(f,
 
                 function: () => x + y,
-                gradient: () => new[] { 1.0, 1.0, 0.0 },
+                gradient: () => gradient,
 
                 shouldBe: ConstraintType.EqualTo, value: 1
             ),
@@ -255,6 +257,9 @@ public class AugmentedLagrangianTest
         Assert.IsFalse(double.IsNaN(solver.Solution[1]));
         Assert.IsFalse(double.IsNaN(solver.Solution[2]));
     }
+
+    private static readonly double[] gradientArray = new[] { 1.0, 0.0 };
+    private static readonly double[] gradientArray0 = new[] { 0.0, 1.0 };
 
     [TestMethod]
     public void AugmentedLagrangianSolverConstructorTest5()
@@ -296,8 +301,7 @@ public class AugmentedLagrangianTest
                 function: () => x,
                 shouldBe: ConstraintType.GreaterThanOrEqualTo,
                 value: 0,
-                gradient: () => new[] { 1.0, 0.0 }
-            ),
+                gradient: () => gradientArray),
 
             // Add the non-negativity constraint for y
             new NonlinearConstraint(f,
@@ -305,8 +309,7 @@ public class AugmentedLagrangianTest
                 function: () => y,
                 shouldBe: ConstraintType.GreaterThanOrEqualTo,
                 value: 0,
-                gradient: () => new[] { 0.0, 1.0 }
-            )
+                gradient: () => gradientArray0)
         ];
 
         // Finally, we create the non-linear programming solver
@@ -716,7 +719,7 @@ public class AugmentedLagrangianTest
     }
 
     //[TestMethod]
-    public void constructorTest5()
+    public static void constructorTest5()
     {
         // AugmentedLagrangian with NonlinearConstraints
         // have a Gradient NullReferenceException issue 

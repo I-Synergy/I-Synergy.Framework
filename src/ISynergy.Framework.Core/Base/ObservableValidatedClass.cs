@@ -323,7 +323,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     [Display(AutoGenerateField = false)]
     public bool HasErrors
     {
-        get => Errors is not null && Errors.Any(a => a.Value.Any());
+        get => Errors is not null && Errors.Any(a => a.Value.Length != 0);
     }
 
     public bool HasError(string property) => Errors is not null && Errors.Any(a => a.Key.Equals(property));

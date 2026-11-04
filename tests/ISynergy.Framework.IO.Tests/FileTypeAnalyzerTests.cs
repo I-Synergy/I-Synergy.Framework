@@ -226,7 +226,7 @@ public partial class FileTypeAnalyzerTests
     {
         IEnumerable<string> files = GetFilesByExtension(extension);
 
-        if (files is null || files.Count() == 0)
+        if (files is null || !files.Any())
             throw new FileNotFoundException($"Testfile with {extension} extension is not found.");
 
         foreach (string file in files)

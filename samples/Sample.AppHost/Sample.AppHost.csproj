@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
+ 		<AspireHostingSDKVersion>13.6.4</AspireHostingSDKVersion>
+		<AspireUseCliBundle>true</AspireUseCliBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(CI)' == 'true'">
     <!--

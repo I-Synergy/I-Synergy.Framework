@@ -108,6 +108,8 @@ public class MunkresTest
         Assert.AreEqual(0, m.Solution[2]);
     }
 
+    private static readonly int[] objB = new[] { 2, 1, 0 };
+
     [TestMethod]
     public void minimize_test_more_jobs2()
     {
@@ -129,7 +131,7 @@ public class MunkresTest
         Assert.IsTrue(success);
         Assert.AreEqual(10, m.Value);
         Assert.IsTrue(m.starZ.IsEqual([2, 1, 0, 3]));
-        Assert.IsTrue(m.Solution.IsEqual(new[] { 2, 1, 0 }));
+        Assert.IsTrue(m.Solution.IsEqual(objB));
     }
 
     [TestMethod]
@@ -241,7 +243,7 @@ public class MunkresTest
         Assert.IsTrue(m.Solution.IsEqual([0, double.NaN, 2]));
     }
 
-    public void minimize_invalid_row()
+    public static void minimize_invalid_row()
     {
         double inf = double.PositiveInfinity;
 

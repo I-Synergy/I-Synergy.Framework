@@ -72,8 +72,7 @@ public abstract class BaseRelayCommand : IRelayCommand, IDisposable
     /// <exception cref="ObjectDisposedException">Thrown if the command has been disposed.</exception>
     protected void ThrowIfDisposed()
     {
-        if (_disposed)
-            throw new ObjectDisposedException(GetType().Name);
+        ObjectDisposedException.ThrowIf(_disposed, this);
     }
 
     /// <summary>

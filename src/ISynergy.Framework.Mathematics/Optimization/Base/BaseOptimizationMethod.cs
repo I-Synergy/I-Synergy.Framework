@@ -31,8 +31,7 @@ public abstract class BaseOptimizationMethod
     /// <param name="numberOfVariables">The number of free parameters in the optimization problem.</param>
     protected BaseOptimizationMethod(int numberOfVariables)
     {
-        if (numberOfVariables <= 0)
-            throw new ArgumentOutOfRangeException("numberOfVariables");
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(numberOfVariables);
 
         NumberOfVariables = numberOfVariables;
     }
@@ -44,8 +43,7 @@ public abstract class BaseOptimizationMethod
     /// <param name="function">The objective function whose optimum values should be found.</param>
     protected BaseOptimizationMethod(int numberOfVariables, Func<double[], double> function)
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
         NumberOfVariables = numberOfVariables;
         Function = function;
@@ -57,8 +55,7 @@ public abstract class BaseOptimizationMethod
     /// <param name="function">The objective function whose optimum values should be found.</param>
     protected BaseOptimizationMethod(NonlinearObjectiveFunction function)
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
         NumberOfVariables = function.NumberOfVariables;
         Function = function.Function;
@@ -101,11 +98,10 @@ public abstract class BaseOptimizationMethod
         get => x;
         set
         {
-            if (value is null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
 
             if (value.Length != NumberOfVariables)
-                throw new DimensionMismatchException("value");
+                throw new DimensionMismatchException(nameof(value));
 
             x = value;
         }

@@ -159,7 +159,7 @@ public class ItemObservableCollectionTests
         Assert.IsFalse(itemRef.IsAlive, "Item should be garbage collected");
     }
 
-    private void CreateCollectionAndItem(out WeakReference collectionRef, out WeakReference itemRef)
+    private static void CreateCollectionAndItem(out WeakReference collectionRef, out WeakReference itemRef)
     {
         var collection = new ItemObservableCollection<TestItem>();
         var item = new TestItem { Name = "Test" };

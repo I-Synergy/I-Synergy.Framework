@@ -290,11 +290,10 @@ public static partial class Matrix
     /// </summary>
     public static double[,] Power(this double[,] matrix, int n)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         if (!matrix.IsSquare())
-            throw new ArgumentException("Matrix must be square", "matrix");
+            throw new ArgumentException("Matrix must be square", nameof(matrix));
 
         if (n == 0)
             return Matrix.Identity(matrix.GetLength(0));

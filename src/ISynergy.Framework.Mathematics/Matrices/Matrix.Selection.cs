@@ -22,10 +22,10 @@ public static partial class Matrix
     public static T[,] Remove<T>(this T[,] data, int[] rowIndexes, int[] columnIndexes)
     {
         if (rowIndexes is null)
-            rowIndexes = new int[0];
+            rowIndexes = Array.Empty<int>();
 
         if (columnIndexes is null)
-            columnIndexes = new int[0];
+            columnIndexes = Array.Empty<int>();
         var srcRows = data.GetLength(0);
         var srcCols = data.GetLength(1);
 
@@ -241,7 +241,7 @@ public static partial class Matrix
     /// </summary>
     public static int DistinctCount<T>(this T[] values)
     {
-        return values.Distinct().Count();
+        return values.Distinct().Length;
     }
 
     /// <summary>
@@ -334,11 +334,11 @@ public static partial class Matrix
         where T : IComparable<T>
     {
         if (count < 0)
-            throw new ArgumentOutOfRangeException("count",
+            throw new ArgumentOutOfRangeException(nameof(count),
                 "The number of elements to be selected must be positive.");
 
         if (count == 0)
-            return new int[0];
+            return Array.Empty<int>();
 
         var work = inPlace ? values : (T[])values.Clone();
         var idx = Vector.Range(values.Length);
@@ -355,11 +355,11 @@ public static partial class Matrix
         where T : IComparable<T>
     {
         if (count < 0)
-            throw new ArgumentOutOfRangeException("count",
+            throw new ArgumentOutOfRangeException(nameof(count),
                 "The number of elements to be selected must be positive.");
 
         if (count == 0)
-            return new int[0];
+            return Array.Empty<int>();
 
         var work = inPlace ? values : (T[])values.Clone();
         var idx = Vector.Range(values.Length);
@@ -733,11 +733,9 @@ public static partial class Matrix
     /// </summary>
     public static T[,] InsertColumn<T, TSource>(this T[,] matrix, TSource[] column, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
-        if (column is null)
-            throw new ArgumentNullException("column");
+        ArgumentNullException.ThrowIfNull(column);
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -767,8 +765,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] InsertColumn<T, TSource>(this T[,] matrix, TSource value, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -796,10 +793,8 @@ public static partial class Matrix
     /// </summary>
     public static T[][] InsertColumn<T, TSource>(this T[][] matrix, TSource[] column, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
-        if (column is null)
-            throw new ArgumentNullException("column");
+        ArgumentNullException.ThrowIfNull(matrix);
+        ArgumentNullException.ThrowIfNull(column);
 
         var rows = matrix.Length;
         var cols = matrix[0].Length;
@@ -832,8 +827,7 @@ public static partial class Matrix
     /// </summary>
     public static T[][] InsertColumn<T, TSource>(this T[][] matrix, TSource value, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.Length;
         var cols = matrix[0].Length;
@@ -864,8 +858,7 @@ public static partial class Matrix
     /// </summary>
     public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource value, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.Length;
         var cols = matrix[0].Length;
@@ -896,10 +889,8 @@ public static partial class Matrix
     /// </summary>
     public static T[,] InsertRow<T, TSource>(this T[,] matrix, TSource[] row, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
-        if (row is null)
-            throw new ArgumentNullException("row");
+        ArgumentNullException.ThrowIfNull(matrix);
+        ArgumentNullException.ThrowIfNull(row);
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -930,8 +921,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] InsertRow<T, TSource>(this T[,] matrix, TSource value, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -960,10 +950,8 @@ public static partial class Matrix
     /// </summary>
     public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource[] row, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
-        if (row is null)
-            throw new ArgumentNullException("row");
+        ArgumentNullException.ThrowIfNull(matrix);
+        ArgumentNullException.ThrowIfNull(row);
 
         var rows = matrix.Length;
         var cols = matrix[0].Length;
@@ -996,8 +984,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] RemoveRow<T>(this T[,] matrix, int index)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -1022,8 +1009,7 @@ public static partial class Matrix
     /// </summary>
     public static T[] RemoveAt<T>(this T[] array, int index)
     {
-        if (array is null)
-            throw new ArgumentNullException("array");
+        ArgumentNullException.ThrowIfNull(array);
 
         var r = new T[array.Length - 1];
         for (var i = 0; i < index; i++)

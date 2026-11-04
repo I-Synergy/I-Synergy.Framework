@@ -73,14 +73,14 @@ public class DynamicThemeResourceDictionaryTests
     public void PrimaryValue_IsColor()
     {
         var dict = new DynamicThemeResourceDictionary(WindowsBlue);
-        Assert.IsInstanceOfType(dict["Primary"], typeof(System.Windows.Media.Color));
+        Assert.IsInstanceOfType<Color>(dict["Primary"]);
     }
 
     [TestMethod]
     public void PrimaryBrushValue_IsSolidColorBrush()
     {
         var dict = new DynamicThemeResourceDictionary(WindowsBlue);
-        Assert.IsInstanceOfType(dict["PrimaryBrush"], typeof(SolidColorBrush));
+        Assert.IsInstanceOfType<SolidColorBrush>(dict["PrimaryBrush"]);
     }
 
     [TestMethod]

@@ -64,8 +64,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <exception cref="ArgumentException">Thrown when the stream length exceeds <see cref="MaxStreamSize"/>.</exception>
     public FileTypeInfo? DetectType(Stream? inputStream, string extension)
     {
-        if (inputStream is null)
-            throw new ArgumentNullException(nameof(inputStream));
+        ArgumentNullException.ThrowIfNull(inputStream);
 
         if (inputStream.CanSeek && inputStream.Length > MaxStreamSize)
             throw new ArgumentException(
@@ -94,8 +93,7 @@ public class BaseFileTypeAnalyzer : IFileTypeAnalyzer
     /// <exception cref="ArgumentException">input must not be empty</exception>
     public FileTypeInfo? DetectType(byte[]? fileContent, string extension)
     {
-        if (fileContent is null)
-            throw new ArgumentNullException(nameof(fileContent));
+        ArgumentNullException.ThrowIfNull(fileContent);
 
         if (fileContent.Length == 0)
             throw new ArgumentException("input must not be empty", nameof(fileContent));

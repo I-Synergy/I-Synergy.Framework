@@ -57,7 +57,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
         set
         {
             if (value.Length != numberOfParameters)
-                throw new ArgumentException("Parameter vectors must have the same length", "value");
+                throw new ArgumentException("Parameter vectors must have the same length", nameof(value));
             solution = value;
         }
     }
@@ -73,8 +73,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
         get => numberOfParameters;
         set
         {
-            if (value <= 0)
-                throw new ArgumentOutOfRangeException("value");
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
             init(value);
         }
     }

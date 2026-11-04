@@ -142,13 +142,13 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
     public QuadraticObjectiveFunction(double[,] quadraticTerms, double[] linearTerms, params string[] variables)
     {
         if (!quadraticTerms.IsSquare())
-            throw new DimensionMismatchException("quadraticTerms", "The matrix must be square.");
+            throw new DimensionMismatchException(nameof(quadraticTerms), "The matrix must be square.");
 
         if (!quadraticTerms.IsSymmetric(rtol: 1e-6))
             throw new NonSymmetricMatrixException("The matrix must be symmetric.");
 
         if (quadraticTerms.Rows() != linearTerms.Length)
-            throw new DimensionMismatchException("linearTerms",
+            throw new DimensionMismatchException(nameof(linearTerms),
                 "The vector of linear terms must have the same length as the Hessian matrix side.");
 
         if (variables.Length == 0)
@@ -159,7 +159,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
         }
         else if (variables.Length != linearTerms.Length)
         {
-            throw new DimensionMismatchException("variables",
+            throw new DimensionMismatchException(nameof(variables),
                 "The vector of variable names must have the same length as the vector of linear terms.");
         }
 
@@ -295,9 +295,8 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
                 var y = Indices[j];
                 var k = Tuple.Create(x, y);
 
-                if (quadratic.ContainsKey(k))
+                if (quadratic.TryGetValue(k, out double s))
                 {
-                    var s = quadratic[k];
                     Q[i, j] += s;
                     Q[j, i] += s;
                 }
@@ -315,8 +314,8 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
         for (var i = 0; i < Indices.Count; i++)
         {
             var x = Indices[i];
-            if (linear.ContainsKey(x))
-                d[i] += linear[x];
+            if (linear.TryGetValue(x, out double value))
+                d[i] += value;
         }
 
         return d;
@@ -543,7 +542,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
         }
         else
         {
-            variables = new string[0];
+            variables = Array.Empty<string>();
         }
 
         return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
@@ -581,7 +580,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
         }
         else
         {
-            variables = new string[0];
+            variables = Array.Empty<string>();
         }
 
         return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)

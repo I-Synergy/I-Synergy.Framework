@@ -328,7 +328,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
 
         Status = (BroydenFletcherGoldfarbShannoStatus)ret;
 
-        if (!Enum.IsDefined(typeof(BroydenFletcherGoldfarbShannoStatus), Status))
+        if (!Enum.IsDefined(Status))
             throw new InvalidOperationException("Unhandled return code: " + ret);
         return Status == BroydenFletcherGoldfarbShannoStatus.Success ||
                Status == BroydenFletcherGoldfarbShannoStatus.AlreadyMinimized;
@@ -353,7 +353,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value <= 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "The number of corrections must be greater than zero.",
                     "LBFGSERR_INVALID_M");
 
@@ -381,7 +381,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Epsilon should be positive or zero.",
                     "LBFGSERR_INVALID_EPSILON");
 
@@ -404,7 +404,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Past should be positive or zero.",
                     "LBFGSERR_INVALID_TESTPERIOD");
 
@@ -436,7 +436,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Delta should be positive or zero.",
                     "LBFGSERR_INVALID_DELTA");
 
@@ -460,7 +460,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Maximum number of iterations must be positive or zero.",
                     "LBFGSERR_MAXIMUMITERATION");
 
@@ -480,8 +480,8 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         get => linesearch;
         set
         {
-            if (!Enum.IsDefined(typeof(LineSearch), value))
-                throw ArgumentException("value",
+            if (!Enum.IsDefined(value))
+                throw ArgumentException(nameof(value),
                     "Invalid line-search method.",
                     "LBFGSERR_INVALID_LINESEARCH");
 
@@ -502,7 +502,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value <= 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Maximum line searches must be greater than zero.",
                     "LBFGSERR_INVALID_MAXLINESEARCH");
 
@@ -524,7 +524,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Minimum step must be greater than zero and less than the maximum step",
                     "LBFGSERR_INVALID_MINSTEP");
 
@@ -546,7 +546,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Maximum step must be greater than the minimum step",
                     "LBFGSERR_INVALID_MAXSTEP");
 
@@ -565,7 +565,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0 || value > 0.5)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Parameter tolerance must be greater than zero and smaller than 0.5.",
                     "LBFGSERR_INVALID_FTOL");
 
@@ -589,7 +589,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (wolfe > 1.0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Wolfe parameter must be smaller than 1.0.",
                     "LBFGSERR_INVALID_WOLFE");
 
@@ -614,7 +614,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Gradient tolerance must be positive or zero.",
                     "LBFGSERR_INVALID_GTOL");
 
@@ -637,7 +637,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Function tolerance must be positive or zero.",
                     "LBFGSERR_INVALID_XTOL");
 
@@ -667,7 +667,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Orthant-wise C should be positive or zero.",
                     "LBFGSERR_INVALID_ORTHANTWISE");
 
@@ -698,7 +698,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value < 0 || value > NumberOfVariables)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Value must be between 0 and the number of variables in the problem.",
                     "LBFGSERR_INVALID_ORTHANTWISE_START");
 
@@ -722,7 +722,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
         set
         {
             if (value > NumberOfVariables)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Value must be between 0 and the number of variables in the problem.",
                     "LBFGSERR_INVALID_ORTHANTWISE_END");
 

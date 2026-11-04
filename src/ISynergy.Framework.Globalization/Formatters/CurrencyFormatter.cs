@@ -10,6 +10,7 @@ namespace ISynergy.Framework.Globalization.Formatters;
 public sealed class CurrencyFormatter : NumericFormatter
 {
     private readonly int _decimalPlaces;
+    private static readonly string[] sourceArray = new[] { ".", ",", "·", "٫" };
 
     public CurrencyFormatter(CultureInfo culture, int decimalPlaces = 2)
         : base(culture)
@@ -84,8 +85,7 @@ public sealed class CurrencyFormatter : NumericFormatter
 
         // Build list of alternative separators, excluding the current culture's group separator
         var groupSeparator = _culture.NumberFormat.NumberGroupSeparator;
-        var alternativeSeparators = new[] { ".", ",", "·", "٫" }
-            .Where(s => s != decimalSeparator && s != groupSeparator)
+        var alternativeSeparators = sourceArray.Where(s => s != decimalSeparator && s != groupSeparator)
             .ToArray();
 
         var normalized = input;

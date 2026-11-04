@@ -17,6 +17,8 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
     [TestClass]
     public class WebApplicationExtensionsTests
     {
+        private static readonly string[] configureOptions = new[] { "en-US", "nl-NL", "fr-FR" };
+
         [TestMethod]
         public async Task UseGlobalization_WithRouteProvider_SetsCorrectCulture()
         {
@@ -30,7 +32,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
                         services.Configure<GlobalizationOptions>(options =>
                         {
                             options.DefaultCulture = "en-US";
-                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.SupportedCultures = configureOptions;
                             options.ProviderType = RequestCultureProviderTypes.Route;
                         });
 
@@ -92,6 +94,8 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
             host.Dispose();
         }
 
+        private static readonly string[] configureOptionsArray = new[] { "en-US", "nl-NL", "fr-FR" };
+
         [TestMethod]
         public async Task UseGlobalization_WithAcceptLanguageHeaderProvider_SetsCorrectCulture()
         {
@@ -105,7 +109,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
                         services.Configure<GlobalizationOptions>(options =>
                         {
                             options.DefaultCulture = "en-US";
-                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.SupportedCultures = configureOptionsArray;
                             options.ProviderType = RequestCultureProviderTypes.AcceptLanguageHeader;
                         });
 
@@ -160,6 +164,8 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
             host.Dispose();
         }
 
+        private static readonly string[] configureOptionsArray0 = new[] { "en-US", "nl-NL", "fr-FR" };
+
         [TestMethod]
         public async Task UseRequestLocalization_ConfiguresOptionsCorrectly()
         {
@@ -176,7 +182,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
                         services.Configure<GlobalizationOptions>(options =>
                         {
                             options.DefaultCulture = "en-US";
-                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.SupportedCultures = configureOptionsArray0;
                             options.ProviderType = RequestCultureProviderTypes.Route;
                         });
 
@@ -240,11 +246,13 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
 
             // Check that providers are configured correctly
             Assert.IsTrue(capturedOptions.RequestCultureProviders.Count > 0);
-            Assert.IsInstanceOfType(capturedOptions.RequestCultureProviders[0], typeof(RouteDataRequestCultureProvider));
+            Assert.IsInstanceOfType<RouteDataRequestCultureProvider>(capturedOptions.RequestCultureProviders[0]);
 
             await host.StopAsync();
             host.Dispose();
         }
+
+        private static readonly string[] configureOptionsArray1 = new[] { "en-US", "nl-NL", "fr-FR" };
 
         [TestMethod]
         public async Task UseRequestLocalization_WithApiMode_PrioritizesAcceptLanguageHeaderProvider()
@@ -262,7 +270,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
                         services.Configure<GlobalizationOptions>(options =>
                         {
                             options.DefaultCulture = "en-US";
-                            options.SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" };
+                            options.SupportedCultures = configureOptionsArray1;
                             options.ProviderType = RequestCultureProviderTypes.Route; // This would normally prioritize route
                         });
 
@@ -317,7 +325,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
 
             // Check that providers are configured correctly for API
             Assert.IsTrue(capturedOptions.RequestCultureProviders.Count > 0);
-            Assert.IsInstanceOfType(capturedOptions.RequestCultureProviders[0], typeof(AcceptLanguageHeaderRequestCultureProvider));
+            Assert.IsInstanceOfType<AcceptLanguageHeaderRequestCultureProvider>(capturedOptions.RequestCultureProviders[0]);
 
             await host.StopAsync();
             host.Dispose();

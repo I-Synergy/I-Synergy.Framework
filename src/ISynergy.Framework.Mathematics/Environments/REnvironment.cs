@@ -36,7 +36,7 @@ public abstract class REnvironment
     ///   Placeholder vector definition
     /// </summary>
     /// 
-    protected vec _
+    protected static vec _
     {
         get { return new vec(null); }
     }

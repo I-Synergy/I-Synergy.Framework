@@ -141,6 +141,8 @@ public class EnumerableExtensionsTest
         Assert.AreEqual(pageIndex * pageSize, page[0]);
     }
 
+    private static readonly int[] expected = new[] { 1, 2, 3 };
+
     /// <summary>
     /// Defines the test method ToPageOrdersBeforePagingTest: the ordered overload sorts before paging.
     /// </summary>
@@ -151,7 +153,7 @@ public class EnumerableExtensionsTest
 
         var page = list.ToPage(x => x, 0, 3).ToList();
 
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, page);
+        CollectionAssert.AreEqual(expected, page);
     }
 
     /// <summary>

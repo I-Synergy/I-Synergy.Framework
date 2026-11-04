@@ -53,7 +53,7 @@ public class MatReaderTest
         {
             { 1, 2, 3, 4 },
         }, matrix);
-        CollectionAssert.AreEqual(new[] { "a" }, names);
+        CollectionAssert.AreEqual(expected, names);
     }
 
     [TestMethod]
@@ -87,7 +87,7 @@ public class MatReaderTest
             { -128, 127 },
         }, matrix);
 
-        CollectionAssert.AreEqual(new[] { "arr" }, names);
+        CollectionAssert.AreEqual(expectedArray, names);
     }
 
     [TestMethod]
@@ -874,4 +874,6 @@ public class MatReaderTest
         { 1.019908696134792,-0.06572145176389985,1 },
 #endregion
     };
+    private static readonly string[] expectedArray = new[] { "arr" };
+    private static readonly string[] expected = new[] { "a" };
 }

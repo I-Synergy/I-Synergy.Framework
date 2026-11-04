@@ -10,10 +10,10 @@ public static class BinaryConverter
 
         try
         {
-            int size = Marshal.SizeOf(typeof(T));
+            int size = Marshal.SizeOf<T>();
             ptr = Marshal.AllocHGlobal(size);
             Marshal.Copy(bytes, 0, ptr, size);
-            object? obj = Marshal.PtrToStructure(ptr, typeof(T));
+            object? obj = Marshal.PtrToStructure<T>(ptr);
 
             if (obj is null)
                 throw new InvalidOperationException("Failed to convert byte array to structure.");
@@ -35,7 +35,7 @@ public static class BinaryConverter
 
         try
         {
-            int size = Marshal.SizeOf(typeof(T));
+            int size = Marshal.SizeOf<T>();
             ptr = Marshal.AllocHGlobal(size);
             Marshal.StructureToPtr(obj, ptr, true);
             byte[] bytes = new byte[size];

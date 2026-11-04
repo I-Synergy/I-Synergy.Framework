@@ -320,7 +320,7 @@ public struct Matrix3x3
     public Vector3 GetRow(int index)
     {
         if (index < 0 || index > 2)
-            throw new ArgumentException("Invalid row index was specified.", "index");
+            throw new ArgumentException("Invalid row index was specified.", nameof(index));
 
         return index switch
         {
@@ -343,7 +343,7 @@ public struct Matrix3x3
     public Vector3 GetColumn(int index)
     {
         if (index < 0 || index > 2)
-            throw new ArgumentException("Invalid column index was specified.", "index");
+            throw new ArgumentException("Invalid column index was specified.", nameof(index));
 
         return index switch
         {

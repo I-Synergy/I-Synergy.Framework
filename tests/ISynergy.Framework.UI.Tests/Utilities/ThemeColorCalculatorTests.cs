@@ -431,8 +431,8 @@ public class ThemeColorCalculatorTests
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir is not null &&
-               !dir.GetFiles("*.sln").Any() &&
-               !dir.GetFiles("*.slnx").Any())
+               dir.GetFiles("*.sln").Length == 0 &&
+               dir.GetFiles("*.slnx").Length == 0)
             dir = dir.Parent;
         return dir?.FullName ?? AppContext.BaseDirectory;
     }

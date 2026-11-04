@@ -94,7 +94,7 @@ public static class NetworkUtility
     /// <returns><c>true</c> if [is valid ip] [the specified test address]; otherwise, <c>false</c>.</returns>
     public static bool IsValidIP(string TestAddress)
     {
-        return Regex.Match(TestAddress, "^(0[0-7]{10,11}|0(x|X)[0-9a-fA-F]{8}|(\\b4\\d{8}[0-5]\\b|\\b[1-3]?\\d{8}\\d?\\b)|((2[0-5][0-5]|1\\d{2}|[1-9]\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))(\\.((2[0-5][0-5]|1\\d{2}|\\d\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))){3})$", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
+        return Regex.IsMatch(TestAddress, "^(0[0-7]{10,11}|0(x|X)[0-9a-fA-F]{8}|(\\b4\\d{8}[0-5]\\b|\\b[1-3]?\\d{8}\\d?\\b)|((2[0-5][0-5]|1\\d{2}|[1-9]\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))(\\.((2[0-5][0-5]|1\\d{2}|\\d\\d?)|(0(x|X)[0-9a-fA-F]{2})|(0[0-7]{3}))){3})$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ public static class NetworkUtility
     /// <returns><c>true</c> if [is valid domain] [the specified string domain]; otherwise, <c>false</c>.</returns>
     public static bool IsValidDomain(string strDomain)
     {
-        return Regex.Match(strDomain, DomainRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
+        return Regex.IsMatch(strDomain, DomainRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100));
     }
 
     /// <summary>
@@ -124,7 +124,7 @@ public static class NetworkUtility
     /// <returns><c>true</c> if [is valid URL] [the specified string URL]; otherwise, <c>false</c>.</returns>
     public static bool IsValidURL(Uri strURL)
     {
-        return Regex.Match(strURL.AbsoluteUri, URLRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
+        return Regex.IsMatch(strURL.AbsoluteUri, URLRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100));
     }
 
     /// <summary>
@@ -139,7 +139,7 @@ public static class NetworkUtility
     /// <returns><c>true</c> if [is valid e mail] [the specified string mail address]; otherwise, <c>false</c>.</returns>
     public static bool IsValidEMail(string? emailAddress)
     {
-        return Regex.Match(Argument.IsNotNullOrEmpty(emailAddress), MailRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Success;
+        return Regex.IsMatch(Argument.IsNotNullOrEmpty(emailAddress), MailRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100));
     }
 
     /// <summary>

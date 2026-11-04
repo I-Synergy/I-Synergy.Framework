@@ -179,10 +179,10 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         // Update breadcrumb based on the route
         CrumbCurrent = route switch
         {
-            "dashboard" => LocalizedString("Dashboard"),
-            "customcontrols" => LocalizedString("CustomControls"),
-            "mauicontrols" => LocalizedString("MauiControls"),
-            "slideshow" => LocalizedString("SlideShow"),
+            "dashboard" => ShellViewModel.LocalizedString("Dashboard"),
+            "customcontrols" => ShellViewModel.LocalizedString("CustomControls"),
+            "mauicontrols" => ShellViewModel.LocalizedString("MauiControls"),
+            "slideshow" => ShellViewModel.LocalizedString("SlideShow"),
             _ => Title
         };
     }
@@ -244,7 +244,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
         }
     }
 
-    private string LocalizedString(string resourceKey)
+    private static string LocalizedString(string resourceKey)
     {
         try
         {

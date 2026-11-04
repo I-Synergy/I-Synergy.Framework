@@ -427,8 +427,7 @@ public static class Bessel
     /// 
     public static double I(int n, double x)
     {
-        if (n < 0)
-            throw new ArgumentOutOfRangeException("n");
+        ArgumentOutOfRangeException.ThrowIfNegative(n);
 
         if (n == 0)
             return I0(x);

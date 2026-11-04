@@ -203,7 +203,7 @@ public class MessengerRegisterWhileSendingTest
             _messenger.Register<MessageFixture>(this, ReceiveStringNested);
         }
 
-        protected void ReceiveStringNested(MessageFixture m)
+        protected static void ReceiveStringNested(MessageFixture m)
         {
             ReceivedStringMessages++;
             LastReceivedString = m.Content;
@@ -233,7 +233,7 @@ public class MessengerRegisterWhileSendingTest
             }
         }
 
-        public void ReceiveStringNested(BaseMessage m)
+        public static void ReceiveStringNested(BaseMessage m)
         {
             var message = m as MessageFixture;
             if (message is not null)

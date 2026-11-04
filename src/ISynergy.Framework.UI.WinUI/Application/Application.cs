@@ -318,7 +318,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 continue;
 
             // Look for query string format arguments (e.g., "?environment=development&country=nl")
-            if (arg.Contains("?"))
+            if (arg.Contains('?'))
             {
                 var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
 

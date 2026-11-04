@@ -288,6 +288,11 @@ public partial class MatrixTensor
         }
     }
 
+    private static readonly int[] expected = new[] { 2, 3 };
+    private static readonly int[] expectedArray = new[] { 2, 3 };
+    private static readonly int[] expectedArray0 = new[] { 2, 3 };
+    private static readonly int[] expectedArray1 = new[] { 2, 3 };
+
     [TestMethod]
     public void create_as()
     {
@@ -298,16 +303,16 @@ public partial class MatrixTensor
         };
 
         Array actual = Jagged.CreateAs(a, typeof(int));
-        CollectionAssert.AreEqual(new[] { 2, 3 }, actual.GetLength());
+        CollectionAssert.AreEqual(expected, actual.GetLength());
 
         actual = Jagged.CreateAs(a.ToJagged(), typeof(int));
-        CollectionAssert.AreEqual(new[] { 2, 3 }, actual.GetLength());
+        CollectionAssert.AreEqual(expectedArray, actual.GetLength());
 
         actual = Matrix.CreateAs(a, typeof(int));
-        CollectionAssert.AreEqual(new[] { 2, 3 }, actual.GetLength());
+        CollectionAssert.AreEqual(expectedArray0, actual.GetLength());
 
         actual = Matrix.CreateAs(a.ToJagged(), typeof(int));
-        CollectionAssert.AreEqual(new[] { 2, 3 }, actual.GetLength());
+        CollectionAssert.AreEqual(expectedArray1, actual.GetLength());
     }
 
 }

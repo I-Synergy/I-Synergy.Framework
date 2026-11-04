@@ -16,7 +16,7 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class DispatcherService : IDispatcherService
 {
-    public object Dispatcher // NOSONAR - IDispatcherService member
+    public static object Dispatcher // NOSONAR - IDispatcherService member
     {
         get
         {

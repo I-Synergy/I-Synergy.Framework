@@ -318,8 +318,7 @@ public abstract class ObservableClass : IObservableClass // NOSONAR - finalizer-
 
     protected void ThrowIfDisposed()
     {
-        if (_disposed)
-            throw new ObjectDisposedException(GetType().Name);
+        ObjectDisposedException.ThrowIf(_disposed, this);
     }
     #endregion
 }

@@ -134,8 +134,8 @@ public partial class MatrixTest
     [TestMethod]
     public void GetLengthTest2()
     {
-        int[] a = new int[0];
-        double[] b = new double[0];
+        int[] a = Array.Empty<int>();
+        double[] b = Array.Empty<double>();
         int[] actual = a.GetLength();
         int[] expected = b.GetLength();
         Assert.AreEqual(0, actual.Length);
@@ -169,6 +169,9 @@ public partial class MatrixTest
 
     }
 
+    private static readonly int[] b = new[] { 10, 20, 30 };
+    private static readonly int[] bArray = new[] { 10, 20, 30, 40, 50 };
+
     [TestMethod]
     public void AddAxisTest()
     {
@@ -182,7 +185,7 @@ public partial class MatrixTest
             { 15,  16,  17, 18, 19 },
         }));
 
-        actual = m.Add(new[] { 10, 20, 30 }, dimension: VectorType.ColumnVector);
+        actual = m.Add(b, dimension: VectorType.ColumnVector);
         Assert.IsTrue(actual.IsEqual(new int[,]
         {
             { 10,   11,  12,  13,  14 },
@@ -190,7 +193,7 @@ public partial class MatrixTest
             { 40,   41,  42,  43,  44 },
         }));
 
-        actual = m.Add(new[] { 10, 20, 30, 40, 50 }, dimension: 0);
+        actual = m.Add(bArray, dimension: 0);
         Assert.IsTrue(actual.IsEqual(new int[,]
         {
             { 10,   21,  32,  43,  54 },

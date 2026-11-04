@@ -73,7 +73,7 @@ public class FileService : IFileService<FileResult>
         var result = new List<FileResult>();
         var filters = GetFilters(filefilter);
 
-        foreach (var file in await PickFileAsync(filters.ToArray(), multiple))
+        foreach (var file in await FileService.PickFileAsync(filters.ToArray(), multiple))
         {
             if ((await file.GetFileAsync()).Length <= maxFileSize || maxFileSize == 0)
             {
@@ -94,7 +94,7 @@ public class FileService : IFileService<FileResult>
         var fileFilter = string.Empty;
 
         // Support full .NET filters (like "Text files|*.txt") as well
-        if (filter.Contains("|"))
+        if (filter.Contains('|'))
         {
             var splittedFilters = filter.Split(["|"], StringSplitOptions.RemoveEmptyEntries);
             if (splittedFilters.Length == 2)
@@ -149,7 +149,7 @@ public class FileService : IFileService<FileResult>
     /// <returns>
     /// File data object, or null when user cancelled picking file
     /// </returns>
-    private async Task<List<FileResult>> PickFileAsync(string[]? allowedTypes = null, bool multiple = false)
+    private static async Task<List<FileResult>> PickFileAsync(string[]? allowedTypes = null, bool multiple = false)
     {
         var result = new List<FileResult>();
 

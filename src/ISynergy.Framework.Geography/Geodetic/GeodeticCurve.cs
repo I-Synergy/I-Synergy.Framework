@@ -76,7 +76,7 @@ public struct GeodeticCurve : IEquatable<GeodeticCurve>
         builder.Append(Azimuth);
         builder.Append(";a21=");
         builder.Append(ReverseAzimuth);
-        builder.Append(";");
+        builder.Append(';');
 
         return builder.ToString();
     }

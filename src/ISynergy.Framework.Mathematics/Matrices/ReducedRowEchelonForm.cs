@@ -33,8 +33,7 @@ public class ReducedRowEchelonForm
     ///   
     public ReducedRowEchelonForm(double[,] value, bool inPlace = false)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         rref = inPlace ? value : (double[,])value.Clone();
 

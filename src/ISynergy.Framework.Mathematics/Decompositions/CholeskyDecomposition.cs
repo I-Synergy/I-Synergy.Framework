@@ -79,7 +79,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         bool inPlace = false, MatrixType valueType = MatrixType.UpperTriangular)
     {
         if (value.Rows() != value.Columns())
-            throw new DimensionMismatchException("value", "Matrix is not square.");
+            throw new DimensionMismatchException(nameof(value), "Matrix is not square.");
 
         if (!inPlace)
             value = value.Copy();
@@ -388,12 +388,11 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
     public double[,] Solve(double[,] value, bool inPlace)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.Rows() != n)
             throw new ArgumentException(
-                "Argument matrix should have the same number of rows as the decomposed matrix.", "value");
+                "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
 
         if (!robust && !IsPositiveDefinite)
             throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
@@ -443,12 +442,11 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
     public double[] Solve(double[] value, bool inPlace)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.Length != n)
             throw new ArgumentException(
-                "Argument vector should have the same length as rows in the decomposed matrix.", "value");
+                "Argument vector should have the same length as rows in the decomposed matrix.", nameof(value));
 
         if (!robust && !IsPositiveDefinite)
             throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");

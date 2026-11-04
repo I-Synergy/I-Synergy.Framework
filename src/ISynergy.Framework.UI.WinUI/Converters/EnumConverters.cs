@@ -140,10 +140,7 @@ public class EnumToArrayConverter : IValueConverter
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is <see langword="null"/>.</exception>
     public static string GetDescription(Enum value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         return LanguageService.Default.GetString(value.ToString());
     }

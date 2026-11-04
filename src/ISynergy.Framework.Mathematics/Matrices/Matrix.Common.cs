@@ -450,11 +450,9 @@ public static partial class Matrix
         if (objA == objB)
             return true;
 
-        if (objA is null)
-            throw new ArgumentNullException(nameof(objA));
+        ArgumentNullException.ThrowIfNull(objA);
 
-        if (objB is null)
-            throw new ArgumentNullException(nameof(objB));
+        ArgumentNullException.ThrowIfNull(objB);
 
         if (!objA.GetLength().IsEqual(objB.GetLength()))
             return false;
@@ -552,13 +550,13 @@ public static partial class Matrix
         var cnt = new Dictionary<T, int>();
 
         foreach (var s in list1)
-            if (cnt.ContainsKey(s))
-                cnt[s]++;
+            if (cnt.TryGetValue(s, out int value))
+                cnt[s] = ++value;
             else cnt.Add(s, 1);
 
         foreach (var s in list2)
-            if (cnt.ContainsKey(s))
-                cnt[s]--;
+            if (cnt.TryGetValue(s, out int value1))
+                cnt[s] = --value1;
             else return false;
 
         foreach (var s in cnt)
@@ -1001,8 +999,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsSquare<T>(this T[][] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         return matrix.Rows() == matrix.Columns(true);
     }
@@ -1012,8 +1009,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsSquare<T>(this T[,] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         return matrix.Rows() == matrix.Columns();
     }
@@ -1022,7 +1018,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsUpperTriangular<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var zero = default(T);
 
@@ -1042,7 +1038,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsLowerTriangular<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var zero = default(T);
 
@@ -1228,7 +1224,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsDiagonal<T>(this T[,] matrix) where T : IComparable
     {
-        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var zero = default(T);
 
@@ -1253,7 +1249,7 @@ public static partial class Matrix
     /// </remarks>
     public static double Trace(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.GetLength(0);
 
@@ -1269,7 +1265,7 @@ public static partial class Matrix
     public static double Trace(double[,] matrixA, double[,] matrixB)
     {
         if (matrixA.Length != matrixB.Length)
-            throw new DimensionMismatchException("matrixB", "Matrices must have the same length.");
+            throw new DimensionMismatchException(nameof(matrixB), "Matrices must have the same length.");
 
         var length = matrixA.Length;
 
@@ -1294,8 +1290,7 @@ public static partial class Matrix
     /// </remarks>
     public static int Trace(this int[,] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.GetLength(0);
 
@@ -1315,8 +1310,7 @@ public static partial class Matrix
     /// </remarks>
     public static float Trace(this float[,] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.GetLength(0);
 
@@ -1333,8 +1327,7 @@ public static partial class Matrix
     /// <returns>The diagonal vector from the given matrix.</returns>
     public static T[] Diagonal<T>(this T[,] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var r = new T[matrix.GetLength(0)];
         for (var i = 0; i < r.Length; i++)
@@ -1357,8 +1350,7 @@ public static partial class Matrix
     /// </summary>
     public static double Determinant(this double[,] matrix, bool symmetric)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
@@ -1367,7 +1359,7 @@ public static partial class Matrix
             if (!chol.IsPositiveDefinite)
                 throw new ArgumentException("The matrix could not be decomposed using " +
                                             " a robust Cholesky decomposition. Please specify symmetric as false " +
-                                            " and provide a full matrix to be decomposed.", "matrix");
+                                            " and provide a full matrix to be decomposed.", nameof(matrix));
 
             return chol.Determinant;
         }
@@ -1389,8 +1381,7 @@ public static partial class Matrix
     /// </summary>
     public static double LogDeterminant(this double[,] matrix, bool symmetric)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
@@ -1399,7 +1390,7 @@ public static partial class Matrix
             if (!chol.IsPositiveDefinite)
                 throw new ArgumentException("The matrix could not be decomposed using " +
                                             " a robust Cholesky decomposition. Please specify symmetric as false " +
-                                            " and provide a full matrix to be decomposed.", "matrix");
+                                            " and provide a full matrix to be decomposed.", nameof(matrix));
 
             return chol.LogDeterminant;
         }
@@ -1412,8 +1403,7 @@ public static partial class Matrix
     /// </summary>
     public static double PseudoDeterminant(this double[,] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         return new SingularValueDecomposition(matrix,
             false, false,
@@ -1425,8 +1415,7 @@ public static partial class Matrix
     /// </summary>
     public static double PseudoDeterminant(this double[][] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         return new JaggedSingularValueDecomposition(matrix,
             false, false,
@@ -1438,8 +1427,7 @@ public static partial class Matrix
     /// </summary>
     public static double LogPseudoDeterminant(this double[,] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         return new SingularValueDecomposition(matrix,
             false, false,
@@ -1451,8 +1439,7 @@ public static partial class Matrix
     /// </summary>
     public static double LogPseudoDeterminant(this double[][] matrix)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         return new JaggedSingularValueDecomposition(matrix,
             false, false,
@@ -1473,7 +1460,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsSingular(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
         return new SingularValueDecomposition(matrix).IsSingular;
     }
 
@@ -1482,7 +1469,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsPositiveDefinite(this double[,] matrix)
     {
-        if (matrix is null) throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         return new CholeskyDecomposition(matrix).IsPositiveDefinite;
     }
@@ -1596,8 +1583,7 @@ public static partial class Matrix
     /// </summary>
     public static double[,] Round(this double[,] matrix, int decimals = 0)
     {
-        if (matrix is null)
-            throw new ArgumentNullException(nameof(matrix));
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var rows = matrix.GetLength(0);
         var cols = matrix.GetLength(1);
@@ -1616,8 +1602,7 @@ public static partial class Matrix
     /// </summary>
     public static double[] Round(double[] vector, int decimals = 0)
     {
-        if (vector is null)
-            throw new ArgumentNullException(nameof(vector));
+        ArgumentNullException.ThrowIfNull(vector);
 
         var result = new double[vector.Length];
         for (var i = 0; i < result.Length; i++)

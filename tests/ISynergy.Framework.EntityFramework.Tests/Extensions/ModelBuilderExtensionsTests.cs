@@ -79,7 +79,7 @@ public class ModelBuilderExtensionsTests
         // Get the first (and only) filter
         var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
+        Assert.IsInstanceOfType<LambdaExpression>(filter.Expression);
 
         // Validate filter structure
         var lambda = (LambdaExpression)filter.Expression;
@@ -121,7 +121,7 @@ public class ModelBuilderExtensionsTests
         // Get the first (and only) filter
         var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
+        Assert.IsInstanceOfType<LambdaExpression>(filter.Expression);
 
         // Validate filter structure
         var lambda = (LambdaExpression)filter.Expression;
@@ -166,7 +166,7 @@ public class ModelBuilderExtensionsTests
         // Get the first (and only) filter
         var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
+        Assert.IsInstanceOfType<LambdaExpression>(filter.Expression);
 
         // Validate combined filter structure
         var lambda = (LambdaExpression)filter.Expression;
@@ -227,7 +227,7 @@ public class ModelBuilderExtensionsTests
         // Get the first (and only) filter
         var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
+        Assert.IsInstanceOfType<LambdaExpression>(filter.Expression);
 
         // Validate combined filter structure
         var lambda = (LambdaExpression)filter.Expression;
@@ -260,7 +260,7 @@ public class ModelBuilderExtensionsTests
         // Get the first (and only) filter
         var filter = filters.First();
         Assert.IsNotNull(filter);
-        Assert.IsInstanceOfType(filter.Expression, typeof(LambdaExpression));
+        Assert.IsInstanceOfType<LambdaExpression>(filter.Expression);
 
         // Validate combined filter structure
         var lambda = (LambdaExpression)filter.Expression;

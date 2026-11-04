@@ -104,6 +104,8 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
     /// </summary>
     protected string DecimalSeparator => Culture.NumberFormat.NumberDecimalSeparator;
 
+    private static readonly string[] sourceArray = new[] { ".", ",", "·", "٫" };
+
     /// <summary>
     /// Called when the Culture property changes. Derived classes can override to update formatters.
     /// </summary>
@@ -271,8 +273,7 @@ public abstract class NumericEntryBehaviorBase : Behavior<Entry>
         // Now normalize decimal separators
         var decimalSeparator = Culture.NumberFormat.NumberDecimalSeparator;
         var groupSeparator = Culture.NumberFormat.NumberGroupSeparator;
-        var alternativeSeparators = new[] { ".", ",", "·", "٫" }
-            .Where(s => s != decimalSeparator && s != groupSeparator)
+        var alternativeSeparators = sourceArray.Where(s => s != decimalSeparator && s != groupSeparator)
             .ToArray();
 
         foreach (var separator in alternativeSeparators)

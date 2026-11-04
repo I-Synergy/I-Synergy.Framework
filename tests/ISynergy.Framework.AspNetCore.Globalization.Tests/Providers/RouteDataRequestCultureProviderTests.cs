@@ -13,6 +13,7 @@ public class RouteDataRequestCultureProviderTests
 {
     private Mock<IOptions<GlobalizationOptions>> _mockOptions;
     private RouteDataRequestCultureProvider _provider;
+    private static readonly string[] value = new[] { "en-US", "nl-NL", "fr-FR" };
 
     public RouteDataRequestCultureProviderTests()
     {
@@ -25,7 +26,7 @@ public class RouteDataRequestCultureProviderTests
         _mockOptions.Setup(o => o.Value).Returns(new GlobalizationOptions
         {
             DefaultCulture = "en-US",
-            SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" }
+            SupportedCultures = value
         });
 
         _provider = new RouteDataRequestCultureProvider(_mockOptions.Object);

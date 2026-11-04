@@ -327,7 +327,7 @@ public abstract class OctaveEnvironment
     ///   Matrix placeholder.
     /// </summary>
     /// 
-    protected mat _
+    protected static mat _
     {
         get { return new mat(null); }
     }

@@ -82,7 +82,7 @@ public class Startup(IStorageService storageService)
     /// </summary>
     /// <param name="prefix">Optional prefix for the random name.</param>
     /// <returns>A random name.</returns>
-    public string Randomize(string prefix = "sample") =>
+    public static string Randomize(string prefix = "sample") =>
         $"{prefix}-{Guid.NewGuid()}";
 
     /// <summary>
@@ -95,7 +95,7 @@ public class Startup(IStorageService storageService)
     /// </summary>
     /// <param name="extension">An optional file extension.</param>
     /// <returns>A temporary path for creating files.</returns>
-    public string CreateTempPath(string extension = ".txt") =>
+    public static string CreateTempPath(string extension = ".txt") =>
         Path.ChangeExtension(Path.GetRandomFileName(), extension);
 
     /// <summary>

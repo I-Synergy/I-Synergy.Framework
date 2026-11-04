@@ -154,11 +154,9 @@ public abstract class MercatorProjection : IEquatable<MercatorProjection> // NOS
     /// <exception cref="ArgumentException"></exception>
     public double EuclidianDistance(EuclidianCoordinate point1, EuclidianCoordinate point2)
     {
-        if (point1 is null)
-            throw new ArgumentNullException(nameof(point1));
+        ArgumentNullException.ThrowIfNull(point1);
 
-        if (point2 is null)
-            throw new ArgumentNullException(nameof(point2));
+        ArgumentNullException.ThrowIfNull(point2);
 
         if (!(point1.Projection.Equals(this) && point2.Projection.Equals(this)))
             throw new ArgumentException(LanguageService.Default.GetString("POINT_NOT_OWNED"), nameof(point1));

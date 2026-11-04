@@ -7,6 +7,7 @@ namespace ISynergy.Framework.Mathematics.Tests;
 [TestClass]
 public partial class VectorTest
 {
+    private static readonly int[] objB = new[] { 1, 1, 1, 1, 1 };
 
     [TestMethod]
     public void ExpandTest()
@@ -16,7 +17,7 @@ public partial class VectorTest
         int[] w = Vector.Create(1, 2, 3);
 
         Assert.IsTrue(v.IsEqual([0, 0, 0, 0, 0]));
-        Assert.IsTrue(u.IsEqual(new[] { 1, 1, 1, 1, 1 }));
+        Assert.IsTrue(u.IsEqual(objB));
         Assert.IsTrue(w.IsEqual([1, 2, 3]));
     }
 

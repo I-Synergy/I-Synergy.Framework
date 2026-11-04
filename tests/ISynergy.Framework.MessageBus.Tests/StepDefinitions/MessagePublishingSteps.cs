@@ -61,11 +61,13 @@ public class MessagePublishingSteps
             _context.PublishedMessages.Add(_context.Message);
 
    // Track messages by topic
-            if (!_context.TopicMessages.ContainsKey(topic))
+            if (!_context.TopicMessages.TryGetValue(topic, out List<TestMessage>? value))
          {
-         _context.TopicMessages[topic] = new List<TestMessage>();
+                value = new List<TestMessage>();
+                _context.TopicMessages[topic] = value;
      }
-        _context.TopicMessages[topic].Add(_context.Message);
+
+            value.Add(_context.Message);
 
    _logger.LogInformation("Message published successfully to topic: {Topic}", topic);
         }

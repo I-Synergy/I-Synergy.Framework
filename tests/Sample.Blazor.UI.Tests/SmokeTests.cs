@@ -19,6 +19,8 @@ namespace Sample.Blazor.UI.Tests;
 [TestClass]
 public class SmokeTests : SamplePageTest
 {
+    private static readonly string[] collection = new[] { "dark", "light" };
+
     [TestMethod]
     public async Task Home_RendersTheHandRolledAppShell()
     {
@@ -81,7 +83,7 @@ public class SmokeTests : SamplePageTest
         // The shell fills the viewport (100dvh) and is themed through a data attribute.
         Assert.AreEqual(state.GetProperty("viewportHeight").GetInt32(), state.GetProperty("shellHeight").GetInt32(),
             $"The shell must fill the viewport. Observed: {shell}");
-        CollectionAssert.Contains(new[] { "dark", "light" }, state.GetProperty("shellTheme").GetString(),
+        CollectionAssert.Contains(collection, state.GetProperty("shellTheme").GetString(),
             $"The shell must declare its theme. Observed: {shell}");
 
         // Desktop shape: permanent 300px sidebar column, no hamburger.

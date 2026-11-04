@@ -65,6 +65,9 @@ public class QueryableExtensionTests
         Assert.AreEqual(pageIndex * pageSize, page[0]);
     }
 
+    private static readonly int[] sourceArray = new[] { 5, 3, 1, 4, 2 };
+    private static readonly int[] expected = new[] { 1, 2, 3 };
+
     /// <summary>
     /// Defines the test method GetOrderedPageOrdersBeforePagingTest: the ordered overload sorts
     /// an unordered sequence before applying Skip/Take.
@@ -72,11 +75,11 @@ public class QueryableExtensionTests
     [TestMethod]
     public void GetOrderedPageOrdersBeforePagingTest()
     {
-        IQueryable<int> list = new[] { 5, 3, 1, 4, 2 }.AsQueryable();
+        IQueryable<int> list = sourceArray.AsQueryable();
 
         var page = list.ToPage(x => x, 0, 3).ToList();
 
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, page);
+        CollectionAssert.AreEqual(expected, page);
     }
 
     /// <summary>

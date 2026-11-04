@@ -1435,7 +1435,7 @@ public class GoldfarbIdnaniTest
             Assert.AreEqual(expected[i], lagrangian[i], 1e-4);
     }
 
-    private double[,] readMatrixFile(string path)
+    private static double[,] readMatrixFile(string path)
     {
         string[] str = File.ReadAllLines(path);
 
@@ -1458,7 +1458,7 @@ public class GoldfarbIdnaniTest
         return v;
     }
 
-    private double[] readVectorFile(string path)
+    private static double[] readVectorFile(string path)
     {
         string[] str = File.ReadAllLines(path);
         char[] sep = [','];

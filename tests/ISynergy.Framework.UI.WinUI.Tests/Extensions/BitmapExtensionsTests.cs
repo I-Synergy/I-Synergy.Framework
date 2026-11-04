@@ -51,7 +51,7 @@ public class BitmapExtensionsTests
         // Assert
         Assert.IsNotNull(result);
         Assert.IsTrue(result.Length > 0);
-        Assert.IsInstanceOfType(result, typeof(byte[]));
+        Assert.IsInstanceOfType<byte[]>(result);
     }
 
     [TestMethod]
@@ -68,7 +68,7 @@ public class BitmapExtensionsTests
         // Assert
         Assert.IsNotNull(result);
         Assert.IsTrue(result.Length > 0);
-        Assert.IsInstanceOfType(result, typeof(byte[]));
+        Assert.IsInstanceOfType<byte[]>(result);
     }
 
     private static async Task<byte[]> CreateTestBitmapAsync(uint width, uint height)

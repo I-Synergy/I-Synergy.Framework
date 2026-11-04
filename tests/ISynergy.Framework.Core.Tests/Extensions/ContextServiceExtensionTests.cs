@@ -5,7 +5,7 @@ namespace ISynergy.Framework.Core.Extensions;
 [TestClass]
 public class ContextServiceExtensionTests
 {
-    private IServiceProvider CreateTestServiceProvider()
+    private static IServiceProvider CreateTestServiceProvider()
     {
         var services = new ServiceCollection();
         services.AddScoped<ITestService, TestService>();

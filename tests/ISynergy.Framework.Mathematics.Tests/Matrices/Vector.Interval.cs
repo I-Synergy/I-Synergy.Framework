@@ -4,6 +4,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ISynergy.Framework.Mathematics.Tests;
 public partial class VectorTest
 {
+    private static readonly double[] expected = new double[] { 2.0, 2.25, 2.5, 2.75, 3.0 };
+    private static readonly double[] expectedArray = new double[] { 2.0, 2.2, 2.4, 2.6, 2.8 };
+
     [TestMethod]
     public void linspace_comparison_tests()
     {
@@ -16,8 +19,8 @@ public partial class VectorTest
             vector);
 
         // https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html
-        CollectionAssert.AreEqual(new double[] { 2.0, 2.25, 2.5, 2.75, 3.0 }, Vector.Interval(2.0, 3.0, steps: 5));
-        CollectionAssert.AreEqual(new double[] { 2.0, 2.2, 2.4, 2.6, 2.8 }, Vector.Interval(2.0, 3.0, steps: 5, includeLast: false));
+        CollectionAssert.AreEqual(expected, Vector.Interval(2.0, 3.0, steps: 5));
+        CollectionAssert.AreEqual(expectedArray, Vector.Interval(2.0, 3.0, steps: 5, includeLast: false));
 
 
         CollectionAssert.AreEqual(new double[] { 1 }, Vector.Interval(1, 3, 1));

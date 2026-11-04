@@ -12,6 +12,7 @@ public class CultureRouteConstraintTests
 {
     private Mock<IOptions<GlobalizationOptions>> _mockOptions;
     private CultureRouteConstraint _constraint;
+    private static readonly string[] value = new[] { "en-US", "nl-NL", "fr-FR" };
 
     public CultureRouteConstraintTests()
     {
@@ -19,7 +20,7 @@ public class CultureRouteConstraintTests
         _mockOptions.Setup(o => o.Value).Returns(new GlobalizationOptions
         {
             DefaultCulture = "en-US",
-            SupportedCultures = new[] { "en-US", "nl-NL", "fr-FR" }
+            SupportedCultures = value
         });
 
         _constraint = new CultureRouteConstraint(_mockOptions.Object);

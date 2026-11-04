@@ -148,18 +148,18 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         double[,] a;
         m = value.Rows(); // rows
 
         if (m == 0)
-            throw new ArgumentException("Matrix does not have any rows.", "value");
+            throw new ArgumentException("Matrix does not have any rows.", nameof(value));
 
         n = value.Columns(); // cols
 
         if (n == 0)
-            throw new ArgumentException("Matrix does not have any columns.", "value");
+            throw new ArgumentException("Matrix does not have any columns.", nameof(value));
 
         if (m < n) // Check if we are violating JAMA's assumption
         {

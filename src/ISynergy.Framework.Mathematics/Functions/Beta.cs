@@ -118,9 +118,9 @@ public static class Beta
         bool flag;
 
         if (a <= 0.0)
-            throw new ArgumentOutOfRangeException("a", "Lower limit must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(a), "Lower limit must be greater than zero.");
         if (b <= 0.0)
-            throw new ArgumentOutOfRangeException("b", "Upper limit must be greater than zero.");
+            throw new ArgumentOutOfRangeException(nameof(b), "Upper limit must be greater than zero.");
 
         if (x <= 0.0 || x >= 1.0)
         {
@@ -128,7 +128,7 @@ public static class Beta
                 return 0.0;
             if (x == 1.0)
                 return 1.0;
-            throw new ArgumentOutOfRangeException("x", "Value must be between 0 and 1.");
+            throw new ArgumentOutOfRangeException(nameof(x), "Value must be between 0 and 1.");
         }
 
         flag = false;

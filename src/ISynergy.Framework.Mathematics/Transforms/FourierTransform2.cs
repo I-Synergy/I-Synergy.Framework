@@ -606,8 +606,7 @@ public static class FourierTransform2
     /// </summary>
     public static double[] GetMagnitudeSpectrum(Complex[] fft)
     {
-        if (fft is null)
-            throw new ArgumentNullException("fft");
+        ArgumentNullException.ThrowIfNull(fft);
 
         // assumes fft is symmetric
 
@@ -631,8 +630,7 @@ public static class FourierTransform2
     /// </summary>
     public static double[] GetPowerSpectrum(Complex[] fft)
     {
-        if (fft is null)
-            throw new ArgumentNullException("fft");
+        ArgumentNullException.ThrowIfNull(fft);
 
         var n = (int)Math.Ceiling((fft.Length + 1) / 2.0);
 
@@ -651,7 +649,7 @@ public static class FourierTransform2
     /// </summary>
     public static double[] GetPhaseSpectrum(Complex[] fft)
     {
-        if (fft is null) throw new ArgumentNullException("fft");
+        ArgumentNullException.ThrowIfNull(fft);
 
         var n = (int)Math.Ceiling((fft.Length + 1) / 2.0);
 
@@ -690,8 +688,7 @@ public static class FourierTransform2
     /// </summary>
     public static double[] GetPowerCepstrum(Complex[] signal)
     {
-        if (signal is null)
-            throw new ArgumentNullException("signal");
+        ArgumentNullException.ThrowIfNull(signal);
 
         FourierTransform.FFT(signal, FourierTransform.Direction.Backward);
 

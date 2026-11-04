@@ -351,10 +351,7 @@ public partial class BladeView : UserControl, IDisposable
 
     private void UnregisterBlade(IView view)
     {
-        if (_bladeStates.ContainsKey(view))
-        {
-            _bladeStates.Remove(view);
-        }
+        _bladeStates.Remove(view);
     }
 
     private void RemoveBlade(IView view)

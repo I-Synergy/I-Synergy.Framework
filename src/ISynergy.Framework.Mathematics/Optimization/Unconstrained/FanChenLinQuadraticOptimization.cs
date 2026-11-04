@@ -178,7 +178,7 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         set
         {
             if (value.Length != NumberOfVariables)
-                throw new DimensionMismatchException("value");
+                throw new DimensionMismatchException(nameof(value));
             C = value;
         }
     }
@@ -206,7 +206,7 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         set
         {
             if (value.Length != NumberOfVariables)
-                throw new DimensionMismatchException("value");
+                throw new DimensionMismatchException(nameof(value));
             alpha = value;
         }
     }

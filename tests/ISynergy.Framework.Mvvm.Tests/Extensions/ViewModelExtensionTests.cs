@@ -104,7 +104,7 @@ public class ViewModelExtensionTests
 
         // Assert
         Assert.IsTrue(result.EndsWith("GenericViewModel"));
-        Assert.IsFalse(result.Contains("`"));
+        Assert.IsFalse(result.Contains('`'));
     }
 
     [TestMethod]

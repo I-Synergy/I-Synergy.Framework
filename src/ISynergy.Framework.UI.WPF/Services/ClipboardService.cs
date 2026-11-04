@@ -47,7 +47,7 @@ public class ClipboardService : IClipboardService
     /// Gets the bitmap source from clipboard asynchronous.
     /// </summary>
     /// <returns>Task&lt;System.Object&gt;.</returns>
-    public Task<object?> GetBitmapSourceFromClipboardAsync()
+    public static Task<object?> GetBitmapSourceFromClipboardAsync()
     {
         if ((Clipboard.GetData("DeviceIndependentBitmap") is MemoryStream memoryStream))
         {
@@ -56,7 +56,7 @@ public class ClipboardService : IClipboardService
 
             BITMAPINFOHEADER iInfoHeader = BinaryConverter.FromByteArray<BITMAPINFOHEADER>(buffer);
 
-            var fileHeaderSize = Marshal.SizeOf(typeof(BITMAPFILEHEADER));
+            var fileHeaderSize = Marshal.SizeOf<BITMAPFILEHEADER>();
             var infoHeaderSize = iInfoHeader.biSize;
             var fileSize = fileHeaderSize + iInfoHeader.biSize + iInfoHeader.biSizeImage;
 
@@ -84,7 +84,7 @@ public class ClipboardService : IClipboardService
 
     public async Task<ImageResult?> GetImageFromClipboardAsync()
     {
-        if (await GetBitmapSourceFromClipboardAsync() is ImageSource imageSource)
+        if (await ClipboardService.GetBitmapSourceFromClipboardAsync() is ImageSource imageSource)
         {
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create((BitmapSource)imageSource));

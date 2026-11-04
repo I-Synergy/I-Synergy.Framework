@@ -43,62 +43,62 @@ public static partial class Elementwise
     static void check<T, U>(T[] a, U[] b)
     {
         if (a.Length != b.Length)
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[] a, U[] b, V[] result)
     {
         if (a.Length != b.Length)
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
         if (a.Length != result.Length)
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[] a, U b, V[] result)
     {
         if (a.Length != result.Length)
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T a, U[] b, V[] result)
     {
         if (b.Length != result.Length)
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U>(T[,] a, U[,] b)
     {
         if (rows(a) != rows(b) || cols(a) != cols(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U>(T[][] a, U[][] b)
     {
         if (rows(a) != rows(b) || cols(a) != cols(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[,] a, U[,] b, V[,] result)
     {
         if (rows(a) != rows(b) || cols(a) != cols(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[][] a, U[][] b, V[][] result)
     {
         if (rows(a) != rows(b) || cols(a) != cols(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
     [Conditional("DEBUG")]
     static void check<T, U, V>(int d, T[,] a, U[] b, V[,] result)
@@ -106,15 +106,15 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
@@ -123,15 +123,15 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
@@ -140,15 +140,15 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
@@ -157,15 +157,15 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
     [Conditional("DEBUG")]
     static void check<T, U, V>(VectorType d, T[,] a, U[] b, V[,] result)
@@ -173,15 +173,15 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
@@ -190,15 +190,15 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(a) != rows(b))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
@@ -207,15 +207,15 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
@@ -224,118 +224,118 @@ public static partial class Elementwise
         if (d == 0)
         {
             if (cols(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         else
         {
             if (rows(b) != rows(a))
-                throw new DimensionMismatchException("b");
+                throw new DimensionMismatchException(nameof(b));
         }
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[,] a, U[] b, V[,] result)
     {
         if (rows(a) != rows(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[][] a, U[] b, V[][] result)
     {
         if (rows(a) != rows(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[] a, U[,] b, V[,] result)
     {
         if (rows(a) != rows(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
         if (rows(a) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[] a, U[][] b, V[][] result)
     {
         if (rows(a) != rows(b))
-            throw new DimensionMismatchException("b");
+            throw new DimensionMismatchException(nameof(b));
         if (rows(a) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(int d, T a, U[,] b, V[,] result)
     {
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(int d, T a, U[][] b, V[][] result)
     {
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T a, U[,] b, V[,] result)
     {
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T a, U[][] b, V[][] result)
     {
         if (rows(b) != rows(result) || cols(b) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[][] a, U b, V[][] result)
     {
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V>(T[,] a, U b, V[,] result)
     {
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V, W>(T[][] a, U b, V[,] c, W[,] result)
     {
         if (rows(a) != rows(c) || cols(a) != cols(c))
-            throw new DimensionMismatchException("c");
+            throw new DimensionMismatchException(nameof(c));
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V, W>(T[][] a, U b, V[][] c, W[][] result)
     {
         if (rows(a) != rows(c) || cols(a) != cols(c))
-            throw new DimensionMismatchException("c");
+            throw new DimensionMismatchException(nameof(c));
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     [Conditional("DEBUG")]
     static void check<T, U, V, W>(T[,] a, U b, V[,] c, W[,] result)
     {
         if (rows(a) != rows(c) || cols(a) != cols(c))
-            throw new DimensionMismatchException("c");
+            throw new DimensionMismatchException(nameof(c));
         if (rows(a) != rows(result) || cols(a) != cols(result))
-            throw new DimensionMismatchException("result");
+            throw new DimensionMismatchException(nameof(result));
     }
 
     private static TOutput[] VectorCreateAs<TInput, TOutput>(TInput[] vector)

@@ -22,10 +22,7 @@ public sealed class WeakEventListener<TInstance, TSource, TEventArgs> // NOSONAR
     /// <param name="instance">Instance subscribing to the event.</param>
     public WeakEventListener(TInstance instance)
     {
-        if (instance is null)
-        {
-            throw new ArgumentNullException(nameof(instance));
-        }
+        ArgumentNullException.ThrowIfNull(instance);
 
         _weakInstance = new WeakReference<TInstance>(instance);
     }

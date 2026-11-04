@@ -148,22 +148,22 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         double[][] a;
         m = value.Length; // rows
 
         if (m == 0)
-            throw new ArgumentException("Matrix does not have any rows.", "value");
+            throw new ArgumentException("Matrix does not have any rows.", nameof(value));
 
         n = value[0].Length; // cols
 
         if (n == 0)
-            throw new ArgumentException("Matrix does not have any columns.", "value");
+            throw new ArgumentException("Matrix does not have any columns.", nameof(value));
 
         for (var i = 0; i < value.Length; i++)
             if (value[i].Length != n)
-                throw new ArgumentException("Matrix has rows of different sizes.", "value");
+                throw new ArgumentException("Matrix has rows of different sizes.", nameof(value));
         if (m < n) // Check if we are violating JAMA's assumption
         {
             if (!autoTranspose) // Yes, check if we should correct it
@@ -884,8 +884,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
     public double[][] SolveForDiagonal(double[] diagonal)
     {
-        if (diagonal is null)
-            throw new ArgumentNullException("diagonal");
+        ArgumentNullException.ThrowIfNull(diagonal);
 
         return Solve(Jagged.Diagonal(diagonal));
     }

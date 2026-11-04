@@ -199,7 +199,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(int numberOfVariables)
         : base(numberOfVariables)
     {
-        constraints = new NonlinearConstraint[0];
+        constraints = Array.Empty<NonlinearConstraint>();
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(int numberOfVariables, Func<double[], double> function)
         : base(numberOfVariables, function)
     {
-        constraints = new NonlinearConstraint[0];
+        constraints = Array.Empty<NonlinearConstraint>();
     }
 
     /// <summary>
@@ -224,7 +224,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(NonlinearObjectiveFunction function)
         : base(function.NumberOfVariables, function.Function)
     {
-        constraints = new NonlinearConstraint[0];
+        constraints = Array.Empty<NonlinearConstraint>();
     }
 
     /// <summary>
@@ -249,18 +249,17 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(NonlinearObjectiveFunction function, NonlinearConstraint[] constraints)
         : base(function.NumberOfVariables, function.Function)
     {
-        if (constraints is null)
-            throw new ArgumentNullException("constraints");
+        ArgumentNullException.ThrowIfNull(constraints);
 
         for (var i = 0; i < constraints.Length; i++)
         {
             if (constraints[i].NumberOfVariables != function.NumberOfVariables)
-                throw new DimensionMismatchException("constraints", "The constraint at position " + i +
+                throw new DimensionMismatchException(nameof(constraints), "The constraint at position " + i +
                     " contains an unexpected number of variables. Expected value would be " + NumberOfVariables + ".");
 
             if (constraints[i].ShouldBe == ConstraintType.EqualTo)
                 throw new ArgumentException("Inequality constraints are not supported."
-                    + " The constraint at position " + i + " is an inequality constraint.", "constraints");
+                    + " The constraint at position " + i + " is an inequality constraint.", nameof(constraints));
         }
 
         this.constraints = constraints;

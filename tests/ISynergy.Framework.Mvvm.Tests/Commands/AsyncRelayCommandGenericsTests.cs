@@ -10,6 +10,7 @@ public class AsyncRelayCommandGenericsTests
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
+    private static readonly int[] expected = new[] { 1, 2 };
 
     public AsyncRelayCommandGenericsTests()
     {
@@ -74,7 +75,7 @@ public class AsyncRelayCommandGenericsTests
         }
 
         // Assert
-        CollectionAssert.AreEqual(new int[0], executedParameters);
+        CollectionAssert.AreEqual(Array.Empty<int>(), executedParameters);
         Assert.IsTrue(command.IsCancellationRequested);
     }
 
@@ -188,7 +189,7 @@ public class AsyncRelayCommandGenericsTests
         await Task.WhenAll(task1, task2);
 
         // Assert
-        CollectionAssert.AreEqual(new[] { 1, 2 }, executedParameters);
+        CollectionAssert.AreEqual(expected, executedParameters);
     }
 
     [TestMethod]

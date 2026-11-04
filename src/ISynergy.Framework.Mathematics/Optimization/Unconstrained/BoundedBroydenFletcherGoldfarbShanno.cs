@@ -368,7 +368,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         set
         {
             if (value <= 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Number of corrections should be higher than zero.", "ERROR: M .LE. 0");
 
             corrections = value;
@@ -385,7 +385,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         set
         {
             if (value.Length != upperBound.Length)
-                throw new DimensionMismatchException("value",
+                throw new DimensionMismatchException(nameof(value),
                     $"The bounds vector should have the same length as the number of variables to be optimized ({NumberOfVariables}).");
             upperBound = value;
         }
@@ -401,7 +401,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         set
         {
             if (value.Length != lowerBound.Length)
-                throw new DimensionMismatchException("value",
+                throw new DimensionMismatchException(nameof(value),
                     $"The bounds vector should have the same length as the number of variables to be optimized ({NumberOfVariables}).");
             lowerBound = value;
         }
@@ -431,7 +431,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         set
         {
             if (value < 0)
-                throw ArgumentException("value",
+                throw ArgumentException(nameof(value),
                     "Tolerance must be greater than or equal to zero.", "ERROR: FACTR .LT. 0");
 
             factr = value;
@@ -492,11 +492,9 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         Func<double[], double> function, Func<double[], double[]> gradient)
         : this(numberOfVariables)
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
-        if (gradient is null)
-            throw new ArgumentNullException("gradient");
+        ArgumentNullException.ThrowIfNull(gradient);
 
         Function = function;
         Gradient = gradient;

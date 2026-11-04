@@ -35,17 +35,17 @@ public class TokenStorageService : ITokenStorageService
     }
 
     public Task<string?> GetAccessTokenAsync() =>
-        GetSecureValueAsync(AccessTokenKey);
+        TokenStorageService.GetSecureValueAsync(AccessTokenKey);
 
     public Task<string?> GetRefreshTokenAsync() =>
-        GetSecureValueAsync(RefreshTokenKey);
+        TokenStorageService.GetSecureValueAsync(RefreshTokenKey);
 
     public Task<string?> GetIdTokenAsync() =>
-        GetSecureValueAsync(IdTokenKey);
+        TokenStorageService.GetSecureValueAsync(IdTokenKey);
 
     public async Task<DateTimeOffset?> GetTokenExpiryAsync()
     {
-        var expiryString = await GetSecureValueAsync(TokenExpiryKey);
+        var expiryString = await TokenStorageService.GetSecureValueAsync(TokenExpiryKey);
         if (string.IsNullOrEmpty(expiryString))
             return null;
 
@@ -57,7 +57,7 @@ public class TokenStorageService : ITokenStorageService
 
     public async Task<string?> GetEnvironmentAsync()
     {
-        var environmentString = await GetSecureValueAsync(EnvironmentKey);
+        var environmentString = await TokenStorageService.GetSecureValueAsync(EnvironmentKey);
 
         if (string.IsNullOrEmpty(environmentString))
             return null;
@@ -70,19 +70,19 @@ public class TokenStorageService : ITokenStorageService
         try
         {
             if (!string.IsNullOrEmpty(accessToken))
-                await SetSecureValueAsync(AccessTokenKey, accessToken);
+                await TokenStorageService.SetSecureValueAsync(AccessTokenKey, accessToken);
 
             if (!string.IsNullOrEmpty(refreshToken))
-                await SetSecureValueAsync(RefreshTokenKey, refreshToken);
+                await TokenStorageService.SetSecureValueAsync(RefreshTokenKey, refreshToken);
 
             if (!string.IsNullOrEmpty(idToken))
-                await SetSecureValueAsync(IdTokenKey, idToken);
+                await TokenStorageService.SetSecureValueAsync(IdTokenKey, idToken);
 
             if (expiry.HasValue)
-                await SetSecureValueAsync(TokenExpiryKey, expiry.Value.ToString("O"));
+                await TokenStorageService.SetSecureValueAsync(TokenExpiryKey, expiry.Value.ToString("O"));
 
             if (!string.IsNullOrEmpty(environment))
-                await SetSecureValueAsync(EnvironmentKey, environment);
+                await TokenStorageService.SetSecureValueAsync(EnvironmentKey, environment);
 
 
             _logger.LogDebug("Tokens saved successfully");
@@ -98,11 +98,11 @@ public class TokenStorageService : ITokenStorageService
     {
         try
         {
-            await DeleteSecureValueAsync(AccessTokenKey);
-            await DeleteSecureValueAsync(RefreshTokenKey);
-            await DeleteSecureValueAsync(IdTokenKey);
-            await DeleteSecureValueAsync(TokenExpiryKey);
-            await DeleteSecureValueAsync(EnvironmentKey);
+            await TokenStorageService.DeleteSecureValueAsync(AccessTokenKey);
+            await TokenStorageService.DeleteSecureValueAsync(RefreshTokenKey);
+            await TokenStorageService.DeleteSecureValueAsync(IdTokenKey);
+            await TokenStorageService.DeleteSecureValueAsync(TokenExpiryKey);
+            await TokenStorageService.DeleteSecureValueAsync(EnvironmentKey);
 
             _logger.LogDebug("Tokens cleared successfully");
         }
@@ -113,7 +113,7 @@ public class TokenStorageService : ITokenStorageService
         }
     }
 
-    private Task<string?> GetSecureValueAsync(string key) // NOSONAR - uses platform-specific instance state
+    private static Task<string?> GetSecureValueAsync(string key) // NOSONAR - uses platform-specific instance state
     {
 #if WINDOWS
         try
@@ -151,7 +151,7 @@ public class TokenStorageService : ITokenStorageService
 #endif
     }
 
-    private Task SetSecureValueAsync(string key, string value) // NOSONAR - uses platform-specific instance state
+    private static Task SetSecureValueAsync(string key, string value) // NOSONAR - uses platform-specific instance state
     {
 #if WINDOWS
         try
@@ -196,7 +196,7 @@ public class TokenStorageService : ITokenStorageService
         return Task.CompletedTask;
     }
 
-    private Task DeleteSecureValueAsync(string key) // NOSONAR - uses platform-specific instance state
+    private static Task DeleteSecureValueAsync(string key) // NOSONAR - uses platform-specific instance state
     {
 #if WINDOWS
         try

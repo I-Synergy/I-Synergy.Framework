@@ -64,14 +64,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         int[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -315,14 +315,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -390,14 +390,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -460,14 +460,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -535,14 +535,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -605,14 +605,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -680,14 +680,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -750,14 +750,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -825,14 +825,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -895,14 +895,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -970,14 +970,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1040,14 +1040,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -1115,14 +1115,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1185,14 +1185,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -1260,14 +1260,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1330,14 +1330,14 @@ public static partial class Vector
             return [];
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double[] r;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize));
 
@@ -1405,14 +1405,14 @@ public static partial class Vector
             yield break;
 
         if (stepSize == 0)
-            throw new ArgumentOutOfRangeException("stepSize", "stepSize must be different from zero.");
+            throw new ArgumentOutOfRangeException(nameof(stepSize), "stepSize must be different from zero.");
 
         double last;
 
         if (a < b)
         {
             if (stepSize < 0)
-                throw new ArgumentOutOfRangeException("stepSize", "If a < b, stepSize must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
             uint steps = (uint)System.Math.Ceiling(((double)(b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)

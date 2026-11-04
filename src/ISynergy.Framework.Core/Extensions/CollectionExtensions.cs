@@ -298,11 +298,7 @@ public static class CollectionExtensions
 
         foreach (var newItem in newSet.EnsureNotNull())
         {
-            if (itemsToRemove.Contains(newItem))
-            {
-                itemsToRemove.Remove(newItem);
-            }
-            else
+            if (!itemsToRemove.Remove(newItem))
             {
                 itemsToAdd.Add(newItem);
             }

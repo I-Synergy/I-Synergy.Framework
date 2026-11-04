@@ -64,10 +64,13 @@ public class ZeroOneLossTest
         Assert.IsTrue(loss == 0);
     }
 
+    private static readonly int[] expected = new[] { 0, 1 };
+    private static readonly int[] actual = new[] { 0, 2 };
+
     [TestMethod]
     public void gh_824()
     {
-        double loss = new ZeroOneLoss(new[] { 0, 1 }).Loss(new[] { 0, 2 });
+        double loss = new ZeroOneLoss(expected).Loss(actual);
         Assert.AreEqual(0.5, loss, 1e-10);
     }
 }

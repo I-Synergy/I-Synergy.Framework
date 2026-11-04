@@ -12,6 +12,7 @@ public class AsyncRelayCommandTests
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
+    private static readonly int[] expected = new[] { 1, 2, 3 };
 
     public AsyncRelayCommandTests()
     {
@@ -459,7 +460,7 @@ public class AsyncRelayCommandTests
         await command.ExecuteAsync(3);
 
         // Assert
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, receivedParameters);
+        CollectionAssert.AreEqual(expected, receivedParameters);
     }
 
     [TestMethod]

@@ -64,7 +64,7 @@ public static class CredentialManager
         var byteArray = Encoding.Unicode.GetBytes(password);
 
         if (byteArray is not null && byteArray.Length > 512)
-            throw new ArgumentOutOfRangeException("password", "The password message has exceeded 512 bytes.");
+            throw new ArgumentOutOfRangeException(nameof(password), "The password message has exceeded 512 bytes.");
 
         var credential = new CREDENTIAL();
         credential.AttributeCount = 0;
@@ -100,8 +100,8 @@ public static class CredentialManager
         {
             for (int n = 0; n < count; n++)
             {
-                var credentialPtr = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf(typeof(IntPtr)));
-                var credential = ReadCredential((CREDENTIAL)Marshal.PtrToStructure(credentialPtr, typeof(CREDENTIAL))!);
+                var credentialPtr = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf<nint>());
+                var credential = ReadCredential(Marshal.PtrToStructure<CREDENTIAL>(credentialPtr)!);
 
                 if (credential is not null)
                     result.Add(credential);
@@ -154,7 +154,7 @@ public static class CredentialManager
         {
             if (!IsInvalid)
             {
-                var credential = (CREDENTIAL)Marshal.PtrToStructure(handle, typeof(CREDENTIAL))!;
+                var credential = Marshal.PtrToStructure<CREDENTIAL>(handle)!;
                 return credential;
             }
 

@@ -247,7 +247,7 @@ public static class Gamma
     public static double Multivariate(double x, int p)
     {
         if (p < 1)
-            throw new ArgumentOutOfRangeException("p",
+            throw new ArgumentOutOfRangeException(nameof(p),
                 "Parameter p must be higher than 1.");
 
         if (p == 1)
@@ -382,7 +382,7 @@ public static class Gamma
         double z;
 
         // Check the input.
-        if (x <= 0.0) throw new ArgumentException("The input parameter x must be positive.", "x");
+        if (x <= 0.0) throw new ArgumentException("The input parameter x must be positive.", nameof(x));
 
         z = x;
 
@@ -652,7 +652,7 @@ public static class Gamma
     public static double Log(double x, int p)
     {
         if (p < 1)
-            throw new ArgumentOutOfRangeException("p", "Parameter p must be higher than 1.");
+            throw new ArgumentOutOfRangeException(nameof(p), "Parameter p must be higher than 1.");
 
         if (p == 1)
             return Log(x);
