@@ -56,7 +56,7 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
     /// When the frame is evicted, the scope is disposed, which cascades
     /// to the ViewModel and all scoped dependencies resolved within that frame.
     /// </summary>
-    protected class NavigationFrame : IDisposable
+    protected class NavigationFrame : IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
     {
         public IServiceScope Scope { get; init; } = null!;
         public Type ViewModelType { get; init; } = null!;
@@ -479,22 +479,13 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
 
         NavigationFrame? newFrame;
 
-        if (viewModel is not null)
-        {
-            // Caller provided a specific ViewModel instance — wrap it in a new scope
-            var scope = _serviceScopeFactory.CreateScope();
-            // The provided ViewModel is already resolved; register it in the new scope would be complex.
-            // Instead, create a new scope and resolve a fresh instance.
-            scope.ServiceProvider.GetRequiredService<TViewModel>();
-            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
-        }
-        else if (TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
+        if (viewModel is null && TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
         {
             // Reuse existing frame from backstack (ViewModel cached in its scope)
             backStackFrame.Parameter = parameter;
             newFrame = backStackFrame;
         }
-        else // NOSONAR - two navigation paths share the same frame creation
+        else
         {
             // Create a fresh child scope and resolve the ViewModel from it
             var scope = _serviceScopeFactory.CreateScope();
@@ -542,18 +533,12 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
 
         NavigationFrame? newFrame;
 
-        if (viewModel is not null)
-        {
-            var scope = _serviceScopeFactory.CreateScope();
-            scope.ServiceProvider.GetRequiredService<TViewModel>();
-            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
-        }
-        else if (TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
+        if (viewModel is null && TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
         {
             backStackFrame.Parameter = parameter;
             newFrame = backStackFrame;
         }
-        else // NOSONAR - two navigation paths share the same frame creation
+        else
         {
             var scope = _serviceScopeFactory.CreateScope();
             scope.ServiceProvider.GetRequiredService<TViewModel>();
