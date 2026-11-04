@@ -7,4 +7,11 @@
     implementations are intentionally parallel; exclude it from copy-paste detection only.
   -->
   <Property Name="sonar.cpd.exclusions">src/ISynergy.Framework.Mathematics/**</Property>
+
+  <!-- The Mathematics project is a port of Math.NET Numerics: the matrix and jagged
+       implementations are intentionally parallel and the overload layout mirrors the
+       upstream sources. C# rules are false positives there; see sonar-project.properties. -->
+  <Property Name="sonar.issue.ignore.multicriteria">e1</Property>
+  <Property Name="sonar.issue.ignore.multicriteria.e1.ruleKey">csharpsquid:*</Property>
+  <Property Name="sonar.issue.ignore.multicriteria.e1.resourceKey">src/ISynergy.Framework.Mathematics/**</Property>
 </AnalysisSettings>
