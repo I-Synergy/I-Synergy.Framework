@@ -23,7 +23,7 @@ public sealed class CurrencyFormatterTests
 
         // Assert
         Assert.IsFalse(result.Contains('$'));
-        Assert.IsTrue(result.Contains("123.45"));
+        Assert.Contains("123.45", result);
     }
 
     [TestMethod]
@@ -38,7 +38,7 @@ public sealed class CurrencyFormatterTests
         // Assert
         Assert.IsFalse(result.Contains('$'));
         Assert.IsFalse(result.Contains(','));
-        Assert.IsTrue(result.Contains("1234.56"));
+        Assert.Contains("1234.56", result);
     }
 
     [TestMethod]
@@ -65,7 +65,7 @@ public sealed class CurrencyFormatterTests
 
         // Assert
         Assert.IsTrue(result.Contains('$'));
-        Assert.IsTrue(result.Contains("123.45"));
+        Assert.Contains("123.45", result);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public sealed class CurrencyFormatterTests
         var result = formatter.FormatValue(123.4m);
 
         // Assert
-        Assert.IsTrue(result.Contains("123.400"));
+        Assert.Contains("123.400", result);
     }
 
     [TestMethod]

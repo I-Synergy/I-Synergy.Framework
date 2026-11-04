@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Sample.ViewModels;
 
-public class ChartsViewModel : ViewModelNavigation<TestItem>
+public partial class ChartsViewModel : ViewModelNavigation<TestItem>
 {
     /// <summary>
     /// Gets the title.

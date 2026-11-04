@@ -10,6 +10,7 @@ using Windows.Storage.Streams;
 namespace ISynergy.Framework.UI.WinUI.Extensions;
 
 [TestClass()]
+[OSCondition(OperatingSystems.Windows)]
 public class BitmapExtensionsTests
 {
     public BitmapExtensionsTests()
@@ -50,7 +51,7 @@ public class BitmapExtensionsTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.Length > 0);
+        Assert.IsNotEmpty(result);
         Assert.IsInstanceOfType<byte[]>(result);
     }
 
@@ -67,7 +68,7 @@ public class BitmapExtensionsTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.Length > 0);
+        Assert.IsNotEmpty(result);
         Assert.IsInstanceOfType<byte[]>(result);
     }
 

@@ -214,8 +214,8 @@ public partial class MatrixTest
 
         // Some more checks
         int[] innerValues = values as int[];
-        Assert.AreEqual(24, innerValues.Length);
-        CollectionAssert.AreEqual(expectedArray, innerValues.GetLength());
+        Assert.HasCount(24, innerValues);
+        Assert.AreSequenceEqual(expectedArray, innerValues.GetLength());
 
 
         // Test #2: Transform the jagged matrix to a multidimensional matrix. The extension method called DeepToMatrix is available at:
@@ -228,7 +228,7 @@ public partial class MatrixTest
         // Some more checks
         int[,,] innerMatrix = matrix as int[,,];
         int[] shape = innerMatrix.GetLength();
-        CollectionAssert.AreEqual(expectedArray0, shape);
+        Assert.AreSequenceEqual(expectedArray0, shape);
 
 
         int[,,] expected =

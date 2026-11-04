@@ -26,6 +26,7 @@ namespace ISynergy.Framework.UI.Maui.Services;
 /// keys to demonstrate the same logic without MAUI dependencies.
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class NavigationServiceMemoryTests
 {
     /// <summary>
@@ -57,7 +58,7 @@ public class NavigationServiceMemoryTests
             "_bodies type should be ConditionalWeakTable<,>");
 
         var genericArgs = fieldType.GetGenericArguments();
-        Assert.AreEqual(2, genericArgs.Length, "ConditionalWeakTable should have two type arguments");
+        Assert.HasCount(2, genericArgs, "ConditionalWeakTable should have two type arguments");
         Assert.AreEqual(typeof(Microsoft.Maui.Controls.ContentPage), genericArgs[0],
             "Key type should be ContentPage");
         Assert.AreEqual(typeof(Microsoft.Maui.Controls.View), genericArgs[1],

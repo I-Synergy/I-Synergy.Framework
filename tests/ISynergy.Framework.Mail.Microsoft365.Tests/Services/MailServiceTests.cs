@@ -40,7 +40,7 @@ public class MailServiceTests
             false);
         ;
 
-        Assert.IsTrue(await service.SendEmailAsync(message));
+        Assert.IsTrue(await service.SendEmailAsync(message, TestContext.CancellationToken));
     }
 
     [TestMethod()]
@@ -54,7 +54,7 @@ public class MailServiceTests
             true);
         ;
 
-        Assert.IsTrue(await service.SendEmailAsync(message));
+        Assert.IsTrue(await service.SendEmailAsync(message, TestContext.CancellationToken));
     }
 
     [TestMethod()]
@@ -68,7 +68,7 @@ public class MailServiceTests
             false);
         ;
 
-        Assert.IsTrue(await service.SendEmailAsync(message));
+        Assert.IsTrue(await service.SendEmailAsync(message, TestContext.CancellationToken));
     }
 
     [TestMethod()]
@@ -82,6 +82,8 @@ public class MailServiceTests
             true);
         ;
 
-        Assert.IsTrue(await service.SendEmailAsync(message));
+        Assert.IsTrue(await service.SendEmailAsync(message, TestContext.CancellationToken));
     }
+
+    public TestContext TestContext { get; set; }
 }

@@ -98,4 +98,9 @@ public struct GeodeticMeasurement : IEquatable<GeodeticMeasurement>
         return ElevationChange.IsApproximatelyEqual(other.ElevationChange) &&
                AverageCurve.Equals(other.AverageCurve);
     }
+
+    public override bool Equals(object obj)
+    {
+        return obj is GeodeticMeasurement && Equals((GeodeticMeasurement)obj);
+    }
 }

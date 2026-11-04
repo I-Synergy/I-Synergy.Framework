@@ -185,6 +185,6 @@ public class ObservableValidatedClassEventTests
         Assert.Throws<ObjectDisposedException>(() => observable.TriggerErrorsChanged("TestProperty"));
 
         // No events should have been added to disposalOrder during disposal
-        Assert.AreEqual(0, disposalOrder.Count);
+        Assert.IsEmpty(disposalOrder);
     }
 }

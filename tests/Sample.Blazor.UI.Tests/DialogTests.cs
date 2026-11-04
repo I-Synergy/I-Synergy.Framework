@@ -87,7 +87,7 @@ public class DialogTests : SamplePageTest
         // Force a Blazor re-render and re-check: press Tab (blur) and click a neutral part of the dialog.
         await input.PressAsync("Tab");
         await Page.Locator($"{SampleDom.Dialog} [slot='title']").ClickAsync();
-        await Task.Delay(300);
+        await Task.Delay(300, TestContext.CancellationToken);
         await Expect(input).ToHaveValueAsync(TypedText);
 
         Log($"text input value after typing + blur + re-render: '{await input.InputValueAsync()}'");
@@ -165,33 +165,33 @@ public class DialogTests : SamplePageTest
         var emptyAboveContent = state.GetProperty("emptyAboveContent").GetInt32();
 
         // The panel contains its content (a collapsed panel is a different defect, not a pass)...
-        Assert.IsTrue(panelHeight > 0, $"The dialog panel has no height. Measurements: {measurements}");
-        Assert.IsTrue(
-            contentHeight > 0,
+        Assert.IsGreaterThan(0, panelHeight, $"The dialog panel has no height. Measurements: {measurements}");
+        Assert.IsGreaterThan(
+            0, contentHeight,
             $"The dialog panel rendered no measurable content (title/input/actions). Measurements: {measurements}");
-        Assert.IsTrue(
-            panelHeight >= contentHeight,
+        Assert.IsGreaterThanOrEqualTo(
+            contentHeight, panelHeight,
             $"The dialog panel ({panelHeight}px) is shorter than its own content ({contentHeight}px). " +
             $"Measurements: {measurements}");
 
         // ...and it is materially shorter than the viewport. The defect rendered the panel at the full
         // viewport height (900px at this viewport); the fix sizes it to its content (~210px). The bound
         // is deliberately relative so it does not hard-code the fixed height.
-        Assert.IsTrue(
-            panelHeight < viewportHeight * MaxPanelHeightToViewportRatio,
+        Assert.IsLessThan(
+            viewportHeight * MaxPanelHeightToViewportRatio, panelHeight,
             $"The dialog panel is not content-sized: {panelHeight}px against a {viewportHeight}px viewport " +
             $"(ratio {panelHeight / (double)viewportHeight:F2}, allowed < {MaxPanelHeightToViewportRatio:F2}). " +
             $"Measurements: {measurements}");
 
         // No large empty area below the body/actions - that empty strip is what the oversized panel
         // looked like. Only the panel's own bottom padding may remain.
-        Assert.IsTrue(
-            emptyBelowContent <= MaxPanelPaddingPx,
+        Assert.IsLessThanOrEqualTo(
+            MaxPanelPaddingPx, emptyBelowContent,
             $"The dialog panel leaves {emptyBelowContent}px of empty space below its last content " +
             $"(body/actions) - more than the panel's own {MaxPanelPaddingPx}px bottom padding allows. " +
             $"Measurements: {measurements}");
-        Assert.IsTrue(
-            emptyAboveContent <= MaxPanelPaddingPx,
+        Assert.IsLessThanOrEqualTo(
+            MaxPanelPaddingPx, emptyAboveContent,
             $"The dialog panel leaves {emptyAboveContent}px of empty space above its first content. " +
             $"Measurements: {measurements}");
     }
@@ -329,4 +329,6 @@ public class DialogTests : SamplePageTest
             });
         }
         """;
+
+    public TestContext TestContext { get; set; }
 }

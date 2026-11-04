@@ -193,11 +193,11 @@ public class RelayCommandGenericTests
         // Act & Assert
         var ex1 = Assert.Throws<ArgumentException>(() =>
             RelayCommand<int>.ThrowArgumentExceptionForInvalidCommandArgument(null));
-        Assert.IsTrue(ex1.Message.Contains("must not be null"));
+        Assert.Contains("must not be null", ex1.Message);
 
         var ex2 = Assert.Throws<ArgumentException>(() =>
             RelayCommand<int>.ThrowArgumentExceptionForInvalidCommandArgument("invalid"));
-        Assert.IsTrue(ex2.Message.Contains("cannot be of type"));
+        Assert.Contains("cannot be of type", ex2.Message);
     }
 
     [TestMethod]

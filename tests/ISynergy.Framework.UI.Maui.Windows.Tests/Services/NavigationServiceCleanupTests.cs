@@ -17,6 +17,7 @@ namespace ISynergy.Framework.UI.Maui.Services;
 /// sign-in/sign-out cycle (see verification section in the plan).
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class NavigationServiceCleanupTests
 {
     private MethodInfo _cleanupMethod = null!;
@@ -77,7 +78,7 @@ public class NavigationServiceCleanupTests
         Assert.IsTrue(_cleanupMethod.IsStatic, "Should be static");
 
         var parameters = _cleanupMethod.GetParameters();
-        Assert.AreEqual(1, parameters.Length, "Should take one parameter");
+        Assert.HasCount(1, parameters, "Should take one parameter");
         Assert.AreEqual(typeof(Page), parameters[0].ParameterType, "Parameter should be Page?");
     }
 }

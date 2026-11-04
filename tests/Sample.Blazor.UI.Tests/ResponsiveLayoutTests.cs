@@ -27,7 +27,7 @@ namespace Sample.Blazor.UI.Tests;
 /// </para>
 /// </summary>
 [TestClass]
-public class ResponsiveLayoutTests : SamplePageTest
+public partial class ResponsiveLayoutTests : SamplePageTest
 {
     private const int MobileWidth = 480;
     private const int MobileHeight = 800;
@@ -50,7 +50,7 @@ public class ResponsiveLayoutTests : SamplePageTest
             $"The navigation must hold the 4 route items. Observed DOM: {beforeClick}");
         Assert.IsFalse(before.GetProperty("sidebarOpen").GetBoolean(),
             $"The drawer must start closed. Observed DOM: {beforeClick}");
-        Assert.IsTrue(before.GetProperty("sidebarBox").GetProperty("right").GetInt32() <= 0,
+        Assert.IsLessThanOrEqualTo(0, before.GetProperty("sidebarBox").GetProperty("right").GetInt32(),
             $"The sidebar must start off-canvas. Observed DOM: {beforeClick}");
         Assert.IsFalse(before.GetProperty("scrimPresent").GetBoolean(),
             $"No scrim may be rendered while the drawer is closed. Observed DOM: {beforeClick}");
@@ -69,7 +69,7 @@ public class ResponsiveLayoutTests : SamplePageTest
 
         Assert.IsTrue(after.GetProperty("sidebarOpen").GetBoolean(),
             $"The drawer did not get the is-open class. Observed DOM: {afterClick}");
-        Assert.IsTrue(after.GetProperty("sidebarBox").GetProperty("x").GetInt32() >= 0,
+        Assert.IsGreaterThanOrEqualTo(0, after.GetProperty("sidebarBox").GetProperty("x").GetInt32(),
             $"The opened drawer must be on screen. Observed DOM: {afterClick}");
         Assert.IsTrue(after.GetProperty("scrimPresent").GetBoolean(),
             $"The scrim must be rendered while the drawer is open. Observed DOM: {afterClick}");
@@ -93,7 +93,7 @@ public class ResponsiveLayoutTests : SamplePageTest
             $"Clicking the scrim must close the drawer. Observed DOM: {afterScrimClick}");
         Assert.IsFalse(closed.GetProperty("scrimPresent").GetBoolean(),
             $"The scrim must be removed once the drawer is closed. Observed DOM: {afterScrimClick}");
-        Assert.IsTrue(closed.GetProperty("sidebarBox").GetProperty("right").GetInt32() <= 0,
+        Assert.IsLessThanOrEqualTo(0, closed.GetProperty("sidebarBox").GetProperty("right").GetInt32(),
             $"The closed drawer must be off-canvas again. Observed DOM: {afterScrimClick}");
 
         await AssertBaselineAsync("mobile-drawer");
@@ -144,7 +144,7 @@ public class ResponsiveLayoutTests : SamplePageTest
 
         Assert.AreEqual("fixed", mobile.GetProperty("sidebarPosition").GetString(),
             $"The sidebar must become an off-canvas drawer after the runtime breakpoint change. Observed DOM: {mobileJson}");
-        Assert.IsTrue(mobile.GetProperty("sidebarBox").GetProperty("right").GetInt32() <= 0,
+        Assert.IsLessThanOrEqualTo(0, mobile.GetProperty("sidebarBox").GetProperty("right").GetInt32(),
             $"The drawer must be off-canvas after the runtime breakpoint change. Observed DOM: {mobileJson}");
 
         await Expect(NavToggle()).ToBeVisibleAsync();
@@ -173,7 +173,7 @@ public class ResponsiveLayoutTests : SamplePageTest
         await Expect(counterLink).ToBeVisibleAsync();
         await counterLink.ClickAsync();
 
-        await Expect(Page).ToHaveURLAsync(new System.Text.RegularExpressions.Regex("/counter$"));
+        await Expect(Page).ToHaveURLAsync(MyRegex());
         await Expect(Page.Locator("h1")).ToHaveTextAsync("Counter");
 
         // The drawer must not survive the navigation (MainLayout is reused by client-side navigation,
@@ -284,9 +284,9 @@ public class ResponsiveLayoutTests : SamplePageTest
         var navHeight = state.GetProperty("nav").GetProperty("height").GetInt32();
         var seam = state.GetProperty("seamPx").GetInt32();
 
-        Assert.IsTrue(columnHeight > 0, "The sidebar column has no height.");
-        Assert.IsTrue(navHeight > 0, "The navigation has no height.");
-        Assert.IsTrue(columnHeight >= navHeight, "The navigation cannot be taller than its sidebar column.");
+        Assert.IsGreaterThan(0, columnHeight, "The sidebar column has no height.");
+        Assert.IsGreaterThan(0, navHeight, "The navigation has no height.");
+        Assert.IsGreaterThanOrEqualTo(navHeight, columnHeight, "The navigation cannot be taller than its sidebar column.");
 
         Console.WriteLine(
             $"[evidence] two-tone check: sidebar column is {columnHeight}px tall, nav.app-nav is {navHeight}px tall, " +
@@ -379,4 +379,7 @@ public class ResponsiveLayoutTests : SamplePageTest
             }
             """);
     }
+
+    [System.Text.RegularExpressions.GeneratedRegex("/counter$")]
+    private static partial System.Text.RegularExpressions.Regex MyRegex();
 }

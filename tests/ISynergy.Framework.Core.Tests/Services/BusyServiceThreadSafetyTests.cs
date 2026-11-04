@@ -17,12 +17,14 @@ public class BusyServiceThreadSafetyTests
 
         for (int i = 0; i < 20; i++)
         {
-            tasks.Add(Task.Run(() => busyService.StartBusy()));
-            tasks.Add(Task.Run(() => busyService.StopBusy()));
+            tasks.Add(Task.Run(() => busyService.StartBusy(), TestContext.CancellationToken));
+            tasks.Add(Task.Run(() => busyService.StopBusy(), TestContext.CancellationToken));
         }
 
         await Task.WhenAll(tasks);
 
         Assert.IsFalse(busyService.IsBusy);
     }
+
+    public TestContext TestContext { get; set; }
 }

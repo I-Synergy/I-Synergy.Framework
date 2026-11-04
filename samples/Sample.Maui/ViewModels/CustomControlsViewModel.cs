@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 namespace Sample.ViewModels;
 
 [Lifetime(Lifetimes.Scoped)]
-public class CustomControlsViewModel : ViewModelNavigation<object>
+public partial class CustomControlsViewModel : ViewModelNavigation<object>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

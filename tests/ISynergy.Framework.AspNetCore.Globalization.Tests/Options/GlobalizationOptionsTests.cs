@@ -31,7 +31,7 @@ public class GlobalizationOptionsTests
 
         // Act & Assert
         Assert.AreEqual("en-US", options.DefaultCulture);
-        Assert.AreEqual(3, options.SupportedCultures.Length);
+        Assert.HasCount(3, options.SupportedCultures);
         Assert.AreEqual("en-US", options.SupportedCultures[0]);
         Assert.AreEqual("nl-NL", options.SupportedCultures[1]);
         Assert.AreEqual("fr-FR", options.SupportedCultures[2]);

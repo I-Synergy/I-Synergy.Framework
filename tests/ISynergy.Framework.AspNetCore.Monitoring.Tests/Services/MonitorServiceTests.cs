@@ -33,7 +33,7 @@ public class MonitorServiceTests
     public async Task PublishTestAsync()
     {
         // Assert: no exception thrown publishing to a valid channel
-        await _monitorService.PublishAsync(_channel, "eventName", null!);
+        await _monitorService.PublishAsync(_channel, "eventName", null!, TestContext.CancellationToken);
         Assert.IsNotNull(_monitorService);
     }
 
@@ -41,7 +41,9 @@ public class MonitorServiceTests
     public async Task PublishInvalidChannelTestAsync()
     {
         // Assert: no exception thrown publishing to an invalid channel
-        await _monitorService.PublishAsync("invalidchannel", "eventName", null!);
+        await _monitorService.PublishAsync("invalidchannel", "eventName", null!, TestContext.CancellationToken);
         Assert.IsNotNull(_monitorService);
     }
+
+    public TestContext TestContext { get; set; }
 }

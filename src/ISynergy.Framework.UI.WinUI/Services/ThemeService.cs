@@ -22,7 +22,7 @@ namespace ISynergy.Framework.UI.Services;
 /// The service reads the persisted <see cref="Themes"/> and color value from <see cref="ISettingsService"/> during construction.
 /// It then applies the theme via the XAML framework and updates the title bar colors accordingly.
 /// </remarks>
-public class ThemeService : BaseThemeService
+public partial class ThemeService : BaseThemeService
 {
     private FrameworkElement? _themeWatchedElement;
 

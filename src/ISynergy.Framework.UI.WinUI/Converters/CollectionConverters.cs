@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class CollectionCountToBooleanConverter : IValueConverter
+public partial class CollectionCountToBooleanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -49,7 +49,7 @@ public class CollectionCountToBooleanConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class UserCollectionToUsernameConverter : IValueConverter
+public partial class UserCollectionToUsernameConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

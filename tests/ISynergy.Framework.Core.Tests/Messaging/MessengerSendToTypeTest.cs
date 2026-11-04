@@ -33,17 +33,17 @@ public class MessengerSendToTypeTest
         const string testContent1 = "abcd";
         const string testContent2 = "efgh";
 
-        Assert.AreEqual(null, recipient11.ReceivedContentString);
-        Assert.AreEqual(null, recipient12.ReceivedContentString);
-        Assert.AreEqual(null, recipient21.ReceivedContentString);
-        Assert.AreEqual(null, recipient22.ReceivedContentString);
+        Assert.IsNull(recipient11.ReceivedContentString);
+        Assert.IsNull(recipient12.ReceivedContentString);
+        Assert.IsNull(recipient21.ReceivedContentString);
+        Assert.IsNull(recipient22.ReceivedContentString);
 
         _messenger.Send<string, TestRecipient1>(testContent1);
 
         Assert.AreEqual(testContent1, recipient11.ReceivedContentString);
         Assert.AreEqual(testContent1, recipient12.ReceivedContentString);
-        Assert.AreEqual(null, recipient21.ReceivedContentString);
-        Assert.AreEqual(null, recipient22.ReceivedContentString);
+        Assert.IsNull(recipient21.ReceivedContentString);
+        Assert.IsNull(recipient22.ReceivedContentString);
 
         _messenger.Send<string, TestRecipient2>(testContent2);
 
@@ -72,17 +72,17 @@ public class MessengerSendToTypeTest
 
         const string testContent1 = "abcd";
 
-        Assert.AreEqual(null, recipient11.ReceivedContentString);
-        Assert.AreEqual(null, recipient12.ReceivedContentString);
-        Assert.AreEqual(null, recipient21.ReceivedContentString);
-        Assert.AreEqual(null, recipient22.ReceivedContentString);
-        Assert.AreEqual(null, recipient31.ReceivedContentString);
-        Assert.AreEqual(null, recipient32.ReceivedContentString);
+        Assert.IsNull(recipient11.ReceivedContentString);
+        Assert.IsNull(recipient12.ReceivedContentString);
+        Assert.IsNull(recipient21.ReceivedContentString);
+        Assert.IsNull(recipient22.ReceivedContentString);
+        Assert.IsNull(recipient31.ReceivedContentString);
+        Assert.IsNull(recipient32.ReceivedContentString);
 
         _messenger.Send<string, ITestRecipient>(testContent1);
 
-        Assert.AreEqual(null, recipient11.ReceivedContentString);
-        Assert.AreEqual(null, recipient12.ReceivedContentString);
+        Assert.IsNull(recipient11.ReceivedContentString);
+        Assert.IsNull(recipient12.ReceivedContentString);
         Assert.AreEqual(testContent1, recipient21.ReceivedContentString);
         Assert.AreEqual(testContent1, recipient22.ReceivedContentString);
         Assert.AreEqual(testContent1, recipient31.ReceivedContentString);

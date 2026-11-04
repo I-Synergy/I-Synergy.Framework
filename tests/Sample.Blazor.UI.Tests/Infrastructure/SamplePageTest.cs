@@ -200,7 +200,7 @@ public abstract class SamplePageTest
     {
         await Page.WaitForFunctionAsync("() => !!window.Blazor", null, new() { Timeout = 30_000 });
 
-        var completed = await Task.WhenAny(_circuitFrame.Task, Task.Delay(TimeSpan.FromSeconds(30)));
+        var completed = await Task.WhenAny(_circuitFrame.Task, Task.Delay(TimeSpan.FromSeconds(30), TestContext.CancellationToken));
         if (completed != _circuitFrame.Task)
             throw new TimeoutException(
                 $"No frame was received on the /_blazor WebSocket within 30s for {Page.Url}; " +
@@ -288,17 +288,16 @@ public abstract class SamplePageTest
         await AssertBlazorErrorUiHiddenAsync();
 
         var fatal = FindCircuitFatalConsoleLines();
-        Assert.AreEqual(
-            0,
-            fatal.Count,
+        Assert.IsEmpty(
+            fatal,
             $"{label}: the Blazor circuit threw or disconnected - the page can keep rendering its DOM " +
             $"while silently ignoring every click. Circuit-fatal console line(s):{Environment.NewLine}{Join(fatal)}" +
             $"{Environment.NewLine}Complete console capture ({_consoleAll.Count} line(s)):{Environment.NewLine}{Join(_consoleAll)}");
 
-        Assert.AreEqual(0, _pageErrors.Count, $"{label}: uncaught JavaScript error(s):{Environment.NewLine}{Join(_pageErrors)}");
-        Assert.AreEqual(0, _consoleErrors.Count, $"{label}: browser console error(s):{Environment.NewLine}{Join(_consoleErrors)}");
-        Assert.AreEqual(0, _httpErrors.Count, $"{label}: 4xx/5xx response(s):{Environment.NewLine}{Join(_httpErrors)}");
-        Assert.AreEqual(0, _localRequestFailures.Count, $"{label}: failed request(s) for the app:{Environment.NewLine}{Join(_localRequestFailures)}");
+        Assert.IsEmpty(_pageErrors, $"{label}: uncaught JavaScript error(s):{Environment.NewLine}{Join(_pageErrors)}");
+        Assert.IsEmpty(_consoleErrors, $"{label}: browser console error(s):{Environment.NewLine}{Join(_consoleErrors)}");
+        Assert.IsEmpty(_httpErrors, $"{label}: 4xx/5xx response(s):{Environment.NewLine}{Join(_httpErrors)}");
+        Assert.IsEmpty(_localRequestFailures, $"{label}: failed request(s) for the app:{Environment.NewLine}{Join(_localRequestFailures)}");
     }
 
     /// <summary>

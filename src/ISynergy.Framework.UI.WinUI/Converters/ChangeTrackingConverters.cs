@@ -11,7 +11,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ChangeTrackingConverters : IValueConverter
+public partial class ChangeTrackingConverters : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

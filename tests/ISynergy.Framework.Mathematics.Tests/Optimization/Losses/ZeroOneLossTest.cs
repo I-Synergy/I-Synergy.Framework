@@ -9,7 +9,7 @@ public class ZeroOneLossTest
     {
         int[] expected = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         double loss = new ZeroOneLoss(expected).Loss(expected);
-        Assert.IsTrue(loss == 0);
+        Assert.AreEqual(0, loss);
     }
 
     [TestMethod]
@@ -39,7 +39,7 @@ public class ZeroOneLossTest
         double[] expected = [0, 1.01, 0.99, 0];
         int[] actual = [0, 1, 1, 0];
         double loss = new ZeroOneLoss(expected).Loss(actual);
-        Assert.IsTrue(loss == 0);
+        Assert.AreEqual(0, loss);
     }
 
     [TestMethod]
@@ -52,7 +52,7 @@ public class ZeroOneLossTest
         ];
         int[] actual = [0, 1, 0, 1];
         double loss = new ZeroOneLoss(expected).Loss(actual);
-        Assert.IsTrue(loss == 0);
+        Assert.AreEqual(0, loss);
     }
 
     [TestMethod]
@@ -61,7 +61,7 @@ public class ZeroOneLossTest
         int[] expected = [-1, -1, 1, -1];
         int[] actual = [0, 0, 1, 0];
         double loss = new ZeroOneLoss(expected).Loss(actual);
-        Assert.IsTrue(loss == 0);
+        Assert.AreEqual(0, loss);
     }
 
     private static readonly int[] expected = new[] { 0, 1 };

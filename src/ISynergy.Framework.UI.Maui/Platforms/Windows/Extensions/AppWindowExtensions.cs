@@ -12,7 +12,7 @@ using Windows.ApplicationModel.Activation;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-public static class AppWindowExtensions
+public static partial class AppWindowExtensions
 {
     public static AppWindow? GetAppWindow(this Page page)
     {
@@ -94,11 +94,11 @@ public static class AppWindowExtensions
     private const int GWL_EXSTYLE = -20;
     private const int WS_EX_LAYOUTRTL = 0x00400000;
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern int GetWindowLong(nint hWnd, int nIndex);
+    [LibraryImport("user32.dll", SetLastError = true)]
+    private static partial int GetWindowLong(nint hWnd, int nIndex);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
+    [LibraryImport("user32.dll", SetLastError = true)]
+    private static partial int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
 
     /// <summary>
     /// Applies or clears the <c>WS_EX_LAYOUTRTL</c> extended window style on the

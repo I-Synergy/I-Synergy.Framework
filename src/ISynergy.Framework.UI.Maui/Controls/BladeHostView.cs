@@ -22,7 +22,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// </para>
 /// </remarks>
 /// <seealso cref="ContentView" />
-public sealed class BladeHostView : ContentView
+public sealed partial class BladeHostView : ContentView
 {
     private bool _resolved;
 

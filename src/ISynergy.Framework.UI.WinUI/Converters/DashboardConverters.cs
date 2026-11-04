@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class TilenameToVisibilityConverter : IValueConverter
+public partial class TilenameToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

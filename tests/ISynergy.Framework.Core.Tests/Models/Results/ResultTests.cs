@@ -113,7 +113,7 @@ public class ResultTests
         // Assert
         Assert.IsFalse(result.Succeeded);
         Assert.HasCount(3, result.Messages);
-        CollectionAssert.AreEqual(messages, result.Messages);
+        Assert.AreSequenceEqual(messages, result.Messages);
         Assert.IsNull(result.StatusCode);
     }
 
@@ -228,7 +228,7 @@ public class ResultTests
 
         // Assert
         Assert.IsFalse(result.Succeeded);
-        CollectionAssert.AreEqual(messages, result.Messages);
+        Assert.AreSequenceEqual(messages, result.Messages);
     }
 
     [TestMethod]

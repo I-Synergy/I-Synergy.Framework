@@ -37,7 +37,7 @@ public class MessengerRegisterWhileSendingTest
 
         _messenger.Send(new MessageFixture(TestContentString));
 
-        Assert.AreEqual(null, TestRecipient.LastReceivedString);
+        Assert.IsNull(TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
         _messenger.Send(new MessageFixture(TestContentStringNested));
@@ -61,7 +61,7 @@ public class MessengerRegisterWhileSendingTest
 
         _messenger.Send(new MessageFixture(TestContentString));
 
-        Assert.AreEqual(null, TestRecipient.LastReceivedString);
+        Assert.IsNull(TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
         _messenger.Send(new MessageFixture(TestContentStringNested));

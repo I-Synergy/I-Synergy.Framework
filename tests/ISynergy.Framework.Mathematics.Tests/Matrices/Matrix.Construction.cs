@@ -10,7 +10,7 @@ public partial class MatrixTest
     public void create_nullable_test()
     {
         double?[] ones = Vector.Ones<double?>(5);
-        CollectionAssert.AreEqual(new double?[] { 1, 1, 1, 1, 1 }, ones);
+        Assert.AreSequenceEqual(new double?[] { 1, 1, 1, 1, 1 }, ones);
     }
 
     [TestMethod]

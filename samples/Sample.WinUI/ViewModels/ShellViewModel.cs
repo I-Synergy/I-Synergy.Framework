@@ -19,7 +19,7 @@ namespace Sample.ViewModels;
 /// <summary>
 /// Class ShellViewModel.
 /// </summary>
-public class ShellViewModel : BaseShellViewModel, IShellViewModel
+public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
     private readonly IFileService<FileResult> _fileService;

@@ -29,6 +29,7 @@ namespace ISynergy.Framework.UI.WinUI.Extensions;
 /// </para>
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class AppActivationExtensionsTests
 {
     private static readonly Type? s_targetType;

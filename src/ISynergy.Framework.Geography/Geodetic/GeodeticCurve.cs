@@ -91,4 +91,9 @@ public struct GeodeticCurve : IEquatable<GeodeticCurve>
         return EllipsoidalDistance.IsApproximatelyEqual(other.EllipsoidalDistance) && Azimuth.Equals(other.Azimuth) &&
                Calculator.Equals(other.Calculator);
     }
+
+    public override bool Equals(object obj)
+    {
+        return obj is GeodeticCurve && Equals((GeodeticCurve)obj);
+    }
 }

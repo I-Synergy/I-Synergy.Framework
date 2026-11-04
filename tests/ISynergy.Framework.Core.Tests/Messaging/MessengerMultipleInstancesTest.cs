@@ -35,17 +35,17 @@ public class MessengerMultipleInstancesTest
         const string TestContent1 = "abcd";
         const string TestContent2 = "efgh";
 
-        Assert.AreEqual(null, recipient11.ReceivedContentString);
-        Assert.AreEqual(null, recipient12.ReceivedContentString);
-        Assert.AreEqual(null, recipient21.ReceivedContentString);
-        Assert.AreEqual(null, recipient22.ReceivedContentString);
+        Assert.IsNull(recipient11.ReceivedContentString);
+        Assert.IsNull(recipient12.ReceivedContentString);
+        Assert.IsNull(recipient21.ReceivedContentString);
+        Assert.IsNull(recipient22.ReceivedContentString);
 
         _messenger1.Send(TestContent1);
 
         Assert.AreEqual(TestContent1, recipient11.ReceivedContentString);
-        Assert.AreEqual(null, recipient12.ReceivedContentString);
+        Assert.IsNull(recipient12.ReceivedContentString);
         Assert.AreEqual(TestContent1, recipient21.ReceivedContentString);
-        Assert.AreEqual(null, recipient22.ReceivedContentString);
+        Assert.IsNull(recipient22.ReceivedContentString);
 
         _messenger2.Send(TestContent2);
 

@@ -20,7 +20,7 @@ public partial class MatrixTest
              { 4, 5, 10, 7 },
              { 8, 9, 10, 11 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4).Transpose();
         m.Set(10d, 2, -1, null); // tested against numpy
@@ -30,7 +30,7 @@ public partial class MatrixTest
              { 4, 5, 10, 7 },
              { 8, 9, 10, 11 },
         }.Transpose();
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
     }
 
     [TestMethod]
@@ -47,7 +47,7 @@ public partial class MatrixTest
              { 10, 10, 10, 10 },
              { 10, 10, 10, 10 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4);
         m.Set(10d, null, 2, 3);
@@ -57,7 +57,7 @@ public partial class MatrixTest
              { 4, 5, 10, 7 },
              { 8, 9, 10, 11 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4);
         m.Set(10d, 2, 3, null);
@@ -67,7 +67,7 @@ public partial class MatrixTest
             { 4, 5, 6, 7 },
             { 10, 10, 10, 10 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4);
         m.Set(10d, 0, 1,
@@ -78,7 +78,7 @@ public partial class MatrixTest
             { 4, 5, 6, 7 },
             { 8, 9, 10, 11 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m.Set(42d, [2], [3]);
         expected = new double[,]
@@ -87,7 +87,7 @@ public partial class MatrixTest
              { 4, 5, 6, 7 },
              { 8, 9, 10, 42 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
 
         m = Vector.Interval(0, 12).Reshape(3, 4);
@@ -98,7 +98,7 @@ public partial class MatrixTest
              { 4, 5, 10, 7 },
              { 8, 9, 10, 11 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4).Transpose();
         m.Set(10d, 2, -1, null);
@@ -108,7 +108,7 @@ public partial class MatrixTest
              { 4, 5, 10, 7 },
              { 8, 9, 10, 11 },
         }.Transpose();
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4);
         m.Set(10d, 1, -1, null);
@@ -118,7 +118,7 @@ public partial class MatrixTest
             { 10, 10, 10, 10 },
             { 8, 9, 10, 11 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m.Set(10d, 0, -1,
                   0, -2);
@@ -128,7 +128,7 @@ public partial class MatrixTest
             { 10, 10, 10, 10 },
             { 8, 9, 10, 11 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m = Vector.Interval(0, 12).Reshape(3, 4);
         m.Set(42d, [-1], [-2]);
@@ -138,7 +138,7 @@ public partial class MatrixTest
             { 4, 5, 6, 7 },
             { 8, 9, 42, 11 },
         };
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
     }
 
     //[TestMethod]
@@ -175,21 +175,21 @@ public partial class MatrixTest
         [
             0, 1, 2, 3, 42
         ];
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m.Set(10, 0);
         expected =
         [
             10, 1, 2, 3, 42
         ];
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
 
         m.Set(42, [4, 2]);
         expected =
         [
             10, 1, 42, 3, 42
         ];
-        CollectionAssert.AreEqual(expected, m);
+        Assert.AreSequenceEqual(expected, m);
     }
 
 }

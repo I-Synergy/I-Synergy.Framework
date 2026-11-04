@@ -7,7 +7,7 @@ using Sample.Models;
 
 namespace Sample.ViewModels;
 
-public class DetailBViewModel : ViewModelBlade<TestItem>
+public partial class DetailBViewModel : ViewModelBlade<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

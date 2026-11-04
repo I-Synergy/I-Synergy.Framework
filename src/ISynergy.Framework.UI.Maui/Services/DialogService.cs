@@ -12,7 +12,7 @@ using System.Globalization;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class DialogService : IDialogService, IDisposable
+public partial class DialogService : IDialogService, IDisposable
 {
     private const string TitleWelcomeKey = "TitleWelcome";
     private const string ExceptionHandlerNotAvailable = "Exception handler service not available for dialog error";

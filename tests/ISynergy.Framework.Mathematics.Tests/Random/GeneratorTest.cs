@@ -14,7 +14,7 @@ public class GeneratorTest
         Generator.Seed = 0;
         double[][] l = create(100, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount > 50);
+        Assert.IsGreaterThan(50, sameCount);
     }
 
     [TestMethod]
@@ -42,7 +42,7 @@ public class GeneratorTest
         Generator.Seed = -1;
         double[][] l = create(1000, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount > 30);
+        Assert.IsGreaterThan(30, sameCount);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public class GeneratorTest
         Generator.Seed = 1;
         double[][] l = create(100, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount == 0);
+        Assert.AreEqual(0, sameCount);
     }
 
     [TestMethod]
@@ -65,7 +65,7 @@ public class GeneratorTest
         double[][] l = create(rows, cols, reset: true);
 
         int sameCount = count(l);
-        Assert.IsTrue(sameCount == 0);
+        Assert.AreEqual(0, sameCount);
     }
 
     [TestMethod]
@@ -75,7 +75,7 @@ public class GeneratorTest
 
         double[][] l = create(100, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount == 0);
+        Assert.AreEqual(0, sameCount);
     }
 
     [TestMethod]
@@ -134,7 +134,7 @@ public class GeneratorTest
             t[i].Join();
 
         int[] keys = values.Keys.ToArray().Sorted();
-        Assert.AreEqual(100, keys.Length);
+        Assert.HasCount(100, keys);
 
         int? ex = null;
         for (int i = 0; i < keys.Length; i++)

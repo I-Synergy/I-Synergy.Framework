@@ -25,7 +25,7 @@ namespace ISynergy.Framework.UI.Services;
 /// layout, so <see cref="INavigationHost"/> reparents each page's content instead of the page.
 /// Modal navigation still uses MAUI's native modal stack.
 /// </remarks>
-public class NavigationService : BaseNavigationService
+public partial class NavigationService : BaseNavigationService
 {
     private const string DefaultPageNotAvailable = "Main page is not available.";
     private const bool Animated = true;

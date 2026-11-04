@@ -34,7 +34,7 @@ public class AggregateRepositoryTests
     [TestMethod]
     public async Task LoadAsync_ReturnsNull_WhenNoEventsExist()
     {
-        var result = await _repository.LoadAsync(Guid.NewGuid());
+        var result = await _repository.LoadAsync(Guid.NewGuid(), TestContext.CancellationToken);
 
         Assert.IsNull(result);
     }
@@ -46,9 +46,9 @@ public class AggregateRepositoryTests
         var order = new OrderAggregate();
         order.Place(orderId, "Alice", 150m);
 
-        await _repository.SaveAsync(order);
+        await _repository.SaveAsync(order, TestContext.CancellationToken);
 
-        var loaded = await _repository.LoadAsync(orderId);
+        var loaded = await _repository.LoadAsync(orderId, TestContext.CancellationToken);
 
         Assert.IsNotNull(loaded);
         Assert.AreEqual(orderId, loaded.Id);
@@ -65,9 +65,9 @@ public class AggregateRepositoryTests
         order.Place(orderId, "Bob", 200m);
         order.Ship("TRACK-XYZ");
 
-        await _repository.SaveAsync(order);
+        await _repository.SaveAsync(order, TestContext.CancellationToken);
 
-        var loaded = await _repository.LoadAsync(orderId);
+        var loaded = await _repository.LoadAsync(orderId, TestContext.CancellationToken);
 
         Assert.IsNotNull(loaded);
         Assert.AreEqual("TRACK-XYZ", loaded.TrackingNumber);
@@ -81,15 +81,15 @@ public class AggregateRepositoryTests
         // First save: place
         var order = new OrderAggregate();
         order.Place(orderId, "Carol", 75m);
-        await _repository.SaveAsync(order);
+        await _repository.SaveAsync(order, TestContext.CancellationToken);
 
         // Second save: ship (reload then apply)
-        var reloaded = await _repository.LoadAsync(orderId);
+        var reloaded = await _repository.LoadAsync(orderId, TestContext.CancellationToken);
         reloaded!.Ship("TRACK-001");
-        await _repository.SaveAsync(reloaded);
+        await _repository.SaveAsync(reloaded, TestContext.CancellationToken);
 
         // Third load: should see both events applied
-        var final = await _repository.LoadAsync(orderId);
+        var final = await _repository.LoadAsync(orderId, TestContext.CancellationToken);
 
         Assert.IsNotNull(final);
         Assert.AreEqual("Carol", final.CustomerName);
@@ -104,13 +104,13 @@ public class AggregateRepositoryTests
         var orderId = Guid.NewGuid();
         var order = new OrderAggregate();
         order.Place(orderId, "Dave", 300m);
-        await _repository.SaveAsync(order);
+        await _repository.SaveAsync(order, TestContext.CancellationToken);
 
         // No new events raised
-        await _repository.SaveAsync(order);
+        await _repository.SaveAsync(order, TestContext.CancellationToken);
 
-        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", orderId);
-        Assert.AreEqual(1, records.Count, "No additional events should have been appended.");
+        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", orderId, cancellationToken: TestContext.CancellationToken);
+        Assert.HasCount(1, records, "No additional events should have been appended.");
     }
 
     [TestMethod]
@@ -120,9 +120,9 @@ public class AggregateRepositoryTests
         var order = new OrderAggregate();
         order.Place(orderId, "Eve", 500m);
 
-        await _repository.SaveAsync(order);
+        await _repository.SaveAsync(order, TestContext.CancellationToken);
 
-        Assert.AreEqual(0, order.GetUncommittedEvents().Count);
+        Assert.IsEmpty(order.GetUncommittedEvents());
     }
 
     [TestMethod]
@@ -133,12 +133,12 @@ public class AggregateRepositoryTests
         order.Place(orderId, "Frank", 25m);
         order.Ship("T99");
 
-        await _repository.SaveAsync(order);
+        await _repository.SaveAsync(order, TestContext.CancellationToken);
 
         // Version should equal the number of events replayed via LoadFromHistory, but at
         // the time of saving the aggregate was freshly created (not loaded), so Version = 0.
         // After saving, the DB has 2 events. Reload to verify version is set by LoadFromHistory.
-        var loaded = await _repository.LoadAsync(orderId);
+        var loaded = await _repository.LoadAsync(orderId, TestContext.CancellationToken);
         Assert.AreEqual(2L, loaded!.Version);
     }
 
@@ -152,20 +152,20 @@ public class AggregateRepositoryTests
         // Two instances both start from the same loaded state (Version = 1 after load).
         var v1 = new OrderAggregate();
         v1.Place(orderId, "Grace", 80m);
-        await _repository.SaveAsync(v1);
+        await _repository.SaveAsync(v1, TestContext.CancellationToken);
 
-        var instanceA = await _repository.LoadAsync(orderId);
-        var instanceB = await _repository.LoadAsync(orderId);
+        var instanceA = await _repository.LoadAsync(orderId, TestContext.CancellationToken);
+        var instanceB = await _repository.LoadAsync(orderId, TestContext.CancellationToken);
 
         instanceA!.Ship("TRACK-A");
         instanceB!.Ship("TRACK-B");
 
         // First save succeeds
-        await _repository.SaveAsync(instanceA);
+        await _repository.SaveAsync(instanceA, TestContext.CancellationToken);
 
         // Second save must fail — both have Version = 1 but DB is now at Version = 2
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            _repository.SaveAsync(instanceB));
+            _repository.SaveAsync(instanceB, TestContext.CancellationToken));
     }
 
     // ── Snapshot hydration ────────────────────────────────────────────────────
@@ -179,10 +179,10 @@ public class AggregateRepositoryTests
 
         await _store.SaveSnapshotAsync(new Models.Snapshot(
             aggregateId, tenantId, "OrderAggregate", 5L,
-            "{}", DateTimeOffset.UtcNow));
+            "{}", DateTimeOffset.UtcNow), TestContext.CancellationToken);
 
         // Act
-        var loaded = await _repository.LoadAsync(aggregateId);
+        var loaded = await _repository.LoadAsync(aggregateId, TestContext.CancellationToken);
 
         // Assert: aggregate returned (not null) with version set from snapshot.
         Assert.IsNotNull(loaded);
@@ -200,19 +200,21 @@ public class AggregateRepositoryTests
         // Save snapshot at version 1 (simulating archive boundary).
         await _store.SaveSnapshotAsync(new Models.Snapshot(
             aggregateId, tenantId, "OrderAggregate", snapshotVersion,
-            "{}", DateTimeOffset.UtcNow));
+            "{}", DateTimeOffset.UtcNow), TestContext.CancellationToken);
 
         // Append a delta event with expectedVersion = snapshotVersion (hot-tier only).
         await _store.AppendEventAsync(
             tenantId, "OrderAggregate", aggregateId, expectedVersion: snapshotVersion,
-            new OrderShipped(aggregateId, "TRACK-DELTA"));
+            new OrderShipped(aggregateId, "TRACK-DELTA"), cancellationToken: TestContext.CancellationToken);
 
         // Act
-        var loaded = await _repository.LoadAsync(aggregateId);
+        var loaded = await _repository.LoadAsync(aggregateId, TestContext.CancellationToken);
 
         // Assert: version is snapshot version + 1 delta event.
         Assert.IsNotNull(loaded);
         Assert.AreEqual(snapshotVersion + 1, loaded.Version);
         Assert.AreEqual("TRACK-DELTA", loaded.TrackingNumber);
     }
+
+    public TestContext TestContext { get; set; }
 }

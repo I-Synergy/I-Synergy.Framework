@@ -50,7 +50,7 @@ public class ViewModelSelectionDialogTests
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.HasCount(2, viewModel.Items);
         Assert.IsNotNull(viewModel.SelectedItem);
         Assert.IsNotNull(viewModel.RefreshCommand);
     }
@@ -106,7 +106,7 @@ public class ViewModelSelectionDialogTests
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
-        Assert.AreEqual(0, viewModel.Items.Count);
+        Assert.IsEmpty(viewModel.Items);
         Assert.IsNull(viewModel.SelectedItem);
     }
 

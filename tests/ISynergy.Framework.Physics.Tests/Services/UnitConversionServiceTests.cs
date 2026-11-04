@@ -27,7 +27,7 @@ public class UnitConversionServiceTests
     {
         Assert.IsNotNull(_unitConversionService);
         Assert.IsNotNull(_unitConversionService.Units);
-        Assert.IsTrue(_unitConversionService.Units.Count > 0);
+        Assert.IsNotEmpty(_unitConversionService.Units);
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class UnitConversionServiceTests
     [TestMethod()]
     public void UnitConversionServiceGetSIUnitsTest()
     {
-        Assert.IsTrue(_unitConversionService!.Units.Where(q => q is SIUnit).Count() == 15);
+        Assert.AreEqual(15, _unitConversionService!.Units.Where(q => q is SIUnit).Count());
     }
 
     /// <summary>

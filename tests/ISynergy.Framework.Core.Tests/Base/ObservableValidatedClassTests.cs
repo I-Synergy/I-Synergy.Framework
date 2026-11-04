@@ -30,7 +30,7 @@ public class ObservableValidatedClassTests
         observable.Dispose();
 
         // Assert
-        Assert.AreEqual(0, observable.Properties.Count);
+        Assert.IsEmpty(observable.Properties);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public class ObservableValidatedClassTests
 
         // Assert
         Assert.IsTrue(asyncProperty.IsAsyncDisposed);
-        Assert.AreEqual(0, observable.Properties.Count);
+        Assert.IsEmpty(observable.Properties);
     }
 
     [TestMethod]
@@ -162,6 +162,6 @@ public class ObservableValidatedClassTests
         // Assert
         Assert.IsTrue(observable.IsDisposed);
         Assert.IsTrue(observable.IsAsyncDisposed);
-        Assert.AreEqual(0, observable.Properties.Count);
+        Assert.IsEmpty(observable.Properties);
     }
 }

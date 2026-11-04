@@ -96,7 +96,7 @@ public class SmokeTests : SamplePageTest
         Assert.AreEqual("none", state.GetProperty("navToggleDisplay").GetString(),
             $"Desktop has no collapsing toggle: the toggle must be display:none. Observed: {shell}");
 
-        Assert.IsTrue(state.GetProperty("footerChildCount").GetInt32() >= 2,
+        Assert.IsGreaterThanOrEqualTo(2, state.GetProperty("footerChildCount").GetInt32(),
             $"The sidebar footer must carry the Help link and the version label. Observed: {shell}");
         await Expect(Page.Locator(SampleDom.SidebarFooterNavItem)).ToHaveCountAsync(1);
 

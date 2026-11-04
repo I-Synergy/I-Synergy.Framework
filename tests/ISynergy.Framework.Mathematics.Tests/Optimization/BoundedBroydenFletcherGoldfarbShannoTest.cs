@@ -237,7 +237,7 @@ public class BoundedBroydenFletcherGoldfarbShannoTest
                 errors++;
         }
 
-        Assert.IsTrue(errors < 1000);
+        Assert.IsLessThan(1000, errors);
     }
 
     private static void createExpDiff(out Func<double[], double> f, out Func<double[], double[]> g)

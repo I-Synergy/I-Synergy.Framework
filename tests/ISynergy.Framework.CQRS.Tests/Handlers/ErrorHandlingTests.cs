@@ -30,7 +30,7 @@ public class ErrorHandlingTests
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await dispatcher.DispatchAsync(command));
+            await dispatcher.DispatchAsync(command, TestContext.CancellationToken));
 
         Assert.AreEqual("Test exception", exception.Message);
     }
@@ -54,8 +54,10 @@ public class ErrorHandlingTests
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await dispatcher.DispatchAsync<string>(query));
+            await dispatcher.DispatchAsync<string>(query, TestContext.CancellationToken));
 
         Assert.AreEqual("Test query exception", exception.Message);
     }
+
+    public TestContext TestContext { get; set; }
 }

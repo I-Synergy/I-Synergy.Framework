@@ -6,7 +6,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// <summary>
 /// Mask to Regex converter.
 /// </summary>
-public class MaskToRegexConverter : IValueConverter
+public partial class MaskToRegexConverter : IValueConverter
 {
     /// <summary>
     /// Converts Mask string to Regex.

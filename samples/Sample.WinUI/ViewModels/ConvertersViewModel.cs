@@ -11,7 +11,7 @@ namespace Sample.ViewModels;
 /// <summary>
 /// Class ConvertersViewModel.
 /// </summary>
-public class ConvertersViewModel : ViewModelNavigation<object>
+public partial class ConvertersViewModel : ViewModelNavigation<object>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

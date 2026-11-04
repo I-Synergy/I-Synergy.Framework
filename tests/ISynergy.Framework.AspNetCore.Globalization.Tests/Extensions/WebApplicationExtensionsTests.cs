@@ -69,28 +69,28 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
                         {
                             route.Run(async context =>
                             {
-                                await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
+                                await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name, TestContext.CancellationToken);
                             });
                         });
 
                         // Fallback for other routes
                         app.Run(async context =>
                         {
-                            await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
+                            await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name, TestContext.CancellationToken);
                         });
                     });
                 });
 
-            var host = await hostBuilder.StartAsync();
+            var host = await hostBuilder.StartAsync(TestContext.CancellationToken);
             var client = host.GetTestClient();
 
             // Act
-            var response = await client.GetStringAsync("/nl-NL/test");
+            var response = await client.GetStringAsync("/nl-NL/test", TestContext.CancellationToken);
 
             // Assert
             Assert.AreEqual("nl-NL", response);
 
-            await host.StopAsync();
+            await host.StopAsync(TestContext.CancellationToken);
             host.Dispose();
         }
 
@@ -143,24 +143,24 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
 
                         app.Run(async context =>
                         {
-                            await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name);
+                            await context.Response.WriteAsync(CultureInfo.CurrentCulture.Name, TestContext.CancellationToken);
                         });
                     });
                 });
 
-            var host = await hostBuilder.StartAsync();
+            var host = await hostBuilder.StartAsync(TestContext.CancellationToken);
             var client = host.GetTestClient();
 
             // Set Accept-Language header
             client.DefaultRequestHeaders.Add("Accept-Language", "fr-FR");
 
             // Act
-            var response = await client.GetStringAsync("/test");
+            var response = await client.GetStringAsync("/test", TestContext.CancellationToken);
 
             // Assert
             Assert.AreEqual("fr-FR", response);
 
-            await host.StopAsync();
+            await host.StopAsync(TestContext.CancellationToken);
             host.Dispose();
         }
 
@@ -221,16 +221,16 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
                         // Add a simple endpoint to verify the server starts
                         app.Run(async context =>
                         {
-                            await context.Response.WriteAsync("OK");
+                            await context.Response.WriteAsync("OK", TestContext.CancellationToken);
                         });
                     });
                 });
 
-            var host = await hostBuilder.StartAsync();
+            var host = await hostBuilder.StartAsync(TestContext.CancellationToken);
 
             // Act - Make a request to ensure the middleware pipeline is initialized
             var client = host.GetTestClient();
-            var response = await client.GetStringAsync("/");
+            var response = await client.GetStringAsync("/", TestContext.CancellationToken);
 
             // Assert
             Assert.IsTrue(optionsConfigured, "Options were not configured");
@@ -239,16 +239,16 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
             Assert.AreEqual("en-US", capturedOptions.DefaultRequestCulture.Culture.Name);
 
             // Check that supported cultures are set correctly
-            Assert.AreEqual(3, capturedOptions.SupportedCultures!.Count);
-            Assert.IsTrue(capturedOptions.SupportedCultures.Any(c => c.Name == "en-US"));
-            Assert.IsTrue(capturedOptions.SupportedCultures.Any(c => c.Name == "nl-NL"));
-            Assert.IsTrue(capturedOptions.SupportedCultures.Any(c => c.Name == "fr-FR"));
+            Assert.HasCount(3, capturedOptions.SupportedCultures);
+            Assert.Contains(c => c.Name == "en-US", capturedOptions.SupportedCultures);
+            Assert.Contains(c => c.Name == "nl-NL", capturedOptions.SupportedCultures);
+            Assert.Contains(c => c.Name == "fr-FR", capturedOptions.SupportedCultures);
 
             // Check that providers are configured correctly
-            Assert.IsTrue(capturedOptions.RequestCultureProviders.Count > 0);
+            Assert.IsNotEmpty(capturedOptions.RequestCultureProviders);
             Assert.IsInstanceOfType<RouteDataRequestCultureProvider>(capturedOptions.RequestCultureProviders[0]);
 
-            await host.StopAsync();
+            await host.StopAsync(TestContext.CancellationToken);
             host.Dispose();
         }
 
@@ -308,27 +308,29 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
                         // Add a simple endpoint to verify the server starts
                         app.Run(async context =>
                         {
-                            await context.Response.WriteAsync("OK");
+                            await context.Response.WriteAsync("OK", TestContext.CancellationToken);
                         });
                     });
                 });
 
-            var host = await hostBuilder.StartAsync();
+            var host = await hostBuilder.StartAsync(TestContext.CancellationToken);
 
             // Act - Make a request to ensure the middleware pipeline is initialized
             var client = host.GetTestClient();
-            var response = await client.GetStringAsync("/");
+            var response = await client.GetStringAsync("/", TestContext.CancellationToken);
 
             // Assert
             Assert.IsTrue(optionsConfigured, "Options were not configured");
             Assert.IsNotNull(capturedOptions, "RequestLocalizationOptions was not captured");
 
             // Check that providers are configured correctly for API
-            Assert.IsTrue(capturedOptions.RequestCultureProviders.Count > 0);
+            Assert.IsNotEmpty(capturedOptions.RequestCultureProviders);
             Assert.IsInstanceOfType<AcceptLanguageHeaderRequestCultureProvider>(capturedOptions.RequestCultureProviders[0]);
 
-            await host.StopAsync();
+            await host.StopAsync(TestContext.CancellationToken);
             host.Dispose();
         }
+
+        public TestContext TestContext { get; set; }
     }
 }

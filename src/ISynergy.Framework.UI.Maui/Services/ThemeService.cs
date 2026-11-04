@@ -18,7 +18,7 @@ namespace ISynergy.Framework.UI.Services;
 /// It then applies the theme via Application.UserAppTheme and sets the global Application.AccentColor.
 /// Platform-specific resources (Android, Windows) are updated to keep native UI elements in sync.
 /// </remarks>
-public class ThemeService : BaseThemeService
+public partial class ThemeService : BaseThemeService
 {
     private const string Primary = nameof(Primary);
     private const string Secondary = nameof(Secondary);

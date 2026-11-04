@@ -49,21 +49,21 @@ public class ModelBuilderExtensionsWithTenantAndSoftDeleteTests
     public async Task SoftDeleteFilter_ShouldOnlyReturnNonDeletedEntities()
     {
         // Act
-        var entities = await _context.TestTenantEntities.ToListAsync();
+        var entities = await _context.TestTenantEntities.ToListAsync(TestContext.CancellationToken);
 
         // Assert
-        Assert.AreEqual(1, entities.Count);
-        Assert.IsFalse(entities.Any(e => e.IsDeleted));
+        Assert.HasCount(1, entities);
+        Assert.DoesNotContain(e => e.IsDeleted, entities);
     }
 
     [TestMethod]
     public async Task TenantFilter_ShouldOnlyReturnCurrentTenantEntities()
     {
         // Act
-        var entities = await _context.TestTenantEntities.ToListAsync();
+        var entities = await _context.TestTenantEntities.ToListAsync(TestContext.CancellationToken);
 
         // Assert
-        Assert.AreEqual(1, entities.Count);
+        Assert.HasCount(1, entities);
         Assert.IsTrue(entities.All(e => e.TenantId == _testTenantId));
     }
 
@@ -71,10 +71,10 @@ public class ModelBuilderExtensionsWithTenantAndSoftDeleteTests
     public async Task CombinedFilters_ShouldApplyBothFilters()
     {
         // Act
-        var entities = await _context.TestTenantEntities.ToListAsync();
+        var entities = await _context.TestTenantEntities.ToListAsync(TestContext.CancellationToken);
 
         // Assert
-        Assert.AreEqual(1, entities.Count);
+        Assert.HasCount(1, entities);
         Assert.IsTrue(entities.All(e => e.TenantId == _testTenantId && !e.IsDeleted));
     }
 
@@ -84,11 +84,13 @@ public class ModelBuilderExtensionsWithTenantAndSoftDeleteTests
         // Act
         var entities = await _context.TestTenantEntities
             .IgnoreQueryFilters()
-            .ToListAsync();
+            .ToListAsync(TestContext.CancellationToken);
 
         // Assert
-        Assert.AreEqual(3, entities.Count);
-        Assert.IsTrue(entities.Any(e => e.TenantId != _testTenantId));
-        Assert.IsTrue(entities.Any(e => e.IsDeleted));
+        Assert.HasCount(3, entities);
+        Assert.Contains(e => e.TenantId != _testTenantId, entities);
+        Assert.Contains(e => e.IsDeleted, entities);
     }
+
+    public TestContext TestContext { get; set; }
 }

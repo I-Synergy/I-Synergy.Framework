@@ -12,7 +12,7 @@ namespace Sample.Services;
 /// The service listens to IThemeService.ThemeChanged and recomputes accent tokens on each change.
 /// It must be initialized after the theme is applied via ApplyTheme().
 /// </remarks>
-public class ShellAccentTokens : IDisposable
+public partial class ShellAccentTokens : IDisposable
 {
     private readonly IThemeService _themeService;
     private readonly ILogger<ShellAccentTokens> _logger;

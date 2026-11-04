@@ -63,8 +63,8 @@ public class MessengerRegisterUnregisterTest
                 }
             });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentException);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
         _messenger.Send(new TestMessageGeneric<Exception>
@@ -72,7 +72,7 @@ public class MessengerRegisterUnregisterTest
             Content = testContentException
         });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
@@ -81,7 +81,7 @@ public class MessengerRegisterUnregisterTest
             Content = testContentDateTime
         });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
 
@@ -108,8 +108,8 @@ public class MessengerRegisterUnregisterTest
         _messenger.Register<TestMessageGeneric<Exception>>(this, m => ReceivedContentException = m.Content);
         _messenger.Register<TestMessageGeneric<string>>(this, m => ReceivedContentStringA1 = m.Content);
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentException);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
         _messenger.Send(new TestMessageGeneric<Exception>
@@ -117,7 +117,7 @@ public class MessengerRegisterUnregisterTest
             Content = testContentException
         });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
 
@@ -126,7 +126,7 @@ public class MessengerRegisterUnregisterTest
             Content = testContentDateTime
         });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
         Assert.AreEqual(testContentException, ReceivedContentException);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
 
@@ -180,7 +180,7 @@ public class MessengerRegisterUnregisterTest
                                                                      ReceivedContentDateTime2 = m.Content;
                                                                  });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime2);
 
@@ -190,7 +190,7 @@ public class MessengerRegisterUnregisterTest
         });
 
         Assert.AreEqual(2, receivedMessages);
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime1);
         Assert.AreEqual(testContentDateTime, ReceivedContentDateTime2);
 
@@ -242,8 +242,8 @@ public class MessengerRegisterUnregisterTest
                 }
             });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringB);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringB);
 
         _messenger.Send(new TestMessageA
         {
@@ -251,7 +251,7 @@ public class MessengerRegisterUnregisterTest
         });
 
         Assert.AreEqual(testContentA, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringB);
+        Assert.IsNull(ReceivedContentStringB);
 
         _messenger.Send(new TestMessageB
         {
@@ -289,9 +289,9 @@ public class MessengerRegisterUnregisterTest
                 }
             });
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringA2);
-        Assert.AreEqual(null, ReceivedContentStringB);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA2);
+        Assert.IsNull(ReceivedContentStringB);
 
         _messenger.Send(new TestMessageA
         {
@@ -299,8 +299,8 @@ public class MessengerRegisterUnregisterTest
         });
 
         Assert.AreEqual(testContentA, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringA2);
-        Assert.AreEqual(null, ReceivedContentStringB);
+        Assert.IsNull(ReceivedContentStringA2);
+        Assert.IsNull(ReceivedContentStringB);
 
         _messenger.Send(new TestMessageAa
         {
@@ -309,7 +309,7 @@ public class MessengerRegisterUnregisterTest
 
         Assert.AreEqual(testContentAa, ReceivedContentStringA1);
         Assert.AreEqual(testContentAa, ReceivedContentStringA2);
-        Assert.AreEqual(null, ReceivedContentStringB);
+        Assert.IsNull(ReceivedContentStringB);
 
         _messenger.Send(new TestMessageB
         {
@@ -318,7 +318,7 @@ public class MessengerRegisterUnregisterTest
 
         Assert.AreEqual(testContentAa, ReceivedContentStringA1);
         Assert.AreEqual(testContentAa, ReceivedContentStringA2);
-        Assert.AreEqual(null, ReceivedContentStringB);
+        Assert.IsNull(ReceivedContentStringB);
     }
 
     [TestMethod]
@@ -334,7 +334,7 @@ public class MessengerRegisterUnregisterTest
         _messenger.Register<DateTime>(this, m => ReceivedContentDateTime1 = m);
         _messenger.Register<int>(this, m => ReceivedContentInt = m);
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
         Assert.AreEqual(DateTime.MinValue, ReceivedContentDateTime1);
         Assert.AreEqual(default, ReceivedContentInt);
 
@@ -376,11 +376,11 @@ public class MessengerRegisterUnregisterTest
         TestRecipient externalRecipient = new();
         externalRecipient.RegisterWith(_messenger);
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringA2);
-        Assert.AreEqual(null, ReceivedContentStringB);
-        Assert.AreEqual(null, externalRecipient.ReceivedContentA);
-        Assert.AreEqual(null, externalRecipient.ReceivedContentB);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA2);
+        Assert.IsNull(ReceivedContentStringB);
+        Assert.IsNull(externalRecipient.ReceivedContentA);
+        Assert.IsNull(externalRecipient.ReceivedContentB);
 
         _messenger.Send(new TestMessageA
         {
@@ -434,11 +434,11 @@ public class MessengerRegisterUnregisterTest
         TestRecipient externalRecipient = new();
         externalRecipient.RegisterWith(_messenger);
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringA2);
-        Assert.AreEqual(null, ReceivedContentStringB);
-        Assert.AreEqual(null, externalRecipient.ReceivedContentA);
-        Assert.AreEqual(null, externalRecipient.ReceivedContentB);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA2);
+        Assert.IsNull(ReceivedContentStringB);
+        Assert.IsNull(externalRecipient.ReceivedContentA);
+        Assert.IsNull(externalRecipient.ReceivedContentB);
 
         _messenger.Send(new TestMessageA
         {
@@ -492,11 +492,11 @@ public class MessengerRegisterUnregisterTest
         TestRecipient externalRecipient = new();
         externalRecipient.RegisterWith(_messenger);
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringA2);
-        Assert.AreEqual(null, ReceivedContentStringB);
-        Assert.AreEqual(null, externalRecipient.ReceivedContentA);
-        Assert.AreEqual(null, externalRecipient.ReceivedContentB);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA2);
+        Assert.IsNull(ReceivedContentStringB);
+        Assert.IsNull(externalRecipient.ReceivedContentA);
+        Assert.IsNull(externalRecipient.ReceivedContentB);
 
         _messenger.Send(new TestMessageA
         {
@@ -543,7 +543,7 @@ public class MessengerRegisterUnregisterTest
 
         _messenger.Register<IMessage>(this, true, m => ReceivedContentStringA1 = m.GetValue());
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA1);
 
         _messenger.Send(new TestMessageImplementsIMessage(testContent1));
 
@@ -606,13 +606,13 @@ public class MessengerRegisterUnregisterTest
         _messenger.Register<string>(this, token1, m => ReceivedContentStringA1 = m);
         _messenger.Register<string>(this, token2, m => ReceivedContentStringA2 = m);
 
-        Assert.AreEqual(null, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringA2);
+        Assert.IsNull(ReceivedContentStringA1);
+        Assert.IsNull(ReceivedContentStringA2);
 
         _messenger.Send(testContent1, token1);
 
         Assert.AreEqual(testContent1, ReceivedContentStringA1);
-        Assert.AreEqual(null, ReceivedContentStringA2);
+        Assert.IsNull(ReceivedContentStringA2);
 
         _messenger.Send(testContent2, token2);
 

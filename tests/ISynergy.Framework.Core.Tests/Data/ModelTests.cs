@@ -70,7 +70,7 @@ public class ModelTests
     {
         ModelFixture<string> instance = new();
 
-        Assert.IsTrue(instance.Value is null, "Value should be null.");
+        Assert.IsNull(instance.Value, "Value should be null.");
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public class ModelTests
     {
         ModelFixture<string> instance = new();
 
-        Assert.IsTrue(instance.Value is null, "Value should be null.");
+        Assert.IsNull(instance.Value, "Value should be null.");
         Assert.IsTrue(instance.ToString().Equals(string.Empty), "ToString() should return empty.");
     }
 

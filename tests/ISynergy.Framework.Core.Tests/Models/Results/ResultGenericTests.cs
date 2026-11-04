@@ -70,7 +70,7 @@ public class ResultGenericTests
         // Assert
         Assert.IsTrue(result.Succeeded);
         Assert.HasCount(2, result.Messages);
-        CollectionAssert.AreEqual(messages, result.Messages);
+        Assert.AreSequenceEqual(messages, result.Messages);
         Assert.AreEqual(data, result.Data);
     }
 
@@ -154,7 +154,7 @@ public class ResultGenericTests
         // Assert
         Assert.IsFalse(result.Succeeded);
         Assert.HasCount(3, result.Messages);
-        CollectionAssert.AreEqual(messages, result.Messages);
+        Assert.AreSequenceEqual(messages, result.Messages);
     }
 
     [TestMethod]
@@ -289,7 +289,7 @@ public class ResultGenericTests
 
         // Assert
         Assert.IsFalse(result.Succeeded);
-        CollectionAssert.AreEqual(messages, result.Messages);
+        Assert.AreSequenceEqual(messages, result.Messages);
     }
 
     [TestMethod]

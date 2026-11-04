@@ -16,21 +16,21 @@ public partial class VectorTest
         double[] vec2 = Vector.EnumerableRange(0d, 5d).ToArray();       // { 0, 1, 2, 3, 4 }
         double[] vec3 = Vector.EnumerableRange(0d, 5d, 1d).ToArray();   // { 0, 1, 2, 3, 4, 5 }
 
-        CollectionAssert.AreEqual(new double[] { 0, 1, 2, 3, 4 }, vec1);
-        CollectionAssert.AreEqual(new double[] { 0, 1, 2, 3, 4 }, vec2);
-        CollectionAssert.AreEqual(new double[] { 0, 1, 2, 3, 4 }, vec3);
+        Assert.AreSequenceEqual(new double[] { 0, 1, 2, 3, 4 }, vec1);
+        Assert.AreSequenceEqual(new double[] { 0, 1, 2, 3, 4 }, vec2);
+        Assert.AreSequenceEqual(new double[] { 0, 1, 2, 3, 4 }, vec3);
     }
 
     [TestMethod]
     public void range_test()
     {
         // Sanity checks
-        CollectionAssert.AreEqual(new int[] { 0, 1, 2 }, Vector.Range(3));
-        CollectionAssert.AreEqual(new int[] { 1, 2 }, Vector.Range(1, 3));
-        CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1));
-        CollectionAssert.AreEqual(new int[] { 2, 1 }, Vector.Range(2, 0));
-        CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1, 1));
-        CollectionAssert.AreEqual(new int[] { 2, 1 }, Vector.Range(2, 0, 1));
+        Assert.AreSequenceEqual(new int[] { 0, 1, 2 }, Vector.Range(3));
+        Assert.AreSequenceEqual(new int[] { 1, 2 }, Vector.Range(1, 3));
+        Assert.AreSequenceEqual(new int[] { 3, 2 }, Vector.Range(3, 1));
+        Assert.AreSequenceEqual(new int[] { 2, 1 }, Vector.Range(2, 0));
+        Assert.AreSequenceEqual(new int[] { 3, 2 }, Vector.Range(3, 1, 1));
+        Assert.AreSequenceEqual(new int[] { 2, 1 }, Vector.Range(2, 0, 1));
 
         // Deep tests
         for (double end = 0; end < 10; end++)
@@ -62,12 +62,12 @@ public partial class VectorTest
     public void enumerable_range_test()
     {
         // Sanity checks
-        CollectionAssert.AreEqual(new double[] { 0, 1, 2 }, Vector.EnumerableRange(3).ToArray());
-        CollectionAssert.AreEqual(new double[] { 1, 2 }, Vector.EnumerableRange(1, 3).ToArray());
-        CollectionAssert.AreEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1).ToArray());
-        CollectionAssert.AreEqual(new double[] { 2, 1 }, Vector.EnumerableRange(2, 0).ToArray());
-        CollectionAssert.AreEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, 1).ToArray());
-        CollectionAssert.AreEqual(new double[] { 2, 1 }, Vector.EnumerableRange(2, 0, 1).ToArray());
+        Assert.AreSequenceEqual(new double[] { 0, 1, 2 }, Vector.EnumerableRange(3).ToArray());
+        Assert.AreSequenceEqual(new double[] { 1, 2 }, Vector.EnumerableRange(1, 3).ToArray());
+        Assert.AreSequenceEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1).ToArray());
+        Assert.AreSequenceEqual(new double[] { 2, 1 }, Vector.EnumerableRange(2, 0).ToArray());
+        Assert.AreSequenceEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, 1).ToArray());
+        Assert.AreSequenceEqual(new double[] { 2, 1 }, Vector.EnumerableRange(2, 0, 1).ToArray());
 
         // Deep tests
         for (double end = 0; end < 10; end++)
@@ -84,10 +84,10 @@ public partial class VectorTest
     [TestMethod]
     public void numpy_comparison_tests()
     {
-        CollectionAssert.AreEqual(new int[] { 1, 2 }, Vector.Range(1, 3, +1));
-        CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1, -1));
-        CollectionAssert.AreEqual(new int[] { 1 }, Vector.Range(1, 3, +5));
-        CollectionAssert.AreEqual(new int[] { 3 }, Vector.Range(3, 1, -5));
+        Assert.AreSequenceEqual(new int[] { 1, 2 }, Vector.Range(1, 3, +1));
+        Assert.AreSequenceEqual(new int[] { 3, 2 }, Vector.Range(3, 1, -1));
+        Assert.AreSequenceEqual(new int[] { 1 }, Vector.Range(1, 3, +5));
+        Assert.AreSequenceEqual(new int[] { 3 }, Vector.Range(3, 1, -5));
 
         Assert.IsTrue(new double[] { 0, 0.3, 0.6, 0.9 }.IsEqual(Vector.Range(0, 1, 0.3), 1e-10));
         Assert.IsTrue(new double[] { 1, 0.7, 0.4, 0.1 }.IsEqual(Vector.Range(1, 0, 0.3), 1e-10));
@@ -98,7 +98,7 @@ public partial class VectorTest
         // and the step is positive. In this case, the framework will still
         // iterate over the range backwards because the third parameter is 
         // considered a step <i>size</i>, instead of a step direction.
-        CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1, +1));
+        Assert.AreSequenceEqual(new int[] { 3, 2 }, Vector.Range(3, 1, +1));
 
         // However, it is not allowed to specify a negative step size when
         // a < b is not allowed since it would result in an infinite loop:
@@ -109,12 +109,12 @@ public partial class VectorTest
     public void range_step_test()
     {
         // Sanity checks
-        CollectionAssert.AreEqual(new int[] { 1, 2 }, Vector.Range(1, 3, +1));
-        CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1, -1));
-        CollectionAssert.AreEqual(new int[] { 3, 2 }, Vector.Range(3, 1, +1));
+        Assert.AreSequenceEqual(new int[] { 1, 2 }, Vector.Range(1, 3, +1));
+        Assert.AreSequenceEqual(new int[] { 3, 2 }, Vector.Range(3, 1, -1));
+        Assert.AreSequenceEqual(new int[] { 3, 2 }, Vector.Range(3, 1, +1));
         Assert.Throws<ArgumentOutOfRangeException>(() => Vector.Range(1, 3, -1));
-        CollectionAssert.AreEqual(new int[] { 1 }, Vector.Range(1, 3, +5));
-        CollectionAssert.AreEqual(new int[] { 3 }, Vector.Range(3, 1, -5));
+        Assert.AreSequenceEqual(new int[] { 1 }, Vector.Range(1, 3, +5));
+        Assert.AreSequenceEqual(new int[] { 3 }, Vector.Range(3, 1, -5));
         Assert.IsTrue(new double[] { 0, 0.3, 0.6, 0.9 }.IsEqual(Vector.Range(0, 1, 0.3), 1e-10));
         Assert.IsTrue(new double[] { 1, 0.7, 0.4, 0.1 }.IsEqual(Vector.Range(1, 0, 0.3), 1e-10));
         Assert.IsTrue(new double[] { 0, 0.2, 0.4, 0.6, 0.8 }.IsEqual(Vector.Range(0, 1, 0.2), 1e-10));
@@ -140,12 +140,12 @@ public partial class VectorTest
     public void enumerable_range_step_test()
     {
         // Sanity checks
-        CollectionAssert.AreEqual(new double[] { 1, 2 }, Vector.EnumerableRange(1, 3, +1).ToArray());
-        CollectionAssert.AreEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, -1).ToArray());
-        CollectionAssert.AreEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, +1).ToArray());
+        Assert.AreSequenceEqual(new double[] { 1, 2 }, Vector.EnumerableRange(1, 3, +1).ToArray());
+        Assert.AreSequenceEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, -1).ToArray());
+        Assert.AreSequenceEqual(new double[] { 3, 2 }, Vector.EnumerableRange(3, 1, +1).ToArray());
         Assert.Throws<ArgumentOutOfRangeException>(() => Vector.EnumerableRange(1, 3, -1).ToArray());
-        CollectionAssert.AreEqual(new double[] { 1 }, Vector.EnumerableRange(1, 3, +5).ToArray());
-        CollectionAssert.AreEqual(new double[] { 3 }, Vector.EnumerableRange(3, 1, -5).ToArray());
+        Assert.AreSequenceEqual(new double[] { 1 }, Vector.EnumerableRange(1, 3, +5).ToArray());
+        Assert.AreSequenceEqual(new double[] { 3 }, Vector.EnumerableRange(3, 1, -5).ToArray());
         Assert.IsTrue(new double[] { 0, 0.3, 0.6, 0.9 }.IsEqual(Vector.EnumerableRange(0, 1, 0.3).ToArray(), 1e-10));
         Assert.IsTrue(new double[] { 1, 0.7, 0.4, 0.1 }.IsEqual(Vector.EnumerableRange(1, 0, 0.3).ToArray(), 1e-10));
         Assert.IsTrue(new double[] { 0, 0.2, 0.4, 0.6, 0.8 }.IsEqual(Vector.EnumerableRange(0, 1, 0.2).ToArray(), 1e-10));
@@ -183,7 +183,7 @@ public partial class VectorTest
 
         if (start == end)
         {
-            Assert.AreEqual(0, values.Length);
+            Assert.IsEmpty(values);
         }
         else if (start < end)
         {
@@ -204,7 +204,7 @@ public partial class VectorTest
         if (start == end)
         {
             double[] values = func();
-            Assert.AreEqual(0, values.Length);
+            Assert.IsEmpty(values);
         }
         else
         {

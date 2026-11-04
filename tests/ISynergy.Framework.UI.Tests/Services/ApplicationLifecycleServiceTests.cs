@@ -234,13 +234,13 @@ public class ApplicationLifecycleServiceTests
         // Act - Simulate concurrent signals
         var tasks = new Task[]
       {
-        Task.Run(() => _service.SignalApplicationUIReady()),
-            Task.Run(() => _service.SignalApplicationInitialized()),
-        Task.Run(() => _service.SignalApplicationUIReady()),
-            Task.Run(() => _service.SignalApplicationInitialized()),
+        Task.Run(() => _service.SignalApplicationUIReady(), TestContext.CancellationToken),
+            Task.Run(() => _service.SignalApplicationInitialized(), TestContext.CancellationToken),
+        Task.Run(() => _service.SignalApplicationUIReady(), TestContext.CancellationToken),
+            Task.Run(() => _service.SignalApplicationInitialized(), TestContext.CancellationToken),
         };
 
-        Task.WaitAll(tasks);
+        Task.WaitAll(tasks, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual(1, applicationLoadedRaiseCount, "Event should raise exactly once despite concurrent calls");
@@ -561,7 +561,7 @@ public class ApplicationLifecycleServiceTests
     #region Stress Tests
 
     [TestMethod]
-    [Timeout(5000)]
+    [Timeout(5000, CooperativeCancellation = true)]
     public void ConcurrentSignaling_FromMultipleThreads_RemainsConsistent()
     {
         // Arrange
@@ -593,7 +593,7 @@ public class ApplicationLifecycleServiceTests
     }
 
     [TestMethod]
-    [Timeout(5000)]
+    [Timeout(5000, CooperativeCancellation = true)]
     public void ConcurrentEventSubscription_DoesNotCauseRaceCondition()
     {
         // Arrange
@@ -609,10 +609,10 @@ public class ApplicationLifecycleServiceTests
              {
                  _service.ApplicationLoaded += (s, e) =>
           Interlocked.Increment(ref eventRaiseCount);
-             }))
+             }, TestContext.CancellationToken))
                .ToList();
 
-        Task.WaitAll(tasks.ToArray());
+        Task.WaitAll(tasks.ToArray(), TestContext.CancellationToken);
 
         // Now signal the second condition
         _service.SignalApplicationInitialized();
@@ -621,6 +621,8 @@ public class ApplicationLifecycleServiceTests
         Assert.AreEqual(subscriberCount, eventRaiseCount,
          "All concurrent subscribers should receive the event exactly once");
     }
+
+    public TestContext TestContext { get; set; }
 
     #endregion
 }

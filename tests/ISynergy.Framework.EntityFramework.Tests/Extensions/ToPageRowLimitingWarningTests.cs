@@ -25,9 +25,8 @@ public class ToPageRowLimitingWarningTests
 
         var query = context.TestEntities.ToPage(e => e.Id, 1, 5);
 
-        CollectionAssert.AreEqual(
-            expected,
-            MethodChain(query).Take(3).ToArray());
+        Assert.AreSequenceEqual(
+            expected, MethodChain(query).Take(3).ToArray());
     }
 
     private static readonly string[] expectedArray = new[] { "Take", "Skip" };
@@ -40,8 +39,8 @@ public class ToPageRowLimitingWarningTests
         var query = context.TestEntities.ToPage(1, 5);
 
         var chain = MethodChain(query);
-        CollectionAssert.AreEqual(expectedArray, chain.Take(2).ToArray());
-        Assert.IsFalse(chain.Contains("OrderBy"), "The legacy overload is unordered by design.");
+        Assert.AreSequenceEqual(expectedArray, chain.Take(2).ToArray());
+        Assert.DoesNotContain("OrderBy", chain, "The legacy overload is unordered by design.");
     }
 
     private static TestDataContext CreateContext()

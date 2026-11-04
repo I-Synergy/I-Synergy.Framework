@@ -6,7 +6,7 @@ using Windows.UI;
 
 namespace ISynergy.Framework.UI.Styles;
 
-public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeResourceDictionary
+public sealed partial class DynamicThemeResourceDictionary : ResourceDictionary, IThemeResourceDictionary
 {
     public DynamicThemeResourceDictionary(Color primary)
     {

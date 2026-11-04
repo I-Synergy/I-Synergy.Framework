@@ -17,7 +17,7 @@ using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
 
-public class SignUpViewModel : ViewModel
+public partial class SignUpViewModel : ViewModel
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

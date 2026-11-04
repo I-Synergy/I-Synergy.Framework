@@ -22,7 +22,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// blade view and its view model are never disposed here — the DI scope that created them
 /// owns their lifetime.
 /// </remarks>
-public class BladePane : ContentView, IDisposable
+public partial class BladePane : ContentView, IDisposable
 {
     #region Bindable properties
 

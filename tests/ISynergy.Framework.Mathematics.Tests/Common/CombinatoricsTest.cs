@@ -52,7 +52,7 @@ public class CombinatoricsTest
         string str = combinations.Apply(x => x.ToArray()).ToCSharp();
 
         for (int i = 0; i < combinations.Length; i++)
-            CollectionAssert.AreEqual(combinations[i], expected[i]);
+            Assert.AreSequenceEqual(combinations[i], expected[i]);
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public class CombinatoricsTest
 
         for (int i = 0; i < combinations.Length; i++)
         {
-            CollectionAssert.AreEqual(combinations[i], expected[i]);
+            Assert.AreSequenceEqual(combinations[i], expected[i]);
         }
     }
 
@@ -116,7 +116,7 @@ public class CombinatoricsTest
 
         List<int[]> permutations = [.. Combinatorics.Permutations(values)];
 
-        Assert.AreEqual(6, permutations.Count);
+        Assert.HasCount(6, permutations);
         Assert.IsTrue(permutations[0].IsEqual([1, 2, 3]));
         Assert.IsTrue(permutations[1].IsEqual([1, 3, 2]));
         Assert.IsTrue(permutations[2].IsEqual([2, 1, 3]));
@@ -222,7 +222,7 @@ public class CombinatoricsTest
         for (int i = 0; i < subsets.Length; i++)
         {
             int[] actual = subsets[i].ToArray();
-            CollectionAssert.AreEqual(actual, expected[i]);
+            Assert.AreSequenceEqual(actual, expected[i]);
         }
     }
 
@@ -263,7 +263,7 @@ public class CombinatoricsTest
         for (int i = 0; i < subsets.Length; i++)
         {
             int[] actual = subsets[i].ToArray();
-            CollectionAssert.AreEqual(actual, expected[i]);
+            Assert.AreSequenceEqual(actual, expected[i]);
         }
     }
 

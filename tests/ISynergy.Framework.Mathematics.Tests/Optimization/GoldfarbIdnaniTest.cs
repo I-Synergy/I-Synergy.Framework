@@ -1146,7 +1146,7 @@ public class GoldfarbIdnaniTest
         for (int i = 0; i < constraints.Count; i++)
         {
             double error = constraints[i].GetViolation(actual);
-            Assert.IsTrue(error >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, error);
         }
 
         for (int i = 0; i < expected.Length; i++)
@@ -1216,7 +1216,7 @@ public class GoldfarbIdnaniTest
         for (int i = 0; i < constraints.Count; i++)
         {
             double error = constraints[i].GetViolation(actual);
-            Assert.IsTrue(error >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, error);
         }
 
         for (int i = 0; i < expected.Length; i++)

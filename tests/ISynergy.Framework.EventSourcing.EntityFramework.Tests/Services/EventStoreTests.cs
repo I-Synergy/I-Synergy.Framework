@@ -36,7 +36,7 @@ public class EventStoreTests
         var @event = new OrderPlaced(aggregateId, "Alice", 99.99m);
 
         var version = await _store.AppendEventAsync(
-            tenantId, "OrderAggregate", aggregateId, expectedVersion: 0, @event);
+            tenantId, "OrderAggregate", aggregateId, expectedVersion: 0, @event, cancellationToken: TestContext.CancellationToken);
 
         Assert.AreEqual(1L, version);
     }
@@ -48,10 +48,10 @@ public class EventStoreTests
         var aggregateId = Guid.NewGuid();
 
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0,
-            new OrderPlaced(aggregateId, "Alice", 99.99m));
+            new OrderPlaced(aggregateId, "Alice", 99.99m), cancellationToken: TestContext.CancellationToken);
 
         var version = await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 1,
-            new OrderShipped(aggregateId, "TRACK-001"));
+            new OrderShipped(aggregateId, "TRACK-001"), cancellationToken: TestContext.CancellationToken);
 
         Assert.AreEqual(2L, version);
     }
@@ -63,12 +63,12 @@ public class EventStoreTests
         var aggregateId = Guid.NewGuid();
 
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0,
-            new OrderPlaced(aggregateId, "Alice", 99.99m));
+            new OrderPlaced(aggregateId, "Alice", 99.99m), cancellationToken: TestContext.CancellationToken);
 
         // expectedVersion = 0 again instead of 1 — concurrency conflict
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0,
-                new OrderShipped(aggregateId, "TRACK-001")));
+                new OrderShipped(aggregateId, "TRACK-001"), cancellationToken: TestContext.CancellationToken));
     }
 
     [TestMethod]
@@ -78,10 +78,10 @@ public class EventStoreTests
         var aggregateId = Guid.NewGuid();
         var @event = new OrderPlaced(aggregateId, "Bob", 200m);
 
-        await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0, @event);
+        await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0, @event, cancellationToken: TestContext.CancellationToken);
 
-        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId);
-        Assert.AreEqual(1, records.Count);
+        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId, cancellationToken: TestContext.CancellationToken);
+        Assert.HasCount(1, records);
 
         var record = records[0];
         Assert.AreEqual(tenantId, record.TenantId);
@@ -101,15 +101,15 @@ public class EventStoreTests
         var aggregateId = Guid.NewGuid();
 
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0,
-            new OrderPlaced(aggregateId, "Alice", 50m));
+            new OrderPlaced(aggregateId, "Alice", 50m), cancellationToken: TestContext.CancellationToken);
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 1,
-            new OrderShipped(aggregateId, "T1"));
+            new OrderShipped(aggregateId, "T1"), cancellationToken: TestContext.CancellationToken);
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 2,
-            new OrderCancelled(aggregateId, "Wrong item"));
+            new OrderCancelled(aggregateId, "Wrong item"), cancellationToken: TestContext.CancellationToken);
 
-        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId);
+        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId, cancellationToken: TestContext.CancellationToken);
 
-        Assert.AreEqual(3, records.Count);
+        Assert.HasCount(3, records);
         Assert.AreEqual(1L, records[0].AggregateVersion);
         Assert.AreEqual(2L, records[1].AggregateVersion);
         Assert.AreEqual(3L, records[2].AggregateVersion);
@@ -122,13 +122,13 @@ public class EventStoreTests
         var aggregateId = Guid.NewGuid();
 
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0,
-            new OrderPlaced(aggregateId, "Alice", 50m));
+            new OrderPlaced(aggregateId, "Alice", 50m), cancellationToken: TestContext.CancellationToken);
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 1,
-            new OrderShipped(aggregateId, "T1"));
+            new OrderShipped(aggregateId, "T1"), cancellationToken: TestContext.CancellationToken);
 
-        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId, fromVersion: 2);
+        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId, fromVersion: 2, TestContext.CancellationToken);
 
-        Assert.AreEqual(1, records.Count);
+        Assert.HasCount(1, records);
         Assert.AreEqual(2L, records[0].AggregateVersion);
     }
 
@@ -142,21 +142,21 @@ public class EventStoreTests
         // Write as tenant A
         _tenantService.SetTenant(tenantAId);
         await _store.AppendEventAsync(tenantAId, "OrderAggregate", aggregateId, 0,
-            new OrderPlaced(aggregateId, "Alice", 50m));
+            new OrderPlaced(aggregateId, "Alice", 50m), cancellationToken: TestContext.CancellationToken);
 
         // Read as tenant B — should see nothing
         _tenantService.SetTenant(tenantBId);
-        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId);
+        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", aggregateId, cancellationToken: TestContext.CancellationToken);
 
-        Assert.AreEqual(0, records.Count);
+        Assert.IsEmpty(records);
     }
 
     [TestMethod]
     public async Task GetEventsForAggregateAsync_ReturnsEmpty_WhenNoEventsExist()
     {
-        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", Guid.NewGuid());
+        var records = await _store.GetEventsForAggregateAsync("OrderAggregate", Guid.NewGuid(), cancellationToken: TestContext.CancellationToken);
 
-        Assert.AreEqual(0, records.Count);
+        Assert.IsEmpty(records);
     }
 
     // ── GetEventsByTypeAsync ──────────────────────────────────────────────────
@@ -169,13 +169,13 @@ public class EventStoreTests
         var id2 = Guid.NewGuid();
         var placedTypeName = _resolver.GetTypeName(typeof(OrderPlaced));
 
-        await _store.AppendEventAsync(tenantId, "OrderAggregate", id1, 0, new OrderPlaced(id1, "Alice", 50m));
-        await _store.AppendEventAsync(tenantId, "OrderAggregate", id1, 1, new OrderShipped(id1, "T1"));
-        await _store.AppendEventAsync(tenantId, "OrderAggregate", id2, 0, new OrderPlaced(id2, "Bob", 100m));
+        await _store.AppendEventAsync(tenantId, "OrderAggregate", id1, 0, new OrderPlaced(id1, "Alice", 50m), cancellationToken: TestContext.CancellationToken);
+        await _store.AppendEventAsync(tenantId, "OrderAggregate", id1, 1, new OrderShipped(id1, "T1"), cancellationToken: TestContext.CancellationToken);
+        await _store.AppendEventAsync(tenantId, "OrderAggregate", id2, 0, new OrderPlaced(id2, "Bob", 100m), cancellationToken: TestContext.CancellationToken);
 
-        var records = await _store.GetEventsByTypeAsync(placedTypeName);
+        var records = await _store.GetEventsByTypeAsync(placedTypeName, cancellationToken: TestContext.CancellationToken);
 
-        Assert.AreEqual(2, records.Count);
+        Assert.HasCount(2, records);
         Assert.IsTrue(records.All(r => r.EventType == placedTypeName));
     }
 
@@ -187,12 +187,12 @@ public class EventStoreTests
         var placedTypeName = _resolver.GetTypeName(typeof(OrderPlaced));
 
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0,
-            new OrderPlaced(aggregateId, "Alice", 50m));
+            new OrderPlaced(aggregateId, "Alice", 50m), cancellationToken: TestContext.CancellationToken);
 
         var future = DateTimeOffset.UtcNow.AddHours(1);
-        var records = await _store.GetEventsByTypeAsync(placedTypeName, to: DateTimeOffset.UtcNow.AddSeconds(-1));
+        var records = await _store.GetEventsByTypeAsync(placedTypeName, to: DateTimeOffset.UtcNow.AddSeconds(-1), cancellationToken: TestContext.CancellationToken);
 
-        Assert.AreEqual(0, records.Count, "Event after 'to' cutoff should be excluded.");
+        Assert.IsEmpty(records, "Event after 'to' cutoff should be excluded.");
     }
 
     // ── GetEventsSinceAsync ───────────────────────────────────────────────────
@@ -205,11 +205,11 @@ public class EventStoreTests
         var before = DateTimeOffset.UtcNow;
 
         await _store.AppendEventAsync(tenantId, "OrderAggregate", aggregateId, 0,
-            new OrderPlaced(aggregateId, "Alice", 50m));
+            new OrderPlaced(aggregateId, "Alice", 50m), cancellationToken: TestContext.CancellationToken);
 
-        var records = await _store.GetEventsSinceAsync(before);
+        var records = await _store.GetEventsSinceAsync(before, TestContext.CancellationToken);
 
-        Assert.IsTrue(records.Count >= 1);
+        Assert.IsGreaterThanOrEqualTo(1, records.Count);
     }
 
     // ── Snapshot ──────────────────────────────────────────────────────────────
@@ -217,7 +217,7 @@ public class EventStoreTests
     [TestMethod]
     public async Task GetSnapshotAsync_ReturnsNull_WhenNoSnapshotExists()
     {
-        var snapshot = await _store.GetSnapshotAsync(Guid.NewGuid());
+        var snapshot = await _store.GetSnapshotAsync(Guid.NewGuid(), TestContext.CancellationToken);
 
         Assert.IsNull(snapshot);
     }
@@ -230,8 +230,8 @@ public class EventStoreTests
             aggregateId, _tenantService.TenantId, "OrderAggregate", 5L,
             """{"customerName":"Alice","total":100}""", DateTimeOffset.UtcNow);
 
-        await _store.SaveSnapshotAsync(snapshot);
-        var loaded = await _store.GetSnapshotAsync(aggregateId);
+        await _store.SaveSnapshotAsync(snapshot, TestContext.CancellationToken);
+        var loaded = await _store.GetSnapshotAsync(aggregateId, TestContext.CancellationToken);
 
         Assert.IsNotNull(loaded);
         Assert.AreEqual(aggregateId, loaded.AggregateId);
@@ -245,12 +245,12 @@ public class EventStoreTests
         var tenantId = _tenantService.TenantId;
 
         var first = new Models.Snapshot(aggregateId, tenantId, "OrderAggregate", 3L, "{}", DateTimeOffset.UtcNow);
-        await _store.SaveSnapshotAsync(first);
+        await _store.SaveSnapshotAsync(first, TestContext.CancellationToken);
 
         var second = new Models.Snapshot(aggregateId, tenantId, "OrderAggregate", 7L, "{\"updated\":true}", DateTimeOffset.UtcNow);
-        await _store.SaveSnapshotAsync(second);
+        await _store.SaveSnapshotAsync(second, TestContext.CancellationToken);
 
-        var loaded = await _store.GetSnapshotAsync(aggregateId);
+        var loaded = await _store.GetSnapshotAsync(aggregateId, TestContext.CancellationToken);
         Assert.IsNotNull(loaded);
         Assert.AreEqual(7L, loaded.Version);
     }
@@ -264,10 +264,10 @@ public class EventStoreTests
 
         _tenantService.SetTenant(tenantAId);
         await _store.SaveSnapshotAsync(
-            new Models.Snapshot(aggregateId, tenantAId, "OrderAggregate", 5L, "{}", DateTimeOffset.UtcNow));
+            new Models.Snapshot(aggregateId, tenantAId, "OrderAggregate", 5L, "{}", DateTimeOffset.UtcNow), TestContext.CancellationToken);
 
         _tenantService.SetTenant(tenantBId);
-        var snapshot = await _store.GetSnapshotAsync(aggregateId);
+        var snapshot = await _store.GetSnapshotAsync(aggregateId, TestContext.CancellationToken);
 
         Assert.IsNull(snapshot, "Snapshot from tenant A should not be visible to tenant B.");
     }
@@ -284,12 +284,12 @@ public class EventStoreTests
 
         await _store.SaveSnapshotAsync(new Models.Snapshot(
             aggregateId, tenantId, "OrderAggregate", snapshotVersion,
-            "{}", DateTimeOffset.UtcNow));
+            "{}", DateTimeOffset.UtcNow), TestContext.CancellationToken);
 
         // Act: append a new event with expectedVersion = snapshotVersion
         var newVersion = await _store.AppendEventAsync(
             tenantId, "OrderAggregate", aggregateId, snapshotVersion,
-            new OrderPlaced(aggregateId, "Alice", 99m));
+            new OrderPlaced(aggregateId, "Alice", 99m), cancellationToken: TestContext.CancellationToken);
 
         // Assert: event is stored as version snapshotVersion + 1
         Assert.AreEqual(snapshotVersion + 1, newVersion);
@@ -304,12 +304,14 @@ public class EventStoreTests
 
         await _store.SaveSnapshotAsync(new Models.Snapshot(
             aggregateId, tenantId, "OrderAggregate", 3L,
-            "{}", DateTimeOffset.UtcNow));
+            "{}", DateTimeOffset.UtcNow), TestContext.CancellationToken);
 
         // Act & Assert: using expectedVersion = 0 should fail because current version is 3.
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             _store.AppendEventAsync(
                 tenantId, "OrderAggregate", aggregateId, expectedVersion: 0,
-                new OrderPlaced(aggregateId, "Bob", 50m)));
+                new OrderPlaced(aggregateId, "Bob", 50m), cancellationToken: TestContext.CancellationToken));
     }
+
+    public TestContext TestContext { get; set; }
 }

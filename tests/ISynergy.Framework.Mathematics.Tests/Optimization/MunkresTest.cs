@@ -153,8 +153,8 @@ public class MunkresTest
 
         bool success = m.Minimize();
 
-        Assert.AreEqual(3, m.validCol.Length);
-        Assert.AreEqual(4, m.validRow.Length);
+        Assert.HasCount(3, m.validCol);
+        Assert.HasCount(4, m.validRow);
 
         Assert.IsTrue(success);
         Assert.AreEqual(10, m.Value);
@@ -553,6 +553,6 @@ public class MunkresTest
         double[] expected = [0, 1, 24, 20, 31, 4, 17, 29, 11, 32, 5, 13, 22, 6, 9, 19, 7, 15, 3, 23, 2, 14, 10, 33, 21, 12, 26, 25, 16, 18, 8, 28, 30, 27
         ];
 
-        CollectionAssert.AreEqual(expected, solution);
+        Assert.AreSequenceEqual(expected, solution);
     }
 }

@@ -22,13 +22,13 @@ public partial class MatrixTensor
         };
 
         object actual = a.To<double[,]>();
-        CollectionAssert.AreEqual(expected, (ICollection)actual);
+        Assert.AreSequenceEqual(expected, (ICollection)actual);
 
         actual = a.To<double[,,]>();
         Assert.AreNotEqual(expected, (ICollection)actual);
 
         actual = a.To<double[,,]>().To<double[,]>();
-        CollectionAssert.AreEqual(expected, (ICollection)actual);
+        Assert.AreSequenceEqual(expected, (ICollection)actual);
     }
 
     [TestMethod]
@@ -39,7 +39,7 @@ public partial class MatrixTensor
         double[,] expected = Matrix.Magic(3);
 
         double[,] actual = a.To<double[,]>();
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -50,7 +50,7 @@ public partial class MatrixTensor
         double[,] expected = Matrix.Magic(3);
 
         double[,] actual = a.To<double[,]>();
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -99,14 +99,14 @@ public partial class MatrixTensor
         };
 
 
-        CollectionAssert.AreEqual(actual0, expected0);
-        CollectionAssert.AreEqual(actual1, expected1);
-        CollectionAssert.AreEqual(actual2, expected2);
+        Assert.AreSequenceEqual(actual0, expected0);
+        Assert.AreSequenceEqual(actual1, expected1);
+        Assert.AreSequenceEqual(actual2, expected2);
 
         // Test squeeze
-        CollectionAssert.AreEqual(a, expected0.Squeeze());
-        CollectionAssert.AreEqual(a, expected1.Squeeze());
-        CollectionAssert.AreEqual(a, expected2.Squeeze());
+        Assert.AreSequenceEqual(a, expected0.Squeeze());
+        Assert.AreSequenceEqual(a, expected1.Squeeze());
+        Assert.AreSequenceEqual(a, expected2.Squeeze());
     }
 
     [TestMethod]
@@ -121,15 +121,15 @@ public partial class MatrixTensor
 
         expected = a.Flatten(MatrixOrder.CRowMajor);
         actual = (double[])((Array)a).Flatten(MatrixOrder.CRowMajor);
-        CollectionAssert.AreEqual(expected, actual);
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
+        Assert.AreSequenceEqual(expected, actual);
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
 
         expected = a.Flatten(MatrixOrder.FortranColumnMajor);
         actual = (double[])((Array)a).Flatten(MatrixOrder.FortranColumnMajor);
-        CollectionAssert.AreEqual(expected, actual);
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
+        Assert.AreSequenceEqual(expected, actual);
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
 
 
         double[,,,] b =
@@ -140,15 +140,15 @@ public partial class MatrixTensor
 
         expected = a.Flatten(MatrixOrder.CRowMajor);
         actual = (double[])b.Flatten(MatrixOrder.CRowMajor);
-        CollectionAssert.AreEqual(expected, actual);
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
+        Assert.AreSequenceEqual(expected, actual);
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.CRowMajor));
 
         expected = a.Flatten(MatrixOrder.FortranColumnMajor);
         actual = (double[])b.Flatten(MatrixOrder.FortranColumnMajor);
-        CollectionAssert.AreEqual(expected, actual);
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
-        CollectionAssert.AreEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
+        Assert.AreSequenceEqual(expected, actual);
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
+        Assert.AreSequenceEqual(a, actual.Reshape(a.GetLength(), MatrixOrder.FortranColumnMajor));
     }
 
     [TestMethod]
@@ -168,7 +168,7 @@ public partial class MatrixTensor
         };
 
         Array actual = target.Transpose();
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -188,7 +188,7 @@ public partial class MatrixTensor
 
         int[,] actual = a.To<int[,]>();
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -257,7 +257,7 @@ public partial class MatrixTensor
                 { 1, 2 },
             };
 
-            CollectionAssert.AreEqual(expected, r);
+            Assert.AreSequenceEqual(expected, r);
         }
 
         {
@@ -270,7 +270,7 @@ public partial class MatrixTensor
                 { 3, 4 },
             };
 
-            CollectionAssert.AreEqual(expected, r);
+            Assert.AreSequenceEqual(expected, r);
         }
 
         {
@@ -284,7 +284,7 @@ public partial class MatrixTensor
                 { 2, 3 },
             };
 
-            CollectionAssert.AreEqual(expected, r);
+            Assert.AreSequenceEqual(expected, r);
         }
     }
 
@@ -303,16 +303,16 @@ public partial class MatrixTensor
         };
 
         Array actual = Jagged.CreateAs(a, typeof(int));
-        CollectionAssert.AreEqual(expected, actual.GetLength());
+        Assert.AreSequenceEqual(expected, actual.GetLength());
 
         actual = Jagged.CreateAs(a.ToJagged(), typeof(int));
-        CollectionAssert.AreEqual(expectedArray, actual.GetLength());
+        Assert.AreSequenceEqual(expectedArray, actual.GetLength());
 
         actual = Matrix.CreateAs(a, typeof(int));
-        CollectionAssert.AreEqual(expectedArray0, actual.GetLength());
+        Assert.AreSequenceEqual(expectedArray0, actual.GetLength());
 
         actual = Matrix.CreateAs(a.ToJagged(), typeof(int));
-        CollectionAssert.AreEqual(expectedArray1, actual.GetLength());
+        Assert.AreSequenceEqual(expectedArray1, actual.GetLength());
     }
 
 }

@@ -16,7 +16,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ISynergy.Framework.UI.ViewModels;
 
 [Lifetime(Lifetimes.Singleton)]
-public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
+public partial class SplashScreenViewModel : ObservableValidatedClass, IViewModel
 {
     private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;

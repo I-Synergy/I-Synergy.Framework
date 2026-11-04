@@ -715,7 +715,7 @@ public class AugmentedLagrangianTest
         }
 
         Assert.IsNotNull(solverTest.Solution);
-        Assert.AreEqual(nVariablesTest, solverTest.Solution.Length);
+        Assert.HasCount(nVariablesTest, solverTest.Solution);
     }
 
     //[TestMethod]

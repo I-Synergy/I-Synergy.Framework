@@ -39,7 +39,7 @@ public static class DateTimeConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DateTimeToTimeSpanConverter : IValueConverter
+public partial class DateTimeToTimeSpanConverter : IValueConverter
 {
     /// <summary>
     /// The original
@@ -91,7 +91,7 @@ public class DateTimeToTimeSpanConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DateTimeToDateTimeOffsetConverter : IValueConverter
+public partial class DateTimeToDateTimeOffsetConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -139,7 +139,7 @@ public class DateTimeToDateTimeOffsetConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DateTimeToLocalDateStringConverter : IValueConverter
+public partial class DateTimeToLocalDateStringConverter : IValueConverter
 {
     // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:d\} 2009-06-15T13:45:30 -> 6/15/2009 (en-US)
     // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=\{0:D\} 2009-06-15T13:45:30 -> Monday, June 15, 2009 (en-US)

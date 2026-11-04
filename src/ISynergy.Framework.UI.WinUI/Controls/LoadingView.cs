@@ -15,7 +15,7 @@ using Windows.UI;
 
 namespace ISynergy.Framework.UI.Controls;
 
-public class LoadingView : Page
+public partial class LoadingView : Page
 {
     private readonly IApplicationLifecycleService _applicationLifecycleService;
     private readonly ICommonServices _commonServices;

@@ -40,8 +40,8 @@ public class MessengerCreationDeletionTest
         _messenger.Register<string>(recipient1, recipient1.ReceiveMessage);
         _messenger.Register<string>(recipient2, recipient2.ReceiveMessage);
 
-        Assert.AreEqual(null, recipient1.ReceivedContentString);
-        Assert.AreEqual(null, recipient2.ReceivedContentString);
+        Assert.IsNull(recipient1.ReceivedContentString);
+        Assert.IsNull(recipient2.ReceivedContentString);
 
         _messenger.Send(TestContent1);
 
@@ -70,7 +70,7 @@ public class MessengerCreationDeletionTest
 
         _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
 
-        Assert.AreEqual(null, StringContent);
+        Assert.IsNull(StringContent);
 
         _messenger.Send(new TestMessage
         {
@@ -89,7 +89,7 @@ public class MessengerCreationDeletionTest
 
         _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
 
-        Assert.AreEqual(null, StringContent);
+        Assert.IsNull(StringContent);
 
         _messenger.Send(new TestMessage
         {

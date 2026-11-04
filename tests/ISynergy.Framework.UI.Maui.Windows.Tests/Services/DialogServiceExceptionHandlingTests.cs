@@ -13,7 +13,8 @@ namespace ISynergy.Framework.UI.Maui.Services;
 /// Tests for exception handling in DialogService.
 /// </summary>
 [TestClass]
-public class DialogServiceExceptionHandlingTests
+[OSCondition(OperatingSystems.Windows)]
+public partial class DialogServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
@@ -115,7 +116,7 @@ public class DialogServiceExceptionHandlingTests
     // Test window and viewmodel types for testing
     private interface TestWindow : Mvvm.Abstractions.IWindow { }
 
-    private class TestViewModelDialog : ViewModelDialog<string>
+    private partial class TestViewModelDialog : ViewModelDialog<string>
     {
         public TestViewModelDialog(ICommonServices commonServices, ILogger<ViewModelDialog<string>> logger)
             : base(commonServices, logger)

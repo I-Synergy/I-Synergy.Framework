@@ -59,13 +59,11 @@ public class CommandDemoViewTests : SamplePageTest
                           Height: b.GetProperty("h").GetInt32()))
             .ToList();
 
-        CollectionAssert.AreEqual(
-            ExpectedButtonLabels,
-            observed.Select(b => b.Text).ToArray(),
-            $"{SampleDom.CommandDemoRoute} must render exactly the four expected buttons in order. " +
+        Assert.AreSequenceEqual(
+            ExpectedButtonLabels, observed.Select(b => b.Text).ToArray(), $"{SampleDom.CommandDemoRoute} must render exactly the four expected buttons in order. " +
             $"Observed: {measurements}");
 
-        Assert.IsTrue(articleWidth > 0, $"The content column has no width. Measurements: {measurements}");
+        Assert.IsGreaterThan(0, articleWidth, $"The content column has no width. Measurements: {measurements}");
 
         // A stretched button is ~ the whole column; a content-sized one is a small fraction of it. The
         // bound is relative to the live column width, so it does not hard-code any button size.
@@ -76,8 +74,8 @@ public class CommandDemoViewTests : SamplePageTest
                 button.Width > 0 && button.Height > 0,
                 $"The '{button.Text}' button has no rendered box. Measurements: {measurements}");
 
-            Assert.IsTrue(
-                button.Width <= maxWidth,
+            Assert.IsLessThanOrEqualTo(
+                maxWidth, button.Width,
                 $"The '{button.Text}' button is stretched to {button.Width}px of the {articleWidth}px content " +
                 $"column (limit {maxWidth:F0}px): it lost its content sizing - the flex column blockifies it " +
                 $"again (this measured ~989px before the fix). Measurements: {measurements}");

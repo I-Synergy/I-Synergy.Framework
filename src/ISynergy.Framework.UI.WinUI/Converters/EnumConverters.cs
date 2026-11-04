@@ -11,7 +11,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class EnumToBooleanConverter : IValueConverter
+public partial class EnumToBooleanConverter : IValueConverter
 {
     /// <summary>
     /// Gets or sets the type of the enum.
@@ -91,7 +91,7 @@ public class EnumToBooleanConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class EnumToArrayConverter : IValueConverter
+public partial class EnumToArrayConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -151,7 +151,7 @@ public class EnumToArrayConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class EnumToStringConverter : IValueConverter
+public partial class EnumToStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -202,7 +202,7 @@ public class EnumToStringConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class EnumToDescriptionConverter : IValueConverter
+public partial class EnumToDescriptionConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -235,7 +235,7 @@ public class EnumToDescriptionConverter : IValueConverter
     }
 }
 
-public class EnumToIntegerConverter : IValueConverter
+public partial class EnumToIntegerConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

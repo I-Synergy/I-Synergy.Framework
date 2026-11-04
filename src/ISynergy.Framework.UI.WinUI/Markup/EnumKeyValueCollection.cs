@@ -13,7 +13,7 @@ namespace ISynergy.Framework.UI.Markup;
 /// <seealso cref="MarkupExtension" />
 [Bindable]
 [MarkupExtensionReturnType(ReturnType = typeof(List<KeyValuePair<int, string>>))]
-public class EnumKeyValueCollection : MarkupExtension
+public partial class EnumKeyValueCollection : MarkupExtension
 {
     /// <summary>
     /// Gets or sets the type of the enum.

@@ -61,7 +61,7 @@ public class QueryableExtensionTests
         IQueryable<int> list = Enumerable.Range(0, size).AsQueryable();
         var page = list.ToPage(x => x, pageIndex, pageSize).ToList();
 
-        Assert.AreEqual(count, page.Count);
+        Assert.HasCount(count, page);
         Assert.AreEqual(pageIndex * pageSize, page[0]);
     }
 
@@ -79,7 +79,7 @@ public class QueryableExtensionTests
 
         var page = list.ToPage(x => x, 0, 3).ToList();
 
-        CollectionAssert.AreEqual(expected, page);
+        Assert.AreSequenceEqual(expected, page);
     }
 
     /// <summary>

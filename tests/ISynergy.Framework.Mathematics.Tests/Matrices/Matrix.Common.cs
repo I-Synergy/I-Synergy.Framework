@@ -122,10 +122,10 @@ public partial class MatrixTest
         double[,] b = Matrix.Zeros(1, 1);
         int[] actual = a.GetLength();
         int[] expected = b.GetLength();
-        Assert.AreEqual(2, actual.Length);
+        Assert.HasCount(2, actual);
         Assert.AreEqual(1, actual[0]);
         Assert.AreEqual(1, actual[1]);
-        Assert.AreEqual(2, expected.Length);
+        Assert.HasCount(2, expected);
         Assert.AreEqual(1, expected[0]);
         Assert.AreEqual(1, expected[1]);
         Assert.IsTrue(actual.IsEqual(expected));
@@ -138,8 +138,8 @@ public partial class MatrixTest
         double[] b = Array.Empty<double>();
         int[] actual = a.GetLength();
         int[] expected = b.GetLength();
-        Assert.AreEqual(0, actual.Length);
-        Assert.AreEqual(0, expected.Length);
+        Assert.IsEmpty(actual);
+        Assert.IsEmpty(expected);
         Assert.IsTrue(actual.IsEqual(expected));
     }
 
@@ -219,6 +219,6 @@ public partial class MatrixTest
             { 3, 2, 1 }
         };
 
-        CollectionAssert.AreEqual(expected, m.GetSymmetric(MatrixType.UpperTriangular));
+        Assert.AreSequenceEqual(expected, m.GetSymmetric(MatrixType.UpperTriangular));
     }
 }

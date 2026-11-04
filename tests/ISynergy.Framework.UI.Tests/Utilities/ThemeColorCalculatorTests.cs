@@ -131,7 +131,7 @@ public class ThemeColorCalculatorTests
         var originalLum = Luminosity(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
         var (red, green, blue) = ThemeColorCalculator.WhiteBlend(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue, 0.25f);
 
-        Assert.IsTrue(Luminosity(red, green, blue) > originalLum);
+        Assert.IsGreaterThan(originalLum, Luminosity(red, green, blue));
     }
 
     // ── BlackBlend ───────────────────────────────────────────────────────────
@@ -193,7 +193,7 @@ public class ThemeColorCalculatorTests
         var originalLum = Luminosity(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
         var (red, green, blue) = ThemeColorCalculator.BlackBlend(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue, 0.25f);
 
-        Assert.IsTrue(Luminosity(red, green, blue) < originalLum);
+        Assert.IsLessThan(originalLum, Luminosity(red, green, blue));
     }
 
     // ── CalculateSecondary ───────────────────────────────────────────────────
@@ -214,7 +214,7 @@ public class ThemeColorCalculatorTests
     {
         var (secondaryRed, secondaryGreen, secondaryBlue) = ThemeColorCalculator.CalculateSecondary(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
 
-        Assert.IsTrue(Luminosity(secondaryRed, secondaryGreen, secondaryBlue) > Luminosity(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue));
+        Assert.IsGreaterThan(Luminosity(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue), Luminosity(secondaryRed, secondaryGreen, secondaryBlue));
     }
 
     [TestMethod]
@@ -266,7 +266,7 @@ public class ThemeColorCalculatorTests
     {
         var (tertiaryRed, tertiaryGreen, tertiaryBlue) = ThemeColorCalculator.CalculateTertiary(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
 
-        Assert.IsTrue(Luminosity(tertiaryRed, tertiaryGreen, tertiaryBlue) < Luminosity(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue));
+        Assert.IsLessThan(Luminosity(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue), Luminosity(tertiaryRed, tertiaryGreen, tertiaryBlue));
     }
 
     [TestMethod]
@@ -306,7 +306,7 @@ public class ThemeColorCalculatorTests
         var (secondaryRed, secondaryGreen, secondaryBlue) = ThemeColorCalculator.CalculateSecondary(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
         var (tertiaryRed, tertiaryGreen, tertiaryBlue) = ThemeColorCalculator.CalculateTertiary(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
 
-        Assert.IsTrue(Luminosity(secondaryRed, secondaryGreen, secondaryBlue) > Luminosity(tertiaryRed, tertiaryGreen, tertiaryBlue));
+        Assert.IsGreaterThan(Luminosity(tertiaryRed, tertiaryGreen, tertiaryBlue), Luminosity(secondaryRed, secondaryGreen, secondaryBlue));
     }
 
     // ── CalculateTintedGrays ─────────────────────────────────────────────────
@@ -316,7 +316,7 @@ public class ThemeColorCalculatorTests
     {
         var grays = ThemeColorCalculator.CalculateTintedGrays(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
 
-        Assert.AreEqual(20, grays.Count);
+        Assert.HasCount(20, grays);
     }
 
     [TestMethod]
@@ -336,7 +336,7 @@ public class ThemeColorCalculatorTests
         var (r000, g000, b000) = grays["000"];
         var (r950, g950, b950) = grays["950"];
 
-        Assert.IsTrue(Luminosity(r000, g000, b000) > Luminosity(r950, g950, b950));
+        Assert.IsGreaterThan(Luminosity(r950, g950, b950), Luminosity(r000, g000, b000));
     }
 
     [TestMethod]
@@ -350,7 +350,7 @@ public class ThemeColorCalculatorTests
         {
             var (red, green, blue) = grays[key];
             float luminosity = Luminosity(red, green, blue);
-            Assert.IsTrue(luminosity <= previousLuminosity + Tolerance, $"Gray {key} ({luminosity:F4}) should not be lighter than previous ({previousLuminosity:F4})");
+            Assert.IsLessThanOrEqualTo(previousLuminosity + Tolerance, luminosity, $"Gray {key} ({luminosity:F4}) should not be lighter than previous ({previousLuminosity:F4})");
             previousLuminosity = luminosity;
         }
     }
@@ -376,7 +376,7 @@ public class ThemeColorCalculatorTests
         foreach (var (key, (red, green, blue)) in grays)
         {
             float chroma = MathF.Max(red, MathF.Max(green, blue)) - MathF.Min(red, MathF.Min(green, blue));
-            Assert.IsTrue(chroma < 0.01f, $"Key {key}: chroma ({chroma:F4}) should be near zero for black primary");
+            Assert.IsLessThan(0.01f, chroma, $"Key {key}: chroma ({chroma:F4}) should be near zero for black primary");
         }
     }
 

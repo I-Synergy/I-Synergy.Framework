@@ -115,8 +115,8 @@ public class SentryTelemetryExtensionsTests
 
         var json = JsonSerializer.Serialize(new KeyValuePair<string, bool>("simulator", true), options);
 
-        Assert.IsTrue(json.Contains("simulator"), $"Key missing from payload: {json}");
-        Assert.IsTrue(json.Contains("true"), $"Value missing from payload: {json}");
+        Assert.Contains("simulator", json, $"Key missing from payload: {json}");
+        Assert.Contains("true", json, $"Value missing from payload: {json}");
     }
 
     [TestMethod]

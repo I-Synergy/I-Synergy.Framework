@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalToVisibilityConverter : IValueConverter
+public partial class DecimalToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -49,7 +49,7 @@ public class DecimalToVisibilityConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsConverter : IValueConverter
+public partial class DecimalEqualsConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -92,7 +92,7 @@ public class DecimalEqualsConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalLesserThenConverter : IValueConverter
+public partial class DecimalLesserThenConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -135,7 +135,7 @@ public class DecimalLesserThenConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalGreaterThenConverter : IValueConverter
+public partial class DecimalGreaterThenConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -178,7 +178,7 @@ public class DecimalGreaterThenConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsOrLesserThenConverter : IValueConverter
+public partial class DecimalEqualsOrLesserThenConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -221,7 +221,7 @@ public class DecimalEqualsOrLesserThenConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsOrGreaterThenConverter : IValueConverter
+public partial class DecimalEqualsOrGreaterThenConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -264,7 +264,7 @@ public class DecimalEqualsOrGreaterThenConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalToStringConverter : IValueConverter
+public partial class DecimalToStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -318,7 +318,7 @@ public class DecimalToStringConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalToDoubleConverter : IValueConverter
+public partial class DecimalToDoubleConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

@@ -31,7 +31,7 @@ public partial class FileTypeAnalyzerTests
         {
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Name.StartsWith("UTF-8", StringComparison.OrdinalIgnoreCase));
-            Assert.IsTrue(result.Name.IndexOf("BOM", StringComparison.OrdinalIgnoreCase) == -1);
+            Assert.AreEqual(-1, result.Name.IndexOf("BOM", StringComparison.OrdinalIgnoreCase));
         });
     }
 
@@ -46,7 +46,7 @@ public partial class FileTypeAnalyzerTests
         {
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Name.StartsWith("UTF-8", StringComparison.OrdinalIgnoreCase));
-            Assert.IsTrue(result.Name.IndexOf("BOM", StringComparison.OrdinalIgnoreCase) > -1);
+            Assert.IsGreaterThan(-1, result.Name.IndexOf("BOM", StringComparison.OrdinalIgnoreCase));
         });
     }
 

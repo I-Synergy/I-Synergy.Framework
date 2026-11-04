@@ -5,7 +5,7 @@ namespace ISynergy.Framework.UI.Common;
 /// <summary>
 /// Represents a custom implementation of the <see cref="CustomXamlResourceLoader" /> class that allows users to replace the built-in theme resources via the <see cref="UserThemeResources" /> class.
 /// </summary>
-public sealed class UserThemeResourceLoader : CustomXamlResourceLoader
+public sealed partial class UserThemeResourceLoader : CustomXamlResourceLoader
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserThemeResourceLoader"/> class.

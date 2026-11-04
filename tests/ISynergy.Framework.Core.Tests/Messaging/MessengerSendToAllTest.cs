@@ -43,9 +43,9 @@ public class MessengerSendToAllTest
         TestRecipient externalRecipient = new();
         externalRecipient.RegisterWith(_messenger);
 
-        Assert.AreEqual(null, StringContent1);
-        Assert.AreEqual(null, StringContent2);
-        Assert.AreEqual(null, externalRecipient.StringContent);
+        Assert.IsNull(StringContent1);
+        Assert.IsNull(StringContent2);
+        Assert.IsNull(externalRecipient.StringContent);
 
         _messenger.Send(new TestMessage
         {

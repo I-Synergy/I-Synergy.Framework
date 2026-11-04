@@ -19,9 +19,9 @@ namespace ISynergy.Framework.Core.Extensions
             {
                 logMessage = ex.ToMessage(Environment.StackTrace);
 
-                Assert.IsTrue(logMessage.Contains(ex.Message));
+                Assert.Contains(ex.Message, logMessage);
                 Assert.IsNotNull(Environment.StackTrace);
-                Assert.IsTrue(logMessage.Contains(Environment.StackTrace));
+                Assert.Contains(Environment.StackTrace, logMessage);
             }
         }
 
@@ -36,9 +36,9 @@ namespace ISynergy.Framework.Core.Extensions
             var logMessage = exception.ToMessage(environmentStackTrace);
 
             // Assert
-            Assert.IsTrue(logMessage.Contains(exception.Message));
+            Assert.Contains(exception.Message, logMessage);
             Assert.IsTrue(string.IsNullOrEmpty(environmentStackTrace));
-            Assert.IsTrue(logMessage.Contains(environmentStackTrace));
+            Assert.Contains(environmentStackTrace, logMessage);
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace ISynergy.Framework.Core.Extensions
             var logMessage = exception.ToMessage(environmentStackTrace!);
 
             // Assert
-            Assert.IsTrue(logMessage.Contains(exception.Message));
+            Assert.Contains(exception.Message, logMessage);
             Assert.IsTrue(string.IsNullOrEmpty(environmentStackTrace));
         }
 
@@ -94,7 +94,7 @@ namespace ISynergy.Framework.Core.Extensions
 
             // Should be returned unchanged — too large to process
             Assert.AreEqual(input, result);
-            Assert.IsTrue(result.Contains("my-secret-db-connection"),
+            Assert.Contains("my-secret-db-connection", result,
                 "Large input should skip sanitization entirely, leaving sensitive data intact.");
         }
 
@@ -107,9 +107,9 @@ namespace ISynergy.Framework.Core.Extensions
 
             var result = ExceptionExtensions.SanitizeSensitiveData(input);
 
-            Assert.IsFalse(result.Contains("my-secret-db-connection"),
+            Assert.DoesNotContain("my-secret-db-connection", result,
                 "Input under the limit should still be sanitized.");
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.Contains("[REDACTED]", result);
         }
 
         #region Connection Strings
@@ -119,11 +119,11 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "ConnectionString=Server=localhost;Database=mydb;User ID=admin;Password=secret123");
-            Assert.IsFalse(result.Contains("localhost"));
-            Assert.IsFalse(result.Contains("mydb"));
-            Assert.IsFalse(result.Contains("admin"));
-            Assert.IsFalse(result.Contains("secret123"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("localhost", result);
+            Assert.DoesNotContain("mydb", result);
+            Assert.DoesNotContain("admin", result);
+            Assert.DoesNotContain("secret123", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -131,34 +131,34 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "Data Source=prod-server.example.com;Initial Catalog=MyDb");
-            Assert.IsFalse(result.Contains("prod-server"));
-            Assert.IsFalse(result.Contains("MyDb"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("prod-server", result);
+            Assert.DoesNotContain("MyDb", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_ServerKeyword_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("Server=db.internal:5432");
-            Assert.IsFalse(result.Contains("db.internal"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("db.internal", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_UserId_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("User ID=firstname.lastname");
-            Assert.IsFalse(result.Contains("firstname.lastname"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("firstname.lastname", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_IntegratedSecurity_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("Integrated Security=True;Trusted_Connection=Yes");
-            Assert.IsFalse(result.Contains("True"));
-            Assert.IsFalse(result.Contains("Yes"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("True", result);
+            Assert.DoesNotContain("Yes", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -179,56 +179,56 @@ namespace ISynergy.Framework.Core.Extensions
         public void SanitizeSensitiveData_PasswordEquals_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("password=MyP@ssw0rd!");
-            Assert.IsFalse(result.Contains("MyP@ssw0rd!"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("MyP@ssw0rd!", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_PasswordColon_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("password: my-secret-password");
-            Assert.IsFalse(result.Contains("my-secret-password"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("my-secret-password", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_Token_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("token=abc123def456ghi789");
-            Assert.IsFalse(result.Contains("abc123def456ghi789"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("abc123def456ghi789", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_BearerToken_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("bearer=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxx.yyy");
-            Assert.IsFalse(result.Contains("eyJhbGci"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("eyJhbGci", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_ApiKey_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("apikey=sk-1234567890abcdef");
-            Assert.IsFalse(result.Contains("sk-1234567890abcdef"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("sk-1234567890abcdef", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_Secret_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("secret=my-client-secret-value");
-            Assert.IsFalse(result.Contains("my-client-secret-value"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("my-client-secret-value", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
         public void SanitizeSensitiveData_QuotedPassword_RedactsValue()
         {
             var result = ExceptionExtensions.SanitizeSensitiveData("password=\"quoted secret\"");
-            Assert.IsFalse(result.Contains("quoted secret"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("quoted secret", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -260,8 +260,8 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "api_key=dGhpcyBpcyBhIHRlc3Qgc2VjcmV0IGtleSBmb3IgdW5pdCB0ZXN0aW5n");
-            Assert.IsFalse(result.Contains("dGhpcyBpcyBhIHRlc3Q"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("dGhpcyBpcyBhIHRlc3Q", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -269,8 +269,8 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "secret_key=A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8S9t0==");
-            Assert.IsFalse(result.Contains("A1b2C3d4E5f6G7h8"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("A1b2C3d4E5f6G7h8", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -278,8 +278,8 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "private_key=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtest1234567890abcdef==");
-            Assert.IsFalse(result.Contains("MIGfMA0GCSqGSIb3DQEBAQU"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("MIGfMA0GCSqGSIb3DQEBAQU", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -301,10 +301,10 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
-            Assert.IsFalse(result.Contains("eyJhbGci"));
-            Assert.IsFalse(result.Contains("eyJzdWIi"));
-            Assert.IsFalse(result.Contains("SflKxw"));
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.DoesNotContain("eyJhbGci", result);
+            Assert.DoesNotContain("eyJzdWIi", result);
+            Assert.DoesNotContain("SflKxw", result);
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -313,8 +313,8 @@ namespace ISynergy.Framework.Core.Extensions
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "Token1: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyIjoiYWRtaW4ifQ.signature1 " +
                 "Token2: eyJ0eXAiOiJKV1QifQ.eyJyb2xlIjoidXNlciJ9.signature2");
-            Assert.IsFalse(result.Contains("eyJhbGciOiJSUzI1NiJ9"));
-            Assert.IsFalse(result.Contains("eyJ0eXAiOiJKV1QifQ"));
+            Assert.DoesNotContain("eyJhbGciOiJSUzI1NiJ9", result);
+            Assert.DoesNotContain("eyJ0eXAiOiJKV1QifQ", result);
             Assert.AreEqual(2, CountOccurrences(result, "[REDACTED]"));
         }
 
@@ -326,7 +326,7 @@ namespace ISynergy.Framework.Core.Extensions
             var result = ExceptionExtensions.SanitizeSensitiveData(input);
             // The "eyJ" prefix is there but it's not a valid JWT format (only one dot)
             // The JWT pattern requires exactly two dots with valid segments
-            Assert.IsTrue(result.Contains("eyJhbGci"));
+            Assert.Contains("eyJhbGci", result);
         }
 
         [TestMethod]
@@ -340,10 +340,10 @@ namespace ISynergy.Framework.Core.Extensions
             sw.Stop();
 
             // Should complete very quickly (well under the 100ms regex timeout)
-            Assert.IsTrue(sw.ElapsedMilliseconds < 90,
+            Assert.IsLessThan(90, sw.ElapsedMilliseconds,
                 $"Sanitization took {sw.ElapsedMilliseconds}ms — should be well under the 100ms timeout.");
             // The string should be returned unchanged for the base64 part
-            Assert.IsTrue(result.Contains("eyJ"));
+            Assert.Contains("eyJ", result);
         }
 
         [TestMethod]
@@ -357,10 +357,10 @@ namespace ISynergy.Framework.Core.Extensions
             var result = ExceptionExtensions.SanitizeSensitiveData(input);
             sw.Stop();
 
-            Assert.IsTrue(sw.ElapsedMilliseconds < 90,
+            Assert.IsLessThan(90, sw.ElapsedMilliseconds,
                 $"Sanitization took {sw.ElapsedMilliseconds}ms — should be well under the 100ms timeout.");
             // Not a valid JWT (only one dot), so eyJ should remain
-            Assert.IsTrue(result.Contains("eyJ"));
+            Assert.Contains("eyJ", result);
         }
 
         #endregion
@@ -372,10 +372,10 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var input = @"Error accessing C:\Users\testuser\Documents\config.json";
             var result = ExceptionExtensions.SanitizeSensitiveData(input);
-            Assert.IsFalse(result.Contains("testuser"));
+            Assert.DoesNotContain("testuser", result);
             // The callback preserves "C:" (the colon triggers key:value logic) then redacts the rest
-            Assert.IsTrue(result.Contains(@"C: [REDACTED]"));
-            Assert.IsTrue(result.Contains(@"\Documents\config.json"));
+            Assert.Contains(@"C: [REDACTED]", result);
+            Assert.Contains(@"\Documents\config.json", result);
         }
 
         [TestMethod]
@@ -383,9 +383,9 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "File not found: /home/testuser/config.yml");
-            Assert.IsFalse(result.Contains("testuser"));
+            Assert.DoesNotContain("testuser", result);
             // No colon or equals in the match, so the whole match becomes [REDACTED]
-            Assert.IsTrue(result.Contains("[REDACTED]/config.yml"));
+            Assert.Contains("[REDACTED]/config.yml", result);
         }
 
         [TestMethod]
@@ -393,9 +393,9 @@ namespace ISynergy.Framework.Core.Extensions
         {
             var result = ExceptionExtensions.SanitizeSensitiveData(
                 "Error in /Users/testuser/.bashrc");
-            Assert.IsFalse(result.Contains("testuser"));
+            Assert.DoesNotContain("testuser", result);
             // No colon or equals in the match, so the whole match becomes [REDACTED]
-            Assert.IsTrue(result.Contains("[REDACTED]/.bashrc"));
+            Assert.Contains("[REDACTED]/.bashrc", result);
         }
 
         #endregion
@@ -410,12 +410,12 @@ namespace ISynergy.Framework.Core.Extensions
                         $"using token=ghp_1234567890abcdef at {testPath}";
             var result = ExceptionExtensions.SanitizeSensitiveData(input);
 
-            Assert.IsFalse(result.Contains("myserver"));
-            Assert.IsFalse(result.Contains("admin"));
-            Assert.IsFalse(result.Contains("s3cret"));
-            Assert.IsFalse(result.Contains("ghp_1234567890abcdef"));
+            Assert.DoesNotContain("myserver", result);
+            Assert.DoesNotContain("admin", result);
+            Assert.DoesNotContain("s3cret", result);
+            Assert.DoesNotContain("ghp_1234567890abcdef", result);
             // Multiple redactions (connection string values, password, token)
-            Assert.IsTrue(CountOccurrences(result, "[REDACTED]") >= 3);
+            Assert.IsGreaterThanOrEqualTo(3, CountOccurrences(result, "[REDACTED]"));
         }
 
         [TestMethod]
@@ -431,10 +431,10 @@ namespace ISynergy.Framework.Core.Extensions
 
             var result = ExceptionExtensions.SanitizeSensitiveData(input);
 
-            Assert.IsFalse(result.Contains("SuperSecret123!"));
-            Assert.IsFalse(result.Contains("prod-db.internal"));
+            Assert.DoesNotContain("SuperSecret123!", result);
+            Assert.DoesNotContain("prod-db.internal", result);
             // "sa" in key=value positions (User ID=sa, Password=...) should be redacted
-            Assert.IsTrue(result.Contains("[REDACTED]"));
+            Assert.Contains("[REDACTED]", result);
         }
 
         [TestMethod]
@@ -453,7 +453,7 @@ namespace ISynergy.Framework.Core.Extensions
             sw.Stop();
 
             // Should complete well within the timeout
-            Assert.IsTrue(sw.ElapsedMilliseconds < 90,
+            Assert.IsLessThan(90, sw.ElapsedMilliseconds,
                 $"Sanitization took {sw.ElapsedMilliseconds}ms — should be well under the 100ms timeout.");
             Assert.IsNotNull(result);
         }

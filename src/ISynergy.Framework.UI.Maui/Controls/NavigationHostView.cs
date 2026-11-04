@@ -15,7 +15,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// detached body is cached per page, so navigating back to an earlier frame restores the same
 /// page instance (and its view model) exactly as the frame-based navigation service expects.
 /// </remarks>
-public class NavigationHostView : ContentView, INavigationHost
+public partial class NavigationHostView : ContentView, INavigationHost
 {
     private readonly ConditionalWeakTable<ContentPage, Microsoft.Maui.Controls.View> _bodies = new();
 

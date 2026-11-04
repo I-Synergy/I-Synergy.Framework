@@ -57,13 +57,13 @@ public class CollectionExtensionsTests
             System.Data.DataTable dataTable = data.ToDataTable("Test");
 
             Assert.IsNotNull(dataTable);
-            Assert.AreEqual(5, dataTable.Rows.Count);
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
+            Assert.HasCount(5, dataTable.Rows);
+            Assert.DoesNotContain(nameof(Product.ProductGroups), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.Properties), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.Errors), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.Validator), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.HasErrors), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.IsDirty), dataTable.Columns);
         }
         else
         {
@@ -91,13 +91,13 @@ public class CollectionExtensionsTests
             System.Data.DataTable dataTable = data.ToDataTable(typeof(Product), "Test");
 
             Assert.IsNotNull(dataTable);
-            Assert.AreEqual(5, dataTable.Rows.Count);
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.ProductGroups)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Properties)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Errors)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.Validator)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.HasErrors)));
-            Assert.IsFalse(dataTable.Columns.Contains(nameof(Product.IsDirty)));
+            Assert.HasCount(5, dataTable.Rows);
+            Assert.DoesNotContain(nameof(Product.ProductGroups), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.Properties), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.Errors), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.Validator), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.HasErrors), dataTable.Columns);
+            Assert.DoesNotContain(nameof(Product.IsDirty), dataTable.Columns);
         }
         else
         {

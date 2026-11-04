@@ -154,7 +154,7 @@ public class AutomationTests
         _stopwatch.Stop();
 
         Assert.IsFalse(result2.Succeeded);
-        Assert.IsFalse(_stopwatch.Elapsed >= expectedDelay);
+        Assert.IsLessThan(expectedDelay, _stopwatch.Elapsed);
 
         cancellationTokenSource.Dispose();
     }
@@ -264,7 +264,7 @@ public class AutomationTests
         _stopwatch.Stop();
 
         Assert.IsTrue(IsWithinTolerance(executionTimeout, _stopwatch.Elapsed));
-        Assert.IsTrue(_stopwatch.Elapsed < actionDelay);
+        Assert.IsLessThan(actionDelay, _stopwatch.Elapsed);
 
         cancellationTokenSource.Dispose();
     }

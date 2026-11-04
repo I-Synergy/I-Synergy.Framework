@@ -13,7 +13,7 @@ public class CommandTests
         var command = new TestCommand { Data = "Test Data" };
 
         // Act
-        await handler.HandleAsync(command);
+        await handler.HandleAsync(command, TestContext.CancellationToken);
 
         // Assert
         Assert.IsTrue(handler.WasHandled);
@@ -27,7 +27,7 @@ public class CommandTests
         var command = new TestCommandWithResult { Input = "Expected Input" };
 
         // Act
-        var result = await handler.HandleAsync(command);
+        var result = await handler.HandleAsync(command, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Result: Expected Input", result);
@@ -49,4 +49,6 @@ public class CommandTests
             await handler.HandleAsync(command, cts.Token);
         });
     }
+
+    public TestContext TestContext { get; set; }
 }

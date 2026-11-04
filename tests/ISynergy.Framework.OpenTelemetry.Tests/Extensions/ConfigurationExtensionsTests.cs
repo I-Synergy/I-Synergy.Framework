@@ -54,7 +54,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
             Assert.AreEqual(TimeSpan.FromSeconds(5), options.Timeout);
             Assert.AreEqual(new Uri("http://localhost:8200"), options.ServiceUri);
             Assert.AreEqual(TestEnum.Value2, options.EnumProperty);
-            Assert.AreEqual(0, options.Attributes.Count);
+            Assert.IsEmpty(options.Attributes);
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
 
             // Assert
             Assert.AreEqual("http://localhost:4317", options.Endpoint);
-            Assert.AreEqual(2, options.Attributes.Count);
+            Assert.HasCount(2, options.Attributes);
             Assert.AreEqual("value1", options.Attributes["CustomOption1"]);
             Assert.AreEqual("value2", options.Attributes["CustomOption2"]);
             Assert.AreEqual("test", options.Environment);
@@ -259,7 +259,7 @@ namespace ISynergy.Framework.OpenTelemetry.Extensions.Tests
             // Assert
             Assert.AreEqual("http://lowercase.endpoint", options.Endpoint);
             Assert.AreEqual("uppercase-protocol", options.Protocol);
-            Assert.AreEqual(0, options.Attributes.Count); // These should be recognized as properties, not attributes
+            Assert.IsEmpty(options.Attributes); // These should be recognized as properties, not attributes
         }
     }
 }

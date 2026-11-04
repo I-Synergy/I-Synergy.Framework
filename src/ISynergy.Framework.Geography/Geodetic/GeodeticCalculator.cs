@@ -427,4 +427,9 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
     {
         return ReferenceGlobe.Equals(other.ReferenceGlobe);
     }
+
+    public override bool Equals(object obj)
+    {
+        return obj is GeodeticCalculator && Equals((GeodeticCalculator)obj);
+    }
 }

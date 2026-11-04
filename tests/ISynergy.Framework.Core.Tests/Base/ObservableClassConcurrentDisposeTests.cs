@@ -30,7 +30,7 @@ public class ObservableClassConcurrentDisposeTests
             {
                 Interlocked.CompareExchange(ref capturedException, ex, null);
             }
-        });
+        }, TestContext.CancellationToken);
 
         var setValueTask = Task.Run(() =>
         {
@@ -52,9 +52,11 @@ public class ObservableClassConcurrentDisposeTests
             {
                 Interlocked.CompareExchange(ref capturedException, ex, null);
             }
-        });
+        }, TestContext.CancellationToken);
 
         await Task.WhenAll(disposeTask, setValueTask);
         Assert.IsNull(capturedException);
     }
+
+    public TestContext TestContext { get; set; }
 }

@@ -81,18 +81,18 @@ public class PropertyChangedMessageTest
 
         Assert.AreEqual(DateTime.MinValue, receivedPreviousDateTime);
         Assert.AreEqual(DateTime.MinValue, receivedCurrentDateTime);
-        Assert.AreEqual(null, receivedPreviousException);
-        Assert.AreEqual(null, receivedCurrentException);
+        Assert.IsNull(receivedPreviousException);
+        Assert.IsNull(receivedCurrentException);
 
         testViewModel.MyDate = currentDateTime;
 
         Assert.IsTrue(messageWasReceived);
         Assert.AreEqual(testViewModel, receivedSender);
-        Assert.AreEqual(null, receivedTarget);
+        Assert.IsNull(receivedTarget);
         Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
         Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
-        Assert.AreEqual(null, receivedPreviousException);
-        Assert.AreEqual(null, receivedCurrentException);
+        Assert.IsNull(receivedPreviousException);
+        Assert.IsNull(receivedCurrentException);
 
         receivedSender = null;
         receivedTarget = null;
@@ -102,7 +102,7 @@ public class PropertyChangedMessageTest
 
         Assert.IsTrue(messageWasReceived);
         Assert.AreEqual(testViewModel, receivedSender);
-        Assert.AreEqual(null, receivedTarget);
+        Assert.IsNull(receivedTarget);
         Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
         Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
         Assert.AreEqual(PreviousException, receivedPreviousException);
@@ -116,7 +116,7 @@ public class PropertyChangedMessageTest
 
         Assert.IsTrue(messageWasReceived);
         Assert.AreEqual(testViewModel, receivedSender);
-        Assert.AreEqual(null, receivedTarget);
+        Assert.IsNull(receivedTarget);
         Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
         Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
         Assert.AreEqual(PreviousException, receivedPreviousException);
@@ -177,18 +177,18 @@ public class PropertyChangedMessageTest
 
         Assert.AreEqual(DateTime.MinValue, receivedPreviousDateTime);
         Assert.AreEqual(DateTime.MinValue, receivedCurrentDateTime);
-        Assert.AreEqual(null, receivedPreviousException);
-        Assert.AreEqual(null, receivedCurrentException);
+        Assert.IsNull(receivedPreviousException);
+        Assert.IsNull(receivedCurrentException);
 
         testViewModel.MyDate = currentDateTime;
 
         Assert.IsTrue(messageWasReceived);
         Assert.AreEqual(testViewModel, receivedSender);
-        Assert.AreEqual(null, receivedTarget);
+        Assert.IsNull(receivedTarget);
         Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
         Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
-        Assert.AreEqual(null, receivedPreviousException);
-        Assert.AreEqual(null, receivedCurrentException);
+        Assert.IsNull(receivedPreviousException);
+        Assert.IsNull(receivedCurrentException);
 
         receivedSender = null;
         receivedTarget = null;
@@ -198,7 +198,7 @@ public class PropertyChangedMessageTest
 
         Assert.IsTrue(messageWasReceived);
         Assert.AreEqual(testViewModel, receivedSender);
-        Assert.AreEqual(null, receivedTarget);
+        Assert.IsNull(receivedTarget);
         Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
         Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
         Assert.AreEqual(PreviousException, receivedPreviousException);
@@ -212,7 +212,7 @@ public class PropertyChangedMessageTest
 
         Assert.IsTrue(messageWasReceived);
         Assert.AreEqual(testViewModel, receivedSender);
-        Assert.AreEqual(null, receivedTarget);
+        Assert.IsNull(receivedTarget);
         Assert.AreEqual(previousDateTime, receivedPreviousDateTime);
         Assert.AreEqual(currentDateTime, receivedCurrentDateTime);
         Assert.AreEqual(PreviousException, receivedPreviousException);
@@ -271,10 +271,10 @@ public class PropertyChangedMessageTest
                                                                        }
                                                                    });
 
-        Assert.AreEqual(null, receivedNewContent1);
-        Assert.AreEqual(null, receivedOldContent1);
-        Assert.AreEqual(null, receivedNewContent2);
-        Assert.AreEqual(null, receivedOldContent2);
+        Assert.IsNull(receivedNewContent1);
+        Assert.IsNull(receivedOldContent1);
+        Assert.IsNull(receivedNewContent2);
+        Assert.IsNull(receivedOldContent2);
 
         PropertyChangedMessage<string> propertyMessage1;
         PropertyChangedMessage<string> propertyMessage2;
@@ -318,8 +318,8 @@ public class PropertyChangedMessageTest
         Assert.AreEqual(target, receivedTarget);
         Assert.AreEqual(TestOldContent1, receivedOldContent1);
         Assert.AreEqual(TestNewContent1, receivedNewContent1);
-        Assert.AreEqual(null, receivedOldContent2);
-        Assert.AreEqual(null, receivedNewContent2);
+        Assert.IsNull(receivedOldContent2);
+        Assert.IsNull(receivedNewContent2);
 
         receivedTarget = null;
         receivedSender = null;

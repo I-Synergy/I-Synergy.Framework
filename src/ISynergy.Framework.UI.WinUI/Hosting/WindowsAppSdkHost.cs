@@ -16,7 +16,7 @@ using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArg
 
 namespace ISynergy.Framework.UI.Hosting;
 
-internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
+internal sealed partial class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     where TApp : Application, new()
 {
     private readonly ILogger<WindowsAppSdkHost<TApp>> _logger;

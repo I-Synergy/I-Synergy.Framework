@@ -18,7 +18,7 @@ namespace Sample.Blazor.UI.Tests;
 /// </para>
 /// </summary>
 [TestClass]
-public class NavigationTests : SamplePageTest
+public partial class NavigationTests : SamplePageTest
 {
     private static readonly string[] ExpectedItems = ["Home", "Counter", "Weather", "Command Demo"];
 
@@ -33,10 +33,8 @@ public class NavigationTests : SamplePageTest
         // Asserted on the label span, because the leading icon span (aria-hidden decoration) is part of
         // the anchor's text.
         var texts = await Page.Locator(SampleDom.NavItemLabel).AllInnerTextsAsync();
-        CollectionAssert.AreEqual(
-            ExpectedItems,
-            texts.Select(t => t.Trim()).ToArray(),
-            $"Navigation items were '{string.Join(" | ", texts)}'.");
+        Assert.AreSequenceEqual(
+            ExpectedItems, texts.Select(t => t.Trim()).ToArray(), $"Navigation items were '{string.Join(" | ", texts)}'.");
 
         // Regression guards, from oldest to newest:
         // - v4 emitted <a class="fluent-nav-link"> and a <fluent-nav-menu> element; v5 emits neither.
@@ -97,7 +95,7 @@ public class NavigationTests : SamplePageTest
 
         // Counter
         await ClickNavItemAsync("Counter");
-        await Expect(Page).ToHaveURLAsync(new Regex("/counter$"));
+        await Expect(Page).ToHaveURLAsync(MyRegex());
         await Expect(Page.Locator("h1")).ToHaveTextAsync("Counter");
         Assert.AreEqual(1, await CountAsync(SampleDom.NavItemActive), "/counter: exactly one active item.");
 
@@ -131,4 +129,7 @@ public class NavigationTests : SamplePageTest
         Assert.AreEqual(1, await item.CountAsync(), $"No unique nav item matching '{text}'.");
         await item.ClickAsync();
     }
+
+    [GeneratedRegex("/counter$")]
+    private static partial Regex MyRegex();
 }

@@ -20,7 +20,7 @@ namespace ISynergy.Framework.UI.Services;
 /// Handles WinUI-specific window/frame access, view creation, and UI thread dispatching.
 /// </summary>
 /// <seealso cref="BaseNavigationService" />
-public class NavigationService : BaseNavigationService
+public partial class NavigationService : BaseNavigationService
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.

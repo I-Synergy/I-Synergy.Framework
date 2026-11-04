@@ -5,6 +5,7 @@ using System.Windows.Media;
 namespace ISynergy.Framework.UI.WPF.Styles;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class DynamicThemeResourceDictionaryTests
 {
     private static readonly System.Windows.Media.Color WindowsBlue =
@@ -183,7 +184,7 @@ public class DynamicThemeResourceDictionaryTests
         float primaryLum = (MathF.Max(primary.R, MathF.Max(primary.G, primary.B)) + MathF.Min(primary.R, MathF.Min(primary.G, primary.B))) / 2f;
         float secondaryLum = (MathF.Max(secondary.R, MathF.Max(secondary.G, secondary.B)) + MathF.Min(secondary.R, MathF.Min(secondary.G, secondary.B))) / 2f;
 
-        Assert.IsTrue(secondaryLum > primaryLum, $"Secondary ({secondaryLum:F1}) should be lighter than primary ({primaryLum:F1})");
+        Assert.IsGreaterThan(primaryLum, secondaryLum, $"Secondary ({secondaryLum:F1}) should be lighter than primary ({primaryLum:F1})");
     }
 
     [TestMethod]
@@ -196,7 +197,7 @@ public class DynamicThemeResourceDictionaryTests
         float primaryLum = (MathF.Max(primary.R, MathF.Max(primary.G, primary.B)) + MathF.Min(primary.R, MathF.Min(primary.G, primary.B))) / 2f;
         float tertiaryLum = (MathF.Max(tertiary.R, MathF.Max(tertiary.G, tertiary.B)) + MathF.Min(tertiary.R, MathF.Min(tertiary.G, tertiary.B))) / 2f;
 
-        Assert.IsTrue(tertiaryLum < primaryLum, $"Tertiary ({tertiaryLum:F1}) should be darker than primary ({primaryLum:F1})");
+        Assert.IsLessThan(primaryLum, tertiaryLum, $"Tertiary ({tertiaryLum:F1}) should be darker than primary ({primaryLum:F1})");
     }
 
     // ── Semantic brushes follow the theme ────────────────────────────────────
@@ -211,7 +212,7 @@ public class DynamicThemeResourceDictionaryTests
 
         Assert.IsTrue(IsLighter(background.Color, border.Color),
             "The light background brush must be lighter than the light border brush");
-        Assert.IsTrue(background.Color.R > 200, "The light background brush must be a light gray");
+        Assert.IsGreaterThan(200, background.Color.R, "The light background brush must be a light gray");
     }
 
     [TestMethod]
@@ -224,7 +225,7 @@ public class DynamicThemeResourceDictionaryTests
 
         Assert.IsTrue(IsLighter(border.Color, background.Color),
             "The dark border brush must be lighter than the dark background brush");
-        Assert.IsTrue(background.Color.R < 60, "The dark background brush must be a dark gray");
+        Assert.IsLessThan(60, background.Color.R, "The dark background brush must be a dark gray");
     }
 
     [TestMethod]

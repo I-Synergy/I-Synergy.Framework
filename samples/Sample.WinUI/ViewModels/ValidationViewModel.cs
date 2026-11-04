@@ -12,7 +12,7 @@ namespace Sample.ViewModels;
 /// <summary>
 /// Validation sample viewmodel.
 /// </summary>
-public class ValidationViewModel : ViewModelNavigation<object>
+public partial class ValidationViewModel : ViewModelNavigation<object>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

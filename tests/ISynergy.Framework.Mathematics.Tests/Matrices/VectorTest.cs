@@ -34,7 +34,7 @@ public partial class VectorTest
     {
         int[] r = Vector.Range(10000);
         int[] s = Vector.Sample(r, 10);
-        Assert.IsTrue(s.Any(x => x > 10));
+        Assert.Contains(x => x > 10, s);
     }
 
 }

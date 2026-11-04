@@ -165,7 +165,7 @@ public partial class MatrixTest
 
         double[,] actual = Matrix.Diagonal(rows, cols, value);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -184,7 +184,7 @@ public partial class MatrixTest
 
         double[,] actual = Matrix.Diagonal(rows, cols, value);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -209,7 +209,7 @@ public partial class MatrixTest
 
         actual = Vector.Interval(0.0, 0.0, 5);
         Assert.IsTrue(actual.All(x => x == 0));
-        Assert.AreEqual(5, actual.Length);
+        Assert.HasCount(5, actual);
     }
 
     [TestMethod]
@@ -226,7 +226,7 @@ public partial class MatrixTest
         actual = Vector.Interval(0.0, 0.0, 5.0);
 #pragma warning restore CS0618 // Type or member is obsolete
         Assert.AreEqual(0, actual[0]);
-        Assert.AreEqual(1, actual.Length);
+        Assert.HasCount(1, actual);
     }
 
     [TestMethod]
@@ -397,7 +397,7 @@ public partial class MatrixTest
 
         double[,] actual = Elementwise.Divide(scalar, matrix);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -432,7 +432,7 @@ public partial class MatrixTest
         double y = 2;
         double[] expected = [1, 4, 9];
         double[] actual = Elementwise.Pow(x, y);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -442,7 +442,7 @@ public partial class MatrixTest
         double[] b = [-0.72, 0.00];
         double[] expected = [-0.1440, 0];
         double[] actual = Elementwise.Multiply(a, b);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -467,7 +467,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Elementwise.Multiply(a, b);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -492,7 +492,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Elementwise.Add(a, b);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -539,7 +539,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Elementwise.AddToDiagonal(a, 1.0);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         actual = Elementwise.SubtractFromDiagonal(actual, 1.0);
         Assert.IsTrue(actual.IsEqual(a));
@@ -591,7 +591,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Elementwise.Multiply(a, b, (VectorType)dimension);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
 
         b = [4, 1, 2];
@@ -604,7 +604,7 @@ public partial class MatrixTest
         };
 
         actual = Elementwise.Multiply(a, b, (VectorType)dimension);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -629,7 +629,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Elementwise.Subtract(a, b);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -783,8 +783,8 @@ public partial class MatrixTest
 
         for (int i = 0; i < rows; i++)
         {
-            CollectionAssert.AreEqual(vec, broadcasted1.GetRow(i));
-            CollectionAssert.AreEqual(vec, broadcasted2.GetRow(i));
+            Assert.AreSequenceEqual(vec, broadcasted1.GetRow(i));
+            Assert.AreSequenceEqual(vec, broadcasted2.GetRow(i));
         }
     }
     #endregion
@@ -796,7 +796,7 @@ public partial class MatrixTest
         double[] array = [1, 5, 2];
         double[,] expected = { { 1, 5, 2 } };
         double[,] actual = Matrix.ToMatrix(array);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
 #if !NO_DATA_TABLE
@@ -817,15 +817,15 @@ public partial class MatrixTest
 
         expected = [4.20, -3.14, 21];
         actual = table.Columns["Double"].ToArray();
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         expected = [42, -17, 0];
         actual = table.Columns["Integer"].ToArray();
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         expected = [1, 0, 0];
         actual = table.Columns["Boolean"].ToArray();
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -859,7 +859,7 @@ public partial class MatrixTest
 
         table.ToJagged(out actualNames);
 
-        CollectionAssert.AreEqual(expectedNames, actualNames);
+        Assert.AreSequenceEqual(expectedNames, actualNames);
     }
 
     [TestMethod]
@@ -883,7 +883,7 @@ public partial class MatrixTest
 
         double[,] actual = table.ToMatrix();
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
 
         string[] expectedNames = ["Double", "Integer", "Boolean"];
@@ -1024,14 +1024,14 @@ public partial class MatrixTest
         expected = [7, 5, 1];
 
         actual = Matrix.Sum(value, 0);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         actual = Matrix.Sum(value, 0);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         expected = [6, 7];
         actual = Matrix.Sum(value, 1);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -1056,7 +1056,7 @@ public partial class MatrixTest
 
         expected = [6.3, 8.5];
         actual = Matrix.Sum(value, 1);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -1269,7 +1269,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Matrix.Outer(a, b);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -2274,7 +2274,7 @@ public partial class MatrixTest
         };
 
         int[,] actual = Matrix.Transpose(value);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -2297,11 +2297,11 @@ public partial class MatrixTest
         int[,] actual;
 
         actual = Matrix.Transpose(value, false);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
         Assert.AreNotEqual(value, actual);
 
         actual = Matrix.Transpose(value, true);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
         Assert.AreEqual(value, actual);
     }
 
@@ -2354,7 +2354,7 @@ public partial class MatrixTest
         double[] expected = [0, 0, 0];
 
         actual = Matrix.Apply(data, func);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
         CollectionAssert.AreNotEqual(actual, data);
 
         Matrix.Apply(data, func);
@@ -2382,7 +2382,7 @@ public partial class MatrixTest
         };
 
         actual = Matrix.Apply(data, func);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
         CollectionAssert.AreNotEqual(actual, data);
 
         Matrix.Apply(data, func);
@@ -2402,7 +2402,7 @@ public partial class MatrixTest
         int[] expected = [0, 0, 0];
 
         actual = Matrix.Apply(data, func);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
         CollectionAssert.AreNotEqual(actual, data);
     }
 
@@ -2425,7 +2425,7 @@ public partial class MatrixTest
         };
 
         actual = Matrix.Apply(data, func);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
         CollectionAssert.AreNotEqual(actual, data);
     }
 
@@ -2449,7 +2449,7 @@ public partial class MatrixTest
 
         string[,] actual = Matrix.Apply(matrix, func);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -2469,7 +2469,7 @@ public partial class MatrixTest
 
         string[] actual = Matrix.Apply(matrix, func);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -2492,7 +2492,7 @@ public partial class MatrixTest
         double[] vector = [0.1, 0.5, 1.5];
         double[] expected = [1.0, 1.0, 2.0];
         double[] actual = Matrix.Ceiling(vector);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -2510,7 +2510,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Matrix.Ceiling(matrix);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     /// <summary>
@@ -2522,7 +2522,7 @@ public partial class MatrixTest
         double[] vector = [0.1, 0.5, 1.5];
         double[] expected = [0.0, 0.0, 1.0];
         double[] actual = Matrix.Floor(vector);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     /// <summary>
@@ -2543,7 +2543,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Matrix.Floor(matrix);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
     #endregion
 
@@ -2706,7 +2706,7 @@ public partial class MatrixTest
         };
 
         double[,] actual = Matrix.InsertColumn(m, column, 1);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -2815,29 +2815,29 @@ public partial class MatrixTest
             [33.89, 24.76, 100.00]
         ];
 
-        Assert.AreEqual(3, a.Length);
-        Assert.AreEqual(3, a[0].Length);
+        Assert.HasCount(3, a);
+        Assert.HasCount(3, a[0]);
 
         double[][] b = a.InsertColumn(new double[] { 1, 2, 3, 100 });
 
-        Assert.AreEqual(3, a.Length);
-        Assert.AreEqual(3, a[0].Length);
-        Assert.AreEqual(4, b.Length);
-        Assert.AreEqual(4, b[0].Length);
+        Assert.HasCount(3, a);
+        Assert.HasCount(3, a[0]);
+        Assert.HasCount(4, b);
+        Assert.HasCount(4, b[0]);
 
         double[][] c = a.InsertRow(new double[] { 1, 2, 3, 100 });
 
-        Assert.AreEqual(3, a.Length);
-        Assert.AreEqual(3, a[0].Length);
-        Assert.AreEqual(4, b.Length);
-        Assert.AreEqual(4, b[0].Length);
+        Assert.HasCount(3, a);
+        Assert.HasCount(3, a[0]);
+        Assert.HasCount(4, b);
+        Assert.HasCount(4, b[0]);
         Assert.IsTrue(c.GetColumn(3).IsEqual(new[] { 0, 0, 0, 100 }));
 
         a = a.InsertColumn(new double[] { 1, 2, 3 })
              .InsertRow(new double[] { 1, 2, 3, 100 });
 
-        Assert.AreEqual(4, a.Length);
-        Assert.AreEqual(4, a[0].Length);
+        Assert.HasCount(4, a);
+        Assert.HasCount(4, a[0]);
         Assert.IsTrue(a.GetRow(3).IsEqual(new[] { 1, 2, 3, 100 }));
         Assert.IsTrue(a.GetColumn(3).IsEqual(new[] { 1, 2, 3, 100 }));
     }
@@ -2887,28 +2887,28 @@ public partial class MatrixTest
             [33.89, 24.76, 100.00]
         ];
 
-        Assert.AreEqual(3, a.Length);
-        Assert.AreEqual(3, a[0].Length);
+        Assert.HasCount(3, a);
+        Assert.HasCount(3, a[0]);
 
         double[][] b = a.InsertColumn(new double[] { 1, 2, 3 });
 
-        Assert.AreEqual(3, a.Length);
-        Assert.AreEqual(3, a[0].Length);
-        Assert.AreEqual(3, b.Length);
-        Assert.AreEqual(4, b[0].Length);
+        Assert.HasCount(3, a);
+        Assert.HasCount(3, a[0]);
+        Assert.HasCount(3, b);
+        Assert.HasCount(4, b[0]);
 
         double[][] c = a.InsertRow(new double[] { 1, 2, 3 });
 
-        Assert.AreEqual(3, a.Length);
-        Assert.AreEqual(3, a[0].Length);
-        Assert.AreEqual(4, c.Length);
-        Assert.AreEqual(3, c[0].Length);
+        Assert.HasCount(3, a);
+        Assert.HasCount(3, a[0]);
+        Assert.HasCount(4, c);
+        Assert.HasCount(3, c[0]);
 
         a = a.InsertColumn(new double[] { 1, 2, 3 })
              .InsertRow(new double[] { 1, 2, 3 });
 
-        Assert.AreEqual(4, a.Length);
-        Assert.AreEqual(4, a[0].Length);
+        Assert.HasCount(4, a);
+        Assert.HasCount(4, a[0]);
     }
 
     [TestMethod]
@@ -2918,19 +2918,19 @@ public partial class MatrixTest
         double[] kernel = [2, 1];
         double[] expected = [6, 11, 14, 5];
         double[] actual = Matrix.Convolve(a, kernel);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         a = [1, 2, 3, 4];
         kernel = [1, 2, 1];
         expected = [1, 4, 8, 12, 11, 4];
         actual = Matrix.Convolve(a, kernel);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         a = [1, 2, 3, 4];
         kernel = [0, 1, 0];
         expected = [0, 1, 2, 3, 4, 0];
         actual = Matrix.Convolve(a, kernel);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -2940,31 +2940,31 @@ public partial class MatrixTest
         double[] kernel = [2, 1];
         double[] expected = [6, 11, 14];
         double[] actual = Matrix.Convolve(a, kernel, true);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         a = [1, 2, 3, 4];
         kernel = [1, 2, 1];
         expected = [4, 8, 12, 11];
         actual = Matrix.Convolve(a, kernel, true);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         a = [1, 2, 3, 4];
         kernel = [0, 1, 0];
         expected = [1, 2, 3, 4];
         actual = Matrix.Convolve(a, kernel, true);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         a = [1, 2, 3, 4, 5, 6, 7];
         kernel = [0, 1, 0];
         expected = [1, 2, 3, 4, 5, 6, 7];
         actual = Matrix.Convolve(a, kernel, true);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         a = [1, 2];
         kernel = [0, 1, 0];
         expected = [1, 2];
         actual = Matrix.Convolve(a, kernel, true);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -3030,7 +3030,7 @@ public partial class MatrixTest
 
         double[,] actual = Matrix.Concatenate(matrix, vector);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
 
@@ -3126,7 +3126,7 @@ public partial class MatrixTest
         // Now we can plot the points on-screen
         // Accord.Controls.ScatterplotBox.Show("Grid (step size)", grid).Hold();
 
-        Assert.AreEqual(55, grid.Length);
+        Assert.HasCount(55, grid);
     }
 
     [TestMethod]
@@ -3145,7 +3145,7 @@ public partial class MatrixTest
         // Now we can plot the points on-screen
         // Accord.Controls.ScatterplotBox.Show("Grid (fixed steps)", grid).Hold();
 
-        Assert.AreEqual(66, grid.Length);
+        Assert.HasCount(66, grid);
     }
 
     [TestMethod]
@@ -3235,7 +3235,7 @@ public partial class MatrixTest
 
         double[,] actual = Matrix.Concatenate(matrices);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
 
@@ -3340,7 +3340,7 @@ public partial class MatrixTest
             double[,] matrix = a.Transpose();
             double[,] rightSide = b.Transpose();
 
-            Assert.IsTrue(matrix.GetLength(0) > matrix.GetLength(1));
+            Assert.IsGreaterThan(matrix.GetLength(1), matrix.GetLength(0));
 
             double[,] expected =
             {
@@ -3359,7 +3359,7 @@ public partial class MatrixTest
             double[,] matrix = a;
             double[,] rightSide = b;
 
-            Assert.IsTrue(matrix.GetLength(0) < matrix.GetLength(1));
+            Assert.IsLessThan(matrix.GetLength(1), matrix.GetLength(0));
 
 
             double[,] expected =
@@ -3394,7 +3394,7 @@ public partial class MatrixTest
                 { 9 },
             };
 
-            Assert.IsTrue(matrix.GetLength(0) > matrix.GetLength(1));
+            Assert.IsGreaterThan(matrix.GetLength(1), matrix.GetLength(0));
 
             double[,] expected =
             {
@@ -3421,7 +3421,7 @@ public partial class MatrixTest
                 { 8 }
             };
 
-            Assert.IsTrue(matrix.GetLength(0) < matrix.GetLength(1));
+            Assert.IsLessThan(matrix.GetLength(1), matrix.GetLength(0));
 
 
             double[,] expected =
@@ -3451,7 +3451,7 @@ public partial class MatrixTest
 
             double[] rightSide = [7, 8, 9];
 
-            Assert.IsTrue(matrix.GetLength(0) > matrix.GetLength(1));
+            Assert.IsGreaterThan(matrix.GetLength(1), matrix.GetLength(0));
 
             double[] expected = [-6, 6.5];
 
@@ -3470,7 +3470,7 @@ public partial class MatrixTest
 
             double[] rightSide = [7, 8];
 
-            Assert.IsTrue(matrix.GetLength(0) < matrix.GetLength(1));
+            Assert.IsLessThan(matrix.GetLength(1), matrix.GetLength(0));
 
 
             double[] expected = [-55 / 18.0, 1 / 9.0, 59 / 18.0];
@@ -3539,7 +3539,7 @@ public partial class MatrixTest
 #pragma warning disable CS0618 // Type or member is obsolete
             double[] selected = values.Submatrix(idx);
 #pragma warning restore CS0618 // Type or member is obsolete
-            Assert.AreEqual(5, idx.Length);
+            Assert.HasCount(5, idx);
             Assert.AreEqual(9, selected[0]);
             Assert.AreEqual(8, selected[1]);
             Assert.AreEqual(8, selected[2]);
@@ -3552,7 +3552,7 @@ public partial class MatrixTest
 #pragma warning disable CS0618 // Type or member is obsolete
             double[] selected = values.Submatrix(idx);
 #pragma warning restore CS0618 // Type or member is obsolete
-            Assert.AreEqual(5, idx.Length);
+            Assert.HasCount(5, idx);
             Assert.AreEqual(-2, selected[0]);
             Assert.AreEqual(0, selected[1]);
             Assert.AreEqual(1, selected[2]);
@@ -3583,7 +3583,7 @@ public partial class MatrixTest
                 double[] expectedTop = values.Get(values.Length - k, values.Length);
                 double[] expectedBottom = values.Get(0, k);
 
-                Assert.AreEqual(k, actualTop.Length);
+                Assert.HasCount(k, actualTop);
                 Assert.AreEqual(k, actualBottom.Length);
                 Assert.AreEqual(expectedTop.Length, actualTop.Length);
                 Assert.AreEqual(expectedBottom.Length, actualBottom.Length);
@@ -3620,7 +3620,7 @@ public partial class MatrixTest
     {
         double[,] v = Matrix.Ones(2, 0);
         int[][] idx = v.GetIndices().ToArray();
-        Assert.AreEqual(0, idx.Length);
+        Assert.IsEmpty(idx);
     }
 
     [TestMethod]
@@ -3628,7 +3628,7 @@ public partial class MatrixTest
     {
         double[,] v = Matrix.Ones(0, 3);
         int[][] idx = v.GetIndices().ToArray();
-        Assert.AreEqual(0, idx.Length);
+        Assert.IsEmpty(idx);
     }
 
     [TestMethod]
@@ -3636,19 +3636,19 @@ public partial class MatrixTest
     {
         double[][] v = Jagged.Ones(0, 3);
         int[][] idx = v.GetIndices().ToJagged();
-        Assert.AreEqual(0, idx.Length);
+        Assert.IsEmpty(idx);
     }
 
     [TestMethod]
     public void find_test_1()
     {
         int[] a = [5, 1, 10, 5];
-        CollectionAssert.AreEqual(new[] { 0, 3 }, a.Find(x => x == 5));
+        Assert.AreSequenceEqual(new[] { 0, 3 }, a.Find(x => x == 5));
         Assert.AreEqual(1, a.Find(x => x == 1)[0]);
         Assert.AreEqual(2, a.Find(x => x == 10)[0]);
-        Assert.AreEqual(0, a.Find(x => x == 0).Length);
-        Assert.AreEqual(0, a.Find(x => x == 2).Length);
-        Assert.AreEqual(0, a.Find(x => x == 11).Length);
+        Assert.IsEmpty(a.Find(x => x == 0));
+        Assert.IsEmpty(a.Find(x => x == 2));
+        Assert.IsEmpty(a.Find(x => x == 11));
     }
 
     [TestMethod]

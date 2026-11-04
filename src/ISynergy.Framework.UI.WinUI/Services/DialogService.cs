@@ -18,7 +18,7 @@ using Windows.Foundation;
 
 namespace ISynergy.Framework.UI.Services;
 
-public class DialogService : BaseDialogService, IDialogService, IDisposable
+public partial class DialogService : BaseDialogService, IDialogService, IDisposable
 {
     private const string ButtonStyleErrorMessage = "Failed to set button styles";
     private const string DefaultDialogButtonStyleKey = "DefaultDialogButtonStyle";

@@ -224,7 +224,7 @@ public class FourierTransformTest
             }
         }
 
-        Assert.IsTrue(maxLogError < -12.9);
+        Assert.IsLessThan(-12.9, maxLogError);
     }
 
 
@@ -246,7 +246,7 @@ public class FourierTransformTest
         FourierTransform2.FFT(actualoutreal, actualoutimag, FourierTransform.Direction.Forward);
 
         double error = log10RmsErr(refoutreal, refoutimag, actualoutreal, actualoutimag);
-        Assert.IsTrue(error < -12.9);
+        Assert.IsLessThan(-12.9, error);
 
 
         // Test Complex overloads
@@ -286,7 +286,7 @@ public class FourierTransformTest
         FourierTransform2.Convolve(input0real, input0imag, input1real, input1imag, actualoutreal, actualoutimag);
 
         double error = log10RmsErr(refoutreal, refoutimag, actualoutreal, actualoutimag);
-        Assert.IsTrue(error < 13);
+        Assert.IsLessThan(13, error);
 
 
 

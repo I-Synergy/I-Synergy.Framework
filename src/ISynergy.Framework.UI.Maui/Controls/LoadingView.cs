@@ -16,7 +16,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// This control provides a standardized loading experience following the same pattern as EmptyView.
 /// </summary>
 [Lifetime(Lifetimes.Singleton)]
-public class LoadingView : ContentPage
+public partial class LoadingView : ContentPage
 {
     private readonly IApplicationLifecycleService _applicationLifecycleService;
     private MediaElement? _backgroundMediaElement;

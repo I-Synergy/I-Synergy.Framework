@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
-public class ShellViewModel : BaseShellViewModel, IShellViewModel
+public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly IBladeService _bladeService;
 

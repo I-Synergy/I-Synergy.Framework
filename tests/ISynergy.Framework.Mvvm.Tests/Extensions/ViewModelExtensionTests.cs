@@ -103,7 +103,7 @@ public class ViewModelExtensionTests
         var result = type.GetViewModelFullName();
 
         // Assert
-        Assert.IsTrue(result.EndsWith("GenericViewModel"));
+        Assert.EndsWith("GenericViewModel", result);
         Assert.IsFalse(result.Contains('`'));
     }
 
@@ -130,7 +130,7 @@ public class ViewModelExtensionTests
         var result = viewModel.GetViewModelFullName();
 
         // Assert
-        Assert.IsTrue(result.EndsWith("TestViewModel"));
+        Assert.EndsWith("TestViewModel", result);
     }
 
     [TestMethod]

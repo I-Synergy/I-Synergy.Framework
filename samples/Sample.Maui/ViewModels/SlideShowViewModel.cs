@@ -13,7 +13,7 @@ namespace Sample.ViewModels;
 /// <summary>
 /// Class SlideShowViewModel.
 /// </summary>
-public class SlideShowViewModel : ViewModelNavigation<MediaItem>
+public partial class SlideShowViewModel : ViewModelNavigation<MediaItem>
 {
     private readonly IDispatcherService _dispatcherService;
 

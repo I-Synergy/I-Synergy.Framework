@@ -24,7 +24,7 @@ public class ObservableClassExtensionsTests
         var result = product.GetProperties();
 
         foreach (var name in _alwaysExcluded)
-            Assert.IsFalse(result.Any(p => p.Name == name), $"{name} should always be excluded");
+            Assert.DoesNotContain(p => p.Name == name, result, $"{name} should always be excluded");
     }
 
     [TestMethod]
@@ -34,7 +34,7 @@ public class ObservableClassExtensionsTests
         var result = product.GetProperties();
 
         foreach (var name in _memoProperties.Concat(_auditProperties))
-            Assert.IsFalse(result.Any(p => p.Name == name), $"{name} should be excluded by default");
+            Assert.DoesNotContain(p => p.Name == name, result, $"{name} should be excluded by default");
     }
 
     [TestMethod]
@@ -43,10 +43,10 @@ public class ObservableClassExtensionsTests
         var product = new Product();
         var result = product.GetProperties();
 
-        Assert.IsTrue(result.Any(p => p.Name == nameof(Product.Name)));
-        Assert.IsTrue(result.Any(p => p.Name == nameof(Product.ProductId)));
-        Assert.IsTrue(result.Any(p => p.Name == nameof(Product.Quantity)));
-        Assert.IsTrue(result.Any(p => p.Name == nameof(Product.Price)));
+        Assert.Contains(p => p.Name == nameof(Product.Name), result);
+        Assert.Contains(p => p.Name == nameof(Product.ProductId), result);
+        Assert.Contains(p => p.Name == nameof(Product.Quantity), result);
+        Assert.Contains(p => p.Name == nameof(Product.Price), result);
     }
 
     [TestMethod]
@@ -55,7 +55,7 @@ public class ObservableClassExtensionsTests
         var product = new Product();
         var result = product.GetProperties(includeMemo: true);
 
-        Assert.IsTrue(result.Any(p => p.Name == "Memo"));
+        Assert.Contains(p => p.Name == "Memo", result);
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@ public class ObservableClassExtensionsTests
         var product = new Product();
         var result = product.GetProperties(includeMemo: false);
 
-        Assert.IsFalse(result.Any(p => p.Name == "Memo"));
+        Assert.DoesNotContain(p => p.Name == "Memo", result);
     }
 
     [TestMethod]
@@ -74,7 +74,7 @@ public class ObservableClassExtensionsTests
         var result = product.GetProperties(includeAudit: true);
 
         foreach (var name in _auditProperties)
-            Assert.IsTrue(result.Any(p => p.Name == name), $"{name} should be included when includeAudit=true");
+            Assert.Contains(p => p.Name == name, result, $"{name} should be included when includeAudit=true");
     }
 
     [TestMethod]
@@ -84,7 +84,7 @@ public class ObservableClassExtensionsTests
         var result = product.GetProperties(includeAudit: false);
 
         foreach (var name in _auditProperties)
-            Assert.IsFalse(result.Any(p => p.Name == name), $"{name} should be excluded when includeAudit=false");
+            Assert.DoesNotContain(p => p.Name == name, result, $"{name} should be excluded when includeAudit=false");
     }
 
     [TestMethod]
@@ -94,7 +94,7 @@ public class ObservableClassExtensionsTests
         var result = product.GetProperties(includeMemo: true, includeAudit: true);
 
         foreach (var name in _memoProperties.Concat(_auditProperties))
-            Assert.IsTrue(result.Any(p => p.Name == name), $"{name} should be included when both flags are true");
+            Assert.Contains(p => p.Name == name, result, $"{name} should be included when both flags are true");
     }
 
     [TestMethod]
@@ -104,6 +104,6 @@ public class ObservableClassExtensionsTests
         var result = product.GetProperties(includeMemo: true, includeAudit: true);
 
         foreach (var name in _alwaysExcluded)
-            Assert.IsFalse(result.Any(p => p.Name == name), $"{name} should always be excluded");
+            Assert.DoesNotContain(p => p.Name == name, result, $"{name} should always be excluded");
     }
 }

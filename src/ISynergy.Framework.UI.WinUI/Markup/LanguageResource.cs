@@ -12,7 +12,7 @@ namespace ISynergy.Framework.UI.Markup;
 /// <seealso cref="MarkupExtension" />
 [Bindable]
 [MarkupExtensionReturnType(ReturnType = typeof(string))]
-public class LanguageResource : MarkupExtension
+public partial class LanguageResource : MarkupExtension
 {
     /// <summary>
     /// Gets or sets the key.

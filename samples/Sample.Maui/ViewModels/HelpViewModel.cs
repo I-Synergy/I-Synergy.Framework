@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace Sample.ViewModels;
 
 [Lifetime(Lifetimes.Scoped)]
-public class HelpViewModel : ViewModelNavigation<object>
+public partial class HelpViewModel : ViewModelNavigation<object>
 {
     private readonly INavigationService _navigationService;
 

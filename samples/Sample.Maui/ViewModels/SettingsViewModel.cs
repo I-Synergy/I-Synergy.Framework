@@ -18,7 +18,7 @@ namespace Sample.ViewModels;
 /// the blade is closed through <see cref="SaveCommand"/> (save) or the inherited cancel command.
 /// </summary>
 [Lifetime(Lifetimes.Scoped)]
-public class SettingsViewModel : ViewModelBlade<object>
+public partial class SettingsViewModel : ViewModelBlade<object>
 {
     private readonly IDialogService _dialogService;
     private readonly ISettingsService _settingsService;

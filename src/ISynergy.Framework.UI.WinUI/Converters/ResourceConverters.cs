@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ResourceNameToGeometryConverter : IValueConverter
+public partial class ResourceNameToGeometryConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -53,7 +53,7 @@ public class ResourceNameToGeometryConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ResourceNameToStringConverter : IValueConverter
+public partial class ResourceNameToStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
