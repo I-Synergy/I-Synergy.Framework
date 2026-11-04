@@ -109,7 +109,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
                 try
                 {
-                    existing.RedirectActivationToAsync(activationArgs).AsTask().GetAwaiter().GetResult();
+                    existing.RedirectActivationToAsync(activationArgs).AsTask(CancellationToken.None).GetAwaiter().GetResult();
                     Debug.WriteLine("[SingleInstance] Redirect completed.");
                 }
                 catch (Exception ex)

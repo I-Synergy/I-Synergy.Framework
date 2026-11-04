@@ -72,6 +72,6 @@ internal class NugetService(IHttpClientFactory httpClientFactory, IOptions<Nuget
                 streamWriter.Close();
                 process.WaitForExit();
             }
-        });
+        }, cancellationToken);
     }
 }

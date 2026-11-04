@@ -62,7 +62,6 @@ public static class ApplicationBuilderExtensions
                     options.RequestCultureProviders.Add(new CookieRequestCultureProvider());
                     break;
 
-                case RequestCultureProviderTypes.Route:
                 default:
                     options.RequestCultureProviders.Add(app.ApplicationServices.GetRequiredService<RouteDataRequestCultureProvider>());
                     options.RequestCultureProviders.Add(new AcceptLanguageHeaderRequestCultureProvider());

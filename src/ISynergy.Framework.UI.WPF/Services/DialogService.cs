@@ -283,7 +283,7 @@ public class DialogService : BaseDialogService, IDialogService
             {
                 await viewmodel.InitializeAsync();
             }
-            catch (Exception ex)
+            catch (Exception ex) // NOSONAR - log-and-rethrow at the dialog boundary
             {
                 _logger?.LogError(ex, "Error initializing viewmodel");
                 viewmodel.Closed -= ViewModelClosedHandler;

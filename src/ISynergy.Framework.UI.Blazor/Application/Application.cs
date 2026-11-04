@@ -18,7 +18,7 @@ using System.Globalization;
 
 namespace ISynergy.Framework.UI;
 
-public abstract class Application : ComponentBase, IDisposable
+public abstract class Application : ComponentBase, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     private const string ExceptionHandlerErrorMessage = "Error in exception handler";
     protected readonly IExceptionHandlerService _exceptionHandlerService;

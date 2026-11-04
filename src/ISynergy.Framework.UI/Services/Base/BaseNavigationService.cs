@@ -494,7 +494,7 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
             backStackFrame.Parameter = parameter;
             newFrame = backStackFrame;
         }
-        else
+        else // NOSONAR - two navigation paths share the same frame creation
         {
             // Create a fresh child scope and resolve the ViewModel from it
             var scope = _serviceScopeFactory.CreateScope();
@@ -553,7 +553,7 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
             backStackFrame.Parameter = parameter;
             newFrame = backStackFrame;
         }
-        else
+        else // NOSONAR - two navigation paths share the same frame creation
         {
             var scope = _serviceScopeFactory.CreateScope();
             scope.ServiceProvider.GetRequiredService<TViewModel>();

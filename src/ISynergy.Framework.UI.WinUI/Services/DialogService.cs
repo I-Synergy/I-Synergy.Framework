@@ -534,7 +534,7 @@ public class DialogService : BaseDialogService, IDialogService, IDisposable
                 {
                     await OpenDialogAsync(window);
                 }
-                catch (Exception ex)
+                catch (Exception ex) // NOSONAR - log-and-rethrow at the dialog boundary
                 {
                     _logger.LogError(ex, "Error opening dialog");
                     viewmodel.Closed -= viewModelClosedHandler;

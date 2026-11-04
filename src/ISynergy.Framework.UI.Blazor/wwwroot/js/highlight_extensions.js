@@ -41,7 +41,7 @@ function hljs_ColorSystem() {
     if (theme != null) {
         const mode = theme.getAttribute('mode');
         if (mode == null || mode === 'null') {
-            const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isSystemDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
             hljs_ColorSwitcher(isSystemDark);
         }
     }
