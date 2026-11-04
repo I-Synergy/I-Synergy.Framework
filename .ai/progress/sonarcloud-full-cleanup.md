@@ -23,10 +23,11 @@ Commit: `084e0ed1c`
 - [x] Batch 5 — web assets (theme-color-preview.html 200, site.css 48, JS 16)
 - [x] Batch 3a — mechanical C# (S1854 discards, S1192, S3246, S3928, S127,
       S2589 logger, S3971, S3881)
-- [ ] Batch 3b — structural (S4136 region-aware, S3267 remaining; S3241/S1450
-      deferred: ported routine signatures and DI-injected fields)
-- [ ] Batch 4 — design/complexity (S3776, S107, S2699, S1944)
-- [ ] Batch 6 — suppress documented false positives
+- [x] Batch 3b — structural (S3267 non-hot loops; S4136 non-Math reordered;
+      Math port and S3241/S1450 documented as deliberate)
+- [x] Batch 4 — design/complexity reviewed (S2699 assertions added; S3776/S107/
+      S1944 documented)
+- [x] Batch 6 — `.ai/reference/sonarcloud-known-false-positives.md`
 - [ ] Fresh SonarCloud analysis to re-measure
 
 ## Verified in this session

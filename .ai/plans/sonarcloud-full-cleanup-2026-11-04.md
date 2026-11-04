@@ -53,16 +53,17 @@ cannot be queried for verification from here (anonymous API, no analysis token).
 - [ ] `css:S4666` 4 duplicate selector · `css:S125` 2 · `S4667` 1 · `S4658` 1
 
 ### Batch 3 — Structural C# smells
-- [ ] `S2325` 221 could be static — **private/internal only**; public API stays instance
-- [ ] `S4136` 115 overload adjacency — region-aware manual pass (automation breaks `#if`/`#region`)
-- [ ] `S3267` 17 loop → LINQ — skip hot numeric loops in Mathematics
+- [x] `S2325` 221 could be static — private/internal event handlers fixed; converter
+      implementations and BindableProperty wrappers are false positives (see reference doc)
+- [x] `S4136` non-Mathematics sites reordered; the Mathematics port is excluded (see reference doc)
+- [x] `S3267` remaining non-hot loops converted; Mathematics hot loops skipped
 - [ ] `S1450` 5 field → local · `S1144`-family leftovers · `S4144` 4 duplicate bodies
 - [ ] `S1192` 5 string literals · `S2971` 4 · `S2953` 3 · `S1699` 3 · `S3217` 3
 - [ ] `S2326` 3 · `S3247` 2 · `S2365` 2 · `S6612` 3 · `S3427` 4 · `S3220` 4
 - [ ] `S4035` 4 · `S2436` 4 · `S3246` 6 · `S1133` 4 · `S1135` 2 · `S6966` 3
 
 ### Batch 4 — Design / complexity / correctness judgement
-- [ ] `S3776` 9 cognitive complexity · `S107` 19 constructor parameters
+- [x] `S3776` reviewed (2 algorithmic, 7 UI orchestration deferred) · `S107` ported/DI (see reference doc)
 - [ ] `S3881` 9 IDisposable pattern · `S3971` 6 GC.SuppressFinalize
 - [ ] `S2589` 8 unnecessary null check · `S127` 6 loop counter · `S3928` 6 param name
 - [ ] `S1944` 7 impossible cast · `S1244` remaining · `S6561` 3 DateTime.Now
