@@ -81,3 +81,59 @@ S1944 7 · S2699 7 · S3971 6 · S127 6 · long tail.
 3. Fix the remaining S1854/S3241/S3267 sites that are not hot numeric loops.
 4. Configure a documented rule exclusion for S8970/S2325 converter members, or
    redesign the null flows if the rule must stay enabled.
+
+## New scan — 2026-11-04
+
+Method: local `dotnet-sonarscanner` 12.0.0 (JDK 25), full solution build
+(`CI=true`, `-nodeReuse:false`, `-p:GeneratePackageOnBuild=false`), 192 project
+builds, 0 errors.
+
+- A first upload used `sonar.branch.name=chore/sonarcloud-cleanup-2026-11-04`.
+  It succeeded, but the organization plan rejects non-main branch data
+  (`Organization is not allowed to access data from non main branches`).
+- Per decision, the analysis was re-run **as main** (no branch parameter) so the
+  result is visible. `main` now reflects this branch's code until a scan runs on
+  merged `main`.
+- SonarCloud Automatic Analysis was disabled to permit manual analysis
+  (`POST /api/autoscan/activation`, `enable=false`).
+
+### Results (analysis 2026-11-04T13:53:22Z)
+
+| Bucket | Count |
+|---|---:|
+| Total open | 2,697 |
+| Sonar-native (`csharpsquid`, `css`, `javascript`) | **343** |
+| Imported .NET SDK analyzers (`external_roslyn`) | 2,342 |
+
+Sonar-native backlog: **1,264 → 343 (−73%)**.
+
+Key rules after the cleanup:
+
+| Rule | Before | After |
+|---|---:|---:|
+| S8970 | 229 | 0 |
+| S2325 | 221 | 11 |
+| S4136 | 115 | 108 |
+| S1172 | 40 | 10 |
+| S4487 | 14 | 13 |
+| S8949 | 12 | 3 |
+| S1244 | 3 | 0 |
+| S2699 | 7 | 19 |
+| S107 | 19 | 17 |
+| S3241 | 15 | 15 |
+| S2589 | 8 | 2 |
+| S3881 | 9 | 8 |
+| S3971 | 6 | 0 |
+| S1066 | 20 | 2 |
+| S4663 | 20 | 0 |
+| S125 | 16 | 0 |
+
+The `external_roslyn` bucket is a **new** backlog (2,342), not a regression: the
+previous analysis did not import third-party Roslyn issues. The largest are
+MSTEST0037 (578), CA1507 (457), MSTEST0068 (189), MSTEST0049 (183), CA1873 (172),
+CA1510 (168), CsWinRT1028 (106). To keep the dashboard on Sonar rules only, run
+the scanner with `/d:sonar.cs.roslyn.ignoreIssues=true`.
+
+Remaining Sonar-native work is dominated by S4136 (108, almost all the ported
+Mathematics layout), S2699 (19), S107 (17), S3241 (15) and S4487 (13) — the last
+three are documented in `.ai/reference/sonarcloud-known-false-positives.md`.
