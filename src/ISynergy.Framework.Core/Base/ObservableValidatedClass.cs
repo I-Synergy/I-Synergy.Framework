@@ -65,49 +65,14 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     public override bool Equals(object? obj) // NOSONAR
     {
         if (ReferenceEquals(this, obj))
-        {
             return true;
-        }
 
         if (obj is IObservableValidatedClass observable && observable.HasIdentityProperty())
             return observable.GetIdentityValue()!.Equals(this.GetIdentityValue());
 
-        var currentPropertiesToCheck = this.GetProperties(includeMemo: true, includeAudit: true);
-
-        if (obj is null)
-            return false;
-
-        var propertiesToCheck = obj.GetProperties(includeMemo: true, includeAudit: true);
-
-        foreach (var property in currentPropertiesToCheck.EnsureNotNull())
-        {
-            if (!propertiesToCheck.Any(a => a.Name.Equals(property.Name)))
-            {
-                return false;
-            }
-
-            if (propertiesToCheck.SingleOrDefault(q => q.Name.Equals(property.Name)) is { } propertyInfo)
-            {
-                if ((property.GetValue(this) is null && propertyInfo.GetValue(obj) is not null) ||
-                    (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is null))
-                {
-                    return false;
-                }
-
-                if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this)!.Equals(propertyInfo.GetValue(obj)))
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return base.Equals(obj);
     }
 
-    /// <summary>
-    /// Returns a hash code for this instance.
-    /// </summary>
-    /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode()
     {
         var identityValue = this.GetIdentityValue();
