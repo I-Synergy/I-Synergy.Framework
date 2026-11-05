@@ -202,7 +202,7 @@ public abstract class SamplePageTest
 
         try
         {
-            await _circuitFrame.Task.WaitAsync(TimeSpan.FromSeconds(30));
+            await _circuitFrame.Task.WaitAsync(TimeSpan.FromSeconds(30), TestContext.CancellationToken);
         }
         catch (TimeoutException)
         {

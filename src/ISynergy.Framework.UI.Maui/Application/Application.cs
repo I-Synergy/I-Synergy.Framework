@@ -102,7 +102,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             // Get logger first for proper error tracking
             try
             {
-                _logger = IPlatformApplication.Current.Services.GetRequiredService<ILogger<Application>>();
+                _logger = (IPlatformApplication.Current ?? throw new InvalidOperationException("Platform application is not available.")).Services.GetRequiredService<ILogger<Application>>();
                 _logger.LogTrace("Application constructor started");
             }
             catch (Exception ex)
@@ -273,7 +273,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = IPlatformApplication.Current.Services.GetRequiredService<IConfiguration>();
+            var configuration = (IPlatformApplication.Current ?? throw new InvalidOperationException("Platform application is not available.")).Services.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 

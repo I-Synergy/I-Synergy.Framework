@@ -240,9 +240,9 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
 
             // Check that supported cultures are set correctly
             Assert.HasCount(3, capturedOptions.SupportedCultures!);
-            Assert.Contains(c => c.Name == "en-US", capturedOptions.SupportedCultures);
-            Assert.Contains(c => c.Name == "nl-NL", capturedOptions.SupportedCultures);
-            Assert.Contains(c => c.Name == "fr-FR", capturedOptions.SupportedCultures);
+            Assert.Contains(c => c.Name == "en-US", capturedOptions.SupportedCultures!);
+            Assert.Contains(c => c.Name == "nl-NL", capturedOptions.SupportedCultures!);
+            Assert.Contains(c => c.Name == "fr-FR", capturedOptions.SupportedCultures!);
 
             // Check that providers are configured correctly
             Assert.IsNotEmpty(capturedOptions.RequestCultureProviders);

@@ -74,7 +74,7 @@ public class BladeService : BaseBladeService
 
             try
             {
-                try { await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs)); } catch (TimeoutException) { }
+                try { await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs)); } catch (TimeoutException) { /* view did not load in time */ }
             }
             finally
             {

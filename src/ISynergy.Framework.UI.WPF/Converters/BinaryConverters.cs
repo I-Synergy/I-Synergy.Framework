@@ -5,7 +5,7 @@ namespace ISynergy.Framework.UI.Converters;
 
 public static class BinaryConverter
 {
-    public static T FromByteArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(byte[] bytes) where T : struct
+    public static T FromByteArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(byte[] bytes) where T : struct
     {
         IntPtr ptr = IntPtr.Zero;
 
