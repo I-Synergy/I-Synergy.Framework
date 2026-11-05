@@ -217,10 +217,19 @@
 		// v5: FluentDialog.CloseAsync() no longer exists; the dialog is closed through the
 		// IDialogInstance cascaded into FluentDialogInstance. The view-model distinguishes an
 		// explicit cancel (IsCancelled) from a successful submit.
-		if (Content?.IsCancelled == true)
-			await DialogInstance.CancelAsync();
-		else
-			await DialogInstance.CloseAsync();
+		try
+		{
+			if (Content?.IsCancelled == true)
+				await DialogInstance.CancelAsync();
+			else
+				await DialogInstance.CloseAsync();
+		}
+		catch (InvalidOperationException)
+		{
+			// The dialog was already removed (the submit command closes through the dialog
+			// service). An async void handler must not let that escape: v5 throws on the
+			// second removal and would tear down the circuit.
+		}
 
 		StateHasChanged();
 	}
