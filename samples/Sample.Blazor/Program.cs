@@ -1,5 +1,5 @@
-using ISynergy.Framework.AspNetCore.Blazor.Abstractions.Services;
-using ISynergy.Framework.AspNetCore.Blazor.Extensions;
+using ISynergy.Framework.UI.Abstractions.Services;
+using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.AspNetCore.Extensions;
 using ISynergy.Framework.Core.Serializers;
 using ISynergy.Framework.Core.Services;
@@ -21,8 +21,8 @@ public static class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Logging
-            .AddTelemetry(builder, infoService)
+        ISynergy.Framework.AspNetCore.Extensions.TelemetryExtensions
+            .AddTelemetry(builder.Logging, builder, infoService)
             .AddOtlpExporter();
 
         builder.Services
@@ -46,13 +46,11 @@ public static class Program
                 mainAssembly,
                 f => f.Name!.StartsWith(typeof(Program).Namespace!));
 
-        builder.Services.ConfigureSupportedCultures(cultures =>
-        {
-            cultures.AddCulture("nl");
-            cultures.AddCulture("de");
-            cultures.AddCulture("fr");
-            cultures.AddCulture("ar");
-        });
+        builder.Services.ConfigureSupportedCultures(
+            System.Globalization.CultureInfo.GetCultureInfo("nl"),
+            System.Globalization.CultureInfo.GetCultureInfo("de"),
+            System.Globalization.CultureInfo.GetCultureInfo("fr"),
+            System.Globalization.CultureInfo.GetCultureInfo("ar"));
 
         var app = builder
             .Build();
