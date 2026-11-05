@@ -22,32 +22,8 @@ public class ChangeTrackingConverters : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is IModel model)
-        {
-            var result = new StringBuilder();
-            // Cache service lookup for performance - converters are XAML-bound and cannot use constructor injection
-            var languageService = IPlatformApplication.Current!.Services.GetRequiredService<ILanguageService>();
-
-            var userCreated = languageService.GetString("Unknown");
-            var userChanged = languageService.GetString("Unknown");
-
-            if (!string.IsNullOrEmpty(model.CreatedBy)) userCreated = model.CreatedBy;
-
-            result.AppendLine($"{languageService.GetString("InputFirst")} " +
-                $"{model.CreatedDate.ToLocalTime():f} {languageService.GetString("By")} {userCreated}");
-
-            if (model.ChangedDate.HasValue)
-            {
-                if (!string.IsNullOrEmpty(model.ChangedBy)) userChanged = model.ChangedBy;
-
-                result.AppendLine($"{languageService.GetString("InputLast")} " +
-                    $"{model.ChangedDate.Value.ToLocalTime():f} {languageService.GetString("By")} {userChanged}");
-            }
-
-            return result.ToString();
-        }
-
-        return string.Empty;
+        var languageService = IPlatformApplication.Current!.Services.GetRequiredService<ILanguageService>();
+        return ChangeTrackingConverter.ToDisplayText(value, languageService);
     }
 
     /// <summary>
