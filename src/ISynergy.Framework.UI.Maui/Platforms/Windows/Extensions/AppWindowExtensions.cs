@@ -94,10 +94,14 @@ public static partial class AppWindowExtensions
     private const int GWL_EXSTYLE = -20;
     private const int WS_EX_LAYOUTRTL = 0x00400000;
 
-    [LibraryImport("user32.dll", SetLastError = true)]
+    // NOTE: user32.dll exports GetWindowLongA/GetWindowLongW, not GetWindowLong. The unsuffixed
+    // name only exists as a header macro, so an exact-name P/Invoke throws EntryPointNotFoundException
+    // on 64-bit Windows (x64 and ARM64). The extended style is a 32-bit LONG, so the W variants are
+    // correct on every architecture.
+    [LibraryImport("user32.dll", EntryPoint = "GetWindowLongW", SetLastError = true)]
     private static partial int GetWindowLong(nint hWnd, int nIndex);
 
-    [LibraryImport("user32.dll", SetLastError = true)]
+    [LibraryImport("user32.dll", EntryPoint = "SetWindowLongW", SetLastError = true)]
     private static partial int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
 
     /// <summary>

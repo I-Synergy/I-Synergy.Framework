@@ -41,7 +41,6 @@
 |:---|:---|
 | **I-Synergy.Framework.AspNetCore** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore?label=) |
 | **I-Synergy.Framework.AspNetCore.Authentication** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Authentication?label=) |
-| **I-Synergy.Framework.AspNetCore.Blazor** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Blazor?label=) |
 
 ### 🏛️ Enterprise Features
 
@@ -158,6 +157,7 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 | **I-Synergy.Framework.Update.WinUI** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WinUI?label=Deprecated) |
 | **I-Synergy.Framework.Update.WPF** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WPF?label=Deprecated) |
 | **I-Synergy.Framework.Update.Uno** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Uno?label=Deprecated) |
+| **I-Synergy.Framework.AspNetCore.Blazor** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Blazor?label=) |
 
 </details>
 
