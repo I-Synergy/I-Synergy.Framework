@@ -188,3 +188,25 @@ scanner needs them passed as `/d:` arguments (see `SonarQube.Analysis.xml`).
 
 The remaining `external_roslyn` bucket is the .NET SDK analyzer backlog
 (MSTEST/CA rules), separate from the Sonar rules and not part of this cleanup.
+
+## Zero backlog — 2026-11-05
+
+Final analysis after the analyzer sweep:
+
+| Bucket | Count |
+|---|---:|
+| **Total open issues** | **0** |
+| Sonar-native | 0 |
+| Imported .NET SDK analyzers (`external_roslyn`) | 0 |
+
+The external bucket (2,354 at its peak) was cleared by applying the analyzer
+code fixes with `dotnet format analyzers` and hand-finishing the rules without
+fixers. Rules disabled with a recorded rationale (all in `.editorconfig` or at
+file level): CA1873 (flags the implicit ILogger params array on every call),
+CA1816 (conflicts with Sonar S3971), CA1861/SYSLIB1045/SYSLIB1054/CA1859 in the
+few places where the mechanical fix is invalid or meaningless.
+
+The sweep also surfaced and fixed real defects: an infinite recursion in
+`TypeExtensions.MakeArrayType` for negative ranks, two construction tests that
+called `Matrix.Zeros<T>()`/`Jagged.Zeros<T>()` without a shape, and several
+argument-order/log-template bugs.
