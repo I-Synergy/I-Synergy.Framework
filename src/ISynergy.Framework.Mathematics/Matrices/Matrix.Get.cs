@@ -558,7 +558,7 @@ public static partial class Matrix
         ArgumentNullException.ThrowIfNull(indexes);
 
         if (inPlace && source.Length != indexes.Length)
-            throw new DimensionMismatchException("indexes", "Source and indexes arrays must have the same dimension for in-place operations.");
+            throw new DimensionMismatchException(nameof(indexes), "Source and indexes arrays must have the same dimension for in-place operations.");
 
         var destination = new T[indexes.Length];
         for (var i = 0; i < indexes.Length; i++)

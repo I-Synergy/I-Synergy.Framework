@@ -246,7 +246,7 @@ public class FiniteDifferences
             throw new InvalidOperationException("The Function has not been defined.");
 
         if (x.Length < result.Length)
-            throw new DimensionMismatchException("x", "Gradient vector must have at least the same size as x.");
+            throw new DimensionMismatchException(nameof(x), "Gradient vector must have at least the same size as x.");
 
         if (Function is null) // NOSONAR - null check is a valid guard clause
             throw new InvalidOperationException("The Function has not been defined.");
