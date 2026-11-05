@@ -6,38 +6,6 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.Converters;
 
 /// <summary>
-/// Class DateTimeOffsetConverter.
-/// </summary>
-public static class DateTimeOffsetConverter
-{
-    /// <summary>
-    /// Converts from DateTime to TimaSpan.
-    /// </summary>
-    /// <param name="dt">The source DateTime value.</param>
-    /// <returns>Returns the time portion of DateTime in the form of TimeSpan if succeeded, null otherwise.</returns>
-    public static TimeSpan? DateTimeOffsetToTimeSpan(DateTimeOffset dt)
-    {
-        if (dt == DateTimeOffset.MinValue || dt == DateTimeOffset.MaxValue)
-        {
-            return new TimeSpan(0);
-        }
-
-        return new TimeSpan(dt.TimeOfDay.Ticks);
-    }
-
-    /// <summary>
-    /// Converts from Timespan to DateTime.
-    /// </summary>
-    /// <param name="dt">The dt.</param>
-    /// <param name="ts">The source TimeSpan value.</param>
-    /// <returns>Returns a DateTime filled with date equals to mindate and time equals to time in timespan if succeeded, null otherwise.</returns>
-    public static DateTimeOffset? TimeSpanToDateTimeOffset(DateTimeOffset dt, TimeSpan ts)
-    {
-        return new DateTimeOffset(dt.Year, dt.Month, dt.Day, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, dt.Offset);
-    }
-}
-
-/// <summary>
 /// Class DateTimeOffsetToTimeSpanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
