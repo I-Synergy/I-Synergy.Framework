@@ -9,7 +9,7 @@
 
     <!-- 880px centred column with 40px side padding (matches content width on desktop) -->
     <Grid>
-        <Grid MaximumWidthRequest="880" HorizontalOptions="Fill">
+        <Grid HorizontalOptions="Fill">
             <Grid x:Name="HeaderBar" ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="48">
                 <!-- The header is an in-page row again (no title-bar overlay), so the gutters are plain
                      padding. Left 20 centres the 44px menu button on x=42 — the centre of the sidebar's

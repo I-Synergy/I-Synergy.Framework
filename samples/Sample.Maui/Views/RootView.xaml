@@ -29,7 +29,7 @@
         <controls:AppHeaderView
             x:Name="Header"
             Grid.Row="0"
-            Grid.ColumnSpan="2" />
+            Grid.Column="1" />
 
         <!-- Navigated pages render here; the host registers with the navigation service. -->
         <c:NavigationHostView
@@ -53,7 +53,8 @@
         <!-- Declared after the content host so the phone drawer renders above it. -->
         <controls:SidebarView
             x:Name="Sidebar"
-            Grid.Row="1"
+            Grid.Row="0"
+            Grid.RowSpan="2"
             Grid.Column="0" />
 
         <!-- Shell-level blade pane: last child, so it dims and blocks the sidebar and header too. -->

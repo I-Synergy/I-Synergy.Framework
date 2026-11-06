@@ -83,6 +83,13 @@ public partial class RootView : IShellView
         Grid.SetColumnSpan(ContentHost, 2);
         Grid.SetColumnSpan(DrawerScrim, 2);
 
+        // The breadcrumb row is only a content-column row on desktop; on phones the header spans
+        // the window and the sidebar drawer starts below it.
+        Grid.SetColumn(Header, 0);
+        Grid.SetColumnSpan(Header, 2);
+        Grid.SetRow(Sidebar, 1);
+        Grid.SetRowSpan(Sidebar, 1);
+
         Sidebar.TranslationX = -DrawerWidth;
         Sidebar.WidthRequest = DrawerWidth;
     }
