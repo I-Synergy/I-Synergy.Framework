@@ -42,6 +42,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly SplashScreenOptions _splashScreenOptions;
 
     protected IDispatcherTimer? _clockTimer;
+    private IDispatcherTimer? _windowTitleTimer;
     protected LoadingView? _loadingView;
     protected Microsoft.Maui.Controls.Window? _mainWindow;
 
@@ -245,13 +246,34 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _mainWindow.ApplyFlowDirection(_language);
         _mainWindow.Page = CreateLoadingView();
 
-        // The native window caption is used now that no custom title bar is assigned.
-        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
-            _mainWindow.Title = InfoService.Default.ProductName;
+        // The native window caption is used now that no custom title bar is assigned. Keep the
+        // date/time clock that the old title-bar subtitle used to show.
+        UpdateWindowTitle();
+
+        _windowTitleTimer ??= Dispatcher.CreateTimer();
+        _windowTitleTimer.Interval = TimeSpan.FromSeconds(1);
+        _windowTitleTimer.Tick -= OnWindowTitleTick;
+        _windowTitleTimer.Tick += OnWindowTitleTick;
+        _windowTitleTimer.Start();
 
         _themeService.ApplyTheme();
 
         return _mainWindow;
+    }
+
+    private void OnWindowTitleTick(object? sender, EventArgs e) => UpdateWindowTitle();
+
+    /// <summary>
+    /// Writes the product name and the current date/time to the native window caption.
+    /// </summary>
+    private void UpdateWindowTitle()
+    {
+        if (_mainWindow is null)
+            return;
+
+        var clock = $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+        var productName = InfoService.Default.ProductName;
+        _mainWindow.Title = string.IsNullOrEmpty(productName) ? clock : $"{productName} - {clock}";
     }
 
     /// <summary>
@@ -436,6 +458,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (disposing)
         {
+            _windowTitleTimer?.Stop();
+            _windowTitleTimer = null;
+
 
 
             _messengerService.Unregister<ShowInformationMessage>(this);
