@@ -245,6 +245,10 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _mainWindow.ApplyFlowDirection(_language);
         _mainWindow.Page = CreateLoadingView();
 
+        // The native window caption is used now that no custom title bar is assigned.
+        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
+            _mainWindow.Title = InfoService.Default.ProductName;
+
         _themeService.ApplyTheme();
 
         return _mainWindow;
