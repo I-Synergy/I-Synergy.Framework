@@ -130,10 +130,16 @@ public partial class RootView : IShellView
         // MAUI applies its own title-bar chrome during the first layout pass, so the shell colours
         // are applied afterwards. Failures here are cosmetic and must never break startup.
         Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(400), ApplyWindowChrome);
+
+        if (Application.Current is { } application)
+            application.RequestedThemeChanged += OnRequestedThemeChanged;
 #endif
     }
 
 #if WINDOWS
+    private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e) =>
+        Dispatcher.Dispatch(ApplyWindowChrome);
+
     /// <summary>
     /// Applies the shell colours to the native window chrome (caption background, hover and glyph
     /// colours) so the title bar matches the page background instead of the system surface.
@@ -145,8 +151,14 @@ public partial class RootView : IShellView
             if (Window?.Handler?.PlatformView is not Microsoft.UI.Xaml.Window nativeWindow)
                 return;
 
+            // The native caption/buttons are a separate surface from the MAUI TitleBar. Drop the
+            // Mica backdrop so they use the same opaque shell colour, and pin the caption height to
+            // the 48px title bar so no backdrop band shows above or below it.
+            nativeWindow.SystemBackdrop = null;
+
             var dark = Application.Current?.RequestedTheme == AppTheme.Dark;
             var titleBar = nativeWindow.AppWindow.TitleBar;
+            titleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
 
             var background = ToNativeColor(ResolveShellColor(
                 dark ? "AppBgDark" : "AppBgLight",
@@ -216,6 +228,12 @@ public partial class RootView : IShellView
         if (disposing)
         {
             Loaded -= OnRootLoaded;
+
+#if WINDOWS
+            if (Application.Current is { } application)
+                application.RequestedThemeChanged -= OnRequestedThemeChanged;
+#endif
+
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.Dispose();
         }
