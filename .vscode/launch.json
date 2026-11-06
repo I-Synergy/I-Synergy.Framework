@@ -82,23 +82,54 @@
             "cwd": "${workspaceFolder}/samples/Sample.WinUI/bin/arm64/Debug/net11.0-windows10.0.26100.0/win-arm64"
         },
         {
-            "name": "Sample.Maui (Windows, .NET 10)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build: Sample.Maui (Windows, .NET 10)",
-            "program": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net10.0-windows10.0.26100.0/win-arm64/Sample.Maui.exe",
-            "cwd": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net10.0-windows10.0.26100.0/win-arm64",
-            "env": {
-                "Environment": "Staging"
-            }
-        },
-        {
             "name": "Sample.Maui (Windows, .NET 11)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build: Sample.Maui (Windows, .NET 11)",
             "program": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-windows10.0.26100.0/win-arm64/Sample.Maui.exe",
             "cwd": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-windows10.0.26100.0/win-arm64",
+            "env": {
+                "Environment": "Staging"
+            }
+        },
+        {
+            // macOS/AppKit: .NET 11 runs CoreCLR on Apple, so the plain coreclr debugger can start the
+            // app bundle directly — no MAUI extension, no "startup project", no TFM selector. The
+            // pre-launch task builds exactly this TFM (and keeps the bundle code-signed: an unsigned
+            // bundle is killed at exec with "Code Signature Invalid").
+            // There is no Sample.Maui.exe here — the macOS build output is the .app bundle.
+            "name": "Sample.Maui (MacOS, .NET 11)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "maui: Build (macOS .NET 11)",
+            "program": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-macos/osx-arm64/Sample.app/Contents/MacOS/Sample.Maui",
+            "cwd": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-macos/osx-arm64",
+            "env": {
+                "Environment": "Staging"
+            }
+        },
+        {
+            // Same approach for Mac Catalyst (also CoreCLR on .NET 11).
+            "name": "Sample.Maui (Mac Catalyst, .NET 11)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "maui: Build (Mac Catalyst .NET 11)",
+            "program": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-maccatalyst/maccatalyst-arm64/Sample.app/Contents/MacOS/Sample.Maui",
+            "cwd": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-maccatalyst/maccatalyst-arm64",
+            "env": {
+                "Environment": "Staging"
+            }
+        },
+        {
+            // Android has to be deployed to an emulator/device before anything can attach, so it still
+            // goes through the MAUI extension and needs its startup project selected.
+            "name": "Sample.Maui (Android, .NET 11)",
+            "type": "maui",
+            "request": "launch",
+            "project": "${workspaceFolder}/samples/Sample.Maui/Sample.Maui.csproj",
+            "configuration": "Debug",
+            "targetFramework": "net11.0-android",
+            "preLaunchTask": "maui: Build (Android .NET 11)",
             "env": {
                 "Environment": "Staging"
             }

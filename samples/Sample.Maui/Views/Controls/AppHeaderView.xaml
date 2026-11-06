@@ -10,8 +10,21 @@
     <!-- 880px centred column with 40px side padding (matches content width on desktop) -->
     <Grid>
         <Grid MaximumWidthRequest="880" HorizontalOptions="Fill">
-            <Grid x:Name="HeaderBar" ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="48"
-                  Padding="{OnPlatform WinUI='40,0,140,0', MacCatalyst='80,0,40,0', iOS='16,0', Android='16,0'}">
+            <Grid x:Name="HeaderBar" ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="48">
+                <!-- The header is an in-page row again (no title-bar overlay), so the gutters are plain
+                     padding. Left 20 centres the 44px menu button on x=42 — the centre of the sidebar's
+                     icon column (panel padding 16 + row padding 8 + 36px tile / 2). Right 16 puts the
+                     theme/settings buttons at the window edge. Mac Catalyst keeps an 80px left gutter
+                     because its window is translucent under the traffic lights. -->
+                <Grid.Padding>
+                    <OnPlatform x:TypeArguments="Thickness" Default="20,0,16,0">
+                        <On Platform="WinUI" Value="20,0,16,0" />
+                        <On Platform="macOS" Value="20,0,16,0" />
+                        <On Platform="MacCatalyst" Value="80,0,40,0" />
+                        <On Platform="iOS" Value="16,0" />
+                        <On Platform="Android" Value="16,0" />
+                    </OnPlatform>
+                </Grid.Padding>
 
                 <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
 
@@ -61,7 +74,7 @@
 
                 </HorizontalStackLayout>
 
-                <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center" HorizontalOptions="End">
                     <!-- Theme toggle: moon when light, sun when dark -->
                     <Button Text="{Binding ThemeIcon}"
                             StyleId="HeaderIconButton"

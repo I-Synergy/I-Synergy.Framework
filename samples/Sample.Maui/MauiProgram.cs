@@ -9,8 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.DevFlow.Agent;
+#if MACOS
+using Microsoft.Maui.Platforms.MacOS.Essentials;
+using Microsoft.Maui.Platforms.MacOS.Hosting;
+#endif
 using Sample.Abstractions.Services;
 using Sample.Extensions;
 using Sample.OpenTelemetry;
@@ -68,8 +71,16 @@ public static class MauiProgram
             .AddOtlpExporter();
 
         builder
+#if MACOS
+            // Mac Catalyst and the mobile heads use Microsoft.Maui.Controls' own hosting; the AppKit
+            // backend ships its own (UseMauiAppMacOS + AddMacOSEssentials) and has no MediaElement
+            // handler, so MediaElement is not registered on this target.
+            .UseMauiAppMacOS<App>()
+            .AddMacOSEssentials()
+#else
             .UseMauiApp<App>()
             .UseMauiCommunityToolkitMediaElement(false)
+#endif
             .UseFonts(fonts =>
             {
                 fonts.AddFont("FontAwesomeRegular.otf", "fontawesome");
@@ -160,33 +171,17 @@ public static class MauiProgram
                 cultures.AddCulture("fr");
                 cultures.AddCulture("ar");
             })
-            .ConfigureSyncfusionCore();
+#if !MACOS
+            // Syncfusion.Maui.Core ships no AppKit asset, so the AppKit head runs without its handlers.
+            .ConfigureSyncfusionCore()
+#endif
+            ;
 
 #if WINDOWS
-        // The shell header is drawn by the root page; extend it into the native title bar so the
-        // window has no separate OS title bar. The caption buttons stay native. Their colours and
-        // backgrounds are applied by the root page once the title bar is realized (MAUI's title-bar
-        // handler resets them here otherwise).
-        builder.ConfigureLifecycleEvents(events =>
-        {
-            events.AddWindows(windows => windows.OnWindowCreated(window =>
-            {
-                window.ExtendsContentIntoTitleBar = true;
-
-                // The header is the title bar; drop the system backdrop so the title-bar strip is
-                // painted by the header/shell instead of blending the desktop wallpaper through it.
-                window.SystemBackdrop = null;
-
-                // Tall caption area (48px), the same height as the shell header row, so the native
-                // minimise/maximise/close buttons line up with the header's icon buttons — the
-                // WinUI sample does the same.
-                window.AppWindow.TitleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
-            }));
-        });
-
-        // The header icon buttons live in the title bar. WinUI draws its focus rectangle around the
-        // first focusable control, which reads as a permanent "selected" state; the rectangle is
-        // suppressed while keyboard focus still moves between the buttons.
+        // The shell header is drawn by the root page and the window keeps its native title bar
+        // (default window chrome). WinUI draws a focus rectangle around the first focusable control,
+        // which reads as a permanent "selected" state on the header icon buttons; the rectangle is
+        // suppressed while keyboard focus still moves between them.
         Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping(
             "HeaderIconFocusVisual",
             (handler, view) =>

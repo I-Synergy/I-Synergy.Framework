@@ -1,9 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0-android;net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0')) And $([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.26100.0</TargetFrameworks>
+		<!-- .NET 11 only. .NET 10 built Android and Mac Catalyst on Mono, so those builds could not
+		     be debugged with the CoreCLR debugger; .NET 11 runs CoreCLR on Android and Apple.
+		     ISynergy.Framework.UI.Maui still multi-targets net10 for its consumers.
+		     The macOS (AppKit) head is macOS-host only and is listed before Mac Catalyst on purpose:
+		     tooling that resolves a platform by substring ("mac") takes the first match. -->
+		<TargetFrameworks>net11.0-android;net11.0-ios</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net11.0-macos</TargetFrameworks>
+		<TargetFrameworks>$(TargetFrameworks);net11.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.26100.0</TargetFrameworks>
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is
@@ -43,8 +48,7 @@
   <Choose>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
       <PropertyGroup>
-        <SupportedOSPlatformVersion Condition="$(TargetFramework.StartsWith('net11.0'))">24.0</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="!$(TargetFramework.StartsWith('net11.0'))">21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
@@ -69,6 +73,11 @@
         <SupportedOSPlatformVersion>17.0</SupportedOSPlatformVersion>
       </PropertyGroup>
     </When>
+    <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+      <PropertyGroup>
+        <SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
+      </PropertyGroup>
+    </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
       <PropertyGroup>
         <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -86,13 +95,19 @@
   </Choose>
 
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />
+		<!-- App Icon (Resizetizer). Not used by the macOS/AppKit TFM: its icon target renders the
+		     source with sips, which cannot read SVG, so that target gets the PNG icon instead. -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF"
+		          Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'macos'" />
 		<!-- Splash Screen -->
 		<!-- Splash is a PNG on purpose: the MAUI 11 RC Resizetizer crashes on SVG text (Svg.Skia/Microsoft.Maui.Resizetizer 11.0.0-rc.2 -> MAUIR0005,
 		     MissingMethodException in SKTextBlobBuilder.AddPositionedRun) and the source SVG contains the wordmarks as <text>. splash.svg is kept next to
 		     this file as the editable source; re-rendering it to splash.png is what produces the PNG. -->
-		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#17171a" />
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#17171a"
+		                  Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'macos'" />
+		<!-- macOS app icon: AppKit builds an .icns from a raster source. -->
+		<MauiIcon Include="Resources\Images\icon.png"
+		          Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'" />
 		
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -124,10 +139,23 @@
 		<PackageReference Include="Syncfusion.Maui.Core" />
 	</ItemGroup>
 
-	<!-- Microsoft.Maui.Controls.Compatibility is only shipped for .NET 10; MAUI 11 no longer needs it. -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net10.0'))">
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+	<!-- Native macOS (AppKit) hosting + Essentials. Mac Catalyst keeps the MAUI/Microsoft.Maui.Controls
+	     hosting path, so these are scoped to the macos TFM only. -->
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+		<PackageReference Include="Microsoft.Maui.Platforms.MacOS" />
+		<PackageReference Include="Microsoft.Maui.Platforms.MacOS.Essentials" />
 	</ItemGroup>
+
+	<!-- The MAUI single-project convention only knows the Android/iOS/MacCatalyst/Windows/Tizen
+	     platform folders, so for the macos TFM it removes Platforms/** without re-adding Platforms/MacOS.
+	     Re-include those sources after that removal (evaluation-time items would be removed again). -->
+	<Target Name="_IncludeMacOSPlatformSources"
+	        BeforeTargets="CoreCompile"
+	        Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+		<ItemGroup>
+			<Compile Include="Platforms\MacOS\**\*.cs" />
+		</ItemGroup>
+	</Target>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\ISynergy.Framework.Core\ISynergy.Framework.Core.csproj" />
