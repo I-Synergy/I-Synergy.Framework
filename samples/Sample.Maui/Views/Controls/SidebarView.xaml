@@ -10,11 +10,13 @@
 
     <!-- The panel carries the surface color and the right border so the sidebar
          fills its column in the root grid. -->
-    <Grid ColumnDefinitions="*,1"
-          BackgroundColor="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}">
+    <Border Margin="8"
+            StrokeThickness="1"
+            Stroke="{AppThemeBinding Light={StaticResource AppBorderLight}, Dark={StaticResource AppBorderDark}}"
+            StrokeShape="RoundRectangle 16"
+            BackgroundColor="{AppThemeBinding Light={StaticResource AppSurfaceLight}, Dark={StaticResource AppSurfaceDark}}">
 
-        <Grid Grid.Column="0"
-              Padding="16,24"
+        <Grid Padding="16,24"
               RowDefinitions="Auto,Auto,*,Auto"
               RowSpacing="20">
 
@@ -235,13 +237,6 @@
 
         </Grid>
 
-        <!-- 1px right border -->
-        <BoxView Grid.Column="1"
-                 WidthRequest="1"
-                 HorizontalOptions="Fill"
-                 VerticalOptions="Fill"
-                 Color="{AppThemeBinding Light={StaticResource AppBorderLight}, Dark={StaticResource AppBorderDark}}" />
-
-    </Grid>
+    </Border>
 
 </ContentView>
