@@ -65,7 +65,7 @@ public class ServiceCollectionExtensionsTests
         var command = new TestCommandWithResult { Input = "Integration Test" };
 
         // Act
-        var result = await commandDispatcher.DispatchAsync<TestCommandWithResult, string>(command);
+        var result = await commandDispatcher.DispatchAsync<TestCommandWithResult, string>(command, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Result: Integration Test", result);
@@ -85,10 +85,11 @@ public class ServiceCollectionExtensionsTests
         var query = new TestQuery { Parameter = "Integration Query" };
 
         // Act
-        var result = await queryDispatcher.DispatchAsync<string>(query);
+        var result = await queryDispatcher.DispatchAsync<string>(query, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Query Result: Integration Query", result);
     }
 
+    public TestContext TestContext { get; set; }
 }

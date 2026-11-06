@@ -24,7 +24,7 @@ public static class FrameworkElementExtensions
         ArgumentNullException.ThrowIfNull(element);
 
         element.FlowDirection = !string.IsNullOrWhiteSpace(cultureName)
-            && CultureInfo.GetCultureInfo(cultureName!).TextInfo.IsRightToLeft
+            && CultureInfo.GetCultureInfo(cultureName).TextInfo.IsRightToLeft
                 ? FlowDirection.RightToLeft
                 : FlowDirection.LeftToRight;
 

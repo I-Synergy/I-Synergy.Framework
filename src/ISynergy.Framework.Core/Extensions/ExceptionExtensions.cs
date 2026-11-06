@@ -71,6 +71,7 @@ public static class ExceptionExtensions
     };
 
     private const string SanitizedValue = "[REDACTED]";
+    private static readonly char[] anyOf = new[] { ':', '=' };
 
     /// <summary>
     /// Sanitizes a string by removing or masking sensitive information.
@@ -97,10 +98,10 @@ public static class ExceptionExtensions
                 {
                     // Preserve the key part but redact the value
                     var matchValue = match.Value;
-                    var colonOrEqualsIndex = matchValue.IndexOfAny(new[] { ':', '=' });
+                    var colonOrEqualsIndex = matchValue.IndexOfAny(anyOf);
                     if (colonOrEqualsIndex > 0 && colonOrEqualsIndex < matchValue.Length - 1)
                     {
-                        return matchValue.Substring(0, colonOrEqualsIndex + 1) + " " + SanitizedValue;
+                        return string.Concat(matchValue.AsSpan(0, colonOrEqualsIndex + 1), " ", SanitizedValue);
                     }
                     return SanitizedValue;
                 });

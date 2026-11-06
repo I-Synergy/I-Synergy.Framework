@@ -12,6 +12,7 @@ public class AsyncRelayCommandTests
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
+    private static readonly int[] expected = new[] { 1, 2, 3 };
 
     public AsyncRelayCommandTests()
     {
@@ -47,7 +48,7 @@ public class AsyncRelayCommandTests
         bool wasExecuted = false;
         var command = new AsyncRelayCommand(async () =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             wasExecuted = true;
         });
 
@@ -213,7 +214,7 @@ public class AsyncRelayCommandTests
         var expectedException = new InvalidOperationException("Test exception");
         var command = new AsyncRelayCommand(async () =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             throw expectedException;
         });
 
@@ -228,7 +229,7 @@ public class AsyncRelayCommandTests
         var expectedException = new InvalidOperationException("Test exception");
         var command = new AsyncRelayCommand(async () =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             throw expectedException;
         });
 
@@ -244,7 +245,7 @@ public class AsyncRelayCommandTests
         var outerException = new Exception("Outer exception", innerException);
         var command = new AsyncRelayCommand(async () =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             throw outerException;
         });
 
@@ -260,8 +261,15 @@ public class AsyncRelayCommandTests
         var command = new AsyncRelayCommand(() => Task.CompletedTask);
 
         // Act & Assert - should not throw
-        command.Dispose();
-        command.Dispose(); // Second dispose should be safe
+        Exception? observed = null;
+        try
+        {
+            command.Dispose();
+            command.Dispose(); // Second dispose should be safe
+        }
+        catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     [TestMethod]
@@ -284,7 +292,7 @@ public class AsyncRelayCommandTests
         var command = new AsyncRelayCommand(
             async () =>
             {
-                await Task.Delay(10);
+                await Task.Delay(10, TestContext.CancellationToken);
                 throw expectedException;
             },
             options: AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler
@@ -317,7 +325,7 @@ public class AsyncRelayCommandTests
         var task = command.ExecuteAsync(null);
 
         // Assert initial state
-        Assert.IsTrue(propertyChanges.Contains("IsRunning"));
+        Assert.Contains("IsRunning", propertyChanges);
         Assert.IsTrue(command.IsRunning);
 
         // Complete the task
@@ -325,7 +333,7 @@ public class AsyncRelayCommandTests
         await task;
 
         // Assert final state
-        Assert.IsTrue(propertyChanges.Contains("IsRunning"));
+        Assert.Contains("IsRunning", propertyChanges);
         Assert.IsFalse(command.IsRunning);
     }
 
@@ -338,7 +346,7 @@ public class AsyncRelayCommandTests
         string? receivedParameter = null;
         var command = new AsyncRelayCommand<string>(async param =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameter = param;
         });
 
@@ -357,7 +365,7 @@ public class AsyncRelayCommandTests
         var testObject = new { Id = 123, Name = "Test" };
         var command = new AsyncRelayCommand<object>(async param =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameter = param;
         });
 
@@ -373,7 +381,7 @@ public class AsyncRelayCommandTests
     {
         // Arrange
         var command = new AsyncRelayCommand<int>(
-            async num => await Task.Delay(num),
+            async num => await Task.Delay(num, TestContext.CancellationToken),
             num => num > 0);  // Only execute for positive numbers
 
         // Act & Assert
@@ -390,7 +398,7 @@ public class AsyncRelayCommandTests
         string? receivedParameter = "initial";
         var command = new AsyncRelayCommand<string?>(async param =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameter = param;
         });
 
@@ -422,7 +430,7 @@ public class AsyncRelayCommandTests
         var testData = new TestData { Id = 42, Name = "Test Entity" };
         var command = new AsyncRelayCommand<TestData>(async param =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameter = param;
         });
 
@@ -442,7 +450,7 @@ public class AsyncRelayCommandTests
         var receivedParameters = new List<int>();
         var command = new AsyncRelayCommand<int>(async param =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameters.Add(param);
         });
 
@@ -452,7 +460,7 @@ public class AsyncRelayCommandTests
         await command.ExecuteAsync(3);
 
         // Assert
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, receivedParameters);
+        Assert.AreSequenceEqual(expected, receivedParameters);
     }
 
     [TestMethod]
@@ -464,7 +472,7 @@ public class AsyncRelayCommandTests
         var command = new AsyncRelayCommand<string?>(
             execute: async e =>
             {
-                await Task.Delay(10);
+                await Task.Delay(10, TestContext.CancellationToken);
                 receivedValue = e ?? viewModel.SelectedItem;  // Fallback pattern
             },
             canExecute: e => (e ?? viewModel.SelectedItem) is not null);
@@ -487,7 +495,7 @@ public class AsyncRelayCommandTests
         var command = new AsyncRelayCommand<string?>(
             execute: async e =>
     {
-        await Task.Delay(10);
+        await Task.Delay(10, TestContext.CancellationToken);
         receivedValue = e ?? viewModel.SelectedItem;  // Fallback pattern
     },
             canExecute: e => (e ?? viewModel.SelectedItem) is not null);
@@ -566,7 +574,7 @@ public class AsyncRelayCommandTests
         bool wasExecuted = false;
         var command = new AsyncRelayCommand(async () =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             wasExecuted = true;
         });
 
@@ -590,4 +598,6 @@ public class AsyncRelayCommandTests
     {
         public string? SelectedItem { get; set; }
     }
+
+    public TestContext TestContext { get; set; }
 }

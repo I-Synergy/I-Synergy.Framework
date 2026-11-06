@@ -6,7 +6,7 @@ namespace ISynergy.Framework.UI.Behaviors;
 /// <summary>
 /// Behavior that restricts Entry input to decimal values with configurable decimal places.
 /// </summary>
-public sealed class DecimalEntryBehavior : NumericEntryBehaviorBase
+public sealed partial class DecimalEntryBehavior : NumericEntryBehaviorBase
 {
     private Entry? _attachedEntry;
     private DecimalFormatter? _formatter;

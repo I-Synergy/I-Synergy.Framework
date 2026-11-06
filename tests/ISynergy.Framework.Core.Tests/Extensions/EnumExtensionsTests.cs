@@ -35,6 +35,6 @@ public class EnumExtensionsTests
     public void ToListTest()
     {
         System.Collections.Generic.List<System.Enum> list = typeof(TestEnum).ToList();
-        Assert.AreEqual(4, list.Count);
+        Assert.HasCount(4, list);
     }
 }

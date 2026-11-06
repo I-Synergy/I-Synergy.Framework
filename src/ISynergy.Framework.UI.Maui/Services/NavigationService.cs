@@ -25,7 +25,7 @@ namespace ISynergy.Framework.UI.Services;
 /// layout, so <see cref="INavigationHost"/> reparents each page's content instead of the page.
 /// Modal navigation still uses MAUI's native modal stack.
 /// </remarks>
-public class NavigationService : BaseNavigationService
+public partial class NavigationService : BaseNavigationService
 {
     private const string DefaultPageNotAvailable = "Main page is not available.";
     private const bool Animated = true;
@@ -71,7 +71,7 @@ public class NavigationService : BaseNavigationService
     // Abstract: Window content accessors
     // -----------------------------------------------------------------------
     protected override object? GetWindowContent()
-        => Application.Current?.Windows.FirstOrDefault()?.Page;
+        => (Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Page : null);
 
     protected override void SetWindowContent(IView page)
     {
@@ -165,7 +165,7 @@ public class NavigationService : BaseNavigationService
     // -----------------------------------------------------------------------
     // Override: NavigateModalAsync — native MAUI modal stack
     // -----------------------------------------------------------------------
-    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null)
+    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null) // NOSONAR - native modal-stack orchestration
     {
         if (Application.Current is null)
             return;
@@ -248,24 +248,13 @@ public class NavigationService : BaseNavigationService
     // -----------------------------------------------------------------------
     // Obsolete: Typed-view navigation overloads (not supported in MAUI)
     // -----------------------------------------------------------------------
-    [Obsolete("Not supported!", true)]
-    public new Task NavigateAsync<TViewModel, TView>(TViewModel viewModel, object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView
-        => throw new NotImplementedException();
-
-    [Obsolete("Not supported!", true)]
-    public new Task NavigateAsync<TViewModel, TView>(object? parameter = null, bool backNavigation = false)
-        where TViewModel : class, IViewModel
-        where TView : IView
-        => throw new NotImplementedException();
 
     // -----------------------------------------------------------------------
     // Private helpers
     // -----------------------------------------------------------------------
 
     private static Page? GetMainPage() =>
-        Application.Current?.Windows.FirstOrDefault()?.Page;
+        (Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Page : null);
 
     /// <summary>
     /// Clears MAUI-specific resources (BindingContext, Handler) on a popped modal page.

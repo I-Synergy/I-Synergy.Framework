@@ -6,7 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Singleton)]
-public abstract class View : ContentPage, IView
+public abstract class View : ContentPage, IView // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     private IServiceScope? _viewModelScope;
 
@@ -122,7 +122,6 @@ public abstract class View : ContentPage, IView
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     // The bulk of the clean-up code is implemented in Dispose(bool)

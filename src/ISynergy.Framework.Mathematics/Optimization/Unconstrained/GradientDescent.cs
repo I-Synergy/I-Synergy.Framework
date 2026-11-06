@@ -43,7 +43,7 @@ public class GradientDescent : BaseGradientOptimizationMethod, IGradientOptimiza
         set
         {
             if (value <= 0)
-                throw new ArgumentOutOfRangeException("value", "Learning rate should be higher than 0.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Learning rate should be higher than 0.");
             eta = value;
         }
     }

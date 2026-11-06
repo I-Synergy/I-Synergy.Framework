@@ -1,6 +1,6 @@
 ---
 name: ui-developer
-description: Frontend UI development — builds Blazor components, MAUI pages, layouts, CSS/styling, and UX patterns
+description: Frontend UI development — builds Blazor components, MAUI pages, layouts, CSS/styling, and UX patterns. Use for Blazor/MAUI components, layouts, CSS/styling, and UX patterns.
 runAs: subagent
 model: haiku
 tools: Read, Write, Edit, Bash, Grep, Glob

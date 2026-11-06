@@ -1,3 +1,4 @@
+#pragma warning disable CA1859 // the field intentionally holds an interface-backed test double
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Fixtures;
 using ISynergy.Framework.Core.Messages;
@@ -37,7 +38,7 @@ public class MessengerRegisterWhileSendingTest
 
         _messenger.Send(new MessageFixture(TestContentString));
 
-        Assert.AreEqual(null, TestRecipient.LastReceivedString);
+        Assert.IsNull(TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
         _messenger.Send(new MessageFixture(TestContentStringNested));
@@ -61,7 +62,7 @@ public class MessengerRegisterWhileSendingTest
 
         _messenger.Send(new MessageFixture(TestContentString));
 
-        Assert.AreEqual(null, TestRecipient.LastReceivedString);
+        Assert.IsNull(TestRecipient.LastReceivedString);
         Assert.AreEqual(0, TestRecipient.ReceivedStringMessages);
 
         _messenger.Send(new MessageFixture(TestContentStringNested));
@@ -203,7 +204,7 @@ public class MessengerRegisterWhileSendingTest
             _messenger.Register<MessageFixture>(this, ReceiveStringNested);
         }
 
-        protected void ReceiveStringNested(MessageFixture m)
+        protected static void ReceiveStringNested(MessageFixture m)
         {
             ReceivedStringMessages++;
             LastReceivedString = m.Content;
@@ -233,7 +234,7 @@ public class MessengerRegisterWhileSendingTest
             }
         }
 
-        public void ReceiveStringNested(BaseMessage m)
+        public static void ReceiveStringNested(BaseMessage m)
         {
             var message = m as MessageFixture;
             if (message is not null)

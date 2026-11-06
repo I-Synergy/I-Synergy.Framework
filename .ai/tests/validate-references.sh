@@ -5,10 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FAILED=0
 PASSED=0
+SEPARATOR="========================================="
 
-echo "========================================="
+echo "$SEPARATOR"
 echo "  Reference Validation"
-echo "========================================="
+echo "$SEPARATOR"
 echo ""
 
 # Function to check if a file reference exists
@@ -23,7 +24,7 @@ check_reference() {
         file_ref="$TEMPLATE_ROOT/$file_ref"
     fi
 
-    if [ -f "$file_ref" ] || [ -d "$file_ref" ]; then
+    if [[ -f "$file_ref" || -d "$file_ref" ]]; then
         echo "✅ $context: $(basename "$file_ref")"
         PASSED=$((PASSED + 1))
         return 0
@@ -36,7 +37,7 @@ check_reference() {
 
 # Check references in AGENTS.md
 echo "1. Checking references in AGENTS.md..."
-if [ -f "$TEMPLATE_ROOT/AGENTS.md" ]; then
+if [[ -f "$TEMPLATE_ROOT/AGENTS.md" ]]; then
     echo "✅ AGENTS.md found"
     PASSED=$((PASSED + 1))
 
@@ -79,7 +80,7 @@ echo ""
 
 # Check pattern cross-references
 echo "3. Checking pattern cross-references..."
-if [ -f "$TEMPLATE_ROOT/.ai/patterns/cqrs-patterns.md" ]; then
+if [[ -f "$TEMPLATE_ROOT/.ai/patterns/cqrs-patterns.md" ]]; then
     echo "✅ CQRS patterns file exists for cross-ref"
     PASSED=$((PASSED + 1))
 else
@@ -87,7 +88,7 @@ else
     FAILED=$((FAILED + 1))
 fi
 
-if [ -f "$TEMPLATE_ROOT/.ai/patterns/testing-patterns.md" ]; then
+if [[ -f "$TEMPLATE_ROOT/.ai/patterns/testing-patterns.md" ]]; then
     echo "✅ Testing patterns file exists for cross-ref"
     PASSED=$((PASSED + 1))
 else
@@ -107,23 +108,23 @@ key_files=(
 )
 
 for file in "${key_files[@]}"; do
-    if [ -f "$file" ]; then
+    if [[ -f "$file" ]]; then
         links=$(grep -oE '\[.*\]\([^)]+\)' "$file" 2>/dev/null | grep -oE '\([^)]+\)' | tr -d '()' || true)
 
-        if [ -n "$links" ]; then
+        if [[ -n "$links" ]]; then
             while IFS= read -r link; do
                 if [[ "$link" == http* ]] || [[ "$link" == \#* ]]; then
                     continue
                 fi
 
                 link_path="$TEMPLATE_ROOT/$link"
-                if [ -f "$link_path" ]; then
+                if [[ -f "$link_path" ]]; then
                     echo "✅ Link in $(basename "$file"): $link"
                     PASSED=$((PASSED + 1))
                 else
                     file_dir=$(dirname "$file")
                     link_path="$file_dir/$link"
-                    if [ -f "$link_path" ]; then
+                    if [[ -f "$link_path" ]]; then
                         echo "✅ Link in $(basename "$file"): $link (relative)"
                         PASSED=$((PASSED + 1))
                     else
@@ -142,24 +143,24 @@ echo ""
 echo "5. Checking skill directory consistency..."
 skill_count=0
 for skill_dir in "$TEMPLATE_ROOT/.ai/skills"/*/; do
-    if [ -d "$skill_dir" ]; then
+    if [[ -d "$skill_dir" ]]; then
         skill_count=$((skill_count + 1))
     fi
 done
-if [ $skill_count -gt 0 ]; then
+if [[ $skill_count -gt 0 ]]; then
     echo "✅ All $skill_count skill directories have SKILL.md"
     PASSED=$((PASSED + 1))
 fi
 
 echo ""
-echo "========================================="
+echo "$SEPARATOR"
 echo "Reference Validation Summary"
-echo "========================================="
+echo "$SEPARATOR"
 echo "✅ Passed: $PASSED"
 echo "❌ Failed: $FAILED"
-echo "========================================="
+echo "$SEPARATOR"
 
-if [ $FAILED -eq 0 ]; then
+if [[ $FAILED -eq 0 ]]; then
     echo "✅ ALL REFERENCE TESTS PASSED"
     exit 0
 else

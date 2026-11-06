@@ -10,6 +10,7 @@ public class AsyncRelayCommandGenericsTests
     private Mock<IServiceProvider> _mockServiceProvider;
     private Mock<IServiceScope> _mockServiceScope;
     private Mock<IServiceScopeFactory> _mockServiceScopeFactory;
+    private static readonly int[] expected = new[] { 1, 2 };
 
     public AsyncRelayCommandGenericsTests()
     {
@@ -60,7 +61,7 @@ public class AsyncRelayCommandGenericsTests
         var task = command.ExecuteAsync(42);
 
         // Give a small delay to ensure the task has started
-        await Task.Delay(100);
+        await Task.Delay(100, TestContext.CancellationToken);
 
         command.Cancel();
 
@@ -74,7 +75,7 @@ public class AsyncRelayCommandGenericsTests
         }
 
         // Assert
-        CollectionAssert.AreEqual(new int[0], executedParameters);
+        Assert.AreSequenceEqual(Array.Empty<int>(), executedParameters);
         Assert.IsTrue(command.IsCancellationRequested);
     }
 
@@ -85,7 +86,7 @@ public class AsyncRelayCommandGenericsTests
         string? receivedParameter = null;
         var command = new AsyncRelayCommand<string>(async (param) =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameter = param;
         });
 
@@ -117,7 +118,7 @@ public class AsyncRelayCommandGenericsTests
         string? receivedParameter = "not null";
         var command = new AsyncRelayCommand<string?>(async (param) =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameter = param;
         });
 
@@ -135,7 +136,7 @@ public class AsyncRelayCommandGenericsTests
         int receivedParameter = -1;
         var command = new AsyncRelayCommand<int>(async (param) =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedParameter = param;
         });
 
@@ -154,7 +155,7 @@ public class AsyncRelayCommandGenericsTests
         TestClass? receivedObject = null;
         var command = new AsyncRelayCommand<TestClass>(async (param) =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             receivedObject = param;
         });
 
@@ -188,7 +189,7 @@ public class AsyncRelayCommandGenericsTests
         await Task.WhenAll(task1, task2);
 
         // Assert
-        CollectionAssert.AreEqual(new[] { 1, 2 }, executedParameters);
+        Assert.AreSequenceEqual(expected, executedParameters);
     }
 
     [TestMethod]
@@ -249,7 +250,7 @@ public class AsyncRelayCommandGenericsTests
         var task1 = command.ExecuteAsync(1);
 
         // Wait a small amount to ensure command state is updated
-        await Task.Delay(50);
+        await Task.Delay(50, TestContext.CancellationToken);
 
         Assert.IsNotNull(command.ExecutionTask, "ExecutionTask should not be null after first execution");
         Assert.IsFalse(command.ExecutionTask.IsCompleted, "First execution should not be completed yet");
@@ -259,13 +260,13 @@ public class AsyncRelayCommandGenericsTests
         await task1;
 
         // Wait for property changes to propagate
-        await Task.Delay(50);
+        await Task.Delay(50, TestContext.CancellationToken);
 
         // Act & Assert - Second Execution
         var task2 = command.ExecuteAsync(2);
 
         // Wait a small amount to ensure command state is updated
-        await Task.Delay(50);
+        await Task.Delay(50, TestContext.CancellationToken);
 
         var executionTask = command.ExecutionTask;
         Assert.IsNotNull(executionTask, "ExecutionTask should not be null after second execution");
@@ -276,7 +277,7 @@ public class AsyncRelayCommandGenericsTests
         await task2;
 
         // Wait for property changes to propagate
-        await Task.Delay(50);
+        await Task.Delay(50, TestContext.CancellationToken);
 
         // Log the property changes if test fails
         try
@@ -341,7 +342,7 @@ public class AsyncRelayCommandGenericsTests
         // Act
         var task1 = command.ExecuteAsync(1);
         var task2 = command.ExecuteAsync(2);
-        await Task.Delay(100); // Let tasks start
+        await Task.Delay(100, TestContext.CancellationToken); // Let tasks start
         command.Cancel();
 
         try
@@ -387,7 +388,7 @@ public class AsyncRelayCommandGenericsTests
         await task;
 
         // Assert
-        Assert.IsTrue(propertyChanges.IndexOf("ExecutionTask") < propertyChanges.IndexOf("IsRunning"));
+        Assert.IsLessThan(propertyChanges.IndexOf("IsRunning"), propertyChanges.IndexOf("ExecutionTask"));
     }
 
     [TestMethod]
@@ -398,7 +399,7 @@ public class AsyncRelayCommandGenericsTests
         var command = new AsyncRelayCommand<string>(
             async (param) =>
             {
-                await Task.Delay(10);
+                await Task.Delay(10, TestContext.CancellationToken);
                 throw expectedException;
             },
             options: AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler
@@ -456,4 +457,6 @@ public class AsyncRelayCommandGenericsTests
     {
         public string? Value { get; set; }
     }
+
+    public TestContext TestContext { get; set; }
 }

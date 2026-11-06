@@ -38,7 +38,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 /// <typeparam name="TScore">The type for the predicted score values.</typeparam>
 /// <typeparam name="TLoss">The type for the loss value. Default is double.</typeparam>
 /// 
-public interface ILoss<TScore, TLoss>
+public interface ILoss<in TScore, out TLoss>
 {
     /// <summary>
     ///   Computes the loss between the expected values (ground truth) 
@@ -59,7 +59,7 @@ public interface ILoss<TScore, TLoss>
 ///   <see cref="BinaryCrossEntropyLoss"/>.
 /// </summary>
 /// 
-public interface IDifferentiableLoss<TInput, TScore, TLoss>
+public interface IDifferentiableLoss<in TInput, in TScore, out TLoss>
 {
 
     /// <summary>

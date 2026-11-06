@@ -12,15 +12,15 @@ var claims = new List<Claim>
     new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
     new(ClaimTypes.Email, user.Email),
     new(ClaimTypes.Role, user.Role),
-    new("budget:read", "true"),
-    new("budget:write", "true")
+    new("{entity}:read", "true"),
+    new("{entity}:write", "true")
 };
 
 // Check claims at endpoint
-app.MapPost("/budgets", async (/* params */) =>
+app.MapPost("/{entities}", async (/* params */) =>
 {
     // Handler logic
-}).RequireAuthorization(policy => policy.RequireClaim("budget:write"));
+}).RequireAuthorization(policy => policy.RequireClaim("{entity}:write"));
 ```
 
 ### Policy-Based Authorization
@@ -28,33 +28,33 @@ app.MapPost("/budgets", async (/* params */) =>
 // Define policies
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("BudgetAdmin", policy =>
+    options.AddPolicy("{Entity}Admin", policy =>
         policy.RequireRole("Admin")
-              .RequireClaim("budget:admin"));
+              .RequireClaim("{entity}:admin"));
 
-    options.AddPolicy("BudgetWrite", policy =>
+    options.AddPolicy("{Entity}Write", policy =>
         policy.RequireAuthenticatedUser()
-              .RequireClaim("budget:write"));
+              .RequireClaim("{entity}:write"));
 
     options.AddPolicy("Over18", policy =>
         policy.Requirements.Add(new MinimumAgeRequirement(18)));
 });
 
 // Use policies
-app.MapPost("/budgets", async (/* params */) =>
+app.MapPost("/{entities}", async (/* params */) =>
 {
     // Handler logic
-}).RequireAuthorization("BudgetWrite");
+}).RequireAuthorization("{Entity}Write");
 ```
 
 ### Resource-Based Authorization
 ```csharp
 public interface IAuthorizationService
 {
-    Task<bool> CanAccessBudgetAsync(Guid budgetId, string userId);
+    Task<bool> CanAccess{Entity}Async(Guid {entity}Id, string userId);
 }
 
-app.MapGet("/budgets/{id}", async (
+app.MapGet("/{entities}/{id}", async (
     Guid id,
     IQueryHandler handler,
     IAuthorizationService authService,
@@ -63,10 +63,10 @@ app.MapGet("/budgets/{id}", async (
     var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
         ?? throw new UnauthorizedAccessException();
 
-    if (!await authService.CanAccessBudgetAsync(id, userId))
+    if (!await authService.CanAccess{Entity}Async(id, userId))
         return Results.Forbid();
 
-    var query = new GetBudgetByIdQuery(id);
+    var query = new Get{Entity}ByIdQuery(id);
     return Results.Ok(await handler.HandleAsync(query));
 }).RequireAuthorization();
 ```

@@ -26,6 +26,7 @@ namespace ISynergy.Framework.UI;
 
 public abstract class Application : Microsoft.Maui.Controls.Application, IDisposable
 {
+    private const string ExceptionMessageTemplate = "{ExceptionMessage}";
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
@@ -41,6 +42,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     protected readonly SplashScreenOptions _splashScreenOptions;
 
     protected IDispatcherTimer? _clockTimer;
+    private IDispatcherTimer? _windowTitleTimer;
     protected LoadingView? _loadingView;
     protected Microsoft.Maui.Controls.Window? _mainWindow;
 
@@ -72,6 +74,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
         if (withClock)
         {
+            // Set the subtitle immediately; the timer only refreshes it.
+            titleBar.Subtitle = $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+
             _clockTimer = Dispatcher.CreateTimer();
             _clockTimer.Interval = TimeSpan.FromSeconds(1);
             _clockTimer.Tick += (s, e) =>
@@ -101,7 +106,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             // Get logger first for proper error tracking
             try
             {
-                _logger = IPlatformApplication.Current!.Services.GetRequiredService<ILogger<Application>>();
+                _logger = (IPlatformApplication.Current ?? throw new InvalidOperationException("Platform application is not available.")).Services.GetRequiredService<ILogger<Application>>();
                 _logger.LogTrace("Application constructor started");
             }
             catch (Exception ex)
@@ -119,16 +124,16 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
                 CommandExceptionDispatcher.UnhandledCommandException += CommandExceptionDispatcher_UnhandledCommandException;
 
-                _commonServices = IPlatformApplication.Current!.Services.GetRequiredService<ICommonServices>();
-                _dialogService = IPlatformApplication.Current!.Services.GetRequiredService<IDialogService>();
-                _navigationService = IPlatformApplication.Current!.Services.GetRequiredService<INavigationService>();
-                _exceptionHandlerService = IPlatformApplication.Current!.Services.GetRequiredService<IExceptionHandlerService>();
-                _settingsService = IPlatformApplication.Current!.Services.GetRequiredService<ISettingsService>();
-                _themeService = IPlatformApplication.Current!.Services.GetRequiredService<IThemeService>();
-                _lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
-                _messengerService = IPlatformApplication.Current!.Services.GetRequiredService<IMessengerService>();
+                _commonServices = IPlatformApplication.Current.Services.GetRequiredService<ICommonServices>();
+                _dialogService = IPlatformApplication.Current.Services.GetRequiredService<IDialogService>();
+                _navigationService = IPlatformApplication.Current.Services.GetRequiredService<INavigationService>();
+                _exceptionHandlerService = IPlatformApplication.Current.Services.GetRequiredService<IExceptionHandlerService>();
+                _settingsService = IPlatformApplication.Current.Services.GetRequiredService<ISettingsService>();
+                _themeService = IPlatformApplication.Current.Services.GetRequiredService<IThemeService>();
+                _lifecycleService = IPlatformApplication.Current.Services.GetRequiredService<IApplicationLifecycleService>();
+                _messengerService = IPlatformApplication.Current.Services.GetRequiredService<IMessengerService>();
 
-                _features = IPlatformApplication.Current!.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
+                _features = IPlatformApplication.Current.Services.GetRequiredService<IOptions<ApplicationFeatures>>().Value;
 
                 // Pass a timeout to limit the execution time.
                 // Not specifying a timeout for regular expressions is security - sensitivecsharpsquid:S6444
@@ -166,7 +171,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 // Initialize environment variables from configuration and command-line parameters
                 InitializeEnvironmentVariables();
             }
-            catch (Exception ex)
+            catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
             {
                 _logger?.LogCritical(ex, "Critical error during application initialization"); // NOSONAR
                 throw;
@@ -245,12 +250,44 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _mainWindow.Page = CreateLoadingView();
 
 #if WINDOWS
-        _mainWindow.TitleBar = SetTitleBar();
+        // The custom title bar draws the caption, but the native title is still used by the
+        // taskbar and Alt-Tab.
+        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
+            _mainWindow.Title = InfoService.Default.ProductName;
+
+        // Custom title bar: the centre hosts the title and date/time subtitle (and stays the
+        // native drag region), while interactive shell controls live in the leading/trailing
+        // islands supplied by the application.
+        _mainWindow.TitleBar = SetTitleBar(withClock: true);
+#else
+        // Platforms without a title bar use the native window caption.
+        UpdateWindowTitle();
+
+        _windowTitleTimer ??= Dispatcher.CreateTimer();
+        _windowTitleTimer.Interval = TimeSpan.FromSeconds(1);
+        _windowTitleTimer.Tick -= OnWindowTitleTick;
+        _windowTitleTimer.Tick += OnWindowTitleTick;
+        _windowTitleTimer.Start();
 #endif
 
         _themeService.ApplyTheme();
 
         return _mainWindow;
+    }
+
+    private void OnWindowTitleTick(object? sender, EventArgs e) => UpdateWindowTitle();
+
+    /// <summary>
+    /// Writes the product name and the current date/time to the native window caption.
+    /// </summary>
+    private void UpdateWindowTitle()
+    {
+        if (_mainWindow is null)
+            return;
+
+        var clock = $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+        var productName = InfoService.Default.ProductName;
+        _mainWindow.Title = string.IsNullOrEmpty(productName) ? clock : $"{productName} - {clock}";
     }
 
     /// <summary>
@@ -266,13 +303,13 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    protected void InitializeEnvironmentVariables()
     {
         try
         {
             _logger?.LogTrace("Initializing environment variables");
 
-            var configuration = IPlatformApplication.Current!.Services.GetRequiredService<IConfiguration>();
+            var configuration = (IPlatformApplication.Current ?? throw new InvalidOperationException("Platform application is not available.")).Services.GetRequiredService<IConfiguration>();
 
             var environmentFromConfig = configuration.GetValue<string?>(nameof(Environment), null);
 
@@ -317,7 +354,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
                 continue;
 
             // Look for query string format arguments (e.g., "?environment=development&country=nl")
-            if (arg.Contains("?"))
+            if (arg.Contains('?'))
             {
                 var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
 
@@ -368,7 +405,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
-            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogError(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -382,7 +419,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -398,7 +435,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
             if (_exceptionHandlerService is not null)
                 _exceptionHandlerService.HandleException(exception);
             else
-                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger.LogCritical(exception, ExceptionMessageTemplate, exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -414,7 +451,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
     }
 
     #region IDisposable
@@ -435,6 +472,11 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
     {
         if (disposing)
         {
+            _windowTitleTimer?.Stop();
+            _windowTitleTimer = null;
+            _clockTimer?.Stop();
+            _clockTimer = null;
+
 
 
             _messengerService.Unregister<ShowInformationMessage>(this);

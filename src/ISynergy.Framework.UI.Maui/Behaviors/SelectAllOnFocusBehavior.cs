@@ -1,6 +1,6 @@
 namespace ISynergy.Framework.UI.Behaviors;
 
-public class SelectAllOnFocusBehavior : Behavior<Entry>
+public partial class SelectAllOnFocusBehavior : Behavior<Entry>
 {
     public static readonly BindableProperty AttachBehaviorProperty =
         BindableProperty.CreateAttached("AttachBehavior", typeof(bool), typeof(SelectAllOnFocusBehavior), false, propertyChanged: OnAttachBehaviorChanged);

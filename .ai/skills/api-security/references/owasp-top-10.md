@@ -7,27 +7,27 @@ One worked example per OWASP API Top 10 category, in this template's CQRS/OpenId
 ### 1. Broken Object Level Authorization
 ```csharp
 // ❌ WRONG - No authorization check
-app.MapGet("/budgets/{id}", async (Guid id, IQueryHandler handler) =>
+app.MapGet("/{entities}/{id}", async (Guid id, IQueryHandler handler) =>
 {
-    var query = new GetBudgetByIdQuery(id);
+    var query = new Get{Entity}ByIdQuery(id);
     return await handler.HandleAsync(query);
 });
 
 // ✅ CORRECT - Verify user owns the resource
-app.MapGet("/budgets/{id}", async (
+app.MapGet("/{entities}/{id}", async (
     Guid id,
     IQueryHandler handler,
     ClaimsPrincipal user) =>
 {
     var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    var query = new GetBudgetByIdQuery(id);
-    var budget = await handler.HandleAsync(query);
+    var query = new Get{Entity}ByIdQuery(id);
+    var {entity} = await handler.HandleAsync(query);
 
-    if (budget.UserId.ToString() != userId)
+    if ({entity}.UserId.ToString() != userId)
         return Results.Forbid();
 
-    return Results.Ok(budget);
+    return Results.Ok({entity});
 }).RequireAuthorization();
 ```
 
@@ -221,11 +221,11 @@ var versionSet = app.NewApiVersionSet()
     .ReportApiVersions()
     .Build();
 
-app.MapGet("/budgets/{id}", /* handler */)
+app.MapGet("/{entities}/{id}", /* handler */)
     .WithApiVersionSet(versionSet)
     .MapToApiVersion(1.0);
 
-app.MapGet("/budgets/{id}", /* handler v2 */)
+app.MapGet("/{entities}/{id}", /* handler v2 */)
     .WithApiVersionSet(versionSet)
     .MapToApiVersion(2.0);
 ```

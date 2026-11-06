@@ -71,8 +71,7 @@ public static partial class SafeFireAndForgetExtensions
     /// <param name="onException">If an exception is thrown in the Task using SafeFireAndForget, <c>onException</c> will execute</param>
     public static void SetDefaultExceptionHandling(in Action<Exception> onException)
     {
-        if (onException is null)
-            throw new ArgumentNullException(nameof(onException));
+        ArgumentNullException.ThrowIfNull(onException);
 
         _onException = onException;
     }

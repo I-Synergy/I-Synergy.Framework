@@ -142,8 +142,7 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
     public NonAdaptiveGaussKronrod(Func<double, double> function)
         : this()
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
         ToleranceAbsolute = 0;
         ToleranceRelative = 1e-3;
@@ -159,10 +158,10 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
         : this(function)
     {
         if (double.IsInfinity(a) || double.IsNaN(a))
-            throw new ArgumentOutOfRangeException("a");
+            throw new ArgumentOutOfRangeException(nameof(a));
 
         if (double.IsInfinity(b) || double.IsNaN(b))
-            throw new ArgumentOutOfRangeException("b");
+            throw new ArgumentOutOfRangeException(nameof(b));
 
         range = new NumericRange(a, b);
     }
@@ -214,10 +213,10 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
         set
         {
             if (double.IsInfinity(range.Min) || double.IsNaN(range.Min))
-                throw new ArgumentOutOfRangeException("value", "Minimum is out of range.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Minimum is out of range.");
 
             if (double.IsInfinity(range.Max) || double.IsNaN(range.Max))
-                throw new ArgumentOutOfRangeException("value", "Maximum is out of range.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Maximum is out of range.");
 
             range = value;
         }

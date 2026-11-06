@@ -133,7 +133,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     int maxfun = 3500;
     int iterations;
 
-    NonlinearConstraint[] constraints;
+    readonly NonlinearConstraint[] constraints;
     /// <summary>
     ///   Gets the number of iterations performed in the last
     ///   call to <see cref="IOptimizationMethod{TInput, TOutput}.Minimize()"/>.
@@ -199,7 +199,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(int numberOfVariables)
         : base(numberOfVariables)
     {
-        constraints = new NonlinearConstraint[0];
+        constraints = Array.Empty<NonlinearConstraint>();
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(int numberOfVariables, Func<double[], double> function)
         : base(numberOfVariables, function)
     {
-        constraints = new NonlinearConstraint[0];
+        constraints = Array.Empty<NonlinearConstraint>();
     }
 
     /// <summary>
@@ -224,7 +224,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(NonlinearObjectiveFunction function)
         : base(function.NumberOfVariables, function.Function)
     {
-        constraints = new NonlinearConstraint[0];
+        constraints = Array.Empty<NonlinearConstraint>();
     }
 
     /// <summary>
@@ -249,18 +249,17 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     public Cobyla(NonlinearObjectiveFunction function, NonlinearConstraint[] constraints)
         : base(function.NumberOfVariables, function.Function)
     {
-        if (constraints is null)
-            throw new ArgumentNullException("constraints");
+        ArgumentNullException.ThrowIfNull(constraints);
 
         for (var i = 0; i < constraints.Length; i++)
         {
             if (constraints[i].NumberOfVariables != function.NumberOfVariables)
-                throw new DimensionMismatchException("constraints", "The constraint at position " + i +
+                throw new DimensionMismatchException(nameof(constraints), "The constraint at position " + i +
                     " contains an unexpected number of variables. Expected value would be " + NumberOfVariables + ".");
 
             if (constraints[i].ShouldBe == ConstraintType.EqualTo)
                 throw new ArgumentException("Inequality constraints are not supported."
-                    + " The constraint at position " + i + " is an inequality constraint.", "constraints");
+                    + " The constraint at position " + i + " is an inequality constraint.", nameof(constraints));
         }
 
         this.constraints = constraints;
@@ -931,11 +930,10 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
         //     This subroutine calculates an N-component vector DX by applying the
         //     following two stages. In the first stage, DX is set to the shortest
         //     vector that minimizes the greatest violation of the constraints
-        //       A(1,K)*DX(1)+A(2,K)*DX(2)+...+A(N,K)*DX(N) .GE. B(K), K = 2,3,...,M,
         //     subject to the Euclidean length of DX being at most RHO. If its length is
         //     strictly less than RHO, then we use the resultant freedom in DX to
         //     minimize the objective function
-        //              -A(1,M+1)*DX(1) - A(2,M+1)*DX(2) - ... - A(N,M+1)*DX(N)
+        //              minus A(1,M+1)*DX(1) minus A(2,M+1)*DX(2) minus ... minus A(N,M+1)*DX(N)
         //     subject to no increase in any greatest constraint violation. This
         //     notation allows the gradient of the objective function to be regarded as
         //     the gradient of a constraint. Therefore the two stages are distinguished

@@ -270,7 +270,7 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// 
     public override bool Equals(object? obj)
     {
-        return (obj is NumericRange) ? (this == (NumericRange)obj) : false;
+        return obj is NumericRange range && this == range;
     }
 
     /// <summary>

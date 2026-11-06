@@ -51,14 +51,14 @@ public class GlobalMeshTests
         GlobalMesh theMesh = new(1000);
         long nr = theMesh.MeshNumber(Constants.MyHome);
         System.Collections.Generic.List<long> n0 = theMesh.Neighborhood(nr, 0);
-        Assert.AreEqual(1, n0.Count);
+        Assert.HasCount(1, n0);
         Assert.AreEqual(nr, n0[0]);
         System.Collections.Generic.List<long> n1 = theMesh.Neighborhood(nr, 1);
-        Assert.AreEqual(8, n1.Count);
+        Assert.HasCount(8, n1);
         System.Collections.Generic.List<long> n2 = theMesh.Neighborhood(nr, 2);
-        Assert.AreEqual(16, n2.Count);
+        Assert.HasCount(16, n2);
         System.Collections.Generic.List<long> n3 = theMesh.Neighborhood(nr, 3);
-        Assert.AreEqual(24, n3.Count);
+        Assert.HasCount(24, n3);
     }
 
     /// <summary>

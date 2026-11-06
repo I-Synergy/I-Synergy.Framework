@@ -347,7 +347,7 @@ public class BlobOperationsSteps
             throw new InvalidOperationException("Expected SAS URI to be generated");
         }
 
-        if (!_context.GeneratedSasUri.Contains("?"))
+        if (!_context.GeneratedSasUri.Contains('?'))
         {
             throw new InvalidOperationException("SAS URI should contain query parameters");
         }

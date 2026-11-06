@@ -62,6 +62,13 @@ TEMPLATE_OWNED = [
     ".ai/checklists",
     ".ai/tests",
     ".ai/scripts",
+    "requirements-dev.txt",
+    "pytest.ini",
+    "pip.ini",
+    ".vscode/settings.json",
+    ".gitignore",
+    ".github/workflows/validate-template.yml",
+    ".github/workflows/ci.yml",
 ]
 
 # Project owns these — never read, never write.
@@ -409,9 +416,12 @@ def _run_upgrade(args, source: Path, target: Path, raw_source: str, tmpdir) -> N
     if not counts["quit"]:
         merge_settings_json(source, target, args.dry_run)
 
-    # ─── Post-sync: run sync-skills.py in target ──────────────────────────────
+    # ─── Post-sync: run sync-platforms.py in target ───────────────────────────
     if not args.dry_run and not counts["quit"]:
-        sync_script = target / ".ai" / "scripts" / "sync-skills.py"
+        sync_script = target / ".ai" / "scripts" / "sync-platforms.py"
+        if not sync_script.exists():
+            # A project that predates the rename.
+            sync_script = target / ".ai" / "scripts" / "sync-skills.py"
         if sync_script.exists():
             print(f"\n{c(CYAN, 'Syncing skills to Claude Code and GitHub Copilot targets ...')}")
             result = subprocess.run(
@@ -424,11 +434,11 @@ def _run_upgrade(args, source: Path, target: Path, raw_source: str, tmpdir) -> N
             if result.returncode == 0:
                 print(c(GREEN, "  ✓ Skills synced"))
             else:
-                print(c(YELLOW, f"  ⚠ sync-skills.py exited {result.returncode}"))
+                print(c(YELLOW, f"  ⚠ {sync_script.name} exited {result.returncode}"))
                 if result.stderr:
                     print(f"    {result.stderr.strip()}")
         else:
-            print(f"\n{c(YELLOW, 'Note:')} run /update-skills in the target project to sync skills to Claude Code and GitHub Copilot")
+            print(f"\n{c(YELLOW, 'Note:')} run /sync-platforms in the target project to sync the platform junctions")
 
         sync_agents = target / ".ai" / "scripts" / "sync-agents.py"
         if sync_agents.exists():

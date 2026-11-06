@@ -1,0 +1,20 @@
+<AnalysisSettings>
+  <!--
+    Settings for the SonarScanner for .NET (`dotnet sonarscanner begin /s:SonarQube.Analysis.xml`).
+    Keep in sync with sonar-project.properties.
+
+    src/ISynergy.Framework.Mathematics is a port of Math.NET Numerics whose matrix and jagged
+    implementations are intentionally parallel; exclude it from copy-paste detection only.
+  -->
+  <Property Name="sonar.cpd.exclusions">src/ISynergy.Framework.Mathematics/**</Property>
+
+  <!--
+    The Mathematics issue exclusions documented in sonar-project.properties use
+    sonar.issue.ignore.multicriteria. The .NET scanner rejects that multi-property block
+    from this file, so pass it on the command line instead:
+
+      /d:sonar.issue.ignore.multicriteria=e1,e2,...
+      /d:sonar.issue.ignore.multicriteria.e1.ruleKey=csharpsquid:S4136
+      /d:sonar.issue.ignore.multicriteria.e1.resourceKey=src/ISynergy.Framework.Mathematics/**
+  -->
+</AnalysisSettings>

@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
 
-public class TestViewModel : ViewModelDialog<object>
+public partial class TestViewModel : ViewModelDialog<object>
 {
 
     /// <summary>

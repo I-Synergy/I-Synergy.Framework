@@ -41,8 +41,7 @@ public abstract class BaseGradientOptimizationMethod : BaseOptimizationMethod
         Func<double[], double> function, Func<double[], double[]> gradient)
         : base(numberOfVariables, function)
     {
-        if (gradient is null)
-            throw new ArgumentNullException("gradient");
+        ArgumentNullException.ThrowIfNull(gradient);
 
         Gradient = gradient;
     }

@@ -7,7 +7,7 @@ namespace ISynergy.Framework.UI.Behaviors;
 /// Behavior that restricts Entry input to integer values only.
 /// No decimal places are allowed.
 /// </summary>
-public sealed class IntegerEntryBehavior : NumericEntryBehaviorBase
+public sealed partial class IntegerEntryBehavior : NumericEntryBehaviorBase
 {
     private IntegerFormatter? _formatter;
 
@@ -29,7 +29,7 @@ public sealed class IntegerEntryBehavior : NumericEntryBehaviorBase
             return false;
 
         _formatter ??= new IntegerFormatter(Culture);
-        return _formatter.IsInteger(value);
+        return IntegerFormatter.IsInteger(value);
     }
 
     protected override string FormatValue(decimal value)

@@ -97,19 +97,19 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     public GeneralizedEigenvalueDecomposition(double[,] a, double[,] b, bool sort = false)
     {
         if (a is null)
-            throw new ArgumentNullException("a", "Matrix A cannot be null.");
+            throw new ArgumentNullException(nameof(a), "Matrix A cannot be null.");
 
         if (b is null)
-            throw new ArgumentNullException("b", "Matrix B cannot be null.");
+            throw new ArgumentNullException(nameof(b), "Matrix B cannot be null.");
 
         if (a.GetLength(0) != a.GetLength(1))
-            throw new ArgumentException("Matrix is not a square matrix.", "a");
+            throw new ArgumentException("Matrix is not a square matrix.", nameof(a));
 
         if (b.GetLength(0) != b.GetLength(1))
-            throw new ArgumentException("Matrix is not a square matrix.", "b");
+            throw new ArgumentException("Matrix is not a square matrix.", nameof(b));
 
         if (a.GetLength(0) != b.GetLength(0) || a.GetLength(1) != b.GetLength(1))
-            throw new ArgumentException("Matrix dimensions do not match", "b");
+            throw new ArgumentException("Matrix dimensions do not match", nameof(b));
         n = a.GetLength(0);
         RealAlphas = new double[n];
         ImaginaryAlphas = new double[n];

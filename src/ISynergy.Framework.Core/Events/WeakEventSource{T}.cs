@@ -58,8 +58,7 @@ public class WeakEventSource<TEventArgs>
     /// <param name="handler">The handler.</param>
     public void Subscribe(EventHandler<TEventArgs> handler)
     {
-        if (handler is null)
-            throw new ArgumentNullException(nameof(handler));
+        ArgumentNullException.ThrowIfNull(handler);
 
         var weakHandlers = handler
             .GetInvocationList()
@@ -158,8 +157,7 @@ public class WeakEventSource<TEventArgs>
         /// <param name="handler">The handler.</param>
         public WeakDelegate(Delegate handler)
         {
-            if (handler is null)
-                throw new ArgumentNullException(nameof(handler));
+            ArgumentNullException.ThrowIfNull(handler);
 
             _weakTarget = handler.Target is not null ? new WeakReference(handler.Target) : null;
             _method = handler.GetMethodInfo();

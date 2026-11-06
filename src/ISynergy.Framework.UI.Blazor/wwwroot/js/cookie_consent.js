@@ -21,32 +21,34 @@ const injectGAScript = (measurementId) => {
 };
 function injectMCScript(projectId) {
     try {
-        (function (c, l, a, r, i, t, y) {
+        (function (c, l, a, r, i) {
             if (l.getElementById("clarity-script")) {
                 return;
             }
-            c[a] = c[a] ||
-                function () {
-                    (c[a].q = c[a].q || []).push(arguments);
+            if (!c[a]) {
+                c[a] = function () {
+                    c[a].q = c[a].q || [];
+                    c[a].q.push(arguments);
                 };
-            t = l.createElement(r);
-            t.async = 1;
-            t.src = "https://www.clarity.ms/tag/" + i + "?ref=npm";
-            t.id = "clarity-script"
-            y = l.getElementsByTagName(r)[0];
-            y.parentNode.insertBefore(t, y);
+            }
+            const script = l.createElement(r);
+            script.async = 1;
+            script.src = "https://www.clarity.ms/tag/" + i + "?ref=npm";
+            script.id = "clarity-script";
+            const firstScript = l.getElementsByTagName(r)[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
         })(window, document, "clarity", "script", projectId);
         console.log('Microsoft Clarity initialized successfully');
         return;
     } catch (error) {
-        console.error('Failed to load Microsoft Clarity');
+        console.error('Failed to load Microsoft Clarity', error);
         return;
     }
 };
 
 const Clarity = {
     init(projectId) {
-        injectMCScript(projectId, 'clarity-script');
+        injectMCScript(projectId);
     },
 
     setTag(key, value) {
@@ -85,8 +87,8 @@ export async function initAnalytics(GAmeasurementId, MCprojectId) {
     injectGAScript(GAmeasurementId);
 
     // Microsoft Clarity initialization
-    Clarity.init(MCprojectId)
-    Clarity.consent()
+    Clarity.init(MCprojectId);
+    Clarity.consent();
 
     console.log("Analytics initialized")
 }

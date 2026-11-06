@@ -216,8 +216,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
     /// <param name="function">The function to be integrated.</param>
     public InfiniteAdaptiveGaussKronrod(int subintervals, Func<double, double> function)
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
         init(subintervals, function, double.MinValue, double.MaxValue);
     }
@@ -235,8 +234,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
     public InfiniteAdaptiveGaussKronrod(int subintervals,
         Func<double, double> function, double a, double b)
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
         init(subintervals, function, a, b);
     }
@@ -271,7 +269,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             var limit = Math.Max(Constants.SingleEpsilon * 50.0, 5e-15);
 
             if (value <= limit)
-                throw new ArgumentOutOfRangeException("value",
+                throw new ArgumentOutOfRangeException(nameof(value),
                     "Tolerance must be higher than machine precision"
                     + "(must be greater than " + limit + ")");
 
@@ -398,7 +396,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
     private void init(int subintervals, Func<double, double> function, double a, double b)
     {
         if (subintervals <= 0)
-            throw new ArgumentOutOfRangeException("subintervals",
+            throw new ArgumentOutOfRangeException(nameof(subintervals),
                 "Number of subintervals must be higher than zero.");
 
         Function = function;

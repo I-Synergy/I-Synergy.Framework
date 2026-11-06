@@ -31,6 +31,11 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// </summary>
     protected readonly JsonTypeInfo<TEntity>? _jsonTypeInfo;
 
+    private static readonly JsonSerializerOptions CachedJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     /// <summary>
     /// ServiceBus client.
     /// </summary>
@@ -155,7 +160,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
         _logger.LogDebug("- Exception: {ExceptionType}: {ExceptionMessage}", arg.Exception.GetType().Name, arg.Exception.Message);
 
         if (_serviceBusProcessor is not null)
-            await _serviceBusProcessor.CloseAsync();
+            await _serviceBusProcessor.CloseAsync(arg.CancellationToken);
     }
 
     private async Task MessageHandlerAsync(ProcessMessageEventArgs arg)
@@ -165,10 +170,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
 
         var data = _jsonTypeInfo is not null
             ? JsonSerializer.Deserialize(body, _jsonTypeInfo)
-            : JsonSerializer.Deserialize<TEntity>(body, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            : JsonSerializer.Deserialize<TEntity>(body, CachedJsonOptions);
 
         if (data is not null && ValidateMessage(data))
         {
@@ -177,7 +179,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
                 // Now that we're done with "processing" the message, we tell the broker about that being the
                 // case. The MessageReceiver.CompleteAsync operation will settle the message transfer with
                 // the broker and remove it from the broker.
-                await arg.CompleteMessageAsync(message)
+                await arg.CompleteMessageAsync(message, arg.CancellationToken)
                     .ConfigureAwait(false);
             }
             else
@@ -185,7 +187,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
                 // If the message does not meet our processing criteria, we will dead letter it, meaning
                 // it is put into a special queue for handling defective messages. The broker will automatically
                 // dead letter the message, if delivery has been attempted too many times.
-                await arg.DeadLetterMessageAsync(message)
+                await arg.DeadLetterMessageAsync(message, cancellationToken: arg.CancellationToken)
                     .ConfigureAwait(false);
             }
         }

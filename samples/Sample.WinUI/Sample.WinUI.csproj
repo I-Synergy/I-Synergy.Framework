@@ -50,7 +50,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
-		<PackageReference Include="Sentry" />
 		<PackageReference Include="Sentry.OpenTelemetry" />
 		<PackageReference Include="Syncfusion.Chart.WinUI" />
 		<PackageReference Include="Syncfusion.Editors.WinUI" />

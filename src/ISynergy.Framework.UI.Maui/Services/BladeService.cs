@@ -83,7 +83,7 @@ public class BladeService : BaseBladeService
             return;
         }
 
-        var rootPage = Application.Current?.Windows.FirstOrDefault()?.Page;
+        var rootPage = (Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Page : null);
 
         if (rootPage is null)
         {
@@ -120,7 +120,7 @@ public class BladeService : BaseBladeService
     /// Resolves the view type for a blade ViewModel. Selection ViewModels get
     /// their known selection views; others use reflection-based naming convention.
     /// </summary>
-    private static Type? ResolveViewType(IViewModel bladeVm)
+    protected override Type? ResolveViewType(IViewModel bladeVm)
     {
         if (bladeVm is ISingleSelectionViewModel)
             return typeof(SingleSelectionView);
@@ -188,7 +188,7 @@ public class BladeService : BaseBladeService
 
             try
             {
-                await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                try { await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs)); } catch (TimeoutException) { /* view did not load in time */ }
             }
             finally
             {

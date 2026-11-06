@@ -15,7 +15,7 @@ namespace Sample.ViewModels;
 /// </summary>
 /// <seealso cref="ViewModelDialog{Boolean}" />
 /// <seealso cref="IForgotPasswordViewModel" />
-public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordViewModel
+public partial class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordViewModel
 {
     /// <summary>
     /// Gets the title.
@@ -56,7 +56,7 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// Resets the password asynchronous.
     /// </summary>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public Task<bool> ResetPasswordAsync()
+    public static Task<bool> ResetPasswordAsync()
     {
         return Task.FromResult(false);
     }

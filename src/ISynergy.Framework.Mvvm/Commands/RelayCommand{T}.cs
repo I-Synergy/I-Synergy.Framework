@@ -117,7 +117,7 @@ public sealed class RelayCommand<T> : BaseRelayCommand, IRelayCommand<T>
         // Slower path for type conversion (only executed if the above checks fail)
         try
         {
-            if (parameter != null && parameter is T converted)
+            if (parameter is T converted)
             {
                 result = converted;
                 return true;

@@ -21,8 +21,8 @@ public class DomainEventBaseTests
         var @event = new OrderCreated(Guid.NewGuid(), "Alice", 99.99m);
         var after = DateTimeOffset.UtcNow;
 
-        Assert.IsTrue(@event.OccurredAt >= before);
-        Assert.IsTrue(@event.OccurredAt <= after);
+        Assert.IsGreaterThanOrEqualTo(before, @event.OccurredAt);
+        Assert.IsLessThanOrEqualTo(after, @event.OccurredAt);
     }
 
     [TestMethod]

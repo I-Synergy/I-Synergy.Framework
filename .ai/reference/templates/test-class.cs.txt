@@ -1,4 +1,4 @@
-// File: tests/{ApplicationName}.{Domain}.Tests/Handlers/Create{Entity}CommandHandlerTests.cs
+// File: tests/I-Synergy.Framework.{Domain}.Tests/Handlers/Create{Entity}CommandHandlerTests.cs
 // Traces: US-{BC}-{NNN} / AC-{BC}-{NNN}.{n}, …
 
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace {ApplicationName}.{Domain}.Tests.Handlers;
+namespace I-Synergy.Framework.{Domain}.Tests.Handlers;
 
 [TestClass]
 public class Create{Entity}CommandHandlerTests

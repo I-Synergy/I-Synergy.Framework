@@ -5,7 +5,7 @@ using Sample.Models;
 
 namespace Sample.ViewModels;
 
-public class TestExceptionViewModel : ViewModelDialog<TestItem>
+public partial class TestExceptionViewModel : ViewModelDialog<TestItem>
 {
     public TestExceptionViewModel(
         ICommonServices commonServices,

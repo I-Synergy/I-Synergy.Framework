@@ -40,7 +40,7 @@ static partial class Measures
     public static double ExponentialWeightedMean(this double[] values, double alpha = 0)
     {
         if (values is null)
-            throw new ArgumentNullException("values", "The vector cannot be null.");
+            throw new ArgumentNullException(nameof(values), "The vector cannot be null.");
 
         return values.ExponentialWeightedMean(values.Length, alpha);
     }
@@ -119,7 +119,7 @@ static partial class Measures
         this double[] values, double alpha = 0, bool unbiased = false)
     {
         if (values is null)
-            throw new ArgumentNullException("values", "The vector cannot be null.");
+            throw new ArgumentNullException(nameof(values), "The vector cannot be null.");
 
         return values.ExponentialWeightedVariance(values.Length, alpha, unbiased);
     }
@@ -183,7 +183,7 @@ static partial class Measures
     {
         if (values.Length != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length");
         }
 
@@ -212,7 +212,7 @@ static partial class Measures
     {
         if (values.Length != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length");
         }
 
@@ -433,7 +433,7 @@ static partial class Measures
     {
         if (values.Length != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length");
         }
 
@@ -585,7 +585,7 @@ static partial class Measures
     {
         if (values.Length != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length");
         }
 
@@ -666,12 +666,12 @@ static partial class Measures
 
         if (rows != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length");
         }
 
         if (rows == 0)
-            return new double[0];
+            return Array.Empty<double>();
 
         int cols = matrix[0].Length;
 
@@ -791,7 +791,7 @@ static partial class Measures
 
         if (rows != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length.");
         }
 
@@ -872,12 +872,12 @@ static partial class Measures
 
         if (rows != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length");
         }
 
         if (rows == 0)
-            return new double[0];
+            return Array.Empty<double>();
 
         int cols = matrix[0].Length;
 
@@ -962,7 +962,7 @@ static partial class Measures
 
         if (rows != weights.Length)
         {
-            throw new DimensionMismatchException("weights",
+            throw new DimensionMismatchException(nameof(weights),
                 "The values and weight vectors must have the same length.");
         }
 
@@ -1009,7 +1009,7 @@ static partial class Measures
     public static T WeightedMode<T>(this T[] values, double[] weights, bool inPlace = false, bool alreadySorted = false)
     {
         if (values.Length == 0)
-            throw new ArgumentException("The values vector cannot be empty.", "values");
+            throw new ArgumentException("The values vector cannot be empty.", nameof(values));
 
         if (values[0] is IComparable)
             return weighted_mode_sort<T>(values, weights, inPlace, alreadySorted);
@@ -1031,7 +1031,7 @@ static partial class Measures
     public static T WeightedMode<T>(this T[] values, int[] weights, bool inPlace = false, bool alreadySorted = false)
     {
         if (values.Length == 0)
-            throw new ArgumentException("The values vector cannot be empty.", "values");
+            throw new ArgumentException("The values vector cannot be empty.", nameof(values));
 
         if (values[0] is IComparable)
             return weighted_mode_sort<T>(values, weights, inPlace, alreadySorted);
@@ -1347,14 +1347,14 @@ static partial class Measures
     {
         // Perform some basic error validation
         if (vector is null)
-            throw new ArgumentNullException("vector", "The vector cannot be null.");
+            throw new ArgumentNullException(nameof(vector), "The vector cannot be null.");
 
         if (alpha < 0 || alpha > 1)
         {
             string message = string.Format(
                 "Alpha must lie in the interval [0, 1] but was {0}", alpha);
 
-            throw new ArgumentOutOfRangeException("alpha", message);
+            throw new ArgumentOutOfRangeException(nameof(alpha), message);
         }
 
         int numSamples = vector.Length;
@@ -1366,7 +1366,7 @@ static partial class Measures
                 window,
                 numSamples);
 
-            throw new ArgumentOutOfRangeException("window", message);
+            throw new ArgumentOutOfRangeException(nameof(window), message);
         }
     }
 }

@@ -80,7 +80,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
         bool inPlace = false, MatrixType valueType = MatrixType.UpperTriangular)
     {
         if (value.Rows() != value.Columns())
-            throw new DimensionMismatchException("value", "Matrix is not square.");
+            throw new DimensionMismatchException(nameof(value), "Matrix is not square.");
 
         if (!inPlace)
             value = value.Copy();
@@ -275,8 +275,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
     public double[][] SolveForDiagonal(double[] diagonal)
     {
-        if (diagonal is null)
-            throw new ArgumentNullException("diagonal");
+        ArgumentNullException.ThrowIfNull(diagonal);
 
         return Solve(Jagged.Diagonal(diagonal));
     }
@@ -399,12 +398,11 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
     public double[][] Solve(double[][] value, bool inPlace)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.Length != n)
             throw new ArgumentException(
-                "Argument matrix should have the same number of rows as the decomposed matrix.", "value");
+                "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
 
         if (!robust && !positiveDefinite)
             throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
@@ -417,7 +415,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
 
         var B = inPlace ? value : value.MemberwiseClone();
 
-        // Solve L*Y = B;
         for (var k = 0; k < n; k++)
             for (var j = 0; j < B[k].Length; j++)
             {
@@ -431,7 +428,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
                 for (var j = 0; j < B[k].Length; j++)
                     B[k][j] /= Diagonal[k];
 
-        // Solve L'*X = Y;
         for (var k = n - 1; k >= 0; k--)
             for (var j = 0; j < B[k].Length; j++)
             {
@@ -455,12 +451,11 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
     public double[] Solve(double[] value, bool inPlace)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.Length != n)
             throw new ArgumentException(
-                "Argument vector should have the same length as rows in the decomposed matrix.", "value");
+                "Argument vector should have the same length as rows in the decomposed matrix.", nameof(value));
 
         if (!robust && !positiveDefinite)
             throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
@@ -473,7 +468,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
 
         var B = inPlace ? value : value.Copy();
 
-        // Solve L*Y = B;
         for (var k = 0; k < n; k++)
         {
             for (var i = 0; i < k; i++)
@@ -485,7 +479,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
             for (var k = 0; k < Diagonal.Length; k++)
                 B[k] /= Diagonal[k];
 
-        // Solve L'*X = Y;
         for (var k = n - 1; k >= 0; k--)
         {
             for (var i = k + 1; i < n; i++)

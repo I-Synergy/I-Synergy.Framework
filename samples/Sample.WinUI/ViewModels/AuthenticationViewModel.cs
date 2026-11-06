@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
 
-public class AuthenticationViewModel : ViewModel
+public partial class AuthenticationViewModel : ViewModel
 {
     private const string WarningPasswordSizeKey = "WarningPasswordSize";
     private const string WarningPasswordMatchKey = "WarningPasswordMatch";

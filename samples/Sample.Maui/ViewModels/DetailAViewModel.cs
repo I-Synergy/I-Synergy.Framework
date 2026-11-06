@@ -9,7 +9,7 @@ namespace Sample.ViewModels;
 /// Second, nested blade of <see cref="DetailsViewModel"/>. It opens no further blade and is
 /// closed through the inherited cancel/close command.
 /// </summary>
-public class DetailAViewModel : ViewModelBlade<TestItem>
+public partial class DetailAViewModel : ViewModelBlade<TestItem>
 {
     public DetailAViewModel(
         ICommonServices commonServices,

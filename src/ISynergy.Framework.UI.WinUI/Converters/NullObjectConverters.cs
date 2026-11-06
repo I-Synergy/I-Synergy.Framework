@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class NullToVisibilityConverter : IValueConverter
+public partial class NullToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -45,7 +45,7 @@ public class NullToVisibilityConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class NullToInversedVisibilityConverter : IValueConverter
+public partial class NullToInversedVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

@@ -16,7 +16,7 @@ public class MigrationService : IMigrationService
     public async Task ApplyMigrationAsync<TMigration>()
         where TMigration : class, IMigration
     {
-        if (Activator.CreateInstance(typeof(TMigration)) is IMigration migration &&
+        if (Activator.CreateInstance<TMigration>() is IMigration migration &&
             _settingsService.LocalSettings.MigrationVersion < migration.MigrationVersion)
         {
             await migration.UpAsync();
@@ -29,7 +29,7 @@ public class MigrationService : IMigrationService
     public async Task RevertMigrationAsync<TMigration>()
         where TMigration : class, IMigration
     {
-        if (Activator.CreateInstance(typeof(TMigration)) is IMigration migration &&
+        if (Activator.CreateInstance<TMigration>() is IMigration migration &&
             _settingsService.LocalSettings.MigrationVersion > migration.MigrationVersion)
         {
             await migration.DownAsync();

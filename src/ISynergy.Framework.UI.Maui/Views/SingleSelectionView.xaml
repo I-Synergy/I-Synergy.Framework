@@ -4,7 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:c="clr-namespace:ISynergy.Framework.UI.Controls;assembly=ISynergy.Framework.UI.Maui"
-    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui">
+    xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
+    xmlns:vm="clr-namespace:ISynergy.Framework.Mvvm.Abstractions.ViewModels;assembly=ISynergy.Framework.Mvvm"
+    x:DataType="vm:ISelectionViewModel">
 
     <Grid Padding="4" RowDefinitions="Auto,*,Auto">
         <Label
@@ -20,7 +22,7 @@
             SelectionMode="Single">
 
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="{x:Null}">
                     <Grid Padding="10">
                         <Label Margin="10,0" Text="{Binding}" />
                     </Grid>

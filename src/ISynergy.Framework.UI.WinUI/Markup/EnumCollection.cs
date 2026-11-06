@@ -14,7 +14,7 @@ namespace ISynergy.Framework.UI.Markup;
 /// <seealso cref="MarkupExtension" />
 [Bindable]
 [MarkupExtensionReturnType(ReturnType = typeof(List<Enum>))]
-public class EnumCollection : MarkupExtension
+public partial class EnumCollection : MarkupExtension
 {
     /// <summary>
     /// Gets or sets the type of the enum.

@@ -76,9 +76,11 @@ public static class ApplicationExtensions
                 && !string.IsNullOrEmpty(launchArgs.Arguments))
             {
                 var parsed = launchArgs.Arguments.ParseCommandLineArgs();
-                return parsed.TryGetValue("environment", out var env) ? env
-                    : parsed.TryGetValue("e", out var e) ? e
-                    : null;
+
+                if (parsed.TryGetValue("environment", out var env))
+                    return env;
+
+                return parsed.TryGetValue("e", out var shortEnv) ? shortEnv : null;
             }
         }
         catch

@@ -1,7 +1,7 @@
 ---
 name: ui-blazor
 description: >-
-  Blazor UI library implementation (View<TViewModel>, ConfigureServices bootstrapper, Fluent UI integration, form-factor + antiforgery services, HTTP resilience).
+  Blazor UI library implementation (View<TViewModel>, ConfigureServices bootstrapper, Fluent UI integration, form-factor + antiforgery services, HTTP resilience). Use when implementing the Blazor UI library's View<TViewModel>, Fluent UI integration, form-factor/antiforgery services, or HTTP resilience.
 version: 2026.02.10
 sources:
   - src/ISynergy.Framework.UI.Blazor

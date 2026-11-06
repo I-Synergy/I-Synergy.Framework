@@ -24,7 +24,7 @@ public class CommandHandlerDecoratorTests
         var command = new DummyCommand();
 
         // Act
-        await decorator.HandleAsync(command);
+        await decorator.HandleAsync(command, TestContext.CancellationToken);
 
         // Assert
         handlerMock.Verify(h => h.HandleAsync(command, It.IsAny<CancellationToken>()), Times.Once);
@@ -42,7 +42,7 @@ public class CommandHandlerDecoratorTests
         var command = new DummyResultCommand();
 
         // Act
-        var result = await decorator.HandleAsync(command);
+        var result = await decorator.HandleAsync(command, TestContext.CancellationToken);
 
         // Assert
         handlerMock.Verify(h => h.HandleAsync(command, It.IsAny<CancellationToken>()), Times.Once);
@@ -60,7 +60,7 @@ public class CommandHandlerDecoratorTests
         var command = new DummyCommand();
 
         // Act
-        await decorator.HandleAsync(command);
+        await decorator.HandleAsync(command, TestContext.CancellationToken);
 
         // Assert
         handlerMock.Verify(h => h.HandleAsync(command, It.IsAny<CancellationToken>()), Times.Once);
@@ -83,7 +83,7 @@ public class CommandHandlerDecoratorTests
         var command = new DummyCommand();
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await decorator.HandleAsync(command));
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await decorator.HandleAsync(command, TestContext.CancellationToken));
         loggerMock.Verify(l => l.Log(
             LogLevel.Error,
             It.IsAny<EventId>(),
@@ -91,4 +91,6 @@ public class CommandHandlerDecoratorTests
             It.IsAny<InvalidOperationException>(),
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Once);
     }
+
+    public TestContext TestContext { get; set; }
 }

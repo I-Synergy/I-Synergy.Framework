@@ -293,7 +293,7 @@ public class MatReader : IDisposable
             case MatDataType.miUINT64:
                 return typeof(ulong);
             default:
-                throw new ArgumentOutOfRangeException("type");
+                throw new ArgumentOutOfRangeException(nameof(type));
         }
     }
     #region IDisposable members

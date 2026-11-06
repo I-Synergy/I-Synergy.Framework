@@ -12,7 +12,7 @@ namespace Sample.Services;
 /// The service listens to IThemeService.ThemeChanged and recomputes accent tokens on each change.
 /// It must be initialized after the theme is applied via ApplyTheme().
 /// </remarks>
-public class ShellAccentTokens : IDisposable
+public partial class ShellAccentTokens : IDisposable
 {
     private readonly IThemeService _themeService;
     private readonly ILogger<ShellAccentTokens> _logger;
@@ -83,8 +83,8 @@ public class ShellAccentTokens : IDisposable
             var darkVariant = primaryColor.AddLuminosity(0.30f);
 
             // Compute soft variants with opacity for selected rows/badges
-            var softLight = ComputeSoftAccent(lightVariant, isLightMode: true);
-            var softDark = ComputeSoftAccent(darkVariant, isLightMode: false);
+            var softLight = ShellAccentTokens.ComputeSoftAccent(lightVariant, isLightMode: true);
+            var softDark = ShellAccentTokens.ComputeSoftAccent(darkVariant, isLightMode: false);
 
             _logger.LogTrace(
                 "Accent tokens computed: Light={Light}, Dark={Dark}, SoftLight={SoftLight}, SoftDark={SoftDark}",
@@ -110,7 +110,7 @@ public class ShellAccentTokens : IDisposable
     /// <param name="accentColor">The accent color to soften.</param>
     /// <param name="isLightMode">True for light mode, false for dark mode.</param>
     /// <returns>The blended color.</returns>
-    private Color ComputeSoftAccent(Color accentColor, bool isLightMode)
+    private static Color ComputeSoftAccent(Color accentColor, bool isLightMode)
     {
         // Background colors for blending
         const string lightBg = "#F4F6F3";

@@ -296,17 +296,7 @@ public static class CollectionExtensions
         var itemsToRemove = new HashSet<T>(existingSet);
         var itemsToAdd = new List<T>();
 
-        foreach (var newItem in newSet.EnsureNotNull())
-        {
-            if (itemsToRemove.Contains(newItem))
-            {
-                itemsToRemove.Remove(newItem);
-            }
-            else
-            {
-                itemsToAdd.Add(newItem);
-            }
-        }
+        itemsToAdd.AddRange(newSet.EnsureNotNull().Where(newItem => !itemsToRemove.Remove(newItem)));
 
         foreach (var itemToRemove in itemsToRemove)
         {

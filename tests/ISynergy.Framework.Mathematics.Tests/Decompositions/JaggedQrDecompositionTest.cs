@@ -461,7 +461,7 @@ public class JaggedQrDecompositionTest
     }
 
 
-    private void decompose(ref double[][] a, out double[][] q)
+    private static void decompose(ref double[][] a, out double[][] q)
     {
         int m = a.Rows();
         int n = a.Columns();
@@ -475,7 +475,7 @@ public class JaggedQrDecompositionTest
         }
     }
 
-    private double[][] householder(double[] a)
+    private static double[][] householder(double[] a)
     {
         double[] v = a.Divide(a[0] + Special.Sign(a.Euclidean(), a[0]));
         v[0] = 1;

@@ -25,6 +25,7 @@ namespace ISynergy.Framework.UI.Maui.Extensions;
 /// </para>
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class SingleInstanceActivationTests
 {
     private static readonly Type s_targetType = typeof(MauiWinUIApplicationExtensions);

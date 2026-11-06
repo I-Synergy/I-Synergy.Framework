@@ -6,7 +6,7 @@ using Windows.UI;
 
 namespace ISynergy.Framework.UI.Styles;
 
-public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeResourceDictionary
+public sealed partial class DynamicThemeResourceDictionary : ResourceDictionary, IThemeResourceDictionary
 {
     public DynamicThemeResourceDictionary(Color primary)
     {
@@ -56,7 +56,7 @@ public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeR
     private static (float Red, float Green, float Blue) ToFloats(Color color) =>
         (color.R / 255f, color.G / 255f, color.B / 255f);
 
-    private static ResourceDictionary BuildDefaultTheme(
+    private static ResourceDictionary BuildDefaultTheme( // NOSONAR - palette construction is data-heavy
         Color accent,
         Color variant1, Color variant2, Color variant3,
         Color altVariant1, Color altVariant2, Color altVariant3,

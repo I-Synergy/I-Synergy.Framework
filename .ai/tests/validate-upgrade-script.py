@@ -105,6 +105,13 @@ def test_template_owned_completeness() -> bool:
         ".ai/checklists",
         ".ai/tests",
         ".ai/scripts",
+        "requirements-dev.txt",
+        "pytest.ini",
+        "pip.ini",
+        ".vscode/settings.json",
+        ".gitignore",
+        ".github/workflows/validate-template.yml",
+        ".github/workflows/ci.yml",
     }
 
     missing = required - owned
@@ -173,6 +180,7 @@ def test_collect_template_files() -> bool:
     expected_contains = [
         ".ai/skills/dotnet-engineer/SKILL.md",
         ".ai/skills/refactor/SKILL.md",
+        ".ai/skills/product-discovery/SKILL.md",
         ".ai/skills/design-interrogation/SKILL.md",
         ".ai/patterns/cqrs-patterns.md",
         ".ai/reference/critical-rules.md",
@@ -199,7 +207,8 @@ def test_dry_run_writes_nothing() -> bool:
 
     with tempfile.TemporaryDirectory() as tmp:
         target = Path(tmp)
-        # Put one project-owned file that must not be touched
+        # Put one legacy project file that must not be touched
+        # (CLAUDE.md is a legacy project file that may exist in older projects)
         claude_md = target / "CLAUDE.md"
         claude_md.write_text("# Project CLAUDE.md\nMy custom content\n", encoding="utf-8")
 
@@ -318,12 +327,102 @@ def test_project_owned_never_copied() -> bool:
         return True
 
 
+def test_agents_md_shipped_to_empty_target() -> bool:
+    """Integration: AGENTS.md from source is copied (ADDED) to target that has none."""
+    print("\nTEST 10: AGENTS.md is shipped (ADDED) when target has none")
+    print("-" * 40)
+
+    with tempfile.TemporaryDirectory() as source_tmp, \
+         tempfile.TemporaryDirectory() as target_tmp:
+
+        source = Path(source_tmp)
+        target = Path(target_tmp)
+
+        # Create AGENTS.md in source
+        agents_md = source / "AGENTS.md"
+        agents_md.write_text("# AI Development Template\n\nTemplate configuration for AI agents.\n", encoding="utf-8")
+
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, str(UPGRADE_SCRIPT),
+             "--source", str(source),
+             "--target", str(target),
+             "--non-interactive"],
+            capture_output=True, text=True,
+        )
+
+        copied = target / "AGENTS.md"
+        if not copied.exists():
+            print(f"  FAIL: AGENTS.md was not copied to target")
+            print(f"  stdout: {result.stdout[:300]}")
+            return False
+
+        content = copied.read_text(encoding="utf-8")
+        if "AI Development Template" not in content:
+            print("  FAIL: copied AGENTS.md content is wrong")
+            return False
+
+        # Verify output shows it was ADDED, not skipped
+        if "ADDED" not in result.stdout or "AGENTS.md" not in result.stdout:
+            print(f"  FAIL: upgrade output does not show AGENTS.md as ADDED")
+            print(f"  stdout: {result.stdout[:500]}")
+            return False
+
+        print("  PASS: AGENTS.md was copied correctly as a new file")
+        return True
+
+
+def test_agents_md_not_overwritten_in_non_interactive() -> bool:
+    """Integration: when target has a different AGENTS.md, --non-interactive skips it."""
+    print("\nTEST 11: AGENTS.md in target is not overwritten with --non-interactive")
+    print("-" * 40)
+
+    with tempfile.TemporaryDirectory() as source_tmp, \
+         tempfile.TemporaryDirectory() as target_tmp:
+
+        source = Path(source_tmp)
+        target = Path(target_tmp)
+
+        # Create different AGENTS.md files in source and target
+        source_agents = source / "AGENTS.md"
+        source_agents.write_text("# Source AGENTS.md\nVersion A\n", encoding="utf-8")
+
+        target_agents = target / "AGENTS.md"
+        target_agents.write_text("# Project AGENTS.md\nVersion B (custom)\n", encoding="utf-8")
+
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, str(UPGRADE_SCRIPT),
+             "--source", str(source),
+             "--target", str(target),
+             "--non-interactive"],
+            capture_output=True, text=True,
+        )
+
+        # Target AGENTS.md should remain unchanged (not overwritten)
+        content_after = target_agents.read_text(encoding="utf-8")
+        if "Version B (custom)" not in content_after:
+            print(f"  FAIL: AGENTS.md was overwritten")
+            print(f"  Content after: {content_after}")
+            return False
+
+        # Verify output shows it was skipped, not updated
+        if "skipped" not in result.stdout.lower() or "AGENTS.md" not in result.stdout:
+            print(f"  FAIL: upgrade output does not show AGENTS.md as skipped")
+            print(f"  stdout: {result.stdout}")
+            return False
+
+        print("  PASS: AGENTS.md was correctly skipped in --non-interactive mode")
+        return True
+
+
 def test_design_interrogation_pipeline() -> bool:
     """Verify that all skills referenced by design-interrogation exist."""
     print("\nTEST 10: design-interrogation pipeline skills all exist")
     print("-" * 40)
 
     pipeline_skills = [
+        "product-discovery",
         "ubiquitous-language",
         "usecase-specification",
         "user-story",
@@ -407,6 +506,8 @@ def main() -> int:
         test_dry_run_writes_nothing,
         test_new_skill_gets_copied,
         test_project_owned_never_copied,
+        test_agents_md_shipped_to_empty_target,
+        test_agents_md_not_overwritten_in_non_interactive,
         test_design_interrogation_pipeline,
         test_three_tier_completeness,
     ]

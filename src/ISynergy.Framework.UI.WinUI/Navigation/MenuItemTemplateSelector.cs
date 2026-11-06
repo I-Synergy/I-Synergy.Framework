@@ -11,7 +11,7 @@ namespace ISynergy.Framework.UI.Navigation;
 /// </summary>
 /// <seealso cref="DataTemplateSelector" />
 [ContentProperty(Name = "ItemTemplate")]
-public class MenuItemTemplateSelector : DataTemplateSelector
+public partial class MenuItemTemplateSelector : DataTemplateSelector
 {
     /// <summary>
     /// Gets or sets the item template.

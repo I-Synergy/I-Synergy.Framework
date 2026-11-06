@@ -83,6 +83,13 @@ public partial class RootView : IShellView
         Grid.SetColumnSpan(ContentHost, 2);
         Grid.SetColumnSpan(DrawerScrim, 2);
 
+        // The breadcrumb row is only a content-column row on desktop; on phones the header spans
+        // the window and the sidebar drawer starts below it.
+        Grid.SetColumn(Header, 0);
+        Grid.SetColumnSpan(Header, 2);
+        Grid.SetRow(Sidebar, 1);
+        Grid.SetRowSpan(Sidebar, 1);
+
         Sidebar.TranslationX = -DrawerWidth;
         Sidebar.WidthRequest = DrawerWidth;
     }
@@ -123,10 +130,16 @@ public partial class RootView : IShellView
         // MAUI applies its own title-bar chrome during the first layout pass, so the shell colours
         // are applied afterwards. Failures here are cosmetic and must never break startup.
         Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(400), ApplyWindowChrome);
+
+        if (Application.Current is { } application)
+            application.RequestedThemeChanged += OnRequestedThemeChanged;
 #endif
     }
 
 #if WINDOWS
+    private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e) =>
+        Dispatcher.Dispatch(ApplyWindowChrome);
+
     /// <summary>
     /// Applies the shell colours to the native window chrome (caption background, hover and glyph
     /// colours) so the title bar matches the page background instead of the system surface.
@@ -138,8 +151,14 @@ public partial class RootView : IShellView
             if (Window?.Handler?.PlatformView is not Microsoft.UI.Xaml.Window nativeWindow)
                 return;
 
+            // The native caption/buttons are a separate surface from the MAUI TitleBar. Drop the
+            // Mica backdrop so they use the same opaque shell colour, and pin the caption height to
+            // the 48px title bar so no backdrop band shows above or below it.
+            nativeWindow.SystemBackdrop = null;
+
             var dark = Application.Current?.RequestedTheme == AppTheme.Dark;
             var titleBar = nativeWindow.AppWindow.TitleBar;
+            titleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
 
             var background = ToNativeColor(ResolveShellColor(
                 dark ? "AppBgDark" : "AppBgLight",
@@ -164,6 +183,18 @@ public partial class RootView : IShellView
             titleBar.ButtonInactiveForegroundColor = foreground;
             titleBar.ButtonHoverForegroundColor = hoverForeground;
             titleBar.ButtonPressedForegroundColor = hoverForeground;
+
+            // MAUI's TitleBar handler can re-apply its own surface after the native caption is
+            // configured. Re-set the control's background here so the bar matches the page.
+            if (Window?.TitleBar is TitleBar mauiTitleBar)
+            {
+                var mauiBackground = dark
+                    ? ResolveShellColor("AppBgDark", Color.FromArgb("#0D1614"))
+                    : ResolveShellColor("AppBgLight", Color.FromArgb("#F4F6F3"));
+
+                mauiTitleBar.BackgroundColor = mauiBackground;
+                mauiTitleBar.Background = new SolidColorBrush(mauiBackground);
+            }
         }
         catch (Exception ex)
         {
@@ -188,13 +219,13 @@ public partial class RootView : IShellView
     /// </summary>
     private void MergeHeaderIntoTitleBar()
     {
-        if (Window?.TitleBar is not TitleBar { Content: Sample.Views.Controls.AppHeaderView titleBarHeader })
+        if (Window?.TitleBar is not TitleBar titleBar)
             return;
 
-        titleBarHeader.BindingContext = _viewModel;
+        titleBar.BindingContext = _viewModel;
 
-        Header.IsVisible = false;
-        HeaderRow.Height = new GridLength(0d);
+        // The title bar owns the shell controls; the page row keeps only the breadcrumb.
+        Header.ShowBreadcrumbOnly();
     }
 
 
@@ -209,6 +240,12 @@ public partial class RootView : IShellView
         if (disposing)
         {
             Loaded -= OnRootLoaded;
+
+#if WINDOWS
+            if (Application.Current is { } application)
+                application.RequestedThemeChanged -= OnRequestedThemeChanged;
+#endif
+
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.Dispose();
         }

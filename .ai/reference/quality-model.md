@@ -55,7 +55,7 @@ answerable from a diff and its surrounding code.
 |---|---|---|---|
 | 1 | **Functional suitability** | The handler does what the slice blueprint and its acceptance criteria say — including the edge cases those criteria name — and nothing in the design is unaccounted for | Does this change do what its traced acceptance criteria say, no more and no less? |
 | 2 | **Performance efficiency** | Query shape, result-set bounds, allocations, and whether work sits on a request path that should not carry it | Is there an unbounded query, an N+1, or a hot-path cost the design did not account for? |
-| 3 | **Compatibility** | Types shared through `{ApplicationName}.Common`, the EF Core schema, API response shapes, the Kiota client, and anything another project links against | Does this break, or force a change in, something outside the slice it belongs to? |
+| 3 | **Compatibility** | Types shared through `I-Synergy.Framework.Common`, the EF Core schema, API response shapes, the Kiota client, and anything another project links against | Does this break, or force a change in, something outside the slice it belongs to? |
 | 4 | **Interaction capability** | Blazor and MAUI surfaces, and — for a headless API — the status codes and error bodies a client has to interpret | Can the caller tell what happened and what to do next without reading the source? |
 | 5 | **Reliability** | Failure paths: null checks, cancellation, retry and idempotency, partial writes, disposal, transaction boundaries | What happens when this fails, and is calling it twice safe? |
 | 6 | **Security** | The exposure surface: new endpoints, serialization, logging, secrets, authorization | Does this widen who can do something, or see something? |

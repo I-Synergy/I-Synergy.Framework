@@ -10,16 +10,16 @@ namespace ISynergy.Framework.UI.Extensions;
 /// Extension methods for applying native window layout direction (RTL/LTR)
 /// using the Win32 WS_EX_LAYOUTRTL extended window style.
 /// </summary>
-public static class WindowNativeExtensions
+public static partial class WindowNativeExtensions
 {
     private const int GWL_EXSTYLE = -20;
     private const int WS_EX_LAYOUTRTL = 0x00400000;
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern int GetWindowLong(nint hWnd, int nIndex);
+    [LibraryImport("user32.dll", SetLastError = true)]
+    private static partial int GetWindowLong(nint hWnd, int nIndex);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
+    [LibraryImport("user32.dll", SetLastError = true)]
+    private static partial int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
 
     /// <summary>
     /// Applies or clears the <c>WS_EX_LAYOUTRTL</c> extended window style on the
@@ -44,9 +44,11 @@ public static class WindowNativeExtensions
         var exStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 
         if (isRightToLeft)
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle |= WS_EX_LAYOUTRTL);
+            exStyle |= WS_EX_LAYOUTRTL;
         else
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle &= ~WS_EX_LAYOUTRTL);
+            exStyle &= ~WS_EX_LAYOUTRTL;
+
+        SetWindowLong(hWnd, GWL_EXSTYLE, exStyle);
     }
 
     /// <summary>
@@ -69,9 +71,11 @@ public static class WindowNativeExtensions
         var exStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 
         if (isRightToLeft)
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle |= WS_EX_LAYOUTRTL);
+            exStyle |= WS_EX_LAYOUTRTL;
         else
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle &= ~WS_EX_LAYOUTRTL);
+            exStyle &= ~WS_EX_LAYOUTRTL;
+
+        SetWindowLong(hWnd, GWL_EXSTYLE, exStyle);
     }
 
     /// <summary>

@@ -49,11 +49,11 @@ public class ModelBuilderExtensionsWithSoftDeleteTests
     public async Task SoftDeleteFilter_ShouldOnlyReturnNonDeletedEntities()
     {
         // Act
-        var entities = await _context.TestTenantEntities.ToListAsync();
+        var entities = await _context.TestTenantEntities.ToListAsync(TestContext.CancellationToken);
 
         // Assert
-        Assert.AreEqual(2, entities.Count);
-        Assert.IsFalse(entities.Any(e => e.IsDeleted));
+        Assert.HasCount(2, entities);
+        Assert.DoesNotContain(e => e.IsDeleted, entities);
     }
 
     [TestMethod]
@@ -62,11 +62,13 @@ public class ModelBuilderExtensionsWithSoftDeleteTests
         // Act
         var entities = await _context.TestTenantEntities
             .IgnoreQueryFilters()
-            .ToListAsync();
+            .ToListAsync(TestContext.CancellationToken);
 
         // Assert
-        Assert.AreEqual(3, entities.Count);
-        Assert.IsTrue(entities.Any(e => e.TenantId != _testTenantId));
-        Assert.IsTrue(entities.Any(e => e.IsDeleted));
+        Assert.HasCount(3, entities);
+        Assert.Contains(e => e.TenantId != _testTenantId, entities);
+        Assert.Contains(e => e.IsDeleted, entities);
     }
+
+    public TestContext TestContext { get; set; }
 }

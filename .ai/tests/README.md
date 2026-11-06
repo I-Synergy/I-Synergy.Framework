@@ -33,7 +33,7 @@ Validates the directory structure and presence of all required files.
 - Required reference files are present
 - Template files exist
 - The checklist file exists
-- Main documentation files (`CLAUDE.md`, `README.md`, `.ai/session-context.md`)
+- Main documentation files (`AGENTS.md`, `README.md`, `.ai/session-context.md`)
 
 **Run individually:**
 ```bash
@@ -63,7 +63,7 @@ python3 .ai/tests/validate-skills.py
 Validates file references and links throughout the documentation.
 
 **What it checks:**
-- File references in CLAUDE.md exist
+- File references in AGENTS.md exist
 - Skill references are valid
 - Pattern file references are valid
 - Template file references exist
@@ -108,9 +108,9 @@ Validates template token usage and consistency.
 bash .ai/tests/validate-tokens.sh
 ```
 
-### CLAUDE.md References (`validate-claude-md.py`)
+### AGENTS.md References (`validate-agents-md.py`)
 
-Validates every `.ai/` path referenced from `CLAUDE.md`, and flags skills and patterns that exist on disk but are referenced by no task type.
+Validates every `.ai/` path referenced from `AGENTS.md`, and flags skills and patterns that exist on disk but are referenced by no task type.
 
 **What it checks:**
 - Skill references point at an existing `.ai/skills/{name}/SKILL.md`
@@ -120,7 +120,43 @@ Validates every `.ai/` path referenced from `CLAUDE.md`, and flags skills and pa
 
 **Run individually:**
 ```bash
-python3 .ai/tests/validate-claude-md.py
+python3 .ai/tests/validate-agents-md.py
+```
+
+### Trigger Lines (`validate-triggers.py`)
+
+The frontmatter `description` is the primary mechanism a client uses to decide whether to load a skill or delegate to an agent, so it must state *when* to invoke it.
+
+**What it checks:**
+- Every `.ai/skills/*/SKILL.md` and `.ai/agents/*.md` carries parseable YAML frontmatter
+- The `description` field exists and is non-empty
+- The combined text of `description` plus (for skills) `when_to_use` contains an explicit trigger clause — one of `use when`, `use for`, `use before`, `use after`, `trigger when`, `trigger whenever`, `trigger on`, `call this when`, `invoke when`, or `when to use` (case-insensitive, on word boundaries)
+- Fails on a missing frontmatter, a missing/empty description, or a description with no trigger clause
+
+**Scope:** only this repository's own items are checked. Third-party skills and agents
+installed from another catalog source (`dotnet-maui`, `aspire-skills`, `awesome-copilot`)
+keep their upstream descriptions, which need not carry a trigger clause, so they are
+reported as `⏭ … skipped` instead of failing. Provenance comes from `.ai/ai.lock.json`
+(gitignored, absent in CI): entries whose `source` is not `template` are skipped. If the
+lock is missing or unreadable, every item is checked.
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-triggers.py
+```
+
+### Prose To Skills (`validate-prose.py`)
+
+`AGENTS.md` is the always-loaded entry point, so long prose must point at the skill or reference that carries the detail.
+
+**What it checks:**
+- Splits `AGENTS.md` on blank lines into blocks, skipping blocks that are only table rows or headings, and skipping everything inside fenced code blocks
+- Any remaining block over 100 words must carry a `.ai/` pointer — a reference matching `.ai/skills/`, `.ai/reference/`, `.ai/patterns/` or `.ai/agents/`
+- Fails when `AGENTS.md` is missing or an over-threshold block has no such pointer, naming the block's first line and its word count
+
+**Run individually:**
+```bash
+python3 .ai/tests/validate-prose.py
 ```
 
 ### Settings & Structure (`validate-settings.py`)
@@ -171,22 +207,6 @@ Integration tests that verify the template works as a whole.
 python3 .ai/tests/smoke-test.py
 ```
 
-### Reasonix Integration (`validate-reasonix.py`)
-
-Validates the Reasonix Code integration.
-
-**What it checks:**
-- `REASONIX.md` exists and references paths that resolve
-- `.reasonix/skills/` and `.reasonix/agents/` are folder-level junctions into `.ai/`
-- `.claude/settings.json` includes Reasonix in permissions and hooks
-- The sync scripts create and repair the `.reasonix/` junctions
-- Session-management docs mention Reasonix
-
-**Run individually:**
-```bash
-python3 .ai/tests/validate-reasonix.py
-```
-
 ### Traceability (`validate-traceability.py`)
 
 Validates the identifier chain that joins story and use-case documents to blueprints, feature files and test code.
@@ -195,7 +215,7 @@ Validates the identifier chain that joins story and use-case documents to bluepr
 - T1–T4 (failures) — duplicate `US-`/`UC-`/`AC-` identifiers, `@AC-…` scenario tags that resolve to no declared criterion, every identifier a blueprint's `source` names resolving — `use_cases` and `user_stories` as well as `acceptance_criteria`, with a `source` that names neither key failing as untraceable by construction — and `[TestCategory("AC-…")]` attributes that resolve
 - T5–T6 (advisories) — a declared criterion with no tagged scenario, and a declared criterion with no slice or no test-side reference
 - T7 (advisory) — a legacy or partly-labelled *story or use-case* document, reported once per document rather than once per entry; a context history, glossary or note beside them is out of scope
-- A padded child number (`AC-Budget-014.02`) resolves and is reported as an advisory — `{n}` is unpadded
+- A padded child number (`AC-Widget-014.02`) resolves and is reported as an advisory — `{n}` is unpadded
 - Exit code `1` only when a reference is broken; advisory warnings do not change it
 
 This tree ships no `docs/` tree and no test sources, so the suite passes here by finding nothing to check.
@@ -225,22 +245,6 @@ No solution file is present in this tree, so nothing is generated here, the evid
 python3 .ai/tests/validate-standards.py
 ```
 
-### DeepSeek Parity (`validate-deepseek-parity.py`)
-
-Validates that `DEEPSEEK.md` carries the same level-2 section structure as `CLAUDE.md`. The PowerShell profile backs up `CLAUDE.md` and copies `DEEPSEEK.md` over it for the length of a DeepSeek session, so a section one file carries and the other does not is silently erased for that session.
-
-**What it checks:**
-- Every level-2 heading in `CLAUDE.md` is present in `DEEPSEEK.md`, and every level-2 heading in `DEEPSEEK.md` is present in `CLAUDE.md`
-- The core sections both files are built on are present in both, so a section lost from both files is still caught
-- Section order differing between the files is an advisory, not a failure
-- **Structural parity, not byte equality** — the two files differ on purpose in their title, identity sentence and model-tier paragraph, and during a profile swap the working tree's `CLAUDE.md` *is* `DEEPSEEK.md`
-- An absent file is a skip, not a defect: with no `CLAUDE.md` or no `DEEPSEEK.md` there is nothing to compare, and the suite exits `0`
-
-**Run individually:**
-```bash
-python3 .ai/tests/validate-deepseek-parity.py
-```
-
 ### Upgrade Script (`validate-upgrade-script.py`) — pytest only
 
 `run-all-tests.sh` does not run this suite; `test_suite.py` does, which makes pytest the fuller run.
@@ -253,6 +257,44 @@ python3 .ai/tests/validate-deepseek-parity.py
 **Run individually:**
 ```bash
 python3 .ai/tests/validate-upgrade-script.py
+```
+
+### Harness Health Score (`score-harness.py`)
+
+A reporting layer over every suite above, not another suite. `score-harness.py` runs each
+validator as a subprocess and weights the result into a single 0–100 score:
+
+- `1.0` — exit `0`, no advisory lines
+- `0.8` — exit `0`, at least one advisory line (`⚠️`)
+- `0.0` — non-zero exit
+
+The 17 weights sum to exactly 100 and are grouped into five categories — Integrity 40,
+Platform 15, Quality 15, Standards 14, Release 16. Lines marked `⚠️ SKIP:` mean "not
+applicable here" (the standards and traceability suites skip work in a tree with no solution
+file and no test sources) and cost no points. The report gives the total, a letter grade
+(`A+` ≥ 95, `A` ≥ 90, `B` ≥ 80, `C` ≥ 70, `D` ≥ 60, `F` below), a per-category breakdown,
+and every deduction named with its reason.
+
+Options: `--json PATH` writes the machine-readable document, `--badge PATH` writes a
+shields.io SVG (label `harness`, message `<score>/100 <grade>`), `--from-json PATH` re-renders
+a saved document without running a single check, `--fail-under N` exits `1` below a threshold,
+`--timeout SECONDS` caps each check (default 300), `--list` prints the checks and weights, and
+`--quiet` prints only `96.4/100 A+`-style output.
+
+`run-all-tests.sh` does **not** run it, and `test_suite.py` has no wrapper for it: the scorer
+re-invokes the same validators those runners already execute, so adding it would double the
+runtime without adding a single new check. It is a convenience and reporting entry point, not
+part of the pass/fail gate.
+
+The release workflow (`.github/workflows/ci.yml`) does run it on every release: the score is
+appended to the GitHub Release notes, and `harness-score.json` plus `harness-score.svg` are
+uploaded as release assets. The README badges read the latest release's JSON, so a release
+publishes its own score without committing anything to `main`.
+
+**Run individually:**
+```bash
+python .ai/tests/score-harness.py
+python .ai/tests/score-harness.py --json harness-score.json --badge harness-score.svg --fail-under 90
 ```
 
 ## Exit Codes
@@ -268,12 +310,12 @@ All test scripts follow standard Unix conventions:
 - Standard Unix tools: `grep`, `find`, `wc`
 
 ### Python Scripts
-- Python 3.8 or higher
-- `PyYAML` library
+- Python 3.10 or higher (CI runs 3.14)
+- `PyYAML` and `pytest` (pinned in `requirements-dev.txt`)
 
 Install Python dependencies:
 ```bash
-pip install pyyaml
+PIP_CONFIG_FILE=pip.ini pip install -r requirements-dev.txt
 ```
 
 ## CI/CD Integration
@@ -295,15 +337,15 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
+          python-version: '3.14'
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -r requirements-dev.txt
 
       - name: Make scripts executable
         run: chmod +x .ai/tests/*.sh
@@ -318,9 +360,9 @@ Create `.gitlab-ci.yml`:
 
 ```yaml
 validate:
-  image: python:3.11
+  image: python:3.14
   script:
-    - pip install pyyaml
+    - pip install -r requirements-dev.txt
     - chmod +x .ai/tests/*.sh
     - .ai/tests/run-all-tests.sh
 ```
@@ -422,7 +464,7 @@ chmod +x .ai/tests/*.sh
 
 Install PyYAML:
 ```bash
-pip install pyyaml
+pip install -r requirements-dev.txt
 ```
 
 ### Path issues on Windows
@@ -435,7 +477,7 @@ Use Git Bash or WSL to run the tests. The scripts use Unix-style paths.
 
 - Before committing changes to the template
 - After adding new skills or patterns
-- After modifying CLAUDE.md or other documentation
+- After modifying AGENTS.md or other documentation
 - Before creating a new template release
 - In CI/CD pipeline on every commit
 

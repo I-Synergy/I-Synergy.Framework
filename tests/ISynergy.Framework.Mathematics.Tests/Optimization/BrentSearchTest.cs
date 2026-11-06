@@ -82,7 +82,7 @@ public class BrentSearchTest
         Assert.IsTrue(isSuccess);
         Assert.AreEqual(BrentSearchStatus.Success, search.Status);
         Assert.AreEqual(expected, search.Solution, 1e-6);
-        Assert.IsTrue(Math.Abs(search.Value) < 1e-5);
+        Assert.IsLessThan(1e-5, Math.Abs(search.Value));
     }
 
 

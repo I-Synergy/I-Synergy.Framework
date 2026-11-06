@@ -40,34 +40,34 @@ public class CachedCategoryService(
 
 ### Distributed Caching (Redis)
 ```csharp
-public class CachedBudgetService(
+public class Cached{Entity}Service(
     IDistributedCache distributedCache,
     DataContext dataContext,
-    ILogger<CachedBudgetService> logger)
+    ILogger<Cached{Entity}Service> logger)
 {
-    public async Task<BudgetResponse?> GetBudgetByIdAsync(
-        Guid budgetId,
+    public async Task<{Entity}Response?> Get{Entity}ByIdAsync(
+        Guid {entity}Id,
         CancellationToken cancellationToken = default)
     {
-        var cacheKey = $"budget:{budgetId}";
+        var cacheKey = $"{entity}:{entity}Id";
 
         // Try cache first
         var cachedData = await distributedCache.GetStringAsync(cacheKey, cancellationToken);
 
         if (!string.IsNullOrEmpty(cachedData))
         {
-            logger.LogDebug("Cache hit for Budget {BudgetId}", budgetId);
-            return JsonSerializer.Deserialize<BudgetResponse>(cachedData);
+            logger.LogDebug("Cache hit for {Entity}Id", {entity}Id);
+            return JsonSerializer.Deserialize<{Entity}Response>(cachedData);
         }
 
-        logger.LogDebug("Cache miss for Budget {BudgetId}", budgetId);
+        logger.LogDebug("Cache miss for {Entity}Id", {entity}Id);
 
         // Load from database
-        var budget = await dataContext.Budgets.FirstOrDefaultAsync(
-            b => b.BudgetId == budgetId,
+        var {entity} = await dataContext.{Entities}.FirstOrDefaultAsync(
+            b => b.{Entity}Id == {entity}Id,
             cancellationToken);
 
-        var response = budget is null ? null : new BudgetResponse(budget.BudgetId, budget.Name, budget.Amount);
+        var response = {entity} is null ? null : new {Entity}Response({entity}.{Entity}Id, {entity}.Name, {entity}.Amount);
 
         // Cache for 1 hour
         await distributedCache.SetStringAsync(
@@ -82,50 +82,50 @@ public class CachedBudgetService(
         return response;
     }
 
-    public async Task InvalidateBudgetCacheAsync(
-        Guid budgetId,
+    public async Task Invalidate{Entity}CacheAsync(
+        Guid {entity}Id,
         CancellationToken cancellationToken = default)
     {
-        var cacheKey = $"budget:{budgetId}";
+        var cacheKey = $"{entity}:{entity}Id";
         await distributedCache.RemoveAsync(cacheKey, cancellationToken);
 
-        logger.LogDebug("Invalidated cache for Budget {BudgetId}", budgetId);
+        logger.LogDebug("Invalidated cache for {Entity}Id", {entity}Id);
     }
 }
 ```
 
 ### Cache Invalidation Pattern
 ```csharp
-public sealed class UpdateBudgetCommandHandler(
+public sealed class Update{Entity}CommandHandler(
     DataContext dataContext,
     IDistributedCache cache,
-    ILogger<UpdateBudgetCommandHandler> logger
-) : ICommandHandler<UpdateBudgetCommand, UpdateBudgetResponse>
+    ILogger<Update{Entity}CommandHandler> logger
+) : ICommandHandler<Update{Entity}Command, Update{Entity}Response>
 {
-    public async Task<UpdateBudgetResponse> HandleAsync(
-        UpdateBudgetCommand command,
+    public async Task<Update{Entity}Response> HandleAsync(
+        Update{Entity}Command command,
         CancellationToken cancellationToken = default)
     {
-        var entity = await dataContext.Budgets.FirstOrDefaultAsync(
-            b => b.BudgetId == command.BudgetId,
+        var entity = await dataContext.{Entities}.FirstOrDefaultAsync(
+            b => b.{Entity}Id == command.{Entity}Id,
             cancellationToken);
 
         if (entity is null)
-            throw new InvalidOperationException($"Budget {command.BudgetId} not found");
+            throw new InvalidOperationException($"{Entity} {command.{Entity}Id} not found");
 
         entity.Name = command.Name;
         entity.Amount = command.Amount;
         await dataContext.SaveChangesAsync(cancellationToken);
 
         // Invalidate cache
-        var cacheKey = $"budget:{command.BudgetId}";
+        var cacheKey = $"{entity}:{command.{Entity}Id}";
         await cache.RemoveAsync(cacheKey, cancellationToken);
 
         logger.LogInformation(
-            "Updated Budget {BudgetId} and invalidated cache",
-            command.BudgetId);
+            "Updated {Entity}Id and invalidated cache",
+            command.{Entity}Id);
 
-        return new UpdateBudgetResponse(true);
+        return new Update{Entity}Response(true);
     }
 }
 ```

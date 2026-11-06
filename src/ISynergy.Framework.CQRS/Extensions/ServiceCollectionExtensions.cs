@@ -126,14 +126,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    // Required for decorator pattern - helper extension method
-    private static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
-        where TDecorator : TService
-    {
-        return services.Decorate(typeof(TService), typeof(TDecorator));
-    }
-
-    private static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    private static void Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
     {
         var descriptors = services.Where(s => s.ServiceType == serviceType).ToList();
 
@@ -158,8 +151,6 @@ public static class ServiceCollectionExtensions
 
             services.Insert(index, decoratorDescriptor);
         }
-
-        return services;
     }
 
     private static object GetInstance(IServiceProvider serviceProvider, ServiceDescriptor descriptor)

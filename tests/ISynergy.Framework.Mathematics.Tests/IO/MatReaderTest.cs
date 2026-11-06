@@ -49,11 +49,11 @@ public class MatReaderTest
         #endregion
 
         Assert.AreEqual(typeof(int[,]), t);
-        CollectionAssert.AreEqual(new int[,]
+        Assert.AreSequenceEqual(new int[,]
         {
             { 1, 2, 3, 4 },
         }, matrix);
-        CollectionAssert.AreEqual(new[] { "a" }, names);
+        Assert.AreSequenceEqual(expected, names);
     }
 
     [TestMethod]
@@ -82,12 +82,12 @@ public class MatReaderTest
         string[] names = reader.FieldNames; // should contain "arr"
         #endregion
 
-        CollectionAssert.AreEqual(new sbyte[,]
+        Assert.AreSequenceEqual(new sbyte[,]
         {
             { -128, 127 },
         }, matrix);
 
-        CollectionAssert.AreEqual(new[] { "arr" }, names);
+        Assert.AreSequenceEqual(expectedArray, names);
     }
 
     [TestMethod]
@@ -517,9 +517,9 @@ public class MatReaderTest
         Assert.AreEqual(1.87500000000000e-01, (Udt.Value as double[,])[0, 0]);
 
         MatSparse sparse = Uu.Value as MatSparse;
-        Assert.AreEqual(774, sparse.Rows.Length);
-        Assert.AreEqual(2, sparse.Columns.Length);
-        Assert.AreEqual(774, sparse.Values.Length);
+        Assert.HasCount(774, sparse.Rows);
+        Assert.HasCount(2, sparse.Columns);
+        Assert.HasCount(774, sparse.Values);
 
         int j = 0;
         for (int i = 160; i <= 288; i++, j++)
@@ -544,7 +544,7 @@ public class MatReaderTest
         for (int i = 0; i < sparse.Values.Length; i++)
             Assert.AreEqual(1.0, sparse.Values.GetValue(i));
 
-        Assert.AreEqual(2, sparse.Columns.Length);
+        Assert.HasCount(2, sparse.Columns);
         Assert.AreEqual(0, sparse.Columns[0]);
         Assert.AreEqual(774, sparse.Columns[1]);
 
@@ -559,7 +559,7 @@ public class MatReaderTest
 
         Assert.AreEqual("none", Pname.Value);
         ushort[,] ppv = PP.Value as ushort[,];
-        Assert.AreEqual(6, ppv.Length);
+        Assert.HasCount(6, ppv);
         Assert.AreEqual(2.40000000000000e+01, ppv[0, 0]);
         Assert.AreEqual(7.20000000000000e+01, ppv[1, 0]);
         Assert.AreEqual(1.20000000000000e+02, ppv[2, 0]);
@@ -573,7 +573,7 @@ public class MatReaderTest
         MatNode C = Sess["C"];
         Assert.AreEqual(2, C.Count);
 
-        Assert.AreEqual(0, (C["C"].Value as byte[,]).Length);
+        Assert.IsEmpty(C["C"].Value as byte[,]);
         Assert.IsNull(C["name"].Value);
 
         MatNode row = Sess["row"];
@@ -874,4 +874,6 @@ public class MatReaderTest
         { 1.019908696134792,-0.06572145176389985,1 },
 #endregion
     };
+    private static readonly string[] expectedArray = new[] { "arr" };
+    private static readonly string[] expected = new[] { "a" };
 }

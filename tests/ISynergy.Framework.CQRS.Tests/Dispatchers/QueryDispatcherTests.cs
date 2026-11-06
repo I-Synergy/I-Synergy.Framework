@@ -23,7 +23,7 @@ public class QueryDispatcherTests
         var query = new TestQuery { Parameter = "Test Parameter" };
 
         // Act
-        var result = await dispatcher.DispatchAsync<string>(query);
+        var result = await dispatcher.DispatchAsync<string>(query, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Query Result: Test Parameter", result);
@@ -40,7 +40,7 @@ public class QueryDispatcherTests
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await dispatcher.DispatchAsync<string>(query));
+            await dispatcher.DispatchAsync<string>(query, TestContext.CancellationToken));
     }
 
     [TestMethod]
@@ -53,7 +53,7 @@ public class QueryDispatcherTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-            await dispatcher.DispatchAsync<string>((IQuery<string>?)null!));
+            await dispatcher.DispatchAsync<string>((IQuery<string>?)null!, TestContext.CancellationToken));
     }
 
     public class AnotherQuery : IQuery<int> { public int Value { get; set; } }
@@ -74,8 +74,8 @@ public class QueryDispatcherTests
         var dispatcher = new QueryDispatcher(provider, Mock.Of<ILogger<QueryDispatcher>>());
 
         // Act
-        var stringResult = await dispatcher.DispatchAsync<string>(new TestQuery { Parameter = "Multi" });
-        var intResult = await dispatcher.DispatchAsync<int>(new AnotherQuery { Value = 21 });
+        var stringResult = await dispatcher.DispatchAsync<string>(new TestQuery { Parameter = "Multi" }, TestContext.CancellationToken);
+        var intResult = await dispatcher.DispatchAsync<int>(new AnotherQuery { Value = 21 }, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Query Result: Multi", stringResult);
@@ -120,7 +120,7 @@ public class QueryDispatcherTests
         var query = new TestQuery { Parameter = "Generic Test" };
 
         // Act
-        var result = await dispatcher.DispatchAsync<TestQuery, string>(query);
+        var result = await dispatcher.DispatchAsync<TestQuery, string>(query, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Query Result: Generic Test", result);
@@ -141,9 +141,11 @@ public class QueryDispatcherTests
         var query = new TestQuery { Parameter = "Table Path" };
 
         // Act
-        var result = await dispatcher.DispatchAsync<string>(query);
+        var result = await dispatcher.DispatchAsync<string>(query, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Query Result: Table Path", result);
     }
+
+    public TestContext TestContext { get; set; }
 }

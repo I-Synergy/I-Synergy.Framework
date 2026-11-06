@@ -14,7 +14,6 @@ namespace ISynergy.Framework.Automations.Services;
 public class AutomationService : IAutomationService
 {
     private readonly ILogger _logger;
-    private readonly AutomationOptions _options;
     private readonly IAutomationManager _manager;
     private readonly IAutomationConditionValidator _conditionValidator;
     private readonly IActionQueueBuilder _queueBuilder;
@@ -24,20 +23,17 @@ public class AutomationService : IAutomationService
     /// Initializes a new instance of the <see cref="AutomationService"/> class.
     /// </summary>
     /// <param name="manager">The automation manager for loading automations.</param>
-    /// <param name="options">The automation options.</param>
     /// <param name="conditionValidator">The condition validator service.</param>
     /// <param name="queueBuilder">The action queue builder service.</param>
     /// <param name="logger">The logger.</param>
     public AutomationService(
         IAutomationManager manager,
-        IOptions<AutomationOptions> options,
         IAutomationConditionValidator conditionValidator,
         IActionQueueBuilder queueBuilder,
         ILogger<AutomationService> logger)
     {
         _automations = new List<Automation>();
         _manager = manager;
-        _options = options.Value;
         _conditionValidator = conditionValidator;
         _queueBuilder = queueBuilder;
         _logger = logger;

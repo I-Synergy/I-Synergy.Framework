@@ -3,7 +3,7 @@ using ISynergy.Framework.UI.Utilities;
 
 namespace ISynergy.Framework.UI.Styles;
 
-public sealed class DynamicThemeResourceDictionary : ResourceDictionary, IThemeResourceDictionary
+public sealed partial class DynamicThemeResourceDictionary : ResourceDictionary, IThemeResourceDictionary
 {
     public DynamicThemeResourceDictionary(Color primary)
     {

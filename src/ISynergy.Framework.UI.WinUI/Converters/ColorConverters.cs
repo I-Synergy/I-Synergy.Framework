@@ -11,7 +11,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class SolidColorBrushToHexStringConverter : IValueConverter
+public partial class SolidColorBrushToHexStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -47,7 +47,7 @@ public class SolidColorBrushToHexStringConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class IntegerToBrushConverter : IValueConverter
+public partial class IntegerToBrushConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -87,7 +87,7 @@ public class IntegerToBrushConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class IntegerToColorConverter : IValueConverter
+public partial class IntegerToColorConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

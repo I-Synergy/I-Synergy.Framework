@@ -16,7 +16,6 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 internal class UpdateService : IUpdateService
 {
-    private readonly ILogger _logger;
     private readonly IInfoService _infoService;
     private readonly IDialogService _dialogService;
     private readonly ILanguageService _languageService;
@@ -31,14 +30,12 @@ internal class UpdateService : IUpdateService
     /// <param name="dialogService">The dialog service.</param>
     /// <param name="languageService">The language service.</param>
     /// <param name="options"></param>
-    /// <param name="logger"></param>
     public UpdateService(
         IHttpClientFactory httpClientFactory,
         IInfoService infoService,
         IDialogService dialogService,
         ILanguageService languageService,
-        IOptions<UpdateOptions> options,
-        ILogger<UpdateService> logger)
+        IOptions<UpdateOptions> options)
     {
         Argument.IsNotNull(options);
 
@@ -47,7 +44,6 @@ internal class UpdateService : IUpdateService
         _dialogService = dialogService;
         _languageService = languageService;
         _updateOptions = options.Value;
-        _logger = logger;
     }
 
     /// <summary>

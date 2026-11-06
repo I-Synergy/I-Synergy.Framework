@@ -376,7 +376,9 @@ public class DistanceTest
         Assert.AreEqual(a, b);
     }
 
-
+    private static readonly int[] y = Array.Empty<int>();
+    private static readonly int[] x = Array.Empty<int>();
+    private static readonly int[] yArray = Array.Empty<int>();
 
     [TestMethod]
     public void LevenshteinTest1()
@@ -391,15 +393,15 @@ public class DistanceTest
         Assert.AreEqual(0, Distance.Levenshtein(null, ""));
         Assert.AreEqual(5, Distance.Levenshtein("apple", "banana"));
 
-        Assert.AreEqual(0, Distance.Levenshtein([], new int[] { }));
+        Assert.AreEqual(0, Distance.Levenshtein([], y));
         Assert.AreEqual(1, Distance.Levenshtein([], [1]));
         Assert.AreEqual(1, Distance.Levenshtein([1], []));
         Assert.AreEqual(0, Distance.Levenshtein([1], [1]));
         Assert.AreEqual(0, Distance.Levenshtein(null, null));
         Assert.AreEqual(1, Distance.Levenshtein(null, [1]));
         Assert.AreEqual(1, Distance.Levenshtein([1], null));
-        Assert.AreEqual(0, Distance.Levenshtein(new int[] { }, null));
-        Assert.AreEqual(0, Distance.Levenshtein(null, new int[] { }));
+        Assert.AreEqual(0, Distance.Levenshtein(x, null));
+        Assert.AreEqual(0, Distance.Levenshtein(null, yArray));
         Assert.AreEqual(5, Distance.Levenshtein([1, 2, 2, 3, 4], [5, 1, 6, 1, 6, 1]));
     }
 

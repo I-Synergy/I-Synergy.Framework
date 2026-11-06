@@ -10,7 +10,7 @@ namespace Sample.ViewModels;
 /// <summary>
 /// First blade of <see cref="DetailsViewModel"/>. Opens a nested blade on demand.
 /// </summary>
-public class DetailViewModel : ViewModelBlade<TestItem>
+public partial class DetailViewModel : ViewModelBlade<TestItem>
 {
     private readonly IBladeService _bladeService;
 

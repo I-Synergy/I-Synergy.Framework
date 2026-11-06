@@ -398,6 +398,6 @@ public class AngleTests
     {
         Angle a = new(0);
         Angle b = new(0.000000001);
-        Assert.IsTrue(a.GetHashCode() != b.GetHashCode());
+        Assert.AreNotEqual(b.GetHashCode(), a.GetHashCode());
     }
 }

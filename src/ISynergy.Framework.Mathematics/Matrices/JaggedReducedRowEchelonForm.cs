@@ -33,8 +33,7 @@ public class JaggedReducedRowEchelonForm
     ///   
     public JaggedReducedRowEchelonForm(double[][] value, bool inPlace = false)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         rref = inPlace ? value : value.MemberwiseClone();
 

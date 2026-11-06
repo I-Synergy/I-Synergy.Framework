@@ -20,7 +20,7 @@ public class MessengerSendToAllTest
         private set;
     }
 
-    private readonly IMessengerService _messenger;
+    private readonly MessengerService _messenger;
     private readonly ILogger<MessengerService> _logger;
 
     public MessengerSendToAllTest()
@@ -43,9 +43,9 @@ public class MessengerSendToAllTest
         TestRecipient externalRecipient = new();
         externalRecipient.RegisterWith(_messenger);
 
-        Assert.AreEqual(null, StringContent1);
-        Assert.AreEqual(null, StringContent2);
-        Assert.AreEqual(null, externalRecipient.StringContent);
+        Assert.IsNull(StringContent1);
+        Assert.IsNull(StringContent2);
+        Assert.IsNull(externalRecipient.StringContent);
 
         _messenger.Send(new TestMessage
         {
@@ -88,7 +88,7 @@ public class MessengerSendToAllTest
             private set;
         }
 
-        internal void RegisterWith(IMessengerService _messenger)
+        internal void RegisterWith(MessengerService _messenger)
         {
             _messenger.Register<TestMessage>(this, m => StringContent = m.Content);
         }

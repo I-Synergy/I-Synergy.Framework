@@ -43,8 +43,7 @@ public static partial class Matrix
     public static T[,] Get<T>(this T[,] source, T[,] destination,
         int startRow, int endRow, int startColumn, int endColumn)
     {
-        if (destination is null)
-            throw new ArgumentNullException("destination");
+        ArgumentNullException.ThrowIfNull(destination);
 
         int rows = source.Rows();
         int cols = source.Columns();
@@ -56,11 +55,11 @@ public static partial class Matrix
         endColumn = end(endColumn, cols);
 
         if (destination.GetLength(0) < endRow - startRow)
-            throw new DimensionMismatchException("destination",
+            throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
 
         if (destination.GetLength(1) < endColumn - startColumn)
-            throw new DimensionMismatchException("destination",
+            throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
 
         return get(source, destination, startRow, endRow, startColumn, endColumn);
@@ -105,8 +104,7 @@ public static partial class Matrix
     /// 
     public static T[,] Get<T>(this T[,] source, T[,] destination, int[] rowIndexes, int[] columnIndexes)
     {
-        if (destination is null)
-            throw new ArgumentNullException("destination");
+        ArgumentNullException.ThrowIfNull(destination);
 
         return get(source, destination, rowIndexes, columnIndexes);
     }
@@ -138,8 +136,7 @@ public static partial class Matrix
     /// 
     public static T[,] Get<T>(this T[,] source, int startRow, int endRow, int[] columnIndexes)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
         int rows = source.Rows();
         int cols = source.Columns();
@@ -200,8 +197,7 @@ public static partial class Matrix
     /// 
     public static T[,] Get<T>(this T[,] source, int[] rowIndexes, int startColumn, int endColumn)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
         int rows = source.Rows();
         int cols = source.Columns();
@@ -365,13 +361,11 @@ public static partial class Matrix
     /// 
     public static T[][] Get<T>(this T[][] source, int[] indexes, bool transpose = false)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
-        if (indexes is null)
-            throw new ArgumentNullException("indexes");
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(indexes);
 
         int rows = source.Length;
-        if (rows == 0) return new T[0][];
+        if (rows == 0) return Array.Empty<T[]>();
         int cols = source[0].Length;
 
         T[][] destination;
@@ -417,12 +411,11 @@ public static partial class Matrix
     public static T[][] Get<T>(this T[][] source, int[] rowIndexes,
         int startColumn, int endColumn, bool reuseMemory = false)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
         int rows = source.Length;
         if (rows == 0)
-            return new T[0][];
+            return Array.Empty<T[]>();
         int cols = source[0].Length;
 
         startColumn = index(startColumn, cols);
@@ -497,12 +490,11 @@ public static partial class Matrix
     /// 
     public static T[][] Get<T>(this T[][] source, int startRow, int endRow, int[] columnIndexes)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
         int rows = source.Length;
         if (rows == 0)
-            return new T[0][];
+            return Array.Empty<T[]>();
         int cols = source[0].Length;
 
         startRow = index(startRow, rows);
@@ -561,14 +553,12 @@ public static partial class Matrix
     /// 
     public static T[] Get<T>(this T[] source, int[] indexes, bool inPlace = false)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
-        if (indexes is null)
-            throw new ArgumentNullException("indexes");
+        ArgumentNullException.ThrowIfNull(indexes);
 
         if (inPlace && source.Length != indexes.Length)
-            throw new DimensionMismatchException("Source and indexes arrays must have the same dimension for in-place operations.");
+            throw new DimensionMismatchException(nameof(indexes), "Source and indexes arrays must have the same dimension for in-place operations.");
 
         var destination = new T[indexes.Length];
         for (var i = 0; i < indexes.Length; i++)
@@ -598,11 +588,9 @@ public static partial class Matrix
     /// 
     public static T[] Get<T>(this T[] source, IList<int> indexes)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
-        if (indexes is null)
-            throw new ArgumentNullException("indexes");
+        ArgumentNullException.ThrowIfNull(indexes);
 
         var destination = new T[indexes.Count];
 
@@ -641,11 +629,9 @@ public static partial class Matrix
     /// 
     public static T Get<T>(this T[] source, int index)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
-        if (index >= source.Length)
-            throw new ArgumentOutOfRangeException("index");
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, source.Length);
 
         index = Matrix.index(index, source.Length);
 
@@ -661,11 +647,9 @@ public static partial class Matrix
     /// 
     public static List<T> Get<T>(this List<T> source, int[] indexes)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
-        if (indexes is null)
-            throw new ArgumentNullException("indexes");
+        ArgumentNullException.ThrowIfNull(indexes);
 
         var destination = new List<T>();
         for (var i = 0; i < indexes.Length; i++)
@@ -684,8 +668,7 @@ public static partial class Matrix
     internal static T[,] get<T>(this T[,] source, T[,] destination,
         int startRow, int endRow, int startColumn, int endColumn)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
         int rows = source.Rows();
         int cols = source.Columns();
@@ -724,8 +707,7 @@ public static partial class Matrix
     /// 
     private static T[,] get<T>(this T[,] source, T[,] destination, int[] rowIndexes, int[] columnIndexes)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
         int rows = source.GetLength(0);
         int cols = source.GetLength(1);
@@ -755,7 +737,7 @@ public static partial class Matrix
         if (destination is not null)
         {
             if (destination.GetLength(0) < newRows || destination.GetLength(1) < newCols)
-                throw new DimensionMismatchException("destination",
+                throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
         }
         else
@@ -796,11 +778,10 @@ public static partial class Matrix
     private static T[][] get<T>(this T[][] source, T[][] destination,
         int[] rowIndexes, int[] columnIndexes, bool reuseMemory)
     {
-        if (source is null)
-            throw new ArgumentNullException("source");
+        ArgumentNullException.ThrowIfNull(source);
 
         if (source.Length == 0)
-            return new T[0][];
+            return Array.Empty<T[]>();
 
         int rows = source.Length;
         int cols = source[0].Length;
@@ -831,7 +812,7 @@ public static partial class Matrix
         if (destination is not null)
         {
             if (destination.Length < newRows)
-                throw new DimensionMismatchException("destination",
+                throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
         }
         else

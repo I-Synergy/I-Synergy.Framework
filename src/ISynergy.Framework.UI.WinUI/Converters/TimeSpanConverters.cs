@@ -10,7 +10,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class TimeSpanToStringConverter : IValueConverter
+public partial class TimeSpanToStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

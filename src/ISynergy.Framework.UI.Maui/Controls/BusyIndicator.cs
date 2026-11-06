@@ -6,7 +6,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// A reusable indicator control that displays an activity indicator with an optional message and tinted overlay.
 /// This control binds to the IBusyService to automatically show/hide based on busy state.
 /// </summary>
-public class BusyIndicator : ContentView
+public partial class BusyIndicator : ContentView
 {
     private readonly Label _messageLabel;
     private readonly ActivityIndicator _activityIndicator;

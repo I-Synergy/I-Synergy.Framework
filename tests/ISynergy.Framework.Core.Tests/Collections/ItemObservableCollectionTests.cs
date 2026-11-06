@@ -26,7 +26,7 @@ public class ItemObservableCollectionTests
     public void Constructor_CreatesEmptyCollection()
     {
         var collection = new ItemObservableCollection<TestItem>();
-        Assert.AreEqual(0, collection.Count);
+        Assert.IsEmpty(collection);
     }
 
     [TestMethod]
@@ -98,7 +98,7 @@ public class ItemObservableCollectionTests
         item2.Name = "Test2";
 
         Assert.IsFalse(eventRaised);
-        Assert.AreEqual(0, collection.Count);
+        Assert.IsEmpty(collection);
     }
 
     [TestMethod]
@@ -159,7 +159,7 @@ public class ItemObservableCollectionTests
         Assert.IsFalse(itemRef.IsAlive, "Item should be garbage collected");
     }
 
-    private void CreateCollectionAndItem(out WeakReference collectionRef, out WeakReference itemRef)
+    private static void CreateCollectionAndItem(out WeakReference collectionRef, out WeakReference itemRef)
     {
         var collection = new ItemObservableCollection<TestItem>();
         var item = new TestItem { Name = "Test" };

@@ -307,7 +307,7 @@ public class UtmGridTests
         {
             Assert.AreEqual(o.Projection, utm);
             Assert.AreEqual("32U", o.Grid.ToString());
-            Assert.IsTrue(Math.Abs(o.ScaleFactor - 1.0) < 0.001);
+            Assert.IsLessThan(0.001, Math.Abs(o.ScaleFactor - 1.0));
         }
 
         ValidateCorners(g);

@@ -29,11 +29,10 @@ public class LoadingView : Page
         InitializeContent(splashScreenOptions);
         SetupEventHandlers();
 
-        if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
-        {
-            if (FindName("BackgroundImage") is Image backgroundImage)
-                backgroundImage.Source = new BitmapImage(new Uri(splashScreenOptions.Resource));
-        }
+        if (!string.IsNullOrEmpty(splashScreenOptions.Resource)
+            && splashScreenOptions.SplashScreenType == SplashScreenTypes.Image
+            && FindName("BackgroundImage") is Image backgroundImage)
+            backgroundImage.Source = new BitmapImage(new Uri(splashScreenOptions.Resource));
     }
 
     public bool IsSignInButtonEnabled
@@ -127,7 +126,7 @@ public class LoadingView : Page
         loadingSpinner.SetBinding(LoadingSpinner.MessageProperty, new Binding
         {
             Source = _commonServices.BusyService,
-            Path = new PropertyPath(nameof(IBusyService.BusyMessage))
+            Path = new PropertyPath((object)nameof(IBusyService.BusyMessage))
         });
 
         mainGrid.Children.Add(loadingSpinner);
@@ -159,7 +158,7 @@ public class LoadingView : Page
     /// <summary>
     /// Returns black or white, whichever stays readable on <paramref name="background"/>.
     /// </summary>
-    private static Brush GetContrastingBrush(Color background)
+    private static SolidColorBrush GetContrastingBrush(Color background)
     {
         static double Linearize(byte channel)
         {

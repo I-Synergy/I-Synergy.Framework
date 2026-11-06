@@ -1,6 +1,6 @@
 ---
 name: ui-tester
-description: Playwright E2E testing specialist — writes UI tests, accessibility checks, visual regression tests
+description: Playwright E2E testing specialist — writes UI tests, accessibility checks, visual regression tests. Use for Playwright E2E tests, accessibility checks, and visual regression.
 runAs: subagent
 model: haiku
 tools: Read, Write, Edit, Bash, Grep, Glob

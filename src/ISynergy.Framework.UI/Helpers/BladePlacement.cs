@@ -50,7 +50,7 @@ public static class BladePlacement
     public static bool IsStartSide(BladePaneAnchor anchor, string? cultureName)
     {
         var isRightToLeft = !string.IsNullOrWhiteSpace(cultureName)
-            && GlobalizationConstants.IsRightToLeftLanguage(cultureName!);
+            && GlobalizationConstants.IsRightToLeftLanguage(cultureName);
 
         return IsStartSide(anchor, isRightToLeft);
     }

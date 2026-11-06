@@ -36,8 +36,7 @@ public class RedBlackTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     /// 
     public RedBlackTreeDictionary(IComparer<TKey> comparer) // NOSONAR
     {
-        if (comparer is null)
-            throw new ArgumentNullException("comparer");
+        ArgumentNullException.ThrowIfNull(comparer);
 
         init(comparer);
     }

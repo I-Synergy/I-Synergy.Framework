@@ -43,11 +43,11 @@ public static class ThemeColorCalculator
         float min = MathF.Min(red, MathF.Min(green, blue));
         float delta = max - min;
         float lightness = (max + min) / 2f;
-        float saturation = delta == 0f ? 0f : delta / (1f - MathF.Abs(2f * lightness - 1f));
+        float saturation = delta < 1e-6f ? 0f : delta / (1f - MathF.Abs(2f * lightness - 1f));
         float hue;
-        if (delta == 0f) hue = 0f;
-        else if (max == red) hue = 60f * (((green - blue) / delta) % 6f);
-        else if (max == green) hue = 60f * ((blue - red) / delta + 2f);
+        if (delta < 1e-6f) hue = 0f;
+        else if (red >= green && red >= blue) hue = 60f * (((green - blue) / delta) % 6f);
+        else if (green >= blue) hue = 60f * ((blue - red) / delta + 2f);
         else hue = 60f * ((red - green) / delta + 4f);
         if (hue < 0f) hue += 360f;
         return (hue, saturation, lightness);

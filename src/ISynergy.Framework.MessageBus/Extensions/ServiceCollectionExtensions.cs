@@ -131,19 +131,6 @@ public static class ServiceCollectionExtensions
     /// <returns>IServiceCollection.</returns>
     public static IServiceCollection AddSubscribingTopicMessageBus<TQueueMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(this IServiceCollection _self, bool isScoped = false)
         where TQueueMessage : class, IBaseMessage
-        where TImplementation : class, ISubscriberServiceBus<TQueueMessage>
-    {
-        if (isScoped)
-        {
-            _self.TryAddScoped<TImplementation>();
-            _self.TryAddScoped<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
-        }
-        else
-        {
-            _self.TryAddSingleton<TImplementation>();
-            _self.TryAddSingleton<ISubscriberServiceBus<TQueueMessage>, TImplementation>();
-        }
-
-        return _self;
-    }
+        where TImplementation : class, ISubscriberServiceBus<TQueueMessage> =>
+        _self.AddSubscribingQueueMessageBus<TQueueMessage, TImplementation>(isScoped);
 }

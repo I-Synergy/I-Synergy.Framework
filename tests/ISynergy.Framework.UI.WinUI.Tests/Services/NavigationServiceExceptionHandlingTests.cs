@@ -12,6 +12,7 @@ namespace ISynergy.Framework.UI.WinUI.Services;
 /// Tests for exception handling in NavigationService for WinUI.
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class NavigationServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;

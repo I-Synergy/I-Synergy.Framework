@@ -23,7 +23,7 @@ public class AggregateRootTests
     {
         var aggregate = new OrderAggregate();
 
-        Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
+        Assert.IsEmpty(aggregate.GetUncommittedEvents());
     }
 
     // -------------------------------------------------------------------------
@@ -37,7 +37,7 @@ public class AggregateRootTests
 
         aggregate.Create(Guid.NewGuid(), "Alice", 100m);
 
-        Assert.AreEqual(1, aggregate.GetUncommittedEvents().Count);
+        Assert.HasCount(1, aggregate.GetUncommittedEvents());
     }
 
     [TestMethod]
@@ -49,7 +49,7 @@ public class AggregateRootTests
         aggregate.Ship("TRACK-001");
         aggregate.Cancel("Changed mind");
 
-        Assert.AreEqual(3, aggregate.GetUncommittedEvents().Count);
+        Assert.HasCount(3, aggregate.GetUncommittedEvents());
     }
 
     [TestMethod]
@@ -100,7 +100,7 @@ public class AggregateRootTests
 
         // IReadOnlyList does not expose Add — verify the concrete type is read-only
         Assert.IsNotNull(events);
-        Assert.AreEqual(1, events.Count);
+        Assert.HasCount(1, events);
     }
 
     [TestMethod]
@@ -128,7 +128,7 @@ public class AggregateRootTests
 
         aggregate.MarkEventsAsCommitted();
 
-        Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
+        Assert.IsEmpty(aggregate.GetUncommittedEvents());
     }
 
     [TestMethod]
@@ -149,7 +149,7 @@ public class AggregateRootTests
 
         aggregate.MarkEventsAsCommitted();
 
-        Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
+        Assert.IsEmpty(aggregate.GetUncommittedEvents());
     }
 
     // -------------------------------------------------------------------------
@@ -193,7 +193,7 @@ public class AggregateRootTests
 
         aggregate.LoadFromHistory(events);
 
-        Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
+        Assert.IsEmpty(aggregate.GetUncommittedEvents());
     }
 
     [TestMethod]
@@ -256,7 +256,7 @@ public class AggregateRootTests
         aggregate.MarkEventsAsCommitted();
 
         Assert.AreEqual(1L, aggregate.Version);
-        Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
+        Assert.IsEmpty(aggregate.GetUncommittedEvents());
         Assert.AreEqual("TRACK-NEW", aggregate.TrackingNumber);
     }
 
@@ -293,7 +293,7 @@ public class AggregateRootTests
 
         aggregate.LoadFromSnapshot(10L);
 
-        Assert.AreEqual(0, aggregate.GetUncommittedEvents().Count);
+        Assert.IsEmpty(aggregate.GetUncommittedEvents());
     }
 
     // -------------------------------------------------------------------------

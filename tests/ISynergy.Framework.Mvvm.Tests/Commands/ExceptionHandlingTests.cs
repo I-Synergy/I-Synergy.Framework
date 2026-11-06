@@ -92,7 +92,9 @@ public class ExceptionHandlingTests
         var command = new RelayCommand(() => throw expectedException);
 
         // Act & Assert - should not throw
-        command.Execute(null);
+        Exception? observed = null;
+        try { command.Execute(null); } catch (Exception ex) { observed = ex; }
+        Assert.IsNull(observed);
     }
 
     #endregion
@@ -129,7 +131,7 @@ public class ExceptionHandlingTests
         //await Assert.ThrowsAsync<InvalidOperationException>(() => task);
 
         // Assert - exception handler should be called
-        await Task.Delay(100); // Give time for async handling
+        await Task.Delay(100, TestContext.CancellationToken); // Give time for async handling
         Assert.IsTrue(task.IsFaulted);
         Assert.AreEqual(expectedException, task.Exception?.InnerException);
     }
@@ -141,7 +143,7 @@ public class ExceptionHandlingTests
         var expectedException = new InvalidOperationException("Test exception");
         var command = new AsyncRelayCommand(async () =>
         {
-            await Task.Delay(10);
+            await Task.Delay(10, TestContext.CancellationToken);
             throw expectedException;
         });
 
@@ -172,7 +174,9 @@ public class ExceptionHandlingTests
         var command = new AsyncRelayCommand(() => throw new InvalidOperationException("Test exception"), AsyncRelayCommandOptions.None);
 
         // Should not throw - exception is logged via Debug.WriteLine
-        command.Execute(null);
+        Exception? observed = null;
+        try { command.Execute(null); } catch (Exception ex) { observed = ex; }
+        Assert.IsNull(observed);
     }
 
     #endregion
@@ -189,6 +193,8 @@ public class ExceptionHandlingTests
         // Act
         await Assert.ThrowsAsync<InvalidOperationException>(() => command.ExecuteAsync("test"));
     }
+
+    public TestContext TestContext { get; set; }
 
     #endregion
 }

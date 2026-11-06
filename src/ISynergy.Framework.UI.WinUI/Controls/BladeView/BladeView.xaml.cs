@@ -172,7 +172,7 @@ public partial class BladeView : UserControl, IDisposable
     private bool _isDisposed;
     private long _flowDirectionCallbackToken;
 
-    private class BladeState
+    private sealed class BladeState
     {
         public bool IsRemoving { get; set; }
         public Guid MessageToken { get; set; }
@@ -250,9 +250,10 @@ public partial class BladeView : UserControl, IDisposable
 
         var isRtl = FlowDirection == FlowDirection.RightToLeft;
 
-        BladeAlignment = Anchor == BladePaneAnchor.Auto
-            ? (isRtl ? Mirror(HorizontalBladeAlignment) : HorizontalBladeAlignment)
-            : (BladePlacement.IsStartSide(Anchor, isRtl) ? HorizontalAlignment.Left : HorizontalAlignment.Right);
+        if (Anchor == BladePaneAnchor.Auto)
+            BladeAlignment = isRtl ? Mirror(HorizontalBladeAlignment) : HorizontalBladeAlignment;
+        else
+            BladeAlignment = BladePlacement.IsStartSide(Anchor, isRtl) ? HorizontalAlignment.Left : HorizontalAlignment.Right;
     }
 
     /// <summary>
@@ -330,7 +331,7 @@ public partial class BladeView : UserControl, IDisposable
     /// into the already disposed view model and throw <see cref="ObjectDisposedException"/> on the
     /// next open of the same page.
     /// </remarks>
-    private void DetachBladeView(IView view)
+    private static void DetachBladeView(IView view)
     {
         if (view is FrameworkElement element)
             element.DataContext = null;
@@ -350,10 +351,7 @@ public partial class BladeView : UserControl, IDisposable
 
     private void UnregisterBlade(IView view)
     {
-        if (_bladeStates.ContainsKey(view))
-        {
-            _bladeStates.Remove(view);
-        }
+        _bladeStates.Remove(view);
     }
 
     private void RemoveBlade(IView view)

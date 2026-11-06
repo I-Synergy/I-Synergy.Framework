@@ -33,18 +33,18 @@ public class RequestCancellationService
     // Called during sign-out to cancel all pending requests
     public void CancelAllRequests()
     {
-        foreach (var kvp in _activeRequests)
+        foreach (var cancellationTokenSource in _activeRequests.Select(kvp => kvp.Value))
         {
             try
             {
-                kvp.Value.Cancel();
+                cancellationTokenSource.Cancel();
             }
             catch
             {
                 // Ignore errors during cleanup
             }
 
-            kvp.Value.Dispose();
+            cancellationTokenSource.Dispose();
         }
 
         _activeRequests.Clear();

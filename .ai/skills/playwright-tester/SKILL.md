@@ -172,7 +172,7 @@ tests/
 The E2E surface produces the same 29119-3 items as the unit surface, right-sized in
 `.ai/reference/test-documentation.md`. Four consequences:
 
-- **Test plan.** The slice's plan (`docs/slices/{BC}/{Entity}.{Operation}/test-plan.md`, from
+- **Test plan.** The slice's plan (`docs/slices/{Domain}/{Entity}.{Operation}/test-plan.md`, from
   `.ai/reference/templates/test-plan.md.txt`) names which criteria are only observable through the
   UI, marks them at the E2E level, and carries the browser and viewport matrix in its environment
   section. Add rows to that plan — do not write a second plan for the UI.
@@ -199,7 +199,7 @@ The E2E surface produces the same 29119-3 items as the unit surface, right-sized
 - [ ] Each E2E test method that is evidence for a criterion carries `[TestCategory("AC-…")]`
       (`.ai/reference/traceability.md`)
 - [ ] The slice's test plan names which criteria run at the E2E level, and on which browsers
-      (`docs/slices/{BC}/{Entity}.{Operation}/test-plan.md`)
+      (`docs/slices/{Domain}/{Entity}.{Operation}/test-plan.md`)
 - [ ] Failure evidence captured — trace, screenshot or video — and referenced from the incident report
 - [ ] Every failure that outlives the change has a test incident report with reproduce steps,
       expected vs actual results, a severity from `.ai/reference/quality-model.md`, and a status

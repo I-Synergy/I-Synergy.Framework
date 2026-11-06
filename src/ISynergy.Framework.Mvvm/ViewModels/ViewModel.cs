@@ -105,7 +105,7 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
         ILogger<ViewModel> logger)
     {
         _commonServices = commonServices;
-        _commonServices.MessengerService.Register<UserSignedInMessage>(this, msg => { _ = OnUserSignedInAsync(msg); });
+        _commonServices.MessengerService.Register<UserSignedInMessage>(this, msg => { _ = OnUserSignedInAsync(); });
 
         _logger = logger;
 
@@ -115,10 +115,10 @@ public abstract class ViewModel : ObservableValidatedClass, IViewModel
         CloseCommand = new AsyncRelayCommand(CloseAsync);
         CancelCommand = new AsyncRelayCommand(CancelAsync);
 
-        _logger.LogTrace(GetType().Name);
+        _logger.LogTrace("{TypeName}", GetType().Name);
     }
 
-    private async Task OnUserSignedInAsync(UserSignedInMessage message)
+    private async Task OnUserSignedInAsync()
     {
         IsInitialized = false;
         Cleanup();

@@ -50,7 +50,7 @@ public class ActionQueueBuilder : IActionQueueBuilder
                 }
                 else
                 {
-                    i -= 2;
+                    i -= 2; // NOSONAR - repeat logic rewinds the loop intentionally
                     repeatCount += 1;
                 }
                 continue;
@@ -66,7 +66,7 @@ public class ActionQueueBuilder : IActionQueueBuilder
                     }
                     else
                     {
-                        i -= 2;
+                        i -= 2; // NOSONAR - repeat logic rewinds the loop intentionally // NOSONAR - repeat logic rewinds the loop intentionally
                         repeatCount += 1;
                     }
                 }
@@ -78,7 +78,7 @@ public class ActionQueueBuilder : IActionQueueBuilder
                     }
                     else
                     {
-                        i -= 2;
+                        i -= 2; // NOSONAR - repeat logic rewinds the loop intentionally // NOSONAR - repeat logic rewinds the loop intentionally
                         repeatCount += 1;
                     }
                 }
@@ -97,7 +97,7 @@ public class ActionQueueBuilder : IActionQueueBuilder
             var taskFunc = executor.CreateTaskAsync(action, value, cancellationTokenSource, _automationService);
             if (taskFunc is not null)
             {
-                queue.Add(taskFunc);
+                queue.Add(taskFunc, cancellationTokenSource.Token);
             }
         }
 

@@ -22,8 +22,8 @@ public sealed class CurrencyFormatterTests
         var result = formatter.CleanInput("$123.45");
 
         // Assert
-        Assert.IsFalse(result.Contains("$"));
-        Assert.IsTrue(result.Contains("123.45"));
+        Assert.IsFalse(result.Contains('$'));
+        Assert.Contains("123.45", result);
     }
 
     [TestMethod]
@@ -36,9 +36,9 @@ public sealed class CurrencyFormatterTests
         var result = formatter.CleanInput("$1,234.56");
 
         // Assert
-        Assert.IsFalse(result.Contains("$"));
-        Assert.IsFalse(result.Contains(","));
-        Assert.IsTrue(result.Contains("1234.56"));
+        Assert.IsFalse(result.Contains('$'));
+        Assert.IsFalse(result.Contains(','));
+        Assert.Contains("1234.56", result);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public sealed class CurrencyFormatterTests
         var result = formatter.CleanInput("€ 123,45");
 
         // Assert
-        Assert.IsFalse(result.Contains("€"));
+        Assert.IsFalse(result.Contains('€'));
     }
 
     [TestMethod]
@@ -64,8 +64,8 @@ public sealed class CurrencyFormatterTests
         var result = formatter.FormatValue(123.45m);
 
         // Assert
-        Assert.IsTrue(result.Contains("$"));
-        Assert.IsTrue(result.Contains("123.45"));
+        Assert.IsTrue(result.Contains('$'));
+        Assert.Contains("123.45", result);
     }
 
     [TestMethod]
@@ -78,8 +78,8 @@ public sealed class CurrencyFormatterTests
         var result = formatter.FormatValue(1234.56m);
 
         // Assert
-        Assert.IsTrue(result.Contains("€") || result.Contains("EUR"));
-        Assert.IsTrue(result.Contains("1") && result.Contains("234"));
+        Assert.IsTrue(result.Contains('€') || result.Contains("EUR"));
+        Assert.IsTrue(result.Contains('1') && result.Contains("234"));
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public sealed class CurrencyFormatterTests
         var result = formatter.FormatValue(123.4m);
 
         // Assert
-        Assert.IsTrue(result.Contains("123.400"));
+        Assert.Contains("123.400", result);
     }
 
     [TestMethod]

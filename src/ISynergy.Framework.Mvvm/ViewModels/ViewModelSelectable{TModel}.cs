@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Commands;
 using ISynergy.Framework.Mvvm.Events;
 using Microsoft.Extensions.Logging;
@@ -13,12 +14,18 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// and the associated cleanup/dispose logic.
 /// </summary>
 /// <typeparam name="TModel">The type of the model entity.</typeparam>
-public abstract class ViewModelSelectable<TModel> : ViewModel
+public abstract class ViewModelSelectable<TModel> : ViewModel, IDialogViewModel
 {
+    /// <inheritdoc />
+    object? IDialogViewModel.SelectedItem => SelectedItem;
+
+    /// <inheritdoc />
+    System.Windows.Input.ICommand? IDialogViewModel.SubmitCommand => SubmitCommand;
+
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TModel>>? Submitted;
+    public event EventHandler<SubmitEventArgs<TModel>>? Submitted; // NOSONAR - raised via OnSubmitted by derived view models
 
     /// <summary>
     /// Called when [submitted].
@@ -30,7 +37,7 @@ public abstract class ViewModelSelectable<TModel> : ViewModel
         {
             Exception? capturedException = null;
 
-            foreach (EventHandler<SubmitEventArgs<TModel>> handler in Submitted.GetInvocationList())
+            foreach (var handler in Submitted.GetInvocationList().Cast<EventHandler<SubmitEventArgs<TModel>>>())
             {
                 try
                 {

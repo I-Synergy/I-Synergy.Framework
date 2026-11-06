@@ -34,7 +34,7 @@ public class CancellationTokenTests
         using var cts = new CancellationTokenSource();
 
         // Act
-        await dispatcher.DispatchAsync(command); // Should work with default token
+        await dispatcher.DispatchAsync(command, TestContext.CancellationToken); // Should work with default token
 
         // Now cancel and verify it propagates
         cts.Cancel();
@@ -74,7 +74,7 @@ public class CancellationTokenTests
         using var cts = new CancellationTokenSource();
 
         // Act
-        await dispatcher.DispatchAsync<string>(query); // Should work with default token
+        await dispatcher.DispatchAsync<string>(query, TestContext.CancellationToken); // Should work with default token
 
         // Now cancel and verify it propagates
         cts.Cancel();
@@ -92,4 +92,6 @@ public class CancellationTokenTests
 
     public class TestCancellableCommand : ICommand { }
     public class TestCancellableQuery : IQuery<string> { }
+
+    public TestContext TestContext { get; set; }
 }

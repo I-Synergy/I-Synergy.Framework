@@ -65,49 +65,14 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     public override bool Equals(object? obj) // NOSONAR
     {
         if (ReferenceEquals(this, obj))
-        {
             return true;
-        }
 
         if (obj is IObservableValidatedClass observable && observable.HasIdentityProperty())
             return observable.GetIdentityValue()!.Equals(this.GetIdentityValue());
 
-        var currentPropertiesToCheck = this.GetProperties(includeMemo: true, includeAudit: true);
-
-        if (obj is null)
-            return false;
-
-        var propertiesToCheck = obj.GetProperties(includeMemo: true, includeAudit: true);
-
-        foreach (var property in currentPropertiesToCheck.EnsureNotNull())
-        {
-            if (!propertiesToCheck.Any(a => a.Name.Equals(property.Name)))
-            {
-                return false;
-            }
-
-            if (propertiesToCheck.SingleOrDefault(q => q.Name.Equals(property.Name)) is { } propertyInfo)
-            {
-                if ((property.GetValue(this) is null && propertyInfo.GetValue(obj) is not null) ||
-                    (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is null))
-                {
-                    return false;
-                }
-
-                if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this)!.Equals(propertyInfo.GetValue(obj)))
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return base.Equals(obj);
     }
 
-    /// <summary>
-    /// Returns a hash code for this instance.
-    /// </summary>
-    /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
     public override int GetHashCode()
     {
         var identityValue = this.GetIdentityValue();
@@ -139,7 +104,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         if (propertyName is null)
             return;
 
-        if (Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is not IProperty<T> property) return;
+        if (Properties.GetOrAdd(propertyName, key => new Property<T>(key)) is not IProperty<T> property) return;
 
         // During cleanup or when events are suppressed, just set the value
         if (!shouldRaiseEvents || IsInCleanup)
@@ -323,7 +288,7 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
     [Display(AutoGenerateField = false)]
     public bool HasErrors
     {
-        get => Errors is not null && Errors.Any(a => a.Value.Any());
+        get => Errors is not null && Errors.Any(a => a.Value.Length != 0);
     }
 
     public bool HasError(string property) => Errors is not null && Errors.Any(a => a.Key.Equals(property));

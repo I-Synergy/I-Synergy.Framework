@@ -25,18 +25,14 @@ namespace ISynergy.Framework.Documents.Syncfusion.Services;
 /// </remarks>
 internal class DocumentService : IDocumentService
 {
-    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="options"></param>
-    /// <param name="logger"></param>
     public DocumentService(
-        IOptions<SyncfusionLicenseOptions> options,
-        ILogger<DocumentService> logger)
+        IOptions<SyncfusionLicenseOptions> options)
     {
-        _logger = logger;
         global::Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(options.Value?.LicenseKey);
     }
 

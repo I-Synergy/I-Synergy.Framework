@@ -1,3 +1,4 @@
+#pragma warning disable CA1861 // constant arrays must stay inline inside expression trees
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -710,10 +711,13 @@ public class AugmentedLagrangianTest
         {
             errorConstraintsTest[i] = nonlinearConstraintsTest[i].Function(solverTest.Solution);
         }
+
+        Assert.IsNotNull(solverTest.Solution);
+        Assert.HasCount(nVariablesTest, solverTest.Solution);
     }
 
     //[TestMethod]
-    public void constructorTest5()
+    public static void constructorTest5()
     {
         // AugmentedLagrangian with NonlinearConstraints
         // have a Gradient NullReferenceException issue 

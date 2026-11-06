@@ -148,22 +148,22 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         double[][] a;
         m = value.Length; // rows
 
         if (m == 0)
-            throw new ArgumentException("Matrix does not have any rows.", "value");
+            throw new ArgumentException("Matrix does not have any rows.", nameof(value));
 
         n = value[0].Length; // cols
 
         if (n == 0)
-            throw new ArgumentException("Matrix does not have any columns.", "value");
+            throw new ArgumentException("Matrix does not have any columns.", nameof(value));
 
         for (var i = 0; i < value.Length; i++)
             if (value[i].Length != n)
-                throw new ArgumentException("Matrix has rows of different sizes.", "value");
+                throw new ArgumentException("Matrix has rows of different sizes.", nameof(value));
         if (m < n) // Check if we are violating JAMA's assumption
         {
             if (!autoTranspose) // Yes, check if we should correct it
@@ -233,7 +233,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                 if (Diagonal[k] != 0)
                 {
                     if (a[k][k] < 0)
-                        Diagonal[k] = -Diagonal[k];
+                        Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
 
                     for (var i = k; i < a.Length; i++)
                         a[i][k] /= Diagonal[k];
@@ -241,7 +241,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                     a[k][k] += 1;
                 }
 
-                Diagonal[k] = -Diagonal[k];
+                Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
             }
 
             for (var j = k + 1; j < n; j++)
@@ -284,7 +284,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                 if (e[k] != 0)
                 {
                     if (e[k + 1] < 0)
-                        e[k] = -e[k];
+                        e[k] = -e[k]; // NOSONAR - self-referential update
 
                     for (var i = k + 1; i < e.Length; i++)
                         e[i] /= e[k];
@@ -292,7 +292,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                     e[k + 1] += 1;
                 }
 
-                e[k] = -e[k];
+                e[k] = -e[k]; // NOSONAR - self-referential update
                 if ((k + 1 < m) && (e[k] != 0))
                 {
                     // Apply the transformation.
@@ -696,7 +696,8 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                 if (Diagonal[i] > tol)
                     r++;
 
-            return (int)(rank = r);
+            rank = r;
+            return r;
         }
     }
 
@@ -883,8 +884,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
     public double[][] SolveForDiagonal(double[] diagonal)
     {
-        if (diagonal is null)
-            throw new ArgumentNullException("diagonal");
+        ArgumentNullException.ThrowIfNull(diagonal);
 
         return Solve(Jagged.Diagonal(diagonal));
     }

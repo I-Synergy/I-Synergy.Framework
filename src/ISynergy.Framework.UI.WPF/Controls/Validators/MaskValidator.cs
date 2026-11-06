@@ -166,7 +166,7 @@ public static class MaskValidator
         else
             placeHolderValue = _control.GetValue(MaskPlaceholderProperty).ToString();
 
-        Argument.IsNotNullOrEmpty("PlaceHolder", placeHolderValue);
+        Argument.IsNotNullOrEmpty(placeHolderValue);
 
         var escapedChars = new List<int>();
 
@@ -356,9 +356,8 @@ public static class MaskValidator
             var selectedChar = newValue[i - oldSelectionStart];
 
             // If dynamic character a,9,* or custom
-            if (representationDictionary.ContainsKey(maskChar) && escapedChars is not null && !escapedChars.Contains(i))
+            if (representationDictionary.TryGetValue(maskChar, out string? pattern) && escapedChars is not null && !escapedChars.Contains(i))
             {
-                var pattern = representationDictionary[maskChar];
                 if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
                     textArray[i] = selectedChar;
@@ -500,9 +499,8 @@ public static class MaskValidator
             var maskChar = escapedMask[newSelectionIndex];
 
             // If dynamic character a,9,* or custom
-            if (representationDictionary.ContainsKey(maskChar) && escapedChars is not null && !escapedChars.Contains(newSelectionIndex))
+            if (representationDictionary.TryGetValue(maskChar, out string? pattern) && escapedChars is not null && !escapedChars.Contains(newSelectionIndex))
             {
-                var pattern = representationDictionary[maskChar];
                 if (System.Text.RegularExpressions.Regex.IsMatch(selectedChar.ToString(), pattern, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
                 {
                     textArray[newSelectionIndex - 1] = selectedChar;

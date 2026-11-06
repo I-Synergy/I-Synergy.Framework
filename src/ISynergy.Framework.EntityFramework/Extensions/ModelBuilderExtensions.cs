@@ -59,7 +59,7 @@ public static class ModelBuilderExtensions
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes()
             .Select(et => et.ClrType)
-            .Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.GetCustomAttributes(typeof(IgnoreVersioningAttribute), true).Any())
+            .Where(t => typeof(IEntity).IsAssignableFrom(t) && t.GetCustomAttributes(typeof(IgnoreVersioningAttribute), true).Length == 0)
             .ToList();
 
         // Apply default version
@@ -139,7 +139,7 @@ public static class ModelBuilderExtensions
     {
         var clrTypes = modelBuilder.Model.GetEntityTypes()
             .Select(et => et.ClrType)
-            .Where(t => typeof(IEntity).IsAssignableFrom(t) && !t.GetCustomAttributes(typeof(IgnoreSoftDeleteAttribute), true).Any())
+            .Where(t => typeof(IEntity).IsAssignableFrom(t) && t.GetCustomAttributes(typeof(IgnoreSoftDeleteAttribute), true).Length == 0)
             .ToList();
 
         foreach (var type in clrTypes.Where(t => typeof(IEntity).IsAssignableFrom(t)).EnsureNotNull())
@@ -195,7 +195,7 @@ public static class ModelBuilderExtensions
         // Get the expressions list and ensure it's not null
         var filterExpressions = expressions.EnsureNotNull().ToList();
 
-        if (!filterExpressions.Any())
+        if (filterExpressions.Count == 0)
             return Expression.Lambda(Expression.Constant(true), parameter);
 
         // Start with the first expression

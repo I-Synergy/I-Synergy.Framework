@@ -26,8 +26,7 @@ public class DateTimeConverter : JsonConverter<DateTime>
 
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
-        if (writer is null)
-            throw new ArgumentNullException(nameof(writer));
+        ArgumentNullException.ThrowIfNull(writer);
 
         writer.WriteStringValue(value.ToString(GlobalizationConstants.IsoDateTimeFormat));
     }

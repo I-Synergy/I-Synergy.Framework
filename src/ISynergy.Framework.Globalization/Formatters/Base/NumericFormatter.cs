@@ -6,7 +6,7 @@ public abstract class NumericFormatter
 {
     protected readonly CultureInfo _culture;
 
-    public NumericFormatter(CultureInfo culture)
+    protected NumericFormatter(CultureInfo culture)
     {
         _culture = culture ?? throw new ArgumentNullException(nameof(culture));
     }

@@ -22,7 +22,7 @@ export let options = {
 };
 
 export default function () {
-    let response = http.get('https://localhost:7001/budgets');
+    let response = http.get('https://localhost:7001/{entities}');
 
     check(response, {
         'status is 200': (r) => r.status === 200,

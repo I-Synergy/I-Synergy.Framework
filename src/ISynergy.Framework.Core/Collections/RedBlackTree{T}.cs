@@ -158,11 +158,6 @@ public partial class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
         return n;
     }
 
-    void ICollection<T>.Add(T item)
-    {
-        Add(new RedBlackTreeNode<T>(item));
-    }
-
     /// <summary>
     ///   Adds a new item to the tree. If the element already
     ///   belongs to this tree, no new element will be added.
@@ -239,6 +234,11 @@ public partial class RedBlackTree<T> : BinaryTree<RedBlackTreeNode<T>>,
     ///   <c>True</c> if the element was in the tree and was removed; false otherwise.
     /// </returns>
     /// 
+    void ICollection<T>.Add(T item)
+    {
+        Add(new RedBlackTreeNode<T>(item));
+    }
+
     bool ICollection<T>.Remove(T item)
     {
         var node = Find(item);

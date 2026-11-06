@@ -22,12 +22,9 @@ public partial class SingleSelectionWindow : ISingleSelectionWindow
 
     private void SelectionWindow_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
     {
-        if (ViewModel is ISingleSelectionViewModel viewModel)
-        {
-            // Single mode: only pre-select the first item, even if more were passed
-            if (viewModel.SelectedItem is not null)
-                DataSummary.SelectedItem = viewModel.SelectedItem;
-        }
+        // Single mode: only pre-select the first item, even if more were passed
+        if (ViewModel is ISingleSelectionViewModel viewModel && viewModel.SelectedItem is not null)
+            DataSummary.SelectedItem = viewModel.SelectedItem;
     }
 
     private void DataSummary_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

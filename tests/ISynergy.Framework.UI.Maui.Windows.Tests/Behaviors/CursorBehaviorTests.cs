@@ -12,6 +12,7 @@ namespace ISynergy.Framework.UI.Maui.Behaviors;
 /// tests verify the static API surface, method signatures, and guard patterns.
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class CursorBehaviorTests
 {
     [TestMethod]
@@ -39,7 +40,7 @@ public class CursorBehaviorTests
         Assert.IsTrue(method.IsStatic);
 
         var parameters = method.GetParameters();
-        Assert.AreEqual(2, parameters.Length);
+        Assert.HasCount(2, parameters);
         Assert.AreEqual(typeof(VisualElement), parameters[0].ParameterType);
         Assert.AreEqual(typeof(CursorIcons), parameters[1].ParameterType);
     }
@@ -55,7 +56,7 @@ public class CursorBehaviorTests
         Assert.IsTrue(method.IsStatic);
 
         var parameters = method.GetParameters();
-        Assert.AreEqual(2, parameters.Length,
+        Assert.HasCount(2, parameters,
             "Should be (object? sender, EventArgs e)");
     }
 

@@ -42,7 +42,7 @@ public class SyncService(
 
             var agent = new SyncAgent(clientProvider, serverOrchestrator);
 
-            var tables = new string[] { "budgets", "goals", "debts" };
+            var tables = new string[] { "{entities}", "{childEntities}" };
             var setup = new SyncSetup(tables);
 
             var result = await agent.SynchronizeAsync(setup);

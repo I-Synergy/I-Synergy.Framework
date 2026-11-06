@@ -211,14 +211,14 @@ public static class Normal
         {
             if (y0 == 0)
                 return double.NegativeInfinity;
-            throw new ArgumentOutOfRangeException("y0");
+            throw new ArgumentOutOfRangeException(nameof(y0));
         }
 
         if (y0 >= 1.0)
         {
             if (y0 == 1)
                 return double.PositiveInfinity;
-            throw new ArgumentOutOfRangeException("y0");
+            throw new ArgumentOutOfRangeException(nameof(y0));
         }
         double s2pi = Math.Sqrt(2.0 * Math.PI);
         int code = 1;
@@ -678,7 +678,7 @@ public static class Normal
     {
         // check for evem size and for out of range
         if (size % 2 == 0 || size < 3)
-            throw new ArgumentOutOfRangeException("size", "Kernel size must be odd and higher than 2.");
+            throw new ArgumentOutOfRangeException(nameof(size), "Kernel size must be odd and higher than 2.");
 
         int r = size / 2;
 
@@ -709,7 +709,7 @@ public static class Normal
     {
         // check for evem size and for out of range
         if (size % 2 == 0 || size < 3)
-            throw new ArgumentOutOfRangeException("size", "Kernel size must be odd and higher than 2.");
+            throw new ArgumentOutOfRangeException(nameof(size), "Kernel size must be odd and higher than 2.");
 
         int r = size / 2;
 

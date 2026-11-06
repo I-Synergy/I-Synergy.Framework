@@ -61,9 +61,12 @@ public class QueryableExtensionTests
         IQueryable<int> list = Enumerable.Range(0, size).AsQueryable();
         var page = list.ToPage(x => x, pageIndex, pageSize).ToList();
 
-        Assert.AreEqual(count, page.Count);
+        Assert.HasCount(count, page);
         Assert.AreEqual(pageIndex * pageSize, page[0]);
     }
+
+    private static readonly int[] sourceArray = new[] { 5, 3, 1, 4, 2 };
+    private static readonly int[] expected = new[] { 1, 2, 3 };
 
     /// <summary>
     /// Defines the test method GetOrderedPageOrdersBeforePagingTest: the ordered overload sorts
@@ -72,11 +75,11 @@ public class QueryableExtensionTests
     [TestMethod]
     public void GetOrderedPageOrdersBeforePagingTest()
     {
-        IQueryable<int> list = new[] { 5, 3, 1, 4, 2 }.AsQueryable();
+        IQueryable<int> list = sourceArray.AsQueryable();
 
         var page = list.ToPage(x => x, 0, 3).ToList();
 
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, page);
+        Assert.AreSequenceEqual(expected, page);
     }
 
     /// <summary>

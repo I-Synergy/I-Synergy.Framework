@@ -92,7 +92,7 @@ public static class CursorBehavior
             // Get MauiContext for platform cleanup
             var mauiContext = visualElement.Handler?.MauiContext
                 ?? FindMauiContextFromParent(visualElement)
-                ?? Application.Current?.Windows.LastOrDefault()?.Page?.Handler?.MauiContext;
+                ?? (Application.Current?.Windows is { Count: > 0 } windows ? windows[^1].Page?.Handler?.MauiContext : null);
 
             if (mauiContext is not null)
             {

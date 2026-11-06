@@ -111,7 +111,7 @@ public class StringExtensionsTests
     {
         string text = "[a link|http://www.google.com]";
         System.Collections.Generic.IList<string> result = text.SplitAndKeep('[', '|', ']');
-        Assert.AreEqual(5, result.Count);
+        Assert.HasCount(5, result);
         Assert.AreEqual("[", result[0]);
         Assert.AreEqual("a link", result[1]);
         Assert.AreEqual("|", result[2]);

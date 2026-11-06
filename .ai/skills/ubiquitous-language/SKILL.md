@@ -16,7 +16,7 @@ All terms go to `UBIQUITOUS_LANGUAGE.md` at the project root.
 
 | Term | Definition | Bounded Context | Notes |
 |------|-----------|-----------------|-------|
-| {Term} | {Definition} | {BC} | [DRAFT] |
+| {Term} | {Definition} | {Domain} | [DRAFT] |
 ```
 
 Mark the file `[DRAFT]` until finalization. Remove all `[DRAFT]` markers only during the finalization pass.

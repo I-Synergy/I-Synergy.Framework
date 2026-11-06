@@ -21,11 +21,9 @@ public static class DoubleExtensions
     {
         if (double.IsNaN(a)) return double.IsNaN(b);
         if (double.IsInfinity(a)) return double.IsInfinity(b);
-        if (a.Equals(b)) return true;
-
         var scale = 1.0;
 
-        if (!(a.Equals(0.0) || b.Equals(0.0)))
+        if (Math.Abs(a) > double.Epsilon && Math.Abs(b) > double.Epsilon)
             scale = Math.Max(Math.Abs(a), Math.Abs(b));
 
         return Math.Abs(a - b) <= scale * delta;

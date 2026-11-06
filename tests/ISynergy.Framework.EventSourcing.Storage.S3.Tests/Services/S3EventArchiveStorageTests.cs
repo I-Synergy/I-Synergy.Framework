@@ -109,7 +109,7 @@ public class S3EventArchiveStorageTests
         var expected = $"{prefix}-{tenantId.ToString("D").ToLowerInvariant()}";
 
         Assert.AreEqual("archive-aabbccdd-eeff-0011-2233-445566778899", expected);
-        Assert.IsTrue(expected.Length <= 63, "S3 bucket names must be ≤ 63 characters.");
+        Assert.IsLessThanOrEqualTo(63, expected.Length, "S3 bucket names must be ≤ 63 characters.");
         Assert.IsFalse(expected.Contains('_'), "S3 bucket names must not contain underscores.");
     }
 
@@ -126,7 +126,7 @@ public class S3EventArchiveStorageTests
         var key = $"{streamType}/{streamId}/{versionFrom}-{versionTo}.json";
 
         Assert.AreEqual("Order/11111111-2222-3333-4444-555555555555/1-10.json", key);
-        Assert.IsFalse(key.StartsWith(Guid.NewGuid().ToString()[..8]),
+        Assert.DoesNotStartWith(Guid.NewGuid().ToString()[..8], key,
             "Key must not be prefixed with a tenant GUID.");
     }
 }

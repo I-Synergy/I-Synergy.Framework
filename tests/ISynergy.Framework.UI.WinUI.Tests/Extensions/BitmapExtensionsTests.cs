@@ -1,3 +1,4 @@
+#pragma warning disable CsWinRT1030 // WinRT byte[] marshalling in tests
 using ISynergy.Framework.Core.Enumerations;
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Globalization.Services;
@@ -10,6 +11,7 @@ using Windows.Storage.Streams;
 namespace ISynergy.Framework.UI.WinUI.Extensions;
 
 [TestClass()]
+[OSCondition(OperatingSystems.Windows)]
 public class BitmapExtensionsTests
 {
     public BitmapExtensionsTests()
@@ -50,8 +52,8 @@ public class BitmapExtensionsTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.Length > 0);
-        Assert.IsInstanceOfType(result, typeof(byte[]));
+        Assert.IsNotEmpty(result);
+        Assert.IsInstanceOfType<byte[]>(result);
     }
 
     [TestMethod]
@@ -67,8 +69,8 @@ public class BitmapExtensionsTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.Length > 0);
-        Assert.IsInstanceOfType(result, typeof(byte[]));
+        Assert.IsNotEmpty(result);
+        Assert.IsInstanceOfType<byte[]>(result);
     }
 
     private static async Task<byte[]> CreateTestBitmapAsync(uint width, uint height)

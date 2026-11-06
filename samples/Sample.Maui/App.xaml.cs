@@ -38,47 +38,39 @@ public partial class App : Application
     protected override ImageSource? Icon => ImageSource.FromFile("icon.png");
 
     /// <summary>
-    /// The shell header is the title bar: the window title area is left empty and hosts the same
-    /// header the phones and tablets render as a page row, so the breadcrumb starts at the window
-    /// edge and the native caption buttons keep their place at the right (the WinUI look).
+    /// Builds the Windows title bar: the product title and date/time subtitle stay in the centre
+    /// (the native drag region), while the interactive shell controls are hosted by the
+    /// leading/trailing islands so they keep receiving input.
     /// </summary>
     protected override TitleBar? SetTitleBar(bool withClock = false)
     {
-        var titleBar = new TitleBar { BackgroundColor = ResolveShellBackground() };
-        var header = new Sample.Views.Controls.AppHeaderView
-        {
-            // The title bar strip is translucent by default (system backdrop); an opaque surface on
-            // the header makes the top row exactly the shell background colour.
-            BackgroundColor = ResolveShellBackground()
-        };
+        var titleBar = base.SetTitleBar(withClock);
 
-        header.ApplyTitleBarPadding();
+        if (titleBar is null)
+            return null;
 
-        // TitleBar.Content has no public CLR setter; set the bindable property instead. The header
-        // is created here, before the title bar gets a platform handler, so it renders as part of
-        // the title bar rather than being reparented after realization.
-        titleBar.SetValue(TitleBar.ContentProperty, header);
+        titleBar.HeightRequest = 48;
 
-        // The title bar paints its own surface; keep it identical to the shell background so the
-        // header row and the page below it read as one window.
+        // Set both the colour and the brush: a theme brush from the TitleBar style otherwise
+        // outranks BackgroundColor and leaves the bar a different shade from the page.
+        var background = ResolveShellBackground();
+        titleBar.BackgroundColor = background;
+        titleBar.Background = new SolidColorBrush(background);
+
+        titleBar.LeadingContent = new Sample.Views.Controls.AppHeaderLeadingView();
+        titleBar.TrailingContent = new Sample.Views.Controls.AppHeaderTrailingView();
+
         if (Application.Current is { } application)
-            application.RequestedThemeChanged += (_, _) => titleBar.BackgroundColor = ResolveShellBackground();
+        {
+            application.RequestedThemeChanged += (_, _) =>
+            {
+                var themed = ResolveShellBackground();
+                titleBar.BackgroundColor = themed;
+                titleBar.Background = new SolidColorBrush(themed);
+            };
+        }
 
         return titleBar;
-    }
-
-    /// <summary>
-    /// Resolves the shell background for the current theme from the app resources.
-    /// </summary>
-    private static Color ResolveShellBackground()
-    {
-        var isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
-        var key = isDark ? "AppBgDark" : "AppBgLight";
-
-        if (Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color)
-            return color;
-
-        return isDark ? Color.FromArgb("#0D1614") : Color.FromArgb("#F4F6F3");
     }
 
     /// <summary>
@@ -349,5 +341,19 @@ public partial class App : Application
             _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
             _commonServices.MessengerService.Unregister<UserSignedOutMessage>(this);
         }
+    }
+
+    /// <summary>
+    /// Resolves the shell background for the current theme from the app resources.
+    /// </summary>
+    private static Color ResolveShellBackground()
+    {
+        var isDark = Microsoft.Maui.Controls.Application.Current?.RequestedTheme == AppTheme.Dark;
+        var key = isDark ? "AppBgDark" : "AppBgLight";
+
+        if (Microsoft.Maui.Controls.Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color)
+            return color;
+
+        return isDark ? Color.FromArgb("#0D1614") : Color.FromArgb("#F4F6F3");
     }
 }

@@ -99,7 +99,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException(InvalidDimension, "dimension");
+            throw new ArgumentException(InvalidDimension, nameof(dimension));
         }
 
         return mean;
@@ -138,7 +138,7 @@ public static partial class Measures
     public static double[] Mean(this double[][] matrix, int dimension)
     {
         int rows = matrix.Length;
-        if (rows == 0) return new double[0];
+        if (rows == 0) return Array.Empty<double>();
 
         double[] mean;
 
@@ -174,7 +174,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException(InvalidDimension, "dimension");
+            throw new ArgumentException(InvalidDimension, nameof(dimension));
         }
 
         return mean;
@@ -431,7 +431,7 @@ public static partial class Measures
     public static double[] Variance(this double[][] matrix, double[] means, bool unbiased = true)
     {
         int rows = matrix.Length;
-        if (rows == 0) return new double[0];
+        if (rows == 0) return Array.Empty<double>();
         int cols = matrix[0].Length;
         double N = rows;
 
@@ -571,8 +571,7 @@ public static partial class Measures
     /// 
     public static double[] Quartiles(double[][] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Rows();
         int cols = matrix.Columns();
@@ -601,8 +600,7 @@ public static partial class Measures
     /// 
     public static double[] Quartiles(double[,] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Rows();
         int cols = matrix.Columns();
@@ -1188,7 +1186,7 @@ public static partial class Measures
         if (dimension == 0)
         {
             if (means.Length != cols)
-                throw new ArgumentException("Length of the mean vector should equal the number of columns", "means");
+                throw new ArgumentException("Length of the mean vector should equal the number of columns", nameof(means));
 
             cov = new double[cols, cols];
             for (var i = 0; i < cols; i++)
@@ -1207,7 +1205,7 @@ public static partial class Measures
         else if (dimension == 1)
         {
             if (means.Length != rows) throw new ArgumentException(
-                "Length of the mean vector should equal the number of rows", "means");
+                "Length of the mean vector should equal the number of rows", nameof(means));
 
             cov = new double[rows, rows];
             for (var i = 0; i < rows; i++)
@@ -1225,7 +1223,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException(InvalidDimension, "dimension");
+            throw new ArgumentException(InvalidDimension, nameof(dimension));
         }
 
         return cov;
@@ -1397,7 +1395,7 @@ public static partial class Measures
     {
         int rows = matrix.Length;
         if (rows == 0)
-            return new double[0][];
+            return Array.Empty<double[]>();
         int cols = matrix[0].Length;
 
         double[][] cov;
@@ -1405,7 +1403,7 @@ public static partial class Measures
         if (dimension == 0)
         {
             if (means.Length != cols)
-                throw new ArgumentException("Length of the mean vector should equal the number of columns", "means");
+                throw new ArgumentException("Length of the mean vector should equal the number of columns", nameof(means));
 
             cov = Jagged.Zeros(cols, cols);
             for (var i = 0; i < cols; i++)
@@ -1424,7 +1422,7 @@ public static partial class Measures
         else if (dimension == 1)
         {
             if (means.Length != rows)
-                throw new ArgumentException("Length of the mean vector should equal the number of rows", "means");
+                throw new ArgumentException("Length of the mean vector should equal the number of rows", nameof(means));
 
             cov = Jagged.Zeros(rows, rows);
             for (var i = 0; i < rows; i++)
@@ -1442,7 +1440,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException(InvalidDimension, "dimension");
+            throw new ArgumentException(InvalidDimension, nameof(dimension));
         }
 
         return cov;

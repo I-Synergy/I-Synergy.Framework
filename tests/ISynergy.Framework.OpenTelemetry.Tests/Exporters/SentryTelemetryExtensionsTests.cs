@@ -26,6 +26,8 @@ namespace ISynergy.Framework.OpenTelemetry.Exporters.Tests;
 [TestClass]
 public class SentryTelemetryExtensionsTests
 {
+    private static readonly JsonSerializerOptions CachedJsonOptions = new();
+
     private const string TestDsn = "https://test@sentry.io/1";
 
     private static TelemetryBuilder CreateBuilder(string? dsn)
@@ -66,8 +68,11 @@ public class SentryTelemetryExtensionsTests
         // single process, so registration must tolerate repeat calls.
         var builder = CreateBuilder(TestDsn);
 
-        builder.AddSentryExporter();
-        builder.AddSentryExporter();
+        var first = builder.AddSentryExporter();
+        var second = builder.AddSentryExporter();
+
+        Assert.IsNotNull(first);
+        Assert.IsNotNull(second);
     }
 
     [TestMethod]
@@ -107,13 +112,13 @@ public class SentryTelemetryExtensionsTests
     [TestMethod]
     public void KeyValuePairJsonConverterFactory_SerializesKeyValuePair()
     {
-        var options = new JsonSerializerOptions();
+        var options = CachedJsonOptions;
         options.Converters.Add(new KeyValuePairJsonConverterFactory());
 
         var json = JsonSerializer.Serialize(new KeyValuePair<string, bool>("simulator", true), options);
 
-        Assert.IsTrue(json.Contains("simulator"), $"Key missing from payload: {json}");
-        Assert.IsTrue(json.Contains("true"), $"Value missing from payload: {json}");
+        Assert.Contains("simulator", json, $"Key missing from payload: {json}");
+        Assert.Contains("true", json, $"Value missing from payload: {json}");
     }
 
     [TestMethod]

@@ -75,7 +75,7 @@ public static class TypeExtensions
         if (!jagged)
             return elementType.MakeArrayType(rank);
 
-        if (rank == 0)
+        if (rank <= 0)
             return elementType;
 
         return elementType.MakeArrayType(rank: rank - 1, jagged: true).MakeArrayType();

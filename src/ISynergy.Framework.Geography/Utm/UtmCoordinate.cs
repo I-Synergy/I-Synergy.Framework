@@ -7,7 +7,7 @@ namespace ISynergy.Framework.Geography.Utm;
 /// UTM Coordinates need additionally the zone and the band info
 /// to identify the grid to which the X/Y values belong
 /// </summary>
-public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
+public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate> // NOSONAR - public type kept open for consumers
 {
     /// <summary>
     /// The default precision

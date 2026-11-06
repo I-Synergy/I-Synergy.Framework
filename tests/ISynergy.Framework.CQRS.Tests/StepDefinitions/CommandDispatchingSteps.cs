@@ -19,7 +19,7 @@ public class CommandDispatchingSteps
 {
     private readonly ILogger<CommandDispatchingSteps> _logger;
     private IServiceProvider? _serviceProvider;
-    private ICommandDispatcher? _commandDispatcher;
+    private CommandDispatcher? _commandDispatcher;
     private TestCommand? _command;
     private TestCommandWithResult? _commandWithResult;
     private string? _result;

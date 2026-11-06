@@ -12,7 +12,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringFormatConverter : IValueConverter
+public partial class StringFormatConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -53,7 +53,7 @@ public class StringFormatConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToBooleanConverter : IValueConverter
+public partial class StringToBooleanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -97,7 +97,7 @@ public class StringToBooleanConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToVisibilityConverter : IValueConverter
+public partial class StringToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -137,7 +137,7 @@ public class StringToVisibilityConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToEnabledConverter : IValueConverter
+public partial class StringToEnabledConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -177,7 +177,7 @@ public class StringToEnabledConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToInvertEnabledConverter : IValueConverter
+public partial class StringToInvertEnabledConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -217,7 +217,7 @@ public class StringToInvertEnabledConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToGeometryConverter : IValueConverter
+public partial class StringToGeometryConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -259,7 +259,7 @@ public class StringToGeometryConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToDecimalConverter : IValueConverter
+public partial class StringToDecimalConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -298,7 +298,7 @@ public class StringToDecimalConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToIntegerConverter : IValueConverter
+public partial class StringToIntegerConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -337,7 +337,7 @@ public class StringToIntegerConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class UriToImageSourceConverter : IValueConverter
+public partial class UriToImageSourceConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -377,7 +377,7 @@ public class UriToImageSourceConverter : IValueConverter
 /// <summary>
 /// Converts hex string to color.
 /// </summary>
-public class StringToColorConverter : IValueConverter
+public partial class StringToColorConverter : IValueConverter
 {
     /// <summary>
     /// Convert
@@ -413,7 +413,7 @@ public class StringToColorConverter : IValueConverter
 /// <summary>
 /// Converts hex string to color.
 /// </summary>
-public class StringToColorBrushConverter : IValueConverter
+public partial class StringToColorBrushConverter : IValueConverter
 {
     /// <summary>
     /// Convert

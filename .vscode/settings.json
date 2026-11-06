@@ -6,8 +6,11 @@
   ],
   "files.encoding": "utf8",
   "files.autoGuessEncoding": false,
+  // Let the .NET MAUI extension use the committed launch.json configurations
+  // (Sample.Maui (Android|Mac Catalyst|macOS/AppKit|Windows), .NET 10|11).
+  "maui.configuration.useLaunchJsonConfigurations": true,
   "sonarlint.connectedMode.project": {
     "connectionId": "i-synergy-github",
-    "projectKey": "I-Synergy.Framework"
+    "projectKey": "I-Synergy_I-Synergy.Framework"
   }
 }

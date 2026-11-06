@@ -14,7 +14,7 @@ against (T5, T6), so keep them concrete and runnable.
 | Field | Value |
 |---|---|
 | Test plan identifier | `{BC}.{Entity}.{Operation}` (the slice is the identifier) |
-| Solution | `{ApplicationName}` |
+| Solution | `I-Synergy.Framework` |
 | Traced source | `US-{BC}-{NNN}`, `UC-{BC}-{NNN}` |
 | Blueprint | `docs/slices/{BC}/{Entity}.{Operation}/blueprint.json` |
 | Author, role | [{name}, {role}] |

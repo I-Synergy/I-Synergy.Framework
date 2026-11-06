@@ -173,7 +173,7 @@ public class FiniteDifferences
                 throw new ArgumentException(
                     "The order must be less than the number of points being used for interpolation." +
                     " In order to use a higher order, please increase the number of interpolation points first.",
-                    "value");
+                    nameof(value));
 
             derivativeOrder = value;
         }
@@ -188,13 +188,13 @@ public class FiniteDifferences
         set
         {
             if (value % 2 != 1)
-                throw new ArgumentException("The number of points must be odd.", "value");
+                throw new ArgumentException("The number of points must be odd.", nameof(value));
 
             if (derivativeOrder >= value)
                 throw new ArgumentException(
                     "The number of points must be higher than the desired differentiation order." +
                     " In order to use less interpolation points, please decrease the differentiation order first.",
-                    "value");
+                    nameof(value));
 
             coefficients = CreateCoefficients(value);
             points = new ThreadLocal<double[][]>(() => Jagged.Zeros(2, coefficients.Length));
@@ -237,18 +237,16 @@ public class FiniteDifferences
     /// <param name="result">The gradient of the function evaluated at point <c>x</c>.</param>
     public double[] Gradient(double[] x, double[] result)
     {
-        if (x is null)
-            throw new ArgumentNullException("x");
+        ArgumentNullException.ThrowIfNull(x);
 
         if (x.Length != NumberOfVariables)
-            throw new ArgumentException("The number of dimensions does not match.", "x");
+            throw new ArgumentException("The number of dimensions does not match.", nameof(x));
 
         if (Function is null)
             throw new InvalidOperationException("The Function has not been defined.");
 
         if (x.Length < result.Length)
-            throw new DimensionMismatchException("gradient",
-                "Gradient vector must have at least the same size as x.");
+            throw new DimensionMismatchException(nameof(x), "Gradient vector must have at least the same size as x.");
 
         if (Function is null) // NOSONAR - null check is a valid guard clause
             throw new InvalidOperationException("The Function has not been defined.");
@@ -369,7 +367,7 @@ public class FiniteDifferences
     public static double[][,] CreateCoefficients(int numberOfPoints)
     {
         if (numberOfPoints % 2 != 1)
-            throw new ArgumentException("The number of points must be odd.", "numberOfPoints");
+            throw new ArgumentException("The number of points must be odd.", nameof(numberOfPoints));
 
         // Compute difference coefficient table
         var c = new double[numberOfPoints][,]; // [center][order, i];

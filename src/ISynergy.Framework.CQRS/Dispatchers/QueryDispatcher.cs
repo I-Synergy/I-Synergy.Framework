@@ -67,7 +67,7 @@ public class QueryDispatcher : IQueryDispatcher
             // Reflection fallback — not AOT-safe. Triggers trimmer warnings when table is absent.
             return await DispatchViaReflection<TResult>(query, cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (Exception ex) when (ex is not OperationCanceledException) // NOSONAR - log-and-rethrow at the application boundary
         {
             _logger?.LogError(ex, "Error dispatching query of type {QueryType}", query.GetType().Name);
             throw;
@@ -87,7 +87,7 @@ public class QueryDispatcher : IQueryDispatcher
             var handler = _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
             return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (Exception ex) when (ex is not OperationCanceledException) // NOSONAR - log-and-rethrow at the application boundary
         {
             _logger?.LogError(ex, "Error dispatching query of type {QueryType}", typeof(TQuery).Name);
             throw;

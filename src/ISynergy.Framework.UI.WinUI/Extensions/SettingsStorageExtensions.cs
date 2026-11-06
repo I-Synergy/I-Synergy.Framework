@@ -16,6 +16,11 @@ public static class SettingsStorageExtensions
     /// </summary>
     private const string _jsonExtension = ".json";
 
+    private static readonly JsonSerializerOptions CachedJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     /// <summary>
     /// Gets the name of the file.
     /// </summary>
@@ -41,6 +46,21 @@ public static class SettingsStorageExtensions
     }
 
     /// <summary>
+    /// save as an asynchronous operation.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="settings">The settings.</param>
+    /// <param name="key">The key.</param>
+    /// <param name="value">The value.</param>
+    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
+    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
+    public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value) // NOSONAR
+    {
+        settings.SaveString(key, JsonSerializer.Serialize(value));
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// read as an asynchronous operation.
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -59,36 +79,7 @@ public static class SettingsStorageExtensions
         var file = await folder.GetFileAsync(GetJsonFileName(name));
         var fileContent = await FileIO.ReadTextAsync(file);
 
-        return JsonSerializer.Deserialize<T>(fileContent, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
-    }
-
-    /// <summary>
-    /// save as an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="settings">The settings.</param>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value.</param>
-    [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed. Make sure all of the required types are preserved, or use a serializer configured with a JsonSerializerContext.")]
-    [RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
-    public static Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value) // NOSONAR
-    {
-        settings.SaveString(key, JsonSerializer.Serialize(value));
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Saves the string.
-    /// </summary>
-    /// <param name="settings">The settings.</param>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value.</param>
-    public static void SaveString(this ApplicationDataContainer settings, string key, string value)
-    {
-        settings.Values[key] = value;
+        return JsonSerializer.Deserialize<T>(fileContent, CachedJsonOptions);
     }
 
     /// <summary>
@@ -104,13 +95,21 @@ public static class SettingsStorageExtensions
     {
         if (settings.Values.TryGetValue(key, out var obj))
         {
-            return Task.FromResult(JsonSerializer.Deserialize<T>((string)obj, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            }));
+            return Task.FromResult(JsonSerializer.Deserialize<T>((string)obj, CachedJsonOptions));
         }
 
         return Task.FromResult<T?>(default);
+    }
+
+    /// <summary>
+    /// Saves the string.
+    /// </summary>
+    /// <param name="settings">The settings.</param>
+    /// <param name="key">The key.</param>
+    /// <param name="value">The value.</param>
+    public static void SaveString(this ApplicationDataContainer settings, string key, string value)
+    {
+        settings.Values[key] = value;
     }
 
     /// <summary>

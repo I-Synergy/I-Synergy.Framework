@@ -18,7 +18,7 @@ namespace ISynergy.Framework.UI.Services.Base;
 /// platform-specific window/frame access, view creation, and UI threading operations.
 /// </summary>
 /// <seealso cref="INavigationService" />
-public abstract class BaseNavigationService : INavigationService
+public abstract class BaseNavigationService : INavigationService, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     /// <summary>
     /// The exception handler service for handling exceptions during navigation.
@@ -56,13 +56,19 @@ public abstract class BaseNavigationService : INavigationService
     /// When the frame is evicted, the scope is disposed, which cascades
     /// to the ViewModel and all scoped dependencies resolved within that frame.
     /// </summary>
-    protected class NavigationFrame : IDisposable
+    protected class NavigationFrame : IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
     {
         public IServiceScope Scope { get; init; } = null!;
         public Type ViewModelType { get; init; } = null!;
         public object? Parameter { get; set; }
 
-        public void Dispose() => Scope.Dispose();
+        public void Dispose() => Dispose(true);
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+                Scope.Dispose();
+        }
     }
 
     /// <summary>
@@ -222,7 +228,7 @@ public abstract class BaseNavigationService : INavigationService
         // the delegate while iterating over its invocation list.
         EventHandler? deadHandlers = null;
 
-        foreach (EventHandler handler in handlers)
+        foreach (var handler in handlers.Cast<EventHandler>())
         {
             try
             {
@@ -237,7 +243,7 @@ public abstract class BaseNavigationService : INavigationService
         // Remove any dead subscribers in batch after iteration
         if (deadHandlers is not null)
         {
-            foreach (EventHandler dead in deadHandlers.GetInvocationList())
+            foreach (var dead in deadHandlers.GetInvocationList().Cast<EventHandler>())
             {
                 _backStackChanged -= dead;
             }
@@ -280,51 +286,6 @@ public abstract class BaseNavigationService : INavigationService
 
     #endregion
 
-    #region Command Checking
-
-    /// <summary>
-    /// Checks if a ViewModel has any running commands.
-    /// </summary>
-    /// <remarks>
-    /// Uses <see cref="ICommandProvider"/> when available (AOT-safe).
-    /// Falls back to property reflection when the ViewModel does not implement <see cref="ICommandProvider"/>.
-    /// The reflection fallback is decorated with <see cref="RequiresUnreferencedCodeAttribute"/>
-    /// to surface a warning at call sites when publishing with trimming enabled.
-    /// </remarks>
-    private bool HasRunningCommands(IViewModel viewModel)
-    {
-        if (viewModel is null)
-            return false;
-
-        // AOT-safe path: ViewModel explicitly exposes its commands via ICommandProvider.
-        if (viewModel is ICommandProvider provider)
-            return provider.GetCommands().OfType<IAsyncRelayCommand>().Any(c => c.IsRunning);
-
-        // Reflection fallback — not AOT-safe, but preserved for backwards compatibility.
-        return HasRunningCommandsViaReflection(viewModel);
-    }
-
-    /// <summary>
-    /// Reflection-based fallback for <see cref="HasRunningCommands"/> used when the ViewModel
-    /// does not implement <see cref="ICommandProvider"/>.
-    /// Not compatible with NativeAOT or aggressive trimming.
-    /// </summary>
-    private static bool HasRunningCommandsViaReflection(IViewModel viewModel)
-    {
-        var commandProperties = viewModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(p => typeof(IAsyncRelayCommand).IsAssignableFrom(p.PropertyType));
-
-        foreach (var property in commandProperties)
-        {
-            if (property.GetValue(viewModel) is IAsyncRelayCommand command && command.IsRunning)
-                return true;
-        }
-
-        return false;
-    }
-
-    #endregion
-
     #region Navigation Helpers
 
     /// <summary>
@@ -356,7 +317,7 @@ public abstract class BaseNavigationService : INavigationService
             // Trim backstack if over capacity — dispose oldest frames
             while (_backStack.Count > MaxBackstackSize)
             {
-                var oldest = _backStack.ToArray().Last();
+                var oldest = _backStack.ToArray()[^1];
                 _backStack = new Stack<NavigationFrame>(_backStack.Where(f => f != oldest).Reverse());
                 try { oldest.Dispose(); }
                 catch (Exception ex) { _logger.LogError(ex, "Error disposing oldest backstack frame"); }
@@ -518,16 +479,7 @@ public abstract class BaseNavigationService : INavigationService
 
         NavigationFrame? newFrame;
 
-        if (viewModel is not null)
-        {
-            // Caller provided a specific ViewModel instance — wrap it in a new scope
-            var scope = _serviceScopeFactory.CreateScope();
-            // The provided ViewModel is already resolved; register it in the new scope would be complex.
-            // Instead, create a new scope and resolve a fresh instance.
-            scope.ServiceProvider.GetRequiredService<TViewModel>();
-            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
-        }
-        else if (TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
+        if (viewModel is null && TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
         {
             // Reuse existing frame from backstack (ViewModel cached in its scope)
             backStackFrame.Parameter = parameter;
@@ -573,23 +525,15 @@ public abstract class BaseNavigationService : INavigationService
         where TViewModel : class, IViewModel
         where TView : IView
     {
-        var hostFrame = GetNavigationFrame();
-        if (hostFrame is null)
-            return;
-
         using var viewScope = _serviceScopeFactory.CreateScope();
-        if (viewScope.ServiceProvider.GetRequiredService(typeof(TView)) is not IView page)
+
+        var hostFrame = GetNavigationFrame();
+        if (hostFrame is null || viewScope.ServiceProvider.GetRequiredService(typeof(TView)) is not IView page)
             return;
 
         NavigationFrame? newFrame;
 
-        if (viewModel is not null)
-        {
-            var scope = _serviceScopeFactory.CreateScope();
-            scope.ServiceProvider.GetRequiredService<TViewModel>();
-            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
-        }
-        else if (TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
+        if (viewModel is null && TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
         {
             backStackFrame.Parameter = parameter;
             newFrame = backStackFrame;
@@ -708,7 +652,6 @@ public abstract class BaseNavigationService : INavigationService
         catch (Exception ex) { _logger.LogError(ex, "Error disposing modal scope during shutdown"); }
         _modalScope = null;
 
-        GC.SuppressFinalize(this);
     }
 
     #endregion

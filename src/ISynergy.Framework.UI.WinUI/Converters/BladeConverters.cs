@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class BladeVisibilityConverter : IValueConverter
+public partial class BladeVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

@@ -5,7 +5,7 @@ using Sample.Models;
 
 namespace Sample.Converters;
 
-public class ProductionItemTemplateSelector : DataTemplateSelector
+public partial class ProductionItemTemplateSelector : DataTemplateSelector
 {
     public DataTemplate DocumentTemplate { get; set; } = new();
     public DataTemplate FolderTemplate { get; set; } = new();

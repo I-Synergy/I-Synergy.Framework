@@ -320,10 +320,14 @@ public struct Matrix3x3
     public Vector3 GetRow(int index)
     {
         if (index < 0 || index > 2)
-            throw new ArgumentException("Invalid row index was specified.", "index");
+            throw new ArgumentException("Invalid row index was specified.", nameof(index));
 
-        return index == 0 ? new Vector3(V00, V01, V02) : // NOSONAR
-               index == 1 ? new Vector3(V10, V11, V12) : new Vector3(V20, V21, V22);
+        return index switch
+        {
+            0 => new Vector3(V00, V01, V02),
+            1 => new Vector3(V10, V11, V12),
+            _ => new Vector3(V20, V21, V22)
+        };
     }
 
     /// <summary>
@@ -339,10 +343,14 @@ public struct Matrix3x3
     public Vector3 GetColumn(int index)
     {
         if (index < 0 || index > 2)
-            throw new ArgumentException("Invalid column index was specified.", "index");
+            throw new ArgumentException("Invalid column index was specified.", nameof(index));
 
-        return index == 0 ? new Vector3(V00, V10, V20) : // NOSONAR
-               index == 1 ? new Vector3(V01, V11, V21) : new Vector3(V02, V12, V22);
+        return index switch
+        {
+            0 => new Vector3(V00, V10, V20),
+            1 => new Vector3(V01, V11, V21),
+            _ => new Vector3(V02, V12, V22)
+        };
     }
 
     /// <summary>

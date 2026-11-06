@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ISynergy.Framework.UI.WinUI.Converters;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class EnumConverterTests
 {
     [TestMethod]

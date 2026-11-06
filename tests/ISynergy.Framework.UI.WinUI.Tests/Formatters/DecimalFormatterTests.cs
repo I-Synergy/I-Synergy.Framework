@@ -5,6 +5,7 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.WinUI.Formatters;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class DecimalFormatterTests
 {
     private CultureInfo _originalCulture;

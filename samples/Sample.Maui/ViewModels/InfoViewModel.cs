@@ -10,7 +10,7 @@ namespace Sample.ViewModels;
 /// Implements the <see cref="ViewModelNavigation{Object}" />
 /// </summary>
 /// <seealso cref="ViewModelNavigation{Object}" />
-public class InfoViewModel : ViewModelNavigation<object>
+public partial class InfoViewModel : ViewModelNavigation<object>
 {
     /// <summary>
     /// Gets the title.

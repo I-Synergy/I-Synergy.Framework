@@ -784,11 +784,7 @@ public class QuadraticObjectiveFunctionTest
                     Assert.IsFalse(double.IsNaN(e));
                 }
 
-        Assert.Throws<DivideByZeroException>(() =>
-        {
-            QuadraticObjectiveFunction resultant = actual / 0;
-            Assert.IsNull(resultant);
-        });
+        Assert.Throws<DivideByZeroException>(() => _ = actual / 0);
     }
 
     [TestMethod]
@@ -803,11 +799,7 @@ public class QuadraticObjectiveFunctionTest
 
         double[] linearTerms = [0, 2, 0];
 
-        Assert.Throws<NonSymmetricMatrixException>(() =>
-        {
-            QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
-            Assert.IsNotNull(target);
-        });
+        Assert.Throws<NonSymmetricMatrixException>(() => new QuadraticObjectiveFunction(quadraticTerms, linearTerms));
     }
 
     [TestMethod]

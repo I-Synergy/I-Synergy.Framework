@@ -61,7 +61,6 @@ public class AutomationTriggersSteps
         {
             _automationService = new AutomationService(
                 Mock.Of<IAutomationManager>(),
-                Mock.Of<IOptions<AutomationOptions>>(),
                 Mock.Of<IAutomationConditionValidator>(),
                 Mock.Of<IActionQueueBuilder>(),
                 Mock.Of<ILogger<AutomationService>>());

@@ -4,7 +4,7 @@
 
 | Element | Convention | Example |
 |---------|-----------|----------|
-| **Namespace** | `{ApplicationName}.{Layer}.{Domain}` | `BudgetTracker.Domain.Budgets` |
+| **Namespace** | `I-Synergy.Framework.{Layer}.{Domain}` | `BudgetTracker.Domain.Budgets` |
 | **Command** | `{Action}{Entity}Command` | `CreateBudgetCommand` |
 | **Query** | `Get{Entity}{Criteria}Query` | `GetBudgetByIdQuery` |
 | **Handler** | `{Action}{Entity}CommandHandler` / `Get{Entity}{Criteria}QueryHandler` | `CreateBudgetCommandHandler` |
@@ -23,19 +23,19 @@
 
 ```csharp
 // Domain layer
-{ApplicationName}.Domain.{Domain}
-{ApplicationName}.Domain.{Domain}.Features.{Entity}.Commands
-{ApplicationName}.Domain.{Domain}.Features.{Entity}.Queries
-{ApplicationName}.Domain.{Domain}.Features.{Entity}.Events
+I-Synergy.Framework.Domain.{Domain}
+I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Commands
+I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Queries
+I-Synergy.Framework.Domain.{Domain}.Features.{Entity}.Events
 
 // Application layer
-{ApplicationName}.Services.{Domain}
-{ApplicationName}.Services.{Domain}.Endpoints
+I-Synergy.Framework.Services.{Domain}
+I-Synergy.Framework.Services.{Domain}.Endpoints
 
 // Infrastructure layer
-{ApplicationName}.Entities.{Domain}
-{ApplicationName}.Models.{Domain}
-{ApplicationName}.Data
+I-Synergy.Framework.Entities.{Domain}
+I-Synergy.Framework.Models.{Domain}
+I-Synergy.Framework.Data
 
 // Examples
 BudgetTracker.Domain.Budgets

@@ -16,10 +16,16 @@ namespace ISynergy.Framework.UI.Controls;
 /// This control provides a standardized loading experience following the same pattern as EmptyView.
 /// </summary>
 [Lifetime(Lifetimes.Singleton)]
-public class LoadingView : ContentPage
+public partial class LoadingView : ContentPage
 {
     private readonly IApplicationLifecycleService _applicationLifecycleService;
+#if MACOS
+#pragma warning disable CS0649 // assigned only on platforms that have a MediaElement handler
+#endif
     private MediaElement? _backgroundMediaElement;
+#if MACOS
+#pragma warning restore CS0649
+#endif
     private Image? _backgroundImage;
     private Button? _signInButton;
     private bool _loadingCompleted;
@@ -36,7 +42,7 @@ public class LoadingView : ContentPage
 
         _applicationLifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<IApplicationLifecycleService>();
 
-        InitializeContent(commonServices, splashScreenOptions);
+        InitializeContent(splashScreenOptions);
 
         SetupEventHandlers();
 
@@ -57,10 +63,11 @@ public class LoadingView : ContentPage
                 _backgroundImage.Source = ImageSource.FromResource(splashScreenOptions.Resource);
         }
         // Override with custom video if explicitly specified
-        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
+        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource)
+            && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video
+            && _backgroundMediaElement is not null)
         {
-            if (_backgroundMediaElement is not null)
-                _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
+            _backgroundMediaElement.Source = MediaSource.FromResource(splashScreenOptions.Resource);
         }
     }
 
@@ -137,7 +144,7 @@ public class LoadingView : ContentPage
     /// <summary>
     /// Initializes the view content and layout.
     /// </summary>
-    private void InitializeContent(ICommonServices _, SplashScreenOptions splashScreenOptions)
+    private void InitializeContent(SplashScreenOptions splashScreenOptions)
     {
         // Always create background image for the default splash
         _backgroundImage = new Image
@@ -149,15 +156,19 @@ public class LoadingView : ContentPage
         if (splashScreenOptions.SplashScreenType == SplashScreenTypes.None)
             _backgroundImage.VerticalOptions = LayoutOptions.Start;
 
-        // Create media element only for Video splash screens
+        // Create media element only for Video splash screens.
         if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
         {
+#if !MACOS
+            // The AppKit backend ships no MediaElement handler, so the macOS target degrades a video
+            // splash to the static splash image instead of instantiating a control it cannot render.
             _backgroundMediaElement = new MediaElement
             {
                 Aspect = Aspect.AspectFill,
                 IsEnabled = false,
                 ShouldShowPlaybackControls = false
             };
+#endif
         }
 
         // Create semi-transparent overlay

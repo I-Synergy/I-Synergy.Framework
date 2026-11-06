@@ -14,7 +14,7 @@ public class GeneratorTest
         Generator.Seed = 0;
         double[][] l = create(100, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount > 50);
+        Assert.IsGreaterThan(50, sameCount);
     }
 
     [TestMethod]
@@ -42,7 +42,7 @@ public class GeneratorTest
         Generator.Seed = -1;
         double[][] l = create(1000, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount > 30);
+        Assert.IsGreaterThan(30, sameCount);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public class GeneratorTest
         Generator.Seed = 1;
         double[][] l = create(100, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount == 0);
+        Assert.AreEqual(0, sameCount);
     }
 
     [TestMethod]
@@ -65,7 +65,7 @@ public class GeneratorTest
         double[][] l = create(rows, cols, reset: true);
 
         int sameCount = count(l);
-        Assert.IsTrue(sameCount == 0);
+        Assert.AreEqual(0, sameCount);
     }
 
     [TestMethod]
@@ -75,7 +75,7 @@ public class GeneratorTest
 
         double[][] l = create(100, 10, reset: false);
         int sameCount = count(l);
-        Assert.IsTrue(sameCount == 0);
+        Assert.AreEqual(0, sameCount);
     }
 
     [TestMethod]
@@ -114,7 +114,7 @@ public class GeneratorTest
         {
             t[i] = new Thread(() =>
             {
-                int threadId = Thread.CurrentThread.ManagedThreadId;
+                int threadId = System.Environment.CurrentManagedThreadId;
                 List<int> vd = values.GetOrAdd(threadId, []);
                 List<int?> sd = seeds.GetOrAdd(threadId, []);
 
@@ -134,7 +134,7 @@ public class GeneratorTest
             t[i].Join();
 
         int[] keys = values.Keys.ToArray().Sorted();
-        Assert.AreEqual(100, keys.Length);
+        Assert.HasCount(100, keys);
 
         int? ex = null;
         for (int i = 0; i < keys.Length; i++)
@@ -168,12 +168,12 @@ public class GeneratorTest
         return v;
     }
 
-    private static int count(IList<double[]> l)
+    private static int count(double[][] l)
     {
         int sameCount = 0;
-        for (int i = 0; i < l.Count; i++)
+        for (int i = 0; i < l.Length; i++)
         {
-            for (int j = 0; j < l.Count; j++)
+            for (int j = 0; j < l.Length; j++)
             {
                 double[] li = l[i];
                 double[] lj = l[j];

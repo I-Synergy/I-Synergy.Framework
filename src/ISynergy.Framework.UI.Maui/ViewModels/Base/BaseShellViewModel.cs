@@ -23,6 +23,7 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
     protected readonly IDialogService _dialogService;
     protected readonly ISettingsService _settingsService;
     protected readonly IThemeService _themeService;
+    private readonly ShellViewModelSupport _support;
 
     /// <summary>
     /// Gets or sets the IsBackEnabled property value.
@@ -77,18 +78,14 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
         _navigationService = navigationService;
         _settingsService = settingsService;
         _themeService = themeService;
-
-        _navigationService.BackStackChanged += NavigationService_BackStackChanged;
-
-        // Initialize IsBackEnabled with the current state
-        IsBackEnabled = _navigationService.CanGoBack;
+        _support = new ShellViewModelSupport(navigationService, themeService, dialogService, commonServices, value => IsBackEnabled = value);
 
         PrimaryItems = new ObservableCollection<NavigationItem>();
         SecondaryItems = new ObservableCollection<NavigationItem>();
 
-        RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
+        RestartUpdateCommand = new AsyncRelayCommand(_support.ShowRestartAsync);
         SignInCommand = new AsyncRelayCommand(SignOutAsync);
-        ThemeCommand = new AsyncRelayCommand(ToggleThemeAsync);
+        ThemeCommand = new AsyncRelayCommand(_support.ToggleThemeAsync);
         HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
         FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
         SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -99,9 +96,6 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
 
     public abstract Task InitializeFirstRunAsync();
 
-
-    private void NavigationService_BackStackChanged(object? sender, EventArgs e) =>
-        IsBackEnabled = _navigationService.CanGoBack;
 
     /// <summary>
     /// Opens the settings asynchronous.
@@ -115,12 +109,6 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
     /// <returns></returns>
     protected abstract Task SignOutAsync();
 
-    /// <summary>
-    /// Shows the dialog restart after update asynchronous.
-    /// </summary>
-    /// <returns>Task.</returns>
-    protected Task ShowDialogRestartAfterUpdateAsync() =>
-        _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
 
     /// <summary>
     /// Gets or sets the LastSelectedItem property value.
@@ -172,20 +160,6 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
         set => SetValue(value);
     }
 
-    /// <summary>
-    /// Opens the language asynchronous.
-    /// </summary>
-    /// <summary>
-    /// Toggles between the light and dark theme and applies it immediately.
-    /// Accent color selection lives in the application's settings UI.
-    /// </summary>
-    /// <returns>Task.</returns>
-    protected Task ToggleThemeAsync()
-    {
-        var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
-        _themeService.SetTheme(nextTheme);
-        return Task.CompletedTask;
-    }
 
     /// <summary>
     /// Opens the help asynchronously.
@@ -209,9 +183,7 @@ public abstract class BaseShellViewModel : ViewModelNavigation<NavigationItem>, 
     {
         if (disposing)
         {
-            // Remove navigation service event handlers first
-            if (_navigationService is not null)
-                _navigationService.BackStackChanged -= NavigationService_BackStackChanged;
+            _support.Dispose();
 
             Validator = null;
 

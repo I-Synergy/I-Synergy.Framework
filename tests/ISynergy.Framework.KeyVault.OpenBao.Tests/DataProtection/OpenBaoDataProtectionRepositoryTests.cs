@@ -70,7 +70,7 @@ public class OpenBaoDataProtectionRepositoryTests
 
         var elements = _repository.GetAllElements();
 
-        Assert.AreEqual(1, elements.Count);
+        Assert.HasCount(1, elements);
         Assert.AreEqual("key", elements.First().Name.LocalName);
     }
 
@@ -100,7 +100,7 @@ public class OpenBaoDataProtectionRepositoryTests
 
         // Should not throw — invalid XML is logged and skipped
         var elements = _repository.GetAllElements();
-        Assert.AreEqual(0, elements.Count);
+        Assert.IsEmpty(elements);
     }
 
     [TestMethod]

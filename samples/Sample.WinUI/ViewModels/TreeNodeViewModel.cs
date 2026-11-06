@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace Sample.ViewModels;
 
-public class TreeNodeViewModel : ViewModelNavigation<TreeNode<Guid, PublicationItem>>
+public partial class TreeNodeViewModel : ViewModelNavigation<TreeNode<Guid, PublicationItem>>
 {
     /// <summary>
     /// Gets the title.

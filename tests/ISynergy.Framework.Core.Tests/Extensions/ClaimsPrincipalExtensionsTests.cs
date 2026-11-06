@@ -30,7 +30,7 @@ public class ClaimsPrincipalExtensionsTests
     [TestMethod()]
     public void GetClaimsTest()
     {
-        Assert.IsTrue(_principal.GetClaims(Claims.Username).Any());
+        Assert.IsNotEmpty(_principal.GetClaims(Claims.Username));
     }
 
     [TestMethod()]

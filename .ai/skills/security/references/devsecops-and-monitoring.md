@@ -22,10 +22,10 @@ jobs:
   dependency-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -36,12 +36,12 @@ jobs:
         run: dotnet list package --vulnerable --include-transitive
 
       - name: Dependency Review
-        uses: actions/dependency-review-action@v2
+        uses: actions/dependency-review-action@v5
 
   sast-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
       - name: Run Security Code Scan
         run: |
@@ -56,7 +56,7 @@ jobs:
   container-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
       - name: Build Docker image
         run: docker build -t myapp:${{ github.sha }} .
@@ -76,7 +76,7 @@ jobs:
   secret-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 

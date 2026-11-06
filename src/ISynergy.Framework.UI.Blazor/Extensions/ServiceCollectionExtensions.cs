@@ -74,9 +74,9 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IExceptionHandlerService, TExceptionHandlerService>();
 
         services.TryAddScoped<ISettingsService, TSettingsService>();
-        services.TryAddSingleton<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
-        services.TryAddSingleton<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
-        services.TryAddSingleton<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
+        services.TryAddScoped<ILocalSettings>((s) => s.GetRequiredService<ISettingsService>().LocalSettings);
+        services.TryAddScoped<IRoamingSettings>((s) => s.GetRequiredService<ISettingsService>().RoamingSettings);
+        services.TryAddScoped<IGlobalSettings>((s) => s.GetRequiredService<ISettingsService>().GlobalSettings);
         services.TryAddScoped<IAuthenticationProvider, AuthenticationProvider>();
 
         services.TryAddSingleton<TCommonServices>();
@@ -91,7 +91,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IFormFactorService, FormFactorService>();
         services.TryAddSingleton<RequestCancellationService>();
-        services.TryAddSingleton<IThemeService, ThemeService>();
+        services.TryAddScoped<IThemeService, ThemeService>();
 
         services.RegisterAssemblies(assembly, assemblyFilter);
 

@@ -80,6 +80,6 @@ public class ViewModelMultipleSelectionDialogTests
 
         // Assert
         Assert.IsNotNull(capturedResult);
-        Assert.AreEqual(2, capturedResult.Count);
+        Assert.HasCount(2, capturedResult);
     }
 }

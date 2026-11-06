@@ -72,39 +72,39 @@ public class SparseTest
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         v = [0, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
 
         v = [1, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 0);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         v = [0, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 0);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         v = [1, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 1);
         expected = Sparse.Parse("1:1 2:1 3:2 4:3 7:6");
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         v = [0, 2, 3, 0, 0, 6];
         expected = Sparse.FromDense(v);
         s = expected.ToString();
         actual = Sparse.Parse(s, insertValueAtBeginning: 42);
         expected = Sparse.Parse("1:42 3:2 4:3 7:6");
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 }

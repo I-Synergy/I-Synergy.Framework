@@ -87,7 +87,7 @@ public class AzureBlobEventArchiveStorageTests
 
         // The container name must be the lowercase GUID string.
         Assert.AreEqual("aabbccdd-eeff-0011-2233-445566778899", expected);
-        Assert.IsTrue(expected.Length <= 63, "Azure container names must be ≤ 63 characters.");
+        Assert.IsLessThanOrEqualTo(63, expected.Length, "Azure container names must be ≤ 63 characters.");
         Assert.IsFalse(expected.Contains('_'), "Azure container names must not contain underscores.");
     }
 }

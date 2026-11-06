@@ -26,7 +26,7 @@ public class AutomationWorkflowExecutionSteps
 {
     private readonly ILogger<AutomationWorkflowExecutionSteps> _logger;
     private readonly AutomationTestContext _context;
-    private IAutomationService? _automationService;
+    private AutomationService? _automationService;
     private Automation? _automation;
     private Customer? _customer;
     private ActionResult? _result;
@@ -88,7 +88,6 @@ public class AutomationWorkflowExecutionSteps
 
         _automationService = new AutomationService(
             Mock.Of<IAutomationManager>(),
-            Mock.Of<IOptions<AutomationOptions>>(),
             conditionValidator,
             queueBuilder,
             Mock.Of<ILogger<AutomationService>>());

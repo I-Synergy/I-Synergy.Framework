@@ -62,11 +62,11 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     public JaggedQrDecomposition(double[][] value, bool transpose = false,
         bool economy = true, bool inPlace = false)
     {
-        if (value is null) throw new ArgumentNullException("value", "Matrix cannot be null.");
+        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (!transpose && value.Length < value[0].Length ||
             transpose && value[0].Length < value.Length)
-            throw new ArgumentException("Matrix has more columns than rows.", "value");
+            throw new ArgumentException("Matrix has more columns than rows.", nameof(value));
 
         // https://www.inf.ethz.ch/personal/gander/papers/qrneu.pdf
 
@@ -223,7 +223,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     public double[][] Solve(double[][] value)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (value.Length != n)
             throw new ArgumentException("Matrix row dimensions must agree.");
@@ -269,8 +269,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     /// <exception cref="T:System.InvalidOperationException">Matrix is rank deficient.</exception>
     public double[] Solve(double[] value)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.Length != qr.Length)
             throw new ArgumentException("Matrix row dimensions must agree.");
@@ -312,8 +311,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
     public double[][] SolveForDiagonal(double[] diagonal)
     {
-        if (diagonal is null)
-            throw new ArgumentNullException("diagonal");
+        ArgumentNullException.ThrowIfNull(diagonal);
 
         return Solve(Jagged.Diagonal(diagonal));
     }
@@ -355,7 +353,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     public double[][] SolveTranspose(double[][] value)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (value.Columns() != qr.Length)
             throw new ArgumentException("Matrix row dimensions must agree.");

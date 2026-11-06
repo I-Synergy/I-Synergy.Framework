@@ -1,24 +1,20 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace ISynergy.Framework.UI.Converters;
 
 public static class BinaryConverter
 {
-    public static T FromByteArray<T>(byte[] bytes) where T : struct
+    public static T FromByteArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(byte[] bytes) where T : struct
     {
         IntPtr ptr = IntPtr.Zero;
 
         try
         {
-            int size = Marshal.SizeOf(typeof(T));
+            int size = Marshal.SizeOf<T>();
             ptr = Marshal.AllocHGlobal(size);
             Marshal.Copy(bytes, 0, ptr, size);
-            object? obj = Marshal.PtrToStructure(ptr, typeof(T));
-
-            if (obj is null)
-                throw new InvalidOperationException("Failed to convert byte array to structure.");
-
-            return (T)obj;
+            return Marshal.PtrToStructure<T>(ptr);
         }
         finally
         {
@@ -35,7 +31,7 @@ public static class BinaryConverter
 
         try
         {
-            int size = Marshal.SizeOf(typeof(T));
+            int size = Marshal.SizeOf<T>();
             ptr = Marshal.AllocHGlobal(size);
             Marshal.StructureToPtr(obj, ptr, true);
             byte[] bytes = new byte[size];

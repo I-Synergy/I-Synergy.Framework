@@ -132,7 +132,7 @@ public class ViewModelNavigationTests
         entity.Name = "Changed";
 
         // Assert
-        Assert.IsTrue(viewModel.PropertyChangedCallCount > initialCount,
+        Assert.IsGreaterThan(initialCount, viewModel.PropertyChangedCallCount,
        "PropertyChanged should be raised when nested property changes");
     }
 
@@ -186,7 +186,7 @@ public class ViewModelNavigationTests
         // Assert
         Assert.AreEqual(countAfterReplacement, countAfterFirstChange,
       "Changing old entity should not raise PropertyChanged after replacement");
-        Assert.IsTrue(countAfterSecondChange > countAfterFirstChange,
+        Assert.IsGreaterThan(countAfterFirstChange, countAfterSecondChange,
    "Changing new entity should raise PropertyChanged");
         Assert.AreEqual(baselineCount + 1, countAfterReplacement,
           "Replacing SelectedItem should raise PropertyChanged once");

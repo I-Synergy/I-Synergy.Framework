@@ -9,6 +9,7 @@ using Moq;
 namespace ISynergy.Framework.UI.WinUI.Services;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class ThemeServiceTests
 {
     private const string AccentColor = "#0078D4";

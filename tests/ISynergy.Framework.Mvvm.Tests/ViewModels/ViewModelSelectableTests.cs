@@ -79,7 +79,7 @@ public class ViewModelSelectableTests
 
         model.Name = "Changed";
 
-        Assert.IsTrue(viewModel.PropertyChangedCallCount > initialCount,
+        Assert.IsGreaterThan(initialCount, viewModel.PropertyChangedCallCount,
             "PropertyChanged should be raised when nested property changes");
     }
 
@@ -104,7 +104,7 @@ public class ViewModelSelectableTests
 
         Assert.AreEqual(countAfterReplacement, countAfterOldChange,
             "Changing old SelectedItem should not raise PropertyChanged");
-        Assert.IsTrue(countAfterNewChange > countAfterOldChange,
+        Assert.IsGreaterThan(countAfterOldChange, countAfterNewChange,
             "Changing new SelectedItem should raise PropertyChanged");
     }
 

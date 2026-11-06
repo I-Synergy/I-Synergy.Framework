@@ -15,23 +15,23 @@ A vertical slice is one feature, fully implemented across all layers. Each slice
 
 | Input | Source |
 |-------|--------|
-| Use Cases | `docs/bounded-contexts/{BC}/use-cases.md` |
-| User Stories | `docs/bounded-contexts/{BC}/user-stories.md` |
+| Use Cases | `docs/bounded-contexts/{Domain}/use-cases.md` |
+| User Stories | `docs/bounded-contexts/{Domain}/user-stories.md` |
 | Ubiquitous Language | `UBIQUITOUS_LANGUAGE.md` |
 | Architecture Document | `docs/architecture/{SolutionName}-architecture.md` |
 
 ## Output
 
 For each feature:
-1. `docs/slices/{BC}/{Entity}.{Operation}/blueprint.json` — implementation blueprint
-2. `docs/slices/{BC}/{Entity}.{Operation}/{Entity}.{Operation}.feature` — Gherkin feature file
+1. `docs/slices/{Domain}/{Entity}.{Operation}/blueprint.json` — implementation blueprint
+2. `docs/slices/{Domain}/{Entity}.{Operation}/{Entity}.{Operation}.feature` — Gherkin feature file
 
 ## Blueprint JSON Format
 
 ```json
 {
   "slice": "{Entity}.{Operation}",
-  "bounded_context": "{BC}",
+  "bounded_context": "{Domain}",
   "operation_type": "Command | Query",
   "entity": "{Entity}",
   "handler_class": "{Operation}{Entity}CommandHandler",
@@ -42,16 +42,16 @@ For each feature:
     { "name": "{PropertyName}", "type": "{CSharpType}" }
   ],
   "files_to_create": [
-    "{Solution}.Domain.{BC}/Features/{Entity}/Commands/{Operation}{Entity}/{Operation}{Entity}Command.cs",
-    "{Solution}.Domain.{BC}/Features/{Entity}/Commands/{Operation}{Entity}/{Operation}{Entity}CommandHandler.cs",
-    "{Solution}.Domain.{BC}/Features/{Entity}/Commands/{Operation}{Entity}/{Operation}{Entity}Response.cs",
-    "{Solution}.Services.{BC}/Endpoints/{Entity}/{Operation}{Entity}Endpoint.cs",
-    "{Solution}.{BC}.Tests/{Entity}/{Operation}{Entity}CommandHandlerTests.cs"
+    "{Solution}.Domain.{Domain}/Features/{Entity}/Commands/{Operation}{Entity}/{Operation}{Entity}Command.cs",
+    "{Solution}.Domain.{Domain}/Features/{Entity}/Commands/{Operation}{Entity}/{Operation}{Entity}CommandHandler.cs",
+    "{Solution}.Domain.{Domain}/Features/{Entity}/Commands/{Operation}{Entity}/{Operation}{Entity}Response.cs",
+    "{Solution}.Services.{Domain}/Endpoints/{Entity}/{Operation}{Entity}Endpoint.cs",
+    "{Solution}.{Domain}.Tests/{Entity}/{Operation}{Entity}CommandHandlerTests.cs"
   ],
   "source": {
-    "use_cases": ["UC-{BC}-{NNN}"],
-    "user_stories": ["US-{BC}-{NNN}"],
-    "acceptance_criteria": ["AC-{BC}-{NNN}.{n}"]
+    "use_cases": ["UC-{Domain}-{NNN}"],
+    "user_stories": ["US-{Domain}-{NNN}"],
+    "acceptance_criteria": ["AC-{Domain}-{NNN}.{n}"]
   }
 }
 ```
@@ -81,7 +81,7 @@ For each feature:
 2. Map each use case main flow to one Command or Query
 3. For each alternate flow that introduces a distinct outcome, create a separate slice
 4. For each user story, verify it maps to at least one slice — create a slice if missing
-5. Write the blueprint JSON for each slice to `docs/slices/{BC}/{Entity}.{Operation}/`, including
+5. Write the blueprint JSON for each slice to `docs/slices/{Domain}/{Entity}.{Operation}/`, including
    its `source` trace arrays
 6. Extract the Gherkin from the use case/story, including each scenario's `@AC-…` / `@AF-…` tag,
    and write the `.feature` file — tags travel with their scenario and are never stripped
@@ -91,11 +91,11 @@ For each feature:
 
 | Operation | Handler Suffix | Example |
 |-----------|---------------|---------|
-| Create | `CommandHandler` | `CreateBudgetCommandHandler` |
-| Update | `CommandHandler` | `UpdateBudgetCommandHandler` |
-| Delete | `CommandHandler` | `DeleteBudgetCommandHandler` |
-| Get by ID | `QueryHandler` | `GetBudgetByIdQueryHandler` |
-| Get list | `QueryHandler` | `GetBudgetsListQueryHandler` |
+| Create | `CommandHandler` | `Create{Entity}CommandHandler` |
+| Update | `CommandHandler` | `Update{Entity}CommandHandler` |
+| Delete | `CommandHandler` | `Delete{Entity}CommandHandler` |
+| Get by ID | `QueryHandler` | `Get{Entity}ByIdQueryHandler` |
+| Get list | `QueryHandler` | `Get{Entities}ListQueryHandler` |
 
 ## Integration with Solution Generator
 

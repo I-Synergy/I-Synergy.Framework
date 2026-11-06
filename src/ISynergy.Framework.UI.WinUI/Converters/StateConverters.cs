@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StateToBrushConverter : IValueConverter
+public partial class StateToBrushConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -59,7 +59,7 @@ public class StateToBrushConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StateToOpacityConverter : IValueConverter
+public partial class StateToOpacityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

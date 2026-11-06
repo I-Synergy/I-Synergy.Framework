@@ -37,20 +37,19 @@ public class QuadraticConstraint : NonlinearConstraint
     {
         var n = objective.NumberOfVariables;
 
-        if (quadraticTerms is null)
-            throw new ArgumentNullException("quadraticTerms");
+        ArgumentNullException.ThrowIfNull(quadraticTerms);
 
         if (quadraticTerms.GetLength(0) != quadraticTerms.GetLength(1))
-            throw new DimensionMismatchException("quadraticTerms", "Matrix must be square.");
+            throw new DimensionMismatchException(nameof(quadraticTerms), "Matrix must be square.");
 
         if (quadraticTerms.GetLength(0) != n)
-            throw new DimensionMismatchException("quadraticTerms",
+            throw new DimensionMismatchException(nameof(quadraticTerms),
                 "Matrix rows must match the number of variables in the objective function.");
 
         if (linearTerms is not null)
         {
             if (linearTerms.Length != n)
-                throw new DimensionMismatchException("linearTerms",
+                throw new DimensionMismatchException(nameof(linearTerms),
                     "The length of the linear terms vector must match the " +
                     "number of variables in the objective function.");
         }

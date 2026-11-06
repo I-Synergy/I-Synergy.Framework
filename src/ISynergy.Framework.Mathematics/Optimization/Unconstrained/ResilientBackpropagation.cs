@@ -87,7 +87,7 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
         set
         {
             if (value <= 0 || value >= 1)
-                throw new ArgumentOutOfRangeException("value", "Value should be between 0 and 1.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Value should be between 0 and 1.");
             etaMinus = value;
         }
     }
@@ -102,7 +102,7 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
         set
         {
             if (value <= 1)
-                throw new ArgumentOutOfRangeException("value", "Value should be higher than 1.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Value should be higher than 1.");
             etaPlus = value;
         }
     }

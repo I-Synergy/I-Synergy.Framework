@@ -1,3 +1,4 @@
+#pragma warning disable SYSLIB1054 // manual marshalling is required for the credential structs
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Models;
 using Microsoft.Win32.SafeHandles;
@@ -64,7 +65,7 @@ public static class CredentialManager
         var byteArray = Encoding.Unicode.GetBytes(password);
 
         if (byteArray is not null && byteArray.Length > 512)
-            throw new ArgumentOutOfRangeException("password", "The password message has exceeded 512 bytes.");
+            throw new ArgumentOutOfRangeException(nameof(password), "The password message has exceeded 512 bytes.");
 
         var credential = new CREDENTIAL();
         credential.AttributeCount = 0;
@@ -100,8 +101,8 @@ public static class CredentialManager
         {
             for (int n = 0; n < count; n++)
             {
-                var credentialPtr = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf(typeof(IntPtr)));
-                var credential = ReadCredential((CREDENTIAL)Marshal.PtrToStructure(credentialPtr, typeof(CREDENTIAL))!);
+                var credentialPtr = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf<nint>());
+                var credential = ReadCredential(Marshal.PtrToStructure<CREDENTIAL>(credentialPtr));
 
                 if (credential is not null)
                     result.Add(credential);
@@ -119,9 +120,6 @@ public static class CredentialManager
 
     [DllImport("advapi32", SetLastError = true, CharSet = CharSet.Unicode)]
     static extern bool CredEnumerate(string? filter, int flag, out int count, out IntPtr pCredentials);
-
-    [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
-    static extern bool CredFree([In] IntPtr cred);
 
     [DllImport("Advapi32.dll", EntryPoint = "CredDeleteW", CharSet = CharSet.Unicode, SetLastError = true)]
     static extern bool CredDelete(string target, CredentialTypes type, int reservedFlag);
@@ -145,6 +143,9 @@ public static class CredentialManager
 
     sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
     {
+        [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
+        static extern bool CredFree([In] IntPtr cred);
+
         public CriticalCredentialHandle(IntPtr preexistingHandle)
         {
             SetHandle(preexistingHandle);
@@ -154,7 +155,7 @@ public static class CredentialManager
         {
             if (!IsInvalid)
             {
-                var credential = (CREDENTIAL)Marshal.PtrToStructure(handle, typeof(CREDENTIAL))!;
+                var credential = Marshal.PtrToStructure<CREDENTIAL>(handle);
                 return credential;
             }
 

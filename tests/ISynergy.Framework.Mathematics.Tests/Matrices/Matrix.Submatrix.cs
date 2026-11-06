@@ -152,9 +152,9 @@ public partial class MatrixTest
         double[][] groups = value.Subgroups(idx);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-        Assert.AreEqual(2, groups.Length);
-        Assert.AreEqual(3, groups[0].Length);
-        Assert.AreEqual(4, groups[1].Length);
+        Assert.HasCount(2, groups);
+        Assert.HasCount(3, groups[0]);
+        Assert.HasCount(4, groups[1]);
 
         Assert.AreEqual(1, groups[0][0]);
         Assert.AreEqual(2, groups[0][1]);
@@ -177,13 +177,13 @@ public partial class MatrixTest
         double[][] groups = value.Subgroups(idx, 5);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-        Assert.AreEqual(5, groups.Length);
+        Assert.HasCount(5, groups);
 
-        Assert.AreEqual(3, groups[0].Length);
-        Assert.AreEqual(0, groups[1].Length);
-        Assert.AreEqual(0, groups[2].Length);
-        Assert.AreEqual(0, groups[3].Length);
-        Assert.AreEqual(4, groups[4].Length);
+        Assert.HasCount(3, groups[0]);
+        Assert.IsEmpty(groups[1]);
+        Assert.IsEmpty(groups[2]);
+        Assert.IsEmpty(groups[3]);
+        Assert.HasCount(4, groups[4]);
 
         Assert.AreEqual(1, groups[0][0]);
         Assert.AreEqual(2, groups[0][1]);

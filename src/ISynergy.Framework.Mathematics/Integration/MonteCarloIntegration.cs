@@ -81,8 +81,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
     public MonteCarloIntegration(int parameters, Func<double[], double> function)
         : this(parameters)
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
         Function = function;
     }
@@ -94,7 +93,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
     public MonteCarloIntegration(int parameters)
     {
         if (parameters <= 0)
-            throw new ArgumentOutOfRangeException("parameters",
+            throw new ArgumentOutOfRangeException(nameof(parameters),
                 "Number of parameters must be higher than zero.");
 
         NumberOfParameters = parameters;
@@ -168,7 +167,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
 
             var f = Function(sample);
 
-            count++;
+            count++; // NOSONAR - intentional: samples pairs of points
             sum += f;
             sum2 += f * f;
         }
@@ -272,7 +271,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
 
             var f = func(u);
 
-            count++;
+            count++; // NOSONAR - intentional: samples pairs of points
             sum += f;
         }
 

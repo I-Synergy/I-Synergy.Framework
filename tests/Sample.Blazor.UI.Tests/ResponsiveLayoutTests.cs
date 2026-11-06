@@ -1,3 +1,4 @@
+#pragma warning disable SYSLIB1045 // test-local regexes do not benefit from source generation
 using Microsoft.Playwright;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Sample.Blazor.UI.Tests.Infrastructure;
@@ -27,7 +28,7 @@ namespace Sample.Blazor.UI.Tests;
 /// </para>
 /// </summary>
 [TestClass]
-public class ResponsiveLayoutTests : SamplePageTest
+public partial class ResponsiveLayoutTests : SamplePageTest
 {
     private const int MobileWidth = 480;
     private const int MobileHeight = 800;
@@ -39,7 +40,7 @@ public class ResponsiveLayoutTests : SamplePageTest
 
         var beforeClick = await DescribeResponsiveStateAsync();
         Log($"mobile @480px before toggle click: {beforeClick}");
-        var before = System.Text.Json.JsonDocument.Parse(beforeClick).RootElement;
+        var before = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(beforeClick);
 
         // The navigation exists exactly once and is off-canvas until the toggle is used: a translated
         // element still has a box, so "off-canvas" is asserted on the geometry (its right edge is at or
@@ -50,7 +51,7 @@ public class ResponsiveLayoutTests : SamplePageTest
             $"The navigation must hold the 4 route items. Observed DOM: {beforeClick}");
         Assert.IsFalse(before.GetProperty("sidebarOpen").GetBoolean(),
             $"The drawer must start closed. Observed DOM: {beforeClick}");
-        Assert.IsTrue(before.GetProperty("sidebarBox").GetProperty("right").GetInt32() <= 0,
+        Assert.IsLessThanOrEqualTo(0, before.GetProperty("sidebarBox").GetProperty("right").GetInt32(),
             $"The sidebar must start off-canvas. Observed DOM: {beforeClick}");
         Assert.IsFalse(before.GetProperty("scrimPresent").GetBoolean(),
             $"No scrim may be rendered while the drawer is closed. Observed DOM: {beforeClick}");
@@ -65,11 +66,11 @@ public class ResponsiveLayoutTests : SamplePageTest
 
         var afterClick = await DescribeResponsiveStateAsync();
         Log($"mobile @480px after toggle click: {afterClick}");
-        var after = System.Text.Json.JsonDocument.Parse(afterClick).RootElement;
+        var after = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(afterClick);
 
         Assert.IsTrue(after.GetProperty("sidebarOpen").GetBoolean(),
             $"The drawer did not get the is-open class. Observed DOM: {afterClick}");
-        Assert.IsTrue(after.GetProperty("sidebarBox").GetProperty("x").GetInt32() >= 0,
+        Assert.IsGreaterThanOrEqualTo(0, after.GetProperty("sidebarBox").GetProperty("x").GetInt32(),
             $"The opened drawer must be on screen. Observed DOM: {afterClick}");
         Assert.IsTrue(after.GetProperty("scrimPresent").GetBoolean(),
             $"The scrim must be rendered while the drawer is open. Observed DOM: {afterClick}");
@@ -88,12 +89,12 @@ public class ResponsiveLayoutTests : SamplePageTest
 
         var afterScrimClick = await DescribeResponsiveStateAsync();
         Log($"mobile @480px after scrim click: {afterScrimClick}");
-        var closed = System.Text.Json.JsonDocument.Parse(afterScrimClick).RootElement;
+        var closed = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(afterScrimClick);
         Assert.IsFalse(closed.GetProperty("sidebarOpen").GetBoolean(),
             $"Clicking the scrim must close the drawer. Observed DOM: {afterScrimClick}");
         Assert.IsFalse(closed.GetProperty("scrimPresent").GetBoolean(),
             $"The scrim must be removed once the drawer is closed. Observed DOM: {afterScrimClick}");
-        Assert.IsTrue(closed.GetProperty("sidebarBox").GetProperty("right").GetInt32() <= 0,
+        Assert.IsLessThanOrEqualTo(0, closed.GetProperty("sidebarBox").GetProperty("right").GetInt32(),
             $"The closed drawer must be off-canvas again. Observed DOM: {afterScrimClick}");
 
         await AssertBaselineAsync("mobile-drawer");
@@ -115,7 +116,7 @@ public class ResponsiveLayoutTests : SamplePageTest
         await NavigateAsync(SampleDom.HomeRoute);
         await WaitForShellReadyAsync();
 
-        var desktop = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var desktop = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Log($"diagnosis: loaded at desktop width: {await DescribeResponsiveStateAsync()}");
         Assert.AreEqual("static", desktop.GetProperty("sidebarPosition").GetString(),
             "At desktop width the sidebar must be a permanent (static) column.");
@@ -138,13 +139,13 @@ public class ResponsiveLayoutTests : SamplePageTest
             null,
             new() { Timeout = 15_000 });
 
-        var mobile = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var mobile = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         var mobileJson = await DescribeResponsiveStateAsync();
         Log($"diagnosis: after crossing the breakpoint at runtime: {mobileJson}");
 
         Assert.AreEqual("fixed", mobile.GetProperty("sidebarPosition").GetString(),
             $"The sidebar must become an off-canvas drawer after the runtime breakpoint change. Observed DOM: {mobileJson}");
-        Assert.IsTrue(mobile.GetProperty("sidebarBox").GetProperty("right").GetInt32() <= 0,
+        Assert.IsLessThanOrEqualTo(0, mobile.GetProperty("sidebarBox").GetProperty("right").GetInt32(),
             $"The drawer must be off-canvas after the runtime breakpoint change. Observed DOM: {mobileJson}");
 
         await Expect(NavToggle()).ToBeVisibleAsync();
@@ -152,7 +153,7 @@ public class ResponsiveLayoutTests : SamplePageTest
         // The drawer must still work after the transition, not just on a fresh mobile load.
         await NavToggle().ClickAsync();
         await WaitForDrawerOpenAsync();
-        var opened = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var opened = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Assert.AreEqual(4, opened.GetProperty("onscreenNavItems").GetInt32(),
             "The drawer must expose the 4 navigation items after the runtime breakpoint change.");
 
@@ -173,7 +174,7 @@ public class ResponsiveLayoutTests : SamplePageTest
         await Expect(counterLink).ToBeVisibleAsync();
         await counterLink.ClickAsync();
 
-        await Expect(Page).ToHaveURLAsync(new System.Text.RegularExpressions.Regex("/counter$"));
+        await Expect(Page).ToHaveURLAsync(MyRegex());
         await Expect(Page.Locator("h1")).ToHaveTextAsync("Counter");
 
         // The drawer must not survive the navigation (MainLayout is reused by client-side navigation,
@@ -209,7 +210,7 @@ public class ResponsiveLayoutTests : SamplePageTest
         await Expect(toggle).ToBeHiddenAsync();
         await Expect(Page.Locator(SampleDom.NavScrim)).ToHaveCountAsync(0);
 
-        var desktop = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var desktop = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Log($"desktop state: {await DescribeResponsiveStateAsync()}");
         Assert.AreEqual("static", desktop.GetProperty("sidebarPosition").GetString(),
             "The desktop sidebar must be a permanent (static) column, not a fixed drawer.");
@@ -225,7 +226,7 @@ public class ResponsiveLayoutTests : SamplePageTest
         await Expect(sidebar).ToBeVisibleAsync();
         await Expect(toggle).ToBeHiddenAsync();
         await Expect(Page.Locator(SampleDom.NavScrim)).ToHaveCountAsync(0);
-        var afterNavigation = System.Text.Json.JsonDocument.Parse(await DescribeResponsiveStateAsync()).RootElement;
+        var afterNavigation = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(await DescribeResponsiveStateAsync());
         Assert.AreEqual("static", afterNavigation.GetProperty("sidebarPosition").GetString(),
             "The sidebar must still be the permanent desktop column after navigating.");
 
@@ -276,7 +277,7 @@ public class ResponsiveLayoutTests : SamplePageTest
 
         Log($"sidebar column measurements: {measurements}");
 
-        var state = System.Text.Json.JsonDocument.Parse(measurements).RootElement;
+        var state = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(measurements);
         Assert.AreNotEqual(System.Text.Json.JsonValueKind.Null, state.GetProperty("column").ValueKind, "The sidebar column must exist.");
         Assert.AreNotEqual(System.Text.Json.JsonValueKind.Null, state.GetProperty("nav").ValueKind, "The navigation must exist.");
 
@@ -284,9 +285,9 @@ public class ResponsiveLayoutTests : SamplePageTest
         var navHeight = state.GetProperty("nav").GetProperty("height").GetInt32();
         var seam = state.GetProperty("seamPx").GetInt32();
 
-        Assert.IsTrue(columnHeight > 0, "The sidebar column has no height.");
-        Assert.IsTrue(navHeight > 0, "The navigation has no height.");
-        Assert.IsTrue(columnHeight >= navHeight, "The navigation cannot be taller than its sidebar column.");
+        Assert.IsGreaterThan(0, columnHeight, "The sidebar column has no height.");
+        Assert.IsGreaterThan(0, navHeight, "The navigation has no height.");
+        Assert.IsGreaterThanOrEqualTo(navHeight, columnHeight, "The navigation cannot be taller than its sidebar column.");
 
         Console.WriteLine(
             $"[evidence] two-tone check: sidebar column is {columnHeight}px tall, nav.app-nav is {navHeight}px tall, " +
@@ -305,7 +306,7 @@ public class ResponsiveLayoutTests : SamplePageTest
 
     private ILocator NavToggle() => Page.Locator(SampleDom.NavToggle);
 
-    private Task WaitForDrawerOpenAsync() =>
+    private Task<IJSHandle> WaitForDrawerOpenAsync() =>
         Page.WaitForFunctionAsync(
             """
             () => {
@@ -323,7 +324,7 @@ public class ResponsiveLayoutTests : SamplePageTest
     /// Waits until the drawer is closed: the class is gone, the scrim is unrendered and the CSS
     /// transition (0.2s <c>transform</c>) has finished, i.e. the drawer is fully off-canvas again.
     /// </summary>
-    private Task WaitForDrawerClosedAsync() =>
+    private Task<IJSHandle> WaitForDrawerClosedAsync() =>
         Page.WaitForFunctionAsync(
             """
             () => {
@@ -379,4 +380,7 @@ public class ResponsiveLayoutTests : SamplePageTest
             }
             """);
     }
+
+    [System.Text.RegularExpressions.GeneratedRegex("/counter$")]
+    private static partial System.Text.RegularExpressions.Regex MyRegex();
 }

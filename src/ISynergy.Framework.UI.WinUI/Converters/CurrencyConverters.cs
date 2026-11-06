@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class CurrencyConverter : IValueConverter
+public partial class CurrencyConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -47,7 +47,7 @@ public class CurrencyConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class NegativeCurrencyConverter : IValueConverter
+public partial class NegativeCurrencyConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

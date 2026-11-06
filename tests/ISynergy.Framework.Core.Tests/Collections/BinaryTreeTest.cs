@@ -88,11 +88,11 @@ public class BinaryTreeTest
         // should return: "d", "b", "a", "c", "f", "e", "g"
         #endregion
 
-        CollectionAssert.AreEqual(new List<string> { "d", "b", "f", "a", "c", "e", "g" }, breadthFirst);
-        CollectionAssert.AreEqual(new List<string> { "d", "f", "g", "e", "b", "c", "a" }, depthFirst);
-        CollectionAssert.AreEqual(new List<string> { "a", "b", "c", "d", "e", "f", "g" }, inOrder);
-        CollectionAssert.AreEqual(new List<string> { "a", "c", "b", "e", "g", "f", "d" }, postOrder);
-        CollectionAssert.AreEqual(new List<string> { "d", "b", "a", "c", "f", "e", "g" }, preOrder);
+        Assert.AreSequenceEqual(new List<string> { "d", "b", "f", "a", "c", "e", "g" }, breadthFirst);
+        Assert.AreSequenceEqual(new List<string> { "d", "f", "g", "e", "b", "c", "a" }, depthFirst);
+        Assert.AreSequenceEqual(new List<string> { "a", "b", "c", "d", "e", "f", "g" }, inOrder);
+        Assert.AreSequenceEqual(new List<string> { "a", "c", "b", "e", "g", "f", "d" }, postOrder);
+        Assert.AreSequenceEqual(new List<string> { "d", "b", "a", "c", "f", "e", "g" }, preOrder);
     }
 
 }

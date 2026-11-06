@@ -60,7 +60,7 @@ public class FileResultTests
         var resultData = fileResult.File;
 
         // Assert
-        CollectionAssert.AreEqual(_testData, resultData);
+        Assert.AreSequenceEqual(_testData, resultData);
     }
 
     [TestMethod]
@@ -73,7 +73,7 @@ public class FileResultTests
         var resultData = await fileResult.GetFileAsync();
 
         // Assert
-        CollectionAssert.AreEqual(_testData, resultData);
+        Assert.AreSequenceEqual(_testData, resultData);
     }
 
     [TestMethod]
@@ -133,7 +133,7 @@ public class FileResultTests
         var result = stream.ToByteArray();
 
         // Assert
-        CollectionAssert.AreEqual(_testData, result);
+        Assert.AreSequenceEqual(_testData, result);
     }
 
     [TestMethod]

@@ -15,7 +15,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $tag = "v$BuildNumber"
 
-function Write-ErrorAnnotation {
+function Show-ErrorAnnotation {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Message
@@ -32,7 +32,7 @@ function Write-ErrorAnnotation {
 Write-Host "Checking if tag '$tag' already exists locally..."
 $localTagExists = git tag -l "$tag"
 if (-not [string]::IsNullOrWhiteSpace($localTagExists)) {
-    Write-ErrorAnnotation "Tag '$tag' already exists locally"
+    Show-ErrorAnnotation "Tag '$tag' already exists locally"
     exit 1
 }
 Write-Host "Tag does not exist locally."
@@ -40,7 +40,7 @@ Write-Host "Tag does not exist locally."
 Write-Host "Checking if tag '$tag' exists on remote origin..."
 $remoteTagExists = git ls-remote --tags origin "refs/tags/$tag"
 if (-not [string]::IsNullOrWhiteSpace($remoteTagExists)) {
-    Write-ErrorAnnotation "Tag '$tag' already exists on remote"
+    Show-ErrorAnnotation "Tag '$tag' already exists on remote"
     exit 1
 }
 Write-Host "Tag does not exist on remote."

@@ -19,7 +19,7 @@ namespace Sample.ViewModels;
 /// <summary>
 /// Class ShellViewModel.
 /// </summary>
-public class ShellViewModel : BaseShellViewModel, IShellViewModel
+public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
     private readonly DispatcherTimer _clockTimer;
     private readonly IFileService<FileResult> _fileService;
@@ -53,7 +53,7 @@ public class ShellViewModel : BaseShellViewModel, IShellViewModel
     /// <summary>
     /// Gets the copyright text shown in the sidebar footer, matching the MAUI shell.
     /// </summary>
-    public string CopyrightText => $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
+    public static string CopyrightText => $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellViewModel"/> class.

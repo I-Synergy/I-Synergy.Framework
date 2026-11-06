@@ -22,6 +22,7 @@ public class EigenvalueDecompositionTest
                 value[i, j] = double.NaN;
 
                 EigenvalueDecomposition target = new(value);
+                Assert.IsNotNull(target);
             }
         }
     }

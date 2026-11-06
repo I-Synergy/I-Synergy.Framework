@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Sample.ViewModels;
 
-public class TestExceptionViewModel : ViewModelDialog<object>
+public partial class TestExceptionViewModel : ViewModelDialog<object>
 {
     public TestExceptionViewModel(
         ICommonServices commonServices,

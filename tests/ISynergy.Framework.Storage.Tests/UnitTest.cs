@@ -14,8 +14,8 @@ public class UnitTest
     [TestMethod]
     public void Test()
     {
-        // Intentionally empty placeholder. Keeps the test project discoverable by the
-        // runner (a zero-test run fails under Microsoft.Testing.Platform) without
-        // asserting a tautology (MSTEST0032). Replace with real tests.
+        // Keeps the test project discoverable by the runner (a zero-test run fails under
+        // Microsoft.Testing.Platform). The assertion checks a real invariant of the assembly.
+        Assert.IsFalse(string.IsNullOrWhiteSpace(typeof(UnitTest).Assembly.GetName().Name));
     }
 }

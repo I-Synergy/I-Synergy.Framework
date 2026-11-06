@@ -31,6 +31,7 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : System.Windows.Application, IDisposable
 {
+    private const string ExceptionMessageTemplate = "{ExceptionMessage}";
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
@@ -206,7 +207,7 @@ public abstract class Application : System.Windows.Application, IDisposable
                 continue;
 
             // Look for query string format arguments (e.g., "?environment=development&country=nl")
-            if (arg.Contains("?"))
+            if (arg.Contains('?'))
             {
                 var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
 
@@ -235,7 +236,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
 
         e.Handled = true;
     }
@@ -258,7 +259,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
-            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogError(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -272,7 +273,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -288,7 +289,7 @@ public abstract class Application : System.Windows.Application, IDisposable
             if (_exceptionHandlerService is not null)
                 _exceptionHandlerService.HandleException(exception);
             else
-                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger.LogCritical(exception, ExceptionMessageTemplate, exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -303,7 +304,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -394,10 +395,11 @@ public abstract class Application : System.Windows.Application, IDisposable
             // Add custom resourcedictionaries from code.
             if (Current.Resources?.MergedDictionaries is not null)
             {
-                foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
+                foreach (var item in GetAdditionalResourceDictionaries()
+                    .EnsureNotNull()
+                    .Where(item => !Current.Resources.MergedDictionaries.Contains(item)))
                 {
-                    if (!Current.Resources.MergedDictionaries.Contains(item))
-                        Current.Resources.MergedDictionaries.Add(item);
+                    Current.Resources.MergedDictionaries.Add(item);
                 }
             }
 

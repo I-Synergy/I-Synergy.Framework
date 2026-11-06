@@ -21,21 +21,18 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
     where TOption : class, IQueueOption, new()
 {
     private readonly TOption _option;
-    private readonly ILogger _logger;
     private readonly JsonTypeInfo<TQueueMessage>? _jsonTypeInfo;
 
     /// <summary>
     /// Constructor of service bus. Uses AOT-safe source-generated JSON serialization.
     /// </summary>
     /// <param name="options">The options.</param>
-    /// <param name="logger">The logger.</param>
     /// <param name="jsonTypeInfo">
     /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TQueueMessage"/>, obtained from a
     /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
     /// </param>
     public PublisherServiceBus(
         IOptions<TOption> options,
-        ILogger<PublisherServiceBus<TQueueMessage, TOption>> logger,
         JsonTypeInfo<TQueueMessage> jsonTypeInfo)
     {
         _option = options.Value;
@@ -43,7 +40,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
         Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
 
-        _logger = logger;
         _jsonTypeInfo = jsonTypeInfo;
     }
 
@@ -65,7 +61,6 @@ internal class PublisherServiceBus<TQueueMessage, TOption> : IPublisherServiceBu
         Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
 
-        _logger = logger;
     }
 
     /// <summary>

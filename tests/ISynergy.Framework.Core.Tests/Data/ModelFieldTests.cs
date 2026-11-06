@@ -20,7 +20,7 @@ public class ModelFieldTests
 
         ModelFixture<string> instance = new(originalValue);
 
-        Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
+        Assert.IsInstanceOfType<INotifyPropertyChanged>(instance);
 
         bool gotEvent = false;
 
@@ -47,7 +47,7 @@ public class ModelFieldTests
 
         ModelFixture<string> instance = new(originalValue);
 
-        Assert.IsInstanceOfType(instance, typeof(INotifyPropertyChanged));
+        Assert.IsInstanceOfType<INotifyPropertyChanged>(instance);
 
         bool gotEvent = false;
 
@@ -69,7 +69,7 @@ public class ModelFieldTests
     public void ViewModelFieldConstructorEmptyTest()
     {
         ModelFixture<string> instance = new();
-        Assert.IsTrue(instance.Value is null, "Value should be null.");
+        Assert.IsNull(instance.Value, "Value should be null.");
     }
 
     /// <summary>
@@ -93,8 +93,8 @@ public class ModelFieldTests
     {
         ModelFixture<string> instance = new();
 
-        Assert.IsTrue(instance.Value is null, "Value should be null.");
-        Assert.IsTrue(instance.ToString() == string.Empty, "ToString() should return empty.");
+        Assert.IsNull(instance.Value, "Value should be null.");
+        Assert.AreEqual(string.Empty, instance.ToString(), "ToString() should return empty.");
     }
 
     /// <summary>
