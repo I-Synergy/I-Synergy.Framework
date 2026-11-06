@@ -183,6 +183,18 @@ public partial class RootView : IShellView
             titleBar.ButtonInactiveForegroundColor = foreground;
             titleBar.ButtonHoverForegroundColor = hoverForeground;
             titleBar.ButtonPressedForegroundColor = hoverForeground;
+
+            // MAUI's TitleBar handler can re-apply its own surface after the native caption is
+            // configured. Re-set the control's background here so the bar matches the page.
+            if (Window?.TitleBar is TitleBar mauiTitleBar)
+            {
+                var mauiBackground = dark
+                    ? ResolveShellColor("AppBgDark", Color.FromArgb("#0D1614"))
+                    : ResolveShellColor("AppBgLight", Color.FromArgb("#F4F6F3"));
+
+                mauiTitleBar.BackgroundColor = mauiBackground;
+                mauiTitleBar.Background = new SolidColorBrush(mauiBackground);
+            }
         }
         catch (Exception ex)
         {

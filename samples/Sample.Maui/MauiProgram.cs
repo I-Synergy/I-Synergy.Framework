@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.DevFlow.Agent;
+using Microsoft.Maui.LifecycleEvents;
 #if MACOS
 using Microsoft.Maui.Platforms.MacOS.Essentials;
 using Microsoft.Maui.Platforms.MacOS.Hosting;
@@ -30,6 +31,20 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+
+#if WINDOWS
+        // Disable the Mica backdrop before the native window is shown. Setting it later (from the
+        // page) is too late: the caption is already composited with the backdrop, which makes the
+        // title bar a different shade from the opaque page.
+        builder.ConfigureLifecycleEvents(events =>
+        {
+            events.AddWindows(windows => windows.OnWindowCreated(window =>
+            {
+                window.SystemBackdrop = null;
+                window.AppWindow.TitleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
+            }));
+        });
+#endif
         var mainAssembly = Assembly.GetAssembly(typeof(App)) ?? throw new InvalidOperationException("Unable to load main assembly");
         var infoService = new InfoService();
         infoService.LoadAssembly(mainAssembly);

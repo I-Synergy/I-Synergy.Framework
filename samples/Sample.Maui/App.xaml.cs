@@ -50,12 +50,25 @@ public partial class App : Application
             return null;
 
         titleBar.HeightRequest = 48;
-        titleBar.BackgroundColor = ResolveShellBackground();
+
+        // Set both the colour and the brush: a theme brush from the TitleBar style otherwise
+        // outranks BackgroundColor and leaves the bar a different shade from the page.
+        var background = ResolveShellBackground();
+        titleBar.BackgroundColor = background;
+        titleBar.Background = new SolidColorBrush(background);
+
         titleBar.LeadingContent = new Sample.Views.Controls.AppHeaderLeadingView();
         titleBar.TrailingContent = new Sample.Views.Controls.AppHeaderTrailingView();
 
         if (Application.Current is { } application)
-            application.RequestedThemeChanged += (_, _) => titleBar.BackgroundColor = ResolveShellBackground();
+        {
+            application.RequestedThemeChanged += (_, _) =>
+            {
+                var themed = ResolveShellBackground();
+                titleBar.BackgroundColor = themed;
+                titleBar.Background = new SolidColorBrush(themed);
+            };
+        }
 
         return titleBar;
     }
