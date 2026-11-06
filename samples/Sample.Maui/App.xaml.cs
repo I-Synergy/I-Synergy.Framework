@@ -38,6 +38,29 @@ public partial class App : Application
     protected override ImageSource? Icon => ImageSource.FromFile("icon.png");
 
     /// <summary>
+    /// Builds the Windows title bar: the product title and date/time subtitle stay in the centre
+    /// (the native drag region), while the interactive shell controls are hosted by the
+    /// leading/trailing islands so they keep receiving input.
+    /// </summary>
+    protected override TitleBar? SetTitleBar(bool withClock = false)
+    {
+        var titleBar = base.SetTitleBar(withClock);
+
+        if (titleBar is null)
+            return null;
+
+        titleBar.HeightRequest = 48;
+        titleBar.BackgroundColor = ResolveShellBackground();
+        titleBar.LeadingContent = new Sample.Views.Controls.AppHeaderLeadingView();
+        titleBar.TrailingContent = new Sample.Views.Controls.AppHeaderTrailingView();
+
+        if (Application.Current is { } application)
+            application.RequestedThemeChanged += (_, _) => titleBar.BackgroundColor = ResolveShellBackground();
+
+        return titleBar;
+    }
+
+    /// <summary>
     /// Applies the language chosen in Site Settings to the current and default cultures.
     /// Must be called before any resource is read, so the shell derives its flow direction
     /// (RTL for Arabic) from the correct culture.
@@ -305,5 +328,19 @@ public partial class App : Application
             _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
             _commonServices.MessengerService.Unregister<UserSignedOutMessage>(this);
         }
+    }
+
+    /// <summary>
+    /// Resolves the shell background for the current theme from the app resources.
+    /// </summary>
+    private static Color ResolveShellBackground()
+    {
+        var isDark = Microsoft.Maui.Controls.Application.Current?.RequestedTheme == AppTheme.Dark;
+        var key = isDark ? "AppBgDark" : "AppBgLight";
+
+        if (Microsoft.Maui.Controls.Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color)
+            return color;
+
+        return isDark ? Color.FromArgb("#0D1614") : Color.FromArgb("#F4F6F3");
     }
 }

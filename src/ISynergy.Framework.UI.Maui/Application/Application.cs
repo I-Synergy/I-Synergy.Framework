@@ -74,6 +74,9 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
 
         if (withClock)
         {
+            // Set the subtitle immediately; the timer only refreshes it.
+            titleBar.Subtitle = $"{DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}";
+
             _clockTimer = Dispatcher.CreateTimer();
             _clockTimer.Interval = TimeSpan.FromSeconds(1);
             _clockTimer.Tick += (s, e) =>
@@ -246,8 +249,18 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _mainWindow.ApplyFlowDirection(_language);
         _mainWindow.Page = CreateLoadingView();
 
-        // The native window caption is used now that no custom title bar is assigned. Keep the
-        // date/time clock that the old title-bar subtitle used to show.
+#if WINDOWS
+        // The custom title bar draws the caption, but the native title is still used by the
+        // taskbar and Alt-Tab.
+        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
+            _mainWindow.Title = InfoService.Default.ProductName;
+
+        // Custom title bar: the centre hosts the title and date/time subtitle (and stays the
+        // native drag region), while interactive shell controls live in the leading/trailing
+        // islands supplied by the application.
+        _mainWindow.TitleBar = SetTitleBar(withClock: true);
+#else
+        // Platforms without a title bar use the native window caption.
         UpdateWindowTitle();
 
         _windowTitleTimer ??= Dispatcher.CreateTimer();
@@ -255,6 +268,7 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _windowTitleTimer.Tick -= OnWindowTitleTick;
         _windowTitleTimer.Tick += OnWindowTitleTick;
         _windowTitleTimer.Start();
+#endif
 
         _themeService.ApplyTheme();
 
@@ -460,6 +474,8 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         {
             _windowTitleTimer?.Stop();
             _windowTitleTimer = null;
+            _clockTimer?.Stop();
+            _clockTimer = null;
 
 
 

@@ -188,10 +188,10 @@ public partial class RootView : IShellView
     /// </summary>
     private void MergeHeaderIntoTitleBar()
     {
-        if (Window?.TitleBar is not TitleBar { Content: Sample.Views.Controls.AppHeaderView titleBarHeader })
+        if (Window?.TitleBar is not TitleBar titleBar)
             return;
 
-        titleBarHeader.BindingContext = _viewModel;
+        titleBar.BindingContext = _viewModel;
 
         Header.IsVisible = false;
         HeaderRow.Height = new GridLength(0d);
