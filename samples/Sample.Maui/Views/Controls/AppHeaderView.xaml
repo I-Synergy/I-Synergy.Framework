@@ -28,6 +28,8 @@
 
                 <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
 
+                    <HorizontalStackLayout x:Name="ShellButtons" Spacing="8">
+
                     <!-- Menu: first, so its icon sits on the same column as the sidebar's icons. -->
                     <Button
                         Text="&#x2630;"
@@ -46,6 +48,8 @@
                         Style="{StaticResource AppVerseActionButton}"
                         FontSize="18"
                         VerticalOptions="Center" />
+
+                    </HorizontalStackLayout>
 
                     <!-- Breadcrumb: app name (link) / muted slash / current page (bold) -->
                     <!-- First breadcrumb: app name as accent link, tappable to navigate to dashboard -->
@@ -74,7 +78,7 @@
 
                 </HorizontalStackLayout>
 
-                <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center" HorizontalOptions="End">
+                <HorizontalStackLayout x:Name="TrailingButtons" Grid.Column="1" Spacing="4" VerticalOptions="Center" HorizontalOptions="End">
                     <!-- Theme toggle: moon when light, sun when dark -->
                     <Button Text="{Binding ThemeIcon}"
                             StyleId="HeaderIconButton"

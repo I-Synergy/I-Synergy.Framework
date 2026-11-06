@@ -193,8 +193,8 @@ public partial class RootView : IShellView
 
         titleBar.BindingContext = _viewModel;
 
-        Header.IsVisible = false;
-        HeaderRow.Height = new GridLength(0d);
+        // The title bar owns the shell controls; the page row keeps only the breadcrumb.
+        Header.ShowBreadcrumbOnly();
     }
 
 
