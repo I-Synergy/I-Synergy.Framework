@@ -14,13 +14,13 @@
                 <!-- The header is an in-page row again (no title-bar overlay), so the gutters are plain
                      padding. Left 20 centres the 44px menu button on x=42 — the centre of the sidebar's
                      icon column (panel padding 16 + row padding 8 + 36px tile / 2). Right 16 puts the
-                     theme/settings buttons at the window edge. Mac Catalyst keeps an 80px left gutter
-                     because its window is translucent under the traffic lights. -->
+                     theme/settings buttons at the window edge. Both Apple targets use the same
+                     standard title bar and gutters. -->
                 <Grid.Padding>
                     <OnPlatform x:TypeArguments="Thickness" Default="20,0,16,0">
                         <On Platform="WinUI" Value="20,0,16,0" />
                         <On Platform="macOS" Value="20,0,16,0" />
-                        <On Platform="MacCatalyst" Value="80,0,40,0" />
+                        <On Platform="MacCatalyst" Value="20,0,16,0" />
                         <On Platform="iOS" Value="16,0" />
                         <On Platform="Android" Value="16,0" />
                     </OnPlatform>
