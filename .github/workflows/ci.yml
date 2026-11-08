@@ -73,6 +73,65 @@ jobs:
       - name: Install MAUI workloads
         run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
 
+      # SonarCloud analysis must wrap the build: `begin` injects the MSBuild targets the
+      # scanner's analyzers hook into, so it runs before Restore/Build and `end` runs after
+      # Test, when the OpenCover reports exist.
+      # Automatic Analysis must be OFF in the SonarCloud project; the two analysis methods
+      # cannot coexist. Fork PRs get no secrets, so they skip the analysis instead of failing.
+      - name: Install Java for SonarScanner
+        if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install SonarScanner for .NET
+        if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        shell: pwsh
+        run: |
+          dotnet tool install --global dotnet-sonarscanner --version 12.0.0
+          Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools"
+
+      - name: Begin SonarCloud analysis
+        if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        shell: pwsh
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          # The Mathematics port is a port of Math.NET Numerics: its matrix/jagged
+          # implementations are intentionally parallel. The .NET scanner rejects the
+          # multicriteria block from SonarQube.Analysis.xml, so the entries go on the
+          # command line (keep in sync with sonar-project.properties).
+          $rules = @(
+            'S4136', 'S107', 'S3241', 'S3267', 'S1172', 'S3220', 'S3427', 'S101', 'S2325',
+            'S1144', 'S1135', 'S4144', 'S1066', 'S1994', 'S4035', 'S2365', 'S1751', 'S3973',
+            'S1854', 'S2589', 'S4050', 'S1939', 'S6561', 'S2234', 'S2699'
+          )
+
+          $ids = 1..$rules.Count | ForEach-Object { 'e' + $_ }
+          $multicriteria = '/d:sonar.issue.ignore.multicriteria=' + ($ids -join ',')
+
+          $scannerArgs = @(
+            'begin',
+            '/k:I-Synergy_I-Synergy.Framework',
+            '/o:i-synergy-github',
+            '/n:I-Synergy.Framework',
+            "/v:${{ steps.version.outputs.VersionPackage }}",
+            '/d:sonar.host.url=https://sonarcloud.io',
+            "/d:sonar.token=$env:SONAR_TOKEN",
+            '/d:sonar.cs.opencover.reportsPaths=TestResults/**/coverage.opencover.xml',
+            '/d:sonar.cpd.exclusions=src/ISynergy.Framework.Mathematics/**',
+            $multicriteria
+          )
+
+          for ($i = 0; $i -lt $rules.Count; $i++) {
+            $id = 'e' + ($i + 1)
+            $scannerArgs += "/d:sonar.issue.ignore.multicriteria.$id.ruleKey=csharpsquid:$($rules[$i])"
+            $scannerArgs += "/d:sonar.issue.ignore.multicriteria.$id.resourceKey=src/ISynergy.Framework.Mathematics/**"
+          }
+
+          dotnet sonarscanner @scannerArgs
+
       # Restore must use the build configuration: in Release the MAUI SDK adds
       # maccatalyst-arm64 to the default runtime identifiers, so a Debug restore leaves
       # the assets file without that target and the Release build fails with NETSDK1047.
@@ -165,6 +224,15 @@ jobs:
             Write-Host "::endgroup::"
           }
           if ($failed.Count -gt 0) { throw "Test failures in: $($failed -join ', ')" }
+
+      # Runs on failure too, so the partial analysis is uploaded instead of leaving the
+      # project stuck in its previous state.
+      - name: End SonarCloud analysis
+        if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        shell: pwsh
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet sonarscanner end /d:sonar.token=$env:SONAR_TOKEN
 
       - name: Upload test results
         if: always()

@@ -424,7 +424,13 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
 1. Settings → Environments → `production`: required reviewers, restrict deployment branches to `main`.
 2. Settings → Environments → `acceptance`: no protection rules — PR builds publish automatically.
 3. Settings → Secrets and variables → Actions → secret `NUGET_USER` (the nuget.org account name).
-4. Repository variables: `BUILD_CONFIGURATION=Release`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`,
+4. Settings → Secrets and variables → Actions → secret `SONAR_TOKEN`: a SonarCloud token with
+   **Analyze** permission on `I-Synergy_I-Synergy.Framework`. The `build` job runs
+   `dotnet sonarscanner begin|end` around Restore/Build/Test, so a missing token fails the job.
+   In SonarCloud, turn **Automatic Analysis OFF** (Administration → Analysis Method): automatic
+   and CI-based analysis cannot run on the same project, and automatic analysis also ignores
+   `sonar-project.properties`, so the Mathematics exclusions would not apply.
+5. Repository variables: `BUILD_CONFIGURATION=Release`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`,
    `AZURE_KEYVAULT_URI`, `AZURE_SIGNING_CERTIFICATE`, `TIMESTAMP_URL`.
    No subscription ID is needed: signing only reads the certificate and signs with the key, which the
    vault's access policy grants to the identity directly.

@@ -4,26 +4,27 @@ Source: `I-Synergy_I-Synergy.Framework`, analysis `2026-10-30T13:12:50Z`.
 This file records findings that were inspected and **must not be "fixed" by rote**.
 It is evidence for a rule-exclusion decision, not a blanket suppression list.
 
-## Automatic analysis (since 2026-11-08)
+## Analysis method: CI-based since 2026-11-08
 
-SonarQube Cloud Automatic Analysis is the project's analysis method now. It ignores
-`sonar-project.properties`, so the scanner-side exclusions no longer apply: the 25
-`sonar.issue.ignore.multicriteria` Mathematics rules must be recreated in
-**Administration > General Settings > Analysis scope > Ignore Issues on Multiple
-Criteria**, and the CPD exclusion lives in `.sonarcloud.properties` (read from `main`).
+Automatic analysis was tried and is **not** the method any more: it runs without the MSBuild
+compilation (so it reports framework contracts as smells) and ignores `sonar-project.properties`
+(so the Mathematics exclusions did not apply, and the backlog jumped from 0 to 606). The project
+is analysed by `dotnet sonarscanner` inside `.github/workflows/ci.yml`: `begin` runs before
+Restore/Build, `end` runs after Test so the OpenCover reports are uploaded with the analysis.
+Automatic Analysis must stay **off** in SonarCloud — the two methods cannot coexist.
 
-Automatic analysis also runs without the MSBuild compilation, so it reports framework
-patterns it cannot bind as smells. PR #174 surfaced 25 such findings. The genuinely
-actionable ones were fixed — S3776 (extracted the activation handlers), S3267 (LINQ
-loops) — and the contractual ones carry an inline `// NOSONAR` with the reason:
-S1172 (BindableProperty `propertyChanged` delegate signature), S2325 (bindable-property
-CLR wrappers), S8970 (`Border.Content` is non-nullable in MAUI), S110 (fixed
+The 25 Mathematics `sonar.issue.ignore.multicriteria` entries live in `sonar-project.properties`
+and are passed to the scanner as `/d:` arguments in the workflow (the .NET scanner rejects the
+block from `SonarQube.Analysis.xml`). The CPD exclusion is passed the same way.
+
+Findings the build-aware analysis still raises, and why they must not be "fixed" by rote:
+S1172 (BindableProperty `propertyChanged` delegate signature), S2325 (bindable-property CLR
+wrappers), S8970 (load-bearing null-forgiving operator; `Nullable` is enabled), S110 (fixed
 `ViewModelBladeView` inheritance chain), S3011 (reflection over WinUI's protected
-`ProtectedCursor`). Do not "fix" those by changing the signatures.
+`ProtectedCursor`). The sites carry an inline `// NOSONAR` with the reason.
 
-The same scan reported 14 findings outside those rules; all are false positives caused
-by the build-less compilation or by conditional compilation, and all now carry an inline
-reason:
+The 2026-11-08 triage also covered 14 findings outside those rules; all were false positives
+caused by conditional compilation:
 
 - S8969 — `MauiWinUIApplicationExtensions`: removing `!` from
   `IPlatformApplication.Current` produces CS8602, verified by building the Windows head.
