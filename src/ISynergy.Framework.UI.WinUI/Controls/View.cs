@@ -16,7 +16,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// <seealso cref="IView" />
 [Bindable(true)]
 [Lifetime(Lifetimes.Singleton)]
-public abstract partial class View : Page, IView
+public abstract partial class View : Page, IView // NOSONAR - the dispose pattern is split across TFM #if branches
 {
     private IViewModel? _viewModel;
     private bool _isWrapped;

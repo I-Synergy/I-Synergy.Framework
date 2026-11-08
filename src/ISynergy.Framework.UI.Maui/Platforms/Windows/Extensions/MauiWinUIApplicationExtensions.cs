@@ -184,7 +184,7 @@ public static partial class MauiWinUIApplicationExtensions
         // externally via windows.OnAppInstanceActivated (outside of ConfigureActivationHandlers).
         try
         {
-            var lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<ILifecycleEventService>();
+            var lifecycleService = IPlatformApplication.Current!.Services.GetRequiredService<ILifecycleEventService>(); // NOSONAR - removing the operator produces CS8602 (verified)
             lifecycleService.OnAppInstanceActivated(sender, e);
             Debug.WriteLine("[SingleInstance] MAUI lifecycle dispatch completed.");
         }

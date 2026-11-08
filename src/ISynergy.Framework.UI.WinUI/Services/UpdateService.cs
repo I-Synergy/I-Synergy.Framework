@@ -14,8 +14,8 @@ internal class UpdateService : IUpdateService
     private readonly IDialogService _dialogService;
     private readonly ILanguageService _languageService;
 
-    private StoreContext? _storeContext;
-    private IReadOnlyList<StorePackageUpdate>? _updates;
+    private StoreContext? _storeContext; // NOSONAR - assigned inside #if WINDOWS, which automatic analysis does not evaluate
+    private IReadOnlyList<StorePackageUpdate>? _updates; // NOSONAR - assigned inside #if WINDOWS, which automatic analysis does not evaluate
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateService" /> class.

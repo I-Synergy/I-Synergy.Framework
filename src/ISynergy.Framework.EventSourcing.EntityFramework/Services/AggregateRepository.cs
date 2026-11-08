@@ -86,7 +86,7 @@ public sealed class AggregateRepository<TAggregate, TId> : IAggregateRepository<
         var events = records
             .Select(r => DeserializeEvent(r))
             .Where(e => e is not null)
-            .Cast<IDomainEvent>()
+            .Cast<IDomainEvent>() // NOSONAR - narrows IDomainEvent? to IDomainEvent for LoadFromHistory
             .ToList();
 
         aggregate.LoadFromHistory(events);

@@ -21,6 +21,20 @@ CLR wrappers), S8970 (`Border.Content` is non-nullable in MAUI), S110 (fixed
 `ViewModelBladeView` inheritance chain), S3011 (reflection over WinUI's protected
 `ProtectedCursor`). Do not "fix" those by changing the signatures.
 
+The same scan reported 14 findings outside those rules; all are false positives caused
+by the build-less compilation or by conditional compilation, and all now carry an inline
+reason:
+
+- S8969 — `MauiWinUIApplicationExtensions`: removing `!` from
+  `IPlatformApplication.Current` produces CS8602, verified by building the Windows head.
+- S3881 — the WPF/MAUI windows inherit `Dispose` from the framework `Window`, and the
+  WinUI `View`/`Window` split the pattern across `#if WINDOWS` / iOS / Android branches.
+- S3459 — `UpdateService` fields are assigned inside `#if WINDOWS`, which automatic
+  analysis does not evaluate.
+- S2589 — `DialogService._logger` is an optional constructor parameter.
+- S1905 — the casts in `AggregateRepository` and `OpenBaoKeyVaultService` carry the
+  nullable annotation (dictionary invariance), not a redundant conversion.
+
 ## S8970 — nullable-forgiving operator (229)
 
 Sonar reports *"Remove this null-forgiving operator; nullable warnings are disabled

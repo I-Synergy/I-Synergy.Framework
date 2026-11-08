@@ -16,7 +16,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// <seealso cref="Mvvm.Abstractions.IWindow" />
 [Bindable(true)]
 [Lifetime(Lifetimes.Scoped)]
-public partial class Window : ContentDialog, IWindow
+public partial class Window : ContentDialog, IWindow // NOSONAR - the dispose pattern is split across TFM #if branches
 {
     private IViewModel? _viewModel;
 

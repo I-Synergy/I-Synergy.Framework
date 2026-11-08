@@ -7,7 +7,7 @@ namespace ISynergy.Framework.UI.Windows;
 /// <summary>
 /// Interaction logic for SelectionWindow.xaml
 /// </summary>
-public partial class MultipleSelectionWindow : IMultipleSelectionWindow
+public partial class MultipleSelectionWindow : IMultipleSelectionWindow // NOSONAR - Dispose is implemented by the framework Window base class
 {
     public MultipleSelectionWindow()
     {
