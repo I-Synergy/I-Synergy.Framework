@@ -477,33 +477,8 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
             return;
         }
 
-        NavigationFrame? newFrame;
-
-        if (viewModel is null && TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
-        {
-            // Reuse existing frame from backstack (ViewModel cached in its scope)
-            backStackFrame.Parameter = parameter;
-            newFrame = backStackFrame;
-        }
-        else
-        {
-            // Create a fresh child scope and resolve the ViewModel from it
-            var scope = _serviceScopeFactory.CreateScope();
-            scope.ServiceProvider.GetRequiredService<TViewModel>();
-            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
-        }
-
-        if (parameter is not null)
-            newFrame.Parameter = parameter;
-
-        // Evict the current frame (push to backstack for forward nav, dispose for back nav)
-        HandleCurrentFrame(backNavigation);
-
-        // Activate the new frame
-        _currentFrame = newFrame;
-        var resolvedVm = newFrame.Scope.ServiceProvider.GetRequiredService<TViewModel>();
-        if (parameter is not null)
-            resolvedVm.Parameter = parameter;
+        var newFrame = CreateOrReuseFrame<TViewModel>(viewModel, parameter);
+        var resolvedVm = ActivateFrame<TViewModel>(newFrame, parameter, backNavigation);
 
         var page = CreateView(newFrame.Scope.ServiceProvider, typeof(TViewModel), resolvedVm, parameter);
         SetFrameContent(hostFrame, page);
@@ -531,33 +506,53 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
         if (hostFrame is null || viewScope.ServiceProvider.GetRequiredService(typeof(TView)) is not IView page)
             return;
 
-        NavigationFrame? newFrame;
+        var newFrame = CreateOrReuseFrame<TViewModel>(viewModel, parameter);
+        var resolvedVm = ActivateFrame<TViewModel>(newFrame, parameter, backNavigation);
 
+        page.ViewModel = resolvedVm;
+        SetFrameContent(hostFrame, page);
+        await InitializeViewAndViewModel(page, backNavigation);
+    }
+
+    /// <summary>
+    /// Reuses a back-stack frame when possible; otherwise creates a fresh child scope and
+    /// resolves the ViewModel from it.
+    /// </summary>
+    private NavigationFrame CreateOrReuseFrame<TViewModel>(TViewModel? viewModel, object? parameter)
+        where TViewModel : class, IViewModel
+    {
         if (viewModel is null && TryRemoveFromBackStack<TViewModel>(out var backStackFrame))
         {
+            // Reuse existing frame from backstack (ViewModel cached in its scope)
             backStackFrame.Parameter = parameter;
-            newFrame = backStackFrame;
-        }
-        else
-        {
-            var scope = _serviceScopeFactory.CreateScope();
-            scope.ServiceProvider.GetRequiredService<TViewModel>();
-            newFrame = new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
+            return backStackFrame;
         }
 
+        // Create a fresh child scope and resolve the ViewModel from it
+        var scope = _serviceScopeFactory.CreateScope();
+        scope.ServiceProvider.GetRequiredService<TViewModel>();
+        return new NavigationFrame { Scope = scope, ViewModelType = typeof(TViewModel), Parameter = parameter };
+    }
+
+    /// <summary>
+    /// Evicts the current frame and activates the new one, returning its resolved ViewModel.
+    /// </summary>
+    private TViewModel ActivateFrame<TViewModel>(NavigationFrame newFrame, object? parameter, bool backNavigation)
+        where TViewModel : class, IViewModel
+    {
         if (parameter is not null)
             newFrame.Parameter = parameter;
 
+        // Evict the current frame (push to backstack for forward nav, dispose for back nav)
         HandleCurrentFrame(backNavigation);
 
+        // Activate the new frame
         _currentFrame = newFrame;
         var resolvedVm = newFrame.Scope.ServiceProvider.GetRequiredService<TViewModel>();
         if (parameter is not null)
             resolvedVm.Parameter = parameter;
 
-        page.ViewModel = resolvedVm;
-        SetFrameContent(hostFrame, page);
-        await InitializeViewAndViewModel(page, backNavigation);
+        return resolvedVm;
     }
 
     #endregion
