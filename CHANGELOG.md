@@ -116,6 +116,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `StyleId` values `HeaderIconButton`, `SidebarRow` and `LinkLabel` are now public constants on
   `ShellChromeStyler` so a shell opts into the chrome by name instead of by hand-written mappers.
 
+#### Application constructors no longer call overridable members (S1699)
+- **`ISynergy.Framework.UI.WPF`**: `Application` takes the built `IHost` instead of calling the abstract
+  `CreateHostBuilder` from its constructor; the composition root is an explicit static `CreateHost()` in the
+  application (`Sample.WPF` shows the shape). `InitializeEnvironmentVariables` is no longer virtual - it runs
+  from the constructor and `HandleCommandArguments` stays the overridable hook.
+- **`ISynergy.Framework.UI.WinUI`**: same change to `InitializeEnvironmentVariables`.
+
 #### MAUI: platform code moved out of shared files
 - **`ISynergy.Framework.UI.Maui`**: head-specific code no longer hides in `#if` blocks inside shared files.
   `ThemeService`, `DialogService`, `MauiExceptions`, `PageExtensions` and `SelectAllOnFocusBehavior` now

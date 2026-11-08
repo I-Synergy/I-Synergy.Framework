@@ -189,7 +189,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 });
 
                 // Initialize environment variables from configuration and command-line parameters
-                InitializeEnvironmentVariables(); // NOSONAR
+                InitializeEnvironmentVariables();
             }
             catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
             {
@@ -260,7 +260,11 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    /// <remarks>
+    /// Not virtual: it runs from the constructor, and a constructor must not dispatch to an overridable
+    /// member. <see cref="HandleCommandArguments"/> stays overridable for application-specific switches.
+    /// </remarks>
+    protected void InitializeEnvironmentVariables()
     {
         try
         {

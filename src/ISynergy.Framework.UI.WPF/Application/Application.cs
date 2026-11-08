@@ -81,14 +81,22 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected virtual bool UseCustomWindowChrome => false;
 
     /// <summary>
-    /// Default constructor.
+    /// Initializes the application with the host built by the concrete application.
     /// </summary>
-    protected Application(SplashScreenOptions? splashScreenOptions = null)
+    /// <remarks>
+    /// The host is built by the derived application and passed in: a constructor must not call an
+    /// overridable member, because the derived state it would rely on is not initialized yet. Building
+    /// it in a static method of the application (or a factory) keeps the composition root explicit and
+    /// the base constructor free of virtual dispatch.
+    /// </remarks>
+    /// <param name="host">The built host whose services the application uses.</param>
+    /// <param name="splashScreenOptions">Splash screen configuration, if any.</param>
+    protected Application(IHost host, SplashScreenOptions? splashScreenOptions = null)
         : base()
     {
+        ArgumentNullException.ThrowIfNull(host);
+
         _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
-        var host = CreateHostBuilder() // NOSONAR
-           .Build();
 
         Services = host.Services;
         _logger = Services.GetRequiredService<ILogger<Application>>();
@@ -138,11 +146,9 @@ public abstract class Application : System.Windows.Application, IDisposable
             await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
         });
 
-        // Initialize environment variables from configuration and command-line parameters
-        InitializeEnvironmentVariables(); // NOSONAR
+        // Initialize environment variables from configuration and command-line parameters.
+        InitializeEnvironmentVariables();
     }
-
-    protected abstract IHostBuilder CreateHostBuilder();
 
     /// <summary>
     /// Called when the application is fully loaded (UI ready + initialization complete).
@@ -156,7 +162,11 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    /// <remarks>
+    /// Not virtual: it runs from the constructor, and a constructor must not dispatch to an overridable
+    /// member. <see cref="HandleCommandArguments"/> stays overridable for application-specific switches.
+    /// </remarks>
+    protected void InitializeEnvironmentVariables()
     {
         try
         {

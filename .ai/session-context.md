@@ -371,6 +371,10 @@ no hits outside build output.
   package limitations (`#if !MACOS` for MediaElement/Syncfusion), the `DEBUG` agent and the required
   `Platforms/**` entry points remain. Full build matrix + MAUI tests green; sample smoke-tested.
 
+- **SonarCloud PR 174 (S1699 x3) fixed**: WPF `Application` now takes the built `IHost` (composition root
+  moved to a static `CreateHost()` in `Sample.WPF`), and `InitializeEnvironmentVariables` is non-virtual in
+  WPF and WinUI. Full matrix + both test suites (90/90, 47/4) green.
+
 ## Open Questions
 - **Wave 2** (see the plan): the remaining converter set, sample-level view names, and the feature gaps the
   audit surfaced (WPF lacks `ImageBrowser`/`NoteWindow`/`CameraService`, WinUI lacks `BladeHostView`).
