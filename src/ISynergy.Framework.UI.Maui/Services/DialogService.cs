@@ -520,7 +520,7 @@ public partial class DialogService : IDialogService, IDisposable
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error showing dialog for window type {WindowType}", window.GetType().Name);
+            _logger?.LogError(ex, "Error showing dialog for window type {WindowType}", window.GetType().Name); // NOSONAR - the logger is an optional constructor parameter
 
             bool handled = false;
 
@@ -532,14 +532,14 @@ public partial class DialogService : IDialogService, IDisposable
             catch (Exception handlerEx)
             {
                 // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, ExceptionHandlerFailed);
+                _logger?.LogError(handlerEx, ExceptionHandlerFailed); // NOSONAR - the logger is an optional constructor parameter
             }
 
             // Suppress exception if it was successfully handled or if handler is not available
             // This prevents app crashes while still allowing the handler to show user-friendly messages
             if (!handled)
             {
-                _logger?.LogWarning(ExceptionHandlerNotAvailable);
+                _logger?.LogWarning(ExceptionHandlerNotAvailable); // NOSONAR - the logger is an optional constructor parameter
             }
         }
     }

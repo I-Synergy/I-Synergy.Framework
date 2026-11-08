@@ -10,7 +10,7 @@ namespace ISynergy.Framework.UI.ViewModels;
 /// blade service, which is what makes the pane independent of the current page.
 /// </summary>
 /// <seealso cref="ViewModelBladeView{TModel}" />
-public sealed class BladeHostViewModel : ViewModelBladeView<object>
+public sealed class BladeHostViewModel : ViewModelBladeView<object> // NOSONAR - the inheritance chain is fixed by the shared ViewModelBladeView contract
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BladeHostViewModel"/> class.

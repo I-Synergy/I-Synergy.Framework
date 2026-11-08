@@ -10,7 +10,7 @@ internal sealed class OpenBaoKeyVaultService(IVaultClient vaultClient) : IKeyVau
         var secret = await vaultClient.V1.Secrets.KeyValue.V2
             .ReadSecretAsync<Dictionary<string, string>>(path, mountPoint: mountPoint)
             .WaitAsync(cancellationToken);
-        return secret.Data.Data.ToDictionary(k => k.Key, v => (string?)v.Value);
+        return secret.Data.Data.ToDictionary(k => k.Key, v => (string?)v.Value); // NOSONAR - dictionary invariance requires the nullable value type
     }
 
     public async Task SetSecretAsync(string path, IDictionary<string, object> data, string mountPoint, CancellationToken cancellationToken = default)
