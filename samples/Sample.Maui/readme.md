@@ -68,6 +68,9 @@ once — Solution Explorer → right-click **Sample.Maui** → *Set as Startup P
   workload.
 - **Mac Catalyst** — deploys and debugs through the extension; the pre-launch task passes
   `-p:ValidateXcodeVersion=false` because the Apple packs pin an older Xcode than this machine runs.
+  Debug builds use `Platforms/MacCatalyst/Entitlements.Debug.plist` (no App Sandbox,
+  `get-task-allow`) so a debugger or terminal that is itself sandboxed can start the bundle
+  directly; Release keeps the App Sandbox in `Platforms/MacCatalyst/Entitlements.plist`.
 - **macOS/AppKit** — declared with `targetFramework: net11.0-macos`. Native macOS support in the
   extension is still marked in-progress: if the launch fails, run the `maui: Build (macOS …)` task
   and start `bin/Debug/<tfm>/osx-arm64/Sample.app` from the terminal (it must stay code-signed).

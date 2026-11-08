@@ -403,7 +403,7 @@ A page that wants an overlay pane declares the control in its own root layout (a
 - `Anchor` — the logical edge, `Auto` (default, resolves to `End`), `Start` or `End`.
 - `DisabledOpacity` — opacity of every blade except the newest one (`0.75` by default).
 - `BladeSpacing` — gap between two adjacent blades (`10` by default).
-- `BladeMaxWidth` — maximum width of a single blade card (`520` by default).
+- `BladeMaxWidth` — width of a single blade card, used as both the minimum and the maximum (`480` by default).
 - `InnerPadding` — padding between the blade stack and the host edges (`8` on every side by default).
 
 The pane registers itself in `IBladeViewHost` (`BladeViewHostRegistry`, singleton, weak references) while it is attached to the visual tree and unregisters when it leaves or is disposed.

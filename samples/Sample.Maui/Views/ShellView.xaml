@@ -38,17 +38,19 @@
             Grid.Column="1"
             BackgroundColor="{AppThemeBinding Light={StaticResource AppBgLight}, Dark={StaticResource AppBgDark}}" />
 
-        <!-- Drawer scrim (phones): dims the content while the sidebar is open. Driven by code-behind. -->
-        <BoxView
+        <!-- Drawer scrim (phones): dims the content while the sidebar is open. Driven by code-behind.
+             A layout background is used instead of a BoxView: the Android BoxView paints the
+             semi-transparent colour opaque, which turned the page behind the drawer black. -->
+        <Grid
             x:Name="DrawerScrim"
             Grid.Row="1"
             Grid.ColumnSpan="2"
             IsVisible="False"
-            Color="#99000000">
-            <BoxView.GestureRecognizers>
+            BackgroundColor="#99000000">
+            <Grid.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding ToggleMenuCommand}" />
-            </BoxView.GestureRecognizers>
-        </BoxView>
+            </Grid.GestureRecognizers>
+        </Grid>
 
         <!-- Declared after the content host so the phone drawer renders above it. -->
         <controls:SidebarView

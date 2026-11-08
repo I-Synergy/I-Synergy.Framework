@@ -55,6 +55,13 @@
 		<None Include="I-Synergy.Framework.UI.Maui.targets" Pack="true" PackagePath="buildTransitive\%(Filename)%(Extension)" />
 	</ItemGroup>
 	
+	<!-- Native macOS (AppKit) hosting and Essentials: UseMauiAppForCurrentHead calls
+	     UseMauiAppMacOS/AddMacOSEssentials for the macos TFM. -->
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+		<PackageReference Include="Microsoft.Maui.Platforms.MacOS" />
+		<PackageReference Include="Microsoft.Maui.Platforms.MacOS.Essentials" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />

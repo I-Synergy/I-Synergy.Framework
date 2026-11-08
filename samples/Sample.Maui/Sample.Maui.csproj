@@ -71,6 +71,10 @@
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
       <PropertyGroup>
         <SupportedOSPlatformVersion>17.0</SupportedOSPlatformVersion>
+        <!-- Debug runs without the App Sandbox: a sandboxed debugger/terminal cannot start a
+             sandboxed bundle directly (libsecinit aborts with SYSCALL_SET_USERLAND_PROFILE).
+             Release keeps Platforms/MacCatalyst/Entitlements.plist. -->
+        <CodesignEntitlements Condition="'$(Configuration)' == 'Debug'">Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>
       </PropertyGroup>
     </When>
     <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">

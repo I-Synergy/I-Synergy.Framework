@@ -49,7 +49,9 @@ public partial class ShellView : IShellView
         // Desktop starts expanded; phones start with the drawer closed.
         _viewModel.IsMenuOpen = !_isPhone;
         ApplyMenuState();
+        Sidebar.ApplySidebarChrome(FlowDirection == FlowDirection.RightToLeft);
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        PropertyChanged += OnShellPropertyChanged;
 
         // The framework never raises BaseShellViewModel.ShellLoadedAsync for this root page, so the
         // saved theme, the initial route and the first-run flow are started here, once the visual
@@ -80,7 +82,11 @@ public partial class ShellView : IShellView
     /// </summary>
     private void SetUpPhoneDrawer()
     {
+        // Reset the column as well as the span: ContentHost is declared in column 1 for desktop,
+        // and setting only the span would keep it in column 1 and overflow the right edge.
+        Grid.SetColumn(ContentHost, 0);
         Grid.SetColumnSpan(ContentHost, 2);
+        Grid.SetColumn(DrawerScrim, 0);
         Grid.SetColumnSpan(DrawerScrim, 2);
 
         // The breadcrumb row is only a content-column row on desktop; on phones the header spans
@@ -90,7 +96,6 @@ public partial class ShellView : IShellView
         Grid.SetRow(Sidebar, 1);
         Grid.SetRowSpan(Sidebar, 1);
 
-        Sidebar.TranslationX = -DrawerWidth;
         Sidebar.WidthRequest = DrawerWidth;
     }
 
@@ -103,12 +108,24 @@ public partial class ShellView : IShellView
         if (_isPhone)
         {
             DrawerScrim.IsVisible = _viewModel.IsMenuOpen;
-            Sidebar.TranslationX = _viewModel.IsMenuOpen ? 0d : -DrawerWidth;
+            var closedOffset = FlowDirection == FlowDirection.RightToLeft ? DrawerWidth : -DrawerWidth;
+            Sidebar.TranslationX = _viewModel.IsMenuOpen ? 0d : closedOffset;
             return;
         }
 
         Sidebar.IsVisible = _viewModel.IsMenuOpen;
         SidebarColumn.Width = _viewModel.IsMenuOpen ? new GridLength(DrawerWidth) : new GridLength(0d);
+    }
+
+    private void OnShellPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != FlowDirectionProperty.PropertyName)
+            return;
+
+        Sidebar.ApplySidebarChrome(FlowDirection == FlowDirection.RightToLeft);
+
+        if (_isPhone)
+            ApplyMenuState();
     }
 
     private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -123,7 +140,6 @@ public partial class ShellView : IShellView
         Loaded -= OnRootLoaded;
 
         await _viewModel.ShellLoadedAsync();
-
     }
 
 
@@ -138,6 +154,7 @@ public partial class ShellView : IShellView
         {
             Loaded -= OnRootLoaded;
 
+            PropertyChanged -= OnShellPropertyChanged;
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.Dispose();
         }

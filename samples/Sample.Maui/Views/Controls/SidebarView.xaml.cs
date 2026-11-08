@@ -15,6 +15,20 @@ public partial class SidebarView
     }
 
     /// <summary>
+    /// Applies the sidebar chrome: flush with the page top, outer edge and bottom, with the
+    /// rounding only on the inner edge (right in LTR, left in RTL). Used by the desktop column and
+    /// the phone drawer.
+    /// </summary>
+    /// <param name="isRtl">Whether the shell is right-to-left.</param>
+    public void ApplySidebarChrome(bool isRtl)
+    {
+        SidebarCard.Margin = new Thickness(0);
+        SidebarCardShape.CornerRadius = isRtl
+            ? new CornerRadius(16, 0, 16, 0)
+            : new CornerRadius(0, 16, 0, 16);
+    }
+
+    /// <summary>
     /// Sidebar rows are <see cref="Border"/>s with a tap gesture, so MAUI gives them no hover
     /// feedback. A rounded overlay behind each row's content is shown while the pointer is over the
     /// row; because it is a separate layer, the row's selected (accent) background is unaffected.

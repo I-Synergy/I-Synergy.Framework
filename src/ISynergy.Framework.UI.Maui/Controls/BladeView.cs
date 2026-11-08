@@ -74,7 +74,7 @@ public partial class BladeView : ContentView, IDisposable
         nameof(BladeMaxWidth),
         typeof(double),
         typeof(BladeView),
-        defaultValue: 520d,
+        defaultValue: 480d,
         propertyChanged: OnCardLayoutChanged);
 
     /// <summary>
@@ -129,9 +129,11 @@ public partial class BladeView : ContentView, IDisposable
     }
 
     /// <summary>
-    /// Gets or sets the maximum width of a single blade card.
+    /// Gets or sets the width of a single blade card. It is used as both the minimum and the
+    /// maximum, so every head renders the same blade width regardless of how wide the native
+    /// controls inside the blade measure.
     /// </summary>
-    /// <value>The maximum width; <c>520</c> by default.</value>
+    /// <value>The blade width; <c>480</c> by default.</value>
     public double BladeMaxWidth
     {
         get => (double)GetValue(BladeMaxWidthProperty);
@@ -155,7 +157,7 @@ public partial class BladeView : ContentView, IDisposable
     private const uint SlideDurationMilliseconds = 200u;
     private const double CardCornerRadius = 8d;
 
-    private readonly BoxView _scrim;
+    private readonly Grid _scrim;
     private readonly HorizontalStackLayout _bladesPanel;
 
     private readonly Dictionary<IView, BladeCard> _cards = [];
@@ -187,11 +189,12 @@ public partial class BladeView : ContentView, IDisposable
     /// </summary>
     public BladeView()
     {
-        // Scrim: a translucent black overlay that closes the newest blade when tapped.
-        _scrim = new BoxView
+        // Scrim: a translucent black overlay that closes the newest blade when tapped. A layout
+        // background is used instead of a BoxView: on Android the BoxView painted the
+        // semi-transparent colour opaque, so the shell behind the blade was black instead of dimmed.
+        _scrim = new Grid
         {
-            Color = Colors.Black,
-            Opacity = 0.5d,
+            BackgroundColor = Color.FromRgba(0f, 0f, 0f, 0.5f),
             InputTransparent = false
         };
 
@@ -528,6 +531,7 @@ public partial class BladeView : ContentView, IDisposable
             StrokeThickness = 1d,
             StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = new CornerRadius(CardCornerRadius) },
             MaximumWidthRequest = BladeMaxWidth,
+            MinimumWidthRequest = BladeMaxWidth,
             HorizontalOptions = LayoutOptions.Fill,
             VerticalOptions = LayoutOptions.Fill,
             Padding = new Thickness(0d),
@@ -581,7 +585,10 @@ public partial class BladeView : ContentView, IDisposable
         _bladesPanel.Spacing = BladeSpacing;
 
         foreach (var card in _cards.Values)
+        {
             card.Card.MaximumWidthRequest = BladeMaxWidth;
+            card.Card.MinimumWidthRequest = BladeMaxWidth;
+        }
     }
 
     private void ApplyInnerPadding()
