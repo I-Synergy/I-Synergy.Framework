@@ -7,7 +7,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// <summary>
 /// Value converter that applies NOT operator to a <see cref="bool" /> value.
 /// </summary>
-public sealed class BoolNegationConverter : IValueConverter
+public sealed class BooleanNegationConverter : IValueConverter
 {
     /// <summary>
     /// Convert a boolean value to its negation.
@@ -37,11 +37,11 @@ public sealed class BoolNegationConverter : IValueConverter
 }
 
 /// <summary>
-/// Class BoolToStateConverter.
+/// Class BooleanToStateConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public sealed class BoolToStateConverter : IValueConverter
+public sealed class BooleanToStateConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -86,16 +86,16 @@ public sealed class BooleanToStyleConverter : BooleanConverter<Style>
 }
 
 /// <summary>
-/// Class BooleanToIsVisibleConverter.
+/// Class BooleanToVisibilityConverter.
 /// Implements the <see cref="BooleanConverter{Visibility}" />
 /// </summary>
 /// <seealso cref="BooleanConverter{Visibility}" />
-public sealed class BooleanToIsVisibleConverter : BooleanConverter<bool>
+public sealed class BooleanToVisibilityConverter : BooleanConverter<bool>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BooleanToIsVisibleConverter"/> class.
+    /// Initializes a new instance of the <see cref="BooleanToVisibilityConverter"/> class.
     /// </summary>
-    public BooleanToIsVisibleConverter()
+    public BooleanToVisibilityConverter()
         : base(true, false)
     {
     }

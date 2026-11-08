@@ -117,113 +117,19 @@ public partial class ThemeService : BaseThemeService
     {
         if (Application.AccentColor is not null)
         {
-#if ANDROID
-            Logger.LogTrace("Updating Android-specific colors");
+            // Each head implements this in Platforms/<head>/Services/ThemeService.<head>.cs.
+            ApplyPlatformColors(application);
 
-            UpdateOrAddResource(application, "colorPrimary", Application.AccentColor);
-            UpdateOrAddResource(application, "colorAccent", Application.AccentColor);
-            UpdateOrAddResource(application, "colorPrimaryDark", Application.AccentColor.AddLuminosity(-0.25f));
-#endif
-
-#if IOS
-            Logger.LogTrace("Updating iOS-specific colors");
-
-            UIKit.UIView.Appearance.TintColor = new UIKit.UIColor(
-                (nfloat)Application.AccentColor.Red,
-                (nfloat)Application.AccentColor.Green,
-                (nfloat)Application.AccentColor.Blue,
-                1.0f);
-#endif
-
-#if WINDOWS
-            Logger.LogTrace("Updating Windows-specific colors");
-
-            UpdateOrAddResource(application, "SystemAccentColor", Application.AccentColor);
-            UpdateOrAddResource(application, "SystemColorControlAccentColor", Application.AccentColor);
-            UpdateOrAddResource(application, "SystemAccentColorDark1", Application.AccentColor);
-            UpdateOrAddResource(application, "SystemAccentColorDark2", Application.AccentColor);
-            UpdateOrAddResource(application, "SystemAccentColorDark3", Application.AccentColor);
-            UpdateOrAddResource(application, "SystemAccentColorLight1", Application.AccentColor);
-            UpdateOrAddResource(application, "SystemAccentColorLight2", Application.AccentColor);
-            UpdateOrAddResource(application, "SystemAccentColorLight3", Application.AccentColor);
-
-            // Register WinUI text control focus border overrides.
-            ISynergy.Framework.UI.Maui.Platforms.Windows.Extensions.ControlAccentStyler.Register();
-
-            // Update Windows title bar colors
-            UpdateWindowsTitleBar();
-#endif
             Logger.LogTrace("Platform-specific colors updated");
         }
     }
 
-#if WINDOWS
     /// <summary>
-    /// Updates Windows title bar colors to match the current accent color.
+    /// Applies the accent colour to the native resources of the current head.
     /// </summary>
-    private void UpdateWindowsTitleBar()
-    {
-        try
-        {
-            var window = (Microsoft.Maui.Controls.Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Handler?.PlatformView : null) as Microsoft.UI.Xaml.Window;
+    /// <param name="application">The MAUI application whose resources are updated.</param>
+    partial void ApplyPlatformColors(Application application);
 
-            if (window?.AppWindow?.TitleBar is null)
-            {
-                Logger.LogTrace("Windows title bar not available for customization");
-                return;
-            }
-
-            // Use the page background color (TintedGray000 light / TintedGray950 dark)
-            // so the title bar blends seamlessly with the page content.
-            var backgroundResourceKey = IsLightThemeEnabled ? TintedGray050 : TintedGray900;
-            var pageBackgroundColor = ResourceUtility.FindResource<Color>(backgroundResourceKey);
-
-            if (pageBackgroundColor is not null)
-            {
-                // Convert MAUI Color to Windows.UI.Color (use global:: to avoid namespace conflict)
-                var winColor = global::Windows.UI.Color.FromArgb(
-                    (byte)(pageBackgroundColor.Alpha * 255),
-                    (byte)(pageBackgroundColor.Red * 255),
-                    (byte)(pageBackgroundColor.Green * 255),
-                    (byte)(pageBackgroundColor.Blue * 255)
-                 );
-
-                var titleBar = window.AppWindow.TitleBar;
-
-                // Set native title bar button colors to match page background
-                titleBar.ButtonBackgroundColor = winColor;
-                titleBar.ButtonInactiveBackgroundColor = winColor;
-                titleBar.BackgroundColor = winColor;
-
-                // Set text/foreground colors based on theme for contrast
-                var foregroundColor = IsLightThemeEnabled
-                    ? global::Windows.UI.Color.FromArgb(255, 0, 0, 0)       // Black text on light background
-                    : global::Windows.UI.Color.FromArgb(255, 255, 255, 255); // White text on dark background
-
-                titleBar.ForegroundColor = foregroundColor;
-                titleBar.ButtonForegroundColor = foregroundColor;
-                titleBar.ButtonHoverForegroundColor = foregroundColor;
-                titleBar.ButtonPressedForegroundColor = foregroundColor;
-
-                // Also set the MAUI TitleBar colors, which renders
-                // the title bar area when Window.TitleBar is assigned.
-                if (Microsoft.Maui.Controls.Application.Current?.Windows is { Count: > 0 } titleBarWindows && titleBarWindows[0] is Microsoft.Maui.Controls.Window mauiWindow
-                    && mauiWindow.TitleBar is Microsoft.Maui.Controls.TitleBar mauiTitleBar)
-                {
-                    mauiTitleBar.BackgroundColor = pageBackgroundColor;
-                    mauiTitleBar.ForegroundColor = IsLightThemeEnabled ? Colors.Black : Colors.White;
-                }
-
-                Logger.LogTrace("Windows title bar colors updated to page background ({Theme})",
-                    IsLightThemeEnabled ? "Light" : "Dark");
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.LogWarning(ex, "Failed to update Windows title bar colors");
-        }
-    }
-#endif
 
     /// <summary>
     /// Updates an existing resource or adds it to the application resources when absent.

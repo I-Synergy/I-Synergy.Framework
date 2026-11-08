@@ -13,8 +13,8 @@ namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
 /// MAUI implementation of <see cref="IBladeService"/>. It is adaptive: on tablet and desktop
-/// (where an attached <see cref="IBladePaneHost"/> exists) blades are added to the owner and
-/// rendered as an overlay pane by <see cref="ISynergy.Framework.UI.Controls.BladePane"/>; on phone — or when no pane host is
+/// (where an attached <see cref="IBladeViewHost"/> exists) blades are added to the owner and
+/// rendered as an overlay pane by <see cref="ISynergy.Framework.UI.Controls.BladeView"/>; on phone — or when no pane host is
 /// present in the current page — a blade is pushed as a native modal page.
 /// </summary>
 public class BladeService : BaseBladeService
@@ -153,8 +153,8 @@ public class BladeService : BaseBladeService
         }
     }
 
-    private static IBladePaneHost? ResolveBladePaneHost() =>
-        IPlatformApplication.Current?.Services?.GetService<IBladePaneHost>();
+    private static IBladeViewHost? ResolveBladePaneHost() =>
+        IPlatformApplication.Current?.Services?.GetService<IBladeViewHost>();
 
     /// <inheritdoc />
     protected override IViewModelBladeView ResolveBladeHost(IViewModelBladeView owner, BladeHostTargets hostTarget) =>

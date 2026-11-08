@@ -10,7 +10,7 @@ namespace Sample.ViewModels;
 
 /// <summary>
 /// Blade-owning page view model. Hosts <see cref="DetailViewModel"/> and, through it,
-/// <see cref="DetailAViewModel"/> inside the <c>BladePane</c> of the details page.
+/// <see cref="DetailAViewModel"/> inside the <c>BladeView</c> of the details page.
 /// </summary>
 public partial class DetailsViewModel : ViewModelBladeView<TestItem>
 {

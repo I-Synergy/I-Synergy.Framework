@@ -16,7 +16,7 @@ Cross-platform .NET MAUI UI framework for building modern applications on Window
 - **File service** with platform-specific pickers
 - **Clipboard service** for text and data operations
 - **Camera service** for photo capture and gallery access
-- **Custom controls** (NavigationMenu, ImageBrowser, ErrorPresenter, TabbedView, BladePane)
+- **Custom controls** (NavigationMenu, ImageBrowser, ErrorPresenter, TabbedView, BladeView)
 - **Value converters** for all common data types
 - **Blade panes** with adaptive presentation — an overlay pane on tablet/desktop, a modal page on phone
 - **Behaviors** (SelectAllOnFocusBehavior)
@@ -348,10 +348,10 @@ The theme service supports:
 </ui:TabbedView>
 ```
 
-#### BladePane
+#### BladeView
 
 ```xml
-<c:BladePane ItemsSource="{Binding Blades}"
+<c:BladeView ItemsSource="{Binding Blades}"
              Anchor="Auto" />
 ```
 
@@ -393,11 +393,11 @@ Derive the owner from `ViewModelBladeView<TModel>` to get `Blades` and the blade
 A page that wants an overlay pane declares the control in its own root layout (a `Shell` cannot host an overlay itself):
 
 ```xml
-<c:BladePane ItemsSource="{Binding Blades}"
+<c:BladeView ItemsSource="{Binding Blades}"
              Anchor="End" />
 ```
 
-`BladePane` properties:
+`BladeView` properties:
 
 - `ItemsSource` — the blade views to host, in opening order. When `null`, the `Blades` of the `IViewModelBladeView` binding context is used.
 - `Anchor` — the logical edge, `Auto` (default, resolves to `End`), `Start` or `End`.
@@ -406,15 +406,15 @@ A page that wants an overlay pane declares the control in its own root layout (a
 - `BladeMaxWidth` — maximum width of a single blade card (`520` by default).
 - `InnerPadding` — padding between the blade stack and the host edges (`8` on every side by default).
 
-The pane registers itself in `IBladePaneHost` (`BladePaneHostRegistry`, singleton, weak references) while it is attached to the visual tree and unregisters when it leaves or is disposed.
+The pane registers itself in `IBladeViewHost` (`BladeViewHostRegistry`, singleton, weak references) while it is attached to the visual tree and unregisters when it leaves or is disposed.
 
 ### Shell-level pane
 
-`Controls/BladeHostView` is a self-contained host: it resolves the framework's `BladeHostViewModel` (`ISynergy.Framework.UI/ViewModels`, singleton) lazily — in the constructor, again on `Loaded` and on `OnParentSet`, because the platform service provider may not exist yet during startup — and then attaches a `BladePane` with `ItemsSource = host.Blades`.
+`Controls/BladeHostView` is a self-contained host: it resolves the framework's `BladeHostViewModel` (`ISynergy.Framework.UI/ViewModels`, singleton) lazily — in the constructor, again on `Loaded` and on `OnParentSet`, because the platform service provider may not exist yet during startup — and then attaches a `BladeView` with `ItemsSource = host.Blades`.
 Declare it as the **last child** of the page's root layout so the pane overlays the page content.
 When the view model cannot be resolved the control stays hidden and traces the failure instead of throwing.
 
-Use `BladeHostView` when the blades are shell-level, and a page-level `BladePane` when the blades belong to that page.
+Use `BladeHostView` when the blades are shell-level, and a page-level `BladeView` when the blades belong to that page.
 The sample's Settings is a blade now: `OpenSettingsAsync` (and first run) opens `SettingsViewModel` through `IBladeService` against the shared `BladeHostViewModel`, and `BladeHostView` is declared as the last child of `InfoView`, `CustomControlsView`, `MauiControlsView` and `SlideShowView`; the old per-page settings drawer (`SettingsDrawer` and `SettingsDrawerState`) is gone.
 On `DeviceInfo.Idiom == Phone` the blade still presents as a modal page, per the adaptive behaviour below.
 
@@ -422,7 +422,7 @@ On `DeviceInfo.Idiom == Phone` the blade still presents as a modal page, per the
 
 `BladeService` is adaptive and decides per blade at open time:
 
-- **Tablet and desktop** — when a `BladePane` is attached (`IBladePaneHost.IsHostAttached`) and `DeviceInfo.Idiom` is not `Phone`, the blade is added to the owner and rendered by the pane.
+- **Tablet and desktop** — when a `BladeView` is attached (`IBladeViewHost.IsHostAttached`) and `DeviceInfo.Idiom` is not `Phone`, the blade is added to the owner and rendered by the pane.
 - **Phone** — the blade view is pushed with `PushModalAsync` and popped on the blade's `Closed` event, but only when that page is still on top of the modal stack, so closing an older blade never pops a newer page.
 - **Fallback** — when neither path is possible (the view is not a `Page`, there is no root page, the push fails, or no pane is attached) the blade falls back to the overlay pane and a warning is logged; a blade is never dropped silently.
 

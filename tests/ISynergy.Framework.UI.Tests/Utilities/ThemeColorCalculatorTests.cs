@@ -199,10 +199,10 @@ public class ThemeColorCalculatorTests
     // ── CalculateSecondary ───────────────────────────────────────────────────
 
     [TestMethod]
-    public void CalculateSecondary_IsEquivalentToWhiteBlend025()
+    public void CalculateSecondary_IsEquivalentToWhiteBlend010()
     {
         var secondary = ThemeColorCalculator.CalculateSecondary(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue);
-        var whiteBlend = ThemeColorCalculator.WhiteBlend(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue, 0.25f);
+        var whiteBlend = ThemeColorCalculator.WhiteBlend(WindowsBlueRed, WindowsBlueGreen, WindowsBlueBlue, 0.10f);
 
         Assert.AreEqual(whiteBlend.Red, secondary.Red, Tolerance);
         Assert.AreEqual(whiteBlend.Green, secondary.Green, Tolerance);
@@ -218,13 +218,13 @@ public class ThemeColorCalculatorTests
     }
 
     [TestMethod]
-    public void CalculateSecondary_Black_ReturnsGray025()
+    public void CalculateSecondary_Black_ReturnsGray010()
     {
         var (red, green, blue) = ThemeColorCalculator.CalculateSecondary(0f, 0f, 0f);
 
-        Assert.AreEqual(0.25f, red, Tolerance);
-        Assert.AreEqual(0.25f, green, Tolerance);
-        Assert.AreEqual(0.25f, blue, Tolerance);
+        Assert.AreEqual(0.10f, red, Tolerance);
+        Assert.AreEqual(0.10f, green, Tolerance);
+        Assert.AreEqual(0.10f, blue, Tolerance);
     }
 
     [TestMethod]

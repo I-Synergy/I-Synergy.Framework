@@ -88,11 +88,11 @@ public partial class DecimalEqualsConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalLesserThenConverter.
+/// Class DecimalLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public partial class DecimalLesserThenConverter : IValueConverter
+public partial class DecimalLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -131,11 +131,11 @@ public partial class DecimalLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalGreaterThenConverter.
+/// Class DecimalGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public partial class DecimalGreaterThenConverter : IValueConverter
+public partial class DecimalGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -174,11 +174,11 @@ public partial class DecimalGreaterThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalEqualsOrLesserThenConverter.
+/// Class DecimalEqualsOrLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public partial class DecimalEqualsOrLesserThenConverter : IValueConverter
+public partial class DecimalEqualsOrLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -217,11 +217,11 @@ public partial class DecimalEqualsOrLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalEqualsOrGreaterThenConverter.
+/// Class DecimalEqualsOrGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public partial class DecimalEqualsOrGreaterThenConverter : IValueConverter
+public partial class DecimalEqualsOrGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

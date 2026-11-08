@@ -89,19 +89,19 @@ public partial class BladeView : UserControl, IDisposable
 
     /// <summary>
     /// Gets or sets the logical edge the blade pane is anchored to. Logical means the edge follows
-    /// the active flow direction: <see cref="BladePaneAnchor.Start"/> is the left edge in
+    /// the active flow direction: <see cref="BladeViewAnchor.Start"/> is the left edge in
     /// left-to-right cultures and the right edge in right-to-left cultures.
     /// </summary>
-    public BladePaneAnchor Anchor
+    public BladeViewAnchor Anchor
     {
-        get { return (BladePaneAnchor)GetValue(AnchorProperty); }
+        get { return (BladeViewAnchor)GetValue(AnchorProperty); }
         set { SetValue(AnchorProperty, value); }
     }
 
     /// <summary>
     /// Identifies the <see cref="Anchor"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(BladePaneAnchor), typeof(BladeView), new PropertyMetadata(BladePaneAnchor.Auto, OnAnchorChanged));
+    public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(nameof(Anchor), typeof(BladeViewAnchor), typeof(BladeView), new PropertyMetadata(BladeViewAnchor.Auto, OnAnchorChanged));
 
     /// <summary>
     /// Gets the resolved, physical horizontal alignment of the blade pane. Unlike
@@ -250,7 +250,7 @@ public partial class BladeView : UserControl, IDisposable
 
         var isRtl = FlowDirection == FlowDirection.RightToLeft;
 
-        if (Anchor == BladePaneAnchor.Auto)
+        if (Anchor == BladeViewAnchor.Auto)
             BladeAlignment = isRtl ? Mirror(HorizontalBladeAlignment) : HorizontalBladeAlignment;
         else
             BladeAlignment = BladePlacement.IsStartSide(Anchor, isRtl) ? HorizontalAlignment.Left : HorizontalAlignment.Right;

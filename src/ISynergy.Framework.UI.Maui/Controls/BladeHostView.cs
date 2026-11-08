@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace ISynergy.Framework.UI.Controls;
 
 /// <summary>
-/// Shell-level host for the MAUI blade pane. It binds a <see cref="BladePane"/> to the shared
+/// Shell-level host for the MAUI blade pane. It binds a <see cref="BladeView"/> to the shared
 /// <see cref="BladeHostViewModel"/>, so blades opened from anywhere in the shell dock into the
 /// same overlay pane instead of into the current page.
 /// </summary>
@@ -67,7 +67,7 @@ public sealed partial class BladeHostView : ContentView
 
             BindingContext = host;
 
-            var pane = new BladePane { ItemsSource = host.Blades };
+            var pane = new BladeView { ItemsSource = host.Blades };
             pane.PropertyChanged += OnPanePropertyChanged;
             Content = pane;
 
@@ -83,7 +83,7 @@ public sealed partial class BladeHostView : ContentView
 
     private void OnPanePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(IsVisible) && sender is BladePane pane)
+        if (e.PropertyName == nameof(IsVisible) && sender is BladeView pane)
             IsVisible = pane.IsVisible;
     }
 }

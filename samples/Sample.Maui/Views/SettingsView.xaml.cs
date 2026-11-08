@@ -11,7 +11,7 @@ using System.Globalization;
 namespace Sample.Views;
 
 /// <summary>
-/// The Settings blade page. It is hosted by the in-page <see cref="ISynergy.Framework.UI.Controls.BladePane"/>
+/// The Settings blade page. It is hosted by the in-page <see cref="ISynergy.Framework.UI.Controls.BladeView"/>
 /// (overlay on tablet/desktop, modal on phone) so the page underneath stays visible behind the scrim.
 /// Language, theme and accent color are applied live and persisted as they change.
 /// </summary>

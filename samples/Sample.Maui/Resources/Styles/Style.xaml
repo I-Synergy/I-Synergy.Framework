@@ -23,25 +23,25 @@
     <converters:StringToIntegerConverter x:Key="StringToIntegerConverter" />
     <converters:DecimalToStringConverter x:Key="DecimalToStringConverter" />
     <converters:IntegerToStringConverter x:Key="IntegerToStringConverter" />
-    <converters:StringToIsVisibleConverter x:Key="StringToIsVisibleConverter" />
+    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
     <converters:StringToEnabledConverter x:Key="StringToEnabledConverter" />
     <converters:DateTimeOffsetToLocalDateTimeConverter x:Key="DateTimeOffsetToLocalDateTimeConverter" />
     <converters:DateTimeOffsetToLocalDateTimeOffsetConverter x:Key="DateTimeOffsetToLocalDateTimeOffsetConverter" />
     <converters:DateTimeOffsetToLocalDateStringConverter x:Key="DateTimeOffsetToLocalDateStringConverter" />
-    <converters:BooleanToIsVisibleConverter
-        x:Key="BooleanToIsVisibleConverter"
+    <converters:BooleanToVisibilityConverter
+        x:Key="BooleanToVisibilityConverter"
         False="False"
         True="True" />
-    <converters:BooleanToIsVisibleConverter
-        x:Key="InverseBooleanToIsVisibleConverter"
+    <converters:BooleanToVisibilityConverter
+        x:Key="InverseBooleanToVisibilityConverter"
         False="True"
         True="False" />
-    <converters:BooleanToIsVisibleConverter
+    <converters:BooleanToVisibilityConverter
         x:Key="IsEditableToVisibleConverter"
         False="False"
         True="True" />
-    <converters:NullToIsVisibleConverter x:Key="NullToIsVisibleConverter" />
-    <converters:NullToInversedIsVisibleConverter x:Key="NullToInversedIsVisibleConverter" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <converters:NullToInversedVisibilityConverter x:Key="NullToInversedVisibilityConverter" />
     <converters:ChangeTrackingConverters x:Key="ChangeTrackingConverters" />
     <converters:DecimalNumberFormatter x:Key="DecimalNumberFormatter" />
     <converters:IntegerNumberFormatter x:Key="IntegerNumberFormatter" />
@@ -97,7 +97,9 @@
     </Style>
 
     <Style x:Key="DefaultButtonStyle" TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource White}}" />
+        <!-- Secondary is the accent blended 25% towards white, so white text is not always legible
+             (teal lands at 4.2:1, orange far lower); the palette supplies the matching foreground. -->
+        <Setter Property="TextColor" Value="{DynamicResource SecondaryForeground}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Secondary}, Dark={DynamicResource Secondary}}" />
         <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}" />
         <Setter Property="BorderWidth" Value="0" />
@@ -123,6 +125,7 @@
                         <VisualState.Setters>
                             <Setter Property="Opacity" Value="1" />
                             <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource Primary}}" />
+                            <Setter Property="TextColor" Value="{DynamicResource PrimaryForeground}" />
                             <Setter Property="Shadow" Value="{DynamicResource DefaultButtonShadow}" />
                         </VisualState.Setters>
                     </VisualState>
@@ -306,7 +309,7 @@
 
     <!-- Primary Button Style: Uses accent color for important actions -->
     <Style x:Key="PrimaryButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{DynamicResource White}" />
+        <Setter Property="TextColor" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BackgroundColor" Value="{DynamicResource Primary}" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="BorderWidth" Value="0" />

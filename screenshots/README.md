@@ -22,6 +22,15 @@ buttons, surfaces and settings surface.
 
 Notes:
 
+- The 01–03 shots were re-captured on **Windows** on 2026-11-07 from the **.NET 11** `net11.0-windows10.0.26100.0`
+  (WinUI) head, at native 2134×1318 (2× HiDPI, after trimming the invisible resize frame) via a
+  `PrintWindow`/`PW_RENDERFULLCONTENT` capture of the app window — `maui devflow ui screenshot` reports
+  "Failed to capture screenshot" on the Windows head, and its UI automation (`ui query`/`ui navigate`)
+  returns no elements there. The Windows head uses the platform title bar with the application title and
+  keeps the shell header in the page, as on the Apple targets, so the settings blade dims the menu, theme
+  and settings commands along with the rest of the shell. `BladePane` dismisses open blades when the app
+  theme changes (reparented blade content keeps its native control theme otherwise), so the blade shots
+  show a blade opened after the theme switch.
 - The 04–06 shots were captured on macOS on 2026-11-07 from the **.NET 11** heads (the sample is
   .NET 11 only): macOS/AppKit and Mac Catalyst windows were rendered in-app (`CacheDisplay` /
   `UIGraphicsImageRenderer`), Android came from `adb exec-out screencap` on an API 36 arm64

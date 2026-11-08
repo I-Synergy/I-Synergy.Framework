@@ -1,12 +1,12 @@
 namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
-/// Default singleton implementation of <see cref="IBladePaneHost"/>. It keeps a list of
+/// Default singleton implementation of <see cref="IBladeViewHost"/>. It keeps a list of
 /// weak references to the attached blade pane hosts so that a long-lived service
 /// (registered as a singleton) does not keep a host control, and its whole visual tree,
 /// alive after it has been removed from the visual tree.
 /// </summary>
-public sealed class BladePaneHostRegistry : IBladePaneHost
+public sealed class BladeViewHostRegistry : IBladeViewHost
 {
     private readonly object _sync = new();
     private readonly List<WeakReference> _hosts = [];

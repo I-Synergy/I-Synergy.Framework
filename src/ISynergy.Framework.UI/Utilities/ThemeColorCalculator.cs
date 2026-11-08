@@ -19,11 +19,51 @@ public static class ThemeColorCalculator
     public static (float Red, float Green, float Blue) BlackBlend(float red, float green, float blue, float factor) =>
         (red * (1f - factor), green * (1f - factor), blue * (1f - factor));
 
+    /// <summary>
+    /// Derives the secondary accent surface: the primary colour blended 10% towards white.
+    /// </summary>
+    /// <remarks>
+    /// The step is deliberately small. Secondary is used as a default button background and is paired
+    /// with the palette's <c>SecondaryForeground</c>; a 25% blend left the default teal at 4.2:1 with
+    /// white text (under the 4.5:1 AA threshold) and turned the foreground black, which read as an
+    /// inverted label next to the primary button.
+    /// </remarks>
     public static (float Red, float Green, float Blue) CalculateSecondary(float red, float green, float blue) =>
-        WhiteBlend(red, green, blue, 0.25f);
+        WhiteBlend(red, green, blue, 0.10f);
 
     public static (float Red, float Green, float Blue) CalculateTertiary(float red, float green, float blue) =>
         BlackBlend(red, green, blue, 0.25f);
+
+    /// <summary>
+    /// Chooses the WCAG-contrast-optimal foreground (black or white) for an accent background.
+    /// </summary>
+    /// <remarks>
+    /// <c>Secondary</c> is the primary colour blended 25% towards white, so white text on it lands at
+    /// about 4.2:1 for the default teal — under the 4.5:1 AA threshold — and is far worse for light
+    /// accents such as orange. Picking the foreground per accent keeps every accent button legible.
+    /// </remarks>
+    /// <param name="red">Background red channel, 0–1.</param>
+    /// <param name="green">Background green channel, 0–1.</param>
+    /// <param name="blue">Background blue channel, 0–1.</param>
+    /// <returns>Black or white, whichever contrasts more with the background.</returns>
+    public static (float Red, float Green, float Blue) CalculateOnColor(float red, float green, float blue)
+    {
+        var luminance = RelativeLuminance(red, green, blue);
+        var contrastWithBlack = (luminance + 0.05f) / 0.05f;
+        var contrastWithWhite = 1.05f / (luminance + 0.05f);
+
+        return contrastWithBlack >= contrastWithWhite
+            ? (0f, 0f, 0f)
+            : (1f, 1f, 1f);
+    }
+
+    private static float RelativeLuminance(float red, float green, float blue) =>
+        (0.2126f * Linearize(red)) + (0.7152f * Linearize(green)) + (0.0722f * Linearize(blue));
+
+    private static float Linearize(float channel) =>
+        channel <= 0.03928f
+            ? channel / 12.92f
+            : MathF.Pow((channel + 0.055f) / 1.055f, 2.4f);
 
     public static IReadOnlyDictionary<string, (float Red, float Green, float Blue)> CalculateTintedGrays(float red, float green, float blue)
     {

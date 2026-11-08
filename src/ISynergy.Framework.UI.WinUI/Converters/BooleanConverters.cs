@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// <summary>
 /// Value converter that applies NOT operator to a <see cref="bool" /> value.
 /// </summary>
-public sealed partial class BoolNegationConverter : IValueConverter
+public sealed partial class BooleanNegationConverter : IValueConverter
 {
     /// <summary>
     /// Convert a boolean value to its negation.
@@ -39,11 +39,11 @@ public sealed partial class BoolNegationConverter : IValueConverter
 }
 
 /// <summary>
-/// Class BoolToStateConverter.
+/// Class BooleanToStateConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public sealed partial class BoolToStateConverter : IValueConverter
+public sealed partial class BooleanToStateConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -83,11 +83,11 @@ public sealed partial class BoolToStateConverter : IValueConverter
 }
 
 /// <summary>
-/// Class BoolToCommandBarDisplayModeConverter.
+/// Class BooleanToCommandBarDisplayModeConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public sealed partial class BoolToCommandBarDisplayModeConverter : IValueConverter
+public sealed partial class BooleanToCommandBarDisplayModeConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

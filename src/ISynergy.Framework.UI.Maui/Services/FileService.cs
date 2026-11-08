@@ -70,13 +70,15 @@ public class FileService : IFileService<FileResult>
     /// <summary>
     /// Saves file to folder async.
     /// </summary>
-    /// <param name="folder"></param>
-    /// <param name="filename"></param>
-    /// <param name="file"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file)
-    {
-        throw new NotImplementedException();
-    }
+    /// <remarks>
+    /// MAUI exposes no cross-platform "save as" picker, so this head reports "not saved" instead of
+    /// throwing; callers treat <see langword="null"/> the same way as a cancelled dialog on WPF and
+    /// WinUI. Write to a known folder with <see cref="System.IO.File"/> if the location is fixed.
+    /// </remarks>
+    /// <param name="folder">Target folder.</param>
+    /// <param name="filename">File name.</param>
+    /// <param name="file">Content.</param>
+    /// <returns>Always <see langword="null"/> on MAUI.</returns>
+    public Task<FileResult?> SaveFileAsync(string folder, string filename, byte[] file) =>
+        Task.FromResult<FileResult?>(null);
 }

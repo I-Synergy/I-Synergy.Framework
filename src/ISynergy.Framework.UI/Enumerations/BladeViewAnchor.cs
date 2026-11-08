@@ -5,7 +5,7 @@ namespace ISynergy.Framework.UI.Enumerations;
 /// active flow direction: <see cref="Start"/> is left in left-to-right
 /// cultures and right in right-to-left cultures.
 /// </summary>
-public enum BladePaneAnchor
+public enum BladeViewAnchor
 {
     /// <summary>Anchor at the logical end edge (the default).</summary>
     Auto = 0,

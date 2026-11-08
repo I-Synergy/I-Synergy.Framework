@@ -383,22 +383,19 @@ public partial class DialogService : IDialogService, IDisposable
 
     private static Task<bool> TryEventLogNotificationAsync(string message, string title) // NOSONAR
     {
-#if WINDOWS
-        try
-        {
-            using var eventLog = new System.Diagnostics.EventLog("Application");
-            eventLog.Source = "MAUI DialogService";
-            eventLog.WriteEntry($"{title}: {message}", System.Diagnostics.EventLogEntryType.Warning);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
-#else
-        return Task.FromResult(false);
-#endif
+        var handled = false;
+        WritePlatformEventLog(message, title, ref handled);
+        return Task.FromResult(handled);
     }
+
+    /// <summary>
+    /// Writes the notification to a platform log. Windows implements this against the application
+    /// event log; the other heads do not, so the caller falls back to the file log.
+    /// </summary>
+    /// <param name="message">Dialog message.</param>
+    /// <param name="title">Dialog title.</param>
+    /// <param name="handled">Set when the platform log accepted the entry.</param>
+    static partial void WritePlatformEventLog(string message, string title, ref bool handled);
 
     private static async Task<bool> TryFileNotificationAsync(string message, string title)
     {

@@ -249,26 +249,32 @@ public abstract class Application : Microsoft.Maui.Controls.Application, IDispos
         _mainWindow.ApplyFlowDirection(_language);
         _mainWindow.Page = CreateLoadingView();
 
-#if WINDOWS
-        // The custom title bar draws the caption, but the native title is still used by the
-        // taskbar and Alt-Tab.
-        if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
-            _mainWindow.Title = InfoService.Default.ProductName;
+        // WinUI is the only head with a customisable title bar; every other head shows the product
+        // name and the current date/time in the native caption. A runtime check keeps this file free
+        // of conditional compilation - Window.TitleBar exists on all heads and is ignored elsewhere.
+        if (DeviceInfo.Platform == DevicePlatform.WinUI)
+        {
+            // The custom title bar draws the caption, but the native title is still used by the
+            // taskbar and Alt-Tab.
+            if (!string.IsNullOrEmpty(InfoService.Default.ProductName))
+                _mainWindow.Title = InfoService.Default.ProductName;
 
-        // Custom title bar: the centre hosts the title and date/time subtitle (and stays the
-        // native drag region), while interactive shell controls live in the leading/trailing
-        // islands supplied by the application.
-        _mainWindow.TitleBar = SetTitleBar(withClock: true);
-#else
-        // Platforms without a title bar use the native window caption.
-        UpdateWindowTitle();
+            // Custom title bar: the centre hosts the title and date/time subtitle (and stays the
+            // native drag region), while interactive shell controls live in the leading/trailing
+            // islands supplied by the application.
+            _mainWindow.TitleBar = SetTitleBar(withClock: true);
+        }
+        else
+        {
+            // Platforms without a title bar use the native window caption.
+            UpdateWindowTitle();
 
-        _windowTitleTimer ??= Dispatcher.CreateTimer();
-        _windowTitleTimer.Interval = TimeSpan.FromSeconds(1);
-        _windowTitleTimer.Tick -= OnWindowTitleTick;
-        _windowTitleTimer.Tick += OnWindowTitleTick;
-        _windowTitleTimer.Start();
-#endif
+            _windowTitleTimer ??= Dispatcher.CreateTimer();
+            _windowTitleTimer.Interval = TimeSpan.FromSeconds(1);
+            _windowTitleTimer.Tick -= OnWindowTitleTick;
+            _windowTitleTimer.Tick += OnWindowTitleTick;
+            _windowTitleTimer.Start();
+        }
 
         _themeService.ApplyTheme();
 

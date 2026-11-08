@@ -4,11 +4,11 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.Converters;
 
 /// <summary>
-/// Class DecimalToIsVisibleConverter.
+/// Class DecimalToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalToIsVisibleConverter : IValueConverter
+public class DecimalToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -44,11 +44,11 @@ public class DecimalToIsVisibleConverter : IValueConverter
 }
 
 /// <summary>
-/// Class ZeroDecimalToIsVisibleConverter.
+/// Class ZeroDecimalToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ZeroDecimalToIsVisibleConverter : IValueConverter
+public class ZeroDecimalToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -122,11 +122,11 @@ public class DecimalEqualsConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalLesserThenConverter.
+/// Class DecimalLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalLesserThenConverter : IValueConverter
+public class DecimalLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -160,11 +160,11 @@ public class DecimalLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalGreaterThenConverter.
+/// Class DecimalGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalGreaterThenConverter : IValueConverter
+public class DecimalGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -198,11 +198,11 @@ public class DecimalGreaterThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalEqualsOrLesserThenConverter.
+/// Class DecimalEqualsOrLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsOrLesserThenConverter : IValueConverter
+public class DecimalEqualsOrLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -236,11 +236,11 @@ public class DecimalEqualsOrLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalEqualsOrGreaterThenConverter.
+/// Class DecimalEqualsOrGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsOrGreaterThenConverter : IValueConverter
+public class DecimalEqualsOrGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

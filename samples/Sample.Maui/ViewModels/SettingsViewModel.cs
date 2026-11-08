@@ -1,6 +1,7 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Attributes;
 using ISynergy.Framework.Core.Enumerations;
+using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Globalization.Extensions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Commands;
@@ -23,6 +24,8 @@ public partial class SettingsViewModel : ViewModelBlade<object>
     private readonly IDialogService _dialogService;
     private readonly ISettingsService _settingsService;
     private readonly IThemeService _themeService;
+    private readonly ISupportedCulturesService _supportedCulturesService;
+    private CultureInfo? _selectedLanguage;
 
     /// <summary>
     /// Gets the title.
@@ -59,9 +62,14 @@ public partial class SettingsViewModel : ViewModelBlade<object>
     /// <summary>
     /// Gets or sets the LanguageOptions property value.
     /// </summary>
-    public ObservableCollection<string> LanguageOptions
+    /// <remarks>
+    /// The supported cultures come from <see cref="ISupportedCulturesService"/> and are shown by their
+    /// display name ("English"), as in the WPF blade; a list of culture codes rendered "en" in the picker
+    /// and could offer a culture the application was not configured for.
+    /// </remarks>
+    public ObservableCollection<CultureInfo> LanguageOptions
     {
-        get => GetValue<ObservableCollection<string>>();
+        get => GetValue<ObservableCollection<CultureInfo>>();
         set => SetValue(value);
     }
 
@@ -80,25 +88,26 @@ public partial class SettingsViewModel : ViewModelBlade<object>
     /// <remarks>
     /// The view binds to this instead of <see cref="LocalSettings"/> directly: a two-way binding into the
     /// settings model would write the picker's transient empty selection back into persisted settings
-    /// while the blade page is being re-parented.
+    /// while the blade page is being re-parented. The value is the <see cref="CultureInfo"/> the picker
+    /// shows; the persisted setting stays the culture name.
     /// </remarks>
-    public string SelectedLanguage
+    public CultureInfo? SelectedLanguage
     {
-        get => LocalSettings?.Language ?? string.Empty;
+        get => _selectedLanguage;
         set
         {
-            if (string.IsNullOrWhiteSpace(value) || string.Equals(LocalSettings?.Language, value, StringComparison.OrdinalIgnoreCase))
+            if (value is null || string.Equals(LocalSettings?.Language, value.Name, StringComparison.OrdinalIgnoreCase))
                 return;
 
             if (LocalSettings is not null)
-                LocalSettings.Language = value;
+                LocalSettings.Language = value.Name;
 
-            SetValue(value);
+            _selectedLanguage = value;
+            RaisePropertyChanged(nameof(SelectedLanguage));
 
             _settingsService.SaveLocalSettings();
 
-            var culture = new CultureInfo(value);
-            culture.ApplyCulture();
+            value.ApplyCulture();
         }
     }
 
@@ -140,25 +149,19 @@ public partial class SettingsViewModel : ViewModelBlade<object>
         IDialogService dialogService,
         ISettingsService settingsService,
         IThemeService themeService,
+        ISupportedCulturesService supportedCulturesService,
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
         _settingsService = settingsService;
         _themeService = themeService;
+        _supportedCulturesService = supportedCulturesService;
 
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
 
-        LanguageOptions = new ObservableCollection<string>
-        {
-            "en",
-            "nl",
-            "de",
-            "fr",
-            "es",
-            "ar"
-        };
+        LanguageOptions = new ObservableCollection<CultureInfo>(supportedCulturesService.SupportedCultures);
 
         ThemeOptions = new ObservableCollection<Themes>
         {
@@ -180,6 +183,25 @@ public partial class SettingsViewModel : ViewModelBlade<object>
         ];
 
         SaveCommand = new AsyncRelayCommand(SaveAsync);
+
+        // The theme can also be switched from the shell header while the blade is open; without
+        // this the picker kept showing the theme the blade was opened with.
+        _themeService.ThemeChanged += OnThemeChanged;
+    }
+
+    private void OnThemeChanged(object? sender, EventArgs e) =>
+        RaisePropertyChanged(nameof(SelectedTheme));
+
+    /// <summary>
+    /// Releases the theme subscription.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release managed resources.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+            _themeService.ThemeChanged -= OnThemeChanged;
+
+        base.Dispose(disposing);
     }
 
     public override async Task InitializeAsync()
@@ -196,6 +218,14 @@ public partial class SettingsViewModel : ViewModelBlade<object>
 
                 if (_settingsService.LocalSettings is LocalSettings localSetting)
                     LocalSettings = localSetting;
+
+                // The picker holds CultureInfo instances; match the persisted name (English when the
+                // setting is empty or no longer supported).
+                _selectedLanguage = LanguageOptions.FirstOrDefault(culture =>
+                        string.Equals(culture.Name, LocalSettings?.Language, StringComparison.OrdinalIgnoreCase))
+                    ?? _supportedCulturesService.DefaultCulture;
+
+                RaisePropertyChanged(nameof(SelectedLanguage));
 
                 await _settingsService.LoadGlobalSettingsAsync();
 

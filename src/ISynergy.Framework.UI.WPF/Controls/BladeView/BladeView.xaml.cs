@@ -42,9 +42,9 @@ public partial class BladeView : UserControl, IDisposable
     /// </summary>
     public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(
         nameof(Anchor),
-        typeof(BladePaneAnchor),
+        typeof(BladeViewAnchor),
         typeof(BladeView),
-        new PropertyMetadata(BladePaneAnchor.Auto, OnAnchorChanged));
+        new PropertyMetadata(BladeViewAnchor.Auto, OnAnchorChanged));
 
     /// <summary>
     /// Identifies the <see cref="DisabledOpacity"/> dependency property.
@@ -96,10 +96,10 @@ public partial class BladeView : UserControl, IDisposable
     /// <summary>
     /// Gets or sets the logical edge the blade pane is anchored to.
     /// </summary>
-    /// <value>The logical anchor; <see cref="BladePaneAnchor.Auto"/> by default.</value>
-    public BladePaneAnchor Anchor
+    /// <value>The logical anchor; <see cref="BladeViewAnchor.Auto"/> by default.</value>
+    public BladeViewAnchor Anchor
     {
-        get => (BladePaneAnchor)GetValue(AnchorProperty);
+        get => (BladeViewAnchor)GetValue(AnchorProperty);
         set => SetValue(AnchorProperty, value);
     }
 

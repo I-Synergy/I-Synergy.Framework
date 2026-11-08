@@ -5,7 +5,7 @@ namespace ISynergy.Framework.UI.Services;
 /// host control is currently attached to the visual tree, so blades can be rendered
 /// as an overlay pane instead of being pushed as a modal page.
 /// </summary>
-public interface IBladePaneHost
+public interface IBladeViewHost
 {
     /// <summary>
     /// Gets a value indicating whether at least one blade pane host is currently

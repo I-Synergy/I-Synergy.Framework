@@ -306,7 +306,7 @@ public class ProfileViewModel : ViewModel
 `BladeView` renders a backdrop plus a horizontal `ListBox` of blade cards and keeps only the newest blade interactive; every earlier card is dimmed to `DisabledOpacity`.
 
 - `ItemsSource` — the blade views to host, in opening order.
-- `Anchor` — `BladePaneAnchor`, default `Auto`: the *logical* edge the pane is anchored to (`Auto` resolves to `End`, i.e. the right edge in a left-to-right culture).
+- `Anchor` — `BladeViewAnchor`, default `Auto`: the *logical* edge the pane is anchored to (`Auto` resolves to `End`, i.e. the right edge in a left-to-right culture).
 - `BladeAlignment` — read-only, resolved physical `HorizontalAlignment` published by the control. It is already mirrored for right-to-left, is consumed by the control template, and must never be hardcoded in XAML.
 - `HorizontalBladeAlignment` — the left-to-right *intent* (`Right` by default). It is only used as the base value that `BladeAlignment` mirrors when `Anchor` is `Auto`; prefer `Anchor` for new call sites.
 - `DisabledOpacity` (`0.75`), `BladeSpacing` (`10`), `InnerPadding` (`8`), `BladeHeight`, `AutoCollapseThreshold`, `Orientation`.

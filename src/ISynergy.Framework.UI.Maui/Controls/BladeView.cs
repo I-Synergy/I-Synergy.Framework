@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Helpers;
@@ -22,7 +23,7 @@ namespace ISynergy.Framework.UI.Controls;
 /// blade view and its view model are never disposed here — the DI scope that created them
 /// owns their lifetime.
 /// </remarks>
-public partial class BladePane : ContentView, IDisposable
+public partial class BladeView : ContentView, IDisposable
 {
     #region Bindable properties
 
@@ -32,7 +33,7 @@ public partial class BladePane : ContentView, IDisposable
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
         nameof(ItemsSource),
         typeof(ObservableCollection<IView>),
-        typeof(BladePane),
+        typeof(BladeView),
         defaultValue: null,
         propertyChanged: OnItemsSourceChanged);
 
@@ -41,9 +42,9 @@ public partial class BladePane : ContentView, IDisposable
     /// </summary>
     public static readonly BindableProperty AnchorProperty = BindableProperty.Create(
         nameof(Anchor),
-        typeof(BladePaneAnchor),
-        typeof(BladePane),
-        defaultValue: BladePaneAnchor.Auto,
+        typeof(BladeViewAnchor),
+        typeof(BladeView),
+        defaultValue: BladeViewAnchor.Auto,
         propertyChanged: OnAnchorChanged);
 
     /// <summary>
@@ -52,7 +53,7 @@ public partial class BladePane : ContentView, IDisposable
     public static readonly BindableProperty DisabledOpacityProperty = BindableProperty.Create(
         nameof(DisabledOpacity),
         typeof(double),
-        typeof(BladePane),
+        typeof(BladeView),
         defaultValue: 0.75d,
         propertyChanged: OnBladeStateChanged);
 
@@ -62,7 +63,7 @@ public partial class BladePane : ContentView, IDisposable
     public static readonly BindableProperty BladeSpacingProperty = BindableProperty.Create(
         nameof(BladeSpacing),
         typeof(double),
-        typeof(BladePane),
+        typeof(BladeView),
         defaultValue: 10d,
         propertyChanged: OnCardLayoutChanged);
 
@@ -72,7 +73,7 @@ public partial class BladePane : ContentView, IDisposable
     public static readonly BindableProperty BladeMaxWidthProperty = BindableProperty.Create(
         nameof(BladeMaxWidth),
         typeof(double),
-        typeof(BladePane),
+        typeof(BladeView),
         defaultValue: 520d,
         propertyChanged: OnCardLayoutChanged);
 
@@ -82,7 +83,7 @@ public partial class BladePane : ContentView, IDisposable
     public static readonly BindableProperty InnerPaddingProperty = BindableProperty.Create(
         nameof(InnerPadding),
         typeof(Thickness),
-        typeof(BladePane),
+        typeof(BladeView),
         defaultValue: new Thickness(8d),
         propertyChanged: OnInnerPaddingChanged);
 
@@ -100,10 +101,10 @@ public partial class BladePane : ContentView, IDisposable
     /// <summary>
     /// Gets or sets the logical edge the blade pane is anchored to.
     /// </summary>
-    /// <value>The logical anchor; <see cref="BladePaneAnchor.Auto"/> by default.</value>
-    public BladePaneAnchor Anchor
+    /// <value>The logical anchor; <see cref="BladeViewAnchor.Auto"/> by default.</value>
+    public BladeViewAnchor Anchor
     {
-        get => (BladePaneAnchor)GetValue(AnchorProperty);
+        get => (BladeViewAnchor)GetValue(AnchorProperty);
         set => SetValue(AnchorProperty, value);
     }
 
@@ -161,7 +162,8 @@ public partial class BladePane : ContentView, IDisposable
 
     private ObservableCollection<IView>? _subscribedCollection;
     private IViewModelBladeView? _subscribedViewModel;
-    private IBladePaneHost? _bladePaneHost;
+    private IBladeViewHost? _bladePaneHost;
+    private bool _isListeningForThemeChanges;
     private bool _isDisposed;
 
     /// <summary>
@@ -181,9 +183,9 @@ public partial class BladePane : ContentView, IDisposable
     #endregion
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BladePane"/> class.
+    /// Initializes a new instance of the <see cref="BladeView"/> class.
     /// </summary>
-    public BladePane()
+    public BladeView()
     {
         // Scrim: a translucent black overlay that closes the newest blade when tapped.
         _scrim = new BoxView
@@ -228,6 +230,12 @@ public partial class BladePane : ContentView, IDisposable
         HandlerChanged += BladePane_HandlerChanged;
         HandlerChanging += BladePane_HandlerChanging;
 
+        if (Application.Current is { } application)
+        {
+            application.RequestedThemeChanged += BladePane_RequestedThemeChanged;
+            _isListeningForThemeChanges = true;
+        }
+
         ApplyAnchor();
         ApplyInnerPadding();
         ApplyCardLayout();
@@ -239,7 +247,7 @@ public partial class BladePane : ContentView, IDisposable
 
     private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is BladePane bladePane && !bladePane._isDisposed)
+        if (bindable is BladeView bladePane && !bladePane._isDisposed)
         {
             bladePane.AttachCollection();
             bladePane.RebuildBlades();
@@ -248,25 +256,25 @@ public partial class BladePane : ContentView, IDisposable
 
     private static void OnAnchorChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is BladePane bladePane && !bladePane._isDisposed)
+        if (bindable is BladeView bladePane && !bladePane._isDisposed)
             bladePane.ApplyAnchor();
     }
 
     private static void OnBladeStateChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is BladePane bladePane && !bladePane._isDisposed)
+        if (bindable is BladeView bladePane && !bladePane._isDisposed)
             bladePane.UpdateBladeStates();
     }
 
     private static void OnCardLayoutChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is BladePane bladePane && !bladePane._isDisposed)
+        if (bindable is BladeView bladePane && !bladePane._isDisposed)
             bladePane.ApplyCardLayout();
     }
 
     private static void OnInnerPaddingChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is BladePane bladePane && !bladePane._isDisposed)
+        if (bindable is BladeView bladePane && !bladePane._isDisposed)
             bladePane.ApplyInnerPadding();
     }
 
@@ -300,8 +308,8 @@ public partial class BladePane : ContentView, IDisposable
             UnregisterHost();
     }
 
-    private IBladePaneHost? ResolveHost() =>
-        _bladePaneHost ??= IPlatformApplication.Current?.Services?.GetService<IBladePaneHost>();
+    private IBladeViewHost? ResolveHost() =>
+        _bladePaneHost ??= IPlatformApplication.Current?.Services?.GetService<IBladeViewHost>();
 
     private void RegisterHost()
     {
@@ -311,7 +319,7 @@ public partial class BladePane : ContentView, IDisposable
         }
         catch (Exception ex)
         {
-            Trace.TraceError($"BladePane failed to register its host: {ex}");
+            Trace.TraceError($"BladeView failed to register its host: {ex}");
         }
     }
 
@@ -323,7 +331,7 @@ public partial class BladePane : ContentView, IDisposable
         }
         catch (Exception ex)
         {
-            Trace.TraceError($"BladePane failed to unregister its host: {ex}");
+            Trace.TraceError($"BladeView failed to unregister its host: {ex}");
         }
     }
 
@@ -406,7 +414,7 @@ public partial class BladePane : ContentView, IDisposable
         }
         catch (Exception ex)
         {
-            Trace.TraceError($"BladePane failed to handle a blade collection change: {ex}");
+            Trace.TraceError($"BladeView failed to handle a blade collection change: {ex}");
         }
     }
 
@@ -472,7 +480,7 @@ public partial class BladePane : ContentView, IDisposable
     {
         if (blade is not ContentPage page)
         {
-            Trace.TraceError($"BladePane cannot host '{blade.GetType().FullName}': a MAUI blade must derive from {nameof(ContentPage)}.");
+            Trace.TraceError($"BladeView cannot host '{blade.GetType().FullName}': a MAUI blade must derive from {nameof(ContentPage)}.");
             return null;
         }
 
@@ -480,7 +488,7 @@ public partial class BladePane : ContentView, IDisposable
 
         if (content is null)
         {
-            Trace.TraceError($"BladePane cannot host '{blade.GetType().FullName}': the page has no content to reparent.");
+            Trace.TraceError($"BladeView cannot host '{blade.GetType().FullName}': the page has no content to reparent.");
             return null;
         }
 
@@ -557,7 +565,7 @@ public partial class BladePane : ContentView, IDisposable
         }
         catch (Exception ex)
         {
-            Trace.TraceError($"BladePane failed to release a blade card: {ex}");
+            Trace.TraceError($"BladeView failed to release a blade card: {ex}");
         }
 
         // Drop the card's content; the card itself is being discarded, so clearing its shadow is
@@ -631,7 +639,7 @@ public partial class BladePane : ContentView, IDisposable
         }
         catch (Exception ex)
         {
-            Trace.TraceError($"BladePane failed to animate a blade card: {ex}");
+            Trace.TraceError($"BladeView failed to animate a blade card: {ex}");
         }
     }
 
@@ -646,6 +654,49 @@ public partial class BladePane : ContentView, IDisposable
     };
 
     private static bool IsDarkTheme => Application.Current?.RequestedTheme == AppTheme.Dark;
+
+    /// <summary>
+    /// Closes the open blades when the application theme changes.
+    /// </summary>
+    /// <remarks>
+    /// A blade's page content is detached from its <see cref="ContentPage"/> and reparented into a
+    /// <see cref="ContentView"/>. The platform controls inside it (WinUI <c>ComboBox</c>,
+    /// <c>Button</c>, <c>Entry</c>) resolve their theme resources when they are realized and MAUI
+    /// keeps those platform views across re-parenting, so an already open blade would keep the light
+    /// (or dark) chrome it was created with while the MAUI-drawn card and labels follow the new
+    /// theme. Re-applying the element theme and re-hosting the content were both tried and are not
+    /// reliable, so the pane dismisses its blades instead: reopening a blade always renders it with
+    /// the current theme. Blades are transient overlays opened from the shell.
+    /// </remarks>
+    private void BladePane_RequestedThemeChanged(object? sender, AppThemeChangedEventArgs e) =>
+        CloseOpenBlades();
+
+    private void CloseOpenBlades()
+    {
+        if (_isDisposed || _cards.Count == 0)
+            return;
+
+        if (IPlatformApplication.Current?.Services?.GetService<IBladeService>() is not { } bladeService)
+        {
+            Trace.TraceError("BladeView cannot close its blades on a theme change: no blade service is registered.");
+            return;
+        }
+
+        foreach (var card in _cards.Values.ToList())
+        {
+            if (card.Host.BindingContext is not IViewModelBlade blade)
+                continue;
+
+            try
+            {
+                bladeService.RemoveBlade(blade.Owner, blade);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError($"BladeView failed to close a blade on the theme change: {ex}");
+            }
+        }
+    }
 
     private static Color GetCardBackgroundColor() =>
         (IsDarkTheme
@@ -747,7 +798,7 @@ public partial class BladePane : ContentView, IDisposable
         }
         catch (Exception ex)
         {
-            Trace.TraceError($"BladePane failed to close the newest blade: {ex}");
+            Trace.TraceError($"BladeView failed to close the newest blade: {ex}");
         }
     }
 
@@ -799,6 +850,12 @@ public partial class BladePane : ContentView, IDisposable
 
         if (_scrim.GestureRecognizers.Count > 0 && _scrim.GestureRecognizers[0] is TapGestureRecognizer tap)
             tap.Tapped -= Scrim_Tapped;
+
+        if (_isListeningForThemeChanges && Application.Current is { } application)
+        {
+            application.RequestedThemeChanged -= BladePane_RequestedThemeChanged;
+            _isListeningForThemeChanges = false;
+        }
 
         BindingContextChanged -= BladePane_BindingContextChanged;
         HandlerChanged -= BladePane_HandlerChanged;

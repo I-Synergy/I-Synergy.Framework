@@ -1,3 +1,89 @@
+# Session Handoff - 2026-11-08 (UI naming alignment, wave 1)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Started the cross-head naming alignment the user asked for (framework + samples + Blazor, hard rename).
+Plan and progress: `.ai/plans/ui-naming-alignment.md`.
+
+- Audit: services already align (shared interfaces); the drift was in views/controls and converters.
+- Wave 1 renames (breaking, no shims): MAUI `BladePane` -> `BladeView` (matching WPF/WinUI),
+  `BladePaneAnchor` -> `BladeViewAnchor`, `IBladePaneHost` -> `IBladeViewHost`,
+  `BladePaneHostRegistry` -> `BladeViewHostRegistry`; MAUI/WinUI `BooleanToIsVisibleConverter` ->
+  `BooleanToVisibilityConverter`, `Bool*Converter` -> `Boolean*Converter`, and eight `*Then*Converter`
+  names per head -> `*Than*Converter`; `Sample.Maui RootView` -> `ShellView`.
+- Also fixed two stale palette tests in `tests/ISynergy.Framework.UI.Tests` that still asserted the 25%
+  secondary blend from the earlier contrast work (now 10%).
+
+- **Wave 2 (converters)**: MAUI `*ToIsVisibleConverter` -> `*ToVisibilityConverter` (Decimal, Double, Guid,
+  GuidToInversed, Integer, Null, NullToInversed, String, ZeroDecimal, ZeroDouble, ZeroInteger), matching
+  WinUI; the sample's `Style.xaml` keys and `SlideShowView.xaml` binding moved with them.
+- **Gap register** in the plan: WPF lacks `ImageBrowser`/`NoteWindow`/`CameraService`, WinUI lacks
+  `BladeHostView`, and each head has controls the others do not (spinner, masked inputs, dialog buttons,
+  tiles, busy/empty views). Those are platform/feature differences, not naming drift - documented, not
+  renamed. Sample pages with different structure (`SignInControl` vs `SignInView`) stay as they are.
+
+## Verification
+Built: `ISynergy.Framework.UI.WPF` (net11.0-windows10.0.26100.0), `UI.WinUI`, `UI.Maui`, `UI.Blazor`,
+`Sample.WPF`, `Sample.WinUI` (needs `-p:RuntimeIdentifier=win-arm64` on this machine), `Sample.Maui`
+(net11.0-windows10.0.26100.0) - after both waves. Tests: `ISynergy.Framework.UI.Tests` 90/90,
+`ISynergy.Framework.UI.Maui.Windows.Tests` 47 passed / 4 skipped. Launched `Sample.Maui`, opened the
+settings blade: English label, single Close button, scrim covers the header, theme switch works.
+Repo grep for `IsVisibleConverter`, `*Then*Converter`, `Bool*Converter`, `BladePane` and `RootView`:
+no hits outside build output.
+
+## Decisions Made
+- **Hard rename, no `[Obsolete]` shims** and **framework + samples + Blazor** (user choice).
+- **Rename by concept, not by head**: the pane is `BladeView` everywhere; `Boolean`, not `Bool`; `Than`,
+  not `Then`; sample shell page is `ShellView` in every sample.
+
+- **Structural/functional comparison** written to `docs/developers/ui-heads-comparison.md` (linked from
+  `docs/developers/index.md`): project shape and TFM/dependency table, contract coverage per head, the
+  dialog/navigation/blade/theme mechanics side by side, control and converter inventories, and the gap
+  list. Key findings: MAUI `FileService.SaveFileAsync` throws `NotImplementedException` (the only real
+  service gap), WPF has no `ICameraService`, WPF lacks `ImageBrowser`/`NoteWindow`, WinUI has no
+  `BladeHostView`, and WPF exposes `GetBitmapSourceFromClipboardAsync` with a WPF type in its signature.
+
+- **API-surface alignment**: WPF `ClipboardService.GetBitmapSourceFromClipboardAsync` is `private` (no
+  `BitmapSource` on the public surface) and MAUI `FileService.SaveFileAsync` returns `null` instead of
+  throwing (MAUI has no save picker; `null` is the "cancelled" contract on the other heads).
+- **Full build matrix green**: `UI.WPF`, `UI.WinUI`, `UI.MAUI`, `UI.Blazor`, `Sample.WPF`, `Sample.WinUI`
+  (win-arm64), `Sample.Maui`, `Sample.Blazor`, and both UI test projects build; tests 90/90 and 47/4.
+
+- **MAUI platform code split** (`.ai/plans/maui-platform-code.md`): `ThemeService`, `DialogService`,
+  `MauiExceptions`, `PageExtensions` and `SelectAllOnFocusBehavior` now use `partial` hooks implemented
+  under `Platforms/<head>/`; `Application.CreateWindow` selects the WinUI title bar at runtime. 13 of 22
+  `#if` blocks removed; the rest (WinRT launch args, clipboard image matrix, macOS/AppKit, one `DEBUG`)
+  are documented with reasons. Builds for windows/android/ios/maccatalyst + `Sample.Maui` green; MAUI
+  tests 47 passed / 4 skipped; settings blade smoke-tested.
+
+- **Samples hold no platform logic**: `Sample.Maui` now calls `UseMauiAppForCurrentHead`, `AddShellMenuBar`
+  and `ConfigureActivationDiagnostics`; the WinUI focus-visual/cursor mappers live in
+  `Platforms/Windows/Extensions/ShellChromeStyler` and are registered by `ConfigureServices`. Only
+  package limitations (`#if !MACOS` for MediaElement/Syncfusion), the `DEBUG` agent and the required
+  `Platforms/**` entry points remain. Full build matrix + MAUI tests green; sample smoke-tested.
+
+## Open Questions
+- **Wave 2** (see the plan): the remaining converter set, sample-level view names, and the feature gaps the
+  audit surfaced (WPF lacks `ImageBrowser`/`NoteWindow`/`CameraService`, WinUI lacks `BladeHostView`).
+  Decide per item: rename, implement, or document.
+- Member-level differences were not audited yet (text scan only); a Roslyn comparison is the next step.
+
+## Files Modified
+- `src/ISynergy.Framework.UI.Maui/Controls/BladeView.cs` (renamed), `Services/IBladeViewHost.cs`,
+  `Services/BladeViewHostRegistry.cs`, `Controls/BladeHostView.cs`, `Services/BladeService.cs`,
+  `Converters/BooleanConverters.cs`, `Converters/DecimalConverters.cs`, `Converters/DoubleConverters.cs`
+- `src/ISynergy.Framework.UI/Enumerations/BladeViewAnchor.cs` (renamed), `Helpers/BladePlacement.cs`
+- `src/ISynergy.Framework.UI.WinUI/Converters/*`, `Controls/BladeView/BladeView.xaml.cs`
+- `samples/Sample.Maui/Views/ShellView.xaml(.cs)` (renamed), `App.xaml.cs`, `Resources/Styles/Style.xaml`,
+  `ViewModels/DetailsViewModel.cs`, `Views/SettingsView.xaml.cs`
+- `tests/ISynergy.Framework.UI.Tests/Utilities/ThemeColorCalculatorTests.cs`,
+  `Helpers/BladePlacementTests.cs`
+- `docs/`, `CHANGELOG.md`, `.ai/plans/ui-naming-alignment.md`, `.ai/session-context.md`
+
+---
+
 # Session Handoff - 2026-10-27 (Blazor component analyzer warnings)
 
 **Written By:** Reasonix Code

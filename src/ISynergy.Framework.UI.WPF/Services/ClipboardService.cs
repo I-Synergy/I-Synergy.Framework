@@ -44,10 +44,14 @@ public class ClipboardService : IClipboardService
     }
 
     /// <summary>
-    /// Gets the bitmap source from clipboard asynchronous.
+    /// Reads a device-independent bitmap from the clipboard.
     /// </summary>
-    /// <returns>Task&lt;System.Object&gt;.</returns>
-    public static Task<object?> GetBitmapSourceFromClipboardAsync()
+    /// <remarks>
+    /// Implementation detail: it returns a WPF <c>BitmapSource</c>, a platform type that does not belong
+    /// on the shared surface. The public contract is <see cref="GetImageFromClipboardAsync"/>.
+    /// </remarks>
+    /// <returns>The bitmap source, or <see langword="null"/> when the clipboard holds no bitmap.</returns>
+    private static Task<object?> GetBitmapSourceFromClipboardAsync()
     {
         if ((Clipboard.GetData("DeviceIndependentBitmap") is MemoryStream memoryStream))
         {

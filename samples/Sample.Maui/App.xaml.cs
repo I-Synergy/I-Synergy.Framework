@@ -38,40 +38,18 @@ public partial class App : Application
     protected override ImageSource? Icon => ImageSource.FromFile("icon.png");
 
     /// <summary>
-    /// Builds the Windows title bar: the product title and date/time subtitle stay in the centre
-    /// (the native drag region), while the interactive shell controls are hosted by the
-    /// leading/trailing islands so they keep receiving input.
+    /// Opts out of a custom title bar.
     /// </summary>
-    protected override TitleBar? SetTitleBar(bool withClock = false)
-    {
-        var titleBar = base.SetTitleBar(withClock);
-
-        if (titleBar is null)
-            return null;
-
-        titleBar.HeightRequest = 48;
-
-        // Set both the colour and the brush: a theme brush from the TitleBar style otherwise
-        // outranks BackgroundColor and leaves the bar a different shade from the page.
-        var background = ResolveShellBackground();
-        titleBar.BackgroundColor = background;
-        titleBar.Background = new SolidColorBrush(background);
-
-        titleBar.LeadingContent = new Sample.Views.Controls.AppHeaderLeadingView();
-        titleBar.TrailingContent = new Sample.Views.Controls.AppHeaderTrailingView();
-
-        if (Application.Current is { } application)
-        {
-            application.RequestedThemeChanged += (_, _) =>
-            {
-                var themed = ResolveShellBackground();
-                titleBar.BackgroundColor = themed;
-                titleBar.Background = new SolidColorBrush(themed);
-            };
-        }
-
-        return titleBar;
-    }
+    /// <remarks>
+    /// The platform default title bar is used, as on the Apple heads: it shows the window title and
+    /// follows the operating system appearance. The shell header (menu, back, breadcrumb, theme and
+    /// settings) lives in the page, so the blade pane overlays it and blocks those commands while a
+    /// blade is open. Hosting them in the title bar put them outside the page, where the pane could
+    /// neither dim them nor stop a second blade or a theme switch from being triggered underneath one.
+    /// </remarks>
+    /// <param name="withClock">Ignored; kept for the base signature.</param>
+    /// <returns>Always <see langword="null"/>: the platform title bar renders the window title.</returns>
+    protected override TitleBar? SetTitleBar(bool withClock = false) => null;
 
     /// <summary>
     /// Applies the language chosen in Site Settings to the current and default cultures.
@@ -213,11 +191,11 @@ public partial class App : Application
             // the window so its blade pane (the last child of the root grid) can cover every
             // section. Navigation happens inside the shell's content host (the MAUI equivalent of
             // the WinUI content frame), so the root itself is a plain page.
-            var rootView = IPlatformApplication.Current!.Services.GetRequiredService<RootView>();
+            var shellView = IPlatformApplication.Current!.Services.GetRequiredService<ShellView>();
 
-            Microsoft.Maui.Controls.Application.Current!.Windows[0].Page = rootView;
+            Microsoft.Maui.Controls.Application.Current!.Windows[0].Page = shellView;
 
-            await rootView.ViewModel.InitializeAsync();
+            await shellView.ViewModel.InitializeAsync();
         }
         catch (Exception ex)
         {
@@ -341,19 +319,5 @@ public partial class App : Application
             _commonServices.MessengerService.Unregister<UserSignedInMessage>(this);
             _commonServices.MessengerService.Unregister<UserSignedOutMessage>(this);
         }
-    }
-
-    /// <summary>
-    /// Resolves the shell background for the current theme from the app resources.
-    /// </summary>
-    private static Color ResolveShellBackground()
-    {
-        var isDark = Microsoft.Maui.Controls.Application.Current?.RequestedTheme == AppTheme.Dark;
-        var key = isDark ? "AppBgDark" : "AppBgLight";
-
-        if (Microsoft.Maui.Controls.Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color)
-            return color;
-
-        return isDark ? Color.FromArgb("#0D1614") : Color.FromArgb("#F4F6F3");
     }
 }
