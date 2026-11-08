@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.ViewModels.Base
 {
-    public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, IShellViewModel
+    public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, IShellViewModel // NOSONAR - the inheritance chain is fixed by the shared ViewModelBladeView contract
     {
         protected readonly INavigationService _navigationService;
         protected readonly IDialogService _dialogService;

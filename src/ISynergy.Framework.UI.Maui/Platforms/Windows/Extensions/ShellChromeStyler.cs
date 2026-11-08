@@ -71,7 +71,7 @@ public static class ShellChromeStyler
         {
             var property = typeof(Microsoft.UI.Xaml.UIElement).GetProperty(
                 "ProtectedCursor",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic); // NOSONAR - UIElement.ProtectedCursor is protected; reflection is the only way to set it
 
             property?.SetValue(
                 element,
