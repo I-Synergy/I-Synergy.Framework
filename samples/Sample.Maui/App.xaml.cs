@@ -38,48 +38,18 @@ public partial class App : Application
     protected override ImageSource? Icon => ImageSource.FromFile("icon.png");
 
     /// <summary>
-    /// The shell header is the title bar: the window title area is left empty and hosts the same
-    /// header the phones and tablets render as a page row, so the breadcrumb starts at the window
-    /// edge and the native caption buttons keep their place at the right (the WinUI look).
+    /// Opts out of a custom title bar.
     /// </summary>
-    protected override TitleBar? SetTitleBar(bool withClock = false)
-    {
-        var titleBar = new TitleBar { BackgroundColor = ResolveShellBackground() };
-        var header = new Sample.Views.Controls.AppHeaderView
-        {
-            // The title bar strip is translucent by default (system backdrop); an opaque surface on
-            // the header makes the top row exactly the shell background colour.
-            BackgroundColor = ResolveShellBackground()
-        };
-
-        header.ApplyTitleBarPadding();
-
-        // TitleBar.Content has no public CLR setter; set the bindable property instead. The header
-        // is created here, before the title bar gets a platform handler, so it renders as part of
-        // the title bar rather than being reparented after realization.
-        titleBar.SetValue(TitleBar.ContentProperty, header);
-
-        // The title bar paints its own surface; keep it identical to the shell background so the
-        // header row and the page below it read as one window.
-        if (Application.Current is { } application)
-            application.RequestedThemeChanged += (_, _) => titleBar.BackgroundColor = ResolveShellBackground();
-
-        return titleBar;
-    }
-
-    /// <summary>
-    /// Resolves the shell background for the current theme from the app resources.
-    /// </summary>
-    private static Color ResolveShellBackground()
-    {
-        var isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
-        var key = isDark ? "AppBgDark" : "AppBgLight";
-
-        if (Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color)
-            return color;
-
-        return isDark ? Color.FromArgb("#0D1614") : Color.FromArgb("#F4F6F3");
-    }
+    /// <remarks>
+    /// The platform default title bar is used, as on the Apple heads: it shows the window title and
+    /// follows the operating system appearance. The shell header (menu, back, breadcrumb, theme and
+    /// settings) lives in the page, so the blade pane overlays it and blocks those commands while a
+    /// blade is open. Hosting them in the title bar put them outside the page, where the pane could
+    /// neither dim them nor stop a second blade or a theme switch from being triggered underneath one.
+    /// </remarks>
+    /// <param name="withClock">Ignored; kept for the base signature.</param>
+    /// <returns>Always <see langword="null"/>: the platform title bar renders the window title.</returns>
+    protected override TitleBar? SetTitleBar(bool withClock = false) => null;
 
     /// <summary>
     /// Applies the language chosen in Site Settings to the current and default cultures.
@@ -221,11 +191,11 @@ public partial class App : Application
             // the window so its blade pane (the last child of the root grid) can cover every
             // section. Navigation happens inside the shell's content host (the MAUI equivalent of
             // the WinUI content frame), so the root itself is a plain page.
-            var rootView = IPlatformApplication.Current!.Services.GetRequiredService<RootView>();
+            var shellView = IPlatformApplication.Current!.Services.GetRequiredService<ShellView>();
 
-            Microsoft.Maui.Controls.Application.Current!.Windows[0].Page = rootView;
+            Microsoft.Maui.Controls.Application.Current!.Windows[0].Page = shellView;
 
-            await rootView.ViewModel.InitializeAsync();
+            await shellView.ViewModel.InitializeAsync();
         }
         catch (Exception ex)
         {

@@ -11,8 +11,6 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 		<PackageReference Include="MSTest.TestAdapter" />
-		<PackageReference Include="MSTest.TestFramework" />
-		<PackageReference Include="Microsoft.Playwright" />
 		<PackageReference Include="Microsoft.Playwright.MSTest" />
 		<PackageReference Include="coverlet.collector">
 			<PrivateAssets>all</PrivateAssets>
@@ -26,9 +24,7 @@
 	  \ms-playwright, and the suite fails with a clear message if the browser is missing.
 	-->
 	<Target Name="InstallPlaywrightBrowsers" AfterTargets="Build">
-		<Exec Command="pwsh -Command &quot;&amp; '$(TargetDir)playwright.ps1' install chromium&quot;"
-			  IgnoreExitCode="true"
-			  ContinueOnError="true" />
+		<Exec Command="pwsh -Command &quot;&amp; '$(TargetDir)playwright.ps1' install chromium&quot;" IgnoreExitCode="true" ContinueOnError="true" />
 	</Target>
 
 </Project>

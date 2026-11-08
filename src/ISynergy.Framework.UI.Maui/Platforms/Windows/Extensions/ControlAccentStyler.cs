@@ -11,6 +11,7 @@ namespace ISynergy.Framework.UI.Maui.Platforms.Windows.Extensions;
 /// </summary>
 public static class ControlAccentStyler
 {
+    private const string AccentStylerCategory = "AccentStyler";
     private static bool _registered;
 
     private static readonly string[] GlobalAccentKeys =
@@ -44,20 +45,20 @@ public static class ControlAccentStyler
 
         // Entry / Editor → TextBox
         EntryHandler.Mapper.AppendToMapping(
-            "AccentStyler",
+            AccentStylerCategory,
             (handler, view) => ApplyTextBoxAccent(handler.PlatformView));
         EditorHandler.Mapper.AppendToMapping(
-            "AccentStyler",
+            AccentStylerCategory,
             (handler, view) => ApplyTextBoxAccent(handler.PlatformView));
 
         // Picker → ComboBox
         PickerHandler.Mapper.AppendToMapping(
-            "AccentStyler",
+            AccentStylerCategory,
             (handler, view) => ApplyComboBoxAccent(handler.PlatformView));
 
         // SearchBar → AutoSuggestBox
         SearchBarHandler.Mapper.AppendToMapping(
-            "AccentStyler",
+            AccentStylerCategory,
             (handler, view) => ApplyAutoSuggestBoxAccent(handler.PlatformView));
 
     }

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Globalization.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
+using ISynergy.Framework.Mvvm.Enumerations;
 using Microsoft.Extensions.Logging;
 using Windows.Services.Store;
 
@@ -10,7 +11,6 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 internal class UpdateService : IUpdateService
 {
-    private readonly ILogger _logger;
     private readonly IDialogService _dialogService;
     private readonly ILanguageService _languageService;
 
@@ -31,8 +31,7 @@ internal class UpdateService : IUpdateService
         _dialogService = dialogService;
         _languageService = languageService;
 
-        _logger = logger;
-        _logger.LogTrace("UpdateService instance created with ID: {InstanceId}", Guid.NewGuid());
+        logger.LogTrace("UpdateService instance created with ID: {InstanceId}", Guid.NewGuid());
 
 
     }
@@ -170,7 +169,7 @@ internal class UpdateService : IUpdateService
     /// to take, such as notifying the user and disabling features in your app.
     /// </summary>
     /// <returns>Task.</returns>
-    private Task HandleMandatoryPackageErrorAsync()
+    private Task<MessageBoxResults> HandleMandatoryPackageErrorAsync()
     {
         return _dialogService.ShowErrorAsync(
             _languageService.GetString("WarningMandatoryUpdateFailed"));

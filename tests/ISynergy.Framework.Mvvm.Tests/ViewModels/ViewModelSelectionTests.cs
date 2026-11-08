@@ -48,7 +48,7 @@ public class ViewModelSelectionTests
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.HasCount(2, viewModel.Items);
         Assert.IsNotNull(viewModel.SelectedItem);
     }
 

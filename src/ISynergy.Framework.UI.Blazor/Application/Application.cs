@@ -18,8 +18,10 @@ using System.Globalization;
 
 namespace ISynergy.Framework.UI;
 
-public abstract class Application : ComponentBase
+public abstract class Application : ComponentBase, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
+    private const string ExceptionMessageTemplate = "{ExceptionMessage}";
+    private const string ExceptionHandlerErrorMessage = "Error in exception handler";
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
@@ -125,7 +127,7 @@ public abstract class Application : ComponentBase
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    protected void InitializeEnvironmentVariables()
     {
         try
         {
@@ -176,7 +178,7 @@ public abstract class Application : ComponentBase
                 continue;
 
             // Look for query string format arguments (e.g., "?environment=development&country=nl")
-            if (arg.Contains("?"))
+            if (arg.Contains('?'))
             {
                 var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
 
@@ -232,7 +234,7 @@ public abstract class Application : ComponentBase
             catch (Exception handlerEx)
             {
                 // If exception handler fails, log directly
-                _logger?.LogError(handlerEx, "Error in exception handler");
+                _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
             }
         }
         else
@@ -240,7 +242,7 @@ public abstract class Application : ComponentBase
             if (e.Exception.HResult != _lastErrorMessage)
             {
                 _lastErrorMessage = e.Exception.HResult;
-                _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+                _logger?.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
             }
         }
     }
@@ -267,11 +269,11 @@ public abstract class Application : ComponentBase
             catch (Exception handlerEx)
             {
                 // If exception handler fails, log directly
-                _logger?.LogError(handlerEx, "Error in exception handler");
+                _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
             }
         }
         else
-            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger?.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -297,11 +299,11 @@ public abstract class Application : ComponentBase
                 catch (Exception handlerEx)
                 {
                     // If exception handler fails, log directly
-                    _logger?.LogError(handlerEx, "Error in exception handler");
+                    _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
                 }
             }
             else
-                _logger?.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger?.LogCritical(exception, ExceptionMessageTemplate, exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -326,11 +328,11 @@ public abstract class Application : ComponentBase
             catch (Exception handlerEx)
             {
                 // If exception handler fails, log directly
-                _logger?.LogError(handlerEx, "Error in exception handler");
+                _logger?.LogError(handlerEx, ExceptionHandlerErrorMessage);
             }
         }
         else
-            _logger?.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger?.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -349,7 +351,6 @@ public abstract class Application : ComponentBase
     public new void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 #else
     /// <summary>
@@ -358,7 +359,6 @@ public abstract class Application : ComponentBase
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 #endif
 

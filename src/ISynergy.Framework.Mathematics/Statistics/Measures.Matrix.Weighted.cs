@@ -80,7 +80,7 @@ public static partial class Measures
         int rows = matrix.Length;
 
         if (rows == 0)
-            return new double[0];
+            return Array.Empty<double>();
 
         int cols = matrix[0].Length;
 
@@ -92,7 +92,7 @@ public static partial class Measures
 
             if (rows != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of rows and weights must match.");
             }
 
@@ -113,7 +113,7 @@ public static partial class Measures
 
             if (cols != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of columns and weights must match.");
             }
 
@@ -130,7 +130,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException("Invalid dimension.", nameof(dimension));
         }
 
         double weightSum = weights.Sum();
@@ -182,7 +182,7 @@ public static partial class Measures
 
             if (rows != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of rows and weights must match.");
             }
 
@@ -202,7 +202,7 @@ public static partial class Measures
 
             if (cols != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of columns and weights must match.");
             }
 
@@ -218,7 +218,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException("Invalid dimension.", nameof(dimension));
         }
         double weightSum = weights.Sum();
 
@@ -261,7 +261,7 @@ public static partial class Measures
         int rows = matrix.Length;
 
         if (rows == 0)
-            return new double[0];
+            return Array.Empty<double>();
 
         int cols = matrix[0].Length;
 
@@ -273,7 +273,7 @@ public static partial class Measures
 
             if (rows != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of rows and weights must match.");
             }
 
@@ -294,7 +294,7 @@ public static partial class Measures
 
             if (cols != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of columns and weights must match.");
             }
 
@@ -311,7 +311,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException("Invalid dimension.", nameof(dimension));
         }
 
         double weightSum = weights.Sum();
@@ -363,7 +363,7 @@ public static partial class Measures
 
             if (rows != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of rows and weights must match.");
             }
 
@@ -383,7 +383,7 @@ public static partial class Measures
 
             if (cols != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of columns and weights must match.");
             }
 
@@ -399,7 +399,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException("Invalid dimension.", nameof(dimension));
         }
         double weightSum = weights.Sum();
 
@@ -436,7 +436,7 @@ public static partial class Measures
     public static double[] ExponentialWeightedMean(this double[][] matrix, double alpha = 0)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix", "The matrix cannot be null.");
+            throw new ArgumentNullException(nameof(matrix), "The matrix cannot be null.");
 
         return matrix.ExponentialWeightedMean(matrix.Rows(), alpha);
     }
@@ -515,7 +515,7 @@ public static partial class Measures
         this double[][] matrix, double alpha = 0, bool unbiased = false)
     {
         if (matrix is null)
-            throw new ArgumentNullException("matrix", "The matrix cannot be null.");
+            throw new ArgumentNullException(nameof(matrix), "The matrix cannot be null.");
 
         return matrix.ExponentialWeightedCovariance(matrix.Rows(), alpha, unbiased);
     }
@@ -936,13 +936,13 @@ public static partial class Measures
         {
             if (means.Length != cols)
             {
-                throw new DimensionMismatchException("means",
+                throw new DimensionMismatchException(nameof(means),
                     "Length of the mean vector should equal the number of columns.");
             }
 
             if (rows != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of rows and weights must match.");
             }
 
@@ -963,13 +963,13 @@ public static partial class Measures
         {
             if (means.Length != rows)
             {
-                throw new DimensionMismatchException("means",
+                throw new DimensionMismatchException(nameof(means),
                     "Length of the mean vector should equal the number of rows.");
             }
 
             if (cols != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of columns and weights must match.");
             }
 
@@ -988,7 +988,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException("Invalid dimension.", nameof(dimension));
         }
 
         return cov;
@@ -1028,13 +1028,13 @@ public static partial class Measures
         {
             if (means.Length != cols)
             {
-                throw new DimensionMismatchException("means",
+                throw new DimensionMismatchException(nameof(means),
                     "Length of the mean vector should equal the number of columns.");
             }
 
             if (rows != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of rows and weights must match.");
             }
 
@@ -1055,13 +1055,13 @@ public static partial class Measures
         {
             if (means.Length != rows)
             {
-                throw new DimensionMismatchException("means",
+                throw new DimensionMismatchException(nameof(means),
                     "Length of the mean vector should equal the number of rows.");
             }
 
             if (cols != weights.Length)
             {
-                throw new DimensionMismatchException("weights",
+                throw new DimensionMismatchException(nameof(weights),
                     "The number of columns and weights must match.");
             }
 
@@ -1080,7 +1080,7 @@ public static partial class Measures
         }
         else
         {
-            throw new ArgumentException("Invalid dimension.", "dimension");
+            throw new ArgumentException("Invalid dimension.", nameof(dimension));
         }
 
         return cov;
@@ -1109,7 +1109,7 @@ public static partial class Measures
         // Perform some basic error validation
         if (matrix is null)
         {
-            throw new ArgumentNullException("matrix", "The matrix cannot be null.");
+            throw new ArgumentNullException(nameof(matrix), "The matrix cannot be null.");
         }
 
         if (alpha < 0 || alpha > 1)
@@ -1117,7 +1117,7 @@ public static partial class Measures
             string message = string.Format(
                 "Alpha must lie in the interval [0, 1] but was {0}", alpha);
 
-            throw new ArgumentOutOfRangeException("alpha", message);
+            throw new ArgumentOutOfRangeException(nameof(alpha), message);
         }
 
         int rows = matrix.Rows();
@@ -1129,7 +1129,7 @@ public static partial class Measures
                 window,
                 rows);
 
-            throw new ArgumentOutOfRangeException("window", message);
+            throw new ArgumentOutOfRangeException(nameof(window), message);
         }
     }
 

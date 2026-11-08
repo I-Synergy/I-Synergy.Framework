@@ -236,7 +236,7 @@ public static partial class Distance
     {
         // Note: this is an auto-generated method stub that forwards the call
         // to the actual implementation, indicated in the next line below:
-        return cacheEuclidean.Distance(vector1x, vector1y, vector2x, vector2y);
+        return Distances.Euclidean.Distance(vector1x, vector1y, vector2x, vector2y);
     }
 
     /// <summary>
@@ -603,7 +603,7 @@ public static partial class Distance
     {
         // Note: this is an auto-generated method stub that forwards the call
         // to the actual implementation, indicated in the next line below:
-        return cacheSquareEuclidean.Distance(x1, y1, x2, y2);
+        return Distances.SquareEuclidean.Distance(x1, y1, x2, y2);
     }
 
     /// <summary>

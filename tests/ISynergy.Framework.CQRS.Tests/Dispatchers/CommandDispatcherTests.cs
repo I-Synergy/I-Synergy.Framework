@@ -23,7 +23,7 @@ public class CommandDispatcherTests
         var command = new TestCommand();
 
         // Act
-        await dispatcher.DispatchAsync(command);
+        await dispatcher.DispatchAsync(command, TestContext.CancellationToken);
 
         // Assert
         Assert.IsTrue(handler.WasHandled);
@@ -42,7 +42,7 @@ public class CommandDispatcherTests
         var command = new TestCommandWithResult { Input = "Test Input" };
 
         // Act
-        var result = await dispatcher.DispatchAsync<TestCommandWithResult, string>(command);
+        var result = await dispatcher.DispatchAsync<TestCommandWithResult, string>(command, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Result: Test Input", result);
@@ -59,6 +59,8 @@ public class CommandDispatcherTests
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await dispatcher.DispatchAsync(command));
+            await dispatcher.DispatchAsync(command, TestContext.CancellationToken));
     }
+
+    public TestContext TestContext { get; set; }
 }

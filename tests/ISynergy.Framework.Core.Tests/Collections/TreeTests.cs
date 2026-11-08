@@ -28,7 +28,7 @@ public class TreeTests
     {
         using Tree<Guid, Space> building = new(buildingSpace);
 
-        Assert.AreEqual(0, building.Children.Count);
+        Assert.IsEmpty(building.Children);
         Assert.AreEqual(building.ParentKey, Guid.Empty);
     }
 
@@ -75,13 +75,13 @@ public class TreeTests
         using TreeNode<Guid, Space> storage = building.AddChild(storageSpace);
         using TreeNode<Guid, Space> bin = storage.AddChild(binSpace);
 
-        Assert.AreEqual(1, building.Children.Count);
+        Assert.HasCount(1, building.Children);
         Assert.IsNull(building.Parent);
 
-        Assert.AreEqual(1, storage.Children.Count);
+        Assert.HasCount(1, storage.Children);
         Assert.AreSame(storage.Parent, building);
 
-        Assert.AreEqual(0, bin.Children.Count);
+        Assert.IsEmpty(bin.Children);
         Assert.AreSame(bin.Parent, storage);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
@@ -100,13 +100,13 @@ public class TreeTests
 
         bin.SetParent(null);
 
-        Assert.AreEqual(1, building.Children.Count);
+        Assert.HasCount(1, building.Children);
         Assert.IsNull(building.Parent);
 
-        Assert.AreEqual(0, storage.Children.Count);
+        Assert.IsEmpty(storage.Children);
         Assert.AreSame(storage.Parent, building);
 
-        Assert.AreEqual(0, bin.Children.Count);
+        Assert.IsEmpty(bin.Children);
         Assert.IsNull(bin.Parent);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
@@ -126,16 +126,16 @@ public class TreeTests
 
         bin.SetParent(kitchen);
 
-        Assert.AreEqual(2, building.Children.Count);
+        Assert.HasCount(2, building.Children);
         Assert.IsNull(building.Parent);
 
-        Assert.AreEqual(0, storage.Children.Count);
+        Assert.IsEmpty(storage.Children);
         Assert.AreSame(storage.Parent, building);
 
-        Assert.AreEqual(1, kitchen.Children.Count);
+        Assert.HasCount(1, kitchen.Children);
         Assert.AreSame(kitchen.Parent, building);
 
-        Assert.AreEqual(0, bin.Children.Count);
+        Assert.IsEmpty(bin.Children);
         Assert.AreSame(bin.Parent, kitchen);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
@@ -157,13 +157,13 @@ public class TreeTests
 
         storage.RemoveChild(bin);
 
-        Assert.AreEqual(1, building.Children.Count);
+        Assert.HasCount(1, building.Children);
         Assert.IsNull(building.Parent);
 
-        Assert.AreEqual(0, storage.Children.Count);
+        Assert.IsEmpty(storage.Children);
         Assert.AreSame(storage.Parent, building);
 
-        Assert.AreEqual(0, bin.Children.Count);
+        Assert.IsEmpty(bin.Children);
         Assert.IsNull(bin.Parent);
 
         Assert.AreEqual(building.Key, storage.ParentKey);
@@ -187,34 +187,34 @@ public class TreeTests
         TreeNode<Guid, Space> meetingRoom = buildingB.AddChild(meetingRoomSpace);
         TreeNode<Guid, Space> meetingRoomCloset = meetingRoom.AddChild(meetingRoomClosetSpace);
 
-        Assert.AreEqual(2, property.Children.Count);
+        Assert.HasCount(2, property.Children);
         Assert.IsNull(property.Parent);
 
-        Assert.AreEqual(3, buildingA.Children.Count);
+        Assert.HasCount(3, buildingA.Children);
         Assert.AreSame(property, buildingA.Parent);
 
-        Assert.AreEqual(0, laundryRoom.Children.Count);
+        Assert.IsEmpty(laundryRoom.Children);
         Assert.AreSame(buildingA, laundryRoom.Parent);
 
-        Assert.AreEqual(0, bathroomA.Children.Count);
+        Assert.IsEmpty(bathroomA.Children);
         Assert.AreSame(buildingA, bathroomA.Parent);
 
-        Assert.AreEqual(0, storageA.Children.Count);
+        Assert.IsEmpty(storageA.Children);
         Assert.AreSame(buildingA, storageA.Parent);
 
-        Assert.AreEqual(3, buildingB.Children.Count);
+        Assert.HasCount(3, buildingB.Children);
         Assert.AreSame(property, buildingB.Parent);
 
-        Assert.AreEqual(0, bathroomB.Children.Count);
+        Assert.IsEmpty(bathroomB.Children);
         Assert.AreSame(buildingB, bathroomB.Parent);
 
-        Assert.AreEqual(0, storageB.Children.Count);
+        Assert.IsEmpty(storageB.Children);
         Assert.AreSame(buildingB, storageB.Parent);
 
-        Assert.AreEqual(1, meetingRoom.Children.Count);
+        Assert.HasCount(1, meetingRoom.Children);
         Assert.AreSame(buildingB, meetingRoom.Parent);
 
-        Assert.AreEqual(0, meetingRoomCloset.Children.Count);
+        Assert.IsEmpty(meetingRoomCloset.Children);
         Assert.AreSame(meetingRoom, meetingRoomCloset.Parent);
     }
 
@@ -224,8 +224,8 @@ public class TreeTests
         Tree<Guid, Space> property = new(propertySpace);
         TreeNode<Guid, Space> buildingA = property.AddChild(buildingASpace);
 
-        Assert.AreEqual(1, property.Children.Count);
-        Assert.AreEqual(0, buildingA.Children.Count);
+        Assert.HasCount(1, property.Children);
+        Assert.IsEmpty(buildingA.Children);
 
         var parentOfBuildingA = buildingA.Parent;
         Assert.IsNotNull(parentOfBuildingA);
@@ -233,7 +233,7 @@ public class TreeTests
 
         property.Children.Remove(buildingA);
 
-        Assert.AreEqual(0, property.Children.Count);
-        Assert.AreEqual(0, buildingA.Children.Count);
+        Assert.IsEmpty(property.Children);
+        Assert.IsEmpty(buildingA.Children);
     }
 }

@@ -42,14 +42,15 @@ public static class ViewModelExtensions
     private static Func<Assembly, bool> assemblyFilter => // NOSONAR
         (x =>
         !x.IsDynamic &&
-        !x.FullName!.StartsWith("System", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("WinRT", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Microsoft", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Syncfusion", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Snippets", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("Xamarin", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("netstandard", StringComparison.Ordinal) &&
-        !x.FullName!.StartsWith("mscorlib", StringComparison.Ordinal));
+        x.FullName is { } name &&
+        !name.StartsWith("System", StringComparison.Ordinal) &&
+        !name.StartsWith("WinRT", StringComparison.Ordinal) &&
+        !name.StartsWith("Microsoft", StringComparison.Ordinal) &&
+        !name.StartsWith("Syncfusion", StringComparison.Ordinal) &&
+        !name.StartsWith("Snippets", StringComparison.Ordinal) &&
+        !name.StartsWith("Xamarin", StringComparison.Ordinal) &&
+        !name.StartsWith("netstandard", StringComparison.Ordinal) &&
+        !name.StartsWith("mscorlib", StringComparison.Ordinal));
 
     /// <summary>
     /// In case of an generic viewmodel, this function returns the base name from IViewModel. 
@@ -109,27 +110,27 @@ public static class ViewModelExtensions
         var result = viewModelType.Name;
 
         if (viewModelType.IsInterface && result.StartsWith('I'))
-            result = result.Substring(1, result.Length - 1);
+            result = result.Substring(1);
 
         result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.View);
 
         return result;
     }
 
+    public static string GetRelatedView(this IViewModel viewModel) =>
+        viewModel.GetType().GetRelatedView();
+
     public static string GetRelatedWindow(this Type viewModelType)
     {
         var result = viewModelType.Name;
 
         if (viewModelType.IsInterface && result.StartsWith('I'))
-            result = result.Substring(1, result.Length - 1);
+            result = result.Substring(1);
 
         result = result.ReplaceLastOf(GenericConstants.ViewModel, GenericConstants.Window);
 
         return result;
     }
-
-    public static string GetRelatedView(this IViewModel viewModel) =>
-        viewModel.GetType().GetRelatedView();
 
     public static string GetRelatedWindow(this IViewModel viewModel) =>
         viewModel.GetType().GetRelatedWindow();
@@ -139,7 +140,7 @@ public static class ViewModelExtensions
         var result = type.Name;
 
         if (type.IsInterface && result.StartsWith('I'))
-            result = result.Substring(1, result.Length - 1);
+            result = result.Substring(1);
 
         if (type.GetInterfaces().Contains(typeof(IWindow)))
             result = result.ReplaceLastOf(GenericConstants.Window, GenericConstants.ViewModel);

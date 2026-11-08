@@ -148,18 +148,18 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         double[,] a;
         m = value.Rows(); // rows
 
         if (m == 0)
-            throw new ArgumentException("Matrix does not have any rows.", "value");
+            throw new ArgumentException("Matrix does not have any rows.", nameof(value));
 
         n = value.Columns(); // cols
 
         if (n == 0)
-            throw new ArgumentException("Matrix does not have any columns.", "value");
+            throw new ArgumentException("Matrix does not have any columns.", nameof(value));
 
         if (m < n) // Check if we are violating JAMA's assumption
         {
@@ -225,7 +225,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 if (Diagonal[k] != 0)
                 {
                     if (a[k, k] < 0)
-                        Diagonal[k] = -Diagonal[k];
+                        Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
 
                     for (var i = k; i < a.Rows(); i++)
                         a[i, k] /= Diagonal[k];
@@ -233,7 +233,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                     a[k, k] += 1;
                 }
 
-                Diagonal[k] = -Diagonal[k];
+                Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
             }
 
             for (var j = k + 1; j < n; j++)
@@ -276,7 +276,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 if (e[k] != 0)
                 {
                     if (e[k + 1] < 0)
-                        e[k] = -e[k];
+                        e[k] = -e[k]; // NOSONAR - self-referential update
 
                     for (var i = k + 1; i < e.Rows(); i++)
                         e[i] /= e[k];
@@ -284,7 +284,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                     e[k + 1] += 1;
                 }
 
-                e[k] = -e[k];
+                e[k] = -e[k]; // NOSONAR - self-referential update
                 if ((k + 1 < m) && (e[k] != 0))
                 {
                     // Apply the transformation.
@@ -688,7 +688,8 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 if (Diagonal[i] > tol)
                     r++;
 
-            return (int)(rank = r);
+            rank = r;
+            return r;
         }
     }
 

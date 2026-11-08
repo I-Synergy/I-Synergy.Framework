@@ -43,7 +43,7 @@ public abstract class BaseExceptionHandlerService : IExceptionHandlerService
     {
         try
         {
-            _logger.LogError(exception, exception.ToMessage(Environment.StackTrace));
+            _logger.LogError(exception, "{ExceptionMessage}", exception.ToMessage(Environment.StackTrace));
 
             if (exception.InnerException is WebSocketException)
                 return;

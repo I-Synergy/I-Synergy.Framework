@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class SelectionModeConverter : IValueConverter
+public partial class SelectionModeConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

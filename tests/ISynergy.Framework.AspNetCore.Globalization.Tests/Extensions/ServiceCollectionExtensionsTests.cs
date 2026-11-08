@@ -71,7 +71,7 @@ namespace ISynergy.Framework.AspNetCore.Globalization.Extensions
             var options = serviceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<GlobalizationOptions>>().Value;
             Assert.IsNotNull(options);
             Assert.AreEqual("en-US", options.DefaultCulture);
-            Assert.AreEqual(3, options.SupportedCultures.Length);
+            Assert.HasCount(3, options.SupportedCultures);
             Assert.AreEqual(RequestCultureProviderTypes.Route, options.ProviderType);
         }
     }

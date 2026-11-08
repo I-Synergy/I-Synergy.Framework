@@ -1,6 +1,6 @@
 ---
 name: architect
-description: Solution architecture and system design — designs features, chooses patterns, defines component boundaries, and produces implementation blueprints
+description: Solution architecture and system design — designs features, chooses patterns, defines component boundaries, and produces implementation blueprints. Use for feature design, pattern selection, component boundaries, and architecture analysis.
 runAs: subagent
 model: sonnet
 tools: Read, Write, Edit, Bash, Grep, Glob

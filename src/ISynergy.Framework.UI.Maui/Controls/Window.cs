@@ -5,7 +5,7 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Scoped)]
-public class Window : ContentPage, IWindow
+public partial class Window : ContentPage, IWindow // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     public IViewModel ViewModel
     {
@@ -102,7 +102,6 @@ public class Window : ContentPage, IWindow
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     // The bulk of the clean-up code is implemented in Dispose(bool)

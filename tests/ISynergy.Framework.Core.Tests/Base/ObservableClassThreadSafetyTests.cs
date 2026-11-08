@@ -18,11 +18,13 @@ public class ObservableClassThreadSafetyTests
         for (int i = 0; i < 10; i++)
         {
             var index = i;
-            tasks.Add(Task.Run(() => obj.SetValuePublic($"value{index}", $"Property{index}")));
+            tasks.Add(Task.Run(() => obj.SetValuePublic($"value{index}", $"Property{index}"), TestContext.CancellationToken));
         }
 
         await Task.WhenAll(tasks);
-        Assert.AreEqual(10, obj.Properties.Count);
+
+        Assert.IsTrue(tasks.All(t => t.IsCompletedSuccessfully));
+        Assert.HasCount(10, obj.Properties);
     }
 
     [TestMethod]
@@ -36,5 +38,9 @@ public class ObservableClassThreadSafetyTests
             .ToList();
 
         await Task.WhenAll(tasks);
+
+        Assert.IsTrue(tasks.All(t => t.IsCompletedSuccessfully));
     }
+
+    public TestContext TestContext { get; set; }
 }

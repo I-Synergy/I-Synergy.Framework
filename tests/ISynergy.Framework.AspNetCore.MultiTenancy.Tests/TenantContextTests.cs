@@ -164,7 +164,7 @@ public class TenantContextTests
 
             // Allow all tasks to set their values before any reads.
             barrier.Release();
-            await barrier.WaitAsync();
+            await barrier.WaitAsync(TestContext.CancellationToken);
 
             results[i] = TenantContext.TenantId;
         }).ToArray();
@@ -186,7 +186,7 @@ public class TenantContextTests
 
         using (TenantContext.Use(scoped, "scoped"))
         {
-            await Task.Delay(1);
+            await Task.Delay(1, TestContext.CancellationToken);
             Assert.AreEqual(scoped, TenantContext.TenantId);
         }
 
@@ -203,4 +203,6 @@ public class TenantContextTests
 
         Assert.AreEqual(tenantId, captured);
     }
+
+    public TestContext TestContext { get; set; }
 }

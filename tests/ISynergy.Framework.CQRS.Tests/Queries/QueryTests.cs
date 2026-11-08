@@ -13,7 +13,7 @@ public class QueryTests
         var query = new TestQuery { Parameter = "Test Parameter" };
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.HandleAsync(query, TestContext.CancellationToken);
 
         // Assert
         Assert.AreEqual("Query Result: Test Parameter", result);
@@ -32,7 +32,8 @@ public class QueryTests
         await Assert.ThrowsAsync<TaskCanceledException>(async () =>
         {
             await Task.Delay(100, cts.Token); // This will throw when used with the canceled token
-            await handler.HandleAsync(query, cts.Token);
         });
     }
+
+    public TestContext TestContext { get; set; }
 }

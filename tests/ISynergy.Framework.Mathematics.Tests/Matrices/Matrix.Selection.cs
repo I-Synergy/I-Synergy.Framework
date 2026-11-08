@@ -1,3 +1,4 @@
+#pragma warning disable CA1861 // expected values in assertions stay inline
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -227,7 +228,7 @@ public partial class MatrixTest
                 for (int j = 0; j <= i; j++)
                     Assert.AreEqual(sorted[j], copy[j]);
 
-                CollectionAssert.AreEqual(copy, v.Get(idx));
+                Assert.AreSequenceEqual(copy, v.Get(idx));
             }
 
             sorted = v.Sorted(asc: false);
@@ -250,7 +251,7 @@ public partial class MatrixTest
                 for (int j = 0; j <= i; j++)
                     Assert.AreEqual(sorted[j], copy[j]);
 
-                CollectionAssert.AreEqual(copy, v.Get(idx));
+                Assert.AreSequenceEqual(copy, v.Get(idx));
             }
         }
     }
@@ -350,7 +351,7 @@ public partial class MatrixTest
 
         int[] expected = [5, 4, 1, 2, 3, 0];
         Assert.IsTrue(idx.IsEqual(expected));
-        Assert.AreEqual(5, comparisons.Count);
+        Assert.HasCount(5, comparisons);
 
         Assert.AreEqual(4.47213595499958, comparisons[0].Item1);
         Assert.AreEqual(2.8284271247461903, comparisons[0].Item2);
@@ -472,10 +473,10 @@ public partial class MatrixTest
     {
         int[] a = [2, 7, 3, 5, 4];
 
-        CollectionAssert.AreEqual(new[] { 7, 3 }, a.Get(1, 3));
-        CollectionAssert.AreEqual(new[] { 4 }, a.Get(-1, 0));
-        CollectionAssert.AreEqual(new[] { 3, 5, 4 }, a.Get(-3, 0));
-        CollectionAssert.AreEqual(new[] { 2, 7, 3, 5 }, a.Get(0, -1));
+        Assert.AreSequenceEqual(new[] { 7, 3 }, a.Get(1, 3));
+        Assert.AreSequenceEqual(new[] { 4 }, a.Get(-1, 0));
+        Assert.AreSequenceEqual(new[] { 3, 5, 4 }, a.Get(-3, 0));
+        Assert.AreSequenceEqual(new[] { 2, 7, 3, 5 }, a.Get(0, -1));
     }
 
     [TestMethod]
@@ -581,7 +582,7 @@ public partial class MatrixTest
         };
         #endregion
 
-        CollectionAssert.AreEqual(expected1, sortedMatrix1);
-        CollectionAssert.AreEqual(expected2, sortedMatrix2);
+        Assert.AreSequenceEqual(expected1, sortedMatrix1);
+        Assert.AreSequenceEqual(expected2, sortedMatrix2);
     }
 }

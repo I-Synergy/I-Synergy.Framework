@@ -19,21 +19,16 @@ namespace ISynergy.Framework.Printer.Label.Dymo.Services;
 /// </remarks>
 internal class LabelPrinterService : ILabelPrinterService
 {
-    private readonly ILogger _logger;
     private readonly IDymoLabel _label;
-    private readonly List<string> _twinTurboRolls;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public LabelPrinterService(ILogger<LabelPrinterService> logger)
+    public LabelPrinterService()
     {
-        _logger = logger;
-
         DymoSDK.App.Init(); // NOSONAR
 
         _label = DymoLabel.LabelSharedInstance;
-        _twinTurboRolls = ["Auto", "Left", "Right"];
     }
 
     /// <summary>

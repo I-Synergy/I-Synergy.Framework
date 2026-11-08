@@ -4,6 +4,7 @@ using Windows.UI;
 namespace ISynergy.Framework.UI.WinUI.Helpers;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class ColorHelperTests
 {
     // ── HexStringToColor ─────────────────────────────────────────────────────

@@ -25,7 +25,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" />
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" />

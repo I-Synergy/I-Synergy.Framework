@@ -1,6 +1,6 @@
 ---
 name: user-story
-description: Drafts and finalizes user stories with Gherkin acceptance criteria for bounded contexts. Use when acceptance criteria for a feature are agreed during design sessions, or to extract stories from existing documents. Trigger whenever the user says "user story", "as a user", "acceptance criteria", or asks to define what a feature needs to do. Validates stories against INVEST criteria. Outputs structured stories with Gherkin to docs/bounded-contexts/{BC}/user-stories.md.
+description: Drafts and finalizes user stories with Gherkin acceptance criteria for bounded contexts. Use when acceptance criteria for a feature are agreed during design sessions, or to extract stories from existing documents. Trigger whenever the user says "user story", "as a user", "acceptance criteria", or asks to define what a feature needs to do. Validates stories against INVEST criteria. Outputs structured stories with Gherkin to docs/bounded-contexts/{Domain}/user-stories.md.
 ---
 
 # User Story
@@ -15,28 +15,28 @@ Each bounded context gets its own file:
 ```markdown
 ## [DRAFT] User Stories — {BoundedContext}
 
-### US-{BC}-{NNN}: {Story Title}
+### US-{Domain}-{NNN}: {Story Title}
 
 **As a** {role}
 **I want** {feature/capability}
 **So that** {business value}
 
 **Acceptance Criteria:**
-- [ ] AC-{BC}-{NNN}.1: {Criterion 1}
-- [ ] AC-{BC}-{NNN}.2: {Criterion 2}
-- [ ] AC-{BC}-{NNN}.3: {Criterion 3 (minimum)}
+- [ ] AC-{Domain}-{NNN}.1: {Criterion 1}
+- [ ] AC-{Domain}-{NNN}.2: {Criterion 2}
+- [ ] AC-{Domain}-{NNN}.3: {Criterion 3 (minimum)}
 
 **Gherkin:**
 ```gherkin
 Feature: {Story Title}
 
-  @AC-{BC}-{NNN}.1
+  @AC-{Domain}-{NNN}.1
   Scenario: {Criterion 1 scenario}
     Given {context}
     When {action}
     Then {outcome}
 
-  @AC-{BC}-{NNN}.2
+  @AC-{Domain}-{NNN}.2
   Scenario: {Criterion 2 scenario}
     Given {context}
     When {action}
@@ -53,16 +53,16 @@ Mark as `[DRAFT]` until finalization. Remove markers only during the finalizatio
 Story, criterion and scenario identifiers follow `.ai/reference/traceability.md` — the source of
 truth for formats, allocation and legacy handling.
 
-- `{BC}` is the bounded context's name as a single PascalCase token, copied verbatim from
-  `UBIQUITOUS_LANGUAGE.md` (`Budget`, `HouseholdPlanning`). `{NNN}` is exactly three digits,
+- `{Domain}` is the bounded context's name as a single PascalCase token, copied verbatim from
+  `UBIQUITOUS_LANGUAGE.md` (`{Domain}`, `{Entity}`). `{NNN}` is exactly three digits,
   zero-padded from `001`. `{n}` is an unpadded criterion number within its story.
 - Allocate when the entry is first written: the next `{NNN}` **above the high-water mark** of the
   context. Allocation is append-only — deleting a criterion never frees its number, and
   reordering never moves one. Retired identifiers are tombstoned in a `## Retired IDs` section of
   the owning file.
-- Every criterion is `- [ ] AC-{BC}-{NNN}.{n}: {text}`. Write the identifier as literal text —
+- Every criterion is `- [ ] AC-{Domain}-{NNN}.{n}: {text}`. Write the identifier as literal text —
   never bold or code-formatted.
-- Every scenario carries exactly one `@AC-{BC}-{NNN}.{n}` tag directly above `Scenario:`. One
+- Every scenario carries exactly one `@AC-{Domain}-{NNN}.{n}` tag directly above `Scenario:`. One
   scenario satisfies exactly one criterion; a criterion may have several scenarios. Other tags
   (`@smoke`, `@e2e`) may share the line; `Feature:` and `Background:` carry none.
 - A story document with no identifiers is in **legacy mode** — a supported state, not a defect.
@@ -77,7 +77,7 @@ Use when existing documents are provided.
 2. Identify every user-facing feature, capability, or workflow
 3. Draft a user story entry for each feature — use `[OPEN]` for missing acceptance criteria
 4. Identify the bounded context each story belongs to
-5. Write draft files to `docs/bounded-contexts/{BC}/user-stories.md`
+5. Write draft files to `docs/bounded-contexts/{Domain}/user-stories.md`
 6. Announce: "Extracted N user stories — M gaps marked [OPEN]."
 
 ## Mode 1 — Progressive Capture (During Sessions)
@@ -85,9 +85,9 @@ Use when existing documents are provided.
 Use as soon as acceptance criteria for a feature are agreed during design interrogation.
 
 When criteria are agreed:
-1. Create `docs/bounded-contexts/{BC}/user-stories.md` if it does not exist
+1. Create `docs/bounded-contexts/{Domain}/user-stories.md` if it does not exist
 2. Write the draft story entry (criteria captured, Gherkin `[OPEN]`)
-3. Announce: "📝 Draft user story logged to `docs/bounded-contexts/{BC}/user-stories.md`."
+3. Announce: "📝 Draft user story logged to `docs/bounded-contexts/{Domain}/user-stories.md`."
 
 ## Mode 2 — Finalization
 
@@ -100,7 +100,7 @@ Run when interrogation is complete.
    criteria numbered `.1`, `.2`, … top to bottom in current document order. Numbers are frozen
    once written (`.ai/reference/traceability.md`)
 4. Add Gherkin scenarios traced to every acceptance criterion — at least one scenario per
-   criterion, each tagged with exactly one `@AC-{BC}-{NNN}.{n}` on the line directly above
+   criterion, each tagged with exactly one `@AC-{Domain}-{NNN}.{n}` on the line directly above
    `Scenario:`. A scenario that covers two criteria is split into two, never tagged twice
 5. Validate each story against INVEST:
    - **Independent** — can be delivered without depending on another story

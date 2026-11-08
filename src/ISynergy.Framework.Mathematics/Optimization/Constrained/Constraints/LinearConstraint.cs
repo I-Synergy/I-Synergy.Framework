@@ -83,11 +83,10 @@ public class LinearConstraint : IConstraint
         get { return indices; }
         set
         {
-            if (value is null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
 
             if (value.Length != NumberOfVariables)
-                throw new DimensionMismatchException("value");
+                throw new DimensionMismatchException(nameof(value));
 
             indices = value;
             grad = null;
@@ -103,11 +102,10 @@ public class LinearConstraint : IConstraint
         get { return combinedAs; }
         set
         {
-            if (value is null)
-                throw new ArgumentNullException("value");
+            ArgumentNullException.ThrowIfNull(value);
 
             if (value.Length != NumberOfVariables)
-                throw new DimensionMismatchException("value");
+                throw new DimensionMismatchException(nameof(value));
 
             combinedAs = value;
             grad = null;
@@ -341,7 +339,7 @@ public class LinearConstraint : IConstraint
             type = ConstraintType.GreaterThanOrEqualTo;
         else if (f.Contains("<="))
             type = ConstraintType.LesserThanOrEqualTo;
-        else if (f.Contains("="))
+        else if (f.Contains('='))
             type = ConstraintType.EqualTo;
         else
             throw new FormatException("Invalid constraint type.");

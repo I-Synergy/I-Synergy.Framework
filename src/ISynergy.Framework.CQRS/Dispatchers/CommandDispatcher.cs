@@ -39,7 +39,7 @@ public class CommandDispatcher : ICommandDispatcher
             var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>();
             await handler.HandleAsync(command, cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
         {
             _logger?.LogError(ex, "Error dispatching command of type {CommandType}", typeof(TCommand).Name);
             throw;
@@ -62,7 +62,7 @@ public class CommandDispatcher : ICommandDispatcher
             var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand, TResult>>();
             return await handler.HandleAsync(command, cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
         {
             _logger?.LogError(ex, "Error dispatching command of type {CommandType}", typeof(TCommand).Name);
             throw;

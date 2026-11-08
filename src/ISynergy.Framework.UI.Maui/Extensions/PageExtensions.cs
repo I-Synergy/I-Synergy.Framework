@@ -3,8 +3,17 @@ namespace ISynergy.Framework.UI.Extensions;
 /// <summary>
 /// Extension methods for <see cref="Page"/> to apply culture-aware window configuration.
 /// </summary>
-public static class PageExtensions
+public static partial class PageExtensions
 {
+    /// <summary>
+    /// Applies the culture to head-specific window chrome. Windows mirrors it onto the native title
+    /// bar once the page is attached to a window; other heads have nothing to do.
+    /// </summary>
+    /// <typeparam name="T">The page type.</typeparam>
+    /// <param name="page">The MAUI page.</param>
+    /// <param name="cultureName">The culture name.</param>
+    static partial void ApplyPlatformFlowDirection<T>(T page, string cultureName) where T : Page;
+
     /// <summary>
     /// Applies flow direction to both the MAUI page and (on Windows) the native title bar.
     /// The MAUI-level flow direction is applied immediately to the page and any
@@ -46,30 +55,8 @@ public static class PageExtensions
         if (page is NavigationPage navPage && navPage.CurrentPage is Page currentPage)
             currentPage.ApplyFlowDirection(cultureName);
 
-#if WINDOWS
-        // Defer native title bar configuration until the page is attached to a window.
-        // In constructors GetParentWindow() returns null because the page isn't
-        // in the visual tree yet. We use the Loaded event as a one-shot trigger.
-        void OnLoaded(object? sender, EventArgs e)
-        {
-            page.Loaded -= OnLoaded;
-
-            var appWindow = page.GetAppWindow();
-            appWindow?.ApplyFlowDirectionToTitleBar(cultureName);
-        }
-
-        // If the page is already loaded (e.g., re-applying culture at runtime),
-        // apply immediately. Otherwise defer via the Loaded event.
-        if (page.IsLoaded)
-        {
-            var appWindow = page.GetAppWindow();
-            appWindow?.ApplyFlowDirectionToTitleBar(cultureName);
-        }
-        else
-        {
-            page.Loaded += OnLoaded;
-        }
-#endif
+        // Head-specific title bar work (Windows only today); unimplemented heads do nothing.
+        ApplyPlatformFlowDirection(page, cultureName);
 
         return page;
     }

@@ -1,7 +1,7 @@
 ---
 name: ui-wpf
 description: >-
-  Windows Presentation Foundation (WPF) implementation of the ISynergy UI stack: dialog/navigation services, theme system, BladeView controls, update pipeline.
+  Windows Presentation Foundation (WPF) implementation of the ISynergy UI stack: dialog/navigation services, theme system, BladeView controls, update pipeline. Use when implementing WPF dialog/navigation services, the theme system, BladeView controls, or the update pipeline.
 version: 2026.02.10
 sources:
   - src/ISynergy.Framework.UI.WPF

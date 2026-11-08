@@ -94,19 +94,19 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
     public JaggedGeneralizedEigenvalueDecomposition(double[][] a, double[][] b, bool sort = false)
     {
         if (a is null)
-            throw new ArgumentNullException("a", "Matrix A cannot be null.");
+            throw new ArgumentNullException(nameof(a), "Matrix A cannot be null.");
 
         if (b is null)
-            throw new ArgumentNullException("b", "Matrix B cannot be null.");
+            throw new ArgumentNullException(nameof(b), "Matrix B cannot be null.");
 
         if (a.Rows() != a.Columns())
-            throw new ArgumentException("Matrix is not a square matrix.", "a");
+            throw new ArgumentException("Matrix is not a square matrix.", nameof(a));
 
         if (b.Rows() != b.Columns())
-            throw new ArgumentException("Matrix is not a square matrix.", "b");
+            throw new ArgumentException("Matrix is not a square matrix.", nameof(b));
 
         if (a.Rows() != b.Rows() || a.Columns() != b.Columns())
-            throw new ArgumentException("Matrix dimensions do not match", "b");
+            throw new ArgumentException("Matrix dimensions do not match", nameof(b));
 
         n = a.Rows();
         RealAlphas = new double[n];

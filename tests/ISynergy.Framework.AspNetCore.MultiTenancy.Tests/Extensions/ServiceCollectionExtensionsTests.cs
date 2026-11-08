@@ -60,7 +60,7 @@ public class ServiceCollectionExtensionsTests
         var registrations = services.Where(d => d.ServiceType == typeof(ITenantService)).ToList();
 
         // TryAddTransient means only one registration survives.
-        Assert.AreEqual(1, registrations.Count);
+        Assert.HasCount(1, registrations);
     }
 
     [TestMethod]
@@ -102,10 +102,10 @@ public class ServiceCollectionExtensionsTests
                         app.UseEndpoints(e => e.MapGet("/ping", () => "pong"));
                     });
             })
-            .StartAsync();
+            .StartAsync(TestContext.CancellationToken);
 
         var client = host.GetTestClient();
-        var response = await client.GetAsync("/ping");
+        var response = await client.GetAsync("/ping", TestContext.CancellationToken);
 
         Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
     }
@@ -137,11 +137,13 @@ public class ServiceCollectionExtensionsTests
                         app.UseEndpoints(e => e.MapGet("/", () => string.Empty));
                     });
             })
-            .StartAsync();
+            .StartAsync(TestContext.CancellationToken);
 
         var client = host.GetTestClient();
-        await client.GetAsync("/");
+        await client.GetAsync("/", TestContext.CancellationToken);
 
         Assert.IsTrue(nextInvoked);
     }
+
+    public TestContext TestContext { get; set; }
 }

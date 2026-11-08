@@ -48,13 +48,13 @@ public partial class MigrateOldDataToNewFormat : Migration
         // 1. Add new columns
         migrationBuilder.AddColumn<string>(
             name: "new_column",
-            table: "budgets",
+            table: "{entities}",
             type: "text",
             nullable: true);
 
         // 2. Migrate data
         migrationBuilder.Sql(@"
-            UPDATE budgets
+            UPDATE {entities}
             SET new_column = CONCAT(old_column1, '-', old_column2)
             WHERE old_column1 IS NOT NULL;
         ");
@@ -62,7 +62,7 @@ public partial class MigrateOldDataToNewFormat : Migration
         // 3. Make new column required
         migrationBuilder.AlterColumn<string>(
             name: "new_column",
-            table: "budgets",
+            table: "{entities}",
             type: "text",
             nullable: false,
             oldClrType: typeof(string),
@@ -72,11 +72,11 @@ public partial class MigrateOldDataToNewFormat : Migration
         // 4. Drop old columns
         migrationBuilder.DropColumn(
             name: "old_column1",
-            table: "budgets");
+            table: "{entities}");
 
         migrationBuilder.DropColumn(
             name: "old_column2",
-            table: "budgets");
+            table: "{entities}");
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
@@ -84,18 +84,18 @@ public partial class MigrateOldDataToNewFormat : Migration
         // Reverse the migration
         migrationBuilder.AddColumn<string>(
             name: "old_column1",
-            table: "budgets",
+            table: "{entities}",
             type: "text",
             nullable: true);
 
         migrationBuilder.AddColumn<string>(
             name: "old_column2",
-            table: "budgets",
+            table: "{entities}",
             type: "text",
             nullable: true);
 
         migrationBuilder.Sql(@"
-            UPDATE budgets
+            UPDATE {entities}
             SET
                 old_column1 = SPLIT_PART(new_column, '-', 1),
                 old_column2 = SPLIT_PART(new_column, '-', 2)
@@ -104,7 +104,7 @@ public partial class MigrateOldDataToNewFormat : Migration
 
         migrationBuilder.DropColumn(
             name: "new_column",
-            table: "budgets");
+            table: "{entities}");
     }
 }
 ```

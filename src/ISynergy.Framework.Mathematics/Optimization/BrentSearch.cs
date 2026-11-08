@@ -371,13 +371,13 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
     {
         // perform some basic validation checks and allow these to throw
         if (double.IsInfinity(lowerBound))
-            throw new ArgumentOutOfRangeException("lowerBound", "Bounds must be finite");
+            throw new ArgumentOutOfRangeException(nameof(lowerBound), "Bounds must be finite");
 
         if (double.IsInfinity(upperBound))
-            throw new ArgumentOutOfRangeException("upperBound", "Bounds must be finite");
+            throw new ArgumentOutOfRangeException(nameof(upperBound), "Bounds must be finite");
 
         if (tol < 0)
-            throw new ArgumentOutOfRangeException("tol", "Tolerance must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(tol), "Tolerance must be positive.");
 
         if (maxIterations == 0)
             maxIterations = Int32.MaxValue;
@@ -505,13 +505,13 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
     {
         // perform some basic validation checks and allow these to throw
         if (double.IsInfinity(lowerBound))
-            throw new ArgumentOutOfRangeException("lowerBound", "Bounds must be finite");
+            throw new ArgumentOutOfRangeException(nameof(lowerBound), "Bounds must be finite");
 
         if (double.IsInfinity(upperBound))
-            throw new ArgumentOutOfRangeException("upperBound", "Bounds must be finite");
+            throw new ArgumentOutOfRangeException(nameof(upperBound), "Bounds must be finite");
 
         if (tol < 0)
-            throw new ArgumentOutOfRangeException("tol", "Tolerance must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(tol), "Tolerance must be positive.");
 
         double fa = function(lowerBound); // f(a)
         double fb = function(upperBound); // f(b) 
@@ -627,7 +627,7 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
             case BrentSearchStatus.MaxIterationsReached:
                 throw new ConvergenceException("The maximum number of iterations was reached.");
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(result), result.Status, "Unexpected search status.");
         }
     }
 

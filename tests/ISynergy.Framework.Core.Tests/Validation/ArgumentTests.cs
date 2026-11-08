@@ -220,7 +220,7 @@ public class ArgumentTests
         int test = 15;
         // Assert: no exception thrown for value exceeding minimum
         Argument.IsMinimal(test, 10, (value, min) => value > min);
-        Assert.IsTrue(test > 10);
+        Assert.IsGreaterThan(10, test);
     }
 
     /// <summary>
@@ -243,7 +243,7 @@ public class ArgumentTests
         int test = 5;
         // Assert: no exception thrown for value below maximum
         Argument.IsMaximum(test, 10, (value, max) => value < max);
-        Assert.IsTrue(test < 10);
+        Assert.IsLessThan(10, test);
     }
 
     /// <summary>
@@ -277,7 +277,7 @@ public class ArgumentTests
         Guid? test = Guid.NewGuid();
         var result = Argument.IsNotNullOrEmpty(test);
 
-        Assert.IsFalse(result == Guid.Empty);
+        Assert.AreNotEqual(Guid.Empty, result);
     }
 
     /// <summary>

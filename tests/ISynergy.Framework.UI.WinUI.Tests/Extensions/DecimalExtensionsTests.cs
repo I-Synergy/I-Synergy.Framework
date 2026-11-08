@@ -5,6 +5,7 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.WinUI.Extensions;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class DecimalExtensionsTests
 {
     private CultureInfo _originalCulture;

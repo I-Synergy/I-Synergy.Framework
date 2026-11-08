@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalToVisibilityConverter : IValueConverter
+public partial class DecimalToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -49,7 +49,7 @@ public class DecimalToVisibilityConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsConverter : IValueConverter
+public partial class DecimalEqualsConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -61,8 +61,8 @@ public class DecimalEqualsConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test == limit)
         {
@@ -88,11 +88,11 @@ public class DecimalEqualsConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalLesserThenConverter.
+/// Class DecimalLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalLesserThenConverter : IValueConverter
+public partial class DecimalLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -104,8 +104,8 @@ public class DecimalLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test < limit)
         {
@@ -131,11 +131,11 @@ public class DecimalLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalGreaterThenConverter.
+/// Class DecimalGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalGreaterThenConverter : IValueConverter
+public partial class DecimalGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -147,8 +147,8 @@ public class DecimalGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test > limit)
         {
@@ -174,11 +174,11 @@ public class DecimalGreaterThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalEqualsOrLesserThenConverter.
+/// Class DecimalEqualsOrLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsOrLesserThenConverter : IValueConverter
+public partial class DecimalEqualsOrLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -190,8 +190,8 @@ public class DecimalEqualsOrLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test <= limit)
         {
@@ -217,11 +217,11 @@ public class DecimalEqualsOrLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DecimalEqualsOrGreaterThenConverter.
+/// Class DecimalEqualsOrGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalEqualsOrGreaterThenConverter : IValueConverter
+public partial class DecimalEqualsOrGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -233,8 +233,8 @@ public class DecimalEqualsOrGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        decimal.TryParse(parameter.ToString(), out var limit);
-        decimal.TryParse(value.ToString(), out var test);
+        _ = decimal.TryParse(parameter.ToString(), out var limit);
+        _ = decimal.TryParse(value.ToString(), out var test);
 
         if (test >= limit)
         {
@@ -264,7 +264,7 @@ public class DecimalEqualsOrGreaterThenConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalToStringConverter : IValueConverter
+public partial class DecimalToStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -318,7 +318,7 @@ public class DecimalToStringConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalToDoubleConverter : IValueConverter
+public partial class DecimalToDoubleConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

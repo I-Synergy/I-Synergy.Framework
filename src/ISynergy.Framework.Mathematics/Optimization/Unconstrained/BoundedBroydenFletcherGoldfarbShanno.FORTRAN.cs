@@ -161,7 +161,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
         }
 
-        // 
         if ((iprint >= 0))
         {
             if (prjctd)
@@ -1040,9 +1039,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             tj = t[(nleft - (1)) + _t_offset];
             ibp = iorder[(nleft - (1)) + _iorder_offset];
         }
-        // 
         dt = (tj - tj0);
-        // 
         if (((dt != 0.0) && (iprint >= 100)))
         {
             // DISPLAY: nseg, f1, f2
@@ -1110,7 +1107,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         //
         f1 = (((f1 + (dt * f2)) + dibp2) - ((theta * dibp) * zibp));
         f2 = (f2 - (theta * dibp2));
-        // 
         if ((col > 0))
         {
             // update c = c + dt*p.
@@ -1197,7 +1193,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         //   the variables whose breakpoints haven't been reached.
         // 
         daxpy(n, tsum, d, _d_offset, 1, xcp, _xcp_offset, 1);
-    // 
     L999:
         // 
         // Update c = c + dtm*p = W'(x^c - x) 
@@ -1662,7 +1657,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             fy = (fym + (sty * gtest));
             gx = (gxm + gtest);
             gy = (gym + gtest);
-            // 
         }
         else
         {
@@ -1717,7 +1711,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         task = "FG";
 
-    // 
     L1000:
 
         // 
@@ -3047,7 +3040,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             goto L556;
         }
 
-        // 
         dtd = ddot(n, d, _d_offset, 1, d, _d_offset, 1);
         dnorm = System.Math.Sqrt(dtd);
         // 
@@ -3098,7 +3090,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
         }
 
-        // 
         if (((iter == 0) && (!boxed)))
         {
             if (double.IsNaN(dnorm))
@@ -3111,7 +3102,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             stp = 1.0;
         }
 
-        // 
         dcopy(n, x, _x_offset, 1, t, _t_offset, 1);
         dcopy(n, g, _g_offset, 1, r, _r_offset, 1);
 
@@ -3143,7 +3133,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             0.1000000000000000055511151231257827021182, 0.0,
             stpmx, ref csave, isave, _isave_offset, dsave, _dsave_offset);
 
-        // 
         xstep = (stp * dnorm);
         if (((!csave.StartsWith("CONV", StringComparison.OrdinalIgnoreCase))
             && (!csave.StartsWith("WARN", StringComparison.OrdinalIgnoreCase))))
@@ -3500,7 +3489,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // 
             // c           'info' records the termination information.
             info = 0;
-            // 
             itfile = 8;
             if ((iprint >= 1))
             {
@@ -3538,7 +3526,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             cnstnd = lsave[(2 - (1)) + _lsave_offset];
             boxed = lsave[(3 - (1)) + _lsave_offset];
             updatd = lsave[(4 - (1)) + _lsave_offset];
-            // 
             nintol = isave[(1 - (1)) + _isave_offset];
             itfile = isave[(3 - (1)) + _isave_offset];
             iback = isave[(4 - (1)) + _isave_offset];
@@ -3557,7 +3544,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             nact = isave[(18 - (1)) + _isave_offset];
             ileave = isave[(19 - (1)) + _isave_offset];
             nenter = isave[(20 - (1)) + _isave_offset];
-            // 
             theta = dsave[(1 - (1)) + _dsave_offset];
             fold = dsave[(2 - (1)) + _dsave_offset];
             tol = dsave[(3 - (1)) + _dsave_offset];
@@ -3703,7 +3689,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             iwhere, _iwhere_offset, ref wrk, updatd, cnstnd, iprint, iter);
 
         nact = (n - nfree);
-    // 
     L333:
 
         // 
@@ -3979,7 +3964,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         formt(m, wt, _wt_offset, sy, _sy_offset, ss,
             _ss_offset, col, theta, ref info);
 
-        // 
         if ((info != 0))
         {
             // c          nonpositive definiteness in Cholesky factorization;
@@ -4021,7 +4005,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         lsave[(2 - (1)) + _lsave_offset] = cnstnd;
         lsave[(3 - (1)) + _lsave_offset] = boxed;
         lsave[(4 - (1)) + _lsave_offset] = updatd;
-        // 
         isave[(1 - (1)) + _isave_offset] = nintol;
         isave[(3 - (1)) + _isave_offset] = itfile;
         isave[(4 - (1)) + _isave_offset] = iback;
@@ -4040,7 +4023,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         isave[(18 - (1)) + _isave_offset] = nact;
         isave[(19 - (1)) + _isave_offset] = ileave;
         isave[(20 - (1)) + _isave_offset] = nenter;
-        // 
         dsave[(1 - (1)) + _dsave_offset] = theta;
         dsave[(2 - (1)) + _dsave_offset] = fold;
         dsave[(3 - (1)) + _dsave_offset] = tol;
@@ -4539,7 +4521,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         lt = isave[(14 - (1)) + _isave_offset];
         lxp = isave[(15 - (1)) + _isave_offset];
         lwa = isave[(16 - (1)) + _isave_offset];
-        // 
         mainlb(n, m, x, _x_offset, l, _l_offset, u, _u_offset, nbd,
             _nbd_offset, ref f, g, _g_offset, factr, pgtol, wa, (lws - (1)) + _wa_offset,
             wa, (lwy - (1)) + _wa_offset, wa, (lsy - (1)) + _wa_offset, wa,

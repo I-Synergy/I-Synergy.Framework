@@ -19,6 +19,8 @@ namespace Sample.Blazor.UI.Tests;
 [TestClass]
 public class SmokeTests : SamplePageTest
 {
+    private static readonly string[] collection = new[] { "dark", "light" };
+
     [TestMethod]
     public async Task Home_RendersTheHandRolledAppShell()
     {
@@ -76,13 +78,12 @@ public class SmokeTests : SamplePageTest
             """);
         Log($"shell: {shell}");
 
-        var state = System.Text.Json.JsonDocument.Parse(shell).RootElement;
+        var state = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(shell);
 
         // The shell fills the viewport (100dvh) and is themed through a data attribute.
         Assert.AreEqual(state.GetProperty("viewportHeight").GetInt32(), state.GetProperty("shellHeight").GetInt32(),
             $"The shell must fill the viewport. Observed: {shell}");
-        CollectionAssert.Contains(new[] { "dark", "light" }, state.GetProperty("shellTheme").GetString(),
-            $"The shell must declare its theme. Observed: {shell}");
+        Assert.Contains(state.GetProperty("shellTheme").GetString(), collection, $"The shell must declare its theme. Observed: {shell}");
 
         // Desktop shape: permanent 300px sidebar column, no hamburger.
         Assert.AreEqual("flex", state.GetProperty("headerDisplay").GetString(), $"header.app-header must be laid out. Observed: {shell}");
@@ -94,7 +95,7 @@ public class SmokeTests : SamplePageTest
         Assert.AreEqual("none", state.GetProperty("navToggleDisplay").GetString(),
             $"Desktop has no collapsing toggle: the toggle must be display:none. Observed: {shell}");
 
-        Assert.IsTrue(state.GetProperty("footerChildCount").GetInt32() >= 2,
+        Assert.IsGreaterThanOrEqualTo(2, state.GetProperty("footerChildCount").GetInt32(),
             $"The sidebar footer must carry the Help link and the version label. Observed: {shell}");
         await Expect(Page.Locator(SampleDom.SidebarFooterNavItem)).ToHaveCountAsync(1);
 

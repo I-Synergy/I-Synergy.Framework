@@ -127,12 +127,12 @@ public static class ArrayExtensions
             return [-1];
 
         if (array.Rank == 0)
-            return new int[0];
+            return Array.Empty<int>();
 
         if (deep && IsJagged(array))
         {
             if (array.Length == 0)
-                return new int[0];
+                return Array.Empty<int>();
 
             int[] rest;
             if (!max)

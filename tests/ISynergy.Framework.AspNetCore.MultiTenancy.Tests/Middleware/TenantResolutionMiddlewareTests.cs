@@ -24,7 +24,7 @@ public class TenantResolutionMiddlewareTests
             Microsoft.Extensions.Options.Options.Create(options ?? new TenantResolutionOptions()),
             NullLogger<TenantResolutionMiddleware>.Instance);
 
-    private static HttpContext CreateAuthenticatedContext(Guid? tenantId, string? userName = null)
+    private static DefaultHttpContext CreateAuthenticatedContext(Guid? tenantId, string? userName = null)
     {
         var claims = new List<Claim>();
 
@@ -37,13 +37,13 @@ public class TenantResolutionMiddlewareTests
         return CreateContext(claims);
     }
 
-    private static HttpContext CreateContext(IEnumerable<Claim> claims)
+    private static DefaultHttpContext CreateContext(IEnumerable<Claim> claims)
     {
         var identity = new ClaimsIdentity(claims, authenticationType: "Test");
         return new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
     }
 
-    private static HttpContext CreateUnauthenticatedContext()
+    private static DefaultHttpContext CreateUnauthenticatedContext()
     {
         var context = new DefaultHttpContext();
         context.User = new ClaimsPrincipal(new ClaimsIdentity()); // no authentication type → not authenticated

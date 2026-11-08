@@ -1,3 +1,7 @@
+#if MACOS
+using Microsoft.Maui.Platforms.MacOS.Essentials;
+using Microsoft.Maui.Platforms.MacOS.Hosting;
+#endif
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
@@ -67,7 +71,7 @@ public static class MauiAppBuilderExtensions
     /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
     [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
         Justification = "View, ViewModel and Window types are rooted by the application XAML compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
-    public static MauiAppBuilder ConfigureServices<
+    public static MauiAppBuilder ConfigureServices< // NOSONAR - DI composition root
         TApplication,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
@@ -144,7 +148,7 @@ public static class MauiAppBuilderExtensions
         appBuilder.Services.TryAddSingleton<IApplicationLifecycleService, ApplicationLifecycleService>();
         appBuilder.Services.TryAddSingleton<IDispatcherService, DispatcherService>();
         appBuilder.Services.TryAddSingleton<INavigationService, NavigationService>();
-        appBuilder.Services.TryAddSingleton<IBladePaneHost, BladePaneHostRegistry>();
+        appBuilder.Services.TryAddSingleton<IBladeViewHost, BladeViewHostRegistry>();
         appBuilder.Services.TryAddSingleton<INavigationHostRegistry, NavigationHostRegistry>();
         appBuilder.Services.TryAddSingleton<IBladeService, BladeService>();
         appBuilder.Services.TryAddSingleton<BladeHostViewModel>();
@@ -156,8 +160,41 @@ public static class MauiAppBuilderExtensions
 
         appBuilder.Services.RegisterAssemblies(assembly, assemblyFilter);
 
+#if WINDOWS
+        // WinUI needs a focus-visual and cursor pass on the shell controls that MAUI cannot express;
+        // registering it here keeps that platform detail out of the applications.
+        ISynergy.Framework.UI.Maui.Platforms.Windows.Extensions.ShellChromeStyler.Register();
+#endif
+
         action.Invoke(appBuilder);
 
+        return appBuilder;
+    }
+
+    /// <summary>
+    /// Registers the application with the hosting backend of the current head.
+    /// </summary>
+    /// <remarks>
+    /// Mac Catalyst and the mobile heads use Microsoft.Maui.Controls' own hosting; the AppKit head ships
+    /// its own (UseMauiAppMacOS + AddMacOSEssentials). Choosing here keeps conditional compilation out
+    /// of the application's startup code.
+    /// </remarks>
+    /// <typeparam name="TApplication">The MAUI application type.</typeparam>
+    /// <param name="appBuilder">The MAUI app builder.</param>
+    /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
+    public static MauiAppBuilder UseMauiAppForCurrentHead<TApplication>(this MauiAppBuilder appBuilder)
+        where TApplication : class, IApplication
+    {
+#if MACOS
+        appBuilder.UseMauiAppMacOS<TApplication>().AddMacOSEssentials();
+#else
+        // MCTME001 (CommunityToolkit.Maui) expects UseMauiApp<T>() in the application's own chain; it
+        // cannot see through this wrapper, so the diagnostic is suppressed here instead of pushing the
+        // hosting call back into every application.
+#pragma warning disable MCTME001
+        appBuilder.UseMauiApp<TApplication>();
+#pragma warning restore MCTME001
+#endif
         return appBuilder;
     }
 

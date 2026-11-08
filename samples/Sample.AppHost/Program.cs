@@ -37,7 +37,7 @@ builder.AddDotnetProject("api", @"../Sample.Api/Sample.Api.csproj");
 builder.AddDotnetProject("automation", @"../Sample.Automation/Sample.Automation.csproj");
 
 // ── Blazor UI sample ──────────────────────────────────────────────────────────
-// Demonstrates the ISynergy.Framework.AspNetCore.Blazor + Fluent UI integration.
+// Demonstrates the ISynergy.Framework.UI.Blazor + Fluent UI integration.
 builder.AddDotnetProject("blazor", @"../Sample.Blazor/Sample.Blazor.csproj");
 
 // ── SignalR monitoring sample ─────────────────────────────────────────────────

@@ -39,6 +39,8 @@ public class ObservableValidatedClassEventTests
         // Act
         observable.Dispose();
 
+        Assert.IsTrue(observable.IsDisposed);
+
         // Assert
         Assert.Throws<ObjectDisposedException>(() => observable.TestProperty = "New Value");
         Assert.IsFalse(eventFired);
@@ -158,8 +160,10 @@ public class ObservableValidatedClassEventTests
         // Act
         observable.Dispose();
 
-        // Assert - Should not throw
+        // Assert
         observable.PropertyChanged -= handler;
+        observable.ErrorsChanged -= errorHandler;
+        Assert.IsTrue(observable.IsDisposed);
         observable.ErrorsChanged -= errorHandler;
     }
 
@@ -181,6 +185,6 @@ public class ObservableValidatedClassEventTests
         Assert.Throws<ObjectDisposedException>(() => observable.TriggerErrorsChanged("TestProperty"));
 
         // No events should have been added to disposalOrder during disposal
-        Assert.AreEqual(0, disposalOrder.Count);
+        Assert.IsEmpty(disposalOrder);
     }
 }

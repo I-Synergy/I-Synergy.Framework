@@ -134,7 +134,7 @@ public class DenavitHartenbergNodeCollection : Collection<DenavitHartenbergNode>
     protected override void InsertItem(int index, DenavitHartenbergNode item)
     {
         if (item.Parent is not null)
-            throw new ArgumentException("The node already belongs to another model.", "item");
+            throw new ArgumentException("The node already belongs to another model.", nameof(item));
 
         item.Parent = Owner;
         base.InsertItem(index, item);

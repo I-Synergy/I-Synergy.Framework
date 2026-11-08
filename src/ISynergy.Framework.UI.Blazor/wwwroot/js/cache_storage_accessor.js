@@ -22,7 +22,7 @@ function createRequest(url, method, body = "") {
     return request;
 }
 
-export async function put(storageName, url, method, body = "", responseString) {
+export async function put(storageName, url, method, responseString, body = "") {
     const CACHING_DURATION = 7 * 24 * 3600;
 
     const expires = new Date();
@@ -81,14 +81,8 @@ export async function removeAll(storageName) {
     let cache = await openCacheStorage(storageName);
 
     if (cache != null) {
-        cache.keys().then(function (names) {
-            for (let name of names)
-                cache.delete(name);
-        });
-        //let requests = await cache.keys();
+        const names = await cache.keys();
 
-        //for (let request in requests) {
-        //    await cache.delete(request);
-        //}
+        await Promise.all(names.map(name => cache.delete(name)));
     }
 }

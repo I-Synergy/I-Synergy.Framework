@@ -156,13 +156,13 @@ sequenceDiagram
     participant DataContext
     participant Database
 
-    Client->>Endpoint: HTTP POST /budgets
-    Endpoint->>Handler: CreateBudgetCommand
-    Handler->>DataContext: Budgets.Add() + SaveChangesAsync()
+    Client->>Endpoint: HTTP POST /{entities}
+    Endpoint->>Handler: Create{Entity}Command
+    Handler->>DataContext: {Entities}.Add() + SaveChangesAsync()
     DataContext->>Database: INSERT
     Database-->>DataContext: Success
-    DataContext-->>Handler: Budget Model
-    Handler-->>Endpoint: CreateBudgetResponse
+    DataContext-->>Handler: {Entity} Model
+    Handler-->>Endpoint: Create{Entity}Response
     Endpoint-->>Client: 201 Created
 ```
 ````

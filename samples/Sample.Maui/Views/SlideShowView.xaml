@@ -24,7 +24,7 @@
             Padding="20"
             VerticalOptions="Center"
             HorizontalOptions="Center"
-            IsVisible="{Binding SelectedItem, Converter={StaticResource NullToInversedIsVisibleConverter}}">
+            IsVisible="{Binding SelectedItem, Converter={StaticResource NullToInversedVisibilityConverter}}">
             <Label
                 Text="No Image Available"
                 FontSize="18"

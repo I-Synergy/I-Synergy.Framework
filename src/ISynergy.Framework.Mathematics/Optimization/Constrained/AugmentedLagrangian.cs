@@ -87,8 +87,8 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
     IConstraint[] greaterThanConstraints;
     IConstraint[] equalityConstraints;
     private double rho;
-    private double rhoMax = 1e+1;
-    private double rhoMin = 1e-6;
+    private readonly double rhoMax = 1e+1;
+    private readonly double rhoMin = 1e-6;
 
     private double[] lambda; // equality multipliers
     private double[] mu;     // "lesser than"  inequality multipliers
@@ -97,9 +97,9 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
     private double[] g;
 
     // Stopping criteria
-    private double ftol_abs = 0;
-    private double ftol_rel = 1e-10;
-    private double xtol_rel = 1e-10;
+    private readonly double ftol_abs = 0;
+    private readonly double ftol_rel = 1e-10;
+    private readonly double xtol_rel = 1e-10;
 
     private int functionEvaluations;
     private int maxEvaluations;
@@ -154,8 +154,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
         get { return maxEvaluations; }
         set
         {
-            if (value < 0)
-                throw new ArgumentOutOfRangeException("value");
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
             maxEvaluations = value;
         }
     }
@@ -211,7 +210,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
     {
         if (innerSolver.NumberOfVariables != function.NumberOfVariables)
             throw new ArgumentException("The inner unconstrained optimization algorithm and the "
-                + "objective function should have the same number of variables.", "function");
+                + "objective function should have the same number of variables.", nameof(function));
 
         init(function, constraints, innerSolver);
     }
@@ -238,7 +237,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
         {
             if (function.NumberOfVariables != NumberOfVariables)
             {
-                throw new ArgumentOutOfRangeException("function",
+                throw new ArgumentOutOfRangeException(nameof(function),
                     "Incorrect number of variables in the objective function. " +
                     "The number of variables must match the number of variables set in the solver.");
             }
@@ -276,7 +275,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
                     lesserThan.Add(c); break;
 
                 default:
-                    throw new ArgumentException("Unknown constraint type.", "constraints");
+                    throw new ArgumentException("Unknown constraint type.", nameof(constraints));
             }
         }
 

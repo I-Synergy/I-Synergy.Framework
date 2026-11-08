@@ -1146,7 +1146,7 @@ public class GoldfarbIdnaniTest
         for (int i = 0; i < constraints.Count; i++)
         {
             double error = constraints[i].GetViolation(actual);
-            Assert.IsTrue(error >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, error);
         }
 
         for (int i = 0; i < expected.Length; i++)
@@ -1216,7 +1216,7 @@ public class GoldfarbIdnaniTest
         for (int i = 0; i < constraints.Count; i++)
         {
             double error = constraints[i].GetViolation(actual);
-            Assert.IsTrue(error >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, error);
         }
 
         for (int i = 0; i < expected.Length; i++)
@@ -1435,7 +1435,7 @@ public class GoldfarbIdnaniTest
             Assert.AreEqual(expected[i], lagrangian[i], 1e-4);
     }
 
-    private double[,] readMatrixFile(string path)
+    private static double[,] readMatrixFile(string path)
     {
         string[] str = File.ReadAllLines(path);
 
@@ -1458,7 +1458,7 @@ public class GoldfarbIdnaniTest
         return v;
     }
 
-    private double[] readVectorFile(string path)
+    private static double[] readVectorFile(string path)
     {
         string[] str = File.ReadAllLines(path);
         char[] sep = [','];

@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// <summary>
 /// Value converter that applies NOT operator to a <see cref="bool" /> value.
 /// </summary>
-public sealed class BoolNegationConverter : IValueConverter
+public sealed partial class BooleanNegationConverter : IValueConverter
 {
     /// <summary>
     /// Convert a boolean value to its negation.
@@ -39,11 +39,11 @@ public sealed class BoolNegationConverter : IValueConverter
 }
 
 /// <summary>
-/// Class BoolToStateConverter.
+/// Class BooleanToStateConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public sealed class BoolToStateConverter : IValueConverter
+public sealed partial class BooleanToStateConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -83,11 +83,11 @@ public sealed class BoolToStateConverter : IValueConverter
 }
 
 /// <summary>
-/// Class BoolToCommandBarDisplayModeConverter.
+/// Class BooleanToCommandBarDisplayModeConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public sealed class BoolToCommandBarDisplayModeConverter : IValueConverter
+public sealed partial class BooleanToCommandBarDisplayModeConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -132,7 +132,7 @@ public sealed class BoolToCommandBarDisplayModeConverter : IValueConverter
 /// Implements the <see cref="BooleanConverter{Style}" />
 /// </summary>
 /// <seealso cref="BooleanConverter{Style}" />
-public sealed class BooleanToStyleConverter : BooleanConverter<Style>
+public sealed partial class BooleanToStyleConverter : BooleanConverter<Style>
 {
 }
 
@@ -141,7 +141,7 @@ public sealed class BooleanToStyleConverter : BooleanConverter<Style>
 /// Implements the <see cref="BooleanConverter{Visibility}" />
 /// </summary>
 /// <seealso cref="BooleanConverter{Visibility}" />
-public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility>
+public sealed partial class BooleanToVisibilityConverter : BooleanConverter<Visibility>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BooleanToVisibilityConverter"/> class.
@@ -157,7 +157,7 @@ public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility>
 /// Implements the <see cref="BooleanConverter{Visibility}" />
 /// </summary>
 /// <seealso cref="BooleanConverter{Visibility}" />
-public sealed class NavigationViewBackButtonVisibleConverter : BooleanConverter<NavigationViewBackButtonVisible>
+public sealed partial class NavigationViewBackButtonVisibleConverter : BooleanConverter<NavigationViewBackButtonVisible>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BooleanToVisibilityConverter"/> class.
@@ -174,7 +174,7 @@ public sealed class NavigationViewBackButtonVisibleConverter : BooleanConverter<
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public sealed class NullToBooleanConverter : IValueConverter
+public sealed partial class NullToBooleanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -214,7 +214,7 @@ public sealed class NullToBooleanConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public sealed class InverseBooleanConverter : IValueConverter
+public sealed partial class InverseBooleanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -242,13 +242,8 @@ public sealed class InverseBooleanConverter : IValueConverter
     /// <param name="language">The language.</param>
     /// <returns>System.Object.</returns>
     /// <exception cref="InvalidOperationException">The target must be a boolean</exception>
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        if (value is bool x)
-            return !x;
-
-        throw new InvalidOperationException("The target must be a boolean");
-    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
+        Convert(value, targetType, parameter, language);
 }
 
 /// <summary>
@@ -256,7 +251,7 @@ public sealed class InverseBooleanConverter : IValueConverter
 /// Implements the <see cref="BooleanToStringConverter" />
 /// </summary>
 /// <seealso cref="BooleanToStringConverter" />
-public sealed class BooleanToStringConverter : BooleanConverter<string>
+public sealed partial class BooleanToStringConverter : BooleanConverter<string>
 {
 }
 
@@ -265,7 +260,7 @@ public sealed class BooleanToStringConverter : BooleanConverter<string>
 /// Implements the <see cref="BooleanToIntegerConverter" />
 /// </summary>
 /// <seealso cref="BooleanToIntegerConverter" />
-public sealed class BooleanToIntegerConverter : BooleanConverter<int>
+public sealed partial class BooleanToIntegerConverter : BooleanConverter<int>
 {
 }
 
@@ -274,7 +269,7 @@ public sealed class BooleanToIntegerConverter : BooleanConverter<int>
 /// Implements the <see cref="BooleanToDoubleConverter" />
 /// </summary>
 /// <seealso cref="BooleanToDoubleConverter" />
-public sealed class BooleanToDoubleConverter : BooleanConverter<double>
+public sealed partial class BooleanToDoubleConverter : BooleanConverter<double>
 {
 }
 
@@ -283,7 +278,7 @@ public sealed class BooleanToDoubleConverter : BooleanConverter<double>
 /// Implements the <see cref="BooleanToBooleanConverter" />
 /// </summary>
 /// <seealso cref="BooleanToBooleanConverter" />
-public sealed class BooleanToBooleanConverter : BooleanConverter<bool>
+public sealed partial class BooleanToBooleanConverter : BooleanConverter<bool>
 {
 }
 

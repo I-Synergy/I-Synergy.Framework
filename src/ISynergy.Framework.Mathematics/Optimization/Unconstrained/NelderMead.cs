@@ -251,7 +251,7 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
         set
         {
             if (Capacity > 0 && (value <= 0 || value > Capacity))
-                throw new ArgumentOutOfRangeException("value",
+                throw new ArgumentOutOfRangeException(nameof(value),
                     "The number of variables must be higher than 0 and less than or"
                     + " equal to the maximum number of variables initially passed to the"
                     + " Nelder-Mead constructor (it was passed " + Capacity + ").");

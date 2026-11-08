@@ -49,10 +49,12 @@ public class ModelBuilderExtensionsWithTenantTests
     public async Task TenantFilter_ShouldOnlyReturnCurrentTenantEntities()
     {
         // Act
-        var entities = await _context.TestTenantEntities.ToListAsync();
+        var entities = await _context.TestTenantEntities.ToListAsync(TestContext.CancellationToken);
 
         // Assert
-        Assert.AreEqual(2, entities.Count);
+        Assert.HasCount(2, entities);
         Assert.IsTrue(entities.All(e => e.TenantId == _testTenantId));
     }
+
+    public TestContext TestContext { get; set; }
 }

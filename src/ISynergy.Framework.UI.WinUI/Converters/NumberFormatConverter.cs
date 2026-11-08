@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DecimalNumberFormatter : IValueConverter
+public partial class DecimalNumberFormatter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -52,7 +52,7 @@ public class DecimalNumberFormatter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class IntegerNumberFormatter : IValueConverter
+public partial class IntegerNumberFormatter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

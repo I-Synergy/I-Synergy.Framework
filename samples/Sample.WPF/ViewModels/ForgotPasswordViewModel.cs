@@ -56,7 +56,7 @@ public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordVie
     /// Resets the password asynchronous.
     /// </summary>
     /// <returns>Task&lt;System.Boolean&gt;.</returns>
-    public Task<bool> ResetPasswordAsync()
+    public static Task<bool> ResetPasswordAsync()
     {
         return Task.FromResult(false);
     }

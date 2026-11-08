@@ -4,6 +4,7 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.WinUI.Converters;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class CurrencyConverterTests
 {
     private CultureInfo _originalCulture;
@@ -38,8 +39,8 @@ public class CurrencyConverterTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.StartsWith("$"));
-        Assert.IsTrue(result.EndsWith("1,234.56"));
+        Assert.StartsWith("$", result);
+        Assert.EndsWith("1,234.56", result);
     }
 
     [TestMethod]
@@ -61,8 +62,8 @@ public class CurrencyConverterTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.StartsWith("-"));
-        Assert.IsTrue(result.EndsWith("1,234.56"));
+        Assert.StartsWith("-", result);
+        Assert.EndsWith("1,234.56", result);
     }
 
     [TestMethod]

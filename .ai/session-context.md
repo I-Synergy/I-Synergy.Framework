@@ -1,3 +1,400 @@
+# Session Handoff - 2026-11-08 (phone layouts: iOS and Android)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Checked the phone form factor (the existing set covered desktop/tablet only) and fixed the phone
+content layout bug it exposed.
+
+- **Bug:** `ShellView.SetUpPhoneDrawer` set `ColumnSpan=2` on `ContentHost` but left it in column 1
+  (its desktop column), so on phones the content started after the 300pt sidebar column and
+  overflowed the right edge. iOS and Android screenshots showed clipped fields.
+- **Fix:** `Grid.SetColumn(ContentHost, 0)` (and the scrim) before the spans in
+  `samples/Sample.Maui/Views/ShellView.xaml.cs`.
+- Captured `10-shell-ios.png`, `11-settings-ios.png` (iPhone 17 simulator, 402×874 pt / 1206×2622,
+  dark system theme) and `12-shell-android-phone.png`, `13-drawer-android-phone.png`,
+  `14-settings-android-phone.png` (Pixel 6, 1080×2400, density 420, light theme). Both heads open
+  the settings blade on first run (`GlobalSettings.IsFirstRun`); relaunch shows the shell.
+- **iOS build caveat:** the framework library's `net10.0-ios` target wants
+  `Microsoft.iOS.Runtime.iossimulator-arm64.net10.0_26.0`, which is not installed (only the .NET 11
+  iOS workload is). The simulator build succeeded after temporarily targeting net11 only for
+  `ISynergy.Framework.UI.Maui`; that csproj edit was reverted (only the earlier macOS package fix
+  remains). A normal iOS build on a machine with only .NET 11 workloads needs the .NET 10 iOS
+  workload, or a `SkipNet10Mobile`-style switch.
+- The Android drawer/settings scrim rendered opaque black in the headless emulator: the `BoxView`
+  painted the translucent colour opaque. Replaced the sample's `DrawerScrim` and the framework
+  `BladeView` scrim with layout backgrounds (`Grid` + alpha), so the page behind the drawer and
+  the settings blade is dimmed at full width.
+- The phone header also had a 16pt left gutter that pushed the hamburger right of the page labels;
+  removed it and added a -6 phone-only margin on the menu button, so the hamburger glyph lines up
+  with the 16pt page labels. The desktop/tablet header stays at the content edge.
+- **Drawer chrome (LTR/RTL):** the phone drawer card is flush now - LTR: no top/left/bottom gap,
+  rounded on the right only; RTL: no top/right/bottom gap, rounded on the left only.
+  `SidebarView.ApplySidebarChrome` sets the margin/shape, `ShellView.ApplyMenuState` flips the
+  closed translation, and `AppHeaderView.UpdateFlowChrome` flips the header padding/nudge.
+- **Desktop sidebar:** the same chrome now applies to the desktop/tablet column, not just the phone
+  drawer: `SidebarView.ApplySidebarChrome` runs for every head in the `ShellView` constructor and on
+  `FlowDirection` changes, so the sidebar is flush top/outer/bottom with the rounding on the inner
+  edge only (right LTR, left RTL). The macOS/Catalyst/tablet screenshots were recaptured. The
+  WPF/WinUI/Blazor samples use their own sidebar controls and keep the floating card.
+- **Blade width:** the blade card was content-sized, so the native Pickers made the macOS/Catalyst
+  blade narrower (the macOS settings blade clipped the fourth swatch). `BladeMaxWidth` (480) now
+  sets both the card's minimum and maximum (`CreateCard`/`ApplyCardLayout`), so the settings blade
+  is the same 480 width on every MAUI head. `07`, `08`, `09` recaptured. The 01/02 Windows captures
+  still show the earlier 520px blade (no Windows host here).
+- Captured `13-drawer-android-phone.png` (LTR) and added `15-drawer-android-rtl.png` (after
+  switching the app language to Arabic and restarting); `06`, `09`, `10`, `12` were updated for the
+  earlier scrim/header fixes. `11`/`14` are unchanged (full-screen settings pages with no
+  header/scrim). The iOS drawer was not captured: the DevFlow mutation lease blocks and `simctl`
+  has no tap; the Android drawer demonstrates the shared drawer code.
+- Recaptured the macOS and Mac Catalyst set after the final changes:
+  `04-shell-macos.png` / `07-settings-macos.png` (2560×1440, visually unchanged) and
+  `05-shell-maccatalyst.png` / `08-settings-maccatalyst.png` (2660×1996 at the current 1330×998 pt
+  window). The temporary in-app capture hook and its `ShellView` call were removed; both heads
+  rebuild clean.
+
+## Decisions Made
+- **Fix the phone column in `SetUpPhoneDrawer`**, not the layout declarations: ContentHost keeps
+  its desktop column and is reset only for the phone path.
+- **Layout backgrounds for the scrims** instead of `BoxView`: Android painted the translucent
+  `BoxView` opaque, which turned the drawer/settings background black.
+- **Phone-only -6 margin** on the menu button so the 44px glyph lines up with the page labels; the
+  desktop/tablet header keeps the content edge.
+- **Add the mobile shots to the set** (10–14) and keep the desktop/tablet shots.
+- **Do not add a permanent net10 skip switch now**; document the iOS pack caveat instead.
+
+## Open Questions
+- **OPEN**: add a `SkipNet10Mobile` property (library) + `AdditionalProperties` on the sample's
+  project reference so net11-only builds do not restore the net10 mobile packs.
+- **OPEN**: iOS drawer capture needs a tap-capable harness (DevFlow mutation lease / no simctl tap).
+
+## Files Modified
+- `samples/Sample.Maui/Views/ShellView.xaml.cs` - phone content column, RTL drawer translation
+- `samples/Sample.Maui/Views/ShellView.xaml` - drawer scrim as a layout background
+- `samples/Sample.Maui/Views/Controls/SidebarView.xaml`, `.xaml.cs` - drawer card chrome
+- `samples/Sample.Maui/Views/Controls/AppHeaderView.xaml`, `.xaml.cs` - phone gutter/nudge + RTL
+- `src/ISynergy.Framework.UI.Maui/Controls/BladeView.cs` - blade scrim as a layout background; fixed 480 card width
+- `screenshots/maui/04`, `05`, `07`, `08` - macOS/Catalyst recaptures
+- `screenshots/maui/06`, `09`, `10`, `12`, `13` - updated mobile/tablet captures
+- `screenshots/maui/15-drawer-android-rtl.png` - RTL drawer capture
+- `screenshots/README.md` - mobile rows and capture notes
+- `.ai/session-context.md` - this handoff
+
+## Next Actions (Priority Order)
+1. Review the updated phone/tablet captures.
+2. Decide on the net10 skip switch for iOS/Android local builds.
+3. Commit the working tree (this fix, the header fix, the Mac Catalyst entitlements fix, the
+   screenshots and the `net*-macos` package fix).
+
+---
+
+# Session Handoff - 2026-11-08 (macOS header alignment)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Aligned the macOS/AppKit shell header with the sidebar and removed the extra header-to-content gap.
+
+- **Cause:** every head uses the same header/sidebar padding and margins. On AppKit the
+  `AppHeaderView` `ContentView` was measured 112 high (the 48px `HeaderBar` plus a 64px inset) and
+  centred the bar in that slot; the header row was 112, so the header content sat below the sidebar
+  top and `NavigationHostView` started at y=144 instead of 80. Catalyst measured the same XAML at
+  48.
+- **Fix:** `HeightRequest="48"` on the root `ContentView` in
+  `samples/Sample.Maui/Views/Controls/AppHeaderView.xaml` (with a comment); the shared header
+  control owns its height, so all heads measure 48 without a shell-level or per-head workaround.
+  The shell XAML and its padding/margins are unchanged.
+- **Verified:** macOS `AppHeaderView` y=32/h=48, `NavigationHostView` y=80, `SidebarView` y=32
+  (was 144/112); Mac Catalyst unchanged (y=0/h=48/nav 48). Recaptured
+  `screenshots/maui/04-shell-macos.png` and `07-settings-macos.png` with the fixed layout; the
+  temporary in-app capture hook was removed again and the clean macOS build succeeds.
+
+## Decisions Made
+- **Pin the header slot in the sample**, not change the framework safe-area handling: local,
+  reversible, and the same 48px height as the other heads.
+  - **Alternatives considered:** remove the page safe area on AppKit (rejected: would put the
+    header under the traffic lights); change the framework `ContentView` (rejected: broad blast
+    radius for a sample layout issue).
+- **Recaptured only macOS**: the Catalyst/Android headers were already 48, so 05/06/08/09 stay.
+
+## Open Questions
+- **OPEN**: the macOS settings blade is content-sized and still clips the fourth accent swatch;
+  the new `07-settings-macos.png` shows it. A `MinimumWidthRequest` or wider blade is the candidate.
+- **OPEN**: the AppKit head still prints `Could not find System.Security.Permissions` at startup.
+
+## Files Modified
+- `samples/Sample.Maui/Views/Controls/AppHeaderView.xaml` - header control height + comment
+- `screenshots/maui/04-shell-macos.png`, `07-settings-macos.png` - recaptured
+- `.ai/session-context.md` - this handoff
+
+## Next Actions (Priority Order)
+1. Review the macOS header in the running app and the updated captures.
+2. Decide whether to fix the macOS blade width; then commit the working tree (this fix, the Mac
+   Catalyst entitlement fix, the screenshots and the `net*-macos` package fix).
+
+---
+
+# Session Handoff - 2026-11-08 (Mac Catalyst direct-launch crash)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Fixed the macOS crash report for `Sample.Maui` when the Mac Catalyst Debug bundle is launched
+directly (debugger/terminal or the agent's shell).
+
+- **Root cause:** the Debug bundle carried `com.apple.security.app-sandbox`. Starting a sandboxed
+  app as a child of a sandboxed process aborts in `libsecinit` with
+  `SYSCALL_SET_USERLAND_PROFILE` (`SIGTRAP`) before managed code runs. The 09:31 crash report is
+  that abort; the 09:40 report was the temporary screenshot hook (removed).
+- **Fix:** new `samples/Sample.Maui/Platforms/MacCatalyst/Entitlements.Debug.plist` (network
+  client/server + `get-task-allow`, no App Sandbox), selected by `CodesignEntitlements` when
+  `Configuration=Debug`; Release keeps `Platforms/MacCatalyst/Entitlements.plist`.
+- **Verified:** `codesign -d --entitlements -` shows no `app-sandbox` and does show
+  `get-task-allow`; a direct executable launch stays running with no new crash report; the Release
+  evaluation still resolves `CodesignEntitlements` to `Platforms/MacCatalyst/Entitlements.plist`.
+- Debug data/preferences now live outside the App Sandbox container; Release is unchanged.
+
+## Decisions Made
+- **Debug-only sandbox removal** instead of changing the launch flow. It keeps the existing
+  F5/`coreclr` launch working from any parent and keeps the Release sandbox for distribution.
+  - **Alternatives considered:** launch only via `open`/the MAUI extension (rejected: direct F5
+    from a sandboxed parent would keep crashing); disable code signing (rejected: unsigned bundles
+    are killed on Apple Silicon).
+
+## Open Questions
+- **OPEN**: the macOS AppKit head still prints `Could not find System.Security.Permissions` at
+  startup (benign runtime loader warning). Add the `System.Security.Permissions` package if it
+  should be silenced.
+- **ASSUMED**: the reported crash was the Mac Catalyst direct launch; the final direct launch
+  produced no crash report.
+
+## Files Modified
+- `samples/Sample.Maui/Platforms/MacCatalyst/Entitlements.Debug.plist` - new Debug entitlements
+- `samples/Sample.Maui/Sample.Maui.csproj` - Debug `CodesignEntitlements`
+- `samples/Sample.Maui/readme.md` - documents the Debug/Release split
+- `.ai/session-context.md` - this handoff
+
+## Next Actions (Priority Order)
+1. Run/debug Mac Catalyst directly and confirm no crash report.
+2. Commit this fix together with the screenshots and the macOS `net*-macos` package fix already in
+   the working tree.
+
+---
+
+# Session Handoff - 2026-11-08 (non-Windows screenshots after the UI alignment)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Refreshed the MAUI screenshots for the non-Windows heads and added per-head settings captures.
+User chose: macOS, Mac Catalyst, Android; shell + settings blade.
+
+- Replaced `screenshots/maui/04-shell-macos.png`, `05-shell-maccatalyst.png`, `06-shell-android.png`.
+- Added `screenshots/maui/07-settings-macos.png`, `08-settings-maccatalyst.png`, `09-settings-android.png`.
+- Captured from the .NET 11 heads: macOS/AppKit (dark, 2560×1440), Mac Catalyst (light, 3742×2050),
+  Android (API 37 arm64, 1280×800 at density 160, light, 1280×800).
+- macOS/Catalyst used a **temporary** in-app capture hook (`NSView.CacheDisplay` /
+  `UIGraphicsImageRenderer`) because `screencapture` and CUA window capture are blocked in this
+  environment. The hook, the `ShellView` call and the bundle trigger were removed; both heads
+  rebuild green without it.
+- Android was deployed with `dotnet build -f net11.0-android -t:Run` (fast deployment). A plain APK
+  install crashes at CoreCLR init (assemblies missing) - do not install the Debug APK directly.
+- `screenshots/README.md`: rows 07–09, API 37, capture method, theme notes; `BladePane` typo fixed
+  to `BladeView`.
+
+## Decisions Made
+- **Temporary hook, not committed.** Desktop screen capture is unavailable; the hook is scratch and
+  was removed after the captures.
+- **Android density 160** in addition to `wm size 1280x800`, otherwise the Pixel 6 AVD renders the
+  phone presentation instead of the desktop shell.
+- **Dark macOS / light Catalyst+Android**, matching the existing set.
+
+## Open Questions
+- **OPEN**: the macOS settings blade is content-sized and clips the fourth accent swatch at the
+  1280×720 window; the capture shows it. A `MinimumWidthRequest` (or a wider default blade) is the
+  candidate fix.
+- **OPEN**: the Android settings capture shows the scrim as opaque black (the shell is not visible
+  behind the blade), unlike macOS/Catalyst. Likely the headless emulator's layer compositing; verify
+  on a device or a windowed emulator before treating it as a UI bug.
+- **ASSUMED**: nothing is committed; the images and README change are in the working tree.
+
+## Files Modified
+- `screenshots/maui/04-shell-macos.png`, `05-shell-maccatalyst.png`, `06-shell-android.png` - replaced
+- `screenshots/maui/07-settings-macos.png`, `08-settings-maccatalyst.png`, `09-settings-android.png` - new
+- `screenshots/README.md` - table rows and capture notes
+- `.ai/session-context.md` - this handoff
+- (`src/ISynergy.Framework.UI.Maui/ISynergy.Framework.UI.Maui.csproj` and the earlier handoff are from
+  the preceding macOS build-fix task in the same working tree.)
+
+## Next Actions (Priority Order)
+1. Review the six captures; decide whether to fix the macOS blade width and the Android scrim.
+2. Commit the screenshots/README (and the macOS csproj fix).
+
+## Session Notes
+- Builds used `MSBUILDDISABLENODEREUSE=1` and `-nodeReuse:false`; `NUGET_HTTP_CACHE_PATH` pointed at
+  `$TMPDIR` because the sandbox denies writes to the NuGet http cache.
+- The emulator ran from a copied AVD under `$TMPDIR/avd` (`ANDROID_AVD_HOME`) because `~/.android`
+  is not writable from the sandbox; the original AVD is untouched.
+
+---
+
+# Session Handoff - 2026-11-08 (macOS head build fix after the MAUI platform split)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Reviewed commit `6faa391f` on macOS, Mac Catalyst and Android, then fixed the one blocking finding.
+
+- **macOS (AppKit) did not compile.** `net10.0-macos` and `net11.0-macos` failed with `CS0234`
+  (`Microsoft.Maui.Platforms` missing) in `MauiAppBuilderExtensions.cs`: `UseMauiAppForCurrentHead`
+  moved `UseMauiAppMacOS` / `AddMacOSEssentials` into the library, but
+  `Microsoft.Maui.Platforms.MacOS` + `.Essentials` were only referenced by `Sample.Maui`.
+  The macos TFM is only added on macOS hosts, so the Windows-side verification missed it.
+- **Fix applied:** two macos-conditioned `PackageReference`s in
+  `src/ISynergy.Framework.UI.Maui/ISynergy.Framework.UI.Maui.csproj`.
+- **Verified after the fix:** `UI.Maui` `net11.0-macos` and `net10.0-macos`, and
+  `Sample.Maui` `net11.0-macos` (`-p:ValidateXcodeVersion=false`) all build. The condition does not
+  affect other heads: `UI.Maui` `net11.0-maccatalyst` and `net11.0-android` still build.
+- **Review result (before the fix):** Mac Catalyst and Android were green -
+  `UI.Maui` `net10.0-maccatalyst`, `net11.0-maccatalyst`, `net11.0-android`, `net10.0-ios`,
+  `net11.0-ios`; `Sample.Maui` `net11.0-android` and `net11.0-maccatalyst`.
+- **Code review notes:** the `ThemeService` split is behaviour-preserving on Mac Catalyst (`IOS` is not
+  defined for `maccatalyst`, so the old `#if IOS` body was iOS-only and the new `Platforms/iOS` partial
+  matches it); `MauiExceptions` correctly has separate iOS and Mac Catalyst files. The one Android
+  behaviour delta is `SelectAllOnFocusBehavior`, which now also subscribes the shared `Focused` handler
+  on Android (previously native `SetSelectAllOnFocus` only) - intended, idempotent, worth a smoke test.
+  `PageMenuExtensions.SupportsMenuBar` relies on `DeviceInfo.Platform == DevicePlatform.MacCatalyst`;
+  the AppKit head's reported platform was not verified at runtime.
+
+## Decisions Made
+- **Fix the library, not the sample.** The AppKit hosting helper lives in the framework now, so the
+  package references move with it, conditioned on the macos TFM.
+  - **Alternatives considered:** push `UseMauiAppForCurrentHead` back into the sample (rejected: undoes
+    the commit's "samples hold no platform logic" goal).
+- **No behaviour change.** Package references only; no source code was edited.
+
+## Open Questions
+- **OPEN**: `tests/ISynergy.Framework.UI.Maui.Mac.Tests` has `SupportedOSPlatformVersion` 15.0 (the
+  SDK minimum is 17.0) and its `.app` crashes at launch with
+  `UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption` (the Xcode 27 UIScene requirement).
+  Pre-existing and unrelated to the commit; the Mac test suite could not be run on Xcode 27.2.
+- **OPEN**: `net10.0-android` was not verified - Android SDK platform 36 is not installed (only
+  37.0/37.2). `net11.0-android` builds.
+- **ASSUMED**: nothing was committed; the csproj fix is in the working tree only.
+
+## Files Modified
+- `src/ISynergy.Framework.UI.Maui/ISynergy.Framework.UI.Maui.csproj` - macos-conditioned package refs
+- `.ai/session-context.md` - this handoff
+
+## Next Actions (Priority Order)
+1. Commit the csproj fix (follow-up commit to `6faa391f`).
+2. Optionally raise the Mac test project's `SupportedOSPlatformVersion` to 17.0 and adopt the UIScene
+   lifecycle for Xcode 27.
+3. Optionally install Android API 36 to verify the `net10.0-android` asset.
+
+## Session Notes
+- Builds used `MSBUILDDISABLENODEREUSE=1` and `-nodeReuse:false`.
+- `NUGET_HTTP_CACHE_PATH` had to point inside `$TMPDIR`; the sandbox denies writes to
+  `~/.local/share/NuGet/http-cache` (NU1900 + restore failures otherwise).
+- No CHANGELOG entry: the fix restores a build for an unreleased change.
+
+---
+
+# Session Handoff - 2026-11-08 (UI naming alignment, wave 1)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Started the cross-head naming alignment the user asked for (framework + samples + Blazor, hard rename).
+Plan and progress: `.ai/plans/ui-naming-alignment.md`.
+
+- Audit: services already align (shared interfaces); the drift was in views/controls and converters.
+- Wave 1 renames (breaking, no shims): MAUI `BladePane` -> `BladeView` (matching WPF/WinUI),
+  `BladePaneAnchor` -> `BladeViewAnchor`, `IBladePaneHost` -> `IBladeViewHost`,
+  `BladePaneHostRegistry` -> `BladeViewHostRegistry`; MAUI/WinUI `BooleanToIsVisibleConverter` ->
+  `BooleanToVisibilityConverter`, `Bool*Converter` -> `Boolean*Converter`, and eight `*Then*Converter`
+  names per head -> `*Than*Converter`; `Sample.Maui RootView` -> `ShellView`.
+- Also fixed two stale palette tests in `tests/ISynergy.Framework.UI.Tests` that still asserted the 25%
+  secondary blend from the earlier contrast work (now 10%).
+
+- **Wave 2 (converters)**: MAUI `*ToIsVisibleConverter` -> `*ToVisibilityConverter` (Decimal, Double, Guid,
+  GuidToInversed, Integer, Null, NullToInversed, String, ZeroDecimal, ZeroDouble, ZeroInteger), matching
+  WinUI; the sample's `Style.xaml` keys and `SlideShowView.xaml` binding moved with them.
+- **Gap register** in the plan: WPF lacks `ImageBrowser`/`NoteWindow`/`CameraService`, WinUI lacks
+  `BladeHostView`, and each head has controls the others do not (spinner, masked inputs, dialog buttons,
+  tiles, busy/empty views). Those are platform/feature differences, not naming drift - documented, not
+  renamed. Sample pages with different structure (`SignInControl` vs `SignInView`) stay as they are.
+
+## Verification
+Built: `ISynergy.Framework.UI.WPF` (net11.0-windows10.0.26100.0), `UI.WinUI`, `UI.Maui`, `UI.Blazor`,
+`Sample.WPF`, `Sample.WinUI` (needs `-p:RuntimeIdentifier=win-arm64` on this machine), `Sample.Maui`
+(net11.0-windows10.0.26100.0) - after both waves. Tests: `ISynergy.Framework.UI.Tests` 90/90,
+`ISynergy.Framework.UI.Maui.Windows.Tests` 47 passed / 4 skipped. Launched `Sample.Maui`, opened the
+settings blade: English label, single Close button, scrim covers the header, theme switch works.
+Repo grep for `IsVisibleConverter`, `*Then*Converter`, `Bool*Converter`, `BladePane` and `RootView`:
+no hits outside build output.
+
+## Decisions Made
+- **Hard rename, no `[Obsolete]` shims** and **framework + samples + Blazor** (user choice).
+- **Rename by concept, not by head**: the pane is `BladeView` everywhere; `Boolean`, not `Bool`; `Than`,
+  not `Then`; sample shell page is `ShellView` in every sample.
+
+- **Structural/functional comparison** written to `docs/developers/ui-heads-comparison.md` (linked from
+  `docs/developers/index.md`): project shape and TFM/dependency table, contract coverage per head, the
+  dialog/navigation/blade/theme mechanics side by side, control and converter inventories, and the gap
+  list. Key findings: MAUI `FileService.SaveFileAsync` throws `NotImplementedException` (the only real
+  service gap), WPF has no `ICameraService`, WPF lacks `ImageBrowser`/`NoteWindow`, WinUI has no
+  `BladeHostView`, and WPF exposes `GetBitmapSourceFromClipboardAsync` with a WPF type in its signature.
+
+- **API-surface alignment**: WPF `ClipboardService.GetBitmapSourceFromClipboardAsync` is `private` (no
+  `BitmapSource` on the public surface) and MAUI `FileService.SaveFileAsync` returns `null` instead of
+  throwing (MAUI has no save picker; `null` is the "cancelled" contract on the other heads).
+- **Full build matrix green**: `UI.WPF`, `UI.WinUI`, `UI.MAUI`, `UI.Blazor`, `Sample.WPF`, `Sample.WinUI`
+  (win-arm64), `Sample.Maui`, `Sample.Blazor`, and both UI test projects build; tests 90/90 and 47/4.
+
+- **MAUI platform code split** (`.ai/plans/maui-platform-code.md`): `ThemeService`, `DialogService`,
+  `MauiExceptions`, `PageExtensions` and `SelectAllOnFocusBehavior` now use `partial` hooks implemented
+  under `Platforms/<head>/`; `Application.CreateWindow` selects the WinUI title bar at runtime. 13 of 22
+  `#if` blocks removed; the rest (WinRT launch args, clipboard image matrix, macOS/AppKit, one `DEBUG`)
+  are documented with reasons. Builds for windows/android/ios/maccatalyst + `Sample.Maui` green; MAUI
+  tests 47 passed / 4 skipped; settings blade smoke-tested.
+
+- **Samples hold no platform logic**: `Sample.Maui` now calls `UseMauiAppForCurrentHead`, `AddShellMenuBar`
+  and `ConfigureActivationDiagnostics`; the WinUI focus-visual/cursor mappers live in
+  `Platforms/Windows/Extensions/ShellChromeStyler` and are registered by `ConfigureServices`. Only
+  package limitations (`#if !MACOS` for MediaElement/Syncfusion), the `DEBUG` agent and the required
+  `Platforms/**` entry points remain. Full build matrix + MAUI tests green; sample smoke-tested.
+
+- **SonarCloud PR 174 (S1699 x3) fixed**: WPF `Application` now takes the built `IHost` (composition root
+  moved to a static `CreateHost()` in `Sample.WPF`), and `InitializeEnvironmentVariables` is non-virtual in
+  WPF and WinUI. Full matrix + both test suites (90/90, 47/4) green.
+
+## Open Questions
+- **Wave 2** (see the plan): the remaining converter set, sample-level view names, and the feature gaps the
+  audit surfaced (WPF lacks `ImageBrowser`/`NoteWindow`/`CameraService`, WinUI lacks `BladeHostView`).
+  Decide per item: rename, implement, or document.
+- Member-level differences were not audited yet (text scan only); a Roslyn comparison is the next step.
+
+## Files Modified
+- `src/ISynergy.Framework.UI.Maui/Controls/BladeView.cs` (renamed), `Services/IBladeViewHost.cs`,
+  `Services/BladeViewHostRegistry.cs`, `Controls/BladeHostView.cs`, `Services/BladeService.cs`,
+  `Converters/BooleanConverters.cs`, `Converters/DecimalConverters.cs`, `Converters/DoubleConverters.cs`
+- `src/ISynergy.Framework.UI/Enumerations/BladeViewAnchor.cs` (renamed), `Helpers/BladePlacement.cs`
+- `src/ISynergy.Framework.UI.WinUI/Converters/*`, `Controls/BladeView/BladeView.xaml.cs`
+- `samples/Sample.Maui/Views/ShellView.xaml(.cs)` (renamed), `App.xaml.cs`, `Resources/Styles/Style.xaml`,
+  `ViewModels/DetailsViewModel.cs`, `Views/SettingsView.xaml.cs`
+- `tests/ISynergy.Framework.UI.Tests/Utilities/ThemeColorCalculatorTests.cs`,
+  `Helpers/BladePlacementTests.cs`
+- `docs/`, `CHANGELOG.md`, `.ai/plans/ui-naming-alignment.md`, `.ai/session-context.md`
+
+---
+
 # Session Handoff - 2026-10-27 (Blazor component analyzer warnings)
 
 **Written By:** Reasonix Code

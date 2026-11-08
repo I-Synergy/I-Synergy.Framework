@@ -8,7 +8,7 @@ using Sample.Models;
 
 namespace Sample.ViewModels;
 
-public class PivotViewModel : ViewModelBladeView<TestItem>
+public partial class PivotViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

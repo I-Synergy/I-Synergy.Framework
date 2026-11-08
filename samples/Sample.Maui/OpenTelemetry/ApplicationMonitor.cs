@@ -10,7 +10,7 @@ namespace Sample.OpenTelemetry;
 /// <summary>
 /// Monitors MAUI application metrics and performance.
 /// </summary>
-public class ApplicationMonitor : IDisposable
+public partial class ApplicationMonitor : IDisposable
 {
     private readonly ILogger<ApplicationMonitor> _logger;
     private readonly Meter _meter;

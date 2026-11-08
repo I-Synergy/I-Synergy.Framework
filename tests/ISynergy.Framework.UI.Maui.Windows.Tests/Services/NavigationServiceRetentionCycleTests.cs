@@ -18,6 +18,7 @@ namespace ISynergy.Framework.UI.Maui.Services;
 /// instances don't accumulate.
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class NavigationServiceRetentionCycleTests
 {
     private MethodInfo _cleanupMethod = null!;
@@ -56,7 +57,10 @@ public class NavigationServiceRetentionCycleTests
     public void CleanupPageResources_WithNullPage_IsNoOp()
     {
         // Act & Assert — should not throw for null input
-        _cleanupMethod.Invoke(null, new object?[] { null });
+        Exception? observed = null;
+        try { _cleanupMethod.Invoke(null, new object?[] { null }); } catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     [TestMethod]
@@ -65,7 +69,7 @@ public class NavigationServiceRetentionCycleTests
         Assert.IsNotNull(_cleanupMethod);
         Assert.IsTrue(_cleanupMethod.IsPrivate);
         Assert.IsTrue(_cleanupMethod.IsStatic);
-        Assert.IsTrue(_cleanupMethod.ToString()!.Contains("CleanupPage"),
+        Assert.Contains("CleanupPage", _cleanupMethod.ToString()!,
             $"Unexpected method name: {_cleanupMethod}");
     }
 

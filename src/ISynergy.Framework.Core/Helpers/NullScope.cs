@@ -3,7 +3,7 @@ namespace ISynergy.Framework.Core.Helpers;
 /// <summary>
 /// An empty scope without any logic
 /// </summary>
-public class NullScope : IDisposable
+public class NullScope : IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     public static NullScope Instance { get; } = new NullScope();
 
@@ -16,6 +16,15 @@ public class NullScope : IDisposable
     /// This is a no-op scope — there are no resources to release.
     /// </summary>
     public void Dispose()
+    {
+        Dispose(true);
+    }
+
+    /// <summary>
+    /// Releases resources. This scope owns none.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release managed resources.</param>
+    protected virtual void Dispose(bool disposing)
     {
     }
 }

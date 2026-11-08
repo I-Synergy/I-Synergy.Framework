@@ -26,7 +26,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
     /// <summary>
     ///     Initializes a new instance of the <see cref="BaseLeastSquaresMethod" /> class.
     /// </summary>
-    public BaseLeastSquaresMethod()
+    protected BaseLeastSquaresMethod()
     {
         Convergence = new RelativeConvergence(0, 1e-5);
     }
@@ -57,7 +57,7 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
         set
         {
             if (value.Length != numberOfParameters)
-                throw new ArgumentException("Parameter vectors must have the same length", "value");
+                throw new ArgumentException("Parameter vectors must have the same length", nameof(value));
             solution = value;
         }
     }
@@ -73,8 +73,8 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
         get => numberOfParameters;
         set
         {
-            if (value <= 0)
-                throw new ArgumentOutOfRangeException("value");
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
+            numberOfParameters = value;
             init(value);
         }
     }

@@ -161,8 +161,7 @@ public static partial class Matrix
     ///
     public static int[] Sum(this double[][] matrix, int dimension, int[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -189,7 +188,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -207,8 +206,7 @@ public static partial class Matrix
     ///
     public static int[] Sum(this double[,] matrix, int dimension, int[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -235,7 +233,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -253,8 +251,7 @@ public static partial class Matrix
     ///
     public static int[] Product(this double[][] matrix, int dimension, int[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -281,7 +278,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -299,8 +296,7 @@ public static partial class Matrix
     ///
     public static int[] Product(this double[,] matrix, int dimension, int[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -327,7 +323,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -345,8 +341,7 @@ public static partial class Matrix
     ///
     public static short[] Sum(this double[][] matrix, int dimension, short[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -373,7 +368,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -391,8 +386,7 @@ public static partial class Matrix
     ///
     public static short[] Sum(this double[,] matrix, int dimension, short[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -419,7 +413,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -437,8 +431,7 @@ public static partial class Matrix
     ///
     public static short[] Product(this double[][] matrix, int dimension, short[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -465,7 +458,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -483,8 +476,7 @@ public static partial class Matrix
     ///
     public static short[] Product(this double[,] matrix, int dimension, short[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -511,7 +503,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -529,8 +521,7 @@ public static partial class Matrix
     ///
     public static float[] Sum(this double[][] matrix, int dimension, float[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -557,7 +548,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -575,8 +566,7 @@ public static partial class Matrix
     ///
     public static float[] Sum(this double[,] matrix, int dimension, float[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -603,7 +593,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -621,8 +611,7 @@ public static partial class Matrix
     ///
     public static float[] Product(this double[][] matrix, int dimension, float[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -649,7 +638,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -667,8 +656,7 @@ public static partial class Matrix
     ///
     public static float[] Product(this double[,] matrix, int dimension, float[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -695,7 +683,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -713,8 +701,7 @@ public static partial class Matrix
     ///
     public static double[] Sum(this double[][] matrix, int dimension, double[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -741,7 +728,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -759,8 +746,7 @@ public static partial class Matrix
     ///
     public static double[] Sum(this double[,] matrix, int dimension, double[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -787,7 +773,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -805,8 +791,7 @@ public static partial class Matrix
     ///
     public static double[] Product(this double[][] matrix, int dimension, double[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -833,7 +818,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -851,8 +836,7 @@ public static partial class Matrix
     ///
     public static double[] Product(this double[,] matrix, int dimension, double[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -879,7 +863,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -897,8 +881,7 @@ public static partial class Matrix
     ///
     public static long[] Sum(this double[][] matrix, int dimension, long[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -925,7 +908,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -943,8 +926,7 @@ public static partial class Matrix
     ///
     public static long[] Sum(this double[,] matrix, int dimension, long[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -971,7 +953,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -989,8 +971,7 @@ public static partial class Matrix
     ///
     public static long[] Product(this double[][] matrix, int dimension, long[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -1017,7 +998,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1035,8 +1016,7 @@ public static partial class Matrix
     ///
     public static long[] Product(this double[,] matrix, int dimension, long[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -1063,7 +1043,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1081,8 +1061,7 @@ public static partial class Matrix
     ///
     public static decimal[] Sum(this double[][] matrix, int dimension, decimal[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -1109,7 +1088,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1127,8 +1106,7 @@ public static partial class Matrix
     ///
     public static decimal[] Sum(this double[,] matrix, int dimension, decimal[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -1155,7 +1133,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1173,8 +1151,7 @@ public static partial class Matrix
     ///
     public static decimal[] Product(this double[][] matrix, int dimension, decimal[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -1201,7 +1178,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1219,8 +1196,7 @@ public static partial class Matrix
     ///
     public static decimal[] Product(this double[,] matrix, int dimension, decimal[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -1247,7 +1223,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1262,7 +1238,7 @@ public static partial class Matrix
     public static double[] CumulativeSum(this double[] vector)
     {
         if (vector.Length == 0)
-            return new double[0];
+            return Array.Empty<double>();
 
         return CumulativeSum(vector, ISynergy.Framework.Mathematics.Vectors.Vector.CreateAs(vector));
     }
@@ -1331,7 +1307,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1385,7 +1361,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;
@@ -1417,8 +1393,7 @@ public static partial class Matrix
     ///
     public static int[] Sum(this bool[][] matrix, int dimension, int[] result)
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         int rows = matrix.Length;
         int cols = matrix[0].Length;
@@ -1445,7 +1420,7 @@ public static partial class Matrix
         }
         else
         {
-            throw new ArgumentException("Invalid dimension", "dimension");
+            throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
         return result;

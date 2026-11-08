@@ -16,7 +16,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ISynergy.Framework.UI.ViewModels;
 
 [Lifetime(Lifetimes.Singleton)]
-public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
+public partial class SplashScreenViewModel : ObservableValidatedClass, IViewModel
 {
     private readonly ICommonServices _commonServices;
     private readonly ILogger _logger;
@@ -121,7 +121,7 @@ public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
         CloseCommand = new AsyncRelayCommand(CloseAsync);
         CancelCommand = new AsyncRelayCommand(CancelAsync);
 
-        _logger.LogTrace(GetType().Name);
+        _logger.LogTrace("{TypeName}", GetType().Name);
     }
 
     public void Initialize(DispatcherQueue dispatcherQueue, Action onLoadingComplete, SplashScreenOptions splashScreenOptions, params Func<DispatcherQueue, Task>[] tasks)
@@ -215,7 +215,7 @@ public class SplashScreenViewModel : ObservableValidatedClass, IViewModel
     public virtual Task InitializeAsync()
     {
         if (!IsInitialized)
-            _logger.LogTrace("{0} initialized.", GetType().Name);
+            _logger.LogTrace("{TypeName} initialized.", GetType().Name);
 
         return Task.CompletedTask;
     }

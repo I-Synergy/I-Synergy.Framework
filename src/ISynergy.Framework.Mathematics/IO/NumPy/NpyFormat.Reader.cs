@@ -338,7 +338,7 @@ public static partial class NpyFormat
         var header = new string(reader.ReadChars(len));
         var mark = "'descr': '";
         var s = header.IndexOf(mark) + mark.Length;
-        var e = header.IndexOf("'", s + 1);
+        var e = header.IndexOf('\'', s + 1);
         var type = header.Substring(s, e - s);
         bool? isLittleEndian;
         t = GetType(type, out bytes, out isLittleEndian);
@@ -348,15 +348,15 @@ public static partial class NpyFormat
 
         mark = "'fortran_order': ";
         s = header.IndexOf(mark) + mark.Length;
-        e = header.IndexOf(",", s + 1);
-        var fortran = bool.Parse(header.Substring(s, e - s));
+        e = header.IndexOf(',', s + 1);
+        var fortran = bool.Parse(header.AsSpan(s, e - s));
 
         if (fortran)
             throw new NotSupportedException("Fortran-order (column-major) NumPy format is not supported.");
 
         mark = "'shape': (";
         s = header.IndexOf(mark) + mark.Length;
-        e = header.IndexOf(")", s + 1);
+        e = header.IndexOf(')', s + 1);
         shape = header.Substring(s, e - s).Split(',').Select(int.Parse).ToArray();
 
         return true;
@@ -391,7 +391,7 @@ public static partial class NpyFormat
             return typeof(float);
         if (typeCode == "f8")
             return typeof(double);
-        if (typeCode.StartsWith("S"))
+        if (typeCode.StartsWith('S'))
             return typeof(string);
 
         throw new NotSupportedException();

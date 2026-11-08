@@ -70,7 +70,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
             var g = Gradient(probe);
 
             if (g.Length != n)
-                throw new DimensionMismatchException("gradient",
+                throw new DimensionMismatchException(nameof(gradient),
                     "The length of the gradient vector must match the number of variables in the objective function.");
         }
     }
@@ -289,7 +289,7 @@ public class NonlinearConstraint : IConstraint, IFormattable
             var g = gradient(probe);
 
             if (g.Length != numberOfVariables)
-                throw new DimensionMismatchException("gradient",
+                throw new DimensionMismatchException(nameof(gradient),
                     "The length of the gradient vector must match the number of variables in the objective function.");
         }
 

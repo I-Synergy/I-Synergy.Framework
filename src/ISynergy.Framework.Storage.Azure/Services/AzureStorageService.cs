@@ -17,22 +17,17 @@ namespace ISynergy.Framework.Storage.Azure.Services;
 internal class AzureStorageService : IStorageService
 {
     private readonly AzureStorageOptions _options;
-    private readonly ILogger<AzureStorageService> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AzureStorageService"/> class.
     /// </summary>
     /// <param name="options">The Azure storage options.</param>
-    /// <param name="logger">The logger.</param>
     public AzureStorageService(
-        IOptions<AzureStorageOptions> options,
-        ILogger<AzureStorageService> logger)
+        IOptions<AzureStorageOptions> options)
     {
         Argument.IsNotNull(options);
-        Argument.IsNotNull(logger);
 
         _options = options.Value;
-        _logger = logger;
     }
 
     /// <summary>
@@ -190,7 +185,7 @@ internal class AzureStorageService : IStorageService
 
         if (blobContainer.GetBlobClient(Path.Combine(folder, filename)) is { } blobClient)
         {
-            return await blobClient.DeleteIfExistsAsync()
+            return await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 

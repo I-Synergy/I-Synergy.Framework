@@ -133,7 +133,7 @@ public static class Classes
     public static T[][] Separate<T>(this T[] values, int[] labels, int groups)
     {
         if (values.Length != labels.Length)
-            throw new DimensionMismatchException("labels");
+            throw new DimensionMismatchException(nameof(labels));
 
         var result = new T[groups][];
 
@@ -170,10 +170,10 @@ public static class Classes
     public static int[][] Expand(this int[] data, int[] positives, int[] negatives)
     {
         if (data.Length != positives.Length)
-            throw new DimensionMismatchException("positives", "The array of positive labels must have the same length as the data.");
+            throw new DimensionMismatchException(nameof(positives), "The array of positive labels must have the same length as the data.");
 
         if (positives.Length != negatives.Length)
-            throw new DimensionMismatchException("negatives", "The array of negative labels must have the same length as the data.");
+            throw new DimensionMismatchException(nameof(negatives), "The array of negative labels must have the same length as the data.");
 
         List<int[]> rows = [];
 
@@ -376,7 +376,7 @@ public static class Classes
     public static int[] Random(int[] labels, double proportion)
     {
         if (labels.DistinctCount() != 2)
-            throw new ArgumentException("Only two classes are supported.", "labels");
+            throw new ArgumentException("Only two classes are supported.", nameof(labels));
 
         int negative = labels.Min();
         int positive = labels.Max();
@@ -717,7 +717,7 @@ public static class Classes
             return true;
         if (label == 0 || label == -1)
             return false;
-        throw new ArgumentOutOfRangeException("label", "Label must be 1, 0 or -1");
+        throw new ArgumentOutOfRangeException(nameof(label), "Label must be 1, 0 or -1");
     }
 
     /// <summary>

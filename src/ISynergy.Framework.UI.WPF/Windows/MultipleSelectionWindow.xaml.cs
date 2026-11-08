@@ -23,17 +23,14 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
 
     private void SelectionWindow_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
     {
-        if (ViewModel is IMultipleSelectionViewModel viewModel)
+        // Multiple mode: pre-select all items in the ListBox
+        if (ViewModel is IMultipleSelectionViewModel viewModel && viewModel.SelectedItem is not null)
         {
-            // Multiple mode: pre-select all items in the ListBox
-            if (viewModel.SelectedItem is not null)
+            foreach (var item in viewModel.SelectedItem)
             {
-                foreach (var item in viewModel.SelectedItem)
-                {
-                    var index = DataSummary.Items.IndexOf(item);
-                    if (index >= 0)
-                        DataSummary.SelectedItems.Add(item);
-                }
+                var index = DataSummary.Items.IndexOf(item);
+                if (index >= 0)
+                    DataSummary.SelectedItems.Add(item);
             }
         }
     }

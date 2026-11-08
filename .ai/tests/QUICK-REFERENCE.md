@@ -24,8 +24,8 @@ python3 .ai/tests/validate-content.py
 # Tokens
 bash .ai/tests/validate-tokens.sh
 
-# CLAUDE.md references
-python3 .ai/tests/validate-claude-md.py
+# AGENTS.md references
+python3 .ai/tests/validate-agents-md.py
 
 # Settings & structure
 python3 .ai/tests/validate-settings.py
@@ -36,17 +36,11 @@ python3 .ai/tests/validate-copilot.py
 # Smoke Tests
 python3 .ai/tests/smoke-test.py
 
-# Reasonix integration
-python3 .ai/tests/validate-reasonix.py
-
 # Traceability
 python3 .ai/tests/validate-traceability.py
 
 # Standards
 python3 .ai/tests/validate-standards.py
-
-# DeepSeek parity
-python3 .ai/tests/validate-deepseek-parity.py
 
 # Upgrade script (pytest only — not run by run-all-tests.sh)
 python3 .ai/tests/validate-upgrade-script.py
@@ -73,14 +67,11 @@ The runner computes its own totals — `run-all-tests.sh` is the list of record.
 | **References** | File refs + links valid |
 | **Content** | Quality + examples |
 | **Tokens** | Token definitions and usage |
-| **CLAUDE.md** | Skill/pattern paths in CLAUDE.md |
+| **AGENTS.md** | Skill/pattern paths in AGENTS.md |
 | **Settings** | settings.json + `.ai/` layout + `.claude/` config-only |
 | **Copilot** | copilot-instructions + `.github/skills/` junction |
-| **Reasonix** | REASONIX.md + `.reasonix/` junctions |
-| **Pi** | `.pi/` junctions + settings.json |
 | **Traceability** | Identifier chain: story → criterion → scenario → slice → test |
 | **Standards** | `.ai/reference/standards.md` + the generated compatibility surfaces |
-| **DeepSeek Parity** | Level-2 sections present in both `CLAUDE.md` and `DEEPSEEK.md` |
 | **Smoke** | Integration tests |
 | **Upgrade Script** | `upgrade-template.py` (pytest only) |
 
@@ -93,7 +84,7 @@ chmod +x .ai/tests/*.sh .ai/tests/*.py
 
 ### PyYAML Missing
 ```bash
-pip install pyyaml
+pip install -r requirements-dev.txt
 ```
 
 ### Test Fails
@@ -107,12 +98,12 @@ pip install pyyaml
 
 Everything the suites discover on disk:
 
-- `.ai/skills/`, plus its `.claude/`, `.github/`, `.reasonix/`, and `.pi/` junctions
+- `.ai/skills/`, plus its `.claude/` and `.github/` junctions
 - `.ai/patterns/`
 - `.ai/reference/` and `.ai/reference/templates/`
 - `.ai/project/`
 - `.ai/checklists/pre-submission.md`
-- `CLAUDE.md`, `README.md`, and `.ai/session-context.md`
+- `AGENTS.md`, `README.md`, and `.ai/session-context.md`
 - `.claude/settings.json` and `.github/copilot-instructions.md`
 
 ## Success Criteria
@@ -123,9 +114,9 @@ All checks must pass:
 - [x] All file references exist
 - [x] Content has examples
 - [x] Tokens properly defined
-- [x] CLAUDE.md paths point to existing files
+- [x] AGENTS.md paths point to existing files
 - [x] settings.json paths correct, .claude/ is config-only
-- [x] Copilot, Reasonix, and Pi skills wired through junctions into `.ai/`
+- [x] Copilot skills wired through junctions into `.ai/`
 - [x] Skills are loadable
 - [x] No duplicate names
 

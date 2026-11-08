@@ -36,7 +36,7 @@ public class GramSchmidtOrthogonalization
     public GramSchmidtOrthogonalization(double[,] value, bool modified)
     {
         if (value.GetLength(0) != value.GetLength(1))
-            throw new DimensionMismatchException("value", "Matrix must be square.");
+            throw new DimensionMismatchException(nameof(value), "Matrix must be square.");
 
         var size = value.GetLength(0);
 

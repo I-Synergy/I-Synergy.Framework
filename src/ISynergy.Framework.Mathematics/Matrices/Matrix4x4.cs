@@ -511,9 +511,13 @@ public struct Matrix4x4
         if (index < 0 || index > 3)
             throw new ArgumentException("Invalid row index was specified.", nameof(index));
 
-        return index == 0 ? new Vector4(V00, V01, V02, V03) : // NOSONAR
-               index == 1 ? new Vector4(V10, V11, V12, V13) :
-               index == 2 ? new Vector4(V20, V21, V22, V23) : new Vector4(V30, V31, V32, V33);
+        return index switch
+        {
+            0 => new Vector4(V00, V01, V02, V03),
+            1 => new Vector4(V10, V11, V12, V13),
+            2 => new Vector4(V20, V21, V22, V23),
+            _ => new Vector4(V30, V31, V32, V33)
+        };
     }
 
     /// <summary>
@@ -531,9 +535,13 @@ public struct Matrix4x4
         if (index < 0 || index > 3)
             throw new ArgumentException("Invalid column index was specified.", nameof(index));
 
-        return index == 0 ? new Vector4(V00, V10, V20, V30) : // NOSONAR
-               index == 1 ? new Vector4(V01, V11, V21, V31) :
-               index == 2 ? new Vector4(V02, V12, V22, V32) : new Vector4(V03, V13, V23, V33);
+        return index switch
+        {
+            0 => new Vector4(V00, V10, V20, V30),
+            1 => new Vector4(V01, V11, V21, V31),
+            2 => new Vector4(V02, V12, V22, V32),
+            _ => new Vector4(V03, V13, V23, V33)
+        };
     }
 
     /// <summary>

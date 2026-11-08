@@ -130,8 +130,7 @@ public class RombergMethod : IUnivariateIntegration
     /// <param name="function">The unidimensional function whose integral should be computed.</param>
     public RombergMethod(int steps, Func<double, double> function)
     {
-        if (function is null)
-            throw new ArgumentNullException("function");
+        ArgumentNullException.ThrowIfNull(function);
 
         Range = new NumericRange(0, 1);
         Function = function;
@@ -148,10 +147,10 @@ public class RombergMethod : IUnivariateIntegration
     public RombergMethod(int steps, Func<double, double> function, double a, double b)
     {
         if (double.IsInfinity(a) || double.IsNaN(a))
-            throw new ArgumentOutOfRangeException("a");
+            throw new ArgumentOutOfRangeException(nameof(a));
 
         if (double.IsInfinity(b) || double.IsNaN(b))
-            throw new ArgumentOutOfRangeException("b");
+            throw new ArgumentOutOfRangeException(nameof(b));
 
         Function = function;
         Range = new NumericRange(a, b);
@@ -186,10 +185,10 @@ public class RombergMethod : IUnivariateIntegration
         set
         {
             if (double.IsInfinity(range.Min) || double.IsNaN(range.Min))
-                throw new ArgumentOutOfRangeException("value", "Minimum is out of range.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Minimum is out of range.");
 
             if (double.IsInfinity(range.Max) || double.IsNaN(range.Max))
-                throw new ArgumentOutOfRangeException("value", "Maximum is out of range.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Maximum is out of range.");
 
             range = value;
         }

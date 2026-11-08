@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: Code quality and architecture review specialist — reviews for SOLID principles, CQRS patterns, security issues, and architecture compliance
+description: Code quality and architecture review specialist — reviews for SOLID principles, CQRS patterns, security issues, and architecture compliance. Use for code quality, SOLID, CQRS compliance, security review, architecture audit, and ISO/IEC 25010 finding attribution.
 runAs: subagent
 model: sonnet
 tools: Read, Grep, Glob

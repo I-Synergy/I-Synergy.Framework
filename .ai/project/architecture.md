@@ -1,6 +1,6 @@
 # Project Architecture — I-Synergy Framework
 
-> **Note:** This repository is a reusable framework library (`ISynergy.Framework.*`), not an application with domain projects. The documented `{ApplicationName}.Domain.{Domain}` project structure with CQRS Features/Commands/Queries/Models applies to consuming applications built on top of this framework, not to this repo itself. The src/ directory contains framework projects providing CQRS abstractions, EntityFramework helpers, UI components, and cross-cutting utilities.
+> **Note:** This repository is a reusable framework library (`ISynergy.Framework.*`), not an application with domain projects. The documented `I-Synergy.Framework.Domain.{Domain}` project structure with CQRS Features/Commands/Queries/Models applies to consuming applications built on top of this framework, not to this repo itself. The src/ directory contains framework projects providing CQRS abstractions, EntityFramework helpers, UI components, and cross-cutting utilities.
 
 ## Architecture Style
 

@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-#### Documentation published with GitHub Pages
+#### Documentation
+
+- **`docs/developers/ui-heads-comparison.md`**: structural and functional comparison of the WPF, WinUI,
+  MAUI and Blazor heads after the naming alignment - project shape, contract coverage per service, how
+  dialogs/navigation/blades/theme work on each head, control and converter inventories, and the remaining
+  functional gaps (MAUI `FileService.SaveFileAsync` throws, WPF has no `ICameraService`, WPF lacks
+  `ImageBrowser`/`NoteWindow`, WinUI has no `BladeHostView`). published with GitHub Pages
 - **`docs/` is now a site**: `docs/_config.yml` sets `jekyll-theme-minimal` plus the whitelisted `jekyll-optional-front-matter` and `jekyll-relative-links` plugins, so the existing Markdown — no YAML front matter, relative `.md` links — renders unchanged with no generated copy and no rewriting step. `docs/index.md` is the landing page.
 - One-time setup: Settings → Pages → *Deploy from a branch* → `main` / `docs`.
 - Internal working documents stay out of the site through `exclude` (`superpowers/`, `FRAMEWORK_REVIEW_*`, `SOLID_PRINCIPLES_ANALYSIS`, `POTENTIAL_ISSUES_AND_RISKS`, `MVVM_AND_UI_FRAMEWORK_ISSUES_REPORT`, `ARCHITECTURAL_ISSUES_SUMMARY`, `ASYNC_EXCEPTION_ISSUES_FIXED`).
@@ -97,6 +103,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **samples/Sample.Maui**: the sample no longer uses `Microsoft.Maui.Controls.Shell`. `Views/RootView` is one always-alive page holding the header, the sidebar, the navigation host and the shell-level `BladeHostView` (last child, so a blade dims and covers all of it), and it is set as the window root at startup. `ShellViewModel` navigates its sections with `INavigationService.NavigateAsync<TViewModel>()` exactly like `Sample.WinUI` navigates its content frame; `CurrentRoute`/`CrumbCurrent` follow the shell navigation service, including back. Phones get a slide-in sidebar drawer (header menu button, scrim, closes on selection) instead of a sidebar column; desktop keeps the fixed sidebar. Back is the header button bound to `IsBackEnabled`, and Android's hardware back routes to `INavigationService.GoBackAsync()` when it can go back
 
 ### Changed
+
+#### MAUI: platform logic moved out of the samples
+- **`Sample.Maui`** no longer contains platform code. The WinUI focus-visual/hand-cursor mappers moved to
+  `ISynergy.Framework.UI.Maui/Platforms/Windows/Extensions/ShellChromeStyler` (registered by
+  `ConfigureServices`; the sample only uses the published `StyleId` constants), the Mac Catalyst menu bar
+  is built through `PageExtensions.AddShellMenuBar` (the library decides which head renders a menu bar),
+  single-instance/activation diagnostics are `ActivationExtensions.ConfigureActivationDiagnostics()` (real
+  on WinUI, a no-op elsewhere) and the AppKit hosting choice is `UseMauiAppForCurrentHead<TApplication>()`.
+  The only conditionals left are package limitations (`#if !MACOS` for MediaElement/Syncfusion), the
+  `DEBUG` DevFlow agent and the per-head entry points under `Platforms/`.
+- The `StyleId` values `HeaderIconButton`, `SidebarRow` and `LinkLabel` are now public constants on
+  `ShellChromeStyler` so a shell opts into the chrome by name instead of by hand-written mappers.
+
+#### Application constructors no longer call overridable members (S1699)
+- **`ISynergy.Framework.UI.WPF`**: `Application` takes the built `IHost` instead of calling the abstract
+  `CreateHostBuilder` from its constructor; the composition root is an explicit static `CreateHost()` in the
+  application (`Sample.WPF` shows the shape). `InitializeEnvironmentVariables` is no longer virtual - it runs
+  from the constructor and `HandleCommandArguments` stays the overridable hook.
+- **`ISynergy.Framework.UI.WinUI`**: same change to `InitializeEnvironmentVariables`.
+
+#### MAUI: platform code moved out of shared files
+- **`ISynergy.Framework.UI.Maui`**: head-specific code no longer hides in `#if` blocks inside shared files.
+  `ThemeService`, `DialogService`, `MauiExceptions`, `PageExtensions` and `SelectAllOnFocusBehavior` now
+  declare `partial` hooks that each head implements under `Platforms/<head>/`, and
+  `Application.CreateWindow` picks the WinUI title bar at runtime (`DeviceInfo.Platform`) instead of
+  compiling two branches. 13 of the 22 conditional blocks are gone; the remaining ones (WinRT launch
+  arguments, the clipboard image matrix, the macOS/AppKit surface and one `DEBUG` block) are documented in
+  `.ai/plans/maui-platform-code.md` with the reason they stay. Public API and behaviour are unchanged,
+  except that Android now also runs the shared `Focused` handler of `SelectAllOnFocusBehavior`.
+- Verified per head: `net11.0-windows10.0.26100.0`, `net11.0-android`, `net11.0-ios`,
+  `net11.0-maccatalyst` plus `Sample.Maui` all build; MAUI tests 47 passed / 4 skipped.
+
+#### UI naming aligned across WPF, WinUI, MAUI and Blazor
+**Breaking** — public type names changed, so consumers of `ISynergy.Framework.UI.*` must update the
+type names they reference (XAML `clr-namespace` type names included). Plan:
+`.ai/plans/ui-naming-alignment.md`.
+- **MAUI**: the blade pane is `BladeView` (was `BladePane`), matching WPF and WinUI; `BladePaneAnchor` →
+  `BladeViewAnchor` (shared `ISynergy.Framework.UI`), `IBladePaneHost` → `IBladeViewHost` and
+  `BladePaneHostRegistry` → `BladeViewHostRegistry`.
+- **MAUI / WinUI converters**: `BooleanToIsVisibleConverter` → `BooleanToVisibilityConverter` (the WPF/WinUI
+  name), `BoolNegationConverter` → `BooleanNegationConverter`, `BoolToStateConverter` →
+  `BooleanToStateConverter`, `BoolToCommandBarDisplayModeConverter` →
+  `BooleanToCommandBarDisplayModeConverter`, and the eight `*Then*Converter` names per head became
+  `*Than*Converter`.
+- **Sample.Maui**: the shell page is `ShellView` (was `RootView`), as in the WPF and WinUI samples; file and
+  `x:Class` renamed with it.
+- **WPF `ClipboardService.GetBitmapSourceFromClipboardAsync`** is `private` now: it returns a WPF
+  `BitmapSource`, and a platform type does not belong on the shared surface. `GetImageFromClipboardAsync`
+  is the public contract on every head.
+- **MAUI `FileService.SaveFileAsync`** returns `null` instead of throwing `NotImplementedException`: MAUI has
+  no cross-platform "save as" picker, and callers already handle `null` as "cancelled" on WPF and WinUI.
+- **MAUI converters**: the remaining `*ToIsVisibleConverter` names (`Decimal`, `Double`, `Guid`,
+  `GuidToInversed`, `Integer`, `Null`, `NullToInversed`, `String`, `ZeroDecimal`, `ZeroDouble`,
+  `ZeroInteger`) are `*ToVisibilityConverter`, matching WinUI; the sample's resource keys and bindings
+  moved with them.
 
 #### Azure signing tool renamed and pinned
 - **.github/workflows/ci.yml**: the signing tool is installed from **`AzureSignTool.Cli`** (was `I-Synergy.Tools.Azure.SignTool`) at the pinned version `2026.11027.11159`, so a tool release cannot silently change what signs a published package. The command name is unchanged (`AzureSignTool`), and so are every flag in use: `-kvu`, `-kvc`, `-act WorkloadIdentityCredential`, `--timestamp-rfc3161`, `-td`, `-v`, `--sign-nuget-contents`, `--sign-nuget-contents-filter`.
@@ -187,10 +248,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ISynergy.Framework.UI.WPF**: `ThemeService` resolves `Themes.Default` to the operating system's application theme instead of letting each consumer interpret it, and `Theme` / `IsLightThemeEnabled` now report that resolved theme. `Themes.Default` used to paint the light palette (`Sample.WPF` compared it with `Themes.Dark`) while the shell's toggle treated it as dark, so the WPF sample started in light mode with a dark-mode icon and needed two clicks to reach the dark theme; one click now switches correctly.
 - **ISynergy.Framework.UI.WPF**: `DynamicThemeResourceDictionary` takes the theme and derives the semantic `Tinted*` brushes from the matching end of the gray ramp (dark: 950/900/600/500, light: 000/100/200/300) instead of always using the dark values, so framework controls follow light/dark switches.
 - **Sample.WPF**: The theme icon, the design tokens and the settings blade's theme picker are derived from the resolved `IThemeService` theme, so the whole shell starts in the theme it reports and the picker never opens with an empty selection.
-- **Sample.Maui title bar polish**: the native caption area is `Tall` (48px) and the shell header row is 48px, so the minimise/maximise/close buttons line up with the header's icon buttons as in the WinUI sample; the system backdrop (Mica) is cleared and the title-bar strip plus the caption-button backgrounds/hover are painted with the shell colours (`AppBg*`/`AppSurface2*`) after the title bar is realized, so the chrome matches the page and follows runtime theme changes; `AppVerseActionButton` binds `TextColor` to the explicit light/dark muted pair instead of the single-key `AppMuted` token. The hamburger is the first header control and is padded so its icon sits on the sidebar's icon column, and the WinUI system focus rectangle is suppressed on the header buttons (it read as a white border around the initially focused hamburger). Sidebar rows, the breadcrumb link and buttons get a hand cursor on Windows, and the rows gained a hover fill.
+- **Sample.Maui header gutter**: the in-page header had a 20pt left padding left over from the title-bar layout, which put the 44px menu button 23pt right of the page's labels. The desktop gutter is now 0, so the menu icon's left edge lines up with the content labels (measured 3px off at 2x; phones keep 16pt for the drawer).
+- **Sample.Maui shell header**: the shell header (menu, back, breadcrumb, theme and settings) is an in-page row on every head, as on the Apple targets, and the platform title bar is used with the application title. The header used to be hosted in a custom window title bar, which put its commands outside the page: the blade pane could neither dim them nor stop a second blade or a theme switch from being triggered underneath an open one. `App.SetTitleBar` now returns `null`, the custom title bar, its leading/trailing islands, the tall caption and the caption recolouring are gone, and the blade scrim covers the header row again. `AppVerseActionButton` binds `TextColor` to the explicit light/dark muted pair instead of the single-key `AppMuted` token. The hamburger is the first header control and is padded so its icon sits on the sidebar's icon column, and the WinUI system focus rectangle is suppressed on the header buttons. Sidebar rows, the breadcrumb link and buttons get a hand cursor on Windows, and the rows gained a hover fill.
 - **Sample.Maui shell polish**: the blade pane's card background, stroke and separator now follow the app theme (`AppSurface*`/`AppBorder*` with the framework `TintedGray*` palette as fallback) instead of the fixed light tints that produced a white outline in dark mode, the settings card's own `Stroke` is theme-aware, the sidebar Help row is a full-size row (52px, 36px icon tile) aligned with the menu items, and the header icon buttons paint on hover only — `Pressed`/`Focused` no longer leave a "selected" fill after a blade opens over the pointer. The hamburger is available on every idiom: it collapses the sidebar into a 0-width column on desktop and opens/closes the drawer on phones.
 - **Sample.Maui shell polish**: the blade pane's card background, stroke and separator now follow the app theme (`AppSurface*`/`AppBorder*` with the framework `TintedGray*` palette as fallback) instead of the fixed light tints that produced a white outline in dark mode, the settings card's own `Stroke` is theme-aware, the sidebar Help row is a full-size row (52px, 36px icon tile) aligned with the menu items, and the header icon buttons paint on hover only — `Pressed`/`Focused` no longer leave a "selected" fill after a blade opens over the pointer. The hamburger is available on every idiom: it collapses the sidebar into a 0-width column on desktop and opens/closes the drawer on phones.
-- **Sample.Maui title bar**: the shell header is now the window title bar (WinUI look) — `App.SetTitleBar` builds a `TitleBar` whose `Content` is the header, `RootView` binds it to the shell view model and collapses the in-page header row, so the breadcrumb, header commands and native caption buttons share one row. `Application.SetTitleBar` is nullable so a head can opt out.
+- **ISynergy.Framework.UI.Maui — `BladePane` dismisses its blades on a theme change**: a blade's page content is detached from its `ContentPage` and reparented into a `ContentView`, and the platform controls inside it (WinUI `ComboBox`, `Button`, `Entry`) resolve their theme resources when they are realized — MAUI keeps those platform views across re-parenting, so an open blade kept the light (or dark) chrome it was created with while the MAUI-drawn card and labels followed the new theme. Re-applying `FrameworkElement.RequestedTheme`, re-adding the cards and re-hosting the content were all tried and are not reliable, so the pane now closes its blades on `Application.RequestedThemeChanged` through `IBladeService.RemoveBlade`; reopening a blade always renders it with the current theme. Blades are transient overlays opened from the shell.
+- **ISynergy.Framework.UI — secondary accent step darkened**: `ThemeColorCalculator.CalculateSecondary` blends the primary colour 10% towards white instead of 25%, so the `Secondary` surface keeps white text above the WCAG AA threshold (default teal: 6.1:1 instead of 4.25:1) and `SecondaryForeground` resolves to white. Primary and default buttons now share the same text colour instead of one being labelled black on a lighter teal.
+- **Sample.Maui settings blade — language picker shows names, not codes**: `SettingsViewModel` built its options from a hardcoded list of culture codes, so the picker rendered "en" and offered `es`, which the application was never configured for. It now takes `ISupportedCulturesService.SupportedCultures` (the same source as the WPF blade), binds `DisplayName`, and keeps the culture code as the persisted setting.
+- **Sample.Maui settings blade — a single Close button**: the blade had "Save & close" (primary) next to "Close" (cancel). It now has one Close button, styled like the primary action, that runs `SaveCommand`, matching the WinUI and WPF blades; the values are applied live, so the button both saves and dismisses.
+- **ISynergy.Framework.UI (MAUI palette) — accent foreground contrast**: `ThemeColorCalculator` now picks the WCAG-contrast-optimal foreground (black or white) for an accent surface (`CalculateOnColor`), and the MAUI `DynamicThemeResourceDictionary` publishes `PrimaryForeground`, `SecondaryForeground` and `TertiaryForeground`. `Secondary` is the primary colour blended 25% towards white, so the sample's default button style drew white text at 4.25:1 for the default teal (and far worse for light accents such as orange); it now uses the palette's foreground, as do the `PointerOver` state, the primary button style and the settings blade's Save button. The secondary action in the blade now measures 4.94:1.
+- **Sample.Maui settings blade — theme value stays in sync**: `SettingsViewModel` listens to `IThemeService.ThemeChanged` and raises `SelectedTheme`, so switching the theme from the shell header while the blade is open updates the picker instead of leaving the theme the blade was opened with.
+- **Sample.Maui settings blade**: the accent-colour swatches inherited the implicit button style's `MinimumWidthRequest` (125), so each swatch rendered ~125 wide instead of 48 and the fourth one was clipped by the blade's right edge. Each swatch now pins `MinimumWidthRequest` to its 48px `WidthRequest`, so all four fit inside the card in both themes.
+- **Sample.Maui**: the shell header moved back into the page and `RootView` no longer merges it into the window title bar; `Application.SetTitleBar` stays nullable so a head can opt out of a custom title bar.
 - **ISynergy.Framework.UI.Maui**: `BladeHostView` is now only visible while its `BladePane` has blades to show. The host used to set `IsVisible = true` as soon as it resolved its view model, so an empty (invisible) pane with a visible, full-window host sat on top of the shell and swallowed every click aimed at the header, the sidebar and the page underneath. Shells that host the pane at the root (as `Sample.Maui` now does) were completely unclickable.
 - **Sample.Maui**: The breadcrumb and the sidebar selection no longer fall back to the previous section after a forward navigation. The navigation service raises `BackStackChanged` before the new frame becomes current, so the route is only re-read from `INavigationService.CurrentViewModelType` when no shell navigation is in flight (that is, on back).
 - **Sample.WinUI**: Added the missing `BladeView` host to `ShellView.xaml`, so blades opened from the shell (including the Settings blade used by `SettingsCommand`) are rendered.

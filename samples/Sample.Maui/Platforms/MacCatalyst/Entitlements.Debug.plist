@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <!-- Debug builds run without the App Sandbox so a debugger/terminal that is itself
+             sandboxed can launch the bundle directly (libsecinit aborts with
+             SYSCALL_SET_USERLAND_PROFILE when a sandboxed app is started as a child of a
+             sandboxed process). Release keeps Platforms/MacCatalyst/Entitlements.plist. -->
+        <key>com.apple.security.network.client</key>
+        <true/>
+        <key>com.apple.security.network.server</key>
+        <true/>
+        <!-- Allows the debugger to attach to the ad-hoc signed Debug bundle. -->
+        <key>com.apple.security.get-task-allow</key>
+        <true/>
+    </dict>
+</plist>

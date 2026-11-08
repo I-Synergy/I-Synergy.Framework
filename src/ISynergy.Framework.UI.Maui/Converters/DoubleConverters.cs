@@ -3,11 +3,11 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.Converters;
 
 /// <summary>
-/// Class ZeroDoubleToIsVisibleConverter.
+/// Class ZeroDoubleToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ZeroDoubleToIsVisibleConverter : IValueConverter
+public class ZeroDoubleToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -43,11 +43,11 @@ public class ZeroDoubleToIsVisibleConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleToIsVisibleConverter.
+/// Class DoubleToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleToIsVisibleConverter : IValueConverter
+public class DoubleToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -126,11 +126,11 @@ public class DoubleOfDoubleConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsLesserThenConverter.
+/// Class DoubleIsLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsLesserThenConverter : IValueConverter
+public class DoubleIsLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -164,11 +164,11 @@ public class DoubleIsLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsLesserOrEqualThenConverter.
+/// Class DoubleIsLesserOrEqualThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsLesserOrEqualThenConverter : IValueConverter
+public class DoubleIsLesserOrEqualThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -202,11 +202,11 @@ public class DoubleIsLesserOrEqualThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsGreaterThenConverter.
+/// Class DoubleIsGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsGreaterThenConverter : IValueConverter
+public class DoubleIsGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -240,11 +240,11 @@ public class DoubleIsGreaterThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsGreaterOrEqualThenConverter.
+/// Class DoubleIsGreaterOrEqualThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
+public class DoubleIsGreaterOrEqualThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

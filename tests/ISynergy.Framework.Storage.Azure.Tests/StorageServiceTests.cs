@@ -79,7 +79,7 @@ public class StorageServiceTests
     [TestMethod]
     public async Task UploadBlobAsyncTest()
     {
-        Uri uri = await _storageService.UploadFileAsync(connectionString, tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder");
+        Uri uri = await _storageService.UploadFileAsync(connectionString, tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder", cancellationToken: TestContext.CancellationToken);
         Assert.IsNotNull(uri);
     }
 
@@ -89,7 +89,7 @@ public class StorageServiceTests
     [TestMethod]
     public async Task DownloadFileAsyncTest()
     {
-        byte[] bytes = await _storageService.DownloadFileAsync(connectionString, tenantId.ToString(), "filename", "folder");
+        byte[] bytes = await _storageService.DownloadFileAsync(connectionString, tenantId.ToString(), "filename", "folder", TestContext.CancellationToken);
         Assert.IsNotNull(bytes);
     }
 
@@ -99,7 +99,7 @@ public class StorageServiceTests
     [TestMethod]
     public async Task UpdateBlobAsyncTest()
     {
-        Uri uri = await _storageService.UpdateFileAsync(connectionString, tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder");
+        Uri uri = await _storageService.UpdateFileAsync(connectionString, tenantId.ToString(), Array.Empty<byte>(), "contentType", "filename", "folder", TestContext.CancellationToken);
         Assert.IsNotNull(uri);
     }
 
@@ -109,7 +109,9 @@ public class StorageServiceTests
     [TestMethod]
     public async Task RemoveFileAsyncTest()
     {
-        bool result = await _storageService.RemoveFileAsync(connectionString, tenantId.ToString(), "filename", "folder");
+        bool result = await _storageService.RemoveFileAsync(connectionString, tenantId.ToString(), "filename", "folder", TestContext.CancellationToken);
         Assert.IsTrue(result);
     }
+
+    public TestContext TestContext { get; set; }
 }

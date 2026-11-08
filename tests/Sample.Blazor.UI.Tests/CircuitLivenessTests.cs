@@ -1,3 +1,4 @@
+#pragma warning disable SYSLIB1045 // test-local regexes do not benefit from source generation
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;
@@ -143,7 +144,7 @@ public class CircuitLivenessTests : SamplePageTest
         Log($"{context}: counter incremented {before} -> {after}; the circuit processed the click.");
     }
 
-    private async Task<int> ReadCounterAsync(ILocator counter, string context)
+    private static async Task<int> ReadCounterAsync(ILocator counter, string context)
     {
         var text = (await counter.InnerTextAsync()).Trim();
         var match = Regex.Match(text, @"Current count:\s*(?<value>-?\d+)");

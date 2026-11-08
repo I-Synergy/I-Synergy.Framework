@@ -6,7 +6,7 @@ namespace ISynergy.Framework.UI.Behaviors;
 /// <summary>
 /// Behavior that restricts Entry input to currency values with culture-specific formatting.
 /// </summary>
-public sealed class CurrencyEntryBehavior : NumericEntryBehaviorBase
+public sealed partial class CurrencyEntryBehavior : NumericEntryBehaviorBase
 {
     private Entry? _attachedEntry;
     private CurrencyFormatter? _formatter;

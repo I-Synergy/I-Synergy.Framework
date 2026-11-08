@@ -82,7 +82,7 @@ public static class SentryTelemetryExtensions
 
         telemetryBuilder.OpenTelemetryBuilder.WithTracing(tracerProviderBuilder =>
         {
-            tracerProviderBuilder.AddSentryOtlpExporter(options.Dsn!);
+            tracerProviderBuilder.AddSentryOtlpExporter(options.Dsn);
         });
 
         telemetryBuilder.OpenTelemetryBuilder.WithMetrics(meterProviderBuilder =>

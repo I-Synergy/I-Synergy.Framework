@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class IntegerToVisibilityConverter : IValueConverter
+public partial class IntegerToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -49,7 +49,7 @@ public class IntegerToVisibilityConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ZeroIntegerToVisibilityConverter : IValueConverter
+public partial class ZeroIntegerToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -89,7 +89,7 @@ public class ZeroIntegerToVisibilityConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class IntegerToStringConverter : IValueConverter
+public partial class IntegerToStringConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -123,7 +123,7 @@ public class IntegerToStringConverter : IValueConverter
 
         if (value is not null)
         {
-            int.TryParse(value.ToString(), out result);
+            _ = int.TryParse(value.ToString(), out result);
         }
 
         return result;
@@ -135,7 +135,7 @@ public class IntegerToStringConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class IntegerToDoubleConverter : IValueConverter
+public partial class IntegerToDoubleConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

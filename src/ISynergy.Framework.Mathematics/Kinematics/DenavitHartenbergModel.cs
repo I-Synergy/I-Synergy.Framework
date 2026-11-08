@@ -144,7 +144,7 @@ public class DenavitHartenbergModel : IEnumerable<DenavitHartenbergJoint>
     public void Compute(DenavitHartenbergModel parent)
     {
         if (parent is null)
-            throw new ArgumentNullException("parent", "Parent cannot be null.");
+            throw new ArgumentNullException(nameof(parent), "Parent cannot be null.");
         // The model position will be the position
         // of the last joint in the parent model:
         //

@@ -7,49 +7,49 @@ N+1 prevention, `AsNoTracking`, projection, batching, and pagination — each wi
 ### N+1 Query Prevention
 ```csharp
 // ❌ BAD - N+1 query problem
-public async Task<List<BudgetWithGoalsResponse>> GetBudgetsWithGoals()
+public async Task<List<{Entity}With{ChildEntities}Response>> Get{Entities}With{ChildEntities}()
 {
-    var budgets = await _context.Budgets.ToListAsync();
+    var {entities} = await _context.{Entities}.ToListAsync();
 
-    foreach (var budget in budgets)
+    foreach (var {entity} in {entities})
     {
-        // Separate query for each budget!
-        budget.Goals = await _context.Goals
-            .Where(g => g.BudgetId == budget.BudgetId)
+        // Separate query for each {entity}!
+        {entity}.{ChildEntities} = await _context.{ChildEntities}
+            .Where(g => g.{Entity}Id == {entity}.{Entity}Id)
             .ToListAsync();
     }
 
-    return budgets.Select(b => new BudgetWithGoalsResponse(
-        b.BudgetId,
+    return {entities}.Select(b => new {Entity}With{ChildEntities}Response(
+        b.{Entity}Id,
         b.Name,
         b.Amount,
-        b.Goals.Select(g => new GoalSummary(g.GoalId, g.Name, g.TargetAmount)).ToList()
+        b.{ChildEntities}.Select(g => new {ChildEntity}Summary(g.{ChildEntity}Id, g.Name, g.Amount)).ToList()
     )).ToList();
 }
 
 // ✅ GOOD - Single query with Include
-public async Task<List<BudgetWithGoalsResponse>> GetBudgetsWithGoals()
+public async Task<List<{Entity}With{ChildEntities}Response>> Get{Entities}With{ChildEntities}()
 {
-    return await _context.Budgets
-        .Include(b => b.Goals)
-        .Select(b => new BudgetWithGoalsResponse(
-            b.BudgetId,
+    return await _context.{Entities}
+        .Include(b => b.{ChildEntities})
+        .Select(b => new {Entity}With{ChildEntities}Response(
+            b.{Entity}Id,
             b.Name,
             b.Amount,
-            b.Goals.Select(g => new GoalSummary(g.GoalId, g.Name, g.TargetAmount)).ToList()
+            b.{ChildEntities}.Select(g => new {ChildEntity}Summary(g.{ChildEntity}Id, g.Name, g.Amount)).ToList()
         ))
         .ToListAsync();
 }
 
 // ✅ BETTER - Project only needed data
-public async Task<List<BudgetWithGoalsResponse>> GetBudgetsWithGoals()
+public async Task<List<{Entity}With{ChildEntities}Response>> Get{Entities}With{ChildEntities}()
 {
-    return await _context.Budgets
-        .Select(b => new BudgetWithGoalsResponse(
-            b.BudgetId,
+    return await _context.{Entities}
+        .Select(b => new {Entity}With{ChildEntities}Response(
+            b.{Entity}Id,
             b.Name,
             b.Amount,
-            b.Goals.Select(g => new GoalSummary(g.GoalId, g.Name, g.TargetAmount)).ToList()
+            b.{ChildEntities}.Select(g => new {ChildEntity}Summary(g.{ChildEntity}Id, g.Name, g.Amount)).ToList()
         ))
         .ToListAsync();
 }
@@ -58,13 +58,13 @@ public async Task<List<BudgetWithGoalsResponse>> GetBudgetsWithGoals()
 ### AsNoTracking for Read-Only Queries
 ```csharp
 // ✅ GOOD - Use AsNoTracking for read-only operations
-public async Task<List<BudgetResponse>> GetBudgetsAsync(
+public async Task<List<{Entity}Response>> Get{Entities}Async(
     CancellationToken cancellationToken)
 {
-    return await _context.Budgets
+    return await _context.{Entities}
         .AsNoTracking()  // Don't track changes
-        .Select(b => new BudgetResponse(
-            b.BudgetId,
+        .Select(b => new {Entity}Response(
+            b.{Entity}Id,
             b.Name,
             b.Amount
         ))
@@ -75,16 +75,16 @@ public async Task<List<BudgetResponse>> GetBudgetsAsync(
 ### Projection to Reduce Data Transfer
 ```csharp
 // ❌ BAD - Loading entire entities
-public async Task<List<string>> GetBudgetNames()
+public async Task<List<string>> Get{Entity}Names()
 {
-    var budgets = await _context.Budgets.ToListAsync();
-    return budgets.Select(b => b.Name).ToList();
+    var {entities} = await _context.{Entities}.ToListAsync();
+    return {entities}.Select(b => b.Name).ToList();
 }
 
 // ✅ GOOD - Project only needed columns
-public async Task<List<string>> GetBudgetNames()
+public async Task<List<string>> Get{Entity}Names()
 {
-    return await _context.Budgets
+    return await _context.{Entities}
         .Select(b => b.Name)
         .ToListAsync();
 }
@@ -93,24 +93,24 @@ public async Task<List<string>> GetBudgetNames()
 ### Batch Operations
 ```csharp
 // ❌ BAD - Individual operations
-public async Task CreateMultipleBudgets(List<CreateBudgetCommand> commands)
+public async Task CreateMultiple{Entities}(List<Create{Entity}Command> commands)
 {
     foreach (var command in commands)
     {
-        var entity = new Budget { BudgetId = Guid.NewGuid(), Name = command.Name, Amount = command.Amount };
-        _context.Budgets.Add(entity);
+        var entity = new {Entity} { {Entity}Id = Guid.NewGuid(), Name = command.Name, Amount = command.Amount };
+        _context.{Entities}.Add(entity);
         await _context.SaveChangesAsync(); // Multiple round trips!
     }
 }
 
 // ✅ GOOD - Batch operation
-public async Task CreateMultipleBudgets(List<CreateBudgetCommand> commands)
+public async Task CreateMultiple{Entities}(List<Create{Entity}Command> commands)
 {
     var entities = commands
-        .Select(c => new Budget { BudgetId = Guid.NewGuid(), Name = c.Name, Amount = c.Amount })
+        .Select(c => new {Entity} { {Entity}Id = Guid.NewGuid(), Name = c.Name, Amount = c.Amount })
         .ToList();
 
-    _context.Budgets.AddRange(entities);
+    _context.{Entities}.AddRange(entities);
     await _context.SaveChangesAsync(); // Single round trip
 }
 ```
@@ -118,23 +118,23 @@ public async Task CreateMultipleBudgets(List<CreateBudgetCommand> commands)
 ### Pagination for Large Result Sets
 ```csharp
 // ✅ GOOD - Implement pagination
-public async Task<PagedResult<BudgetResponse>> GetBudgetsPaged(
+public async Task<PagedResult<{Entity}Response>> Get{Entities}Paged(
     int pageNumber = 1,
     int pageSize = 20,
     CancellationToken cancellationToken = default)
 {
-    var totalCount = await _context.Budgets.CountAsync(cancellationToken);
+    var totalCount = await _context.{Entities}.CountAsync(cancellationToken);
 
-    var budgets = await _context.Budgets
+    var {entities} = await _context.{Entities}
         .AsNoTracking()
         .OrderByDescending(b => b.CreatedDate)
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
-        .Select(b => new BudgetResponse(b.BudgetId, b.Name, b.Amount))
+        .Select(b => new {Entity}Response(b.{Entity}Id, b.Name, b.Amount))
         .ToListAsync(cancellationToken);
 
-    return new PagedResult<BudgetResponse>(
-        budgets,
+    return new PagedResult<{Entity}Response>(
+        {entities},
         totalCount,
         pageNumber,
         pageSize);

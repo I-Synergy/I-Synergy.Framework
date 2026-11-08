@@ -124,7 +124,7 @@ public class RelativeParameterConvergence : IConvergence<double[]>
         set
         {
             if (value < 0)
-                throw new ArgumentOutOfRangeException("value", "Tolerance should be positive.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Tolerance should be positive.");
 
             tolerance = value;
         }
@@ -140,7 +140,7 @@ public class RelativeParameterConvergence : IConvergence<double[]>
         set
         {
             if (value < 0)
-                throw new ArgumentOutOfRangeException("value",
+                throw new ArgumentOutOfRangeException(nameof(value),
                     "The maximum number of iterations should be positive.");
 
             maxIterations = value;

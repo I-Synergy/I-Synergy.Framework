@@ -9,7 +9,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class BytesToImageSourceConverter : IValueConverter
+public partial class BytesToImageSourceConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -48,7 +48,7 @@ public class BytesToImageSourceConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ByteArrayToStreamConverter : IValueConverter
+public partial class ByteArrayToStreamConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

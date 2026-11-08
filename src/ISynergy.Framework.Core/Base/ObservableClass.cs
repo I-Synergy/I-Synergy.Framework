@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 namespace ISynergy.Framework.Core.Base;
 
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
-public abstract class ObservableClass : IObservableClass
+public abstract class ObservableClass : IObservableClass // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     protected PropertyChangedEventHandler? _propertyChanged;
     protected bool _disposed;
@@ -108,7 +108,7 @@ public abstract class ObservableClass : IObservableClass
     /// <returns>T.</returns>
     protected T GetValue<T>([CallerMemberName] string? propertyName = "")
     {
-        if (propertyName is not null && Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is IProperty<T> property)
+        if (propertyName is not null && Properties.GetOrAdd(propertyName, key => new Property<T>(key)) is IProperty<T> property)
             return property.Value!;
 
         return default!;
@@ -149,7 +149,7 @@ public abstract class ObservableClass : IObservableClass
         if (propertyName is null)
             return;
 
-        if (Properties.GetOrAdd(propertyName, _ => new Property<T>(propertyName)) is not IProperty<T> property) return;
+        if (Properties.GetOrAdd(propertyName, key => new Property<T>(key)) is not IProperty<T> property) return;
 
         // During cleanup or when events are suppressed, just set the value
         if (!shouldRaiseEvents || IsInCleanup)
@@ -249,7 +249,6 @@ public abstract class ObservableClass : IObservableClass
     public void Dispose()
     {
         Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     // The bulk of the clean-up code is implemented in Dispose(bool)
@@ -290,7 +289,6 @@ public abstract class ObservableClass : IObservableClass
         await DisposeAsyncCore().ConfigureAwait(false);
 
         Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 
     protected virtual async ValueTask DisposeAsyncCore()
@@ -320,8 +318,7 @@ public abstract class ObservableClass : IObservableClass
 
     protected void ThrowIfDisposed()
     {
-        if (_disposed)
-            throw new ObjectDisposedException(GetType().Name);
+        ObjectDisposedException.ThrowIf(_disposed, this);
     }
     #endregion
 }

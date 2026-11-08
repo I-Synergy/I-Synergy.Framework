@@ -130,7 +130,7 @@ public class ObservableClassTests
         };
 
         Assert.IsTrue(product.Validate());
-        Assert.IsTrue(product.Errors?.Count == 0);
+        Assert.AreEqual(0, product.Errors?.Count);
     }
 
     [TestMethod]

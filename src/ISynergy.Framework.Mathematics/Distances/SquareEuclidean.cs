@@ -101,7 +101,7 @@ public struct SquareEuclidean :
     /// 
     /// <returns>The Square Euclidean distance between x and y.</returns>
     /// 
-    public double Distance(double x1, double y1, double x2, double y2)
+    public static double Distance(double x1, double y1, double x2, double y2)
     {
         double dx = x1 - x2;
         double dy = y1 - y2;

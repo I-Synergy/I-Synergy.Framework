@@ -32,16 +32,27 @@ namespace Sample;
 public partial class App : Application
 {
     public App()
-        : base()
+        : base(CreateHost())
     {
     }
+
+    /// <summary>
+    /// Builds the host before the base constructor runs.
+    /// </summary>
+    /// <remarks>
+    /// Static on purpose: a constructor must not call an overridable member, and the host has to exist
+    /// before the framework constructor resolves its services. This is the application's composition
+    /// root, kept explicit here instead of hidden in a base-class hook.
+    /// </remarks>
+    /// <returns>The built host.</returns>
+    private static IHost CreateHost() => CreateHostBuilder().Build();
 
     /// <summary>
     /// The sample renders its own header and caption buttons, so the OS title bar is removed.
     /// </summary>
     protected override bool UseCustomWindowChrome => true;
 
-    protected override IHostBuilder CreateHostBuilder()
+    private static IHostBuilder CreateHostBuilder()
     {
         var mainAssembly = Assembly.GetExecutingAssembly();
         var infoService = new InfoService();

@@ -295,7 +295,7 @@ public class GammaTest
                 double x = Gamma.UpperIncomplete(lambda, i);
                 double j = Gamma.InverseUpperIncomplete(lambda, x);
 
-                Assert.IsTrue(Math.Abs(i - j) < 1e-2 * Math.Abs(j));
+                Assert.IsLessThan(1e-2 * Math.Abs(j), Math.Abs(i - j));
             }
         }
     }

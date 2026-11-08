@@ -27,7 +27,7 @@ When to add an index, the index types available through the Fluent API, and the 
 builder.HasIndex(e => e.Name);
 
 // Composite index
-builder.HasIndex(e => new { e.BudgetId, e.CreatedDate });
+builder.HasIndex(e => new { e.{Entity}Id, e.CreatedDate });
 
 // Unique index
 builder.HasIndex(e => e.Email)
@@ -38,7 +38,7 @@ builder.HasIndex(e => e.Status)
     .HasFilter("status = 'Active'");
 
 // Covering index (include columns)
-builder.HasIndex(e => e.BudgetId)
+builder.HasIndex(e => e.{Entity}Id)
     .IncludeProperties(e => new { e.Name, e.Amount });
 ```
 
@@ -47,35 +47,35 @@ builder.HasIndex(e => e.BudgetId)
 ### Query Optimization
 ```csharp
 // ✅ GOOD - Single query with Include
-var budgets = await context.Budgets
-    .Include(b => b.Goals)
-    .Include(b => b.Debts)
+var {entities} = await context.{Entities}
+    .Include(b => b.{ChildEntities})
+    .Include(b => b.{ChildEntities})
     .Where(b => b.UserId == userId)
     .ToListAsync();
 
 // ❌ BAD - N+1 query problem
-var budgets = await context.Budgets
+var {entities} = await context.{Entities}
     .Where(b => b.UserId == userId)
     .ToListAsync();
 
-foreach (var budget in budgets)
+foreach (var {entity} in {entities})
 {
-    budget.Goals = await context.Goals
-        .Where(g => g.BudgetId == budget.BudgetId)
-        .ToListAsync(); // Separate query for each budget!
+    {entity}.{ChildEntities} = await context.{ChildEntities}
+        .Where(g => g.{Entity}Id == {entity}.{Entity}Id)
+        .ToListAsync(); // Separate query for each {entity}!
 }
 ```
 
 ### Batch Operations
 ```csharp
 // ✅ GOOD - Batch insert
-context.Budgets.AddRange(budgets);
+context.{Entities}.AddRange({entities});
 await context.SaveChangesAsync();
 
 // ❌ BAD - Individual inserts
-foreach (var budget in budgets)
+foreach (var {entity} in {entities})
 {
-    context.Budgets.Add(budget);
+    context.{Entities}.Add({entity});
     await context.SaveChangesAsync(); // Multiple round trips!
 }
 ```
@@ -83,14 +83,14 @@ foreach (var budget in budgets)
 ### Projection for Performance
 ```csharp
 // ✅ GOOD - Select only needed columns
-var budgetNames = await context.Budgets
+var {entity}Names = await context.{Entities}
     .Where(b => b.UserId == userId)
-    .Select(b => new { b.BudgetId, b.Name })
+    .Select(b => new { b.{Entity}Id, b.Name })
     .ToListAsync();
 
 // ❌ BAD - Load entire entities
-var budgets = await context.Budgets
+var {entities} = await context.{Entities}
     .Where(b => b.UserId == userId)
     .ToListAsync();
-var budgetNames = budgets.Select(b => new { b.BudgetId, b.Name });
+var {entity}Names = {entities}.Select(b => new { b.{Entity}Id, b.Name });
 ```

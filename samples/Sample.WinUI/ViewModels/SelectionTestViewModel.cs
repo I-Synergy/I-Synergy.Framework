@@ -18,7 +18,7 @@ namespace Sample.ViewModels;
 /// <summary>
 /// Class SelectionTestViewModel.
 /// </summary>
-public class SelectionTestViewModel : ViewModelBladeView<TestItem>
+public partial class SelectionTestViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;

@@ -4,11 +4,11 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.Converters;
 
 /// <summary>
-/// Class IntegerToIsVisibleConverter.
+/// Class IntegerToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class IntegerToIsVisibleConverter : IValueConverter
+public class IntegerToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -44,11 +44,11 @@ public class IntegerToIsVisibleConverter : IValueConverter
 }
 
 /// <summary>
-/// Class ZeroIntegerToIsVisibleConverter.
+/// Class ZeroIntegerToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ZeroIntegerToIsVisibleConverter : IValueConverter
+public class ZeroIntegerToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

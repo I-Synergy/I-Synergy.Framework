@@ -87,10 +87,10 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
         bool inPlace = false, bool sort = false)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (value.Length != value[0].Length)
-            throw new ArgumentException("Matrix is not a square matrix.", "value");
+            throw new ArgumentException("Matrix is not a square matrix.", nameof(value));
 
         n = value.Length;
         Eigenvectors = new double[n][];
@@ -501,7 +501,7 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
                         H[i][j] -= f * ort[j];
                 }
 
-                ort[m] = scale * ort[m];
+                ort[m] = scale * ort[m]; // NOSONAR - self-referential update
                 H[m][m - 1] = scale * g;
             }
         }

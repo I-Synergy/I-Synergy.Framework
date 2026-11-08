@@ -29,10 +29,10 @@ public class FourierTransformTest
         double[] re2 = output.Re();
         double[] im2 = output.Im();
 
-        Assert.IsTrue(re.IsEqual(new[] { 20, 0, 12, 0 }, 1e-8));
+        Assert.IsTrue(re.IsEqual(objB, 1e-8));
         Assert.IsTrue(im.IsEqual(new[] { 0, -4, 0, 4 }, 1e-8));
-        Assert.IsTrue(re2.IsEqual(new[] { 8, 4, 8, 0 }, 1e-8));
-        Assert.IsTrue(im2.IsEqual(new[] { 0, 0, 0, 0 }, 1e-8));
+        Assert.IsTrue(re2.IsEqual(objBArray, 1e-8));
+        Assert.IsTrue(im2.IsEqual(objBArray0, 1e-8));
     }
 
     [TestMethod]
@@ -100,10 +100,10 @@ public class FourierTransformTest
         double[] re2 = output.Re();
         double[] im2 = output.Im();
 
-        Assert.IsTrue(re.IsEqual(new[] { 20, 0, 12, 0 }, 1e-8));
+        Assert.IsTrue(re.IsEqual(objBArray1, 1e-8));
         Assert.IsTrue(im.IsEqual(new[] { 0, -4, 0, 4 }, 1e-8));
-        Assert.IsTrue(re2.IsEqual(new[] { 8, 4, 8, 0 }, 1e-8));
-        Assert.IsTrue(im2.IsEqual(new[] { 0, 0, 0, 0 }, 1e-8));
+        Assert.IsTrue(re2.IsEqual(objBArray2, 1e-8));
+        Assert.IsTrue(im2.IsEqual(objBArray3, 1e-8));
     }
 
     [TestMethod]
@@ -224,7 +224,7 @@ public class FourierTransformTest
             }
         }
 
-        Assert.IsTrue(maxLogError < -12.9);
+        Assert.IsLessThan(-12.9, maxLogError);
     }
 
 
@@ -246,7 +246,7 @@ public class FourierTransformTest
         FourierTransform2.FFT(actualoutreal, actualoutimag, FourierTransform.Direction.Forward);
 
         double error = log10RmsErr(refoutreal, refoutimag, actualoutreal, actualoutimag);
-        Assert.IsTrue(error < -12.9);
+        Assert.IsLessThan(-12.9, error);
 
 
         // Test Complex overloads
@@ -286,7 +286,7 @@ public class FourierTransformTest
         FourierTransform2.Convolve(input0real, input0imag, input1real, input1imag, actualoutreal, actualoutimag);
 
         double error = log10RmsErr(refoutreal, refoutimag, actualoutreal, actualoutimag);
-        Assert.IsTrue(error < 13);
+        Assert.IsLessThan(13, error);
 
 
 
@@ -359,6 +359,12 @@ public class FourierTransformTest
 
 
     private static double maxLogError = double.PositiveInfinity;
+    private static readonly int[] objBArray3 = new[] { 0, 0, 0, 0 };
+    private static readonly int[] objBArray2 = new[] { 8, 4, 8, 0 };
+    private static readonly int[] objBArray1 = new[] { 20, 0, 12, 0 };
+    private static readonly int[] objBArray0 = new[] { 0, 0, 0, 0 };
+    private static readonly int[] objBArray = new[] { 8, 4, 8, 0 };
+    private static readonly int[] objB = new[] { 20, 0, 12, 0 };
 
     private static double log10RmsErr(double[] xreal, double[] ximag, double[] yreal, double[] yimag)
     {

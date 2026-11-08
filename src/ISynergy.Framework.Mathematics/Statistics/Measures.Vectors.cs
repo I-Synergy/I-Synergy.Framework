@@ -705,8 +705,7 @@ public static partial class Measures
     /// 
     public static double PooledVariance(bool unbiased, params double[][] samples)
     {
-        if (samples is null)
-            throw new ArgumentNullException("samples");
+        ArgumentNullException.ThrowIfNull(samples);
 
         double sum = 0;
         int length = 0;
@@ -743,14 +742,12 @@ public static partial class Measures
     /// 
     public static double PooledVariance(int[] sizes, double[] variances, bool unbiased = true)
     {
-        if (sizes is null)
-            throw new ArgumentNullException("sizes");
+        ArgumentNullException.ThrowIfNull(sizes);
 
-        if (variances is null)
-            throw new ArgumentNullException("variances");
+        ArgumentNullException.ThrowIfNull(variances);
 
         if (sizes.Length != variances.Length)
-            throw new DimensionMismatchException("variances");
+            throw new DimensionMismatchException(nameof(variances));
 
         double sum = 0;
         int length = 0;
@@ -834,7 +831,7 @@ public static partial class Measures
         bool inPlace, bool alreadySorted = false)
     {
         if (values.Length == 0)
-            throw new ArgumentException("The values vector cannot be empty.", "values");
+            throw new ArgumentException("The values vector cannot be empty.", nameof(values));
 
         if (values[0] is IComparable)
             return mode_sort<T>(values, inPlace, alreadySorted, out count);
@@ -980,14 +977,12 @@ public static partial class Measures
     /// 
     public static double Covariance(this double[] vector1, double mean1, double[] vector2, double mean2, bool unbiased = true)
     {
-        if (vector1 is null)
-            throw new ArgumentNullException("vector1");
+        ArgumentNullException.ThrowIfNull(vector1);
 
-        if (vector2 is null)
-            throw new ArgumentNullException("vector2");
+        ArgumentNullException.ThrowIfNull(vector2);
 
         if (vector1.Length != vector2.Length)
-            throw new DimensionMismatchException("vector2");
+            throw new DimensionMismatchException(nameof(vector2));
 
         double covariance = 0.0;
 

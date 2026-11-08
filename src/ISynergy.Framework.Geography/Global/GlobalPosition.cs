@@ -139,7 +139,7 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
 
         builder.Append(Coordinates);
         builder.Append(Elevation.ToString(NumberFormatInfo.InvariantInfo));
-        builder.Append("m");
+        builder.Append('m');
 
         return builder.ToString();
     }

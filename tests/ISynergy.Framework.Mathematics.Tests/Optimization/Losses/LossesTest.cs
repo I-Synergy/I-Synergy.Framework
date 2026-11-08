@@ -4,6 +4,11 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 [TestClass]
 public class LossesTest
 {
+    private static readonly int[] expected = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray0 = new int[] { 0, 0, 0, 1 };
+    private static readonly int[] expectedArray1 = new int[] { 0, 0, 0, 1 };
+
     [TestMethod]
     public void Hinge()
     {
@@ -20,19 +25,19 @@ public class LossesTest
         actual = new HingeLoss([5.4, 1, -0.5, 0.8]).Loss([-5.2, 1, 0.5, 0.8]);
         Assert.AreEqual(7.9, actual, 1e-10);
 
-        actual = new HingeLoss(new int[] { 0, 1, 0, 0 }).Loss([1, 1, 1, 1]);
+        actual = new HingeLoss(expected).Loss([1, 1, 1, 1]);
         Assert.AreEqual(2, actual);
 
-        actual = new HingeLoss(new int[] { 0, 1, 0, 0 }).Loss([0, 0, 0, 0]);
+        actual = new HingeLoss(expectedArray).Loss([0, 0, 0, 0]);
         Assert.AreEqual(4, actual);
 
         actual = new HingeLoss(new int[] { -1, 1, -1, -1 }).Loss([-1, -1, -1, -1]);
         Assert.AreEqual(6, actual);
 
-        actual = new HingeLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, 1, 1, 1]);
+        actual = new HingeLoss(expectedArray0).Loss([-1, 1, 1, 1]);
         Assert.AreEqual(4, actual);
 
-        actual = new HingeLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, -1, -1, 1]);
+        actual = new HingeLoss(expectedArray1).Loss([-1, -1, -1, 1]);
         Assert.AreEqual(8, actual);
 
         actual = new HingeLoss(new int[] { -1, -1, -1, 1 }).Loss([0, 0, 0, 1]);
@@ -65,6 +70,11 @@ public class LossesTest
         Assert.AreEqual(1, new HingeLoss().Loss(false, 0));
     }
 
+    private static readonly int[] expectedArray2 = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray3 = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray4 = new int[] { 0, 0, 0, 1 };
+    private static readonly int[] expectedArray5 = new int[] { 0, 0, 0, 1 };
+
     [TestMethod]
     public void SmoothHinge()
     {
@@ -81,19 +91,19 @@ public class LossesTest
         actual = new SmoothHingeLoss([5.4, 1, -0.5, 0.8]).Loss([-5.2, 1, 0.5, 0.8]);
         Assert.AreEqual(6.72, actual, 1e-10);
 
-        actual = new SmoothHingeLoss(new int[] { 0, 1, 0, 0 }).Loss([1, 1, 1, 1]);
+        actual = new SmoothHingeLoss(expectedArray2).Loss([1, 1, 1, 1]);
         Assert.AreEqual(1.5, actual);
 
-        actual = new SmoothHingeLoss(new int[] { 0, 1, 0, 0 }).Loss([0, 0, 0, 0]);
+        actual = new SmoothHingeLoss(expectedArray3).Loss([0, 0, 0, 0]);
         Assert.AreEqual(2, actual);
 
         actual = new SmoothHingeLoss(new int[] { -1, 1, -1, -1 }).Loss([-1, -1, -1, -1]);
         Assert.AreEqual(4.5, actual);
 
-        actual = new SmoothHingeLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, 1, 1, 1]);
+        actual = new SmoothHingeLoss(expectedArray4).Loss([-1, 1, 1, 1]);
         Assert.AreEqual(3, actual);
 
-        actual = new SmoothHingeLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, -1, -1, 1]);
+        actual = new SmoothHingeLoss(expectedArray5).Loss([-1, -1, -1, 1]);
         Assert.AreEqual(6, actual);
 
         actual = new SmoothHingeLoss(new int[] { -1, -1, -1, 1 }).Loss([0, 0, 0, 1]);
@@ -126,6 +136,11 @@ public class LossesTest
         Assert.AreEqual(0.5, new SmoothHingeLoss().Loss(false, 0));
     }
 
+    private static readonly int[] expectedArray6 = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray7 = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray8 = new int[] { 0, 0, 0, 1 };
+    private static readonly int[] expectedArray9 = new int[] { 0, 0, 0, 1 };
+
     [TestMethod]
     public void SquaredHinge()
     {
@@ -142,19 +157,19 @@ public class LossesTest
         actual = new SquaredHingeLoss([5.4, 1, -0.5, 0.8]).Loss([-5.2, 1, 0.5, 0.8]);
         Assert.AreEqual(20.365, actual, 1e-10);
 
-        actual = new SquaredHingeLoss(new int[] { 0, 1, 0, 0 }).Loss([1, 1, 1, 1]);
+        actual = new SquaredHingeLoss(expectedArray6).Loss([1, 1, 1, 1]);
         Assert.AreEqual(2, actual);
 
-        actual = new SquaredHingeLoss(new int[] { 0, 1, 0, 0 }).Loss([0, 0, 0, 0]);
+        actual = new SquaredHingeLoss(expectedArray7).Loss([0, 0, 0, 0]);
         Assert.AreEqual(2, actual);
 
         actual = new SquaredHingeLoss(new int[] { -1, 1, -1, -1 }).Loss([-1, -1, -1, -1]);
         Assert.AreEqual(6, actual);
 
-        actual = new SquaredHingeLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, 1, 1, 1]);
+        actual = new SquaredHingeLoss(expectedArray8).Loss([-1, 1, 1, 1]);
         Assert.AreEqual(4, actual);
 
-        actual = new SquaredHingeLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, -1, -1, 1]);
+        actual = new SquaredHingeLoss(expectedArray9).Loss([-1, -1, -1, 1]);
         Assert.AreEqual(8, actual);
 
         actual = new SquaredHingeLoss(new int[] { -1, -1, -1, 1 }).Loss([0, 0, 0, 1]);
@@ -187,6 +202,11 @@ public class LossesTest
         Assert.AreEqual(0.5, new SquaredHingeLoss().Loss(false, 0));
     }
 
+    private static readonly int[] expectedArray10 = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray11 = new int[] { 0, 1, 0, 0 };
+    private static readonly int[] expectedArray12 = new int[] { 0, 0, 0, 1 };
+    private static readonly int[] expectedArray13 = new int[] { 0, 0, 0, 1 };
+
     [TestMethod]
     public void Logistic()
     {
@@ -203,19 +223,19 @@ public class LossesTest
         actual = new LogisticLoss([5.4, 1, -0.5, 0.8]).Loss([-5.2, 1, 0.5, 0.8]);
         Assert.AreEqual(42.765372851511813, actual, 1e-10);
 
-        actual = new LogisticLoss(new int[] { 0, 1, 0, 0 }).Loss([1, 1, 1, 1]);
+        actual = new LogisticLoss(expectedArray10).Loss([1, 1, 1, 1]);
         Assert.AreEqual(3.250459373221156, actual, 1e-10);
 
-        actual = new LogisticLoss(new int[] { 0, 1, 0, 0 }).Loss([0, 0, 0, 0]);
+        actual = new LogisticLoss(expectedArray11).Loss([0, 0, 0, 0]);
         Assert.AreEqual(4, actual);
 
         actual = new LogisticLoss(new int[] { -1, 1, -1, -1 }).Loss([-1, -1, -1, -1]);
         Assert.AreEqual(6.1358494549990832, actual, 1e-10);
 
-        actual = new LogisticLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, 1, 1, 1]);
+        actual = new LogisticLoss(expectedArray12).Loss([-1, 1, 1, 1]);
         Assert.AreEqual(4.6931544141101194, actual, 1e-10);
 
-        actual = new LogisticLoss(new int[] { 0, 0, 0, 1 }).Loss([-1, -1, -1, 1]);
+        actual = new LogisticLoss(expectedArray13).Loss([-1, -1, -1, 1]);
         Assert.AreEqual(7.5785444958880461, actual, 1e-10);
 
         actual = new LogisticLoss(new int[] { -1, -1, -1, 1 }).Loss([0, 0, 0, 1]);

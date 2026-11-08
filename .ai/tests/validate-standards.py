@@ -400,7 +400,7 @@ def run_validators(root: Path,
 # Applicability and produced evidence (rule 9, rule 6's third cause)
 # --------------------------------------------------------------------------------------
 
-_SKIP_DIRS = {'.git', '.vs', '.idea', 'bin', 'obj', 'node_modules', 'TestResults', '__pycache__'}
+_SKIP_DIRS = {'.git', '.vs', '.idea', 'bin', 'obj', 'node_modules', 'TestResults', '__pycache__', 'tmp'}
 
 # `{BC}`, `{Entity}.{Operation}`, `{yyyy-mm-dd}` -- each names a value a project fills in.
 _PATTERN_PLACEHOLDER = re.compile(r'\{[^}]*\}')

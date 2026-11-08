@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class ZeroDoubleToVisibilityConverter : IValueConverter
+public partial class ZeroDoubleToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -48,7 +48,7 @@ public class ZeroDoubleToVisibilityConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleOfDoubleConverter : IValueConverter
+public partial class DoubleOfDoubleConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -87,11 +87,11 @@ public class DoubleOfDoubleConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsLesserThenConverter.
+/// Class DoubleIsLesserThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsLesserThenConverter : IValueConverter
+public partial class DoubleIsLesserThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -103,8 +103,8 @@ public class DoubleIsLesserThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test < limit)
         {
@@ -130,11 +130,11 @@ public class DoubleIsLesserThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsLesserOrEqualThenConverter.
+/// Class DoubleIsLesserOrEqualThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsLesserOrEqualThenConverter : IValueConverter
+public partial class DoubleIsLesserOrEqualThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -146,8 +146,8 @@ public class DoubleIsLesserOrEqualThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test <= limit)
         {
@@ -173,11 +173,11 @@ public class DoubleIsLesserOrEqualThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsGreaterThenConverter.
+/// Class DoubleIsGreaterThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsGreaterThenConverter : IValueConverter
+public partial class DoubleIsGreaterThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -189,8 +189,8 @@ public class DoubleIsGreaterThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test > limit)
         {
@@ -216,11 +216,11 @@ public class DoubleIsGreaterThenConverter : IValueConverter
 }
 
 /// <summary>
-/// Class DoubleIsGreaterOrEqualThenConverter.
+/// Class DoubleIsGreaterOrEqualThanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
+public partial class DoubleIsGreaterOrEqualThanConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -232,8 +232,8 @@ public class DoubleIsGreaterOrEqualThenConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double.TryParse(parameter.ToString(), out var limit);
-        double.TryParse(value.ToString(), out var test);
+        _ = double.TryParse(parameter.ToString(), out var limit);
+        _ = double.TryParse(value.ToString(), out var test);
 
         if (test >= limit)
         {

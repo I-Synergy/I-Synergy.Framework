@@ -16,7 +16,7 @@ public class SupportedCulturesServiceTests
         // Act
         var service = new SupportedCulturesService([]);
         // Assert
-        Assert.AreEqual(1, service.SupportedCultures.Count);
+        Assert.HasCount(1, service.SupportedCultures);
         Assert.AreEqual("en", service.SupportedCultures[0].TwoLetterISOLanguageName);
     }
 
@@ -27,7 +27,7 @@ public class SupportedCulturesServiceTests
         // Act
         var service = new SupportedCulturesService([CultureInfo.GetCultureInfo("en")]);
         // Assert
-        Assert.AreEqual(1, service.SupportedCultures.Count);
+        Assert.HasCount(1, service.SupportedCultures);
         Assert.AreEqual("en", service.SupportedCultures[0].TwoLetterISOLanguageName);
     }
 
@@ -43,7 +43,7 @@ public class SupportedCulturesServiceTests
         ]);
         // Assert
         Assert.AreEqual("en", service.SupportedCultures[0].TwoLetterISOLanguageName);
-        Assert.AreEqual(3, service.SupportedCultures.Count);
+        Assert.HasCount(3, service.SupportedCultures);
     }
 
     [TestMethod]

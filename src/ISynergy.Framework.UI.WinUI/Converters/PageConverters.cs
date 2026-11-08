@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Converters;
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class PageVisibilityConverter : IValueConverter
+public partial class PageVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

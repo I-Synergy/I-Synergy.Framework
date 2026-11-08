@@ -47,7 +47,7 @@ public class NugetViewModel : ViewModelNavigation<PackageVersion>
         set => SetValue(value);
     }
 
-    public RelayCommand SettingsCommand { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public RelayCommand SettingsCommand { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } // NOSONAR - interface member
 
     public NugetViewModel(
         ICommonServices commonServices,

@@ -5,18 +5,32 @@
     xmlns:m="clr-namespace:ISynergy.Framework.UI.Markup;assembly=ISynergy.Framework.UI.Maui"
     xmlns:viewmodels="clr-namespace:Sample.ViewModels"
     x:Class="Sample.Views.Controls.AppHeaderView"
-    x:DataType="viewmodels:ShellViewModel">
+    x:DataType="viewmodels:ShellViewModel"
+    HeightRequest="48">
+
+    <!--
+        The bar is 48 high on every head. AppKit otherwise gives this ContentView a 112px slot
+        (the 48px bar plus a 64px inset) and centres the bar, which pushed the header below the
+        sidebar and the content down by 64px. The control owns its height so the shell layouts do
+        not need a per-head workaround.
+    -->
 
     <!-- 880px centred column with 40px side padding (matches content width on desktop) -->
     <Grid>
-        <Grid MaximumWidthRequest="880" HorizontalOptions="Fill">
-            <Grid x:Name="HeaderBar" ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="48"
-                  Padding="{OnPlatform WinUI='40,0,140,0', MacCatalyst='80,0,40,0', iOS='16,0', Android='16,0'}">
+        <Grid HorizontalOptions="Fill">
+            <Grid x:Name="HeaderBar" ColumnDefinitions="*,Auto" ColumnSpacing="8" HeightRequest="48" Padding="0,0,16,0">
+                <!-- The header is an in-page row, so the gutters are plain padding. No left gutter
+                     on any head: the 44px menu button starts at the content edge (the content
+                     column on desktop, the window edge on phones) and its glyph lines up with the
+                     page labels below. Right 16 puts the theme/settings buttons at the window edge. -->
 
                 <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
 
+                    <HorizontalStackLayout x:Name="ShellButtons" Spacing="8">
+
                     <!-- Menu: first, so its icon sits on the same column as the sidebar's icons. -->
                     <Button
+                        x:Name="MenuButton"
                         Text="&#x2630;"
                         StyleId="HeaderIconButton"
                         Command="{Binding ToggleMenuCommand}"
@@ -33,6 +47,8 @@
                         Style="{StaticResource AppVerseActionButton}"
                         FontSize="18"
                         VerticalOptions="Center" />
+
+                    </HorizontalStackLayout>
 
                     <!-- Breadcrumb: app name (link) / muted slash / current page (bold) -->
                     <!-- First breadcrumb: app name as accent link, tappable to navigate to dashboard -->
@@ -61,7 +77,7 @@
 
                 </HorizontalStackLayout>
 
-                <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                <HorizontalStackLayout x:Name="TrailingButtons" Grid.Column="1" Spacing="4" VerticalOptions="Center" HorizontalOptions="End">
                     <!-- Theme toggle: moon when light, sun when dark -->
                     <Button Text="{Binding ThemeIcon}"
                             StyleId="HeaderIconButton"

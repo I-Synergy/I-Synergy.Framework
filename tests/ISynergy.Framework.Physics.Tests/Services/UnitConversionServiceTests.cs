@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Physics.Services.Tests;
 [TestClass()]
 public class UnitConversionServiceTests
 {
-    private IUnitConversionService? _unitConversionService;
+    private UnitConversionService? _unitConversionService;
 
     /// <summary>
     /// Initializes tests
@@ -27,7 +27,7 @@ public class UnitConversionServiceTests
     {
         Assert.IsNotNull(_unitConversionService);
         Assert.IsNotNull(_unitConversionService.Units);
-        Assert.IsTrue(_unitConversionService.Units.Count > 0);
+        Assert.IsNotEmpty(_unitConversionService.Units);
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class UnitConversionServiceTests
     [TestMethod()]
     public void UnitConversionServiceGetSIUnitsTest()
     {
-        Assert.IsTrue(_unitConversionService!.Units.Where(q => q is SIUnit).Count() == 15);
+        Assert.HasCount(15, _unitConversionService!.Units.Where(q => q is SIUnit));
     }
 
     /// <summary>

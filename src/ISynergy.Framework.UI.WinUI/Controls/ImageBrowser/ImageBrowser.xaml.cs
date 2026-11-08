@@ -78,9 +78,9 @@ public sealed partial class ImageBrowser : UserControl
 
                 if (result is not null && result.Count > 0)
                 {
-                    FileBytes = await result.First().GetFileAsync();
-                    ContentType = result.First().FilePath.ToContentType();
-                    FileName = result.First().FileName;
+                    FileBytes = await result[0].GetFileAsync();
+                    ContentType = result[0].FilePath.ToContentType();
+                    FileName = result[0].FileName;
                     DateTime = System.DateTime.Now;
                 }
             }

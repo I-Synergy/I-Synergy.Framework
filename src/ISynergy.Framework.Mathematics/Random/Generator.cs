@@ -175,7 +175,7 @@ public static class Generator
                     else // value is null
                     {
                         Trace.WriteLine("All threads will be initialized with unpredictable random seeds.");
-                        var s = unchecked((13 * Thread.CurrentThread.ManagedThreadId) ^ sourceLastUpdateTicks);
+                        var s = unchecked((13 * Environment.CurrentManagedThreadId) ^ sourceLastUpdateTicks);
                         sourceRandom = new System.Random(s);
                     }
 
@@ -205,11 +205,11 @@ public static class Generator
                     if (sourceSeed.HasValue)
                     {
                         if (sourceSeed.Value > 0)
-                            return unchecked((13 * Thread.CurrentThread.ManagedThreadId) ^ sourceSeed.Value);
+                            return unchecked((13 * Environment.CurrentManagedThreadId) ^ sourceSeed.Value);
                         return sourceSeed.Value;
                     }
 
-                    return unchecked((int)((13 * Thread.CurrentThread.ManagedThreadId) ^ DateTime.Now.Ticks));
+                    return unchecked((int)((13 * Environment.CurrentManagedThreadId) ^ DateTime.Now.Ticks));
                 }
 
                 return sourceRandom.Next(); // We have a source random generator

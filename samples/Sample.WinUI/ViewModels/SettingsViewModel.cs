@@ -15,7 +15,7 @@ namespace Sample.ViewModels;
 /// Settings blade for language, theme and accent color.
 /// Changes are applied live, matching the Sample.Maui settings drawer.
 /// </summary>
-public class SettingsViewModel : ViewModelBlade<object>
+public partial class SettingsViewModel : ViewModelBlade<object>
 {
     private readonly ISettingsService _settingsService;
     private readonly IThemeService _themeService;

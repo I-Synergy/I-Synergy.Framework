@@ -17,11 +17,12 @@ public partial class MultipleSelectionWindow : IMultipleSelectionWindow
 
     private void SelectionWindow_BindingContextChanged(object? sender, EventArgs e)
     {
-        if (ViewModel is IMultipleSelectionViewModel viewModel)
+        // Multiple mode: pre-select all items
+        if (ViewModel is IMultipleSelectionViewModel viewModel
+            && viewModel.SelectedItem is not null
+            && viewModel.SelectedItem.Count > 0)
         {
-            // Multiple mode: pre-select all items
-            if (viewModel.SelectedItem is not null && viewModel.SelectedItem.Count > 0)
-                DataSummary.SelectedItems = viewModel.SelectedItem.EnsureNotNull().ToList<object>();
+            DataSummary.SelectedItems = viewModel.SelectedItem.EnsureNotNull().ToList<object>();
         }
     }
 

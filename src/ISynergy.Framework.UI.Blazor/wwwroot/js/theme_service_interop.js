@@ -29,7 +29,7 @@ export function applyTheme(theme, accentColor) {
  * @returns {string} The resolved theme ('light' or 'dark') or 'light' if not set
  */
 export function getCurrentTheme() {
-    return document?.documentElement?.getAttribute('data-theme') || 'light';
+    return document?.documentElement?.dataset.theme || 'light';
 }
 
 /**
@@ -72,7 +72,7 @@ let dotNetReferenceValue = null;
 
 function resolveTheme(preference) {
     if (preference === 'system') {
-        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches
             ? 'dark'
             : 'light';
     }
@@ -81,7 +81,7 @@ function resolveTheme(preference) {
 }
 
 function applyResolvedTheme(theme, accentColor) {
-    document.documentElement.setAttribute('data-theme', theme || 'light');
+    document.documentElement.dataset.theme = theme || 'light';
 
     if (accentColor) {
         // Normalize hex color (remove # if present)

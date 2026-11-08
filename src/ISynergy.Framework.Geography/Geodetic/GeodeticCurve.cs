@@ -76,7 +76,7 @@ public struct GeodeticCurve : IEquatable<GeodeticCurve>
         builder.Append(Azimuth);
         builder.Append(";a21=");
         builder.Append(ReverseAzimuth);
-        builder.Append(";");
+        builder.Append(';');
 
         return builder.ToString();
     }
@@ -84,11 +84,27 @@ public struct GeodeticCurve : IEquatable<GeodeticCurve>
     /// <summary>
     /// Test another curve for equality
     /// </summary>
-    /// <param name="other">The other geodetic curve</param>
     /// <returns>True if they are the same</returns>
+    public override int GetHashCode() => HashCode.Combine(EllipsoidalDistance, Azimuth, Calculator);
+
     public bool Equals(GeodeticCurve other)
     {
         return EllipsoidalDistance.IsApproximatelyEqual(other.EllipsoidalDistance) && Azimuth.Equals(other.Azimuth) &&
                Calculator.Equals(other.Calculator);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is GeodeticCurve && Equals((GeodeticCurve)obj);
+    }
+
+    public static bool operator ==(GeodeticCurve left, GeodeticCurve right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(GeodeticCurve left, GeodeticCurve right)
+    {
+        return !(left == right);
     }
 }

@@ -15,7 +15,7 @@ reassurances.
 | Field | Value |
 |---|---|
 | Report identifier | [TCR-{release}] |
-| Solution | `{ApplicationName}` |
+| Solution | `I-Synergy.Framework` |
 | Release / version | [{release} — the tag, version or commit range the report covers] |
 | Period covered | [{yyyy-mm-dd} to {yyyy-mm-dd}] |
 | Author, role | [{name}, {role}] |

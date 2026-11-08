@@ -10,12 +10,13 @@ using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.ViewModels.Base
 {
-    public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, IShellViewModel
+    public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, IShellViewModel // NOSONAR - the inheritance chain is fixed by the shared ViewModelBladeView contract
     {
         protected readonly INavigationService _navigationService;
         protected readonly IDialogService _dialogService;
         protected readonly ISettingsService _settingsService;
         protected readonly IThemeService _themeService;
+    private readonly ShellViewModelSupport _support;
 
         public bool IsBackEnabled
         {
@@ -51,17 +52,15 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             _navigationService = navigationService;
             _settingsService = settingsService;
             _themeService = themeService;
-
-            _navigationService.BackStackChanged += NavigationService_BackStackChanged;
-            IsBackEnabled = _navigationService.CanGoBack;
+        _support = new ShellViewModelSupport(navigationService, themeService, dialogService, commonServices, value => IsBackEnabled = value);
 
             PrimaryItems = new ObservableCollection<NavigationItem>();
             SecondaryItems = new ObservableCollection<NavigationItem>();
 
             GoBackCommand = new AsyncRelayCommand(async () => await _navigationService.GoBackAsync());
-            RestartUpdateCommand = new AsyncRelayCommand(ShowDialogRestartAfterUpdateAsync);
+            RestartUpdateCommand = new AsyncRelayCommand(_support.ShowRestartAsync);
             SignInCommand = new AsyncRelayCommand(SignOutAsync);
-            ThemeCommand = new AsyncRelayCommand(ToggleThemeAsync);
+            ThemeCommand = new AsyncRelayCommand(_support.ToggleThemeAsync);
             HelpCommand = new AsyncRelayCommand(OpenHelpAsync);
             FeedbackCommand = new AsyncRelayCommand(OpenFeedbackAsync);
             SettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -72,8 +71,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
 
         public abstract Task InitializeFirstRunAsync();
 
-        private void NavigationService_BackStackChanged(object? sender, EventArgs e) =>
-            IsBackEnabled = _navigationService.CanGoBack;
 
         protected abstract Task OpenSettingsAsync();
 
@@ -81,8 +78,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
 
         protected abstract Task SignOutAsync();
 
-        protected Task ShowDialogRestartAfterUpdateAsync() =>
-            _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("UpdateRestart"));
 
         public NavigationItem LastSelectedItem
         {
@@ -114,16 +109,6 @@ namespace ISynergy.Framework.UI.ViewModels.Base
             set => SetValue(value);
         }
 
-        /// <summary>
-        /// Toggles between the light and dark theme and applies it immediately.
-        /// Accent color selection lives in the application's settings UI.
-        /// </summary>
-        protected Task ToggleThemeAsync()
-        {
-            var nextTheme = _themeService.Theme == Themes.Light ? Themes.Dark : Themes.Light;
-            _themeService.SetTheme(nextTheme);
-            return Task.CompletedTask;
-        }
 
         /// <summary>
         /// Opens the help asynchronously.
@@ -186,10 +171,7 @@ namespace ISynergy.Framework.UI.ViewModels.Base
         {
             if (disposing)
             {
-                if (_navigationService is not null)
-                {
-                    _navigationService.BackStackChanged -= NavigationService_BackStackChanged;
-                }
+                _support.Dispose();
 
                 Validator = null;
 

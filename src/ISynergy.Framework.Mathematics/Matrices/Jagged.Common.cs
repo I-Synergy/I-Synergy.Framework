@@ -187,7 +187,7 @@ public static partial class Matrix
         if (inPlace)
         {
             if (rows != cols)
-                throw new ArgumentException("Only square matrices can be transposed in place.", "matrix");
+                throw new ArgumentException("Only square matrices can be transposed in place.", nameof(matrix));
 
             for (var i = 0; i < rows; i++)
                 for (var j = i; j < cols; j++)
@@ -426,8 +426,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsDiagonal<T>(this T[][] matrix) where T : IComparable
     {
-        if (matrix is null)
-            throw new ArgumentNullException("matrix");
+        ArgumentNullException.ThrowIfNull(matrix);
 
         var zero = default(T);
 

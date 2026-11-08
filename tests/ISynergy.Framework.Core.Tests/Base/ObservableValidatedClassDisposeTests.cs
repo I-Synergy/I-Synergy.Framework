@@ -18,9 +18,11 @@ public class ObservableValidatedClassDisposeTests
         var obj = new TestObservableValidatedClass();
 
         await Task.WhenAll(
-            Task.Run(() => obj.Dispose()),
-            Task.Run(async () => await obj.DisposeAsync())
+            Task.Run(() => obj.Dispose(), TestContext.CancellationToken),
+            Task.Run(async () => await obj.DisposeAsync(), TestContext.CancellationToken)
         );
+
+        Assert.IsTrue(obj.IsDisposed);
     }
 
     [TestMethod]
@@ -33,7 +35,9 @@ public class ObservableValidatedClassDisposeTests
         await obj.DisposeAsync();
 
         Assert.IsFalse(errorsChangedFired);
-        Assert.AreEqual(0, obj.Properties.Count);
+        Assert.IsEmpty(obj.Properties);
         Assert.AreEqual(0, obj.Errors?.Count);
     }
+
+    public TestContext TestContext { get; set; }
 }

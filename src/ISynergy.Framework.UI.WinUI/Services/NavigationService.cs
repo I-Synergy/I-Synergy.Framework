@@ -20,7 +20,7 @@ namespace ISynergy.Framework.UI.Services;
 /// Handles WinUI-specific window/frame access, view creation, and UI thread dispatching.
 /// </summary>
 /// <seealso cref="BaseNavigationService" />
-public class NavigationService : BaseNavigationService
+public partial class NavigationService : BaseNavigationService
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationService"/> class.
@@ -139,10 +139,14 @@ public class NavigationService : BaseNavigationService
 
             platformView.Loaded += OnViewLoaded;
 
-            var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
-
-            if (completedTask != tcs.Task)
+            try
+            {
+                await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs));
+            }
+            catch (TimeoutException)
+            {
                 platformView.Loaded -= OnViewLoaded;
+            }
         }
     }
 

@@ -46,8 +46,8 @@ public class FileWatcherTests
             Directory.GetFiles(folder).ToList().ForEach(File.Delete);
         }
 
-        Assert.IsTrue(_fixture.ObservedFiles.Any());
-        Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created").Count());
+        Assert.IsNotEmpty(_fixture.ObservedFiles);
+        Assert.HasCount(count, _fixture.ObservedFiles.Where(q => q.EventName == "Created"));
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class FileWatcherTests
             _fixture.RemoveEventHandlers();
         }
 
-        Assert.IsTrue(_fixture.ObservedFiles.Any());
-        Assert.AreEqual(count, _fixture.ObservedFiles.Where(q => q.EventName == "Deleted").Count());
+        Assert.IsNotEmpty(_fixture.ObservedFiles);
+        Assert.HasCount(count, _fixture.ObservedFiles.Where(q => q.EventName == "Deleted"));
     }
 }

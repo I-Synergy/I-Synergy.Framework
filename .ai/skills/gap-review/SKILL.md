@@ -21,7 +21,7 @@ Mandatory post-generation validation — checks the implemented solution against
 | Architecture document | `docs/architecture/{SolutionName}-architecture.md` |
 | Session decisions | `docs/session-decisions.md` |
 | Ubiquitous Language | `UBIQUITOUS_LANGUAGE.md` |
-| Use Cases | `docs/bounded-contexts/{BC}/use-cases.md` |
+| Use Cases | `docs/bounded-contexts/{Domain}/use-cases.md` |
 | Generated solution | Current codebase |
 
 ## Review Dimensions

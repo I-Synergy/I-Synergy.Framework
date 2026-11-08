@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "sources": {
+    "template": {
+      "repo": "I-Synergy/AI",
+      "ref": "2026.11102.11236",
+      "resolve": "remote"
+    },
+    "awesome-copilot": {
+      "repo": "github/awesome-copilot",
+      "ref": "main",
+      "resolve": "remote",
+      "license": "MIT"
+    },
+    "aspire-skills": {
+      "repo": "microsoft/aspire-skills",
+      "ref": "main",
+      "resolve": "remote",
+      "license": "MIT"
+    },
+    "dotnet-maui": {
+      "repo": "dotnet/maui-labs",
+      "ref": "main",
+      "resolve": "remote",
+      "license": "MIT",
+      "paths": {
+        "skill": [
+          "plugins/dotnet-maui/skills"
+        ],
+        "agent": [
+          ".github/agents"
+        ],
+        "instruction": [
+          ".github/instructions"
+        ],
+        "plugin": [],
+        "hook": []
+      }
+    },
+    "dotnet-maui-tooling": {
+      "repo": "dotnet/maui-labs",
+      "ref": "main",
+      "resolve": "remote",
+      "license": "MIT",
+      "paths": {
+        "skill": [
+          "plugins/dotnet-maui-tooling/skills"
+        ],
+        "agent": [],
+        "instruction": [],
+        "plugin": [],
+        "hook": []
+      }
+    }
+  },
+  "skills": [],
+  "agents": [],
+  "instructions": [],
+  "plugins": [],
+  "hooks": [],
+  "materialize": "copy",
+  "exclude": [],
+  "prompts": []
+}

@@ -30,7 +30,7 @@ public class ObservableValidatedClassTests
         observable.Dispose();
 
         // Assert
-        Assert.AreEqual(0, observable.Properties.Count);
+        Assert.IsEmpty(observable.Properties);
     }
 
     [TestMethod]
@@ -54,8 +54,15 @@ public class ObservableValidatedClassTests
         var observable = new TestObservableClass();
 
         // Act & Assert - should not throw
-        observable.Dispose();
-        observable.Dispose();
+        Exception? observed = null;
+        try
+        {
+            observable.Dispose();
+            observable.Dispose();
+        }
+        catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
     }
 
     [TestMethod]
@@ -85,7 +92,7 @@ public class ObservableValidatedClassTests
 
         // Assert
         Assert.IsTrue(asyncProperty.IsAsyncDisposed);
-        Assert.AreEqual(0, observable.Properties.Count);
+        Assert.IsEmpty(observable.Properties);
     }
 
     [TestMethod]
@@ -97,6 +104,8 @@ public class ObservableValidatedClassTests
         // Act & Assert - should not throw
         await observable.DisposeAsync();
         await observable.DisposeAsync();
+
+        Assert.IsTrue(observable.IsDisposed);
     }
 
     [TestMethod]
@@ -153,6 +162,6 @@ public class ObservableValidatedClassTests
         // Assert
         Assert.IsTrue(observable.IsDisposed);
         Assert.IsTrue(observable.IsAsyncDisposed);
-        Assert.AreEqual(0, observable.Properties.Count);
+        Assert.IsEmpty(observable.Properties);
     }
 }

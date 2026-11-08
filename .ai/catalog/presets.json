@@ -1,0 +1,366 @@
+{
+  "$comment": "Named selections expanded by `catalog.py` when a manifest sets `preset`. An explicit id in the manifest unions on top of the preset; `exclude` removes from either. Presets name items from all sources (`template` ids bare, imported ones as `source:name`); `all: true` means every item the catalog currently offers of that kind, so `Everything` never needs regenerating when a skill is added.",
+  "presetVersion": 1,
+  "presets": {
+    "Architecture": {
+      "description": "System design end to end: the architect agent and its design chain, an ADR writer and architecture review from both catalogs.",
+      "skills": [
+        "architect",
+        "council",
+        "design-interrogation",
+        "gap-review",
+        "solution-generator",
+        "ubiquitous-language",
+        "usecase-specification",
+        "user-story",
+        "vertical-slices",
+        "awesome-copilot:architecture-blueprint-generator"
+      ],
+      "agents": [
+        "architect",
+        "awesome-copilot:project-architecture-planner",
+        "awesome-copilot:adr-generator",
+        "awesome-copilot:se-system-architecture-reviewer"
+      ]
+    },
+    "Aspire": {
+      "description": "Aspire distributed apps: route to the right workflow, initialize or wire an AppHost, run the lifecycle, observe telemetry, deploy, and migrate Project v2.",
+      "skills": [
+        "aspire-skills:aspire",
+        "aspire-skills:aspire-init",
+        "aspire-skills:aspireify",
+        "aspire-skills:aspire-orchestration",
+        "aspire-skills:aspire-monitoring",
+        "aspire-skills:aspire-deployment",
+        "aspire-skills:aspire-project-v2-migration"
+      ]
+    },
+    "Books, blogs and writing": {
+      "description": "Documentation and prose: READMEs, ADRs, blog posts, books-to-skills and Microsoft docs lookup.",
+      "skills": [
+        "technical-writer",
+        "book-to-skill",
+        "hugo",
+        "awesome-copilot:documentation-writer",
+        "awesome-copilot:make-blog-post",
+        "awesome-copilot:readme-blueprint-generator",
+        "awesome-copilot:create-readme",
+        "awesome-copilot:markdown-to-html",
+        "awesome-copilot:microsoft-docs",
+        "awesome-copilot:docs-sync-audit"
+      ],
+      "agents": [
+        "writer",
+        "awesome-copilot:gem-documentation-writer",
+        "awesome-copilot:markdown-accessibility-assistant",
+        "awesome-copilot:adr-generator"
+      ]
+    },
+    "Design": {
+      "description": "Visual and interaction design: theming generators and UI implementation across Blazor, MAUI, WPF and WinUI, plus Copilot design personas.",
+      "skills": [
+        "blazor-fluentui",
+        "blazor-theme-generator",
+        "css-theme-generator",
+        "xaml-theme-generator",
+        "keycloak-theme-colors",
+        "dotnet-maui:maui-accessibility",
+        "maui-apple-design",
+        "ui-blazor",
+        "ui-core",
+        "ui-maui",
+        "ui-uwp",
+        "ui-winui",
+        "ui-wpf",
+        "awesome-copilot:anti-ui-slop",
+        "awesome-copilot:penpot-uiux-design",
+        "awesome-copilot:premium-frontend-ui",
+        "awesome-copilot:fluentui-blazor"
+      ],
+      "agents": [
+        "designer",
+        "ui-developer",
+        "ui-tester",
+        "awesome-copilot:gem-designer",
+        "awesome-copilot:se-ux-ui-designer",
+        "awesome-copilot:accessibility",
+        "awesome-copilot:accessibility-runtime-tester"
+      ]
+    },
+    "Devops": {
+      "description": "CI/CD, containers, infrastructure as code and release rollout, with GitHub Actions and Terraform/Bicep agents.",
+      "skills": [
+        "devops-engineer",
+        "awesome-copilot:gem-devops-guidelines",
+        "awesome-copilot:devops-rollout-plan",
+        "awesome-copilot:github-actions-hardening",
+        "awesome-copilot:github-actions-efficiency",
+        "awesome-copilot:multi-stage-dockerfile",
+        "awesome-copilot:azure-devops-cli",
+        "aspire-skills:aspire-deployment"
+      ],
+      "agents": [
+        "awesome-copilot:gem-devops",
+        "awesome-copilot:devops-expert",
+        "awesome-copilot:github-actions-expert",
+        "awesome-copilot:terraform",
+        "awesome-copilot:bicep-plan",
+        "awesome-copilot:bicep-implement"
+      ]
+    },
+    ".Net Core": {
+      "description": ".NET backend work: CQRS, EF Core, APIs, async and documentation conventions, plus the C# test stacks.",
+      "skills": [
+        "api-endpoints",
+        "awesome-copilot:csharp-async",
+        "awesome-copilot:csharp-docs",
+        "awesome-copilot:csharp-xunit",
+        "awesome-copilot:dotnet-best-practices",
+        "awesome-copilot:dotnet-design-pattern-review",
+        "awesome-copilot:nuget-manager",
+        "code-reviewer",
+        "council",
+        "database-migration",
+        "dotnet-engineer",
+        "integration-specialist",
+        "performance-engineer",
+        "refactor",
+        "security",
+        "unit-tester"
+      ],
+      "agents": [
+        "developer",
+        "tester",
+        "architect",
+        "awesome-copilot:CSharpExpert",
+        "awesome-copilot:dotnet-upgrade",
+        "awesome-copilot:csharp-dotnet-janitor",
+        "awesome-copilot:dotnet-fullstack-mentor"
+      ],
+      "recommended": true
+    },
+    ".Net Maui": {
+      "description": "Everything MAUI: app architecture, controls, auth, offline data, notifications, bindings, release and DevFlow debugging.",
+      "skills": [
+        "maui-specialist",
+        "dotnet-maui:maui-app-architecture",
+        "dotnet-maui:maui-app-assets-lifecycle",
+        "dotnet-maui:maui-auth-secure-storage",
+        "maui-blazor",
+        "dotnet-maui:maui-blazor-hybrid",
+        "dotnet-maui:maui-controls-deep-dive",
+        "dotnet-maui:maui-custom-handlers",
+        "dotnet-maui:maui-device-capabilities",
+        "dotnet-maui:maui-networking-offline-data",
+        "dotnet-maui:maui-notifications-deep-links",
+        "dotnet-maui:maui-performance",
+        "dotnet-maui:maui-project-structure",
+        "dotnet-maui:maui-ui-patterns",
+        "dotnet-maui:maui-unit-testing",
+        "dotnet-maui:maui-localization-theming",
+        "dotnet-maui:maui-platform-invoke",
+        "dotnet-maui:maui-essentials-ai",
+        "dotnet-maui:maui-ai-tool-bindings",
+        "dotnet-maui:maui-aspire-client",
+        "dotnet-maui:maui-current-apis",
+        "dotnet-maui:maui-release-notes",
+        "dotnet-maui:maui-xcode27-migration",
+        "maui-apple-design",
+        "dotnet-maui:maui-accessibility",
+        "dotnet-maui:maui-labs-platform-targeting",
+        "dotnet-maui:xamarin-forms-migration",
+        "dotnet-maui-tooling:android-java-bindings",
+        "dotnet-maui-tooling:android-slim-bindings",
+        "dotnet-maui-tooling:ios-slim-bindings",
+        "mobile-release",
+        "dotnet-maui-tooling:devflow-automation",
+        "dotnet-maui-tooling:devflow-connect",
+        "dotnet-maui-tooling:maui-devflow-debug",
+        "dotnet-maui-tooling:maui-devflow-onboard",
+        "dotnet-maui-tooling:maui-devflow-session-review",
+        "dotnet-maui-tooling:maui-ai-debugging",
+        "dotnet-maui-tooling:dotnet-workload-info",
+        "awesome-copilot:mvvm-toolkit",
+        "awesome-copilot:mvvm-toolkit-di",
+        "awesome-copilot:mvvm-toolkit-messenger"
+      ],
+      "agents": [
+        "developer",
+        "tester",
+        "ui-developer",
+        "ui-tester",
+        "awesome-copilot:dotnet-maui",
+        "awesome-copilot:gem-mobile-tester",
+        "dotnet-maui:expert-reviewer"
+      ]
+    },
+    ".Net Web and Blazor": {
+      "description": "Backend plus Blazor UI: APIs, security, EF Core, Fluent UI Blazor, E2E tests and the full review chain.",
+      "skills": [
+        "blazor-specialist",
+        "blazor-fluentui",
+        "blazor-theme-generator",
+        "css-theme-generator",
+        "ui-blazor",
+        "ui-core",
+        "api-endpoints",
+        "api-security",
+        "dotnet-engineer",
+        "database-migration",
+        "integration-specialist",
+        "performance-engineer",
+        "unit-tester",
+        "playwright-tester",
+        "code-reviewer",
+        "awesome-copilot:fluentui-blazor",
+        "awesome-copilot:aspnet-minimal-api-openapi",
+        "awesome-copilot:api-breaking-change-detector",
+        "awesome-copilot:premium-frontend-ui",
+        "awesome-copilot:csharp-xunit"
+      ],
+      "agents": [
+        "architect",
+        "developer",
+        "ui-developer",
+        "tester",
+        "reviewer",
+        "awesome-copilot:frontend-performance-investigator",
+        "awesome-copilot:openapi-to-application"
+      ]
+    },
+    ".Net WinUI": {
+      "description": "WinUI 3 / Windows App SDK work: Fluent shell, UWP migration, MSIX publishing and the MVVM Toolkit.",
+      "skills": [
+        "winui-specialist",
+        "ui-winui",
+        "ui-uwp",
+        "ui-core",
+        "xaml-theme-generator",
+        "dotnet-engineer",
+        "awesome-copilot:winui3-migration-guide",
+        "awesome-copilot:msstore-cli",
+        "awesome-copilot:microsoft-store-publisher",
+        "awesome-copilot:mvvm-toolkit",
+        "awesome-copilot:mvvm-toolkit-di",
+        "awesome-copilot:mvvm-toolkit-messenger",
+        "awesome-copilot:winmd-api-search"
+      ],
+      "agents": [
+        "developer",
+        "ui-developer",
+        "ui-tester"
+      ]
+    },
+    ".Net WPF": {
+      "description": "WPF desktop work with the shared UI stack, XAML theming and the MVVM Toolkit.",
+      "skills": [
+        "ui-wpf",
+        "ui-core",
+        "xaml-theme-generator",
+        "dotnet-engineer",
+        "awesome-copilot:mvvm-toolkit",
+        "awesome-copilot:mvvm-toolkit-di",
+        "awesome-copilot:mvvm-toolkit-messenger",
+        "awesome-copilot:winmd-api-search",
+        "awesome-copilot:microsoft-store-publisher"
+      ],
+      "agents": [
+        "designer",
+        "developer",
+        "ui-developer"
+      ]
+    },
+    "Review": {
+      "description": "Code review and quality gates: the reviewer agent, gap review, audit skills and the Copilot quality playbook.",
+      "skills": [
+        "code-reviewer",
+        "gap-review",
+        "verify-config",
+        "council",
+        "awesome-copilot:quality-playbook",
+        "awesome-copilot:review-and-refactor",
+        "awesome-copilot:audit-integrity",
+        "awesome-copilot:docs-sync-audit"
+      ],
+      "agents": [
+        "reviewer",
+        "awesome-copilot:quality-playbook"
+      ]
+    },
+    "Security": {
+      "description": "Threat modelling, secure coding, API hardening, secret scanning and agent supply-chain review from all sources.",
+      "skills": [
+        "api-security",
+        "security",
+        "software-security",
+        "awesome-copilot:security-review",
+        "awesome-copilot:agent-owasp-compliance",
+        "awesome-copilot:secret-scanning",
+        "awesome-copilot:mcp-security-audit",
+        "awesome-copilot:agent-supply-chain"
+      ],
+      "agents": [
+        "security",
+        "awesome-copilot:se-security-reviewer",
+        "awesome-copilot:sast-sca-security-analyzer",
+        "awesome-copilot:trojan-skill-hunter"
+      ]
+    },
+    "Tools": {
+      "description": "Meta-tooling: skill and agent creation, catalog maintenance, Copilot CLI, MCP builders and prompt engineering.",
+      "skills": [
+        "skill-creator",
+        "sync-platforms",
+        "upgrade-template",
+        "verify-config",
+        "awesome-copilot:copilot-cli-quickstart",
+        "awesome-copilot:cli-mastery",
+        "awesome-copilot:github-copilot-starter",
+        "awesome-copilot:agent-skill-stack",
+        "awesome-copilot:copilot-sdk",
+        "awesome-copilot:tldr-prompt",
+        "awesome-copilot:suggest-awesome-github-copilot-agents",
+        "awesome-copilot:suggest-awesome-github-copilot-skills",
+        "awesome-copilot:dotnet-mcp-builder",
+        "awesome-copilot:mcp-cli",
+        "awesome-copilot:microsoft-skill-creator",
+        "awesome-copilot:system-commandline-cli",
+        "awesome-copilot:webmcpify"
+      ],
+      "agents": [
+        "awesome-copilot:gem-skill-creator",
+        "awesome-copilot:custom-agent-foundry",
+        "awesome-copilot:prompt-builder",
+        "awesome-copilot:prompt-engineer"
+      ]
+    },
+    "Minimal": {
+      "description": "The smallest useful template baseline: architecture, implementation, review, security and documentation, with the architect, developer and reviewer agents.",
+      "skills": [
+        "architect",
+        "code-reviewer",
+        "dotnet-engineer",
+        "security",
+        "technical-writer"
+      ],
+      "agents": [
+        "architect",
+        "developer",
+        "reviewer"
+      ]
+    },
+    "Everything": {
+      "description": "Everything the catalog offers from all sources. Used by the template repository itself as a regression guard, and by projects that want the whole set.",
+      "skills": [
+        {
+          "all": true
+        }
+      ],
+      "agents": [
+        {
+          "all": true
+        }
+      ]
+    }
+  }
+}

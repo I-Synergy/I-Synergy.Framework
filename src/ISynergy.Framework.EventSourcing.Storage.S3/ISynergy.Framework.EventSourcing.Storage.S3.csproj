@@ -11,7 +11,6 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ISynergy.Framework.EventSourcing.Storage\ISynergy.Framework.EventSourcing.Storage.csproj" />

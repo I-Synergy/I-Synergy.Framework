@@ -48,7 +48,7 @@ public static partial class Vector
     public static double[] Interval(int a, int b, int steps, bool includeLast = true)
     {
         if (steps < 0)
-            throw new ArgumentOutOfRangeException("steps", "The number of steps must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(steps), "The number of steps must be positive.");
 
         if (steps == 0)
             return [];
@@ -123,7 +123,7 @@ public static partial class Vector
     public static double[] Interval(double a, double b, int steps, bool includeLast = true)
     {
         if (steps < 0)
-            throw new ArgumentOutOfRangeException("steps", "The number of steps must be positive.");
+            throw new ArgumentOutOfRangeException(nameof(steps), "The number of steps must be positive.");
 
         if (steps == 0)
             return [];

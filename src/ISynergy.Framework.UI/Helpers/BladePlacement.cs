@@ -5,21 +5,21 @@ namespace ISynergy.Framework.UI.Helpers;
 
 /// <summary>
 /// Platform-agnostic helper that decides which physical screen edge a blade pane
-/// is anchored to. It resolves the logical <see cref="BladePaneAnchor"/> against the
+/// is anchored to. It resolves the logical <see cref="BladeViewAnchor"/> against the
 /// active flow direction so that WPF, MAUI and WinUI hosts share the same contract.
 /// </summary>
 public static class BladePlacement
 {
     /// <summary>
-    /// Resolves <see cref="BladePaneAnchor.Auto"/> to <see cref="BladePaneAnchor.End"/>,
+    /// Resolves <see cref="BladeViewAnchor.Auto"/> to <see cref="BladeViewAnchor.End"/>,
     /// leaving an explicit anchor unchanged. This only concerns the logical edge and does
     /// not flip the result for right-to-left.
     /// </summary>
     /// <param name="anchor">The logical anchor to resolve.</param>
     /// <param name="isRightToLeft">Whether the active flow direction is right-to-left.</param>
     /// <returns>The resolved logical anchor.</returns>
-    public static BladePaneAnchor Resolve(BladePaneAnchor anchor, bool isRightToLeft) =>
-        anchor == BladePaneAnchor.Auto ? BladePaneAnchor.End : anchor;
+    public static BladeViewAnchor Resolve(BladeViewAnchor anchor, bool isRightToLeft) =>
+        anchor == BladeViewAnchor.Auto ? BladeViewAnchor.End : anchor;
 
     /// <summary>
     /// Determines whether the resolved anchor maps to the physical LEFT edge.
@@ -27,14 +27,14 @@ public static class BladePlacement
     /// <param name="anchor">The logical anchor.</param>
     /// <param name="isRightToLeft">Whether the active flow direction is right-to-left.</param>
     /// <returns><c>true</c> when the pane sits on the physical left edge; otherwise, <c>false</c>.</returns>
-    public static bool IsStartSide(BladePaneAnchor anchor, bool isRightToLeft)
+    public static bool IsStartSide(BladeViewAnchor anchor, bool isRightToLeft)
     {
         var resolved = Resolve(anchor, isRightToLeft);
 
         // In LTR, the logical Start edge is on the left; in RTL it is mirrored to the right.
         return isRightToLeft
-            ? resolved == BladePaneAnchor.End
-            : resolved == BladePaneAnchor.Start;
+            ? resolved == BladeViewAnchor.End
+            : resolved == BladeViewAnchor.Start;
     }
 
     /// <summary>
@@ -47,10 +47,10 @@ public static class BladePlacement
     /// <exception cref="System.Globalization.CultureNotFoundException">
     /// Thrown when <paramref name="cultureName"/> is not a valid culture name.
     /// </exception>
-    public static bool IsStartSide(BladePaneAnchor anchor, string? cultureName)
+    public static bool IsStartSide(BladeViewAnchor anchor, string? cultureName)
     {
         var isRightToLeft = !string.IsNullOrWhiteSpace(cultureName)
-            && GlobalizationConstants.IsRightToLeftLanguage(cultureName!);
+            && GlobalizationConstants.IsRightToLeftLanguage(cultureName);
 
         return IsStartSide(anchor, isRightToLeft);
     }
@@ -63,7 +63,7 @@ public static class BladePlacement
     /// <param name="anchor">The logical anchor.</param>
     /// <param name="isRightToLeft">Whether the active flow direction is right-to-left.</param>
     /// <returns><c>+1</c> when the pane sits on the physical right edge; otherwise, <c>-1</c>.</returns>
-    public static int HorizontalSign(BladePaneAnchor anchor, bool isRightToLeft) =>
+    public static int HorizontalSign(BladeViewAnchor anchor, bool isRightToLeft) =>
         HorizontalSign(IsStartSide(anchor, isRightToLeft), isRightToLeft);
 
     /// <summary>

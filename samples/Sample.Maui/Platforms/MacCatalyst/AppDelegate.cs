@@ -9,8 +9,7 @@ public class AppDelegate : MauiUIApplicationDelegate
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
     /// <summary>
-    /// Hides the native window title so the shell header is the only title bar on macOS.
-    /// The traffic-light buttons stay in place.
+    /// Uses the standard opaque title bar so Mac Catalyst matches the native macOS window.
     /// </summary>
     public override bool FinishedLaunching(UIApplication application, NSDictionary? launchOptions)
     {
@@ -20,7 +19,7 @@ public class AppDelegate : MauiUIApplicationDelegate
         {
             if (window.WindowScene?.Titlebar is { } titlebar)
             {
-                titlebar.TitleVisibility = UITitlebarTitleVisibility.Hidden;
+                titlebar.TitleVisibility = UITitlebarTitleVisibility.Visible;
                 titlebar.Toolbar = null;
             }
         }

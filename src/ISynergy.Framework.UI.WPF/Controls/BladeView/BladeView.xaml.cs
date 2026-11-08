@@ -3,8 +3,6 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.UI.Enumerations;
 using ISynergy.Framework.UI.Helpers;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,9 +40,9 @@ public partial class BladeView : UserControl, IDisposable
     /// </summary>
     public static readonly DependencyProperty AnchorProperty = DependencyProperty.Register(
         nameof(Anchor),
-        typeof(BladePaneAnchor),
+        typeof(BladeViewAnchor),
         typeof(BladeView),
-        new PropertyMetadata(BladePaneAnchor.Auto, OnAnchorChanged));
+        new PropertyMetadata(BladeViewAnchor.Auto, OnAnchorChanged));
 
     /// <summary>
     /// Identifies the <see cref="DisabledOpacity"/> dependency property.
@@ -87,7 +85,7 @@ public partial class BladeView : UserControl, IDisposable
     /// <see cref="IViewModelBladeView"/> carried by the data context are used instead.
     /// </summary>
     /// <value>The blade views, in opening order.</value>
-    public ObservableCollection<IView>? ItemsSource
+    public ObservableCollection<IView>? ItemsSource // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (ObservableCollection<IView>?)GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
@@ -96,10 +94,10 @@ public partial class BladeView : UserControl, IDisposable
     /// <summary>
     /// Gets or sets the logical edge the blade pane is anchored to.
     /// </summary>
-    /// <value>The logical anchor; <see cref="BladePaneAnchor.Auto"/> by default.</value>
-    public BladePaneAnchor Anchor
+    /// <value>The logical anchor; <see cref="BladeViewAnchor.Auto"/> by default.</value>
+    public BladeViewAnchor Anchor // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
-        get => (BladePaneAnchor)GetValue(AnchorProperty);
+        get => (BladeViewAnchor)GetValue(AnchorProperty);
         set => SetValue(AnchorProperty, value);
     }
 
@@ -107,7 +105,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the opacity applied to every blade that is not the newest one.
     /// </summary>
     /// <value>The dimmed opacity; <c>0.75</c> by default.</value>
-    public double DisabledOpacity
+    public double DisabledOpacity // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (double)GetValue(DisabledOpacityProperty);
         set => SetValue(DisabledOpacityProperty, value);
@@ -117,7 +115,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the spacing between two adjacent blades.
     /// </summary>
     /// <value>The spacing in device-independent pixels; <c>10</c> by default.</value>
-    public double BladeSpacing
+    public double BladeSpacing // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (double)GetValue(BladeSpacingProperty);
         set => SetValue(BladeSpacingProperty, value);
@@ -127,7 +125,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the maximum width of a single blade card.
     /// </summary>
     /// <value>The maximum width; <c>520</c> by default.</value>
-    public double BladeMaxWidth
+    public double BladeMaxWidth // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (double)GetValue(BladeMaxWidthProperty);
         set => SetValue(BladeMaxWidthProperty, value);
@@ -137,7 +135,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the padding between the blade stack and the host edges.
     /// </summary>
     /// <value>The inner padding; <c>8</c> on every side by default.</value>
-    public Thickness InnerPadding
+    public Thickness InnerPadding // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (Thickness)GetValue(InnerPaddingProperty);
         set => SetValue(InnerPaddingProperty, value);
@@ -153,8 +151,7 @@ public partial class BladeView : UserControl, IDisposable
     private readonly Dictionary<IView, Border> _cards = [];
     private readonly HashSet<Border> _animatedCards = [];
 
-    private ObservableCollection<IView>? _subscribedCollection;
-    private IViewModelBladeView? _subscribedViewModel;
+    private readonly BladeSourceTracker _bladeSourceTracker;
     private bool _isDisposed;
 
     #endregion
@@ -165,6 +162,12 @@ public partial class BladeView : UserControl, IDisposable
     public BladeView()
     {
         InitializeComponent();
+
+        _bladeSourceTracker = new BladeSourceTracker(
+            () => DataContext,
+            () => ItemsSource,
+            RebuildBlades,
+            UpdateVisibility);
 
         ScrimBorder.MouseLeftButtonUp += ScrimBorder_MouseLeftButtonUp;
         DataContextChanged += BladeView_DataContextChanged;
@@ -238,74 +241,14 @@ public partial class BladeView : UserControl, IDisposable
         RebuildBlades();
     }
 
-    private void AttachViewModel()
-    {
-        var viewModel = DataContext as IViewModelBladeView;
+    private void AttachViewModel() => _bladeSourceTracker.AttachViewModel();
 
-        if (ReferenceEquals(viewModel, _subscribedViewModel))
-            return;
-
-        if (_subscribedViewModel is not null)
-            _subscribedViewModel.PropertyChanged -= ViewModel_PropertyChanged;
-
-        _subscribedViewModel = viewModel;
-
-        if (_subscribedViewModel is not null)
-            _subscribedViewModel.PropertyChanged += ViewModel_PropertyChanged;
-    }
-
-    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (_isDisposed)
-            return;
-
-        if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(IViewModelBladeView.Blades))
-        {
-            // The collection instance itself may have been replaced.
-            AttachCollection();
-            RebuildBlades();
-            return;
-        }
-
-        UpdateVisibility();
-    }
+    private void AttachCollection() => _bladeSourceTracker.AttachCollection();
 
     /// <summary>
     /// Resolves the collection of blades currently in effect.
     /// </summary>
-    private ObservableCollection<IView>? ResolveBlades() =>
-        ItemsSource ?? (DataContext as IViewModelBladeView)?.Blades;
-
-    private void AttachCollection()
-    {
-        var collection = ResolveBlades();
-
-        if (ReferenceEquals(collection, _subscribedCollection))
-            return;
-
-        if (_subscribedCollection is not null)
-            _subscribedCollection.CollectionChanged -= Blades_CollectionChanged;
-
-        _subscribedCollection = collection;
-
-        if (_subscribedCollection is not null)
-            _subscribedCollection.CollectionChanged += Blades_CollectionChanged;
-    }
-
-    private void Blades_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (_isDisposed)
-            return;
-
-        try
-        {
-            RebuildBlades();
-        }
-        catch (Exception ex)
-        {
-            Trace.TraceError($"BladeView failed to handle a blade collection change: {ex}");
-        }
-    }
+    private ObservableCollection<IView>? ResolveBlades() => _bladeSourceTracker.ResolveBlades();
 
     #endregion
 
@@ -316,15 +259,9 @@ public partial class BladeView : UserControl, IDisposable
         if (_isDisposed)
             return;
 
-        var blades = ResolveBlades();
-        var wanted = blades?.ToList() ?? [];
+        var wanted = ResolveBlades()?.ToList() ?? [];
 
-        // Drop the cards of blades that are no longer present.
-        foreach (var stale in _cards.Keys.Where(blade => !wanted.Contains(blade)).ToList())
-        {
-            ReleaseCard(_cards[stale]);
-            _cards.Remove(stale);
-        }
+        BladeViewInteraction.RemoveStaleCards(wanted, _cards, ReleaseCard);
 
         var ordered = new List<UIElement>(wanted.Count);
 
@@ -625,17 +562,7 @@ public partial class BladeView : UserControl, IDisposable
 
         try
         {
-            var blades = ResolveBlades();
-
-            if (blades is null || blades.Count == 0)
-                return;
-
-            // Closing is delegated to the blade's view model: its Closed event drives
-            // BaseBladeService.RemoveBlade, which removes the blade from the owner.
-            var newest = blades[^1];
-
-            if (newest.ViewModel is IViewModel viewModel && viewModel.CloseCommand.CanExecute(null))
-                viewModel.CloseCommand.Execute(null);
+            BladeViewInteraction.CloseNewestBlade(ResolveBlades());
         }
         catch (Exception ex)
         {
@@ -674,17 +601,7 @@ public partial class BladeView : UserControl, IDisposable
 
     private void Cleanup()
     {
-        if (_subscribedCollection is not null)
-        {
-            _subscribedCollection.CollectionChanged -= Blades_CollectionChanged;
-            _subscribedCollection = null;
-        }
-
-        if (_subscribedViewModel is not null)
-        {
-            _subscribedViewModel.PropertyChanged -= ViewModel_PropertyChanged;
-            _subscribedViewModel = null;
-        }
+        _bladeSourceTracker.Dispose();
 
         ScrimBorder.MouseLeftButtonUp -= ScrimBorder_MouseLeftButtonUp;
         DataContextChanged -= BladeView_DataContextChanged;

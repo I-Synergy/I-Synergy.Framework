@@ -93,21 +93,21 @@ public class S3StorageServiceTests
     public async Task UploadFileAsync_EmptyContainerName_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.UploadFileAsync("conn", "", new byte[1], "text/plain", "file.txt", ""));
+            _service.UploadFileAsync("conn", "", new byte[1], "text/plain", "file.txt", "", cancellationToken: TestContext.CancellationToken));
     }
 
     [TestMethod]
     public async Task UploadFileAsync_EmptyFilename_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.UploadFileAsync("conn", "bucket", new byte[1], "text/plain", "", ""));
+            _service.UploadFileAsync("conn", "bucket", new byte[1], "text/plain", "", "", cancellationToken: TestContext.CancellationToken));
     }
 
     [TestMethod]
     public async Task UploadFileAsync_NullFileBytes_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.UploadFileAsync("conn", "bucket", null!, "text/plain", "file.txt", ""));
+            _service.UploadFileAsync("conn", "bucket", null!, "text/plain", "file.txt", "", cancellationToken: TestContext.CancellationToken));
     }
 
     // ------------------------------------------------------------------ //
@@ -118,14 +118,14 @@ public class S3StorageServiceTests
     public async Task DownloadFileAsync_EmptyContainerName_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.DownloadFileAsync("conn", "", "file.txt", ""));
+            _service.DownloadFileAsync("conn", "", "file.txt", "", TestContext.CancellationToken));
     }
 
     [TestMethod]
     public async Task DownloadFileAsync_EmptyFilename_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.DownloadFileAsync("conn", "bucket", "", ""));
+            _service.DownloadFileAsync("conn", "bucket", "", "", TestContext.CancellationToken));
     }
 
     // ------------------------------------------------------------------ //
@@ -136,21 +136,21 @@ public class S3StorageServiceTests
     public async Task UpdateFileAsync_EmptyContainerName_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.UpdateFileAsync("conn", "", new byte[1], "text/plain", "file.txt", ""));
+            _service.UpdateFileAsync("conn", "", new byte[1], "text/plain", "file.txt", "", TestContext.CancellationToken));
     }
 
     [TestMethod]
     public async Task UpdateFileAsync_EmptyFilename_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.UpdateFileAsync("conn", "bucket", new byte[1], "text/plain", "", ""));
+            _service.UpdateFileAsync("conn", "bucket", new byte[1], "text/plain", "", "", TestContext.CancellationToken));
     }
 
     [TestMethod]
     public async Task UpdateFileAsync_NullFileBytes_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.UpdateFileAsync("conn", "bucket", null!, "text/plain", "file.txt", ""));
+            _service.UpdateFileAsync("conn", "bucket", null!, "text/plain", "file.txt", "", TestContext.CancellationToken));
     }
 
     // ------------------------------------------------------------------ //
@@ -161,14 +161,14 @@ public class S3StorageServiceTests
     public async Task RemoveFileAsync_EmptyContainerName_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.RemoveFileAsync("conn", "", "file.txt", ""));
+            _service.RemoveFileAsync("conn", "", "file.txt", "", TestContext.CancellationToken));
     }
 
     [TestMethod]
     public async Task RemoveFileAsync_EmptyFilename_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _service.RemoveFileAsync("conn", "bucket", "", ""));
+            _service.RemoveFileAsync("conn", "bucket", "", "", TestContext.CancellationToken));
     }
 
     // ------------------------------------------------------------------ //
@@ -185,4 +185,6 @@ public class S3StorageServiceTests
         disposable.Dispose();
         Assert.IsNotNull(disposable);
     }
+
+    public TestContext TestContext { get; set; }
 }

@@ -20,7 +20,14 @@ public class TelemetryExporterTests
         _openTelemetryBuilder = _services.AddOpenTelemetry();
     }
 
-    private IConfiguration CreateTestConfiguration()
+    [TestMethod]
+    public void Constructor_InitializesConfigurationAndBuilder()
+    {
+        Assert.IsNotNull(_configuration);
+        Assert.IsNotNull(_openTelemetryBuilder);
+    }
+
+    private static ConfigurationRoot CreateTestConfiguration()
     {
         // Create configuration sources
         var configSource = new MemoryConfigurationSource

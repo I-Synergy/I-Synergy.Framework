@@ -1,6 +1,6 @@
 ---
 name: tester
-description: Unit and integration test specialist — writes MSTest tests, Moq mocks, Reqnroll BDD scenarios
+description: Unit and integration test specialist — writes MSTest tests, Moq mocks, Reqnroll BDD scenarios. Use for MSTest/Reqnroll test design, BDD scenarios, and integration test strategy.
 runAs: subagent
 model: sonnet
 tools: Read, Write, Edit, Bash, Grep, Glob

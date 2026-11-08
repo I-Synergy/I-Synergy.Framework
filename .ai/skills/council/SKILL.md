@@ -115,7 +115,8 @@ Averaging is forbidden. A middle position no seat argued for is mush, not consen
 
 Escalate to the user via the escalation path in `.ai/reference/task-execution.md` when the chair
 cannot decide on the merits after synthesis, or when the decision would override a critical-rule
-violation or a security blocker a seat raised. Unresolved dissent is **never silently absorbed**;
+violation or a security blocker a seat raised. Unresolved dissent is **never absorbed** — it is
+escalated and recorded;
 every escalation names what was tried, the positions, and the options.
 
 ### 7. Record

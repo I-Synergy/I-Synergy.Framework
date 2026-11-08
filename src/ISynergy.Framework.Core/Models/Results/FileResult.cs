@@ -66,8 +66,7 @@ public sealed class FileResult : IDisposable
     {
         get
         {
-            if (_isDisposed)
-                throw new ObjectDisposedException(null);
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
 
             return _fileName;
         }
@@ -77,7 +76,7 @@ public sealed class FileResult : IDisposable
     /// Gets or sets the file.
     /// </summary>
     /// <value>The file.</value>
-    [Obsolete("Use GetFileAsync() instead. Synchronous access to a file supplied through an async getter blocks the calling thread and can deadlock.")]
+    [Obsolete("Use GetFileAsync() instead. Synchronous access to a file supplied through an async getter blocks the calling thread and can deadlock.")] // NOSONAR - deprecated public API kept for binary compatibility
     public byte[] File
     {
         get
@@ -96,7 +95,7 @@ public sealed class FileResult : IDisposable
     public async Task<byte[]> GetFileAsync()
     {
         using var stream = await GetStreamAsync().ConfigureAwait(false);
-        return stream.ToByteArray();
+        return await stream.ToByteArrayAsync().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -106,11 +105,10 @@ public sealed class FileResult : IDisposable
     /// </summary>
     /// <returns>stream object</returns>
     /// <exception cref="ObjectDisposedException">null</exception>
-    [Obsolete("Use GetStreamAsync() instead. This method can block the calling thread and deadlock when the file was supplied through an async getter.")]
+    [Obsolete("Use GetStreamAsync() instead. This method can block the calling thread and deadlock when the file was supplied through an async getter.")] // NOSONAR - deprecated public API kept for binary compatibility
     public Stream GetStream()
     {
-        if (_isDisposed)
-            throw new ObjectDisposedException(null);
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
 
         return GetStreamCore();
     }
@@ -135,8 +133,7 @@ public sealed class FileResult : IDisposable
     /// <exception cref="ObjectDisposedException">null</exception>
     public async Task<Stream> GetStreamAsync()
     {
-        if (_isDisposed)
-            throw new ObjectDisposedException(null);
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
 
         if (_asyncStreamGetter is not null)
             return await _asyncStreamGetter();
@@ -157,8 +154,7 @@ public sealed class FileResult : IDisposable
     {
         get
         {
-            if (_isDisposed)
-                throw new ObjectDisposedException(null);
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
 
             return _filePath;
         }

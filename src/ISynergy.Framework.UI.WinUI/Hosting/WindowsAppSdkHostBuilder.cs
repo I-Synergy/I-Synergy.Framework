@@ -24,7 +24,6 @@ public sealed class WindowsAppSdkHostBuilder<[DynamicallyAccessedMembers(Dynamic
     private readonly HostingEnvironment _hostingEnvironment;
     private IServiceProviderFactory<IServiceCollection> _serviceProviderFactory = new DefaultServiceProviderFactory();
     private bool _hostBuilt;
-    private IServiceProvider _serviceProvider = null!;
     private readonly PhysicalFileProvider _defaultProvider;
 
     /// <inheritdoc />
@@ -116,12 +115,12 @@ public sealed class WindowsAppSdkHostBuilder<[DynamicallyAccessedMembers(Dynamic
 
         var containerBuilder = _serviceProviderFactory.CreateBuilder(_services);
 
-        _serviceProvider = _serviceProviderFactory.CreateServiceProvider(containerBuilder)
+        var serviceProvider = _serviceProviderFactory.CreateServiceProvider(containerBuilder)
             ?? throw new InvalidOperationException("Service provider factory returned null.");
 
-        _ = _serviceProvider.GetService<IConfiguration>();
+        _ = serviceProvider.GetService<IConfiguration>();
 
-        var host = _serviceProvider.GetRequiredService<IHost>();
+        var host = serviceProvider.GetRequiredService<IHost>();
 
         if (diagnosticListener.IsEnabled() && diagnosticListener.IsEnabled(hostBuiltEventName))
             Write(diagnosticListener, hostBuiltEventName, host);

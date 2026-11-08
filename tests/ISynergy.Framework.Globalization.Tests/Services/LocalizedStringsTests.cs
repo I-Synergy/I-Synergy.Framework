@@ -38,7 +38,7 @@ public class LocalizedStringsTests
         // Assert
         Assert.IsNotNull(result);
         Assert.IsFalse(string.IsNullOrEmpty(result));
-        Assert.IsFalse(result.StartsWith("["));
+        Assert.DoesNotStartWith("[", result);
     }
 
     [TestMethod]
@@ -142,8 +142,8 @@ public class LocalizedStringsTests
             // Assert
             Assert.IsNotNull(englishResult);
             Assert.IsNotNull(dutchResult);
-            Assert.IsFalse(englishResult.StartsWith("["));
-            Assert.IsFalse(dutchResult.StartsWith("["));
+            Assert.DoesNotStartWith("[", englishResult);
+            Assert.DoesNotStartWith("[", dutchResult);
             Assert.AreNotEqual(englishResult, dutchResult);
         }
         finally

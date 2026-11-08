@@ -1,7 +1,7 @@
 ---
 name: ui-core
 description: >-
-  Cross-platform UI abstractions (authentication, token storage, localization, theme + language view models) that every ISynergy shell builds on.
+  Cross-platform UI abstractions (authentication, token storage, localization, theme + language view models) that every ISynergy shell builds on. Use when building the shared UI abstractions — authentication, token storage, localization, or theme and language view models — that every ISynergy shell relies on.
 version: 2026.02.10
 sources:
   - src/ISynergy.Framework.UI

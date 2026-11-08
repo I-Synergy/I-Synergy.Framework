@@ -93,7 +93,7 @@ public abstract class BaseBladeService : IBladeService
             {
                 var submittedVmTypeName = typeof(TBladeViewModel).Name;
                 bladeVm.Submitted += (_, args) =>
-                    _ = HandleBladeSubmittedAsync(args.Result, submittedEventHandler, submittedVmTypeName).SafeFireAndForget();
+                    HandleBladeSubmittedAsync(args.Result, submittedEventHandler, submittedVmTypeName).SafeFireAndForget();
             }
 
             if (cancelledEventHandler is not null)
@@ -146,11 +146,37 @@ public abstract class BaseBladeService : IBladeService
     }
 
     /// <summary>
-    /// Platform-specific blade setup: resolves the view from <paramref name="serviceProvider"/>
-    /// (same scope as the ViewModel), monitors load, initializes the ViewModel,
-    /// and adds the blade to the owner.
+    /// Resolves the view type for a blade ViewModel. Platforms return their own selection
+    /// view types and otherwise fall back to the reflection-based naming convention.
     /// </summary>
-    protected abstract Task SetupAndOpenBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, IServiceProvider serviceProvider);
+    protected abstract Type? ResolveViewType(IViewModel bladeVm);
+
+    /// <summary>
+    /// Resolves the view from <paramref name="serviceProvider"/> (same scope as the ViewModel),
+    /// monitors load, initializes the ViewModel, and adds the blade to the owner.
+    /// </summary>
+    protected virtual async Task SetupAndOpenBladeAsync(IViewModelBladeView owner, IViewModelBlade bladeVm, IServiceProvider serviceProvider)
+    {
+        var viewType = ResolveViewType(bladeVm);
+
+        if (viewType is null || serviceProvider.GetRequiredService(viewType) is not IView view)
+            throw new InvalidOperationException($"Cannot resolve view for blade: {bladeVm.GetType().Name}");
+
+        view.ViewModel = bladeVm;
+
+        PrepareOwnerForBlade(owner, bladeVm);
+
+        // Wait for the view to finish loading
+        var loadTask = MonitorViewLoadAsync(view);
+
+        if (!bladeVm.IsInitialized)
+            await bladeVm.InitializeAsync();
+
+        await loadTask;
+
+        SafeOnNavigatedTo(bladeVm);
+        AddBladeToOwner(owner, view);
+    }
 
     /// <summary>
     /// Platform-specific view load monitoring. Default implementation waits for
@@ -159,7 +185,7 @@ public abstract class BaseBladeService : IBladeService
     protected abstract Task MonitorViewLoadAsync(IView view, int timeoutMs = 500);
 
     /// <inheritdoc />
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR - removal orchestration
     {
         if (viewmodel is not IViewModelBlade bladeVm)
             return;
@@ -180,7 +206,8 @@ public abstract class BaseBladeService : IBladeService
             }
 
             if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
-            {                if (owner.Blades.Count < 1)
+            {
+                if (owner.Blades.Count < 1)
                     owner.IsPaneVisible = false;
                 else if (owner.Blades[^1] is { } blade)
                 {

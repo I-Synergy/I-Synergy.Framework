@@ -10,7 +10,7 @@
     Title="{m:GetString Settings}">
 
     <!-- Settings blade page. Language, theme and accent color are applied live and persisted;
-         Save & close persists everything and closes the blade, Close discards (cancel). -->
+         the single Close button saves everything and closes the blade. -->
     <Border
         BackgroundColor="{AppThemeBinding Light={DynamicResource TintedGray100}, Dark={DynamicResource TintedGray900}}"
         Stroke="{AppThemeBinding Light={StaticResource AppBorderLight}, Dark={StaticResource AppBorderDark}}">
@@ -38,7 +38,8 @@
                         <Picker
                             x:Name="LanguagePicker"
                             ItemsSource="{Binding LanguageOptions}"
-                            SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}" />
+                            SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding DisplayName}" />
                     </VerticalStackLayout>
 
                     <!-- Theme -->
@@ -66,6 +67,7 @@
                             <Button
                                 x:Name="ColorTeal"
                                 WidthRequest="48"
+                                MinimumWidthRequest="48"
                                 HeightRequest="48"
                                 CornerRadius="4"
                                 BackgroundColor="#0B5D55"
@@ -74,6 +76,7 @@
                             <Button
                                 x:Name="ColorBlue"
                                 WidthRequest="48"
+                                MinimumWidthRequest="48"
                                 HeightRequest="48"
                                 CornerRadius="4"
                                 BackgroundColor="#0066CC"
@@ -82,6 +85,7 @@
                             <Button
                                 x:Name="ColorGreen"
                                 WidthRequest="48"
+                                MinimumWidthRequest="48"
                                 HeightRequest="48"
                                 CornerRadius="4"
                                 BackgroundColor="#10B981"
@@ -90,6 +94,7 @@
                             <Button
                                 x:Name="ColorOrange"
                                 WidthRequest="48"
+                                MinimumWidthRequest="48"
                                 HeightRequest="48"
                                 CornerRadius="4"
                                 BackgroundColor="#FF8C00"
@@ -101,17 +106,15 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- Footer -->
-            <VerticalStackLayout Grid.Row="2" Spacing="8">
-                <Button
-                    Text="Save &amp; close"
-                    BackgroundColor="{DynamicResource Primary}"
-                    TextColor="White"
-                    Command="{Binding SaveCommand}" />
-                <Button
-                    Text="{m:GetString Close}"
-                    Command="{Binding CancelCommand}" />
-            </VerticalStackLayout>
+            <!-- Footer: a single action. The blade's values are applied live, so closing saves
+                 them and dismisses the blade (the WinUI and WPF blades have the same single button). -->
+            <Button
+                Grid.Row="2"
+                Text="{m:GetString Close}"
+                HorizontalOptions="Fill"
+                BackgroundColor="{DynamicResource Primary}"
+                TextColor="{DynamicResource PrimaryForeground}"
+                Command="{Binding SaveCommand}" />
         </Grid>
     </Border>
 </c:View>

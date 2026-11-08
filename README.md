@@ -8,6 +8,13 @@
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 ![.NET](https://img.shields.io/badge/.NET-10%20LTS%20%7C%2011%20preview-512BD4?logo=.net)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=alert_status)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=bugs)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=code_smells)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=security_rating)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
+
 </div>
 
 ## ✨ Key Features
@@ -34,7 +41,6 @@
 |:---|:---|
 | **I-Synergy.Framework.AspNetCore** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore?label=) |
 | **I-Synergy.Framework.AspNetCore.Authentication** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Authentication?label=) |
-| **I-Synergy.Framework.AspNetCore.Blazor** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Blazor?label=) |
 
 ### 🏛️ Enterprise Features
 
@@ -151,6 +157,7 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 | **I-Synergy.Framework.Update.WinUI** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WinUI?label=Deprecated) |
 | **I-Synergy.Framework.Update.WPF** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.WPF?label=Deprecated) |
 | **I-Synergy.Framework.Update.Uno** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.Update.Uno?label=Deprecated) |
+| **I-Synergy.Framework.AspNetCore.Blazor** | ![Version](https://img.shields.io/nuget/vpre/I-Synergy.Framework.AspNetCore.Blazor?label=) |
 
 </details>
 

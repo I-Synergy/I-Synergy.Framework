@@ -5,7 +5,7 @@ using Sample.Models;
 
 namespace Sample.ViewModels;
 
-public class DetailCViewModel : ViewModelBlade<TestItem>
+public partial class DetailCViewModel : ViewModelBlade<TestItem>
 {
     public DetailCViewModel(
         ICommonServices commonServices,

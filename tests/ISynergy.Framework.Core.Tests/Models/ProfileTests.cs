@@ -27,7 +27,7 @@ public class ProfileTests
     public void Organization_AsInterface_ExposesName()
     {
         // Arrange
-        IOrganization org = new TestOrganization
+        TestOrganization org = new TestOrganization
         {
             OrganizationId = Guid.NewGuid(),
             Name = "My Org"
@@ -188,7 +188,7 @@ public class ProfileTests
         var orgs = ((IProfile)profile).Organizations;
 
         // Assert
-        Assert.AreEqual(2, orgs.Count);
+        Assert.HasCount(2, orgs);
         Assert.AreEqual("Org A", orgs[0].Name);
         Assert.AreEqual("Org B", orgs[1].Name);
     }
@@ -241,9 +241,9 @@ public class ProfileTests
         Assert.AreEqual("NL", profile.CountryCode);
         Assert.AreEqual("nl-NL", profile.CultureCode);
         Assert.AreEqual("john@example.com", profile.Email);
-        Assert.AreEqual(2, profile.Roles.Count);
+        Assert.HasCount(2, profile.Roles);
         Assert.AreEqual("Administrator", profile.Roles[0]);
-        Assert.AreEqual(2, profile.Features.Count);
+        Assert.HasCount(2, profile.Features);
         Assert.AreEqual(now.AddHours(24), profile.Expiration);
         Assert.AreEqual("access-token", profile.Token.AccessToken);
         Assert.AreEqual("id-token", profile.Token.IdToken);
@@ -252,7 +252,7 @@ public class ProfileTests
         Assert.AreEqual("Bearer", profile.Token.TokenType);
 
         var orgs = ((IProfile)profile).Organizations;
-        Assert.AreEqual(1, orgs.Count);
+        Assert.HasCount(1, orgs);
         Assert.AreEqual(tenantId, orgs[0].OrganizationId);
         Assert.AreEqual("Acme Corp", orgs[0].Name);
     }
@@ -346,7 +346,7 @@ public class ProfileTests
 
         // Assert
         Assert.AreEqual(userId, profile.TenantId);
-        Assert.AreEqual(1, ((IProfile)profile).Organizations.Count); // orgs still present, just not selected
+        Assert.HasCount(1, ((IProfile)profile).Organizations); // orgs still present, just not selected
     }
 
     [TestMethod]
@@ -407,7 +407,7 @@ public class ProfileTests
         };
 
         // Assert
-        Assert.IsTrue(profile.Expiration < DateTimeOffset.UtcNow);
+        Assert.IsLessThan(DateTimeOffset.UtcNow, profile.Expiration);
     }
 
     [TestMethod]

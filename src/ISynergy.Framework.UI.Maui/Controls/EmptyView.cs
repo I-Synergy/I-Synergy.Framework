@@ -6,7 +6,7 @@ using ISynergy.Framework.UI.Abstractions.Services;
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Singleton)]
-public class EmptyView : ContentPage
+public partial class EmptyView : ContentPage
 {
     public EmptyView(ICommonServices commonServices)
     {

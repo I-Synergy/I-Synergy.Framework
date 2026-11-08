@@ -15,7 +15,7 @@ namespace Sample.ViewModels;
 /// </summary>
 /// <seealso cref="ViewModelDialog{Boolean}" />
 /// <seealso cref="IForgotPasswordViewModel" />
-public class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordViewModel
+public partial class ForgotPasswordViewModel : ViewModelDialog<bool>, IForgotPasswordViewModel
 {
     /// <summary>
     /// Gets the title.

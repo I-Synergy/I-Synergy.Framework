@@ -689,7 +689,7 @@ public static partial class Matrix
     public static double[,] Magic(int size)
     {
         if (size < 3)
-            throw new ArgumentOutOfRangeException("size", size,
+            throw new ArgumentOutOfRangeException(nameof(size), size,
                 "The square size must be greater or equal to 3.");
 
         var matrix = new double[size, size];
@@ -773,7 +773,7 @@ public static partial class Matrix
     public static double[,] Centering(int size)
     {
         if (size < 0)
-            throw new ArgumentOutOfRangeException("size", size,
+            throw new ArgumentOutOfRangeException(nameof(size), size,
                 "The size of the centering matrix must be a positive integer.");
 
         double[,] C = Matrix.Square(size, -1.0 / size);
@@ -831,8 +831,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] RowVector<T>(params T[] values)
     {
-        if (values is null)
-            throw new ArgumentNullException("values");
+        ArgumentNullException.ThrowIfNull(values);
 
         var matrix = new T[1, values.Length];
         for (var i = 0; i < values.Length; i++)
@@ -891,12 +890,12 @@ public static partial class Matrix
         if (array is null)
             return [-1];
         if (array.Rank == 0)
-            return new int[0];
+            return Array.Empty<int>();
 
         if (deep && IsJagged(array))
         {
             if (array.Length == 0)
-                return new int[0];
+                return Array.Empty<int>();
 
             int[] rest;
             if (!max)

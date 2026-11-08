@@ -23,8 +23,7 @@ public static class ComplexMatrix
     /// </summary>
     public static Complex[] Abs(this Complex[] x)
     {
-        if (x is null)
-            throw new ArgumentNullException("x");
+        ArgumentNullException.ThrowIfNull(x);
 
         var r = new Complex[x.Length];
         for (var i = 0; i < x.Length; i++)
@@ -37,8 +36,7 @@ public static class ComplexMatrix
     /// </summary>
     public static Complex Sum(this Complex[] x)
     {
-        if (x is null)
-            throw new ArgumentNullException("x");
+        ArgumentNullException.ThrowIfNull(x);
 
         var r = Complex.Zero;
         for (var i = 0; i < x.Length; i++)
@@ -51,10 +49,8 @@ public static class ComplexMatrix
     /// </summary>
     public static Complex[] Multiply(this Complex[] a, Complex[] b)
     {
-        if (a is null)
-            throw new ArgumentNullException("a");
-        if (b is null)
-            throw new ArgumentNullException("b");
+        ArgumentNullException.ThrowIfNull(a);
+        ArgumentNullException.ThrowIfNull(b);
 
         var r = new Complex[a.Length];
         for (var i = 0; i < a.Length; i++) r[i] = Complex.Multiply(a[i], b[i]);
@@ -202,8 +198,7 @@ public static class ComplexMatrix
     /// <param name="c">An array of complex numbers.</param>
     public static double[,] ToArray(this Complex[] c)
     {
-        if (c is null)
-            throw new ArgumentNullException("c");
+        ArgumentNullException.ThrowIfNull(c);
 
         var arr = new double[c.Length, 2];
         for (var i = 0; i < c.GetLength(0); i++)
@@ -228,14 +223,12 @@ public static class ComplexMatrix
     /// </returns>
     public static Complex[] ToComplex(this double[] real, double[] imag)
     {
-        if (real is null)
-            throw new ArgumentNullException("real");
+        ArgumentNullException.ThrowIfNull(real);
 
-        if (imag is null)
-            throw new ArgumentNullException("imag");
+        ArgumentNullException.ThrowIfNull(imag);
 
         if (real.Length != imag.Length)
-            throw new DimensionMismatchException("imag");
+            throw new DimensionMismatchException(nameof(imag));
 
         var arr = new Complex[real.Length];
         for (var i = 0; i < arr.Length; i++)
@@ -251,8 +244,7 @@ public static class ComplexMatrix
     /// <returns>The range of magnitude values in the complex vector.</returns>
     public static NumericRange Range(this Complex[] array)
     {
-        if (array is null)
-            throw new ArgumentNullException("array");
+        ArgumentNullException.ThrowIfNull(array);
 
         var min = array[0].Magnitude;
         var max = array[0].Magnitude;
@@ -278,8 +270,8 @@ public static class ComplexMatrix
     public static bool IsEqual(this Complex[][] objA, Complex[][] objB, double threshold)
     {
         if (objA is null && objB is null) return true;
-        if (objA is null) throw new ArgumentNullException("objA");
-        if (objB is null) throw new ArgumentNullException("objB");
+        ArgumentNullException.ThrowIfNull(objA);
+        ArgumentNullException.ThrowIfNull(objB);
 
         for (var i = 0; i < objA.Length; i++)
             for (var j = 0; j < objA[i].Length; j++)
@@ -305,8 +297,8 @@ public static class ComplexMatrix
     public static bool IsEqual(this Complex[] objA, Complex[] objB, double threshold)
     {
         if (objA is null && objB is null) return true;
-        if (objA is null) throw new ArgumentNullException("objA");
-        if (objB is null) throw new ArgumentNullException("objB");
+        ArgumentNullException.ThrowIfNull(objA);
+        ArgumentNullException.ThrowIfNull(objB);
 
         for (var i = 0; i < objA.Length; i++)
         {

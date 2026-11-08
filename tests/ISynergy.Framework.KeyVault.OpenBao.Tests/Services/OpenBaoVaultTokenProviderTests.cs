@@ -47,7 +47,7 @@ public class OpenBaoVaultTokenProviderTests
         var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(tempDir);
         var stateFile = Path.Combine(tempDir, "vault-state.json");
-        await File.WriteAllTextAsync(stateFile, """{"RootToken":"file-token","Keys":["key1"]}""");
+        await File.WriteAllTextAsync(stateFile, """{"RootToken":"file-token","Keys":["key1"]}""", TestContext.CancellationToken);
 
         try
         {
@@ -70,7 +70,7 @@ public class OpenBaoVaultTokenProviderTests
         var fullDir = Path.Combine(home, relPath);
         Directory.CreateDirectory(fullDir);
         var stateFile = Path.Combine(fullDir, "vault-state.json");
-        await File.WriteAllTextAsync(stateFile, """{"RootToken":"home-token","Keys":[]}""");
+        await File.WriteAllTextAsync(stateFile, """{"RootToken":"home-token","Keys":[]}""", TestContext.CancellationToken);
 
         try
         {
@@ -84,4 +84,6 @@ public class OpenBaoVaultTokenProviderTests
             Directory.Delete(fullDir, recursive: true);
         }
     }
+
+    public TestContext TestContext { get; set; }
 }

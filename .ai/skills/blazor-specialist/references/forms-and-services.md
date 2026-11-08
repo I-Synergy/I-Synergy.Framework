@@ -5,16 +5,16 @@
 ## Form Validation Pattern
 
 ```razor
-@* File: Pages/Budgets/CreateBudget.razor *@
-@page "/budgets/create"
-@namespace {ApplicationName}.UI.Pages.Budgets
+@* File: Pages/{Entities}/Create{Entity}.razor *@
+@page "/{entities}/create"
+@namespace {ApplicationName}.UI.Pages.{Entities}
 
-<PageTitle>Create Budget</PageTitle>
+<PageTitle>Create {Entity}</PageTitle>
 
-<div class="create-budget-page">
-    <h1>Create Budget</h1>
+<div class="create-{entity}-page">
+    <h1>Create {Entity}</h1>
 
-    <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit" FormName="CreateBudgetForm">
+    <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit" FormName="Create{Entity}Form">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
@@ -59,13 +59,13 @@
 
 @code {
     [Inject]
-    private IBudgetService BudgetService { get; set; } = default!;
+    private I{Entity}Service {Entity}Service { get; set; } = default!;
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
 
     [SupplyParameterFromForm]
-    private CreateBudgetModel Model { get; set; } = new();
+    private Create{Entity}Model Model { get; set; } = new();
 
     private bool IsSubmitting { get; set; }
     private string? ErrorMessage { get; set; }
@@ -77,18 +77,18 @@
 
         try
         {
-            var command = new CreateBudgetCommand(
+            var command = new Create{Entity}Command(
                 Model.Name,
                 Model.Amount,
                 Model.StartDate);
 
-            var result = await BudgetService.CreateBudgetAsync(command);
+            var result = await {Entity}Service.Create{Entity}Async(command);
 
-            Navigation.NavigateTo($"/budgets/{result.BudgetId}");
+            Navigation.NavigateTo($"/{entities}/{result.{Entity}Id}");
         }
         catch (Exception ex)
         {
-            ErrorMessage = "Failed to create budget. Please try again.";
+            ErrorMessage = "Failed to create {entity}. Please try again.";
         }
         finally
         {
@@ -98,16 +98,16 @@
 
     private void Cancel()
     {
-        Navigation.NavigateTo("/budgets");
+        Navigation.NavigateTo("/{entities}");
     }
 }
 ```
 
 ```csharp
-// File: Models/CreateBudgetModel.cs
+// File: Models/Create{Entity}Model.cs
 using System.ComponentModel.DataAnnotations;
 
-public class CreateBudgetModel
+public class Create{Entity}Model
 {
     [Required]
     [StringLength(100, MinimumLength = 3)]
@@ -125,96 +125,96 @@ public class CreateBudgetModel
 ## API Service Pattern
 
 ```csharp
-// File: Services/BudgetService.cs
+// File: Services/{Entity}Service.cs
 namespace {ApplicationName}.UI.Services;
 
 using System.Net.Http.Json;
 
-public interface IBudgetService
+public interface I{Entity}Service
 {
-    Task<List<BudgetResponse>> GetBudgetsAsync(CancellationToken cancellationToken = default);
-    Task<BudgetResponse> GetBudgetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<CreateBudgetResponse> CreateBudgetAsync(CreateBudgetCommand command, CancellationToken cancellationToken = default);
-    Task UpdateBudgetAsync(Guid id, UpdateBudgetCommand command, CancellationToken cancellationToken = default);
-    Task DeleteBudgetAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<List<{Entity}Response>> Get{Entities}Async(CancellationToken cancellationToken = default);
+    Task<{Entity}Response> Get{Entity}ByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Create{Entity}Response> Create{Entity}Async(Create{Entity}Command command, CancellationToken cancellationToken = default);
+    Task Update{Entity}Async(Guid id, Update{Entity}Command command, CancellationToken cancellationToken = default);
+    Task Delete{Entity}Async(Guid id, CancellationToken cancellationToken = default);
 }
 
-public class BudgetService(
+public class {Entity}Service(
     HttpClient httpClient,
-    ILogger<BudgetService> logger
-) : IBudgetService
+    ILogger<{Entity}Service> logger
+) : I{Entity}Service
 {
-    public async Task<List<BudgetResponse>> GetBudgetsAsync(
+    public async Task<List<{Entity}Response>> Get{Entities}Async(
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var budgets = await httpClient.GetFromJsonAsync<List<BudgetResponse>>(
-                "/budgets",
+            var {entities} = await httpClient.GetFromJsonAsync<List<{Entity}Response>>(
+                "/{entities}",
                 cancellationToken);
 
-            return budgets ?? new List<BudgetResponse>();
+            return {entities} ?? new List<{Entity}Response>();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error fetching budgets");
+            logger.LogError(ex, "Error fetching {entities}");
             throw;
         }
     }
 
-    public async Task<BudgetResponse> GetBudgetByIdAsync(
+    public async Task<{Entity}Response> Get{Entity}ByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var budget = await httpClient.GetFromJsonAsync<BudgetResponse>(
-                $"/budgets/{id}",
+            var {entity} = await httpClient.GetFromJsonAsync<{Entity}Response>(
+                $"/{entities}/{id}",
                 cancellationToken);
 
-            return budget ?? throw new InvalidOperationException("Budget not found");
+            return {entity} ?? throw new InvalidOperationException("{Entity} not found");
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error fetching budget {BudgetId}", id);
+            logger.LogError(ex, "Error fetching {entity} {Entity}Id", id);
             throw;
         }
     }
 
-    public async Task<CreateBudgetResponse> CreateBudgetAsync(
-        CreateBudgetCommand command,
+    public async Task<Create{Entity}Response> Create{Entity}Async(
+        Create{Entity}Command command,
         CancellationToken cancellationToken = default)
     {
         try
         {
             var response = await httpClient.PostAsJsonAsync(
-                "/budgets",
+                "/{entities}",
                 command,
                 cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<CreateBudgetResponse>(
+            var result = await response.Content.ReadFromJsonAsync<Create{Entity}Response>(
                 cancellationToken: cancellationToken);
 
-            return result ?? throw new InvalidOperationException("Failed to create budget");
+            return result ?? throw new InvalidOperationException("Failed to create {entity}");
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating budget");
+            logger.LogError(ex, "Error creating {entity}");
             throw;
         }
     }
 
-    public async Task UpdateBudgetAsync(
+    public async Task Update{Entity}Async(
         Guid id,
-        UpdateBudgetCommand command,
+        Update{Entity}Command command,
         CancellationToken cancellationToken = default)
     {
         try
         {
             var response = await httpClient.PutAsJsonAsync(
-                $"/budgets/{id}",
+                $"/{entities}/{id}",
                 command,
                 cancellationToken);
 
@@ -222,31 +222,31 @@ public class BudgetService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error updating budget {BudgetId}", id);
+            logger.LogError(ex, "Error updating {entity} {Entity}Id", id);
             throw;
         }
     }
 
-    public async Task DeleteBudgetAsync(
+    public async Task Delete{Entity}Async(
         Guid id,
         CancellationToken cancellationToken = default)
     {
         try
         {
             var response = await httpClient.DeleteAsync(
-                $"/budgets/{id}",
+                $"/{entities}/{id}",
                 cancellationToken);
 
             response.EnsureSuccessStatusCode();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error deleting budget {BudgetId}", id);
+            logger.LogError(ex, "Error deleting {entity} {Entity}Id", id);
             throw;
         }
     }
 }
 
 // Register service
-builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<I{Entity}Service, {Entity}Service>();
 ```

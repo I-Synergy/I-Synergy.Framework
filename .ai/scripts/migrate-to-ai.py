@@ -214,16 +214,20 @@ def main():
 
     print()
 
-    # ── Step 3: Update CLAUDE.md ──────────────────────────────────────────────
-    claude_md = root / "CLAUDE.md"
-    if claude_md.exists():
-        count = update_file(claude_md, dry_run=dry_run)
-        if count:
-            print(f"Step 3: Updated CLAUDE.md ({count} path replacements){' [DRY RUN]' if dry_run else ''}")
+    # ── Step 3: Update CLAUDE.md and AGENTS.md ─────────────────────────────────
+    config_files = ["CLAUDE.md", "AGENTS.md"]
+    step_3_changes = 0
+    for fname in config_files:
+        config_path = root / fname
+        if config_path.exists():
+            count = update_file(config_path, dry_run=dry_run)
+            if count:
+                print(f"Step 3: Updated {fname} ({count} path replacements){' [DRY RUN]' if dry_run else ''}")
+                step_3_changes += count
+            else:
+                print(f"Step 3: {fname} — no .claude/ content paths found (already updated or not present)")
         else:
-            print("Step 3: CLAUDE.md — no .claude/ content paths found (already updated or not present)")
-    else:
-        print("Step 3: CLAUDE.md not found — skipping")
+            print(f"Step 3: {fname} not found — skipping")
     print()
 
     # ── Step 4: Update settings.json ─────────────────────────────────────────

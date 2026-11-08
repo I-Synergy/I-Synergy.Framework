@@ -3,7 +3,7 @@ using Windows.Globalization.NumberFormatting;
 
 namespace ISynergy.Framework.UI.Formatters;
 
-public class DecimalFormatter : INumberFormatter2, INumberParser
+public partial class DecimalFormatter : INumberFormatter2, INumberParser
 {
     public int Decimals { get; set; } = 2;
 

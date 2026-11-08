@@ -11,6 +11,7 @@ namespace ISynergy.Framework.UI.Maui.Services;
 /// Tests for exception handling in NavigationService.
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class NavigationServiceExceptionHandlingTests
 {
     private Mock<IServiceProvider> _mockServiceProvider;

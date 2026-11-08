@@ -52,9 +52,9 @@ public class OpenBaoKeyVaultServiceTests
                 "test/path", It.IsAny<int?>(), "mymount", It.IsAny<string>()))
             .ReturnsAsync(response);
 
-        var result = await _service.GetSecretAsync("test/path", "mymount");
+        var result = await _service.GetSecretAsync("test/path", "mymount", TestContext.CancellationToken);
 
-        Assert.AreEqual(1, result.Count);
+        Assert.HasCount(1, result);
         Assert.AreEqual("value", result["key"]);
     }
 
@@ -68,7 +68,7 @@ public class OpenBaoKeyVaultServiceTests
                 "test/path", data, It.IsAny<int?>(), "mymount"))
             .ReturnsAsync(new Secret<CurrentSecretMetadata> { Data = new CurrentSecretMetadata() });
 
-        await _service.SetSecretAsync("test/path", data, "mymount");
+        await _service.SetSecretAsync("test/path", data, "mymount", TestContext.CancellationToken);
 
         _mockKvV2.Verify(
             kv => kv.WriteSecretAsync(
@@ -88,10 +88,12 @@ public class OpenBaoKeyVaultServiceTests
             .Setup(kv => kv.ReadSecretPathsAsync("base/path", "mymount", It.IsAny<string>()))
             .ReturnsAsync(listResult);
 
-        var paths = await _service.ListPathsAsync("base/path", "mymount");
+        var paths = await _service.ListPathsAsync("base/path", "mymount", TestContext.CancellationToken);
 
-        Assert.AreEqual(2, paths.Count);
-        CollectionAssert.Contains(paths.ToList(), "key1");
-        CollectionAssert.Contains(paths.ToList(), "key2");
+        Assert.HasCount(2, paths);
+        Assert.Contains("key1", paths.ToList());
+        Assert.Contains("key2", paths.ToList());
     }
+
+    public TestContext TestContext { get; set; }
 }

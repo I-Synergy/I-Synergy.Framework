@@ -11,43 +11,11 @@ using System.Text.Json.Serialization;
 namespace ISynergy.Framework.UI.Converters;
 
 /// <summary>
-/// Class DateTimeOffsetConverter.
-/// </summary>
-public static class DateTimeOffsetConverter
-{
-    /// <summary>
-    /// Converts from DateTime to TimaSpan.
-    /// </summary>
-    /// <param name="dt">The source DateTime value.</param>
-    /// <returns>Returns the time portion of DateTime in the form of TimeSpan if succeeded, null otherwise.</returns>
-    public static TimeSpan? DateTimeOffsetToTimeSpan(DateTimeOffset dt)
-    {
-        if (dt == DateTimeOffset.MinValue || dt == DateTimeOffset.MaxValue)
-        {
-            return new TimeSpan(0);
-        }
-
-        return dt - dt.Date;
-    }
-
-    /// <summary>
-    /// Converts from Timespan to DateTime.
-    /// </summary>
-    /// <param name="dt">The dt.</param>
-    /// <param name="ts">The source TimeSpan value.</param>
-    /// <returns>Returns a DateTime filled with date equals to mindate and time equals to time in timespan if succeeded, null otherwise.</returns>
-    public static DateTimeOffset? TimeSpanToDateTimeOffset(DateTimeOffset dt, TimeSpan ts)
-    {
-        return new DateTimeOffset(dt.Year, dt.Month, dt.Day, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, dt.Offset);
-    }
-}
-
-/// <summary>
 /// Class DateTimeOffsetToTimeSpanConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DateTimeOffsetToTimeSpanConverter : IValueConverter
+public partial class DateTimeOffsetToTimeSpanConverter : IValueConverter
 {
     /// <summary>
     /// The original
@@ -99,7 +67,7 @@ public class DateTimeOffsetToTimeSpanConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
+public partial class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -170,7 +138,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DateTimeOffsetToLocalDateTimeOffsetConverter : IValueConverter
+public partial class DateTimeOffsetToLocalDateTimeOffsetConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -214,7 +182,7 @@ public class DateTimeOffsetToLocalDateTimeOffsetConverter : IValueConverter
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class DateTimeOffsetToLocalDateStringConverter : IValueConverter
+public partial class DateTimeOffsetToLocalDateStringConverter : IValueConverter
 {
     // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=d} 2009-06-15T13:45:30 -> 6/15/2009 (en-US)
     // Converter={StaticResource DateTimeOffsetToLocalDateStringConverter}, ConverterParameter=D} 2009-06-15T13:45:30 -> Monday, June 15, 2009 (en-US)

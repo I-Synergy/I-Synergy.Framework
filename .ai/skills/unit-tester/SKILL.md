@@ -56,7 +56,7 @@ Specialized agent for MSTest, Moq, and Reqnroll testing.
 MethodName_Scenario_ExpectedResult
 
 Examples:
-HandleAsync_ValidCommand_CreatesBudgetSuccessfully
+HandleAsync_ValidCommand_Creates{Entity}Successfully
 HandleAsync_NullCommand_ThrowsArgumentNullException
 HandleAsync_NegativeAmount_ThrowsArgumentException
 ```
@@ -85,7 +85,7 @@ public async Task MethodName_Scenario_ExpectedResult()
 Feature: {Entity} Management
   As a user
   I want to manage {entities}
-  So that I can achieve business goal
+  So that I can achieve a business goal
 
   Scenario: Description of scenario
     Given precondition
@@ -113,8 +113,8 @@ The test artifacts this skill produces are mapped to ISO/IEC/IEEE 29119-3, right
 `.ai/reference/test-documentation.md`. Three consequences:
 
 - **Test plan — one per vertical slice.** Written from
-  `docs/slices/{BC}/{Entity}.{Operation}/blueprint.json` to
-  `docs/slices/{BC}/{Entity}.{Operation}/test-plan.md`, using
+  `docs/slices/{Domain}/{Entity}.{Operation}/blueprint.json` to
+  `docs/slices/{Domain}/{Entity}.{Operation}/test-plan.md`, using
   `.ai/reference/templates/test-plan.md.txt`. Its entry and exit criteria are what the traceability
   validator's checks T5/T6 measure against, so keep them concrete.
 - **Test case specification — do not write one.** The `AC-` ↔ scenario ↔ test mapping in
@@ -136,7 +136,7 @@ The test artifacts this skill produces are mapped to ISO/IEC/IEEE 29119-3, right
 - [ ] All tests pass
 - [ ] Coverage meets 80%+ target
 - [ ] Test plan written for the slice from its blueprint, with entry and exit criteria
-      (`docs/slices/{BC}/{Entity}.{Operation}/test-plan.md`)
+      (`docs/slices/{Domain}/{Entity}.{Operation}/test-plan.md`)
 - [ ] Every criterion in the slice's `source.acceptance_criteria` appears in that plan and is
       referenced from a test — `validate-traceability.py` reports no unresolved reference and no
       T5/T6 warning for it

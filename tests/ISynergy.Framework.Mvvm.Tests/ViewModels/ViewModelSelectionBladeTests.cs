@@ -54,7 +54,7 @@ public class ViewModelSelectionBladeTests
 
         // Verify initial state
         Assert.IsNotNull(viewModel.Items);
-        Assert.IsTrue(viewModel.Items.Any());
+        Assert.IsNotEmpty(viewModel.Items);
         Assert.IsNotNull(viewModel.SelectedItem);
         Assert.AreEqual(selectedItem, viewModel.SelectedItem);
 
@@ -87,7 +87,7 @@ public class ViewModelSelectionBladeTests
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
-        Assert.AreEqual(2, viewModel.Items.Count);
+        Assert.HasCount(2, viewModel.Items);
         Assert.IsNotNull(viewModel.SelectedItem);
         Assert.AreEqual(selectedItem, viewModel.SelectedItem);
         Assert.IsNotNull(viewModel.RefreshCommand);
@@ -150,7 +150,7 @@ public class ViewModelSelectionBladeTests
 
         // Assert
         Assert.IsNotNull(viewModel.Items);
-        Assert.AreEqual(0, viewModel.Items.Count);
+        Assert.IsEmpty(viewModel.Items);
         Assert.IsNull(viewModel.SelectedItem);
     }
 

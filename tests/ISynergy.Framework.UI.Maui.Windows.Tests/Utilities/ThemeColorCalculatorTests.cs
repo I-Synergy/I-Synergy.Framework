@@ -4,6 +4,7 @@ using ISynergy.Framework.UI.Utilities;
 namespace ISynergy.Framework.UI.Maui;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class ThemeColorCalculatorTests
 {
     private const float Tolerance = 0.005f;
@@ -68,7 +69,7 @@ public class ThemeColorCalculatorTests
 
         var (red, green, blue) = ThemeColorCalculator.WhiteBlend(primary.Red, primary.Green, primary.Blue, 0.25f);
 
-        Assert.IsTrue(Luminosity(red, green, blue) > originalLum);
+        Assert.IsGreaterThan(originalLum, Luminosity(red, green, blue));
     }
 
     // ── BlackBlend ───────────────────────────────────────────────────────────
@@ -105,7 +106,7 @@ public class ThemeColorCalculatorTests
 
         var (red, green, blue) = ThemeColorCalculator.BlackBlend(primary.Red, primary.Green, primary.Blue, 0.25f);
 
-        Assert.IsTrue(Luminosity(red, green, blue) < originalLum);
+        Assert.IsLessThan(originalLum, Luminosity(red, green, blue));
     }
 
     // ── CalculateSecondary ───────────────────────────────────────────────────
@@ -115,20 +116,20 @@ public class ThemeColorCalculatorTests
     {
         var (secondaryRed, secondaryGreen, secondaryBlue) = ThemeColorCalculator.CalculateSecondary(0f, 0f, 1f);
 
-        // R = 0 + (1-0)*0.25 = 0.25, G = 0.25, B = 1.0
-        Assert.AreEqual(0.25f, secondaryRed, Tolerance, "Red should be 0.25");
-        Assert.AreEqual(0.25f, secondaryGreen, Tolerance, "Green should be 0.25");
+        // R = 0 + (1-0)*0.10 = 0.10, G = 0.10, B = 1.0
+        Assert.AreEqual(0.10f, secondaryRed, Tolerance, "Red should be 0.10");
+        Assert.AreEqual(0.10f, secondaryGreen, Tolerance, "Green should be 0.10");
         Assert.AreEqual(1.0f, secondaryBlue, Tolerance, "Blue should remain 1.0");
     }
 
     [TestMethod]
-    public void PureBlack_Secondary_IsGray25Percent()
+    public void PureBlack_Secondary_IsGray10Percent()
     {
         var (secondaryRed, secondaryGreen, secondaryBlue) = ThemeColorCalculator.CalculateSecondary(0f, 0f, 0f);
 
-        Assert.AreEqual(0.25f, secondaryRed, Tolerance, "Red should be 0.25");
-        Assert.AreEqual(0.25f, secondaryGreen, Tolerance, "Green should be 0.25");
-        Assert.AreEqual(0.25f, secondaryBlue, Tolerance, "Blue should be 0.25");
+        Assert.AreEqual(0.10f, secondaryRed, Tolerance, "Red should be 0.10");
+        Assert.AreEqual(0.10f, secondaryGreen, Tolerance, "Green should be 0.10");
+        Assert.AreEqual(0.10f, secondaryBlue, Tolerance, "Blue should be 0.10");
     }
 
     [TestMethod]
@@ -149,8 +150,8 @@ public class ThemeColorCalculatorTests
         var (secondaryRed, secondaryGreen, secondaryBlue) = ThemeColorCalculator.CalculateSecondary(primary.Red, primary.Green, primary.Blue);
 
         Assert.AreEqual(1.0f, secondaryRed, Tolerance, "Red should be 1.0");
-        Assert.IsTrue(secondaryGreen > primary.Green, "Green should increase");
-        Assert.AreEqual(0.25f, secondaryBlue, Tolerance, "Blue should be 0.25");
+        Assert.IsGreaterThan(primary.Green, secondaryGreen, "Green should increase");
+        Assert.AreEqual(0.10f, secondaryBlue, Tolerance, "Blue should be 0.10");
     }
 
     // ── CalculateTertiary ────────────────────────────────────────────────────
@@ -182,9 +183,9 @@ public class ThemeColorCalculatorTests
 
         var (tertiaryRed, tertiaryGreen, tertiaryBlue) = ThemeColorCalculator.CalculateTertiary(primary.Red, primary.Green, primary.Blue);
 
-        Assert.IsTrue(tertiaryRed <= primary.Red + Tolerance, "Red should not increase");
-        Assert.IsTrue(tertiaryGreen < primary.Green, "Green should decrease");
-        Assert.IsTrue(tertiaryBlue < primary.Blue, "Blue should decrease");
+        Assert.IsLessThanOrEqualTo(primary.Red + Tolerance, tertiaryRed, "Red should not increase");
+        Assert.IsLessThan(primary.Green, tertiaryGreen, "Green should decrease");
+        Assert.IsLessThan(primary.Blue, tertiaryBlue, "Blue should decrease");
     }
 
     // ── CalculateTintedGrays ─────────────────────────────────────────────────
@@ -196,7 +197,7 @@ public class ThemeColorCalculatorTests
 
         var grays = ThemeColorCalculator.CalculateTintedGrays(primary.Red, primary.Green, primary.Blue);
 
-        Assert.AreEqual(20, grays.Count, "Should have exactly 20 gray shades");
+        Assert.HasCount(20, grays, "Should have exactly 20 gray shades");
     }
 
     [TestMethod]
@@ -220,7 +221,7 @@ public class ThemeColorCalculatorTests
 
         var (r000, g000, b000) = grays["000"];
         var (r950, g950, b950) = grays["950"];
-        Assert.IsTrue(Luminosity(r000, g000, b000) > Luminosity(r950, g950, b950), "Gray 000 should be lighter than Gray 950");
+        Assert.IsGreaterThan(Luminosity(r950, g950, b950), Luminosity(r000, g000, b000), "Gray 000 should be lighter than Gray 950");
     }
 
     [TestMethod]
@@ -234,8 +235,8 @@ public class ThemeColorCalculatorTests
         var primaryHue = Hue(primary.Red, primary.Green, primary.Blue);
         var gray000Hue = Hue(r000, g000, b000);
 
-        Assert.IsTrue(
-            Math.Abs(gray000Hue - primaryHue) < 5f,
+        Assert.IsLessThan(
+            5f, Math.Abs(gray000Hue - primaryHue),
             $"Gray 000 hue ({gray000Hue:F2}) should be close to primary hue ({primaryHue:F2})");
     }
 
@@ -246,10 +247,43 @@ public class ThemeColorCalculatorTests
 
         foreach (var (key, (red, green, blue)) in grays)
         {
-            Assert.IsTrue(
-                Saturation(red, green, blue) <= 0.01f,
+            Assert.IsLessThanOrEqualTo(
+                0.01f, Saturation(red, green, blue),
                 $"Gray '{key}' saturation should be near zero for black primary");
         }
+    }
+
+    // ── CalculateOnColor ─────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void DefaultAccent_Surfaces_KeepWhiteForeground()
+    {
+        // The sample's default accent: primary #0B5D55 and its secondary step. Both are dark enough
+        // that white is the contrast-optimal foreground, so primary and default buttons match.
+        var primary = Color.FromArgb("#0B5D55");
+        var (secondaryRed, secondaryGreen, secondaryBlue) = ThemeColorCalculator.CalculateSecondary(primary.Red, primary.Green, primary.Blue);
+
+        var (primaryRed, primaryGreen, primaryBlue) = ThemeColorCalculator.CalculateOnColor(primary.Red, primary.Green, primary.Blue);
+        var (onSecondaryRed, onSecondaryGreen, onSecondaryBlue) = ThemeColorCalculator.CalculateOnColor(secondaryRed, secondaryGreen, secondaryBlue);
+
+        Assert.AreEqual(1.0f, primaryRed, Tolerance, "Primary foreground should be white");
+        Assert.AreEqual(1.0f, primaryGreen, Tolerance);
+        Assert.AreEqual(1.0f, primaryBlue, Tolerance);
+        Assert.AreEqual(1.0f, onSecondaryRed, Tolerance, "Secondary foreground should be white");
+        Assert.AreEqual(1.0f, onSecondaryGreen, Tolerance);
+        Assert.AreEqual(1.0f, onSecondaryBlue, Tolerance);
+    }
+
+    [TestMethod]
+    public void LightSurface_GetsBlackForeground()
+    {
+        var light = Color.FromArgb("#FFB900");
+
+        var (red, green, blue) = ThemeColorCalculator.CalculateOnColor(light.Red, light.Green, light.Blue);
+
+        Assert.AreEqual(0.0f, red, Tolerance, "A light surface should use black text");
+        Assert.AreEqual(0.0f, green, Tolerance);
+        Assert.AreEqual(0.0f, blue, Tolerance);
     }
 
     // ── Secondary is lighter, Tertiary is darker ─────────────────────────────
@@ -261,8 +295,8 @@ public class ThemeColorCalculatorTests
 
         var (secondaryRed, secondaryGreen, secondaryBlue) = ThemeColorCalculator.CalculateSecondary(primary.Red, primary.Green, primary.Blue);
 
-        Assert.IsTrue(
-            Luminosity(secondaryRed, secondaryGreen, secondaryBlue) > Luminosity(primary.Red, primary.Green, primary.Blue),
+        Assert.IsGreaterThan(
+            Luminosity(primary.Red, primary.Green, primary.Blue), Luminosity(secondaryRed, secondaryGreen, secondaryBlue),
             "Secondary should be lighter than primary");
     }
 
@@ -273,8 +307,8 @@ public class ThemeColorCalculatorTests
 
         var (tertiaryRed, tertiaryGreen, tertiaryBlue) = ThemeColorCalculator.CalculateTertiary(primary.Red, primary.Green, primary.Blue);
 
-        Assert.IsTrue(
-            Luminosity(tertiaryRed, tertiaryGreen, tertiaryBlue) < Luminosity(primary.Red, primary.Green, primary.Blue),
+        Assert.IsLessThan(
+            Luminosity(primary.Red, primary.Green, primary.Blue), Luminosity(tertiaryRed, tertiaryGreen, tertiaryBlue),
             "Tertiary should be darker than primary");
     }
 
@@ -312,7 +346,7 @@ public class ThemeColorCalculatorTests
         var grays = ThemeColorCalculator.CalculateTintedGrays(primary.Red, primary.Green, primary.Blue);
 
         Assert.IsNotNull(grays);
-        Assert.AreEqual(20, grays.Count);
+        Assert.HasCount(20, grays);
         Assert.IsTrue(grays.ContainsKey("000"));
         Assert.IsTrue(grays.ContainsKey("500"));
         Assert.IsTrue(grays.ContainsKey("950"));

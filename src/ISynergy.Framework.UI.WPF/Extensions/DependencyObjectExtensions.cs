@@ -20,8 +20,8 @@ public static class DependencyObjectExtensions
         if (self is null)
             return default;
 
-        if (self is T)
-            return (T)self;
+        if (self is T match)
+            return match;
 
         var childrenCount = VisualTreeHelper.GetChildrenCount(self);
 

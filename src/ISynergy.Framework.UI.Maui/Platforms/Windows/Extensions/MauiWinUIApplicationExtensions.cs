@@ -123,7 +123,6 @@ public static partial class MauiWinUIApplicationExtensions
 
             // Redirect on a dedicated STA thread to avoid UI-thread deadlock
             // from SynchronizationContext capture.
-            Exception? redirectError = null;
             var redirectThread = new Thread(() =>
             {
                 try
@@ -133,16 +132,12 @@ public static partial class MauiWinUIApplicationExtensions
                 }
                 catch (Exception ex)
                 {
-                    redirectError = ex;
-                    Debug.WriteLine($"[SingleInstance] Redirect failed: {ex}");
+                    Debug.WriteLine($"[SingleInstance] Redirect failed (instance will still exit): {ex}");
                 }
             });
             redirectThread.SetApartmentState(ApartmentState.STA);
             redirectThread.Start();
             redirectThread.Join();
-
-            if (redirectError is not null)
-                Debug.WriteLine($"[SingleInstance] Redirect error (instance will still exit): {redirectError}");
 
             Debug.WriteLine("[SingleInstance] Exiting second instance.");
             Process.GetCurrentProcess().Kill();

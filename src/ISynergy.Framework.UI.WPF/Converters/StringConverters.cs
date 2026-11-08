@@ -20,7 +20,10 @@ public sealed class StringToColorBrushConverter : IValueConverter
                 var color = (Color)ColorConverter.ConvertFromString(hex);
                 return new SolidColorBrush(color);
             }
-            catch { }
+            catch
+            {
+                // Malformed color: fall back to the default below.
+            }
         }
         return new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD7));
     }

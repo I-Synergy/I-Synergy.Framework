@@ -62,11 +62,11 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     public QrDecomposition(double[,] value, bool transpose = false,
         bool economy = true, bool inPlace = false)
     {
-        if (value is null) throw new ArgumentNullException("value", "Matrix cannot be null.");
+        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (!transpose && value.Rows() < value.Columns() ||
             transpose && value.Columns() < value.Rows())
-            throw new ArgumentException("Matrix has more columns than rows.", "value");
+            throw new ArgumentException("Matrix has more columns than rows.", nameof(value));
 
         // https://www.inf.ethz.ch/personal/gander/papers/qrneu.pdf
 
@@ -223,7 +223,7 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     public double[,] Solve(double[,] value)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (value.Rows() != n)
             throw new ArgumentException("Matrix row dimensions must agree.");
@@ -269,8 +269,7 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// <exception cref="T:System.InvalidOperationException">Matrix is rank deficient.</exception>
     public double[] Solve(double[] value)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.Length != qr.Rows())
             throw new ArgumentException("Matrix row dimensions must agree.");
@@ -342,7 +341,7 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     public double[,] SolveTranspose(double[,] value)
     {
         if (value is null)
-            throw new ArgumentNullException("value", "Matrix cannot be null.");
+            throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (value.Columns() != qr.Rows())
             throw new ArgumentException("Matrix row dimensions must agree.");

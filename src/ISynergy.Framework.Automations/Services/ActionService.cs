@@ -14,7 +14,6 @@ namespace ISynergy.Framework.Automations.Services;
 public class ActionService : IActionService
 {
     private readonly ILogger _logger;
-    private readonly AutomationOptions _options;
     private readonly IActionManager _manager;
     private readonly List<IAction> _tasks;
 
@@ -22,16 +21,13 @@ public class ActionService : IActionService
     /// Default constructor for the background service.
     /// </summary>
     /// <param name="manager"></param>
-    /// <param name="options"></param>
     /// <param name="logger"></param>
     public ActionService(
         IActionManager manager,
-        IOptions<AutomationOptions> options,
         ILogger<ActionService> logger)
     {
         _tasks = new List<IAction>();
         _manager = manager;
-        _options = options.Value;
         _logger = logger;
     }
 
@@ -88,6 +84,6 @@ public class ActionService : IActionService
                     if (x.IsCompleted)
                         await _manager.SetActionExcecutedAsync(action.ActionId);
                     _logger.LogInformation("Task with {ActionId} executed", action.ActionId);
-                });
+                }, cancellationToken);
     }
 }

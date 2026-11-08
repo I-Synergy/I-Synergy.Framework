@@ -11,12 +11,12 @@ dotnet add package Fluxor.Blazor.Web
 
 ### Define State
 ```csharp
-// File: Store/BudgetState/BudgetState.cs
-namespace {ApplicationName}.UI.Store.BudgetState;
+// File: Store/{Entity}State/{Entity}State.cs
+namespace {ApplicationName}.UI.Store.{Entity}State;
 
-public record BudgetState
+public record {Entity}State
 {
-    public List<BudgetResponse> Budgets { get; init; } = new();
+    public List<{Entity}Response> {Entities} { get; init; } = new();
     public bool IsLoading { get; init; }
     public string? ErrorMessage { get; init; }
 }
@@ -24,57 +24,57 @@ public record BudgetState
 
 ### Define Actions
 ```csharp
-// File: Store/BudgetState/BudgetActions.cs
-namespace {ApplicationName}.UI.Store.BudgetState;
+// File: Store/{Entity}State/{Entity}Actions.cs
+namespace {ApplicationName}.UI.Store.{Entity}State;
 
-public record LoadBudgetsAction;
-public record LoadBudgetsSuccessAction(List<BudgetResponse> Budgets);
-public record LoadBudgetsFailureAction(string ErrorMessage);
+public record Load{Entities}Action;
+public record Load{Entities}SuccessAction(List<{Entity}Response> {Entities});
+public record Load{Entities}FailureAction(string ErrorMessage);
 ```
 
 ### Implement Reducer
 ```csharp
-// File: Store/BudgetState/BudgetReducers.cs
+// File: Store/{Entity}State/{Entity}Reducers.cs
 using Fluxor;
 
-namespace {ApplicationName}.UI.Store.BudgetState;
+namespace {ApplicationName}.UI.Store.{Entity}State;
 
-public static class BudgetReducers
+public static class {Entity}Reducers
 {
     [ReducerMethod]
-    public static BudgetState ReduceLoadBudgetsAction(BudgetState state, LoadBudgetsAction action) =>
+    public static {Entity}State ReduceLoad{Entities}Action({Entity}State state, Load{Entities}Action action) =>
         state with { IsLoading = true, ErrorMessage = null };
 
     [ReducerMethod]
-    public static BudgetState ReduceLoadBudgetsSuccessAction(BudgetState state, LoadBudgetsSuccessAction action) =>
-        state with { IsLoading = false, Budgets = action.Budgets };
+    public static {Entity}State ReduceLoad{Entities}SuccessAction({Entity}State state, Load{Entities}SuccessAction action) =>
+        state with { IsLoading = false, {Entities} = action.{Entities} };
 
     [ReducerMethod]
-    public static BudgetState ReduceLoadBudgetsFailureAction(BudgetState state, LoadBudgetsFailureAction action) =>
+    public static {Entity}State ReduceLoad{Entities}FailureAction({Entity}State state, Load{Entities}FailureAction action) =>
         state with { IsLoading = false, ErrorMessage = action.ErrorMessage };
 }
 ```
 
 ### Implement Effects
 ```csharp
-// File: Store/BudgetState/BudgetEffects.cs
+// File: Store/{Entity}State/{Entity}Effects.cs
 using Fluxor;
 
-namespace {ApplicationName}.UI.Store.BudgetState;
+namespace {ApplicationName}.UI.Store.{Entity}State;
 
-public class BudgetEffects(IBudgetService budgetService)
+public class {Entity}Effects(I{Entity}Service {entity}Service)
 {
     [EffectMethod]
-    public async Task HandleLoadBudgetsAction(LoadBudgetsAction action, IDispatcher dispatcher)
+    public async Task HandleLoad{Entities}Action(Load{Entities}Action action, IDispatcher dispatcher)
     {
         try
         {
-            var budgets = await budgetService.GetBudgetsAsync();
-            dispatcher.Dispatch(new LoadBudgetsSuccessAction(budgets));
+            var {entities} = await {entity}Service.Get{Entities}Async();
+            dispatcher.Dispatch(new Load{Entities}SuccessAction({entities}));
         }
         catch (Exception ex)
         {
-            dispatcher.Dispatch(new LoadBudgetsFailureAction(ex.Message));
+            dispatcher.Dispatch(new Load{Entities}FailureAction(ex.Message));
         }
     }
 }
@@ -93,19 +93,19 @@ builder.Services.AddFluxor(options =>
 ### Use in Component
 ```razor
 @inherits FluxorComponent
-@inject IState<BudgetState> BudgetState
+@inject IState<{Entity}State> {Entity}State
 @inject IDispatcher Dispatcher
 
 <div>
-    @if (BudgetState.Value.IsLoading)
+    @if ({Entity}State.Value.IsLoading)
     {
         <p>Loading...</p>
     }
     else
     {
-        @foreach (var budget in BudgetState.Value.Budgets)
+        @foreach (var {entity} in {Entity}State.Value.{Entities})
         {
-            <BudgetCard Budget="@budget" />
+            <{Entity}Card {Entity}="@({entity})" />
         }
     }
 </div>
@@ -114,7 +114,7 @@ builder.Services.AddFluxor(options =>
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Dispatcher.Dispatch(new LoadBudgetsAction());
+        Dispatcher.Dispatch(new Load{Entities}Action());
     }
 }
 ```
@@ -148,7 +148,7 @@ builder.Services.AddFluxor(options =>
 
 ```javascript
 // wwwroot/js/interop.js
-window.budgetApp = {
+window.{entity}App = {
     formatCurrency: function (amount) {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',

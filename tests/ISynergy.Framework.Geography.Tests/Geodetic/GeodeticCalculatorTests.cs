@@ -53,7 +53,7 @@ public class GeodeticCalculatorTests
         GlobalPosition end = new(Constants.MyOffice, 240);
         GeodeticMeasurement m = calc.CalculateGeodeticMeasurement(start, end);
         GeodeticCurve c = calc.CalculateGeodeticCurve(Constants.MyHome, Constants.MyOffice);
-        Assert.IsTrue(m.EllipsoidalDistance > c.EllipsoidalDistance);
+        Assert.IsGreaterThan(c.EllipsoidalDistance, m.EllipsoidalDistance);
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public class GeodeticCalculatorTests
     public void TestPath4()
     {
         GlobalCoordinates[] path = calc.CalculateGeodeticPath(Constants.MyHome, Constants.MyHome, 10);
-        Assert.AreEqual(2, path.Length);
+        Assert.HasCount(2, path);
         Assert.AreEqual(path[0], Constants.MyHome);
         Assert.AreEqual(path[1], Constants.MyHome);
     }

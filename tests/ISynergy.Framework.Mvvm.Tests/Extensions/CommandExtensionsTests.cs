@@ -101,7 +101,11 @@ public class CommandExtensionsTests
 
         // Act
         var cancelCommand = (IDisposable)mockCommand.Object.CreateCancelCommand();
-        cancelCommand.Dispose();
+
+        Exception? observed = null;
+        try { cancelCommand.Dispose(); } catch (Exception ex) { observed = ex; }
+
+        Assert.IsNull(observed);
 
         // No Assert needed - just verifying no exceptions are thrown
     }

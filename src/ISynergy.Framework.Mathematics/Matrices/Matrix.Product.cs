@@ -163,7 +163,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (rowVector.Length != matrix.Rows() || matrix.Columns() != columnVector.Length)
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException("Matrices must have compatible dimensions.");
 #endif
         double sum = 0;
 
@@ -199,7 +199,7 @@ public static partial class Matrix
         // In Release the pointer arithmetic pa2 = a + cols would stride out of bounds
         // if the dimensions were wrong, so this guard must not be DEBUG-only.
         if (rowVector.Length != rows || cols != columnVector.Length)
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         double result = 0;
 
         unsafe
@@ -270,7 +270,7 @@ public static partial class Matrix
         int stride = b.Columns();
 #if DEBUG
         if (a.Columns() != b.Rows() || result.Rows() > a.Rows() || result.Columns() > b.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
 
         var C = Matrix.CreateAs(result).To<double[,]>();
         for (var i = 0; i < N; i++)
@@ -330,7 +330,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Columns() != b.Length || result.Length > a.Length || result.Columns() > b.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Jagged.CreateAs(result).To<double[,]>();
         C = Dot(a.ToMatrix().To<double[,]>(), b.ToMatrix().To<double[,]>(), C);
 #endif
@@ -372,7 +372,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Columns() != b.Rows() || result.Length > a.Length || result.Columns() > b.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(result).To<double[,]>();
         C = Dot(a.ToMatrix().To<double[,]>(), b.To<double[,]>(), C);
 #endif
@@ -425,7 +425,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Columns() != b.Length || result.Length > a.Length || result.Columns() > b.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(result).To<double[,]>();
         C = Dot(a.To<double[,]>(), b.ToMatrix().To<double[,]>(), C);
 #endif
@@ -473,7 +473,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (rowVector.Length != matrix.Rows() || result.Length > matrix.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
 #endif
         int cols = matrix.Columns();
         for (var j = 0; j < cols; j++)
@@ -499,7 +499,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (matrix.Columns() != columnVector.Length || result.Length > matrix.Length)
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
 #endif
 
         for (var i = 0; i < matrix.Length; i++)
@@ -528,7 +528,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (cols != columnVector.Length || result.Length > rows)
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
 #endif
         unsafe
         {
@@ -591,7 +591,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (rowVector.Length != matrix.Length || result.Length > matrix.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
 #endif
         for (var j = 0; j < result.Length; j++)
         {
@@ -622,7 +622,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(result).To<double[,]>();
         C = Dot(a.To<double[,]>(), b.Transpose().To<double[,]>(), C);
 #endif
@@ -704,7 +704,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (n != b.Rows() || result.Rows() > m || result.Columns() > p)
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = a.Transpose().To<double[,]>().Dot(b.To<double[,]>());
 #endif
         unsafe
@@ -724,14 +724,14 @@ public static partial class Matrix
                     {
                         double aval = a[k, i];
                         for (int j = 0; j < p; j++)
-                            *pt++ += (double)((double)aval * (double)(*pb++));
+                            *pt++ += (aval * (*pb++));
                         pt = ptemp;
                     }
 
                     // Update the results row and clear the cache
                     for (int j = 0; j < p; j++)
                     {
-                        *pr++ = (double)*pt;
+                        *pr++ = *pt;
                         *pt++ = 0;
                     }
                 }
@@ -774,7 +774,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(result).To<double[,]>();
         C = Dot(a.To<double[,]>(), b.Transpose().To<double[,]>(), C);
 #endif
@@ -816,7 +816,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(result).To<double[,]>();
         C = Dot(a.To<double[,]>(), b.Transpose().To<double[,]>(), C);
 #endif
@@ -858,7 +858,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Columns() != b.Columns() || result.Rows() > a.Rows() || result.Columns() > b.Rows())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(result).To<double[,]>();
         C = Dot(a.To<double[,]>(), b.Transpose().To<double[,]>(), C);
 #endif
@@ -962,7 +962,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (n != b.Rows() || result.Rows() > m || result.Columns() > p)
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = a.Transpose().To<double[,]>().Dot(b.To<double[,]>());
 #endif
         unsafe
@@ -1017,7 +1017,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Length != b.Length || result.Length > a.Columns() || result.Columns() > b.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Dot(a.Transpose().To<double[,]>(), b.To<double[,]>());
 #endif
         int n = a.Length;
@@ -1057,7 +1057,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (matrix.Rows() != columnVector.Length || result.Length > matrix.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Dot(matrix.Transpose().To<double[,]>(), columnVector.To<double[]>());
 #endif
         int cols = matrix.Columns();
@@ -1088,7 +1088,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (matrix.Length != columnVector.Length || result.Length > matrix.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Dot(matrix.Transpose().To<double[,]>(), columnVector.To<double[]>());
 #endif
         int cols = matrix.Columns();
@@ -1147,7 +1147,7 @@ public static partial class Matrix
     {
 #if DEBUG
         if (a.Length != b.Length || result.Length > a.Columns() || result.Columns() > b.Columns())
-            throw new DimensionMismatchException();
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Dot(a.Transpose().To<double[,]>(), b.To<double[,]>());
 #endif
         int n = a.Length;
@@ -1164,8 +1164,8 @@ public static partial class Matrix
             {
                 double s = (double)0;
                 for (int k = 0; k < Bcolj.Length; k++)
-                    s += (double)((double)a[k][j] * (double)Bcolj[k]);
-                result[j][i] = (double)s;
+                    s += (a[k][j] * Bcolj[k]);
+                result[j][i] = s;
             }
         }
 #if DEBUG
@@ -1213,7 +1213,7 @@ public static partial class Matrix
     /// 
     public static double[][] TransposeAndDot(this double[] rowVector, double[][] b, double[][] result)
     {
-        return rowVector.Transpose(out double[][] t).Dot(b, result);
+        return rowVector.Transpose(out _).Dot(b, result);
     }
     #endregion
 

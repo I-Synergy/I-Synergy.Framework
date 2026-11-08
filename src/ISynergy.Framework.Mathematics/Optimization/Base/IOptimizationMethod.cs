@@ -46,7 +46,7 @@ public interface IOptimizationMethod<TCode> : IOptimizationMethod, IOptimization
 /// <seealso cref="ConjugateGradient" />
 /// <seealso cref="ResilientBackpropagation" />
 /// <seealso cref="GoldfarbIdnani" />
-public interface IOptimizationMethod<TInput, TOutput>
+public interface IOptimizationMethod<TInput, out TOutput>
 {
     /// <summary>
     ///     Gets the number of variables (free parameters)

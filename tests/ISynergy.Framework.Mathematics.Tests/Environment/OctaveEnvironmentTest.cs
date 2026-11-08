@@ -57,7 +57,7 @@ public class OctaveEnvironmentTest : OctaveEnvironment
     public void svdTest()
     {
         // Declare local matrices
-        mat u = _, s = _, v = _;
+        mat u = OctaveEnvironment._, s = OctaveEnvironment._, v = OctaveEnvironment._;
 
         // Compute a new mat
         mat M = magic(3) * 5;

@@ -23,6 +23,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     private Timer? _backgroundTimer;
     private Timer? _executionTimer;
     private readonly object _timerLock = new();
+    private readonly CancellationTokenSource _stoppingCts = new();
 
     /// <summary>
     /// Default constructor for the background service.
@@ -49,7 +50,10 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     {
         _logger.LogInformation("Starting scheduled action queuing service.");
         await _service.RefreshTasksAsync(cancellationToken);
-        _backgroundTimer = new Timer(_ => _ = RefreshQueueAsync(), null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
+        _backgroundTimer = new Timer(_ =>
+        {
+            _ = RefreshQueueAsync(_stoppingCts.Token); // NOSONAR - fire-and-forget timer callback
+        }, null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
     }
 
     /// <summary>
@@ -60,6 +64,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Scheduled action queuing service is stopping.");
+        _stoppingCts.Cancel();
         _backgroundTimer?.Change(Timeout.Infinite, 0);
         ReplaceExecutionTimer(null);
         return Task.CompletedTask;
@@ -79,7 +84,10 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
             var result = await _service.CalculateTimespanAsync(cancellationToken);
 
             if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
-                ReplaceExecutionTimer(new Timer(state => _ = ExecuteTaskAsync(state as IAction), result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration));
+                ReplaceExecutionTimer(new Timer(state =>
+                {
+                    _ = ExecuteTaskAsync(state as IAction, _stoppingCts.Token); // NOSONAR - fire-and-forget timer callback
+                }, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration));
             else
                 ReplaceExecutionTimer(null);
         }
@@ -143,6 +151,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
         {
             ReplaceExecutionTimer(null);
             _backgroundTimer?.Dispose();
+            _stoppingCts.Dispose();
         }
     }
 }

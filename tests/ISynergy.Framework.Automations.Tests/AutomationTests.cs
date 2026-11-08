@@ -25,7 +25,7 @@ public class AutomationTests
 {
     private Customer _defaultCustomer;
     private Automation _defaultAutomation;
-    private IAutomationService? _automationService;
+    private AutomationService? _automationService;
     private Stopwatch _stopwatch = new Stopwatch();
 
     // Configuration for environment-aware testing
@@ -92,7 +92,6 @@ public class AutomationTests
 
         _automationService = new AutomationService(
         Mock.Of<IAutomationManager>(),
-      Mock.Of<IOptions<AutomationOptions>>(),
    conditionValidator,
     queueBuilder,
           Mock.Of<ILogger<AutomationService>>());
@@ -155,7 +154,7 @@ public class AutomationTests
         _stopwatch.Stop();
 
         Assert.IsFalse(result2.Succeeded);
-        Assert.IsFalse(_stopwatch.Elapsed >= expectedDelay);
+        Assert.IsLessThan(expectedDelay, _stopwatch.Elapsed);
 
         cancellationTokenSource.Dispose();
     }
@@ -265,7 +264,7 @@ public class AutomationTests
         _stopwatch.Stop();
 
         Assert.IsTrue(IsWithinTolerance(executionTimeout, _stopwatch.Elapsed));
-        Assert.IsTrue(_stopwatch.Elapsed < actionDelay);
+        Assert.IsLessThan(actionDelay, _stopwatch.Elapsed);
 
         cancellationTokenSource.Dispose();
     }

@@ -85,7 +85,7 @@ public struct Euclidean :
     /// 
     /// <returns>The Euclidean distance between x and y.</returns>
     /// 
-    public double Distance(double vector1x, double vector1y, double vector2x, double vector2y)
+    public static double Distance(double vector1x, double vector1y, double vector2x, double vector2y)
     {
         double dx = vector1x - vector2x;
         double dy = vector1y - vector2y;

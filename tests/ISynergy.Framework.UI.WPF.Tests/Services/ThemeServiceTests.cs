@@ -10,6 +10,7 @@ using Moq;
 namespace ISynergy.Framework.UI.WPF.Services;
 
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public class ThemeServiceTests
 {
     private const string AccentColor = "#0078D4";

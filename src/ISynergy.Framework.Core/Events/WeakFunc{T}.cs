@@ -91,10 +91,7 @@ public class WeakFunc<TResult>
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
     public WeakFunc(object? target, Func<TResult>? func, bool keepTargetAlive = false)
     {
-        if (func is null)
-        {
-            throw new ArgumentNullException(nameof(func));
-        }
+        ArgumentNullException.ThrowIfNull(func);
 
         if (func.Method.IsStatic)
         {

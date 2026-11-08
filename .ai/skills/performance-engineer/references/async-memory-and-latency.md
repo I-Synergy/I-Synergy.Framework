@@ -7,40 +7,40 @@ Async-all-the-way, `ValueTask` and `ConfigureAwait` guidance, allocation-reducti
 ### Async All the Way
 ```csharp
 // ❌ BAD - Blocking on async
-public BudgetResponse GetBudget(Guid id)
+public {Entity}Response Get{Entity}(Guid id)
 {
-    return GetBudgetAsync(id).Result; // DEADLOCK RISK!
+    return Get{Entity}Async(id).Result; // DEADLOCK RISK!
 }
 
 // ✅ GOOD - Async all the way
-public async Task<BudgetResponse?> GetBudgetAsync(
+public async Task<{Entity}Response?> Get{Entity}Async(
     Guid id,
     CancellationToken cancellationToken = default)
 {
-    var budget = await dataContext.Budgets
-        .FirstOrDefaultAsync(b => b.BudgetId == id, cancellationToken);
+    var {entity} = await dataContext.{Entities}
+        .FirstOrDefaultAsync(b => b.{Entity}Id == id, cancellationToken);
 
-    return budget is null ? null : new BudgetResponse(budget.BudgetId, budget.Name, budget.Amount);
+    return {entity} is null ? null : new {Entity}Response({entity}.{Entity}Id, {entity}.Name, {entity}.Amount);
 }
 ```
 
 ### ValueTask for Hot Paths
 ```csharp
 // ✅ GOOD - Use ValueTask for frequently-called methods
-public async ValueTask<BudgetResponse?> GetCachedBudgetAsync(
-    Guid budgetId,
+public async ValueTask<{Entity}Response?> GetCached{Entity}Async(
+    Guid {entity}Id,
     CancellationToken cancellationToken = default)
 {
     // Check cache (often completes synchronously)
-    if (_memoryCache.TryGetValue(budgetId, out BudgetResponse? cached))
+    if (_memoryCache.TryGetValue({entity}Id, out {Entity}Response? cached))
         return cached;
 
     // Load from database
-    var budget = await dataContext.Budgets
-        .FirstOrDefaultAsync(b => b.BudgetId == budgetId, cancellationToken);
+    var {entity} = await dataContext.{Entities}
+        .FirstOrDefaultAsync(b => b.{Entity}Id == {entity}Id, cancellationToken);
 
-    var response = budget is null ? null : new BudgetResponse(budget.BudgetId, budget.Name, budget.Amount);
-    if (response is not null) _memoryCache.Set(budgetId, response);
+    var response = {entity} is null ? null : new {Entity}Response({entity}.{Entity}Id, {entity}.Name, {entity}.Amount);
+    if (response is not null) _memoryCache.Set({entity}Id, response);
 
     return response;
 }
@@ -49,23 +49,23 @@ public async ValueTask<BudgetResponse?> GetCachedBudgetAsync(
 ### ConfigureAwait Guidelines
 ```csharp
 // For library code (not application code)
-public async Task<BudgetResponse> GetBudgetAsync(Guid id)
+public async Task<{Entity}Response> Get{Entity}Async(Guid id)
 {
-    var budget = await dataContext.Budgets
-        .FirstOrDefaultAsync(b => b.BudgetId == id)
+    var {entity} = await dataContext.{Entities}
+        .FirstOrDefaultAsync(b => b.{Entity}Id == id)
         .ConfigureAwait(false); // Only in library code
 
-    return budget is null ? null : new BudgetResponse(budget.BudgetId, budget.Name, budget.Amount);
+    return {entity} is null ? null : new {Entity}Response({entity}.{Entity}Id, {entity}.Name, {entity}.Amount);
 }
 
 // For application code (ASP.NET Core), DON'T use ConfigureAwait
-public async Task<BudgetResponse?> GetBudgetAsync(Guid id)
+public async Task<{Entity}Response?> Get{Entity}Async(Guid id)
 {
-    var budget = await dataContext.Budgets
-        .FirstOrDefaultAsync(b => b.BudgetId == id);
+    var {entity} = await dataContext.{Entities}
+        .FirstOrDefaultAsync(b => b.{Entity}Id == id);
     // No ConfigureAwait needed in ASP.NET Core
 
-    return budget is null ? null : new BudgetResponse(budget.BudgetId, budget.Name, budget.Amount);
+    return {entity} is null ? null : new {Entity}Response({entity}.{Entity}Id, {entity}.Name, {entity}.Amount);
 }
 ```
 
@@ -74,24 +74,24 @@ public async Task<BudgetResponse?> GetBudgetAsync(Guid id)
 ### String Handling
 ```csharp
 // ❌ BAD - String concatenation in loop
-public string BuildCsv(List<Budget> budgets)
+public string BuildCsv(List<{Entity}> {entities})
 {
     string csv = "Id,Name,Amount\n";
-    foreach (var budget in budgets)
+    foreach (var {entity} in {entities})
     {
-        csv += $"{budget.BudgetId},{budget.Name},{budget.Amount}\n"; // Allocates new string each time
+        csv += $"{entity}.{Entity}Id},{entity}.Name},{entity}.Amount}\n"; // Allocates new string each time
     }
     return csv;
 }
 
 // ✅ GOOD - Use StringBuilder
-public string BuildCsv(List<Budget> budgets)
+public string BuildCsv(List<{Entity}> {entities})
 {
     var sb = new StringBuilder();
     sb.AppendLine("Id,Name,Amount");
-    foreach (var budget in budgets)
+    foreach (var {entity} in {entities})
     {
-        sb.AppendLine($"{budget.BudgetId},{budget.Name},{budget.Amount}");
+        sb.AppendLine($"{entity}.{Entity}Id},{entity}.Name},{entity}.Amount}");
     }
     return sb.ToString();
 }
@@ -118,25 +118,25 @@ public async Task<byte[]> ProcessLargeDataAsync(Stream stream)
 ### Minimize LINQ Allocations
 ```csharp
 // ❌ BAD - Multiple enumerations
-public decimal CalculateTotal(List<Budget> budgets)
+public decimal CalculateTotal(List<{Entity}> {entities})
 {
-    var active = budgets.Where(b => b.IsActive);
+    var active = {entities}.Where(b => b.IsActive);
     var count = active.Count();
     var total = active.Sum(b => b.Amount);
     return total / count;
 }
 
 // ✅ GOOD - Single enumeration
-public decimal CalculateAverage(List<Budget> budgets)
+public decimal CalculateAverage(List<{Entity}> {entities})
 {
-    var activeList = budgets.Where(b => b.IsActive).ToList();
+    var activeList = {entities}.Where(b => b.IsActive).ToList();
     return activeList.Sum(b => b.Amount) / activeList.Count;
 }
 
 // ✅ BETTER - Use aggregate functions
-public decimal CalculateAverage(List<Budget> budgets)
+public decimal CalculateAverage(List<{Entity}> {entities})
 {
-    return budgets.Where(b => b.IsActive).Average(b => b.Amount);
+    return {entities}.Where(b => b.IsActive).Average(b => b.Amount);
 }
 ```
 
@@ -160,16 +160,14 @@ app.UseResponseCompression();
 // ✅ GOOD - Process independent operations in parallel
 public async Task<DashboardData> GetDashboardDataAsync(Guid userId)
 {
-    var budgetsTask = GetUserBudgetsAsync(userId);
-    var goalsTask = GetUserGoalsAsync(userId);
-    var debtsTask = GetUserDebtsAsync(userId);
+    var {entities}Task = GetUser{Entities}Async(userId);
+    var {childEntities}Task = GetUser{ChildEntities}Async(userId);
 
-    await Task.WhenAll(budgetsTask, goalsTask, debtsTask);
+    await Task.WhenAll({entities}Task, {childEntities}Task);
 
     return new DashboardData(
-        await budgetsTask,
-        await goalsTask,
-        await debtsTask);
+        await {entities}Task,
+        await {childEntities}Task);
 }
 ```
 

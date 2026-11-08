@@ -13,8 +13,8 @@ namespace ISynergy.Framework.UI.Services;
 
 /// <summary>
 /// MAUI implementation of <see cref="IBladeService"/>. It is adaptive: on tablet and desktop
-/// (where an attached <see cref="IBladePaneHost"/> exists) blades are added to the owner and
-/// rendered as an overlay pane by <see cref="ISynergy.Framework.UI.Controls.BladePane"/>; on phone — or when no pane host is
+/// (where an attached <see cref="IBladeViewHost"/> exists) blades are added to the owner and
+/// rendered as an overlay pane by <see cref="ISynergy.Framework.UI.Controls.BladeView"/>; on phone — or when no pane host is
 /// present in the current page — a blade is pushed as a native modal page.
 /// </summary>
 public class BladeService : BaseBladeService
@@ -83,7 +83,7 @@ public class BladeService : BaseBladeService
             return;
         }
 
-        var rootPage = Application.Current?.Windows.FirstOrDefault()?.Page;
+        var rootPage = (Application.Current?.Windows is { Count: > 0 } windows ? windows[0].Page : null);
 
         if (rootPage is null)
         {
@@ -120,7 +120,7 @@ public class BladeService : BaseBladeService
     /// Resolves the view type for a blade ViewModel. Selection ViewModels get
     /// their known selection views; others use reflection-based naming convention.
     /// </summary>
-    private static Type? ResolveViewType(IViewModel bladeVm)
+    protected override Type? ResolveViewType(IViewModel bladeVm)
     {
         if (bladeVm is ISingleSelectionViewModel)
             return typeof(SingleSelectionView);
@@ -153,8 +153,8 @@ public class BladeService : BaseBladeService
         }
     }
 
-    private static IBladePaneHost? ResolveBladePaneHost() =>
-        IPlatformApplication.Current?.Services?.GetService<IBladePaneHost>();
+    private static IBladeViewHost? ResolveBladePaneHost() =>
+        IPlatformApplication.Current?.Services?.GetService<IBladeViewHost>();
 
     /// <inheritdoc />
     protected override IViewModelBladeView ResolveBladeHost(IViewModelBladeView owner, BladeHostTargets hostTarget) =>
@@ -188,7 +188,7 @@ public class BladeService : BaseBladeService
 
             try
             {
-                await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                try { await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(timeoutMs)); } catch (TimeoutException) { /* view did not load in time */ }
             }
             finally
             {

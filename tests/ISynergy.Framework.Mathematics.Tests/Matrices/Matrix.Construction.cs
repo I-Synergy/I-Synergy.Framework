@@ -10,13 +10,13 @@ public partial class MatrixTest
     public void create_nullable_test()
     {
         double?[] ones = Vector.Ones<double?>(5);
-        CollectionAssert.AreEqual(new double?[] { 1, 1, 1, 1, 1 }, ones);
+        Assert.AreSequenceEqual(new double?[] { 1, 1, 1, 1, 1 }, ones);
     }
 
     [TestMethod]
     public void CreateJaggedTest()
     {
-        Array jagged = Jagged.Zeros(typeof(int), 2, 3, 1);
+        Array jagged = Jagged.Zeros<int>(2, 3, 1);
 
         foreach (int[] idx in jagged.GetIndices(deep: true))
         {
@@ -36,7 +36,7 @@ public partial class MatrixTest
     [TestMethod]
     public void CreateMatrixTest()
     {
-        Array matrix = Matrix.Zeros(typeof(int), 2, 3, 1);
+        Array matrix = Matrix.Zeros<int>(2, 3, 1);
 
         foreach (int[] idx in matrix.GetIndices())
         {

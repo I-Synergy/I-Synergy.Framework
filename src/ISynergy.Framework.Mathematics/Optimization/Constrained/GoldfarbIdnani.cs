@@ -162,13 +162,13 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         if (function.NumberOfVariables != constraintMatrix.GetLength(1))
             throw new ArgumentException("The number of columns in the constraint matrix A "
                                         + "should equal the number of variables in the problem.",
-                "constraintMatrix");
+                nameof(constraintMatrix));
 
         if (constraintValues.Length != constraintMatrix.GetLength(0))
-            throw new DimensionMismatchException("constraintValues");
+            throw new DimensionMismatchException(nameof(constraintValues));
 
         if (numberOfEqualities < 0 || numberOfEqualities > constraintValues.Length)
-            throw new ArgumentOutOfRangeException("numberOfEqualities");
+            throw new ArgumentOutOfRangeException(nameof(numberOfEqualities));
 
         constraintTolerances = Vector.Create(constraintValues.Length, LinearConstraint.DefaultTolerance);
 

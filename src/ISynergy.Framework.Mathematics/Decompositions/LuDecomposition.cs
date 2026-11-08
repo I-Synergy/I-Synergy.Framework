@@ -83,7 +83,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// </param>
     public LuDecomposition(double[,] value, bool transpose, bool inPlace)
     {
-        if (value is null) throw new ArgumentNullException("value", "Matrix cannot be null.");
+        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (transpose)
             lu = value.Transpose(inPlace);
@@ -336,11 +336,10 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
     public double[,] Solve(double[,] value)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.GetLength(0) != rows)
-            throw new DimensionMismatchException("value",
+            throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
@@ -375,11 +374,10 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
     public double[] Solve(double[] value)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.Length != rows)
-            throw new DimensionMismatchException("value",
+            throw new DimensionMismatchException(nameof(value),
                 "The vector should have the same length as rows in the decomposition.");
 
         if (!Nonsingular)
@@ -437,11 +435,10 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// <returns>Matrix <c>X</c> so that <c>X * L * U = A</c>.</returns>
     public double[,] SolveTranspose(double[,] value)
     {
-        if (value is null)
-            throw new ArgumentNullException("value");
+        ArgumentNullException.ThrowIfNull(value);
 
         if (value.GetLength(0) != rows)
-            throw new DimensionMismatchException("value",
+            throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)

@@ -35,40 +35,40 @@ public class RedBlackTreeTest
         ICollection<KeyValuePair<int, string>> collection = t;
 
         KeyValuePair<int, string>[] values = collection.ToArray();
-        Assert.AreEqual(0, values.Length);
+        Assert.IsEmpty(values);
 
         t.Add(new KeyValuePair<int, string>(1, "1"));
         values = collection.ToArray();
-        Assert.AreEqual(1, values.Length);
+        Assert.HasCount(1, values);
 
         t.Add(new KeyValuePair<int, string>(2, "2"));
         values = collection.ToArray();
-        Assert.AreEqual(2, values.Length);
+        Assert.HasCount(2, values);
         Assert.AreEqual("1", values[0].Value);
         Assert.AreEqual("2", values[1].Value);
 
 
         t.Add(new KeyValuePair<int, string>(1, "bla"));
         values = collection.ToArray();
-        Assert.AreEqual(2, values.Length);
+        Assert.HasCount(2, values);
         Assert.AreEqual("bla", values[0].Value);
         Assert.AreEqual("2", values[1].Value);
 
         RedBlackTreeNode<KeyValuePair<int, string>> node1 = t.Remove(new KeyValuePair<int, string>(1, "-"));
         Assert.IsNotNull(node1);
         values = collection.ToArray();
-        Assert.AreEqual(1, values.Length);
+        Assert.HasCount(1, values);
         Assert.AreEqual("2", values[0].Value);
 
         RedBlackTreeNode<KeyValuePair<int, string>> node2 = t.Remove(new KeyValuePair<int, string>(1, "-"));
         Assert.IsNull(node2);
         values = collection.ToArray();
-        Assert.AreEqual(1, values.Length);
+        Assert.HasCount(1, values);
         Assert.AreEqual("2", values[0].Value);
 
         RedBlackTreeNode<KeyValuePair<int, string>> node3 = t.Remove(new KeyValuePair<int, string>(2, "-"));
         values = collection.ToArray();
-        Assert.AreEqual(0, values.Length);
+        Assert.IsEmpty(values);
     }
 
     [TestMethod]

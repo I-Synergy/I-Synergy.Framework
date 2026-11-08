@@ -45,7 +45,7 @@ public class CameraService : ICameraService
     {
         _logger.LogTrace("Taking picture with max file size: {MaxFileSize}", maxFileSize);
         var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-        var device = devices.FirstOrDefault(); // Finds one device, my webcam
+        var device = devices.Count > 0 ? devices[0] : null; // Finds one device, my webcam
         if (device is not null)
         {
             var settings = new MediaCaptureInitializationSettings();

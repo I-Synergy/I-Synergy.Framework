@@ -3,11 +3,11 @@ using System.Globalization;
 namespace ISynergy.Framework.UI.Converters;
 
 /// <summary>
-/// Class NullToIsVisibleConverter.
+/// Class NullToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class NullToIsVisibleConverter : IValueConverter
+public class NullToVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.
@@ -40,11 +40,11 @@ public class NullToIsVisibleConverter : IValueConverter
 }
 
 /// <summary>
-/// Class NullToInversedIsVisibleConverter.
+/// Class NullToInversedVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class NullToInversedIsVisibleConverter : IValueConverter
+public class NullToInversedVisibilityConverter : IValueConverter
 {
     /// <summary>
     /// Converts the specified value.

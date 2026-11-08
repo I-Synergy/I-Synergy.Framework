@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Sample.ViewModels;
 
-public class SignInViewModel : ViewModel
+public partial class SignInViewModel : ViewModel
 {
     private readonly Sample.Abstractions.Services.IAuthenticationService _authenticationService;
     private readonly IDialogService _dialogService;

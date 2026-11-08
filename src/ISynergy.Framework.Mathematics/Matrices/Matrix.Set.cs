@@ -299,11 +299,9 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[] destination, T value, int[] indices)
     {
-        if (destination is null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(destination);
 
-        if (indices is null)
-            throw new ArgumentNullException(nameof(indices));
+        ArgumentNullException.ThrowIfNull(indices);
 
         for (var i = 0; i < indices.Length; i++)
             destination[Matrix.index(indices[i], destination.Length)] = value;
@@ -335,11 +333,9 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[] destination, T value, int index)
     {
-        if (destination is null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(destination);
 
-        if (index >= destination.Length)
-            throw new ArgumentOutOfRangeException("index");
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, destination.Length);
 
         index = Matrix.index(index, destination.Length);
 
@@ -356,11 +352,9 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this List<T> destination, T value, int[] indices)
     {
-        if (destination is null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(destination);
 
-        if (indices is null)
-            throw new ArgumentNullException(nameof(indices));
+        ArgumentNullException.ThrowIfNull(indices);
 
         for (var i = 0; i < indices.Length; i++)
             destination[indices[i]] = value;
@@ -370,11 +364,9 @@ public static partial class Matrix
         T[,] dst, int[] dstRowIndices, int[] dstColumnIndices,
         T[,] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
-        if (src is null)
-            throw new ArgumentNullException(nameof(src));
+        ArgumentNullException.ThrowIfNull(src);
 
-        if (dst is null)
-            throw new ArgumentNullException(nameof(dst));
+        ArgumentNullException.ThrowIfNull(dst);
 
         if (srcRowIndices is null)
             srcRowIndices = Vector.Range(0, src.Rows());
@@ -405,11 +397,9 @@ public static partial class Matrix
         T[][] dst, int[] dstRowIndices, int[] dstColumnIndices,
         T[][] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
-        if (src is null)
-            throw new ArgumentNullException(nameof(src));
+        ArgumentNullException.ThrowIfNull(src);
 
-        if (dst is null)
-            throw new ArgumentNullException(nameof(dst));
+        ArgumentNullException.ThrowIfNull(dst);
 
         if (srcRowIndices is null)
             srcRowIndices = Vector.Range(0, src.Rows());

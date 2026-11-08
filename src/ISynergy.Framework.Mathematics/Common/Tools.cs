@@ -230,8 +230,7 @@ public static class Tools
     /// </summary>
     public static double Acosh(double x)
     {
-        if (x < 1.0)
-            throw new ArgumentOutOfRangeException("x");
+        ArgumentOutOfRangeException.ThrowIfLessThan(x, 1.0);
         return Math.Log(x + Math.Sqrt(x * x - 1));
     }
 
@@ -266,7 +265,7 @@ public static class Tools
     public static double Atanh(double d)
     {
         if (d > 1.0 || d < -1.0)
-            throw new ArgumentOutOfRangeException("d");
+            throw new ArgumentOutOfRangeException(nameof(d));
         return 0.5 * Math.Log((1.0 + d) / (1.0 - d));
     }
     /// <summary>

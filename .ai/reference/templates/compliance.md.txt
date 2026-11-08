@@ -17,11 +17,11 @@ it is a misrepresentation its author ships. The status column carries the three 
 nothing else — no abbreviation, no synonym, and no adjective asserting that this repository meets a
 standard.
 
-`{ApplicationName}` is the solution name; where no solution file names one, the repository directory
+`I-Synergy.Framework` is the solution name; where no solution file names one, the repository directory
 name is used.
 
 ````markdown
-# Standards Compatibility — {ApplicationName}
+# Standards Compatibility — I-Synergy.Framework
 
 <!-- standards-status: source=.ai/reference/standards.md generated={yyyy-mm-dd} revision={short commit or unknown} validators={filename}:{exit},… -->
 
@@ -148,6 +148,6 @@ procurement reviewer, an auditor, or a developer checking what a project can act
 4. A project that edits the surrounding prose should keep the four fixed elements intact: the
    opening statement, the provenance line, the `Compatibility` table's columns and their order, and
    the three tokens.
-5. Every `{…}` and `[…]` placeholder is resolved before the file is written — `{ApplicationName}`
+5. Every `{…}` and `[…]` placeholder is resolved before the file is written — `I-Synergy.Framework`
    from the solution name, the rest from the manifest and the run. A placeholder left in a committed
    `COMPLIANCE.md` is a generation bug, not an authoring choice.

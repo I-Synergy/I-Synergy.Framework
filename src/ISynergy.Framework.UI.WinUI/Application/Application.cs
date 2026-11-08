@@ -32,6 +32,7 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
 {
+    private const string ExceptionMessageTemplate = "{ExceptionMessage}";
 
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
@@ -188,9 +189,9 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 });
 
                 // Initialize environment variables from configuration and command-line parameters
-                InitializeEnvironmentVariables(); // NOSONAR
+                InitializeEnvironmentVariables();
             }
-            catch (Exception ex)
+            catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
             {
                 _logger?.LogCritical(ex, "Critical error during application initialization");
                 throw;
@@ -259,7 +260,11 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    /// <remarks>
+    /// Not virtual: it runs from the constructor, and a constructor must not dispatch to an overridable
+    /// member. <see cref="HandleCommandArguments"/> stays overridable for application-specific switches.
+    /// </remarks>
+    protected void InitializeEnvironmentVariables()
     {
         try
         {
@@ -318,7 +323,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 continue;
 
             // Look for query string format arguments (e.g., "?environment=development&country=nl")
-            if (arg.Contains("?"))
+            if (arg.Contains('?'))
             {
                 var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
 
@@ -354,7 +359,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
-            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogError(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -368,7 +373,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -384,7 +389,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             if (_exceptionHandlerService is not null)
                 _exceptionHandlerService.HandleException(exception);
             else
-                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger.LogCritical(exception, ExceptionMessageTemplate, exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -399,7 +404,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -574,7 +579,7 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
     protected virtual Task HandleApplicationInitializedAsync() =>
         Task.CompletedTask;
 
-    public bool _isClosing = false;
+    private bool _isClosing;
 
     protected void ExitSuccess()
     {

@@ -12,7 +12,7 @@ using Windows.ApplicationModel.Activation;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-public static class AppWindowExtensions
+public static partial class AppWindowExtensions
 {
     public static AppWindow? GetAppWindow(this Page page)
     {
@@ -94,11 +94,15 @@ public static class AppWindowExtensions
     private const int GWL_EXSTYLE = -20;
     private const int WS_EX_LAYOUTRTL = 0x00400000;
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern int GetWindowLong(nint hWnd, int nIndex);
+    // NOTE: user32.dll exports GetWindowLongA/GetWindowLongW, not GetWindowLong. The unsuffixed
+    // name only exists as a header macro, so an exact-name P/Invoke throws EntryPointNotFoundException
+    // on 64-bit Windows (x64 and ARM64). The extended style is a 32-bit LONG, so the W variants are
+    // correct on every architecture.
+    [LibraryImport("user32.dll", EntryPoint = "GetWindowLongW", SetLastError = true)]
+    private static partial int GetWindowLong(nint hWnd, int nIndex);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
+    [LibraryImport("user32.dll", EntryPoint = "SetWindowLongW", SetLastError = true)]
+    private static partial int SetWindowLong(nint hWnd, int nIndex, int dwNewLong);
 
     /// <summary>
     /// Applies or clears the <c>WS_EX_LAYOUTRTL</c> extended window style on the
@@ -118,9 +122,11 @@ public static class AppWindowExtensions
         var exStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 
         if (isRightToLeft)
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle |= WS_EX_LAYOUTRTL);
+            exStyle |= WS_EX_LAYOUTRTL;
         else
-            SetWindowLong(hWnd, GWL_EXSTYLE, exStyle &= ~WS_EX_LAYOUTRTL);
+            exStyle &= ~WS_EX_LAYOUTRTL;
+
+        SetWindowLong(hWnd, GWL_EXSTYLE, exStyle);
     }
 
     // ──────────────────────────────────────────────

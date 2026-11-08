@@ -80,10 +80,7 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     /// <param name="keepTargetAlive">if set to <c>true</c> [keep target alive].</param>
     public WeakAction(object? target, Action<T>? action, bool keepTargetAlive = false)
     {
-        if (action is null)
-        {
-            throw new ArgumentNullException(nameof(action));
-        }
+        ArgumentNullException.ThrowIfNull(action);
 
         if (action.Method.IsStatic)
         {

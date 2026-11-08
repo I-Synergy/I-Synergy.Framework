@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 namespace Sample.ViewModels;
 
 [Lifetime(Lifetimes.Scoped)]
-public class MauiControlsViewModel : ViewModelNavigation<object>
+public partial class MauiControlsViewModel : ViewModelNavigation<object>
 {
     public override string Title => "MAUI Controls";
 

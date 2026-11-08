@@ -374,7 +374,7 @@ public static class Special
 
         if (n < 0)
             // Factorial is not defined for negative numbers.
-            throw new ArgumentException("Argument cannot be negative.", "n");
+            throw new ArgumentException("Argument cannot be negative.", nameof(n));
         if (n <= 1)
             // Factorial for n between 0 and 1 is 1, so log(factorial(n)) is 0.
             return 0.0;
@@ -408,7 +408,7 @@ public static class Special
 
         if (n < 0)
             // Factorial is not defined for negative numbers
-            throw new ArgumentException("Argument can not be negative", "n");
+            throw new ArgumentException("Argument can not be negative", nameof(n));
         if (n > 32)
             // Return Gamma approximation using exp(gammaln(n+1)),
             //  which for some reason is faster than gamma(n+1).

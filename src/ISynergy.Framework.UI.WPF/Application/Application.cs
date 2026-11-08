@@ -31,6 +31,7 @@ namespace ISynergy.Framework.UI;
 /// </summary>
 public abstract class Application : System.Windows.Application, IDisposable
 {
+    private const string ExceptionMessageTemplate = "{ExceptionMessage}";
     protected readonly IExceptionHandlerService _exceptionHandlerService;
     protected readonly ICommonServices _commonServices;
     protected readonly IDialogService _dialogService;
@@ -80,14 +81,22 @@ public abstract class Application : System.Windows.Application, IDisposable
     protected virtual bool UseCustomWindowChrome => false;
 
     /// <summary>
-    /// Default constructor.
+    /// Initializes the application with the host built by the concrete application.
     /// </summary>
-    protected Application(SplashScreenOptions? splashScreenOptions = null)
+    /// <remarks>
+    /// The host is built by the derived application and passed in: a constructor must not call an
+    /// overridable member, because the derived state it would rely on is not initialized yet. Building
+    /// it in a static method of the application (or a factory) keeps the composition root explicit and
+    /// the base constructor free of virtual dispatch.
+    /// </remarks>
+    /// <param name="host">The built host whose services the application uses.</param>
+    /// <param name="splashScreenOptions">Splash screen configuration, if any.</param>
+    protected Application(IHost host, SplashScreenOptions? splashScreenOptions = null)
         : base()
     {
+        ArgumentNullException.ThrowIfNull(host);
+
         _splashScreenOptions = splashScreenOptions ?? new SplashScreenOptions(SplashScreenTypes.None);
-        var host = CreateHostBuilder() // NOSONAR
-           .Build();
 
         Services = host.Services;
         _logger = Services.GetRequiredService<ILogger<Application>>();
@@ -137,11 +146,9 @@ public abstract class Application : System.Windows.Application, IDisposable
             await _dialogService.ShowErrorAsync(m.Content.Message, m.Content.Title);
         });
 
-        // Initialize environment variables from configuration and command-line parameters
-        InitializeEnvironmentVariables(); // NOSONAR
+        // Initialize environment variables from configuration and command-line parameters.
+        InitializeEnvironmentVariables();
     }
-
-    protected abstract IHostBuilder CreateHostBuilder();
 
     /// <summary>
     /// Called when the application is fully loaded (UI ready + initialization complete).
@@ -155,7 +162,11 @@ public abstract class Application : System.Windows.Application, IDisposable
     /// <summary>
     /// Initializes environment variables from appsettings.json with command-line parameter override.
     /// </summary>
-    protected virtual void InitializeEnvironmentVariables()
+    /// <remarks>
+    /// Not virtual: it runs from the constructor, and a constructor must not dispatch to an overridable
+    /// member. <see cref="HandleCommandArguments"/> stays overridable for application-specific switches.
+    /// </remarks>
+    protected void InitializeEnvironmentVariables()
     {
         try
         {
@@ -206,7 +217,7 @@ public abstract class Application : System.Windows.Application, IDisposable
                 continue;
 
             // Look for query string format arguments (e.g., "?environment=development&country=nl")
-            if (arg.Contains("?"))
+            if (arg.Contains('?'))
             {
                 var environmentValue = arg.ExtractQueryParameter(nameof(Environment));
 
@@ -235,7 +246,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
 
         e.Handled = true;
     }
@@ -258,7 +269,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (e.Exception.HResult != lastErrorMessage)
         {
             lastErrorMessage = e.Exception.HResult;
-            _logger.LogError(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogError(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
         }
     }
 
@@ -272,7 +283,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
 
         e.SetObserved();
     }
@@ -288,7 +299,7 @@ public abstract class Application : System.Windows.Application, IDisposable
             if (_exceptionHandlerService is not null)
                 _exceptionHandlerService.HandleException(exception);
             else
-                _logger.LogCritical(exception, exception.ToMessage(Environment.StackTrace));
+                _logger.LogCritical(exception, ExceptionMessageTemplate, exception.ToMessage(Environment.StackTrace));
     }
 
     /// <summary>
@@ -303,7 +314,7 @@ public abstract class Application : System.Windows.Application, IDisposable
         if (_exceptionHandlerService is not null)
             _exceptionHandlerService.HandleException(e.Exception);
         else
-            _logger.LogCritical(e.Exception, e.Exception.ToMessage(Environment.StackTrace));
+            _logger.LogCritical(e.Exception, ExceptionMessageTemplate, e.Exception.ToMessage(Environment.StackTrace));
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -394,10 +405,11 @@ public abstract class Application : System.Windows.Application, IDisposable
             // Add custom resourcedictionaries from code.
             if (Current.Resources?.MergedDictionaries is not null)
             {
-                foreach (var item in GetAdditionalResourceDictionaries().EnsureNotNull())
+                foreach (var item in GetAdditionalResourceDictionaries()
+                    .EnsureNotNull()
+                    .Where(item => !Current.Resources.MergedDictionaries.Contains(item)))
                 {
-                    if (!Current.Resources.MergedDictionaries.Contains(item))
-                        Current.Resources.MergedDictionaries.Add(item);
+                    Current.Resources.MergedDictionaries.Add(item);
                 }
             }
 

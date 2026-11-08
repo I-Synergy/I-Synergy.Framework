@@ -54,6 +54,30 @@ You are a Database Migration Specialist responsible for managing database schema
    - Monitor database metrics
    - Tune PostgreSQL configuration
 
+## Workflows
+
+Read the matching reference before writing a migration — each carries the full pattern.
+
+### Create, apply, or roll back a migration
+
+Read `references/commands-and-entity-config.md` — the `dotnet ef` command set for this solution's project layout plus the Fluent API entity-configuration pattern.
+
+### Seed data or transform an existing column
+
+Read `references/seeding-and-data-migration.md` — `HasData` seeding in `OnModelCreating` and the expand/migrate/contract migration with a reversible `Down`.
+
+### Design indexes or speed up a query
+
+Read `references/indexing-and-performance.md` — when to index and when not to, index types, N+1 avoidance, batching, projection.
+
+### Add tenant isolation
+
+Read `references/multi-tenant.md` — shared-schema, shared-database/separate-schema, and separate-database models.
+
+### Implement or debug full-text search
+
+Read `references/postgres-full-text.md` — custom dictionaries without stopwords, index-friendly `to_tsvector`, and pinning the migrations-history schema.
+
 ## Load Additional Patterns
 
 - `.ai/patterns/cqrs-patterns.md`
@@ -85,335 +109,6 @@ You are a Database Migration Specialist responsible for managing database schema
 - Monitor connection counts
 - Use prepared statements
 
-## Migration Commands
-
-### Create Migration
-```bash
-# From solution root
-dotnet ef migrations add {MigrationName} --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-
-# Example
-dotnet ef migrations add AddBudgetTable --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-```
-
-### Apply Migration
-```bash
-# Update database to latest migration
-dotnet ef database update --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-
-# Update to specific migration
-dotnet ef database update {MigrationName} --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-```
-
-### Rollback Migration
-```bash
-# Rollback to previous migration
-dotnet ef database update {PreviousMigrationName} --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-
-# Rollback all migrations
-dotnet ef database update 0 --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-```
-
-### Remove Migration
-```bash
-# Remove last migration (if not applied)
-dotnet ef migrations remove --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-```
-
-### Generate SQL Script
-```bash
-# Generate SQL for review
-dotnet ef migrations script --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API --output migration.sql
-
-# Generate SQL from specific migration
-dotnet ef migrations script {FromMigration} {ToMigration} --project src/{ApplicationName}.Data --startup-project src/{ApplicationName}.Services.API
-```
-
-## Entity Configuration Pattern
-
-```csharp
-// File: {ApplicationName}.Data/Configurations/{Entity}Configuration.cs
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using {ApplicationName}.Entities.{Domain};
-
-namespace {ApplicationName}.Data.Configurations;
-
-/// <summary>
-/// Entity configuration for {Entity}.
-/// </summary>
-public class {Entity}Configuration : IEntityTypeConfiguration<{Entity}>
-{
-    public void Configure(EntityTypeBuilder<{Entity}> builder)
-    {
-        // Table name (PostgreSQL snake_case convention)
-        builder.ToTable("{entities}");
-
-        // Primary key
-        builder.HasKey(e => e.{Entity}Id);
-
-        // Properties
-        builder.Property(e => e.Name)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder.Property(e => e.Amount)
-            .IsRequired()
-            .HasPrecision(18, 2);
-
-        builder.Property(e => e.CreatedDate)
-            .IsRequired()
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-        builder.Property(e => e.ChangedDate)
-            .IsRequired(false);
-
-        // Indexes
-        builder.HasIndex(e => e.Name)
-            .HasDatabaseName("idx_{entity}_name");
-
-        builder.HasIndex(e => e.CreatedDate)
-            .HasDatabaseName("idx_{entity}_created_date");
-
-        // Relationships
-        builder.HasMany(e => e.Goals)
-            .WithOne(g => g.Budget)
-            .HasForeignKey(g => g.BudgetId)
-            .OnDelete(DeleteBehavior.Cascade);
-    }
-}
-```
-
-## Data Seeding Pattern
-
-```csharp
-// File: {ApplicationName}.Data/DataContext.cs
-protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    base.OnModelCreating(modelBuilder);
-
-    // Apply configurations
-    modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
-
-    // Seed data
-    SeedData(modelBuilder);
-}
-
-private void SeedData(ModelBuilder modelBuilder)
-{
-    // Seed reference data
-    modelBuilder.Entity<Category>().HasData(
-        new Category
-        {
-            CategoryId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-            Name = "Housing",
-            CreatedDate = DateTimeOffset.UtcNow
-        },
-        new Category
-        {
-            CategoryId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-            Name = "Transportation",
-            CreatedDate = DateTimeOffset.UtcNow
-        }
-    );
-}
-```
-
-## Complex Data Migration Pattern
-
-```csharp
-// File: Migrations/{Timestamp}_MigrateOldDataToNewFormat.cs
-public partial class MigrateOldDataToNewFormat : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
-        // 1. Add new columns
-        migrationBuilder.AddColumn<string>(
-            name: "new_column",
-            table: "budgets",
-            type: "text",
-            nullable: true);
-
-        // 2. Migrate data
-        migrationBuilder.Sql(@"
-            UPDATE budgets
-            SET new_column = CONCAT(old_column1, '-', old_column2)
-            WHERE old_column1 IS NOT NULL;
-        ");
-
-        // 3. Make new column required
-        migrationBuilder.AlterColumn<string>(
-            name: "new_column",
-            table: "budgets",
-            type: "text",
-            nullable: false,
-            oldClrType: typeof(string),
-            oldType: "text",
-            oldNullable: true);
-
-        // 4. Drop old columns
-        migrationBuilder.DropColumn(
-            name: "old_column1",
-            table: "budgets");
-
-        migrationBuilder.DropColumn(
-            name: "old_column2",
-            table: "budgets");
-    }
-
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        // Reverse the migration
-        migrationBuilder.AddColumn<string>(
-            name: "old_column1",
-            table: "budgets",
-            type: "text",
-            nullable: true);
-
-        migrationBuilder.AddColumn<string>(
-            name: "old_column2",
-            table: "budgets",
-            type: "text",
-            nullable: true);
-
-        migrationBuilder.Sql(@"
-            UPDATE budgets
-            SET
-                old_column1 = SPLIT_PART(new_column, '-', 1),
-                old_column2 = SPLIT_PART(new_column, '-', 2)
-            WHERE new_column IS NOT NULL;
-        ");
-
-        migrationBuilder.DropColumn(
-            name: "new_column",
-            table: "budgets");
-    }
-}
-```
-
-## Index Design Guidelines
-
-### When to Add Indexes
-
-✅ **DO Index:**
-- Primary keys (automatic)
-- Foreign keys
-- Frequently queried columns
-- Columns used in WHERE clauses
-- Columns used in ORDER BY
-- Columns used in JOIN conditions
-
-❌ **DON'T Index:**
-- Small tables (< 1000 rows)
-- Columns with low cardinality (few distinct values)
-- Columns rarely used in queries
-- Columns that change frequently
-
-### Index Types
-
-```csharp
-// Single column index
-builder.HasIndex(e => e.Name);
-
-// Composite index
-builder.HasIndex(e => new { e.BudgetId, e.CreatedDate });
-
-// Unique index
-builder.HasIndex(e => e.Email)
-    .IsUnique();
-
-// Filtered index (PostgreSQL)
-builder.HasIndex(e => e.Status)
-    .HasFilter("status = 'Active'");
-
-// Covering index (include columns)
-builder.HasIndex(e => e.BudgetId)
-    .IncludeProperties(e => new { e.Name, e.Amount });
-```
-
-## Multi-Tenant Database Patterns
-
-### Approach 1: Shared Database, Shared Schema
-```csharp
-// Add TenantId to all entities
-public abstract class TenantEntity
-{
-    public Guid TenantId { get; set; }
-}
-
-// Global query filter
-modelBuilder.Entity<Budget>()
-    .HasQueryFilter(b => b.TenantId == _currentTenantId);
-
-// Index on TenantId
-builder.HasIndex(e => e.TenantId);
-```
-
-### Approach 2: Shared Database, Separate Schemas
-```csharp
-// Use different schemas per tenant
-builder.ToTable("budgets", schema: _tenantSchema);
-```
-
-### Approach 3: Separate Databases
-```csharp
-// Connection string per tenant
-var connectionString = _configuration[$"ConnectionStrings:Tenant_{tenantId}"];
-```
-
-## Performance Optimization Patterns
-
-### Query Optimization
-```csharp
-// ✅ GOOD - Single query with Include
-var budgets = await context.Budgets
-    .Include(b => b.Goals)
-    .Include(b => b.Debts)
-    .Where(b => b.UserId == userId)
-    .ToListAsync();
-
-// ❌ BAD - N+1 query problem
-var budgets = await context.Budgets
-    .Where(b => b.UserId == userId)
-    .ToListAsync();
-
-foreach (var budget in budgets)
-{
-    budget.Goals = await context.Goals
-        .Where(g => g.BudgetId == budget.BudgetId)
-        .ToListAsync(); // Separate query for each budget!
-}
-```
-
-### Batch Operations
-```csharp
-// ✅ GOOD - Batch insert
-context.Budgets.AddRange(budgets);
-await context.SaveChangesAsync();
-
-// ❌ BAD - Individual inserts
-foreach (var budget in budgets)
-{
-    context.Budgets.Add(budget);
-    await context.SaveChangesAsync(); // Multiple round trips!
-}
-```
-
-### Projection for Performance
-```csharp
-// ✅ GOOD - Select only needed columns
-var budgetNames = await context.Budgets
-    .Where(b => b.UserId == userId)
-    .Select(b => new { b.BudgetId, b.Name })
-    .ToListAsync();
-
-// ❌ BAD - Load entire entities
-var budgets = await context.Budgets
-    .Where(b => b.UserId == userId)
-    .ToListAsync();
-var budgetNames = budgets.Select(b => new { b.BudgetId, b.Name });
-```
-
 ## Common Migration Pitfalls
 
 ### ❌ Avoid These Mistakes
@@ -441,6 +136,14 @@ var budgetNames = budgets.Select(b => new { b.BudgetId, b.Name });
 6. **Forgetting Indexes After Data Migration**
    - ❌ Large data operation without removing indexes first
    - ✅ Drop indexes, migrate data, recreate indexes
+
+## References
+
+- `references/commands-and-entity-config.md` — `dotnet ef` commands (add/update/rollback/remove/script) and the entity-configuration class
+- `references/seeding-and-data-migration.md` — `HasData` seeding and the expand/migrate/contract `Up`/`Down` pattern
+- `references/indexing-and-performance.md` — index design guidelines, index types, query/batch/projection optimization
+- `references/multi-tenant.md` — shared schema, separate schema, and separate database tenancy
+- `references/postgres-full-text.md` — custom text-search config, index-friendly `to_tsvector`, migrations-history schema
 
 ## Migration Review Checklist
 
@@ -484,51 +187,3 @@ var budgetNames = budgets.Select(b => new { b.BudgetId, b.Name });
 - [ ] Performance impact assessed
 - [ ] Backup plan in place
 - [ ] Team informed of schema changes
-
-## PostgreSQL Full-Text Search
-
-### Custom Config Without Stopwords
-
-Built-in `*_stem` dictionaries (e.g. `english_stem`) have stopwords baked into their Snowball template. So `plainto_tsquery('english','will')` reduces to an empty query — common words silently match nothing ("will" is a stopword). Create custom dictionaries without `StopWords` and a custom config:
-
-```sql
-CREATE TEXT SEARCH DICTIONARY x_english_dict (TEMPLATE = snowball, Language = english);
-
-CREATE TEXT SEARCH CONFIGURATION x_english (COPY = pg_catalog.english);
-
-ALTER TEXT SEARCH CONFIGURATION x_english
-    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
-    WITH x_english_dict;
-```
-
-### Reference Each Translation Column Directly in the WHERE Clause
-
-Reference each translation column directly in the `WHERE` clause via `EF.Functions.ToTsVector("config", x.Column).Matches(EF.Functions.PlainToTsQuery("config", term))`:
-
-```csharp
-// ✅ CORRECT — WHERE references each column directly, so the per-column GIN index is used
-var rows = await dataContext.Documents
-    .Where(x =>
-        EF.Functions.ToTsVector("x_english", x.TitleEn)
-            .Matches(EF.Functions.PlainToTsQuery("x_english", term))
-        || EF.Functions.ToTsVector("x_english", x.TitleAr)
-            .Matches(EF.Functions.PlainToTsQuery("x_english", term)))
-    .Select(x => new SearchResult(
-        x.Id,
-        // ✅ CASE belongs here, in the final output projection only
-        x.Language == "en" ? x.TitleEn : x.TitleAr))
-    .ToListAsync(ct);
-```
-
-A `CASE`-wrapped `to_tsvector()` projection in the `WHERE` clause defeats the per-column GIN index — Postgres can't match an expression index against a `CASE`, so it falls back to a full scan. Keep the `CASE` only in the final output projection.
-
-### Pin the Migrations History Table Schema
-
-Pin the migrations history table schema in the provider options — in **both** dev and prod registrations:
-
-```csharp
-// ✅ CORRECT — both dev and prod registrations pin the same schema
-options.UseNpgsql(npgsql => npgsql.MigrationsHistoryTable("__EFMigrationsHistory", "system"));
-```
-
-`IDbContextOptionsConfiguration` does not reliably apply at runtime, so `MigrateAsync` reads the default `public.__EFMigrationsHistory`, finds no applied migrations, and re-runs every migration (failing with "relation already exists").

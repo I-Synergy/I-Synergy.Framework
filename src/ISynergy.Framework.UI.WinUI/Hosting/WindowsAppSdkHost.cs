@@ -16,7 +16,7 @@ using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArg
 
 namespace ISynergy.Framework.UI.Hosting;
 
-internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
+internal sealed partial class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     where TApp : Application, new()
 {
     private readonly ILogger<WindowsAppSdkHost<TApp>> _logger;
@@ -39,8 +39,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     {
         Services = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-        if (applicationLifetime is null)
-            throw new ArgumentNullException(nameof(applicationLifetime));
+        ArgumentNullException.ThrowIfNull(applicationLifetime);
         _applicationLifetime = applicationLifetime as ApplicationLifetime
             ?? throw new ArgumentException(LanguageService.Default.GetString("WindowsAppSdkHostReplacingIHostApplicationLifetimeIsNotSupported"), nameof(applicationLifetime));
         _hostEnvironment = hostEnvironment;
@@ -55,9 +54,8 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         get;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken = default)
+    public async Task StartAsync(CancellationToken cancellationToken = default) // NOSONAR - host startup orchestration // NOSONAR - host startup orchestration
     {
-        //        _logger.Starting();
 
         using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _applicationLifetime.ApplicationStopping);
         var combinedCancellationToken = combinedCancellationTokenSource.Token;
@@ -65,7 +63,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         await _hostLifetime.WaitForStartAsync(combinedCancellationToken).ConfigureAwait(false);
 
         combinedCancellationToken.ThrowIfCancellationRequested();
-        _hostedServices = Services.GetRequiredService<IEnumerable<IHostedService>>()!;
+        _hostedServices = Services.GetRequiredService<IEnumerable<IHostedService>>();
 
         foreach (var hostedService in _hostedServices.EnsureNotNull())
         {
@@ -78,7 +76,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
             }
         }
 
-        HostOptions.XamlCheckProcessRequirements();
+        HostOptions.EnsureXamlProcessRequirements();
 
         ComWrappersSupport.InitializeComWrappers();
 
@@ -110,7 +108,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
                 try
                 {
-                    existing.RedirectActivationToAsync(activationArgs).AsTask().Wait();
+                    existing.RedirectActivationToAsync(activationArgs).AsTask(CancellationToken.None).GetAwaiter().GetResult();
                     Debug.WriteLine("[SingleInstance] Redirect completed.");
                 }
                 catch (Exception ex)
@@ -217,10 +215,8 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
                 return;
             }
 
-            //_logger.BackgroundServiceFaulted(ex);
             if (_options.BackgroundServiceExceptionBehavior == BackgroundServiceExceptionBehavior.StopHost)
             {
-                //_logger.BackgroundServiceStoppingHost(ex);
                 _applicationLifetime.StopApplication();
             }
         }
@@ -229,7 +225,6 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
     public async Task StopAsync(CancellationToken cancellationToken = default)
     {
         _stopCalled = true;
-        //_logger.Stopping();
 
         using var cts = new CancellationTokenSource(_options.ShutdownTimeout);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, cancellationToken);
@@ -238,7 +233,7 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         // Trigger IHostApplicationLifetime.ApplicationStopping
         _applicationLifetime.StopApplication();
 
-        IList<Exception> exceptions = new List<Exception>();
+        List<Exception> exceptions = new List<Exception>();
         if (_hostedServices != null) // Started?
         {
             foreach (var hostedService in _hostedServices.Reverse().EnsureNotNull())
@@ -270,11 +265,9 @@ internal sealed class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         if (exceptions.Count > 0)
         {
             var ex = new AggregateException("One or more hosted services failed to stop.", exceptions);
-            //_logger.StoppedWithException(ex);
             throw ex;
         }
 
-        //_logger.Stopped();
     }
 
     /// <summary>

@@ -79,11 +79,11 @@ public class StringToBooleanConverter : IValueConverter
 }
 
 /// <summary>
-/// Class StringToIsVisibleConverter.
+/// Class StringToVisibilityConverter.
 /// Implements the <see cref="IValueConverter" />
 /// </summary>
 /// <seealso cref="IValueConverter" />
-public class StringToIsVisibleConverter : IValueConverter
+public class StringToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

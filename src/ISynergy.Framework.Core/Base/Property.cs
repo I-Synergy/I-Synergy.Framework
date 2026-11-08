@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Core.Base;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <seealso cref="IProperty{T}" />
-public class Property<T> : IProperty<T>, IDisposable
+public class Property<T> : IProperty<T>, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
 {
     /// <summary>
     /// Occurs when [value changed].
@@ -157,7 +157,16 @@ public class Property<T> : IProperty<T>, IDisposable
     /// </summary>
     public void Dispose()
     {
-        ValueChanged = null;
-        GC.SuppressFinalize(this);
+        Dispose(true);
+    }
+
+    /// <summary>
+    /// Releases the managed resources used by this property.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release managed resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+            ValueChanged = null;
     }
 }

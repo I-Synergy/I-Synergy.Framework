@@ -61,7 +61,7 @@ public class AccessibilityTests : SamplePageTest
         // as a named textbox (not an unnamed control) and that the dialog exposes a dialog role.
         var snapshot = await Page.Locator(SampleDom.Dialog).AriaSnapshotAsync();
         Log($"{Environment.NewLine}[evidence] dialog accessibility tree:{Environment.NewLine}{snapshot}");
-        StringAssert.Contains(snapshot, "textbox \"Description\"",
+        Assert.Contains("textbox \"Description\"", snapshot,
             "The dialog's text input is not exposed as a named textbox.");
 
         await AssertNoContrastFailuresAsync("dialog");
@@ -113,9 +113,8 @@ public class AccessibilityTests : SamplePageTest
                 Console.WriteLine($"[evidence] {label} named element: {descriptor} -> '{Truncate(name)}'");
         }
 
-        Assert.AreEqual(
-            0,
-            unnamed.Count,
+        Assert.IsEmpty(
+            unnamed,
             $"{label}: interactive element(s) without an accessible name:{Environment.NewLine}{string.Join(Environment.NewLine, unnamed)}");
 
         Assert.AreNotEqual(0, checkedCount, $"{label}: no visible interactive element was found to check.");
@@ -135,13 +134,13 @@ public class AccessibilityTests : SamplePageTest
         if (headings.Count == 0)
             return;
 
-        Assert.AreEqual(1, headings.Count(h => h.Level == 1), $"{label}: expected exactly one <h1>.");
+        Assert.ContainsSingle(h => h.Level == 1, headings, $"{label}: expected exactly one <h1>.");
         Assert.AreEqual(1, headings[0].Level, $"{label}: the first heading must be an <h1> but was <h{headings[0].Level}>.");
 
         for (var i = 1; i < headings.Count; i++)
         {
-            Assert.IsTrue(
-                headings[i].Level <= headings[i - 1].Level + 1,
+            Assert.IsLessThanOrEqualTo(
+                headings[i - 1].Level + 1, headings[i].Level,
                 $"{label}: heading level jumps from <h{headings[i - 1].Level}> '{headings[i - 1].Text}' " +
                 $"to <h{headings[i].Level}> '{headings[i].Text}'.");
         }
@@ -170,7 +169,7 @@ public class AccessibilityTests : SamplePageTest
 
         // Evidence that the decoration filter is a *filter*, not a blanket exclusion, and that the sweep
         // still had plenty of real text to measure.
-        Assert.IsTrue(findings.Count >= 10,
+        Assert.IsGreaterThanOrEqualTo(10, findings.Count,
             $"{label}: only {findings.Count} text element(s) were measured; the contrast sweep must still " +
             $"cover the page's real text. Skipped as aria-hidden decoration: {decorative.Count}.");
 
@@ -187,9 +186,8 @@ public class AccessibilityTests : SamplePageTest
                               $"{warning.Tag} '{Truncate(warning.Text)}' ratio={warning.Ratio} " +
                               $"color={warning.Foreground} on {warning.Background} size={warning.FontSize}px");
 
-        Assert.AreEqual(
-            0,
-            failures.Count,
+        Assert.IsEmpty(
+            failures,
             $"{label}: text below the {MinimumContrast}:1 contrast floor:{Environment.NewLine}" +
             string.Join(Environment.NewLine, failures.Select(f =>
                 $"{f.Tag} '{Truncate(f.Text)}' ratio={f.Ratio} color={f.Foreground} on {f.Background} size={f.FontSize}px")));

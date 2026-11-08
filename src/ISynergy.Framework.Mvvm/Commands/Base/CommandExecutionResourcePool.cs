@@ -20,16 +20,8 @@ internal static class CommandExecutionResourcePool
 
     private static readonly ConcurrentDictionary<TimeSpan, Lazy<CancellationTokenSource>> _timeoutTokenCache = new();
 
-    private static readonly Timer _cacheCleanupTimer;
-
-    static CommandExecutionResourcePool()
-    {
-        // Create a timer to clean up the token cache every minute
-        _cacheCleanupTimer = new Timer(_ => CleanupTokenCache(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
-
-        // Ensure static resources are cleaned up when the process exits
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => Cleanup();
-    }
+    // Cleans up the token cache every minute.
+    private static readonly Timer _cacheCleanupTimer = new Timer(_ => CleanupTokenCache(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
 
     /// <summary>
     /// Rents a weak reference that tracks <paramref name="command"/>.
@@ -99,26 +91,23 @@ internal static class CommandExecutionResourcePool
     {
         _cacheCleanupTimer?.Dispose();
 
-        foreach (var entry in _timeoutTokenCache)
+        foreach (var entry in _timeoutTokenCache.Where(entry => entry.Value.IsValueCreated))
         {
-            if (entry.Value.IsValueCreated)
+            try
             {
-                try
-                {
-                    entry.Value.Value.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore disposal errors during static cleanup
-                    System.Diagnostics.Debug.WriteLine($"Error disposing timeout token: {ex.Message}");
-                }
+                entry.Value.Value.Dispose();
+            }
+            catch (Exception ex)
+            {
+                // Ignore disposal errors during static cleanup
+                System.Diagnostics.Debug.WriteLine($"Error disposing timeout token: {ex.Message}");
             }
         }
 
         _timeoutTokenCache.Clear();
 
         // Clean up pooled resources
-        while (_weakReferencePool.TryDequeue(out _)) { }
+        while (_weakReferencePool.TryDequeue(out _)) { /* drain the pool */ }
 
         while (_continuationCtsPool.TryDequeue(out var cts))
         {

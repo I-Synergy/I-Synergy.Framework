@@ -15,7 +15,7 @@ using Windows.UI;
 
 namespace ISynergy.Framework.UI.Controls;
 
-public class LoadingView : Page
+public partial class LoadingView : Page
 {
     private readonly IApplicationLifecycleService _applicationLifecycleService;
     private readonly ICommonServices _commonServices;
@@ -38,7 +38,7 @@ public class LoadingView : Page
         _commonServices = commonServices;
         _applicationLifecycleService = Application.Services.GetRequiredService<IApplicationLifecycleService>();
 
-        InitializeContent(commonServices, splashScreenOptions);
+        InitializeContent(splashScreenOptions);
 
         SetupEventHandlers();
 
@@ -57,11 +57,12 @@ public class LoadingView : Page
                     UriSource = new Uri(splashScreenOptions.Resource)
                 };
         }
-        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource) && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video)
+        else if (!string.IsNullOrEmpty(splashScreenOptions.Resource)
+            && splashScreenOptions.SplashScreenType == SplashScreenTypes.Video
+            && _backgroundMediaElement is not null)
         {
             // Use MediaElement for video resources
-            if (_backgroundMediaElement is not null)
-                _backgroundMediaElement.Source = Windows.Media.Core.MediaSource.CreateFromUri(new Uri(splashScreenOptions.Resource));
+            _backgroundMediaElement.Source = Windows.Media.Core.MediaSource.CreateFromUri(new Uri(splashScreenOptions.Resource));
         }
     }
 
@@ -138,7 +139,7 @@ public class LoadingView : Page
     /// <summary>
     /// Initializes the view content and layout.
     /// </summary>
-    private void InitializeContent(ICommonServices _, SplashScreenOptions splashScreenOptions)
+    private void InitializeContent(SplashScreenOptions splashScreenOptions)
     {
         // Create background element based on splash screen type
         if (splashScreenOptions.SplashScreenType == SplashScreenTypes.Image)
