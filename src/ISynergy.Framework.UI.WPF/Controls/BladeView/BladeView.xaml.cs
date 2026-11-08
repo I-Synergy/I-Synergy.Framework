@@ -85,7 +85,7 @@ public partial class BladeView : UserControl, IDisposable
     /// <see cref="IViewModelBladeView"/> carried by the data context are used instead.
     /// </summary>
     /// <value>The blade views, in opening order.</value>
-    public ObservableCollection<IView>? ItemsSource
+    public ObservableCollection<IView>? ItemsSource // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (ObservableCollection<IView>?)GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
@@ -95,7 +95,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the logical edge the blade pane is anchored to.
     /// </summary>
     /// <value>The logical anchor; <see cref="BladeViewAnchor.Auto"/> by default.</value>
-    public BladeViewAnchor Anchor
+    public BladeViewAnchor Anchor // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (BladeViewAnchor)GetValue(AnchorProperty);
         set => SetValue(AnchorProperty, value);
@@ -105,7 +105,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the opacity applied to every blade that is not the newest one.
     /// </summary>
     /// <value>The dimmed opacity; <c>0.75</c> by default.</value>
-    public double DisabledOpacity
+    public double DisabledOpacity // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (double)GetValue(DisabledOpacityProperty);
         set => SetValue(DisabledOpacityProperty, value);
@@ -115,7 +115,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the spacing between two adjacent blades.
     /// </summary>
     /// <value>The spacing in device-independent pixels; <c>10</c> by default.</value>
-    public double BladeSpacing
+    public double BladeSpacing // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (double)GetValue(BladeSpacingProperty);
         set => SetValue(BladeSpacingProperty, value);
@@ -125,7 +125,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the maximum width of a single blade card.
     /// </summary>
     /// <value>The maximum width; <c>520</c> by default.</value>
-    public double BladeMaxWidth
+    public double BladeMaxWidth // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (double)GetValue(BladeMaxWidthProperty);
         set => SetValue(BladeMaxWidthProperty, value);
@@ -135,7 +135,7 @@ public partial class BladeView : UserControl, IDisposable
     /// Gets or sets the padding between the blade stack and the host edges.
     /// </summary>
     /// <value>The inner padding; <c>8</c> on every side by default.</value>
-    public Thickness InnerPadding
+    public Thickness InnerPadding // NOSONAR - XAML binds to an instance property; a static one cannot be a bindable target
     {
         get => (Thickness)GetValue(InnerPaddingProperty);
         set => SetValue(InnerPaddingProperty, value);
@@ -259,15 +259,9 @@ public partial class BladeView : UserControl, IDisposable
         if (_isDisposed)
             return;
 
-        var blades = ResolveBlades();
-        var wanted = blades?.ToList() ?? [];
+        var wanted = ResolveBlades()?.ToList() ?? [];
 
-        // Drop the cards of blades that are no longer present.
-        foreach (var stale in _cards.Keys.Where(blade => !wanted.Contains(blade)).ToList())
-        {
-            ReleaseCard(_cards[stale]);
-            _cards.Remove(stale);
-        }
+        BladeViewInteraction.RemoveStaleCards(wanted, _cards, ReleaseCard);
 
         var ordered = new List<UIElement>(wanted.Count);
 

@@ -373,15 +373,9 @@ public partial class BladeView : ContentView, IDisposable
         if (_isDisposed)
             return;
 
-        var blades = ResolveBlades();
-        var wanted = blades?.ToList() ?? [];
+        var wanted = ResolveBlades()?.ToList() ?? [];
 
-        // Drop the cards of blades that are no longer present.
-        foreach (var stale in _cards.Keys.Where(blade => !wanted.Contains(blade)).ToList())
-        {
-            ReleaseCard(_cards[stale]);
-            _cards.Remove(stale);
-        }
+        BladeViewInteraction.RemoveStaleCards(wanted, _cards, ReleaseCard);
 
         var newCards = new List<BladeCard>(wanted.Count);
 
