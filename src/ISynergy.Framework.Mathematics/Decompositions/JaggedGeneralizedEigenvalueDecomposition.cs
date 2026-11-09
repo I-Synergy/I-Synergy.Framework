@@ -861,19 +861,18 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
             na = en - 1;
 
             if (isw == 2) goto L505;
-            if (en == 0) goto L410;
-            if (a[en][na] != 0.0) goto L420;
 
-            // 1-by-1 block][one real root
-            L410:
-            alfr[en] = a[en][en];
-            if (b[en][en] < 0.0) alfr[en] = -alfr[en];
-            beta[en] = Math.Abs(b[en][en]);
-            alfi[en] = 0.0;
-            continue;
+            if (en == 0 || a[en][na] == 0.0)
+            {
+                // 1-by-1 block, one real root
+                alfr[en] = a[en][en];
+                if (b[en][en] < 0.0) alfr[en] = -alfr[en];
+                beta[en] = Math.Abs(b[en][en]);
+                alfi[en] = 0.0;
+                continue;
+            }
 
-        // 2-by-2 block
-        L420:
+            // 2-by-2 block
             if (Math.Abs(b[na][na]) <= epsb) goto L455;
             if (Math.Abs(b[en][en]) > epsb) goto L430;
             a1 = a[en][en];
@@ -1152,70 +1151,71 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
             en = n - nn - 1;
             na = en - 1;
             if (isw == 2) goto L795;
-            if (alfi[en] != 0.0) goto L710;
-
-            // Real vector
-            m = en;
-            b[en][en] = 1.0;
-            if (na == -1) continue;
-            alfm = alfr[m];
-            betm = beta[m];
-
-            // for i=en-1 step -1 until 1 do --
-            for (ii = 0; ii <= na; ++ii)
+            if (alfi[en] == 0.0)
             {
-                i = en - ii - 1;
-                w = betm * a[i][i] - alfm * b[i][i];
-                r = 0.0;
+                // Real vector
+                m = en;
+                b[en][en] = 1.0;
+                if (na == -1) continue;
+                alfm = alfr[m];
+                betm = beta[m];
 
-                for (j = m; j <= en; ++j)
-                    r += (betm * a[i][j] - alfm * b[i][j]) * b[j][en];
+                // for i=en-1 step -1 until 1 do --
+                for (ii = 0; ii <= na; ++ii)
+                {
+                    i = en - ii - 1;
+                    w = betm * a[i][i] - alfm * b[i][i];
+                    r = 0.0;
 
-                if (i == 0 || isw == 2)
-                    goto L630;
+                    for (j = m; j <= en; ++j)
+                        r += (betm * a[i][j] - alfm * b[i][j]) * b[j][en];
 
-                if (betm * a[i][i - 1] == 0.0)
-                    goto L630;
+                    if (i == 0 || isw == 2)
+                        goto L630;
 
-                zz = w;
-                s = r;
-                goto L690;
+                    if (betm * a[i][i - 1] == 0.0)
+                        goto L630;
 
-            L630:
-                m = i;
-                if (isw == 2) goto L640;
+                    zz = w;
+                    s = r;
+                    goto L690;
 
-                // Real 1-by-1 block
-                t = w;
-                if (w == 0.0)
-                    t = epsb;
-                b[i][en] = -r / t;
+                L630:
+                    m = i;
+
+                    if (isw != 2)
+                    {
+                        // Real 1-by-1 block
+                        t = w;
+                        if (w == 0.0)
+                            t = epsb;
+                        b[i][en] = -r / t;
+                        continue;
+                    }
+
+                    // Real 2-by-2 block
+                    x = betm * a[i][i + 1] - alfm * b[i][i + 1];
+                    y = betm * a[i + 1][i];
+                    q = w * zz - x * y;
+                    t = (x * s - zz * r) / q;
+                    b[i][en] = t;
+                    if (Math.Abs(x) <= Math.Abs(zz)) goto L650;
+                    b[i + 1][en] = (-r - w * t) / x;
+                    goto L690;
+
+                L650:
+                    b[i + 1][en] = (-s - y * t) / zz;
+
+                L690:
+                    isw = 3 - isw;
+
+                }
+
+                // End real vector
                 continue;
-
-            // Real 2-by-2 block
-            L640:
-                x = betm * a[i][i + 1] - alfm * b[i][i + 1];
-                y = betm * a[i + 1][i];
-                q = w * zz - x * y;
-                t = (x * s - zz * r) / q;
-                b[i][en] = t;
-                if (Math.Abs(x) <= Math.Abs(zz)) goto L650;
-                b[i + 1][en] = (-r - w * t) / x;
-                goto L690;
-
-            L650:
-                b[i + 1][en] = (-s - y * t) / zz;
-
-            L690:
-                isw = 3 - isw;
-
             }
 
-            // End real vector
-            continue;
-
-        // Complex vector
-        L710:
+            // Complex vector
             m = na;
             almr = alfr[m];
             almi = alfi[m];
@@ -1247,17 +1247,16 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
                     sa = sa + x * b[j][en] + x1 * b[j][na];
                 }
 
-                if (i == 0 || isw == 2) goto L770;
-                if (betm * a[i][i - 1] == 0.0) goto L770;
+                if (i != 0 && isw != 2 && betm * a[i][i - 1] != 0.0)
+                {
+                    zz = w;
+                    z1 = w1;
+                    r = ra;
+                    s = sa;
+                    isw = 2;
+                    continue;
+                }
 
-                zz = w;
-                z1 = w1;
-                r = ra;
-                s = sa;
-                isw = 2;
-                continue;
-
-            L770:
                 m = i;
                 if (isw == 2) goto L780;
 
@@ -1352,41 +1351,44 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
         for (j = 0; j < n; ++j)
         {
             d = 0.0;
-            if (isw == 2) goto L920;
-            if (alfi[j] != 0.0) goto L945;
 
-            for (i = 0; i < n; ++i)
-                if (Math.Abs(z[i][j]) > d)
-                    d = Math.Abs(z[i][j]);
-
-            for (i = 0; i < n; ++i)
-                z[i][j] /= d;
-
-            continue;
-
-        L920:
-            for (i = 0; i < n; ++i)
+            if (isw == 2)
             {
-                r = Math.Abs(z[i][j - 1]) + Math.Abs(z[i][j]);
-                if (r != 0.0)
+                // real 2-by-2 block
+                for (i = 0; i < n; ++i)
                 {
-                    // Computing 2nd power
-                    var u1 = z[i][j - 1] / r;
-                    var u2 = z[i][j] / r;
-                    r *= Math.Sqrt(u1 * u1 + u2 * u2);
+                    r = Math.Abs(z[i][j - 1]) + Math.Abs(z[i][j]);
+                    if (r != 0.0)
+                    {
+                        // Computing 2nd power
+                        var u1 = z[i][j - 1] / r;
+                        var u2 = z[i][j] / r;
+                        r *= Math.Sqrt(u1 * u1 + u2 * u2);
+                    }
+
+                    if (r > d)
+                        d = r;
                 }
 
-                if (r > d)
-                    d = r;
+                for (i = 0; i < n; ++i)
+                {
+                    z[i][j - 1] /= d;
+                    z[i][j] /= d;
+                }
             }
-
-            for (i = 0; i < n; ++i)
+            else if (alfi[j] == 0.0)
             {
-                z[i][j - 1] /= d;
-                z[i][j] /= d;
+                // real 1-by-1 block
+                for (i = 0; i < n; ++i)
+                    if (Math.Abs(z[i][j]) > d)
+                        d = Math.Abs(z[i][j]);
+
+                for (i = 0; i < n; ++i)
+                    z[i][j] /= d;
+
+                continue;
             }
 
-        L945:
             isw = 3 - isw;
 
         }

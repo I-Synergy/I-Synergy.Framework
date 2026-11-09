@@ -10,7 +10,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions;
 /// performs matrix inversions has encountered a non-invertible matrix during the process.</para>
 /// </remarks>
 /// 
-[Serializable]
 public class SingularMatrixException : Exception
 {
     /// <summary>
@@ -38,11 +37,4 @@ public class SingularMatrixException : Exception
     public SingularMatrixException(string message, Exception innerException) :
         base(message, innerException)
     { }
-
-    /// <summary>
-    ///   Initializes a new instance of the <see cref="SingularMatrixException"/> class.
-    /// </summary>
-    /// <param name="info">The serialization info.</param>
-    /// <param name="context">The streaming context.</param>
-    protected SingularMatrixException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }

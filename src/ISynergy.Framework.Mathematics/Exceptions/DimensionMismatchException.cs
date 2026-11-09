@@ -11,7 +11,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions;
 /// dimensions in matrix multiplication.</para>
 /// </remarks>
 ///
-[Serializable]
 public class DimensionMismatchException : ArgumentException
 {
     /// <summary>
@@ -50,11 +49,4 @@ public class DimensionMismatchException : ArgumentException
     public DimensionMismatchException(string message, Exception innerException) :
         base(message, innerException)
     { }
-
-    /// <summary>
-    ///   Initializes a new instance of the <see cref="DimensionMismatchException"/> class.
-    /// </summary>
-    /// <param name="info">The serialization info.</param>
-    /// <param name="context">The streaming context.</param>
-    protected DimensionMismatchException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }

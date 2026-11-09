@@ -756,7 +756,11 @@ public static partial class Matrix
     /// 
     public static bool IsEqual(this Double a, Double[] b, Double atol = 0, Double rtol = 0)
     {
-        return IsEqual(a: b, b: a, atol: rtol, rtol: atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return IsEqual(left, right, absTolerance, relTolerance);
     }
 
     /// <summary>
@@ -765,7 +769,11 @@ public static partial class Matrix
     ///
     public static bool IsEqual(this Double a, Double[,] b, Double atol = 0, Double rtol = 0)
     {
-        return IsEqual(a: b, b: a, atol: rtol, rtol: atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return IsEqual(left, right, absTolerance, relTolerance);
     }
 
     /// <summary>
@@ -774,7 +782,11 @@ public static partial class Matrix
     ///
     public static bool IsEqual(this Double a, Double[][] b, Double atol = 0, Double rtol = 0)
     {
-        return IsEqual(a: b, b: a, atol: rtol, rtol: atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return IsEqual(left, right, absTolerance, relTolerance);
     }
 
     /// <summary>

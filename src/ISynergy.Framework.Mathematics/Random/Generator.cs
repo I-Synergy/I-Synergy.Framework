@@ -77,7 +77,7 @@ public static class Generator
             {
                 threadOverriden = true;
                 threadLastUpdateTicks = Environment.TickCount;
-                threadRandom = new System.Random(threadSeed.Value);
+                threadRandom = new(threadSeed.Value);
             }
             else
             {
@@ -107,7 +107,7 @@ public static class Generator
             {
                 threadSeed = GetRandomSeed();
                 threadLastUpdateTicks = sourceLastUpdateTicks;
-                threadRandom = threadSeed.HasValue ? new System.Random(threadSeed.Value) : new System.Random();
+                threadRandom = threadSeed.HasValue ? new(threadSeed.Value) : new();
             }
 
             return threadRandom;
@@ -163,14 +163,14 @@ public static class Generator
                         else // value.Value > 0
                         {
                             Trace.WriteLine("All threads will be initialized with predictable, but random seeds.");
-                            sourceRandom = new System.Random(value.Value);
+                            sourceRandom = new(value.Value);
                         }
                     }
                     else // value is null
                     {
                         Trace.WriteLine("All threads will be initialized with unpredictable random seeds.");
                         var s = unchecked((13 * Environment.CurrentManagedThreadId) ^ sourceLastUpdateTicks);
-                        sourceRandom = new System.Random(s);
+                        sourceRandom = new(s);
                     }
 
                     threadRandom = null;

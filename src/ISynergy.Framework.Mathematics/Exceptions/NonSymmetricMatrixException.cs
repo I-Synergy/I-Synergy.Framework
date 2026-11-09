@@ -10,7 +10,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions;
 /// expects a matrix to be symmetric but it is not.</para>
 /// </remarks>
 /// 
-[Serializable]
 public class NonSymmetricMatrixException : InvalidOperationException
 {
     /// <summary>
@@ -38,11 +37,4 @@ public class NonSymmetricMatrixException : InvalidOperationException
     public NonSymmetricMatrixException(string message, Exception innerException) :
         base(message, innerException)
     { }
-
-    /// <summary>
-    ///   Initializes a new instance of the <see cref="NonSymmetricMatrixException"/> class.
-    /// </summary>
-    /// <param name="info">The serialization info.</param>
-    /// <param name="context">The streaming context.</param>
-    protected NonSymmetricMatrixException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }

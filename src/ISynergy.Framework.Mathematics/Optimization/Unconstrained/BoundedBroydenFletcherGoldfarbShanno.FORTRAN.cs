@@ -463,12 +463,15 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             ((col + 1) - (1)) + _p_offset, 11, ref info);
 
         if ((info != 0))
+        {
             return;
-            for (i = 1; i <= col; i++)
-            {
-                p[(i - (1)) + _p_offset] = (v[(i - (1)) + _v_offset]
-                    / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
-            }
+        }
+
+        for (i = 1; i <= col; i++)
+        {
+            p[(i - (1)) + _p_offset] = (v[(i - (1)) + _v_offset]
+                / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
+        }
 
         // 
         //  PART II: solve [ -D^(1/2)   D^(-1/2)*L'  ] [ p1 ] = [ p1 ]
@@ -480,22 +483,27 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             p, ((col + 1) - (1)) + _p_offset, 01, ref info);
 
         if ((info != 0))
+        {
             return;
-            for (i = 1; i <= col; i++)
+        }
+
+        for (i = 1; i <= col; i++)
+        {
+            p[(i - (1)) + _p_offset] = -(p[(i - (1)) + _p_offset]
+                / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
+        }
+
+        for (i = 1; i <= col; i++)
+        {
+            sum = 0.0e0;
+            for (k = (i + 1); k <= col; k++)
             {
-                p[(i - (1)) + _p_offset] = -(p[(i - (1)) + _p_offset]
-                    / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
+                sum = (sum + ((sy[(k - (1)) + (i - (1)) * (m) + _sy_offset]
+                    * p[((col + k) - (1)) + _p_offset]) / sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
             }
-            for (i = 1; i <= col; i++)
-            {
-                sum = 0.0e0;
-                    for (k = (i + 1); k <= col; k++)
-                    {
-                        sum = (sum + ((sy[(k - (1)) + (i - (1)) * (m) + _sy_offset]
-                            * p[((col + k) - (1)) + _p_offset]) / sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
-                    }
-                p[(i - (1)) + _p_offset] = (p[(i - (1)) + _p_offset] + sum);
-            }
+
+            p[(i - (1)) + _p_offset] = (p[(i - (1)) + _p_offset] + sum);
+        }
     }
 
     // 
@@ -588,7 +596,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // c                             limited memory BFGS matrix:
     // c         ws(n,m) stores S, a set of s-vectors;
     // c         wy(n,m) stores Y, a set of y-vectors;
-    // c         sy(m,m) stores S'Y;
+    // c         sy holds the m-by-m array of S'Y products.
     // c         wt(m,m) stores the
     // c                 Cholesky factorization of (theta*S'S+LD^(-1)L').
     // c       On exit these arrays are unchanged.
@@ -2155,9 +2163,9 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // c
     // c     info is an integer variable.
     // c       On entry info is unspecified.
-    // c       On exit info =  0 for normal return;
-    // c                    = -1 when the 1st Cholesky factorization failed;
-    // c                    = -2 when the 2st Cholesky factorization failed.
+    // c       On exit info is 0 for a normal return, -1 when the 1st Cholesky
+    // c                    factorization failed, and -2 when the 2nd Cholesky
+    // c                    factorization failed.
     // c
     // c     Subprograms called:
     // c
@@ -3256,11 +3264,9 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         double gdold = 0.0d;
         double stp = 0.0d;
         double stpmx = 0.0d;
-        // float epsilon = 0.0f;
 
         if ((task.StartsWith("START", StringComparison.OrdinalIgnoreCase)))
         {
-            // 
             epsmch = Constants.DoubleEpsilon;
 
             // 
@@ -4184,17 +4190,17 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // c                         search of Cauchy points;
     // c         isave(26) = the total number of skipped BFGS updates before 
     // c                         the current iteration;
-    // c         isave(30) = the number of current iteration;
+    // c         isave(30) holds the number of the current iteration.
     // c         isave(31) = the total number of BFGS updates prior the current
     // c                         iteration;
     // c         isave(33) = the number of intervals explored in the search of
     // c                         Cauchy point in the current iteration;
     // c         isave(34) = the total number of function and gradient 
-    // c                         evaluations;
+    // c                         evaluations performed so far;
     // c         isave(36) = the number of function value or gradient
     // c                                  evaluations in the current iteration;
-    // c         if isave(37) = 0  then the subspace argmin is within the box;
-    // c         if isave(37) = 1  then the subspace argmin is beyond the box;
+    // c         if isave entry 37 is zero, then the subspace argmin is within the box;
+    // c         if isave entry 37 is one, then the subspace argmin is beyond the box;
     // c         isave(38) = the number of free variables in the current
     // c                         iteration;
     // c         isave(39) = the number of active constraints in the current

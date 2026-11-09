@@ -485,14 +485,18 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         result = 0.0;
         abserr = 0.0;
 
-        if (limit < 1 || lenw < limit << 2) goto L10;
-            l1 = limit + 1;
-            l2 = limit + l1;
-            l3 = limit + l2;
+        if (limit < 1 || lenw < limit << 2)
+        {
+            goto L10;
+        }
 
-            qagie_(f, ref bound, ref inf, ref epsabs, ref epsrel, ref limit, ref result,
-                ref abserr, ref neval, ref ier, dwork, dwork, dwork, dwork, iwork,
-                10, 9 + l1, 9 + l2, 9 + l3, 10, ref last);
+        l1 = limit + 1;
+        l2 = limit + l1;
+        l3 = limit + l2;
+
+        qagie_(f, ref bound, ref inf, ref epsabs, ref epsrel, ref limit, ref result,
+            ref abserr, ref neval, ref ier, dwork, dwork, dwork, dwork, iwork,
+            10, 9 + l1, 9 + l2, 9 + l3, 10, ref last);
 
     L10:
         if (ier == 6)
@@ -713,7 +717,15 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
                 if (errsum__r18 <= errbnd__r9) goto L115;
                 if (ier != 0) goto L100;
-                if (last == 2) goto L80;
+                if (last == 2)
+                {
+                    small = .375;
+                    erlarg__r6 = errsum__r18;
+                    ertest__r17 = errbnd__r9;
+                    rlist2_[1] = area;
+                    continue;
+                }
+
                 if (noext) continue;
 
                 erlarg__r6 -= erlast__r12;
@@ -790,12 +802,6 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 extrap__r16 = false;
                 small *= .5;
                 erlarg__r6 = errsum__r18;
-                continue;
-            L80:
-                small = .375;
-                erlarg__r6 = errsum__r18;
-                ertest__r17 = errbnd__r9;
-                rlist2_[1] = area;
             }
 
         /*           set final result and error estimate. */

@@ -9,7 +9,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 ///     This exception may be thrown by the <see cref="BroydenFletcherGoldfarbShanno">L-BFGS Optimizer</see>
 ///     when the line search routine used by the optimization method fails.
 /// </remarks>
-[Serializable]
 public class LineSearchFailedException : Exception
 {
     /// <summary>
@@ -54,11 +53,4 @@ public class LineSearchFailedException : Exception
     /// </summary>
     /// <value>The error code information returned by the line search routine.</value>
     public int Information { get; }
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="LineSearchFailedException"/> class.
-    /// </summary>
-    /// <param name="info">The serialization info.</param>
-    /// <param name="context">The streaming context.</param>
-    protected LineSearchFailedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }

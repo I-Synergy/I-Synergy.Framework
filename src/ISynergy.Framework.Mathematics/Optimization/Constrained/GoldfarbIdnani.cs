@@ -447,7 +447,6 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     private void qpgen2(double[,] dmat, double[] dvec, int[] iact, out int nact, ref int ierr)
     {
         var n = NumberOfVariables;
-        var q = NumberOfConstraints;
         var meq = NumberOfEqualities;
         var amat = (double[,])ConstraintMatrix.Clone();
         var bvec = (double[])constraintValues.Clone();

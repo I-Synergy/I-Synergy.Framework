@@ -1028,7 +1028,11 @@ public static partial class Elementwise
     /// 
     public static bool[] Equals(Double a, Double[] b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(a: b, b: a, atol: rtol, rtol: atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return Equals(left, right, absTolerance, relTolerance);
     }
 
     /// <summary>
@@ -1037,7 +1041,11 @@ public static partial class Elementwise
     ///
     public static bool[,] Equals(Double a, Double[,] b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(a: b, b: a, atol: rtol, rtol: atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return Equals(left, right, absTolerance, relTolerance);
     }
 
     /// <summary>
@@ -1046,6 +1054,10 @@ public static partial class Elementwise
     ///
     public static bool[][] Equals(Double a, Double[][] b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(a: b, b: a, atol: rtol, rtol: atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return Equals(left, right, absTolerance, relTolerance);
     }
 }

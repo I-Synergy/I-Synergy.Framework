@@ -330,7 +330,7 @@ public static partial class Vector
             if (stepSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(stepSize), "If a < b, stepSize must be positive.");
 
-            uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize));
+            uint steps = (uint)System.Math.Ceiling(((b - a) / stepSize));
 
             r = new double[steps];
             for (uint i = 0; i < r.Length; i++)
@@ -340,14 +340,14 @@ public static partial class Vector
         {
             if (stepSize > 0)
             {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize));
+                uint steps = (uint)System.Math.Ceiling(((a - b) / stepSize));
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
                     r[i] = a - i * stepSize;
             }
             else
             {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize));
+                uint steps = (uint)System.Math.Ceiling(((b - a) / stepSize));
                 r = new double[steps];
                 for (uint i = 0; i < r.Length; i++)
                     r[i] = a + i * stepSize;
@@ -1227,7 +1227,7 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
             uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1236,20 +1236,10 @@ public static partial class Vector
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)
@@ -1266,29 +1256,19 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
-            uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
+            uint steps = (uint)System.Math.Ceiling(((b - a) / stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
                 yield return a + i * stepSize;
             last = a + steps * stepSize;
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)
@@ -1305,7 +1285,7 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
             uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1314,20 +1294,10 @@ public static partial class Vector
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)
@@ -1344,7 +1314,7 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
             uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1353,20 +1323,10 @@ public static partial class Vector
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)
@@ -1383,7 +1343,7 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
             uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1392,20 +1352,10 @@ public static partial class Vector
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)
@@ -1422,7 +1372,7 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
             uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1431,20 +1381,10 @@ public static partial class Vector
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)
@@ -1461,7 +1401,7 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
             uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1470,20 +1410,10 @@ public static partial class Vector
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)
@@ -1500,7 +1430,7 @@ public static partial class Vector
     {
         double last;
 
-        if (a < b)
+        if (a < b || stepSize <= 0)
         {
             uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
             for (uint i = 0; i < steps; i++)
@@ -1509,20 +1439,10 @@ public static partial class Vector
         }
         else
         {
-            if (stepSize > 0)
-            {
-                uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a - i * stepSize;
-                last = a - steps * stepSize;
-            }
-            else
-            {
-                uint steps = (uint)System.Math.Ceiling(((b - a) / (double)stepSize)) - 1;
-                for (uint i = 0; i < steps; i++)
-                    yield return a + i * stepSize;
-                last = a + steps * stepSize;
-            }
+            uint steps = (uint)System.Math.Ceiling(((a - b) / (double)stepSize)) - 1;
+            for (uint i = 0; i < steps; i++)
+                yield return a - i * stepSize;
+            last = a - steps * stepSize;
         }
 
         if (a < b)

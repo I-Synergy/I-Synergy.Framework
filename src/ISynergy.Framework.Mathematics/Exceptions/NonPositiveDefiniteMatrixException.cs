@@ -10,7 +10,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions;
 /// expects a matrix to have only positive eigenvalues, such when dealing with covariance matrices.</para>
 /// </remarks>
 /// 
-[Serializable]
 public class NonPositiveDefiniteMatrixException : Exception
 {
     /// <summary>
@@ -38,11 +37,4 @@ public class NonPositiveDefiniteMatrixException : Exception
     public NonPositiveDefiniteMatrixException(string message, Exception innerException) :
         base(message, innerException)
     { }
-
-    /// <summary>
-    ///   Initializes a new instance of the <see cref="NonPositiveDefiniteMatrixException"/> class.
-    /// </summary>
-    /// <param name="info">The serialization info.</param>
-    /// <param name="context">The streaming context.</param>
-    protected NonPositiveDefiniteMatrixException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }

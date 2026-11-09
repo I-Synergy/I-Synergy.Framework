@@ -12,13 +12,13 @@ internal static class ExactComparisons
     public static bool AreEqual(double a, double b) =>
         double.Equals(a, b) && !double.IsNaN(a);
 
-    /// <summary>Determines whether the two values are not exactly equal (NaN is not equal to anything).</summary>
-    public static bool AreNotEqual(double a, double b) =>
-        !double.Equals(a, b) || double.IsNaN(a);
-
     /// <summary>Determines whether the two values are exactly equal (NaN is not equal to anything).</summary>
     public static bool AreEqual(float a, float b) =>
         float.Equals(a, b) && !float.IsNaN(a);
+
+    /// <summary>Determines whether the two values are not exactly equal (NaN is not equal to anything).</summary>
+    public static bool AreNotEqual(double a, double b) =>
+        !double.Equals(a, b) || double.IsNaN(a);
 
     /// <summary>Determines whether the two values are not exactly equal (NaN is not equal to anything).</summary>
     public static bool AreNotEqual(float a, float b) =>

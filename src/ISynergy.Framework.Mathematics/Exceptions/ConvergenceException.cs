@@ -10,7 +10,6 @@ namespace ISynergy.Framework.Mathematics.Exceptions;
 /// algorithm could not converge to a finite solution.</para>
 /// </remarks>
 /// 
-[Serializable]
 public class ConvergenceException : Exception
 {
     /// <summary>
@@ -39,11 +38,4 @@ public class ConvergenceException : Exception
     public ConvergenceException(string message, Exception innerException) :
         base(message, innerException)
     { }
-
-    /// <summary>
-    ///   Initializes a new instance of the <see cref="ConvergenceException"/> class.
-    /// </summary>
-    /// <param name="info">The serialization info.</param>
-    /// <param name="context">The streaming context.</param>
-    protected ConvergenceException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }

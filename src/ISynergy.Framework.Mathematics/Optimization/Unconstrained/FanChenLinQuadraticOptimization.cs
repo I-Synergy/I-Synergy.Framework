@@ -397,35 +397,38 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
             var delta_alpha_i = alpha[i] - old_alpha_i;
             var delta_alpha_j = alpha[j] - old_alpha_j;
 
-            for (var k = 0; k < active_size; k++) G[k] += Q_i[k] * delta_alpha_i + Q_j[k] * delta_alpha_j;
-                var ui__r1 = is_upper_bound(i);
-                var uj__r2 = is_upper_bound(j);
-                update_alpha_status(i);
-                update_alpha_status(j);
+            for (var k = 0; k < active_size; k++)
+            {
+                G[k] += Q_i[k] * delta_alpha_i + Q_j[k] * delta_alpha_j;
+            }
+            var ui__r1 = is_upper_bound(i);
+            var uj__r2 = is_upper_bound(j);
+            update_alpha_status(i);
+            update_alpha_status(j);
 
-                if (ui__r1 != is_upper_bound(i))
-                {
-                    Q(i, indices, l, Q_i);
+            if (ui__r1 != is_upper_bound(i))
+            {
+                Q(i, indices, l, Q_i);
 
-                    if (ui__r1)
-                        for (var k__r3 = 0; k__r3 < l; k__r3++)
-                            G_bar[k__r3] -= C_i * Q_i[k__r3];
-                    else
-                        for (var k__r3 = 0; k__r3 < l; k__r3++)
-                            G_bar[k__r3] += C_i * Q_i[k__r3];
-                }
+                if (ui__r1)
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] -= C_i * Q_i[k__r3];
+                else
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] += C_i * Q_i[k__r3];
+            }
 
-                if (uj__r2 != is_upper_bound(j))
-                {
-                    Q(j, indices, l, Q_j);
+            if (uj__r2 != is_upper_bound(j))
+            {
+                Q(j, indices, l, Q_j);
 
-                    if (uj__r2)
-                        for (var k__r3 = 0; k__r3 < l; k__r3++)
-                            G_bar[k__r3] -= C_j * Q_j[k__r3];
-                    else
-                        for (var k__r3 = 0; k__r3 < l; k__r3++)
-                            G_bar[k__r3] += C_j * Q_j[k__r3];
-                }
+                if (uj__r2)
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] -= C_j * Q_j[k__r3];
+                else
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] += C_j * Q_j[k__r3];
+            }
         }
 
         if (iter >= max_iter)
