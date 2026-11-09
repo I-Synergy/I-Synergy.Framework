@@ -108,3 +108,10 @@ Migrated slices so far: 582 -> 555.
 
 Each slice: wrappers replace the array parameters, bodies bind `.Array`, call sites
 wrap once. All Mathematics tests pass after every slice.
+
+## Final outcome (2026-11-09)
+
+`S2368` 582 -> 0. The Mathematics project builds with **zero Sonar/compiler warnings and zero
+suppressions** (project `NoWarn` only `CS8981;CS1591`, no pragmas). Full solution builds and every
+test project passes (Mathematics: 959 passed, 1 skipped). The wrapper migration is a breaking
+public API change and is recorded in `CHANGELOG.md`.

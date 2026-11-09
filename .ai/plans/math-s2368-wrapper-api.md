@@ -1,6 +1,6 @@
 # Mathematics S2368 — wrapper-type public API (design + migration plan)
 
-Status: PROPOSED (not started)
+Status: DONE (empty-tree wrappers migrated across the API)
 Relates to: `.ai/plans/build-warnings-and-sonar.md`
 
 ## Why this is a separate project
