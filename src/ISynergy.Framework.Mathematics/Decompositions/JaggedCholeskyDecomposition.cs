@@ -83,7 +83,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
             value = value.Copy();
 
         n = value.Rows();
-        L = value.ToUpperTriangular(valueType, value);
+        L = value.ToUpperTriangular(valueType, new Jagged<double>(value));
         this.robust = robust;
 
         if (robust)

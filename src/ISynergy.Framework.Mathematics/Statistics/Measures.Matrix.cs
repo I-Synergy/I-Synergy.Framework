@@ -1450,8 +1450,7 @@ public static partial class Measures
     /// 
     public static double[,] PooledCovariance(Matrix<double>[] covariances, double[] weights)
     {
-        var firstCovariance = covariances[0].Array;
-        double[,] pooledCov = Matrix.CreateAs(firstCovariance);
+        double[,] pooledCov = Matrix.CreateAs(covariances[0]);
 
         double weightSum = weights.Sum();
 

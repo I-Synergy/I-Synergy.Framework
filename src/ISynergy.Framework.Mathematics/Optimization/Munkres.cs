@@ -401,7 +401,7 @@ public class Munkres : IOptimizationMethod
 
     internal static bool[][] findZeros(double[][] C, double[] minRow, double[] minCol, out double[][] min)
     {
-        min = Jagged.CreateAs(C);
+        min = Jagged.CreateAs(new Jagged<double>(C));
         for (var r = 0; r < minRow.Length; r++)
             for (var c = 0; c < minCol.Length; c++)
                 min[r][c] = minRow[r] + minCol[c];

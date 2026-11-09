@@ -1,4 +1,5 @@
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Decompositions;
@@ -175,9 +176,10 @@ public static partial class Matrix
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
     /// <param name="transpose">Whether to transpose the matrix when copying or not. Default is false.</param>
-    public static void CopyTo<T>(this T[,] matrix, T[,] destination, bool transpose = false)
+    public static void CopyTo<T>(this T[,] matrix, Matrix<T> destination, bool transpose = false)
     {
-        if (matrix == destination)
+        var destinationArray = destination.Array;
+        if (matrix == destinationArray)
         {
             if (transpose)
                 matrix.Transpose(true);
@@ -186,25 +188,25 @@ public static partial class Matrix
         {
             if (transpose)
             {
-                var rows = Math.Min(matrix.Rows(), destination.Columns());
-                var cols = Math.Min(matrix.Columns(), destination.Rows());
+                var rows = Math.Min(matrix.Rows(), destinationArray.Columns());
+                var cols = Math.Min(matrix.Columns(), destinationArray.Rows());
                 for (var i = 0; i < rows; i++)
                     for (var j = 0; j < cols; j++)
-                        destination[j, i] = matrix[i, j];
+                        destinationArray[j, i] = matrix[i, j];
             }
             else
             {
-                if (matrix.Length == destination.Length)
+                if (matrix.Length == destinationArray.Length)
                 {
-                    Array.Copy(matrix, 0, destination, 0, matrix.Length);
+                    Array.Copy(matrix, 0, destinationArray, 0, matrix.Length);
                 }
                 else
                 {
-                    var rows = Math.Min(matrix.Rows(), destination.Rows());
-                    var cols = Math.Min(matrix.Columns(), destination.Columns());
+                    var rows = Math.Min(matrix.Rows(), destinationArray.Rows());
+                    var cols = Math.Min(matrix.Columns(), destinationArray.Columns());
                     for (var i = 0; i < rows; i++)
                         for (var j = 0; j < cols; j++)
-                            destination[i, j] = matrix[i, j];
+                            destinationArray[i, j] = matrix[i, j];
                 }
             }
         }
@@ -217,29 +219,30 @@ public static partial class Matrix
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
     /// <param name="transpose">Whether to transpose the matrix when copying or not. Default is false.</param>
-    public static void CopyTo<T>(this T[,] matrix, T[][] destination, bool transpose = false)
+    public static void CopyTo<T>(this T[,] matrix, Jagged<T> destination, bool transpose = false)
     {
+        var destinationArray = destination.Array;
         if (transpose)
         {
-            var rows = Math.Min(matrix.Rows(), destination.Columns());
-            var cols = Math.Min(matrix.Columns(), destination.Rows());
+            var rows = Math.Min(matrix.Rows(), destinationArray.Columns());
+            var cols = Math.Min(matrix.Columns(), destinationArray.Rows());
             for (var i = 0; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    destination[j][i] = matrix[i, j];
+                    destinationArray[j][i] = matrix[i, j];
         }
         else
         {
-            if (matrix.Length == destination.Length)
+            if (matrix.Length == destinationArray.Length)
             {
-                Array.Copy(matrix, 0, destination, 0, matrix.Length);
+                Array.Copy(matrix, 0, destinationArray, 0, matrix.Length);
             }
             else
             {
-                var rows = Math.Min(matrix.Rows(), destination.Rows());
-                var cols = Math.Min(matrix.Columns(), destination.Columns());
+                var rows = Math.Min(matrix.Rows(), destinationArray.Rows());
+                var cols = Math.Min(matrix.Columns(), destinationArray.Columns());
                 for (var i = 0; i < rows; i++)
                     for (var j = 0; j < cols; j++)
-                        destination[i][j] = matrix[i, j];
+                        destinationArray[i][j] = matrix[i, j];
             }
         }
     }
@@ -249,11 +252,12 @@ public static partial class Matrix
     /// <typeparam name="T">The type of the elements to be copied.</typeparam>
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
-    public static void CopyTo<T>(this T[,] matrix, T[][] destination)
+    public static void CopyTo<T>(this T[,] matrix, Jagged<T> destination)
     {
-        for (var i = 0; i < destination.Length; i++)
-            for (var j = 0; j < destination[i].Length; j++)
-                destination[i][j] = matrix[i, j];
+        var destinationArray = destination.Array;
+        for (var i = 0; i < destinationArray.Length; i++)
+            for (var j = 0; j < destinationArray[i].Length; j++)
+                destinationArray[i][j] = matrix[i, j];
     }
 
     /// <summary>
@@ -286,9 +290,9 @@ public static partial class Matrix
     /// <typeparam name="T">The type of the elements to be copied.</typeparam>
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
-    public static void SetTo<T>(this T[,] destination, T[,] matrix)
+    public static void SetTo<T>(this T[,] destination, Matrix<T> matrix)
     {
-        Array.Copy(matrix, 0, destination, 0, matrix.Length);
+        Array.Copy(matrix.Array, 0, destination, 0, matrix.Array.Length);
     }
     /// <summary>
     ///     Copies the content of an array to another array.
@@ -296,11 +300,12 @@ public static partial class Matrix
     /// <typeparam name="T">The type of the elements to be copied.</typeparam>
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
-    public static void SetTo<T>(this T[,] destination, T[][] matrix)
+    public static void SetTo<T>(this T[,] destination, Jagged<T> matrix)
     {
-        for (var i = 0; i < matrix.Length; i++)
-            for (var j = 0; j < matrix[i].Length; j++)
-                destination[i, j] = matrix[i][j];
+        var matrixArray = matrix.Array;
+        for (var i = 0; i < matrixArray.Length; i++)
+            for (var j = 0; j < matrixArray[i].Length; j++)
+                destination[i, j] = matrixArray[i][j];
     }
 
     /// <summary>
@@ -309,11 +314,12 @@ public static partial class Matrix
     /// <typeparam name="T">The type of the elements to be copied.</typeparam>
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
-    public static void SetTo<T>(this T[][] destination, T[,] matrix)
+    public static void SetTo<T>(this T[][] destination, Matrix<T> matrix)
     {
+        var matrixArray = matrix.Array;
         for (var i = 0; i < destination.Length; i++)
             for (var j = 0; j < destination[i].Length; j++)
-                destination[i][j] = matrix[i, j];
+                destination[i][j] = matrixArray[i, j];
     }
 
     /// <summary>
@@ -756,11 +762,12 @@ public static partial class Matrix
     /// <param name="rowVector">A row vector.</param>
     /// <param name="result">The matrix where to store the transpose.</param>
     /// <returns>The transpose of the given vector.</returns>
-    public static T[,] Transpose<T>(this T[] rowVector, T[,] result)
+    public static T[,] Transpose<T>(this T[] rowVector, Matrix<T> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < rowVector.Length; i++)
-            result[i, 0] = rowVector[i];
-        return result;
+            resultArray[i, 0] = rowVector[i];
+        return resultArray;
     }
     /// <summary>
     ///     Gets the generalized transpose of a tensor.
@@ -1045,10 +1052,10 @@ public static partial class Matrix
     /// <summary>
     ///     Converts a matrix to lower triangular form, if possible.
     /// </summary>
-    public static T[,] ToLowerTriangular<T>(this T[,] matrix, MatrixType from, T[,] result = null)
+    public static T[,] ToLowerTriangular<T>(this T[,] matrix, MatrixType from, Matrix<T> result = default)
     {
-        if (result is null)
-            result = Matrix.CreateAs(matrix);
+        if (result.Array is null)
+            result = new Matrix<T>(Matrix.CreateAs(new Matrix<T>(matrix)));
         matrix.CopyTo(result);
 
         switch (from)
@@ -1058,7 +1065,7 @@ public static partial class Matrix
                 break;
 
             case MatrixType.UpperTriangular:
-                Transpose(result, true);
+                Transpose(result.Array, true);
                 break;
 
             default:
@@ -1067,16 +1074,16 @@ public static partial class Matrix
                     nameof(from));
         }
 
-        return result;
+        return result.Array;
     }
 
     /// <summary>
     ///     Converts a matrix to lower triangular form, if possible.
     /// </summary>
-    public static T[][] ToLowerTriangular<T>(this T[][] matrix, MatrixType from, T[][] result = null)
+    public static T[][] ToLowerTriangular<T>(this T[][] matrix, MatrixType from, Jagged<T> result = default)
     {
-        if (result is null)
-            result = Jagged.CreateAs(matrix);
+        if (result.Array is null)
+            result = new Jagged<T>(Jagged.CreateAs(new Jagged<T>(matrix)));
         matrix.CopyTo(result);
 
         switch (from)
@@ -1086,7 +1093,7 @@ public static partial class Matrix
                 break;
 
             case MatrixType.UpperTriangular:
-                Transpose(result, true);
+                Transpose(result.Array, true);
                 break;
 
             default:
@@ -1095,16 +1102,16 @@ public static partial class Matrix
                     nameof(from));
         }
 
-        return result;
+        return result.Array;
     }
 
     /// <summary>
     ///     Converts a matrix to upper triangular form, if possible.
     /// </summary>
-    public static T[,] ToUpperTriangular<T>(this T[,] matrix, MatrixType from, T[,] result = null)
+    public static T[,] ToUpperTriangular<T>(this T[,] matrix, MatrixType from, Matrix<T> result = default)
     {
-        if (result is null)
-            result = Matrix.CreateAs(matrix);
+        if (result.Array is null)
+            result = new Matrix<T>(Matrix.CreateAs(new Matrix<T>(matrix)));
         matrix.CopyTo(result);
 
         switch (from)
@@ -1114,7 +1121,7 @@ public static partial class Matrix
                 break;
 
             case MatrixType.LowerTriangular:
-                Transpose(result, true);
+                Transpose(result.Array, true);
                 break;
 
             default:
@@ -1123,16 +1130,16 @@ public static partial class Matrix
                     nameof(from));
         }
 
-        return result;
+        return result.Array;
     }
 
     /// <summary>
     ///     Converts a matrix to upper triangular form, if possible.
     /// </summary>
-    public static T[][] ToUpperTriangular<T>(this T[][] matrix, MatrixType from, T[][] result = null)
+    public static T[][] ToUpperTriangular<T>(this T[][] matrix, MatrixType from, Jagged<T> result = default)
     {
-        if (result is null)
-            result = Jagged.CreateAs(matrix);
+        if (result.Array is null)
+            result = new Jagged<T>(Jagged.CreateAs(new Jagged<T>(matrix)));
         matrix.CopyTo(result);
 
         switch (from)
@@ -1142,7 +1149,7 @@ public static partial class Matrix
                 break;
 
             case MatrixType.LowerTriangular:
-                Transpose(result, true);
+                Transpose(result.Array, true);
                 break;
 
             default:
@@ -1151,7 +1158,7 @@ public static partial class Matrix
                     nameof(from));
         }
 
-        return result;
+        return result.Array;
     }
 
     /// <summary>
@@ -1160,7 +1167,7 @@ public static partial class Matrix
     public static T[,] GetLowerTriangle<T>(this T[,] matrix, bool includeDiagonal = true)
     {
         var s = includeDiagonal ? 1 : 0;
-        var r = Matrix.CreateAs(matrix);
+        var r = Matrix.CreateAs(new Matrix<T>(matrix));
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = 0; j < i + s; j++)
                 r[i, j] = matrix[i, j];
@@ -1173,7 +1180,7 @@ public static partial class Matrix
     public static T[,] GetUpperTriangle<T>(this T[,] matrix, bool includeDiagonal = false)
     {
         var s = includeDiagonal ? 0 : 1;
-        var r = Matrix.CreateAs(matrix);
+        var r = Matrix.CreateAs(new Matrix<T>(matrix));
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = i + s; j < matrix.Columns(); j++)
                 r[i, j] = matrix[i, j];
@@ -1184,10 +1191,10 @@ public static partial class Matrix
     ///     Transforms a triangular matrix in a symmetric matrix by copying
     ///     its elements to the other, unfilled part of the matrix.
     /// </summary>
-    public static T[,] GetSymmetric<T>(this T[,] matrix, MatrixType type, T[,] result = null)
+    public static T[,] GetSymmetric<T>(this T[,] matrix, MatrixType type, Matrix<T> result = default)
     {
-        if (result is null)
-            result = Matrix.CreateAs(matrix);
+        if (result.Array is null)
+            result = new Matrix<T>(Matrix.CreateAs(new Matrix<T>(matrix)));
 
         switch (type)
         {
@@ -1205,7 +1212,7 @@ public static partial class Matrix
                 throw new ArgumentException("Matrix type can be either LowerTriangular or UpperTriangular.", nameof(type));
         }
 
-        return result;
+        return result.Array;
     }
 
     /// <summary>
@@ -1251,18 +1258,20 @@ public static partial class Matrix
     /// <summary>
     ///     Gets the trace of a matrix product.
     /// </summary>
-    public static double Trace(double[,] matrixA, double[,] matrixB)
+    public static double Trace(Matrix<double> matrixA, Matrix<double> matrixB)
     {
-        if (matrixA.Length != matrixB.Length)
+        var aArray = matrixA.Array;
+        var bArray = matrixB.Array;
+        if (aArray.Length != bArray.Length)
             throw new DimensionMismatchException(nameof(matrixB), "Matrices must have the same length.");
 
-        var length = matrixA.Length;
+        var length = aArray.Length;
 
         if (length == 0)
             return 0.0;
 
-        var spanA = MemoryMarshal.CreateSpan(ref matrixA[0, 0], length);
-        var spanB = MemoryMarshal.CreateSpan(ref matrixB[0, 0], length);
+        var spanA = MemoryMarshal.CreateSpan(ref aArray[0, 0], length);
+        var spanB = MemoryMarshal.CreateSpan(ref bArray[0, 0], length);
         var trace = 0.0;
         for (var i = 0; i < length; i++)
             trace += spanA[i] * spanB[i];
@@ -1509,7 +1518,7 @@ public static partial class Matrix
     /// </summary>
     public static TResult[,] Apply<TInput, TResult>(this TInput[,] matrix, Func<TInput, TResult> func)
     {
-        return Apply(matrix, func, Matrix.CreateAs<TInput, TResult>(matrix));
+        return Apply(matrix, func, new Matrix<TResult>(Matrix.CreateAs<TInput, TResult>(new Matrix<TInput>(matrix))));
     }
 
     /// <summary>
@@ -1517,31 +1526,33 @@ public static partial class Matrix
     /// </summary>
     public static TResult[,] Apply<TInput, TResult>(this TInput[,] matrix, Func<TInput, int, int, TResult> func)
     {
-        return Apply(matrix, func, Matrix.CreateAs<TInput, TResult>(matrix));
+        return Apply(matrix, func, new Matrix<TResult>(Matrix.CreateAs<TInput, TResult>(new Matrix<TInput>(matrix))));
     }
 
     /// <summary>
     ///     Applies a function to every element of the array.
     /// </summary>
     public static TResult[,] Apply<TInput, TResult>(this TInput[,] matrix, Func<TInput, TResult> func,
-        TResult[,] result)
+        Matrix<TResult> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < matrix.GetLength(0); i++)
             for (var j = 0; j < matrix.GetLength(1); j++)
-                result[i, j] = func(matrix[i, j]);
-        return result;
+                resultArray[i, j] = func(matrix[i, j]);
+        return resultArray;
     }
 
     /// <summary>
     ///     Applies a function to every element of the array.
     /// </summary>
     public static TResult[,] Apply<TInput, TResult>(this TInput[,] matrix, Func<TInput, int, int, TResult> func,
-        TResult[,] result)
+        Matrix<TResult> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < matrix.GetLength(0); i++)
             for (var j = 0; j < matrix.GetLength(1); j++)
-                result[i, j] = func(matrix[i, j], i, j);
-        return result;
+                resultArray[i, j] = func(matrix[i, j], i, j);
+        return resultArray;
     }
 
     /// <summary>

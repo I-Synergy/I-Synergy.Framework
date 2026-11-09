@@ -82,7 +82,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             value = value.Copy();
 
         n = value.Rows();
-        L = value.ToUpperTriangular(valueType, value);
+        L = value.ToUpperTriangular(valueType, new Matrix<double>(value));
         this.robust = robust;
 
         if (robust)

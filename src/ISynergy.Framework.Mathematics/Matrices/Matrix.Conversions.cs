@@ -502,7 +502,7 @@ public static partial class Matrix
             converter)
     {
         var matrixArray = matrix.Array;
-        var result = Matrix.CreateAs<TInput, TOutput>(matrixArray);
+        var result = Matrix.CreateAs<TInput, TOutput>(new Jagged<TInput>(matrixArray));
 
         for (var i = 0; i < matrixArray.Length; i++)
             for (var j = 0; j < matrixArray[i].Length; j++)
@@ -1173,7 +1173,7 @@ public static partial class Matrix
     /// 
     public static bool[,] ToBoolean(this Matrix<string> value)
     {
-        return ToBoolean(value, new Matrix<bool>(Matrix.CreateAs<string, bool>(value.Array)));
+        return ToBoolean(value, new Matrix<bool>(Matrix.CreateAs<string, bool>(value)));
     }
 
     /// <summary>
@@ -1182,7 +1182,7 @@ public static partial class Matrix
     /// 
     public static bool[,,] ToBoolean(this Tensor3<string> value)
     {
-        return ToBoolean(value, new Tensor3<bool>(Matrix.CreateAs<string, bool>(value.Array)));
+        return ToBoolean(value, new Tensor3<bool>(Matrix.CreateAs<string, bool>(value)));
     }
 
     /// <summary>
@@ -1191,7 +1191,7 @@ public static partial class Matrix
     /// 
     public static bool[][] ToBoolean(this Jagged<string> value)
     {
-        return ToBoolean(value, new Jagged<bool>(Jagged.CreateAs<string, bool>(value.Array)));
+        return ToBoolean(value, new Jagged<bool>(Jagged.CreateAs<string, bool>(value)));
     }
 
     /// <summary>
@@ -1200,7 +1200,7 @@ public static partial class Matrix
     /// 
     public static bool[][][] ToBoolean(this string[][][] value)
     {
-        return ToBoolean(value, Jagged.CreateAs<string, bool>(value));
+        return ToBoolean(value, Jagged.CreateAs<string, bool>(new Jagged<string[]>(value)));
     }
 
 
@@ -1324,7 +1324,7 @@ public static partial class Matrix
     /// 
     public static int[][] ToInt32(this Jagged<double> value)
     {
-        return ToInt32(value, new Jagged<int>(Jagged.CreateAs<double, int>(value.Array)));
+        return ToInt32(value, new Jagged<int>(Jagged.CreateAs<double, int>(value)));
     }
 
     /// <summary>
@@ -1333,7 +1333,7 @@ public static partial class Matrix
     /// 
     public static int[][] ToInt32(this Jagged<bool> value)
     {
-        return ToInt32(value, new Jagged<int>(Jagged.CreateAs<bool, int>(value.Array)));
+        return ToInt32(value, new Jagged<int>(Jagged.CreateAs<bool, int>(value)));
     }
 
     /// <summary>
@@ -1366,7 +1366,7 @@ public static partial class Matrix
     /// 
     public static int[,] ToInt32(this Matrix<double> value)
     {
-        return ToInt32(value, new Matrix<int>(Matrix.CreateAs<double, int>(value.Array)));
+        return ToInt32(value, new Matrix<int>(Matrix.CreateAs<double, int>(value)));
     }
 
     /// <summary>
@@ -1399,7 +1399,7 @@ public static partial class Matrix
     /// 
     public static int[,] ToInt32(this Matrix<string> value)
     {
-        return ToInt32(value, new Matrix<int>(Matrix.CreateAs<string, int>(value.Array)));
+        return ToInt32(value, new Matrix<int>(Matrix.CreateAs<string, int>(value)));
     }
 
     /// <summary>
@@ -1408,7 +1408,7 @@ public static partial class Matrix
     /// 
     public static int[,,] ToInt32(this Tensor3<string> value)
     {
-        return ToInt32(value, new Tensor3<int>(Matrix.CreateAs<string, int>(value.Array)));
+        return ToInt32(value, new Tensor3<int>(Matrix.CreateAs<string, int>(value)));
     }
 
     /// <summary>
@@ -1417,7 +1417,7 @@ public static partial class Matrix
     /// 
     public static int[][] ToInt32(this Jagged<string> value)
     {
-        return ToInt32(value, new Jagged<int>(Jagged.CreateAs<string, int>(value.Array)));
+        return ToInt32(value, new Jagged<int>(Jagged.CreateAs<string, int>(value)));
     }
 
     /// <summary>
@@ -1426,7 +1426,7 @@ public static partial class Matrix
     /// 
     public static int[][][] ToInt32(this string[][][] value)
     {
-        return ToInt32(value, Jagged.CreateAs<string, int>(value));
+        return ToInt32(value, Jagged.CreateAs<string, int>(new Jagged<string[]>(value)));
     }
 
     /// <summary>
@@ -1527,7 +1527,7 @@ public static partial class Matrix
     /// 
     public static float[][] ToSingle(this Jagged<double> value)
     {
-        return ToSingle(value, new Jagged<float>(Jagged.CreateAs<double, float>(value.Array)));
+        return ToSingle(value, new Jagged<float>(Jagged.CreateAs<double, float>(value)));
     }
 
     /// <summary>
@@ -1548,7 +1548,7 @@ public static partial class Matrix
     /// 
     public static float[,,] ToSingle(this Tensor3<double> value)
     {
-        return ToSingle(value, new Tensor3<float>(Matrix.CreateAs<double, float>(value.Array)));
+        return ToSingle(value, new Tensor3<float>(Matrix.CreateAs<double, float>(value)));
     }
 
     /// <summary>
@@ -1574,7 +1574,7 @@ public static partial class Matrix
     /// 
     public static float[,] ToSingle(this Matrix<double> value)
     {
-        return ToSingle(value, new Matrix<float>(Matrix.CreateAs<double, float>(value.Array)));
+        return ToSingle(value, new Matrix<float>(Matrix.CreateAs<double, float>(value)));
     }
 
     /// <summary>
@@ -1598,7 +1598,7 @@ public static partial class Matrix
     /// 
     public static float[,] ToSingle(this Matrix<string> value)
     {
-        return ToSingle(value, new Matrix<float>(Matrix.CreateAs<string, float>(value.Array)));
+        return ToSingle(value, new Matrix<float>(Matrix.CreateAs<string, float>(value)));
     }
 
     /// <summary>
@@ -1631,7 +1631,7 @@ public static partial class Matrix
     /// 
     public static float[,,] ToSingle(this Tensor3<string> value)
     {
-        return ToSingle(value, new Tensor3<float>(Matrix.CreateAs<string, float>(value.Array)));
+        return ToSingle(value, new Tensor3<float>(Matrix.CreateAs<string, float>(value)));
     }
 
     /// <summary>
@@ -1640,7 +1640,7 @@ public static partial class Matrix
     /// 
     public static float[][] ToSingle(this Jagged<string> value)
     {
-        return ToSingle(value, new Jagged<float>(Jagged.CreateAs<string, float>(value.Array)));
+        return ToSingle(value, new Jagged<float>(Jagged.CreateAs<string, float>(value)));
     }
 
     /// <summary>
@@ -1649,7 +1649,7 @@ public static partial class Matrix
     /// 
     public static float[][][] ToSingle(this string[][][] value)
     {
-        return ToSingle(value, Jagged.CreateAs<string, float>(value));
+        return ToSingle(value, Jagged.CreateAs<string, float>(new Jagged<string[]>(value)));
     }
 
 
@@ -1738,7 +1738,7 @@ public static partial class Matrix
     /// 
     public static short[,] ToInt16(this Matrix<double> value)
     {
-        return ToInt16(value, new Matrix<short>(Matrix.CreateAs<double, short>(value.Array)));
+        return ToInt16(value, new Matrix<short>(Matrix.CreateAs<double, short>(value)));
     }
 
     /// <summary>
@@ -1770,7 +1770,7 @@ public static partial class Matrix
     /// 
     public static short[,] ToInt16(this Matrix<string> value)
     {
-        return ToInt16(value, new Matrix<short>(Matrix.CreateAs<string, short>(value.Array)));
+        return ToInt16(value, new Matrix<short>(Matrix.CreateAs<string, short>(value)));
     }
 
     /// <summary>
@@ -1779,7 +1779,7 @@ public static partial class Matrix
     /// 
     public static short[,,] ToInt16(this Tensor3<string> value)
     {
-        return ToInt16(value, new Tensor3<short>(Matrix.CreateAs<string, short>(value.Array)));
+        return ToInt16(value, new Tensor3<short>(Matrix.CreateAs<string, short>(value)));
     }
 
     /// <summary>
@@ -1788,7 +1788,7 @@ public static partial class Matrix
     /// 
     public static short[][] ToInt16(this Jagged<string> value)
     {
-        return ToInt16(value, new Jagged<short>(Jagged.CreateAs<string, short>(value.Array)));
+        return ToInt16(value, new Jagged<short>(Jagged.CreateAs<string, short>(value)));
     }
 
     /// <summary>
@@ -1797,7 +1797,7 @@ public static partial class Matrix
     /// 
     public static short[][][] ToInt16(this string[][][] value)
     {
-        return ToInt16(value, Jagged.CreateAs<string, short>(value));
+        return ToInt16(value, Jagged.CreateAs<string, short>(new Jagged<string[]>(value)));
     }
 
 
@@ -1929,7 +1929,7 @@ public static partial class Matrix
     /// 
     public static decimal[,] ToDecimal(this Matrix<string> value)
     {
-        return ToDecimal(value, new Matrix<decimal>(Matrix.CreateAs<string, decimal>(value.Array)));
+        return ToDecimal(value, new Matrix<decimal>(Matrix.CreateAs<string, decimal>(value)));
     }
 
     /// <summary>
@@ -1938,7 +1938,7 @@ public static partial class Matrix
     /// 
     public static decimal[,,] ToDecimal(this Tensor3<string> value)
     {
-        return ToDecimal(value, new Tensor3<decimal>(Matrix.CreateAs<string, decimal>(value.Array)));
+        return ToDecimal(value, new Tensor3<decimal>(Matrix.CreateAs<string, decimal>(value)));
     }
 
     /// <summary>
@@ -1947,7 +1947,7 @@ public static partial class Matrix
     /// 
     public static decimal[][] ToDecimal(this Jagged<string> value)
     {
-        return ToDecimal(value, new Jagged<decimal>(Jagged.CreateAs<string, decimal>(value.Array)));
+        return ToDecimal(value, new Jagged<decimal>(Jagged.CreateAs<string, decimal>(value)));
     }
 
     /// <summary>
@@ -1956,7 +1956,7 @@ public static partial class Matrix
     /// 
     public static decimal[][][] ToDecimal(this string[][][] value)
     {
-        return ToDecimal(value, Jagged.CreateAs<string, decimal>(value));
+        return ToDecimal(value, Jagged.CreateAs<string, decimal>(new Jagged<string[]>(value)));
     }
 
 
@@ -2069,7 +2069,7 @@ public static partial class Matrix
     /// 
     public static long[,] ToInt64(this Matrix<string> value)
     {
-        return ToInt64(value, new Matrix<long>(Matrix.CreateAs<string, long>(value.Array)));
+        return ToInt64(value, new Matrix<long>(Matrix.CreateAs<string, long>(value)));
     }
 
     /// <summary>
@@ -2078,7 +2078,7 @@ public static partial class Matrix
     /// 
     public static long[,,] ToInt64(this Tensor3<string> value)
     {
-        return ToInt64(value, new Tensor3<long>(Matrix.CreateAs<string, long>(value.Array)));
+        return ToInt64(value, new Tensor3<long>(Matrix.CreateAs<string, long>(value)));
     }
 
     /// <summary>
@@ -2087,7 +2087,7 @@ public static partial class Matrix
     /// 
     public static long[][] ToInt64(this Jagged<string> value)
     {
-        return ToInt64(value, new Jagged<long>(Jagged.CreateAs<string, long>(value.Array)));
+        return ToInt64(value, new Jagged<long>(Jagged.CreateAs<string, long>(value)));
     }
 
     /// <summary>
@@ -2096,7 +2096,7 @@ public static partial class Matrix
     /// 
     public static long[][][] ToInt64(this string[][][] value)
     {
-        return ToInt64(value, Jagged.CreateAs<string, long>(value));
+        return ToInt64(value, Jagged.CreateAs<string, long>(new Jagged<string[]>(value)));
     }
 
     /// <summary>
@@ -2205,7 +2205,7 @@ public static partial class Matrix
     /// 
     public static byte[,] ToByte(this Matrix<string> value)
     {
-        return ToByte(value, new Matrix<byte>(Matrix.CreateAs<string, byte>(value.Array)));
+        return ToByte(value, new Matrix<byte>(Matrix.CreateAs<string, byte>(value)));
     }
 
     /// <summary>
@@ -2214,7 +2214,7 @@ public static partial class Matrix
     /// 
     public static byte[,,] ToByte(this Tensor3<string> value)
     {
-        return ToByte(value, new Tensor3<byte>(Matrix.CreateAs<string, byte>(value.Array)));
+        return ToByte(value, new Tensor3<byte>(Matrix.CreateAs<string, byte>(value)));
     }
 
     /// <summary>
@@ -2223,7 +2223,7 @@ public static partial class Matrix
     /// 
     public static byte[][] ToByte(this Jagged<string> value)
     {
-        return ToByte(value, new Jagged<byte>(Jagged.CreateAs<string, byte>(value.Array)));
+        return ToByte(value, new Jagged<byte>(Jagged.CreateAs<string, byte>(value)));
     }
 
     /// <summary>
@@ -2232,7 +2232,7 @@ public static partial class Matrix
     /// 
     public static byte[][][] ToByte(this string[][][] value)
     {
-        return ToByte(value, Jagged.CreateAs<string, byte>(value));
+        return ToByte(value, Jagged.CreateAs<string, byte>(new Jagged<string[]>(value)));
     }
 
 
@@ -2344,7 +2344,7 @@ public static partial class Matrix
     /// 
     public static sbyte[,] ToSByte(this Matrix<string> value)
     {
-        return ToSByte(value, new Matrix<sbyte>(Matrix.CreateAs<string, sbyte>(value.Array)));
+        return ToSByte(value, new Matrix<sbyte>(Matrix.CreateAs<string, sbyte>(value)));
     }
 
     /// <summary>
@@ -2353,7 +2353,7 @@ public static partial class Matrix
     /// 
     public static sbyte[,,] ToSByte(this Tensor3<string> value)
     {
-        return ToSByte(value, new Tensor3<sbyte>(Matrix.CreateAs<string, sbyte>(value.Array)));
+        return ToSByte(value, new Tensor3<sbyte>(Matrix.CreateAs<string, sbyte>(value)));
     }
 
     /// <summary>
@@ -2362,7 +2362,7 @@ public static partial class Matrix
     /// 
     public static sbyte[][] ToSByte(this Jagged<string> value)
     {
-        return ToSByte(value, new Jagged<sbyte>(Jagged.CreateAs<string, sbyte>(value.Array)));
+        return ToSByte(value, new Jagged<sbyte>(Jagged.CreateAs<string, sbyte>(value)));
     }
 
     /// <summary>
@@ -2371,7 +2371,7 @@ public static partial class Matrix
     /// 
     public static sbyte[][][] ToSByte(this string[][][] value)
     {
-        return ToSByte(value, Jagged.CreateAs<string, sbyte>(value));
+        return ToSByte(value, Jagged.CreateAs<string, sbyte>(new Jagged<string[]>(value)));
     }
 
 

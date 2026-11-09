@@ -74,7 +74,7 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
                 qr = value.Transpose(inPlace);
             else
                 // Create room to store the full decomposition
-                qr = Matrix.Create(value.Columns(), value.Columns(), value, transpose: true);
+                qr = Matrix.Create(value.Columns(), value.Columns(), new Matrix<double>(value), transpose: true);
         }
         else
         {
@@ -85,7 +85,7 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
                 qr = inPlace ? value : value.Copy();
             else
                 // Create room to store the full decomposition
-                qr = Matrix.Create(value.Rows(), value.Rows(), value, transpose: false);
+                qr = Matrix.Create(value.Rows(), value.Rows(), new Matrix<double>(value), transpose: false);
         }
 
         this.economy = economy;
@@ -254,7 +254,7 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
                     X[i, j] -= X[k, j] * qr[i, k];
         }
 
-        return Matrix.Create(p, count, X, transpose: false);
+        return Matrix.Create(p, count, new Matrix<double>(X), transpose: false);
     }
 
     /// <summary>Least squares solution of <c>A * X = B</c></summary>
@@ -372,7 +372,7 @@ public sealed class QrDecomposition : ICloneable, ISolverMatrixDecomposition<dou
                     X[i, j] -= X[k, j] * qr[i, k];
         }
 
-        return Matrix.Create(count, p, X, transpose: true);
+        return Matrix.Create(count, p, new Matrix<double>(X), transpose: true);
     }
 
     #region ICloneable Members

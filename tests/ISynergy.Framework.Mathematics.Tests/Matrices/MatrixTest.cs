@@ -1127,23 +1127,23 @@ public partial class MatrixTest
     [TestMethod]
     public void CombineTest()
     {
-        int[][,] matrices =
+        Matrix<int>[] matrices =
         [
-            new int[,]
+            new Matrix<int>(new int[,]
             {
                   {0, 1}
-            },
+            }),
 
-            new int[,]
+            new Matrix<int>(new int[,]
             {
                   {1, 0},
                   {1, 0}
-            },
+            }),
 
-            new int[,]
+            new Matrix<int>(new int[,]
             {
                   {0, 2}
-            }
+            })
         ];
 
 
@@ -1156,7 +1156,7 @@ public partial class MatrixTest
         };
 
         int[,] actual;
-        actual = Matrix.Stack(matrices);
+        actual = Matrix.Stack<int>(matrices);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -1226,7 +1226,7 @@ public partial class MatrixTest
         ];
 
         {
-            double[][] actual = Matrix.Concatenate(a, b);
+            double[][] actual = Matrix.Concatenate(new Jagged<double>(a), new Jagged<double>(b));
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
         }
 
@@ -1250,7 +1250,7 @@ public partial class MatrixTest
             { 1, 1 }
         };
 
-        double[,] actual = Matrix.Stack([A, B]);
+        double[,] actual = Matrix.Stack<double>([new Matrix<double>(A), new Matrix<double>(B)]);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -3213,19 +3213,19 @@ public partial class MatrixTest
     [TestMethod]
     public void ConcatenateTest1()
     {
-        double[][,] matrices =
+        Matrix<double>[] matrices =
         [
-            new double[,]
+            new Matrix<double>(new double[,]
             {
                 { 0, 1 },
                 { 2, 3 },
-            },
+            }),
 
-            new double[,]
+            new Matrix<double>(new double[,]
             {
                 { 4, 5 },
                 { 6, 7 },
-            }
+            })
         ];
 
 
@@ -3235,7 +3235,7 @@ public partial class MatrixTest
             { 2, 3, 6, 7 },
         };
 
-        double[,] actual = Matrix.Concatenate(matrices);
+        double[,] actual = Matrix.Concatenate<double>(matrices);
 
         Assert.AreSequenceEqual(expected, actual);
     }
@@ -3606,7 +3606,7 @@ public partial class MatrixTest
     {
         double[,] v = Matrix.Ones(2, 3);
         int[][] idx = v.GetIndices().ToArray();
-        Assert.IsTrue(idx.IsEqual(Jagged.Create(new[,]
+        Assert.IsTrue(idx.IsEqual(Jagged.Create(new Matrix<int>(new[,]
             {
                 {0, 0},
                 {0, 1},
@@ -3614,7 +3614,7 @@ public partial class MatrixTest
                 {1, 0},
                 {1, 1},
                 {1, 2},
-            })));
+            }))));
     }
 
     [TestMethod]

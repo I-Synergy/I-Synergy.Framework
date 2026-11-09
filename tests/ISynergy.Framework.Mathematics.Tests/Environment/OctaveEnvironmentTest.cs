@@ -1,3 +1,4 @@
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Environments;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -63,7 +64,7 @@ public class OctaveEnvironmentTest : OctaveEnvironment
         Mat M = magic(3) * 5;
 
         // Compute the SVD
-        ret[u, s, v] = svd(M);
+        ret[u, s, v] = svd(new Matrix<double>((double[,])M));
 
         string str = u;
 
@@ -123,7 +124,7 @@ public class OctaveEnvironmentTest : OctaveEnvironment
 
             B = A * I;
 
-            ret[U, S, V] = svd(B);
+            ret[U, S, V] = svd(new Matrix<double>((double[,])B));
 
             Console.WriteLine(U);
             Console.WriteLine(S);

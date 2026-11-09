@@ -74,7 +74,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
                 qr = value.Transpose(inPlace);
             else
                 // Create room to store the full decomposition
-                qr = Jagged.Create(value.Columns(), value.Columns(), value, true);
+                qr = Jagged.Create(value.Columns(), value.Columns(), new Jagged<double>(value), true);
         }
         else
         {
@@ -85,7 +85,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
                 qr = inPlace ? value : value.Copy();
             else
                 // Create room to store the full decomposition
-                qr = Jagged.Create(value.Rows(), value.Rows(), value, false);
+                qr = Jagged.Create(value.Rows(), value.Rows(), new Jagged<double>(value), false);
         }
 
         this.economy = economy;
@@ -254,7 +254,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
                     X[i][j] -= X[k][j] * qr[i][k];
         }
 
-        return Jagged.Create(p, count, X, false);
+        return Jagged.Create(p, count, new Jagged<double>(X), false);
     }
 
     /// <summary>Least squares solution of <c>A * X = B</c></summary>
@@ -384,7 +384,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
                     X[i][j] -= X[k][j] * qr[i][k];
         }
 
-        return Jagged.Create(count, p, X, true);
+        return Jagged.Create(count, p, new Jagged<double>(X), true);
     }
     #region ICloneable Members
 

@@ -1,5 +1,6 @@
-#define CHECKS
+﻿#define CHECKS
 
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using System.Collections;
 
@@ -36,9 +37,10 @@ public static partial class Matrix
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
     /// <param name="transpose">Whether to transpose the matrix when copying or not. Default is false.</param>
-    public static void CopyTo<T>(this T[][] matrix, T[][] destination, bool transpose = false)
+    public static void CopyTo<T>(this T[][] matrix, Jagged<T> destination, bool transpose = false)
     {
-        if (matrix == destination)
+        var destinationArray = destination.Array;
+        if (matrix == destinationArray)
         {
             if (transpose)
                 matrix.Transpose(true);
@@ -47,19 +49,19 @@ public static partial class Matrix
         {
             if (transpose)
             {
-                var rows = Math.Min(matrix.Rows(), destination.Columns());
-                var cols = Math.Min(matrix.Columns(), destination.Rows());
+                var rows = Math.Min(matrix.Rows(), destinationArray.Columns());
+                var cols = Math.Min(matrix.Columns(), destinationArray.Rows());
                 for (var i = 0; i < rows; i++)
                     for (var j = 0; j < cols; j++)
-                        destination[j][i] = matrix[i][j];
+                        destinationArray[j][i] = matrix[i][j];
             }
             else
             {
-                var rows = Math.Min(matrix.Rows(), destination.Rows());
-                var cols = Math.Min(matrix.Columns(), destination.Columns());
+                var rows = Math.Min(matrix.Rows(), destinationArray.Rows());
+                var cols = Math.Min(matrix.Columns(), destinationArray.Columns());
                 for (var i = 0; i < rows; i++)
                     for (var j = 0; j < cols; j++)
-                        destination[i][j] = matrix[i][j];
+                        destinationArray[i][j] = matrix[i][j];
             }
         }
     }
@@ -83,11 +85,12 @@ public static partial class Matrix
     /// <typeparam name="T">The type of the elements to be copied.</typeparam>
     /// <param name="matrix">The source matrix to be copied.</param>
     /// <param name="destination">The matrix where the elements should be copied to.</param>
-    public static void CopyTo<T>(this T[][] matrix, T[,] destination)
+    public static void CopyTo<T>(this T[][] matrix, Matrix<T> destination)
     {
+        var destinationArray = destination.Array;
         for (var i = 0; i < matrix.Length; i++)
             for (var j = 0; j < matrix[i].Length; j++)
-                destination[i, j] = matrix[i][j];
+                destinationArray[i, j] = matrix[i][j];
     }
 
     // Note: these equality comparisons are repetitive and are a candidate for T4 generation.
@@ -208,12 +211,13 @@ public static partial class Matrix
     /// <param name="rowVector">A row vector.</param>
     /// <param name="result">The matrix where to store the transpose.</param>
     /// <returns>The transpose of the given vector.</returns>
-    public static T[][] Transpose<T>(this T[] rowVector, out T[][] result)
+    public static T[][] Transpose<T>(this T[] rowVector, out Jagged<T> result)
     {
-        result = new T[rowVector.Length][];
+        var r = new T[rowVector.Length][];
         for (var i = 0; i < rowVector.Length; i++)
-            result[i] = [rowVector[i]];
-        return result;
+            r[i] = [rowVector[i]];
+        result = new Jagged<T>(r);
+        return r;
     }
 
     /// <summary>
@@ -222,11 +226,12 @@ public static partial class Matrix
     /// <param name="rowVector">A row vector.</param>
     /// <param name="result">The matrix where to store the transpose.</param>
     /// <returns>The transpose of the given vector.</returns>
-    public static T[][] Transpose<T>(this T[] rowVector, T[][] result)
+    public static T[][] Transpose<T>(this T[] rowVector, Jagged<T> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < rowVector.Length; i++)
-            result[i] = [rowVector[i]];
-        return result;
+            resultArray[i] = [rowVector[i]];
+        return resultArray;
     }
 
     #endregion
@@ -364,7 +369,7 @@ public static partial class Matrix
     public static T[][] GetLowerTriangle<T>(this T[][] matrix, bool includeDiagonal = true)
     {
         var s = includeDiagonal ? 1 : 0;
-        var r = Jagged.CreateAs(matrix);
+        var r = Jagged.CreateAs(new Jagged<T>(matrix));
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = 0; j < i + s; j++)
                 r[i][j] = matrix[i][j];
@@ -377,7 +382,7 @@ public static partial class Matrix
     public static T[][] GetUpperTriangle<T>(this T[][] matrix, bool includeDiagonal = false)
     {
         var s = includeDiagonal ? 0 : 1;
-        var r = Jagged.CreateAs(matrix);
+        var r = Jagged.CreateAs(new Jagged<T>(matrix));
         for (var i = 0; i < matrix.Rows(); i++)
             for (var j = i + s; j < matrix.Columns(); j++)
                 r[i][j] = matrix[i][j];
@@ -388,10 +393,10 @@ public static partial class Matrix
     ///     Transforms a triangular matrix in a symmetric matrix by copying
     ///     its elements to the other, unfilled part of the matrix.
     /// </summary>
-    public static T[][] GetSymmetric<T>(this T[][] matrix, MatrixType type, T[][] result = null)
+    public static T[][] GetSymmetric<T>(this T[][] matrix, MatrixType type, Jagged<T> result = default)
     {
-        if (result is null)
-            result = Jagged.CreateAs(matrix);
+        if (result.Array is null)
+            result = new Jagged<T>(Jagged.CreateAs(new Jagged<T>(matrix)));
 
         switch (type)
         {
@@ -409,7 +414,7 @@ public static partial class Matrix
                 throw new ArgumentException("Matrix type can be either LowerTriangular or UpperTriangular.", nameof(type));
         }
 
-        return result;
+        return result.Array;
     }
 
     /// <summary>
@@ -475,12 +480,13 @@ public static partial class Matrix
     /// </summary>
     /// <param name="matrix">The matrix.</param>
     /// <returns><c>true</c> if the specified matrix is rectangular; otherwise, <c>false</c>.</returns>
-    public static bool IsRectangular<T>(T[][] matrix)
+    public static bool IsRectangular<T>(Jagged<T> matrix)
     {
-        var numberOfCols = matrix[0].Length;
+        var matrixArray = matrix.Array;
+        var numberOfCols = matrixArray[0].Length;
 
-        for (var i = 1; i < matrix.Length; i++)
-            if (matrix[i].Length != numberOfCols)
+        for (var i = 1; i < matrixArray.Length; i++)
+            if (matrixArray[i].Length != numberOfCols)
                 return false;
 
         return true;
@@ -508,9 +514,9 @@ public static partial class Matrix
     /// <summary>
     ///     Applies a function to every element of the array.
     /// </summary>
-    public static TResult[][] Apply<TInput, TResult>(TInput[][] matrix, Func<TInput, TResult> func)
+    public static TResult[][] Apply<TInput, TResult>(Jagged<TInput> matrix, Func<TInput, TResult> func)
     {
-        return Apply(matrix, func, Jagged.CreateAs<TInput, TResult>(matrix));
+        return Apply(matrix.Array, func, new Jagged<TResult>(Jagged.CreateAs<TInput, TResult>(matrix)));
     }
 
     /// <summary>
@@ -518,31 +524,33 @@ public static partial class Matrix
     /// </summary>
     public static TResult[][] Apply<TInput, TResult>(this TInput[][] matrix, Func<TInput, int, int, TResult> func)
     {
-        return Apply(matrix, func, Jagged.CreateAs<TInput, TResult>(matrix));
+        return Apply(matrix, func, new Jagged<TResult>(Jagged.CreateAs<TInput, TResult>(new Jagged<TInput>(matrix))));
     }
 
     /// <summary>
     ///     Applies a function to every element of the array.
     /// </summary>
     public static TResult[][] Apply<TInput, TResult>(this TInput[][] matrix, Func<TInput, TResult> func,
-        TResult[][] result)
+        Jagged<TResult> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < matrix.Length; i++)
             for (var j = 0; j < matrix[i].Length; j++)
-                result[i][j] = func(matrix[i][j]);
-        return result;
+                resultArray[i][j] = func(matrix[i][j]);
+        return resultArray;
     }
 
     /// <summary>
     ///     Applies a function to every element of the array.
     /// </summary>
     public static TResult[][] Apply<TInput, TResult>(this TInput[][] matrix, Func<TInput, int, int, TResult> func,
-        TResult[][] result)
+        Jagged<TResult> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < matrix.Length; i++)
             for (var j = 0; j < matrix[i].Length; j++)
-                result[i][j] = func(matrix[i][j], i, j);
-        return result;
+                resultArray[i][j] = func(matrix[i][j], i, j);
+        return resultArray;
     }
 
     #endregion

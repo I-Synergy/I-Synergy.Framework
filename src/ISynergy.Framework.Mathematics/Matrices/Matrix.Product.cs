@@ -1,4 +1,4 @@
-
+﻿
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -171,7 +171,7 @@ public static partial class Matrix
         if (aArray.Columns() != bArray.Rows() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
 
-        var C = Matrix.CreateAs(resultArray).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         for (var i = 0; i < N; i++)
             for (var j = 0; j < M; j++)
                 for (var k = 0; k < K; k++)
@@ -216,7 +216,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Length || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = Jagged.CreateAs(resultArray).To<double[,]>();
+        var C = Jagged.CreateAs(new Jagged<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(new Jagged<double>(aArray).ToMatrix().To<double[,]>()), new Matrix<double>(new Jagged<double>(bArray).ToMatrix().To<double[,]>()), new Matrix<double>(C));
 #endif
         int K = aArray.Columns();
@@ -261,7 +261,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Rows() || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(resultArray).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(new Jagged<double>(aArray).ToMatrix().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()), new Matrix<double>(C));
 #endif
         int K = aArray.Columns();
@@ -305,7 +305,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Length || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(resultArray).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(new Jagged<double>(bArray).ToMatrix().To<double[,]>()), new Matrix<double>(C));
 #endif
         int N = resultArray.Length;
@@ -570,7 +570,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(resultArray).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
         int n = aArray.Columns();
@@ -638,7 +638,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(resultArray).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
         int n = bArray.Rows();
@@ -678,7 +678,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(resultArray).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
         int n = aArray.Rows();
@@ -718,7 +718,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(resultArray).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
         for (var i = 0; i < aArray.Length; i++)
@@ -797,8 +797,7 @@ public static partial class Matrix
     ///    
     public static double[][] DotWithTransposed(this Jagged<double> a, double[] columnVector, Jagged<double> result)
     {
-        double[][] t;
-        return Dot(a, new Jagged<double>(columnVector.Transpose(out t)), result);
+        return Dot(a, new Jagged<double>(columnVector.Transpose(out _)), result);
     }
 
     /// <summary>
@@ -1379,7 +1378,7 @@ public static partial class Matrix
     /// 
     public static double[,] DivideByDiagonal(this Matrix<double> a, double[] b)
     {
-        return DivideByDiagonal(a, b, new Matrix<double>(Matrix.CreateAs<double, double>(a.Array)));
+        return DivideByDiagonal(a, b, new Matrix<double>(Matrix.CreateAs<double, double>(a)));
     }
 
     /// <summary>
@@ -1392,7 +1391,7 @@ public static partial class Matrix
     /// 
     public static double[][] DivideByDiagonal(this Jagged<double> a, double[] b)
     {
-        return DivideByDiagonal(a, b, new Jagged<double>(Jagged.CreateAs<double, double>(a.Array)));
+        return DivideByDiagonal(a, b, new Jagged<double>(Jagged.CreateAs<double, double>(a)));
     }
 
     #endregion

@@ -141,9 +141,9 @@ public abstract class OctaveEnvironment
     /// <summary>Creates an identity matrix.</summary>
     protected static Mat eye(int size) { return Matrix.Identity(size); }
     /// <summary>Inverts a matrix.</summary>
-    protected static Mat inv(double[,] matrix) { return Matrix.Inverse(matrix); }
+    protected static Mat inv(Matrix<double> matrix) { return Matrix.Inverse(matrix.Array); }
     /// <summary>Inverts a matrix.</summary>
-    protected static Mat pinv(double[,] matrix) { return Matrix.PseudoInverse(matrix); }
+    protected static Mat pinv(Matrix<double> matrix) { return Matrix.PseudoInverse(matrix.Array); }
     /// <summary>Creates a unit matrix.</summary>
     protected static Mat ones(int size) { return Matrix.Ones(size, size); }
     /// <summary>Creates a unit matrix.</summary>
@@ -155,15 +155,15 @@ public abstract class OctaveEnvironment
     /// <summary>Random vector.</summary>
     protected static Mat rand(int n, int m) { return Matrix.Random(n, m); }
     /// <summary>Size of a matrix.</summary>
-    protected static double[] size(double[,] m) { return [m.GetLength(0), m.GetLength(1)]; }
+    protected static double[] size(Matrix<double> m) { return [m.Array.GetLength(0), m.Array.GetLength(1)]; }
     /// <summary>Rank of a matrix.</summary>
-    protected static int rank(double[,] m) { return new SingularValueDecomposition(m).Rank; }
+    protected static int rank(Matrix<double> m) { return new SingularValueDecomposition(m.Array).Rank; }
     /// <summary>Matrix sum vector.</summary>
-    protected static double[] sum(double[,] matrix) { return Matrix.Sum(matrix, 0); }
+    protected static double[] sum(Matrix<double> matrix) { return Matrix.Sum(matrix.Array, 0); }
     /// <summary>Sum of vector elements.</summary>
     protected static double sum(double[] vector) { return Matrix.Sum(vector); }
     /// <summary>Matrix sum vector.</summary>
-    protected static double[] sum(double[,] matrix, int dimension) { return Matrix.Sum(matrix, dimension - dimensionOffset); }
+    protected static double[] sum(Matrix<double> matrix, int dimension) { return Matrix.Sum(matrix.Array, dimension - dimensionOffset); }
     /// <summary>Product of vector elements.</summary>
     protected static double prod(double[] vector) { return Matrix.Product(vector); }
     /// <summary>Rounding.</summary>
@@ -171,49 +171,49 @@ public abstract class OctaveEnvironment
     /// <summary>Rounding.</summary>
     protected static double[] round(double[] f) { return Matrix.Round(f, 0); }
     /// <summary>Rounding.</summary>
-    protected static double[,] round(double[,] f) { return Matrix.Round(f, 0); }
+    protected static double[,] round(Matrix<double> f) { return Matrix.Round(f.Array, 0); }
     /// <summary>Ceiling.</summary>
     protected static double ceil(double f) { return System.Math.Ceiling(f); }
     /// <summary>Ceiling.</summary>
     protected static double[] ceil(double[] f) { return Matrix.Ceiling(f); }
     /// <summary>Ceiling.</summary>
-    protected static double[,] ceil(double[,] f) { return Matrix.Ceiling(f); }
+    protected static double[,] ceil(Matrix<double> f) { return Matrix.Ceiling(f.Array); }
     /// <summary>Flooring.</summary>
     protected static double floor(double f) { return System.Math.Floor(f); }
     /// <summary>Flooring.</summary>
     protected static double[] floor(double[] f) { return Matrix.Floor(f); }
     /// <summary>Flooring.</summary>
-    protected static double[,] floor(double[,] f) { return Matrix.Floor(f); }
+    protected static double[,] floor(Matrix<double> f) { return Matrix.Floor(f.Array); }
     /// <summary>Sin.</summary>
     protected static double sin(double d) { return System.Math.Sin(d); }
     /// <summary>Sin.</summary>
     protected static double[] sin(double[] d) { return Matrix.Apply(d, x => System.Math.Sin(x)); }
     /// <summary>Sin.</summary>
-    protected static Mat sin(double[,] d) { return Matrix.Apply(d, x => System.Math.Sin(x)); }
+    protected static Mat sin(Matrix<double> d) { return Matrix.Apply(d.Array, x => System.Math.Sin(x)); }
     /// <summary>Cos.</summary>
     protected static double cos(double d) { return System.Math.Cos(d); }
     /// <summary>Cos.</summary>
     protected static double[] cos(double[] d) { return Matrix.Apply(d, x => System.Math.Cos(x)); }
     /// <summary>Cos.</summary>
-    protected static Mat cos(double[,] d) { return Matrix.Apply(d, x => System.Math.Cos(x)); }
+    protected static Mat cos(Matrix<double> d) { return Matrix.Apply(d.Array, x => System.Math.Cos(x)); }
     /// <summary>Exponential value.</summary>
     protected static double exp(double d) { return System.Math.Exp(d); }
     /// <summary>Exponential value.</summary>
     protected static double[] exp(double[] d) { return Matrix.Apply(d, x => System.Math.Exp(x)); }
     /// <summary>Exponential value.</summary>
-    protected static Mat exp(double[,] d) { return Matrix.Apply(d, x => System.Math.Exp(x)); }
+    protected static Mat exp(Matrix<double> d) { return Matrix.Apply(d.Array, x => System.Math.Exp(x)); }
     /// <summary>Absolute value.</summary>
     protected static double abs(double d) { return System.Math.Abs(d); }
     /// <summary>Absolute value.</summary>
     protected static double[] abs(double[] d) { return Matrix.Apply(d, x => System.Math.Abs(x)); }
     /// <summary>Absolute value.</summary>
-    protected static Mat abs(double[,] d) { return Matrix.Apply(d, x => System.Math.Abs(x)); }
+    protected static Mat abs(Matrix<double> d) { return Matrix.Apply(d.Array, x => System.Math.Abs(x)); }
     /// <summary>Logarithm.</summary>
     protected static double log(double d) { return System.Math.Log(d); }
     /// <summary>Logarithm.</summary>
     protected static double[] log(double[] d) { return Matrix.Apply(d, x => System.Math.Log(x)); }
     /// <summary>Logarithm.</summary>
-    protected static Mat log(double[,] d) { return Matrix.Apply(d, x => System.Math.Log(x)); }
+    protected static Mat log(Matrix<double> d) { return Matrix.Apply(d.Array, x => System.Math.Log(x)); }
 
     /// <summary>Creates a magic square matrix.</summary>
     protected static Mat magic(int n) { return Matrix.Magic(n); }
@@ -221,9 +221,9 @@ public abstract class OctaveEnvironment
     // decompositions
     #region svd
     /// <summary>Singular value decomposition.</summary>
-    protected static List<Mat> svd(double[,] m) // NOSONAR
+    protected static List<Mat> svd(Matrix<double> m)
     {
-        var svd = new SingularValueDecomposition(m, true, true, true);
+        var svd = new SingularValueDecomposition(m.Array, true, true, true);
         return [svd.LeftSingularVectors, svd.DiagonalMatrix, svd.RightSingularVectors];
     }
 
@@ -231,73 +231,73 @@ public abstract class OctaveEnvironment
 
     #region qr
     /// <summary>QR decomposition.</summary>
-    protected static void qr(double[,] m, out double[,] Q, out double[,] R)
+    protected static void qr(Matrix<double> m, out Matrix<double> Q, out Matrix<double> R)
     {
-        var qr = new QrDecomposition(m);
-        Q = qr.OrthogonalFactor;
-        R = qr.UpperTriangularFactor;
+        var qr = new QrDecomposition(m.Array);
+        Q = new Matrix<double>(qr.OrthogonalFactor);
+        R = new Matrix<double>(qr.UpperTriangularFactor);
     }
 
     /// <summary>QR decomposition.</summary>
-    protected static void qr(double[,] m, out double[,] Q, out double[,] R, out double[] d)
+    protected static void qr(Matrix<double> m, out Matrix<double> Q, out Matrix<double> R, out double[] d)
     {
-        var qr = new QrDecomposition(m);
-        Q = qr.OrthogonalFactor;
-        R = qr.UpperTriangularFactor;
+        var qr = new QrDecomposition(m.Array);
+        Q = new Matrix<double>(qr.OrthogonalFactor);
+        R = new Matrix<double>(qr.UpperTriangularFactor);
         d = qr.Diagonal;
     }
     #endregion
 
     #region eig
     /// <summary>Eigenvalue decomposition.</summary>
-    protected static double[] eig(double[,] a, out double[,] V)
+    protected static double[] eig(Matrix<double> a, out Matrix<double> V)
     {
-        var eig = new EigenvalueDecomposition(a);
-        V = eig.Eigenvectors;
+        var eig = new EigenvalueDecomposition(a.Array);
+        V = new Matrix<double>(eig.Eigenvectors);
         return eig.RealEigenvalues;
     }
 
     /// <summary>Eigenvalue decomposition.</summary>
-    protected static double[] eig(double[,] a, out double[,] V, out double[] im)
+    protected static double[] eig(Matrix<double> a, out Matrix<double> V, out double[] im)
     {
-        var eig = new EigenvalueDecomposition(a);
-        V = eig.Eigenvectors;
+        var eig = new EigenvalueDecomposition(a.Array);
+        V = new Matrix<double>(eig.Eigenvectors);
         im = eig.ImaginaryEigenvalues;
         return eig.RealEigenvalues;
     }
 
     /// <summary>Eigenvalue decomposition.</summary>
-    protected static double[] eig(double[,] a, double[,] b, out double[,] V)
+    protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a, b);
-        V = eig.Eigenvectors;
+        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        V = new Matrix<double>(eig.Eigenvectors);
         return eig.RealEigenvalues;
     }
 
     /// <summary>Eigenvalue decomposition.</summary>
-    protected static double[] eig(double[,] a, double[,] b, out double[,] V, out double[] im)
+    protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V, out double[] im)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a, b);
-        V = eig.Eigenvectors;
+        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        V = new Matrix<double>(eig.Eigenvectors);
         im = eig.ImaginaryEigenvalues;
         return eig.RealEigenvalues;
     }
 
     /// <summary>Eigenvalue decomposition.</summary>
-    protected static double[] eig(double[,] a, double[,] b, out double[,] V, out double[] alphar, out double[] beta)
+    protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V, out double[] alphar, out double[] beta)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a, b);
-        V = eig.Eigenvectors;
+        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        V = new Matrix<double>(eig.Eigenvectors);
         beta = eig.Betas;
         alphar = eig.RealAlphas;
         return eig.RealEigenvalues;
     }
 
     /// <summary>Eigenvalue decomposition.</summary>
-    protected static double[] eig(double[,] a, double[,] b, out double[,] V, out double[] im, out double[] alphar, out double[] alphai, out double[] beta)
+    protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V, out double[] im, out double[] alphar, out double[] alphai, out double[] beta)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a, b);
-        V = eig.Eigenvectors;
+        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        V = new Matrix<double>(eig.Eigenvectors);
         im = eig.ImaginaryEigenvalues;
         beta = eig.Betas;
         alphar = eig.RealAlphas;
@@ -308,9 +308,9 @@ public abstract class OctaveEnvironment
 
     #region chol
     /// <summary>Cholesky decomposition.</summary>
-    protected static double[,] chol(double[,] a)
+    protected static double[,] chol(Matrix<double> a)
     {
-        var chol = new CholeskyDecomposition(a);
+        var chol = new CholeskyDecomposition(a.Array);
         return chol.LeftTriangularFactor;
     }
     #endregion
@@ -321,7 +321,7 @@ public abstract class OctaveEnvironment
     /// 
     protected static Mat _
     {
-        get { return new Mat(null); }
+        get { return new Mat(default(Matrix<double>)); }
     }
 
     /// <summary>
@@ -370,9 +370,9 @@ public abstract class OctaveEnvironment
         ///   Initializes a new instance of the <see cref="Mat"/> class.
         /// </summary>
         ///
-        public Mat(double[,] matrix)
+        public Mat(Matrix<double> matrix)
         {
-            this.matrix = matrix;
+            this.matrix = matrix.Array;
         }
 
         /// <summary>
@@ -480,7 +480,7 @@ public abstract class OctaveEnvironment
         /// 
         public static implicit operator Mat(double[,] m)
         {
-            return new Mat(m);
+            return new Mat(new Matrix<double>(m));
         }
 
         /// <summary>

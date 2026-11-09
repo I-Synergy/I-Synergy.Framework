@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using System.Numerics;
 
 
@@ -19,7 +20,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this int[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<int, double>(value));
+        return ToDouble(value, Matrix.CreateAs<int, double>(new Matrix<int>(value)));
     }
 
 		/// <summary>
@@ -28,7 +29,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this int[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<int, double>(value));
+        return ToDouble(value, Matrix.CreateAs<int, double>(new Tensor3<int>(value)));
     }
 
     /// <summary>
@@ -37,7 +38,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this int[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<int, double>(value));
+        return ToDouble(value, Jagged.CreateAs<int, double>(new Jagged<int>(value)));
     }
 
     /// <summary>
@@ -46,7 +47,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this int[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<int, double>(value));
+        return ToDouble(value, Jagged.CreateAs<int, double>(new Jagged<int[]>(value)));
     }
 
     /// <summary>
@@ -156,7 +157,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this int[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<int, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<int, Complex>(new Matrix<int>(value)));
     }
 
 		/// <summary>
@@ -165,7 +166,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this int[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<int, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<int, Complex>(new Tensor3<int>(value)));
     }
 
     /// <summary>
@@ -174,7 +175,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this int[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<int, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<int, Complex>(new Jagged<int>(value)));
     }
 
     /// <summary>
@@ -183,7 +184,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this int[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<int, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<int, Complex>(new Jagged<int[]>(value)));
     }
 
     /// <summary>
@@ -293,7 +294,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this short[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<short, double>(value));
+        return ToDouble(value, Matrix.CreateAs<short, double>(new Matrix<short>(value)));
     }
 
 		/// <summary>
@@ -302,7 +303,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this short[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<short, double>(value));
+        return ToDouble(value, Matrix.CreateAs<short, double>(new Tensor3<short>(value)));
     }
 
     /// <summary>
@@ -311,7 +312,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this short[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<short, double>(value));
+        return ToDouble(value, Jagged.CreateAs<short, double>(new Jagged<short>(value)));
     }
 
     /// <summary>
@@ -320,7 +321,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this short[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<short, double>(value));
+        return ToDouble(value, Jagged.CreateAs<short, double>(new Jagged<short[]>(value)));
     }
 
     /// <summary>
@@ -436,7 +437,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this short[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<short, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<short, Complex>(new Matrix<short>(value)));
     }
 
 		/// <summary>
@@ -445,7 +446,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this short[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<short, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<short, Complex>(new Tensor3<short>(value)));
     }
 
     /// <summary>
@@ -454,7 +455,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this short[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<short, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<short, Complex>(new Jagged<short>(value)));
     }
 
     /// <summary>
@@ -463,7 +464,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this short[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<short, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<short, Complex>(new Jagged<short[]>(value)));
     }
 
     /// <summary>
@@ -579,7 +580,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this float[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<float, double>(value));
+        return ToDouble(value, Matrix.CreateAs<float, double>(new Matrix<float>(value)));
     }
 
 		/// <summary>
@@ -588,7 +589,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this float[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<float, double>(value));
+        return ToDouble(value, Matrix.CreateAs<float, double>(new Tensor3<float>(value)));
     }
 
     /// <summary>
@@ -597,7 +598,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this float[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<float, double>(value));
+        return ToDouble(value, Jagged.CreateAs<float, double>(new Jagged<float>(value)));
     }
 
     /// <summary>
@@ -606,7 +607,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this float[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<float, double>(value));
+        return ToDouble(value, Jagged.CreateAs<float, double>(new Jagged<float[]>(value)));
     }
 
     /// <summary>
@@ -722,7 +723,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this float[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<float, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<float, Complex>(new Matrix<float>(value)));
     }
 
 		/// <summary>
@@ -731,7 +732,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this float[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<float, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<float, Complex>(new Tensor3<float>(value)));
     }
 
     /// <summary>
@@ -740,7 +741,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this float[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<float, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<float, Complex>(new Jagged<float>(value)));
     }
 
     /// <summary>
@@ -749,7 +750,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this float[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<float, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<float, Complex>(new Jagged<float[]>(value)));
     }
 
     /// <summary>
@@ -865,7 +866,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this double[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<double, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<double, Complex>(new Matrix<double>(value)));
     }
 
 		/// <summary>
@@ -874,7 +875,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this double[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<double, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<double, Complex>(new Tensor3<double>(value)));
     }
 
     /// <summary>
@@ -883,7 +884,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this double[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<double, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<double, Complex>(new Jagged<double>(value)));
     }
 
     /// <summary>
@@ -892,7 +893,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this double[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<double, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<double, Complex>(new Jagged<double[]>(value)));
     }
 
     /// <summary>
@@ -1008,7 +1009,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this long[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<long, double>(value));
+        return ToDouble(value, Matrix.CreateAs<long, double>(new Matrix<long>(value)));
     }
 
 		/// <summary>
@@ -1017,7 +1018,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this long[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<long, double>(value));
+        return ToDouble(value, Matrix.CreateAs<long, double>(new Tensor3<long>(value)));
     }
 
     /// <summary>
@@ -1026,7 +1027,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this long[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<long, double>(value));
+        return ToDouble(value, Jagged.CreateAs<long, double>(new Jagged<long>(value)));
     }
 
     /// <summary>
@@ -1035,7 +1036,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this long[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<long, double>(value));
+        return ToDouble(value, Jagged.CreateAs<long, double>(new Jagged<long[]>(value)));
     }
 
     /// <summary>
@@ -1151,7 +1152,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this long[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<long, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<long, Complex>(new Matrix<long>(value)));
     }
 
 		/// <summary>
@@ -1160,7 +1161,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this long[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<long, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<long, Complex>(new Tensor3<long>(value)));
     }
 
     /// <summary>
@@ -1169,7 +1170,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this long[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<long, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<long, Complex>(new Jagged<long>(value)));
     }
 
     /// <summary>
@@ -1178,7 +1179,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this long[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<long, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<long, Complex>(new Jagged<long[]>(value)));
     }
 
     /// <summary>
@@ -1294,7 +1295,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this byte[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<byte, double>(value));
+        return ToDouble(value, Matrix.CreateAs<byte, double>(new Matrix<byte>(value)));
     }
 
 		/// <summary>
@@ -1303,7 +1304,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this byte[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<byte, double>(value));
+        return ToDouble(value, Matrix.CreateAs<byte, double>(new Tensor3<byte>(value)));
     }
 
     /// <summary>
@@ -1312,7 +1313,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this byte[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<byte, double>(value));
+        return ToDouble(value, Jagged.CreateAs<byte, double>(new Jagged<byte>(value)));
     }
 
     /// <summary>
@@ -1321,7 +1322,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this byte[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<byte, double>(value));
+        return ToDouble(value, Jagged.CreateAs<byte, double>(new Jagged<byte[]>(value)));
     }
 
     /// <summary>
@@ -1425,7 +1426,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this byte[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<byte, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<byte, Complex>(new Matrix<byte>(value)));
     }
 
 		/// <summary>
@@ -1434,7 +1435,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this byte[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<byte, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<byte, Complex>(new Tensor3<byte>(value)));
     }
 
     /// <summary>
@@ -1443,7 +1444,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this byte[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<byte, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<byte, Complex>(new Jagged<byte>(value)));
     }
 
     /// <summary>
@@ -1452,7 +1453,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this byte[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<byte, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<byte, Complex>(new Jagged<byte[]>(value)));
     }
 
     /// <summary>
@@ -1568,7 +1569,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this sbyte[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<sbyte, double>(value));
+        return ToDouble(value, Matrix.CreateAs<sbyte, double>(new Matrix<sbyte>(value)));
     }
 
 		/// <summary>
@@ -1577,7 +1578,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this sbyte[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<sbyte, double>(value));
+        return ToDouble(value, Matrix.CreateAs<sbyte, double>(new Tensor3<sbyte>(value)));
     }
 
     /// <summary>
@@ -1586,7 +1587,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this sbyte[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<sbyte, double>(value));
+        return ToDouble(value, Jagged.CreateAs<sbyte, double>(new Jagged<sbyte>(value)));
     }
 
     /// <summary>
@@ -1595,7 +1596,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this sbyte[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<sbyte, double>(value));
+        return ToDouble(value, Jagged.CreateAs<sbyte, double>(new Jagged<sbyte[]>(value)));
     }
 
     /// <summary>
@@ -1711,7 +1712,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this sbyte[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<sbyte, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<sbyte, Complex>(new Matrix<sbyte>(value)));
     }
 
 		/// <summary>
@@ -1720,7 +1721,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this sbyte[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<sbyte, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<sbyte, Complex>(new Tensor3<sbyte>(value)));
     }
 
     /// <summary>
@@ -1729,7 +1730,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this sbyte[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<sbyte, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<sbyte, Complex>(new Jagged<sbyte>(value)));
     }
 
     /// <summary>
@@ -1738,7 +1739,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this sbyte[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<sbyte, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<sbyte, Complex>(new Jagged<sbyte[]>(value)));
     }
 
     /// <summary>
@@ -1854,7 +1855,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this decimal[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<decimal, double>(value));
+        return ToDouble(value, Matrix.CreateAs<decimal, double>(new Matrix<decimal>(value)));
     }
 
 		/// <summary>
@@ -1863,7 +1864,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this decimal[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<decimal, double>(value));
+        return ToDouble(value, Matrix.CreateAs<decimal, double>(new Tensor3<decimal>(value)));
     }
 
     /// <summary>
@@ -1872,7 +1873,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this decimal[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<decimal, double>(value));
+        return ToDouble(value, Jagged.CreateAs<decimal, double>(new Jagged<decimal>(value)));
     }
 
     /// <summary>
@@ -1881,7 +1882,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this decimal[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<decimal, double>(value));
+        return ToDouble(value, Jagged.CreateAs<decimal, double>(new Jagged<decimal[]>(value)));
     }
 
     /// <summary>
@@ -1997,7 +1998,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this decimal[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<decimal, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<decimal, Complex>(new Matrix<decimal>(value)));
     }
 
 		/// <summary>
@@ -2006,7 +2007,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this decimal[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<decimal, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<decimal, Complex>(new Tensor3<decimal>(value)));
     }
 
     /// <summary>
@@ -2015,7 +2016,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this decimal[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<decimal, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<decimal, Complex>(new Jagged<decimal>(value)));
     }
 
     /// <summary>
@@ -2024,7 +2025,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this decimal[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<decimal, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<decimal, Complex>(new Jagged<decimal[]>(value)));
     }
 
     /// <summary>
@@ -2140,7 +2141,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this bool[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<bool, double>(value));
+        return ToDouble(value, Matrix.CreateAs<bool, double>(new Matrix<bool>(value)));
     }
 
 		/// <summary>
@@ -2149,7 +2150,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this bool[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<bool, double>(value));
+        return ToDouble(value, Matrix.CreateAs<bool, double>(new Tensor3<bool>(value)));
     }
 
     /// <summary>
@@ -2158,7 +2159,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this bool[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<bool, double>(value));
+        return ToDouble(value, Jagged.CreateAs<bool, double>(new Jagged<bool>(value)));
     }
 
     /// <summary>
@@ -2167,7 +2168,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this bool[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<bool, double>(value));
+        return ToDouble(value, Jagged.CreateAs<bool, double>(new Jagged<bool[]>(value)));
     }
 
     /// <summary>
@@ -2283,7 +2284,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this bool[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<bool, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<bool, Complex>(new Matrix<bool>(value)));
     }
 
 		/// <summary>
@@ -2292,7 +2293,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this bool[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<bool, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<bool, Complex>(new Tensor3<bool>(value)));
     }
 
     /// <summary>
@@ -2301,7 +2302,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this bool[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<bool, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<bool, Complex>(new Jagged<bool>(value)));
     }
 
     /// <summary>
@@ -2310,7 +2311,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this bool[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<bool, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<bool, Complex>(new Jagged<bool[]>(value)));
     }
 
     /// <summary>
@@ -2426,7 +2427,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this object[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<object, double>(value));
+        return ToDouble(value, Matrix.CreateAs<object, double>(new Matrix<object>(value)));
     }
 
 		/// <summary>
@@ -2435,7 +2436,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this object[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<object, double>(value));
+        return ToDouble(value, Matrix.CreateAs<object, double>(new Tensor3<object>(value)));
     }
 
     /// <summary>
@@ -2444,7 +2445,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this object[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<object, double>(value));
+        return ToDouble(value, Jagged.CreateAs<object, double>(new Jagged<object>(value)));
     }
 
     /// <summary>
@@ -2453,7 +2454,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this object[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<object, double>(value));
+        return ToDouble(value, Jagged.CreateAs<object, double>(new Jagged<object[]>(value)));
     }
 
     /// <summary>
@@ -2563,7 +2564,7 @@ public static partial class Matrix
     /// 
     public static Complex[,] ToComplex(this object[,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<object, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<object, Complex>(new Matrix<object>(value)));
     }
 
 		/// <summary>
@@ -2572,7 +2573,7 @@ public static partial class Matrix
     /// 
     public static Complex[,,] ToComplex(this object[,,] value)
     {
-        return ToComplex(value, Matrix.CreateAs<object, Complex>(value));
+        return ToComplex(value, Matrix.CreateAs<object, Complex>(new Tensor3<object>(value)));
     }
 
     /// <summary>
@@ -2581,7 +2582,7 @@ public static partial class Matrix
     /// 
     public static Complex[][] ToComplex(this object[][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<object, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<object, Complex>(new Jagged<object>(value)));
     }
 
     /// <summary>
@@ -2590,7 +2591,7 @@ public static partial class Matrix
     /// 
     public static Complex[][][] ToComplex(this object[][][] value)
     {
-        return ToComplex(value, Jagged.CreateAs<object, Complex>(value));
+        return ToComplex(value, Jagged.CreateAs<object, Complex>(new Jagged<object[]>(value)));
     }
 
     /// <summary>
@@ -2700,7 +2701,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this string[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<string, double>(value));
+        return ToDouble(value, Matrix.CreateAs<string, double>(new Matrix<string>(value)));
     }
 
 		/// <summary>
@@ -2709,7 +2710,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this string[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<string, double>(value));
+        return ToDouble(value, Matrix.CreateAs<string, double>(new Tensor3<string>(value)));
     }
 
     /// <summary>
@@ -2718,7 +2719,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this string[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<string, double>(value));
+        return ToDouble(value, Jagged.CreateAs<string, double>(new Jagged<string>(value)));
     }
 
     /// <summary>
@@ -2727,7 +2728,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this string[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<string, double>(value));
+        return ToDouble(value, Jagged.CreateAs<string, double>(new Jagged<string[]>(value)));
     }
 
     /// <summary>
@@ -2837,7 +2838,7 @@ public static partial class Matrix
     /// 
     public static double[,] ToDouble(this Complex[,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<Complex, double>(value));
+        return ToDouble(value, Matrix.CreateAs<Complex, double>(new Matrix<Complex>(value)));
     }
 
 		/// <summary>
@@ -2846,7 +2847,7 @@ public static partial class Matrix
     /// 
     public static double[,,] ToDouble(this Complex[,,] value)
     {
-        return ToDouble(value, Matrix.CreateAs<Complex, double>(value));
+        return ToDouble(value, Matrix.CreateAs<Complex, double>(new Tensor3<Complex>(value)));
     }
 
     /// <summary>
@@ -2855,7 +2856,7 @@ public static partial class Matrix
     /// 
     public static double[][] ToDouble(this Complex[][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<Complex, double>(value));
+        return ToDouble(value, Jagged.CreateAs<Complex, double>(new Jagged<Complex>(value)));
     }
 
     /// <summary>
@@ -2864,7 +2865,7 @@ public static partial class Matrix
     /// 
     public static double[][][] ToDouble(this Complex[][][] value)
     {
-        return ToDouble(value, Jagged.CreateAs<Complex, double>(value));
+        return ToDouble(value, Jagged.CreateAs<Complex, double>(new Jagged<Complex[]>(value)));
     }
 
     /// <summary>
