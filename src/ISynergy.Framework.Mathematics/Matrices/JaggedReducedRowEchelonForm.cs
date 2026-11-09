@@ -1,4 +1,4 @@
-
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -26,11 +26,12 @@ public class JaggedReducedRowEchelonForm
     ///   <paramref name="value"/> will be destroyed in the process, resulting in less
     ///   memory consumption.</param>
     ///   
-    public JaggedReducedRowEchelonForm(double[][] value, bool inPlace = false)
+    public JaggedReducedRowEchelonForm(Jagged<double> value, bool inPlace = false)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        rref = inPlace ? value : value.MemberwiseClone();
+        rref = inPlace ? valueArray : valueArray.MemberwiseClone();
 
         int lead = 0;
         rows = rref.Length;

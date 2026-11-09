@@ -3,6 +3,7 @@ using ISynergy.Framework.Mathematics.Distances.Base;
 
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Distances;
 
 /// <summary>
@@ -42,7 +43,7 @@ public class SquareMahalanobis : BaseMahalanobis
     /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
     /// 
     public SquareMahalanobis(double[,] precision)
-        : base(precision) { }
+        : base(new Matrix<double>(precision)) { }
 
     /// <summary>
     ///   Creates a new Square-Mahalanobis distance from a covariance matrix.

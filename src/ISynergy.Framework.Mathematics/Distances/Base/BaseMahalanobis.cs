@@ -3,6 +3,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Distances.Base;
 
 /// <summary>
@@ -53,11 +54,11 @@ public abstract class BaseMahalanobis : IMetric<double[]>, ICloneable
     /// 
     /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
     /// 
-    protected BaseMahalanobis(double[,] precision)
+    protected BaseMahalanobis(Matrix<double> precision)
     {
         _chol = null;
         _svd = null;
-        _precision = precision;
+        _precision = precision.Array;
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -26,11 +26,12 @@ public class ReducedRowEchelonForm
     ///   <paramref name="value"/> will be destroyed in the process, resulting in less
     ///   memory consumption.</param>
     ///   
-    public ReducedRowEchelonForm(double[,] value, bool inPlace = false)
+    public ReducedRowEchelonForm(Matrix<double> value, bool inPlace = false)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        rref = inPlace ? value : (double[,])value.Clone();
+        rref = inPlace ? valueArray : (double[,])valueArray.Clone();
 
         int lead = 0;
         rows = rref.GetLength(0);

@@ -1,6 +1,7 @@
 
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 namespace ISynergy.Framework.Mathematics.Statistics;
@@ -1447,9 +1448,10 @@ public static partial class Measures
     ///   Calculates the weighted pooled covariance matrix from a set of covariance matrices.
     /// </summary>
     /// 
-    public static double[,] PooledCovariance(double[][,] covariances, double[] weights)
+    public static double[,] PooledCovariance(Matrix<double>[] covariances, double[] weights)
     {
-        double[,] pooledCov = Matrix.CreateAs(covariances[0]);
+        var firstCovariance = covariances[0].Array;
+        double[,] pooledCov = Matrix.CreateAs(firstCovariance);
 
         double weightSum = weights.Sum();
 
@@ -1459,7 +1461,8 @@ public static partial class Measures
             if (weightSum != 0)
                 w /= weightSum;
 
-            pooledCov.MultiplyAndAdd(w, covariances[k], result: pooledCov);
+            var pooled = new Matrix<double>(pooledCov);
+            pooled.MultiplyAndAdd(w, covariances[k], result: pooled);
         }
 
         return pooledCov;

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -33,7 +34,7 @@ public class ReducedRowEchelonFormTest
             { 5, 9,  3 },
         };
 
-        ReducedRowEchelonForm target = new(matrix);
+        ReducedRowEchelonForm target = new(new Matrix<double>(matrix));
 
         double[,] actual = target.Result;
         double[,] expected =
@@ -57,7 +58,7 @@ public class ReducedRowEchelonFormTest
             {9,6,6,9,1},
         };
 
-        ReducedRowEchelonForm target = new(matrix);
+        ReducedRowEchelonForm target = new(new Matrix<double>(matrix));
 
         double[,] actual = target.Result;
 
