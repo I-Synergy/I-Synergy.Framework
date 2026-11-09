@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
 
@@ -228,7 +229,7 @@ public static class Gabor
         }
 
         if (normalized)
-            kernel.Divide(sum, result: kernel);
+            new Matrix<double>(kernel).Divide(sum, result: new Matrix<double>(kernel));
 
         return kernel;
     }

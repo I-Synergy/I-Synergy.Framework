@@ -57,6 +57,7 @@
 //
 
 using ISynergy.Framework.Mathematics.Enumerations;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Vectors;
@@ -268,7 +269,7 @@ public class Munkres : IOptimizationMethod
     /// </returns>
     public bool Maximize()
     {
-        return run(CostMatrix.Multiply(-1));
+        return run(new Jagged<double>(CostMatrix).Multiply(-1));
     }
 
     private void init(double[][] costMatrix)
@@ -367,7 +368,7 @@ public class Munkres : IOptimizationMethod
     private int step_one()
     {
         MinRow = Matrix.Min(validCost, dimension: 1);
-        MinCol = Matrix.Min(validCost.Subtract(MinRow, dimension: (VectorType)1), dimension: 0);
+        MinCol = Matrix.Min(new Jagged<double>(validCost).Subtract(MinRow, dimension: (VectorType)1), dimension: 0);
 
         return 2;
     }

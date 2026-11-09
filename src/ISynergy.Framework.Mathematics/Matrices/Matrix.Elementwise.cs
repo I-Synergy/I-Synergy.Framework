@@ -12,7 +12,7 @@ public static partial class Matrix
     /// </summary>
     public static double[,] ElementwiseMultiply(Matrix<double> a, Matrix<double> b)
     {
-        return Elementwise.Multiply(a.Array, b.Array);
+        return Elementwise.Multiply(a, b);
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ public static partial class Matrix
     /// </summary>
     public static double[,] ElementwiseDivide(this Matrix<double> a, Matrix<double> b)
     {
-        return Elementwise.Divide(a.Array, b.Array);
+        return Elementwise.Divide(a, b);
     }
 
     /// <summary>

@@ -453,7 +453,7 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
     public static QuadraticObjectiveFunction operator *(double scalar, QuadraticObjectiveFunction a)
     {
         double[] linearTerms = a.LinearTerms.Multiply(scalar);
-        double[,] quadraticTerms = a.QuadraticTerms.Multiply(scalar);
+        double[,] quadraticTerms = new Matrix<double>(a.QuadraticTerms).Multiply(scalar);
         var constantTerm = a.ConstantTerm * scalar;
 
         var variables = new string[a.NumberOfVariables];
@@ -564,7 +564,7 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
                 "The quadratic objective functions must have the same number of variables.");
 
         double[] linearTerms = a.LinearTerms.Subtract(b.LinearTerms);
-        double[,] quadraticTerms = a.QuadraticTerms.Subtract(b.QuadraticTerms);
+        double[,] quadraticTerms = new Matrix<double>(a.QuadraticTerms).Subtract(new Matrix<double>(b.QuadraticTerms));
         var constantTerm = a.ConstantTerm - b.ConstantTerm;
 
         string[] variables;

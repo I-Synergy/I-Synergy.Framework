@@ -197,7 +197,7 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
     /// </summary>
     public double[][] Reverse()
     {
-        return Matrix.DotWithDiagonal(new Jagged<double>(Eigenvectors), RealEigenvalues).Divide(Eigenvectors);
+        return Matrix.DotWithDiagonal(new Jagged<double>(Eigenvectors), RealEigenvalues).Divide(new Jagged<double>(Eigenvectors));
     }
     #region Private methods
 

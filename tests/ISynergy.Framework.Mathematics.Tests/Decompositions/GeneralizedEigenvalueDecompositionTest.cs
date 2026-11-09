@@ -41,7 +41,7 @@ public class GeneralizedEigenvalueDecompositionTest
         for (int i = 0; i < lambda.Length; i++)
         {
             // Compute the determinant equation show above
-            double det = Matrix.Determinant(A.Subtract(lambda[i].Multiply(B))); // almost zero
+            double det = Matrix.Determinant(new Matrix<double>(A).Subtract(new Matrix<double>(lambda[i].Multiply(new Matrix<double>(B))))); // almost zero
 
             Assert.IsLessThan(1e-6, det);
         }

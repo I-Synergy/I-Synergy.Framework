@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Enumerations;
+using ISynergy.Framework.Mathematics.Abstractions;
 using System.Runtime.InteropServices;
 
 
@@ -14,9 +15,10 @@ public static partial class Elementwise
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// 
-    public static double[,] Divide(this double[,] a, double b)
+    public static double[,] Divide(this Matrix<double> a, double b)
     {
-        return Divide(a, b, new double[a.GetLength(0), a.GetLength(1)]);
+        var aArray = a.Array;
+        return Divide(a, b, new Matrix<double>(new double[aArray.GetLength(0), aArray.GetLength(1)]));
     }
 
     /// <summary>
@@ -26,9 +28,9 @@ public static partial class Elementwise
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The scalar <c>b</c>.</param>
     /// 
-    public static double[][] Divide(this double[][] a, double b)
+    public static double[][] Divide(this Jagged<double> a, double b)
     {
-        return Divide(a, b, JaggedCreateAs<double, double>(a));
+        return Divide(a, b, new Jagged<double>(JaggedCreateAs<double, double>(a)));
     }
 
     /// <summary>
@@ -62,9 +64,9 @@ public static partial class Elementwise
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[][] Divide(this double[][] a, double[][] b)
+    public static double[][] Divide(this Jagged<double> a, Jagged<double> b)
     {
-        return Divide(a, b, JaggedCreateAs<double, double>(a));
+        return Divide(a, b, new Jagged<double>(JaggedCreateAs<double, double>(a)));
     }
 
     /// <summary>
@@ -74,9 +76,9 @@ public static partial class Elementwise
     /// <param name="a">The matrix <c>A</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[,] Divide(this double[,] a, double[,] b)
+    public static double[,] Divide(this Matrix<double> a, Matrix<double> b)
     {
-        return Divide(a, b, MatrixCreateAs<double, double>(a));
+        return Divide(a, b, new Matrix<double>(MatrixCreateAs<double, double>(a)));
     }
 
     /// <summary>
@@ -86,9 +88,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[,] Divide(this double a, double[,] b)
+    public static double[,] Divide(this double a, Matrix<double> b)
     {
-        return Divide(a, b, MatrixCreateAs<double, double>(b));
+        return Divide(a, b, new Matrix<double>(MatrixCreateAs<double, double>(b)));
     }
 
     /// <summary>
@@ -98,9 +100,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[][] Divide(this double a, double[][] b)
+    public static double[][] Divide(this double a, Jagged<double> b)
     {
-        return Divide(a, b, JaggedCreateAs<double, double>(b));
+        return Divide(a, b, new Jagged<double>(JaggedCreateAs<double, double>(b)));
     }
 
     /// <summary>
@@ -129,9 +131,9 @@ public static partial class Elementwise
     ///   operation will be applied between each column of the matrix and the
     ///   given vector.
     /// </param>
-    public static double[,] Divide(this double[,] a, double[] b, VectorType dimension)
+    public static double[,] Divide(this Matrix<double> a, double[] b, VectorType dimension)
     {
-        return Divide(a, b, dimension, MatrixCreateAs<double, double>(a));
+        return Divide(a, b, dimension, new Matrix<double>(MatrixCreateAs<double, double>(a)));
     }
 
     /// <summary>
@@ -148,9 +150,9 @@ public static partial class Elementwise
     ///   operation will be applied between each column of the matrix and the
     ///   given vector.
     /// </param>
-    public static double[][] Divide(this double[][] a, double[] b, VectorType dimension)
+    public static double[][] Divide(this Jagged<double> a, double[] b, VectorType dimension)
     {
-        return Divide(a, b, dimension, JaggedCreateAs<double, double>(a));
+        return Divide(a, b, dimension, new Jagged<double>(JaggedCreateAs<double, double>(a)));
     }
 
     /// <summary>
@@ -167,9 +169,9 @@ public static partial class Elementwise
     ///   operation will be applied between each column of the matrix and the
     ///   given vector.
     /// </param>
-    public static double[,] Divide(this double[] a, double[,] b, VectorType dimension)
+    public static double[,] Divide(this double[] a, Matrix<double> b, VectorType dimension)
     {
-        return Divide(a, b, dimension, MatrixCreateAs<double, double>(b));
+        return Divide(a, b, dimension, new Matrix<double>(MatrixCreateAs<double, double>(b)));
     }
 
     /// <summary>
@@ -186,9 +188,9 @@ public static partial class Elementwise
     ///   operation will be applied between each column of the matrix and the
     ///   given vector.
     /// </param>
-    public static double[][] Divide(this double[] a, double[][] b, VectorType dimension)
+    public static double[][] Divide(this double[] a, Jagged<double> b, VectorType dimension)
     {
-        return Divide(a, b, dimension, JaggedCreateAs<double, double>(b));
+        return Divide(a, b, dimension, new Jagged<double>(JaggedCreateAs<double, double>(b)));
     }
 
     /// <summary>
@@ -200,14 +202,17 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[][] Divide(this double[][] a, double[][] b, double[][] result)
+    public static double[][] Divide(this Jagged<double> a, Jagged<double> b, Jagged<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        for (var i = 0; i < result.Length; i++)
-            for (var j = 0; j < result[i].Length; j++)
-                result[i][j] = a[i][j] / b[i][j];
+        var aArray = a.Array;
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: bArray, result: resultArray);
+        for (var i = 0; i < resultArray.Length; i++)
+            for (var j = 0; j < resultArray[i].Length; j++)
+                resultArray[i][j] = aArray[i][j] / bArray[i][j];
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -219,18 +224,21 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[,] Divide(this double[,] a, double[,] b, double[,] result)
+    public static double[,] Divide(this Matrix<double> a, Matrix<double> b, Matrix<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        if (a.Length == 0)
-            return result;
-        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
-        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var aArray = a.Array;
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: bArray, result: resultArray);
+        if (aArray.Length == 0)
+            return resultArray;
+        var spanA = MemoryMarshal.CreateSpan(ref aArray[0, 0], aArray.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref bArray[0, 0], bArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var i = 0; i < spanA.Length; i++)
             spanR[i] = spanA[i] / spanB[i];
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -242,13 +250,15 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[][] Divide(this double[][] a, double b, double[][] result)
+    public static double[][] Divide(this Jagged<double> a, double b, Jagged<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        for (var i = 0; i < a.Length; i++)
-            for (var j = 0; j < a[i].Length; j++)
-                result[i][j] = a[i][j] / b;
-        return result;
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: b, result: resultArray);
+        for (var i = 0; i < aArray.Length; i++)
+            for (var j = 0; j < aArray[i].Length; j++)
+                resultArray[i][j] = aArray[i][j] / b;
+        return resultArray;
     }
 
     /// <summary>
@@ -260,13 +270,15 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[][] Divide(this double a, double[][] b, double[][] result)
+    public static double[][] Divide(this double a, Jagged<double> b, Jagged<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        for (var i = 0; i < b.Length; i++)
-            for (var j = 0; j < b[i].Length; j++)
-                result[i][j] = a / b[i][j];
-        return result;
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: a, b: bArray, result: resultArray);
+        for (var i = 0; i < bArray.Length; i++)
+            for (var j = 0; j < bArray[i].Length; j++)
+                resultArray[i][j] = a / bArray[i][j];
+        return resultArray;
     }
 
     /// <summary>
@@ -278,17 +290,19 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[,] Divide(this double a, double[,] b, double[,] result)
+    public static double[,] Divide(this double a, Matrix<double> b, Matrix<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        if (b.Length == 0)
-            return result;
-        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: a, b: bArray, result: resultArray);
+        if (bArray.Length == 0)
+            return resultArray;
+        var spanB = MemoryMarshal.CreateSpan(ref bArray[0, 0], bArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanB.Length; j++)
             spanR[j] = a / spanB[j];
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -300,17 +314,19 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[,] Divide(this double[,] a, double b, double[,] result)
+    public static double[,] Divide(this Matrix<double> a, double b, Matrix<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        if (a.Length == 0)
-            return result;
-        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: b, result: resultArray);
+        if (aArray.Length == 0)
+            return resultArray;
+        var spanA = MemoryMarshal.CreateSpan(ref aArray[0, 0], aArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var i = 0; i < spanA.Length; i++)
             spanR[i] = spanA[i] / b;
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -381,7 +397,7 @@ public static partial class Elementwise
     /// <param name="result">The matrix where the result should be stored. Pass the same
     ///   matrix as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[,] Divide(this double[] a, double[,] b, VectorType dimension, double[,] result)
+    public static double[,] Divide(this double[] a, Matrix<double> b, VectorType dimension, Matrix<double> result)
     {
         return Divide(b, a, dimension, result);
     }
@@ -403,7 +419,7 @@ public static partial class Elementwise
     /// <param name="result">The matrix where the result should be stored. Pass the same
     ///   matrix as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[][] Divide(this double[] a, double[][] b, VectorType dimension, double[][] result)
+    public static double[][] Divide(this double[] a, Jagged<double> b, VectorType dimension, Jagged<double> result)
     {
         return Divide(b, a, dimension, result);
     }
@@ -425,26 +441,28 @@ public static partial class Elementwise
     /// <param name="result">The matrix where the result should be stored. Pass the same
     ///   matrix as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[,] Divide(this double[,] a, double[] b, VectorType dimension, double[,] result)
+    public static double[,] Divide(this Matrix<double> a, double[] b, VectorType dimension, Matrix<double> result)
     {
-        check<double, double, double>(d: dimension, a: a, b: b, result: result);
-        int rows = a.GetLength(0);
-        int cols = a.GetLength(1);
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(d: dimension, a: aArray, b: b, result: resultArray);
+        int rows = aArray.GetLength(0);
+        int cols = aArray.GetLength(1);
 
         if (dimension == 0)
         {
             for (var i = 0; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i, j] = a[i, j] / b[j];
+                    resultArray[i, j] = aArray[i, j] / b[j];
         }
         else
         {
             for (var i = 0; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i, j] = a[i, j] / b[i];
+                    resultArray[i, j] = aArray[i, j] / b[i];
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -464,23 +482,25 @@ public static partial class Elementwise
     /// <param name="result">The matrix where the result should be stored. Pass the same
     ///   matrix as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[][] Divide(this double[][] a, double[] b, VectorType dimension, double[][] result)
+    public static double[][] Divide(this Jagged<double> a, double[] b, VectorType dimension, Jagged<double> result)
     {
-        check<double, double, double>(d: dimension, a: a, b: b, result: result);
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(d: dimension, a: aArray, b: b, result: resultArray);
         if (dimension == 0)
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
-                    result[i][j] = a[i][j] / b[j];
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
+                    resultArray[i][j] = aArray[i][j] / b[j];
         }
         else
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
-                    result[i][j] = a[i][j] / b[i];
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
+                    resultArray[i][j] = aArray[i][j] / b[i];
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -490,9 +510,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[,] DivideByDiagonal(this double a, double[,] b)
+    public static double[,] DivideByDiagonal(this double a, Matrix<double> b)
     {
-        return DivideByDiagonal(a, b, b.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Matrix<double>(b.Array.MemberwiseClone()));
     }
 
     /// <summary>
@@ -502,9 +522,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[][] DivideByDiagonal(this double a, double[][] b)
+    public static double[][] DivideByDiagonal(this double a, Jagged<double> b)
     {
-        return DivideByDiagonal(a, b, b.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Jagged<double>(b.Array.MemberwiseClone()));
     }
 
     /// <summary>
@@ -514,9 +534,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[,] DivideByDiagonal(this double[] a, double[,] b)
+    public static double[,] DivideByDiagonal(this double[] a, Matrix<double> b)
     {
-        return DivideByDiagonal(a, b, b.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Matrix<double>(b.Array.MemberwiseClone()));
     }
 
     /// <summary>
@@ -526,9 +546,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[][] DivideByDiagonal(this double[] a, double[][] b)
+    public static double[][] DivideByDiagonal(this double[] a, Jagged<double> b)
     {
-        return DivideByDiagonal(a, b, b.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Jagged<double>(b.Array.MemberwiseClone()));
     }
 
     /// <summary>
@@ -538,9 +558,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[,] DivideByDiagonal(this double[,] a, double b)
+    public static double[,] DivideByDiagonal(this Matrix<double> a, double b)
     {
-        return DivideByDiagonal(a, b, a.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Matrix<double>(a.Array.MemberwiseClone()));
     }
 
     /// <summary>
@@ -550,9 +570,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[][] DivideByDiagonal(this double[][] a, double b)
+    public static double[][] DivideByDiagonal(this Jagged<double> a, double b)
     {
-        return DivideByDiagonal(a, b, a.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Jagged<double>(a.Array.MemberwiseClone()));
     }
 
     /// <summary>
@@ -562,9 +582,9 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[,] DivideByDiagonal(this double[,] a, double[] b)
+    public static double[,] DivideByDiagonal(this Matrix<double> a, double[] b)
     {
-        return DivideByDiagonal(a, b, a.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Matrix<double>(a.Array.MemberwiseClone()));
     }
 
     /// <summary>
@@ -574,81 +594,97 @@ public static partial class Elementwise
     /// <param name="a">The scalar <c>a</c>.</param>
     /// <param name="b">The matrix <c>B</c>.</param>
     /// 
-    public static double[][] DivideByDiagonal(this double[][] a, double[] b)
+    public static double[][] DivideByDiagonal(this Jagged<double> a, double[] b)
     {
-        return DivideByDiagonal(a, b, a.MemberwiseClone());
+        return DivideByDiagonal(a, b, new Jagged<double>(a.Array.MemberwiseClone()));
     }
 
-    public static double[,] DivideByDiagonal(this double a, double[,] b, double[,] result)
+    public static double[,] DivideByDiagonal(this double a, Matrix<double> b, Matrix<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        int rows = b.GetLength(0);
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: a, b: bArray, result: resultArray);
+        int rows = bArray.GetLength(0);
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = a / b[j, j];
-        return result;
+            resultArray[j, j] = a / bArray[j, j];
+        return resultArray;
     }
 
-    public static double[][] DivideByDiagonal(this double a, double[][] b, double[][] result)
+    public static double[][] DivideByDiagonal(this double a, Jagged<double> b, Jagged<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        for (var i = 0; i < b.Length; i++)
-            result[i][i] = a / b[i][i];
-        return result;
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: a, b: bArray, result: resultArray);
+        for (var i = 0; i < bArray.Length; i++)
+            resultArray[i][i] = a / bArray[i][i];
+        return resultArray;
     }
 
-    public static double[,] DivideByDiagonal(this double[] a, double[,] b, double[,] result)
+    public static double[,] DivideByDiagonal(this double[] a, Matrix<double> b, Matrix<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        int rows = b.GetLength(0);
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: a, b: bArray, result: resultArray);
+        int rows = bArray.GetLength(0);
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = a[j] / b[j, j];
-        return result;
+            resultArray[j, j] = a[j] / bArray[j, j];
+        return resultArray;
     }
 
-    public static double[][] DivideByDiagonal(this double[] a, double[][] b, double[][] result)
+    public static double[][] DivideByDiagonal(this double[] a, Jagged<double> b, Jagged<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        for (var i = 0; i < b.Length; i++)
-            result[i][i] = a[i] / b[i][i];
-        return result;
+        var bArray = b.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: a, b: bArray, result: resultArray);
+        for (var i = 0; i < bArray.Length; i++)
+            resultArray[i][i] = a[i] / bArray[i][i];
+        return resultArray;
     }
 
-    public static double[,] DivideByDiagonal(this double[,] a, double b, double[,] result)
+    public static double[,] DivideByDiagonal(this Matrix<double> a, double b, Matrix<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        int rows = a.GetLength(0);
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: b, result: resultArray);
+        int rows = aArray.GetLength(0);
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = a[j, j] / b;
-        return result;
+            resultArray[j, j] = aArray[j, j] / b;
+        return resultArray;
     }
 
-    public static double[][] DivideByDiagonal(this double[][] a, double b, double[][] result)
+    public static double[][] DivideByDiagonal(this Jagged<double> a, double b, Jagged<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
-        for (var i = 0; i < a.Length; i++)
-            result[i][i] = a[i][i] / b;
-        return result;
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: b, result: resultArray);
+        for (var i = 0; i < aArray.Length; i++)
+            resultArray[i][i] = aArray[i][i] / b;
+        return resultArray;
     }
 
-    public static double[,] DivideByDiagonal(this double[,] a, double[] b, double[,] result)
+    public static double[,] DivideByDiagonal(this Matrix<double> a, double[] b, Matrix<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: b, result: resultArray);
         int rows = b.Length;
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = a[j, j] / b[j];
-        return result;
+            resultArray[j, j] = aArray[j, j] / b[j];
+        return resultArray;
     }
 
-    public static double[][] DivideByDiagonal(this double[][] a, double[] b, double[][] result)
+    public static double[][] DivideByDiagonal(this Jagged<double> a, double[] b, Jagged<double> result)
     {
-        check<double, double, double>(a: a, b: b, result: result);
+        var aArray = a.Array;
+        var resultArray = result.Array;
+        check<double, double, double>(a: aArray, b: b, result: resultArray);
         for (var i = 0; i < b.Length; i++)
-            result[i][i] = a[i][i] / b[i];
-        return result;
+            resultArray[i][i] = aArray[i][i] / b[i];
+        return resultArray;
     }
 
 }

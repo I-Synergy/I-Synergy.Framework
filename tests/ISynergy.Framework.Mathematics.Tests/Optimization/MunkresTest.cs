@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -410,7 +411,7 @@ public class MunkresTest
         ];
 
         double[] minRow = Matrix.Min(costMatrix, dimension: 1);
-        double[] minCol = Matrix.Min(costMatrix.Subtract(minRow, dimension: 0), dimension: 0);
+        double[] minCol = Matrix.Min(new Jagged<double>(costMatrix).Subtract(minRow, dimension: 0), dimension: 0);
         double[][] min;
         bool[][] M = Munkres.findZeros(costMatrix, minRow, minCol, out min);
 

@@ -367,7 +367,7 @@ public partial class MatrixTest
         };
 
 
-        double[,] actual = Elementwise.Divide(a, b, (VectorType)dimension);
+        double[,] actual = Elementwise.Divide(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
 
         b = [1, 2, 3];
@@ -378,7 +378,7 @@ public partial class MatrixTest
             { 4, 2.5, 2},
         };
 
-        actual = Elementwise.Divide(a, b, (VectorType)dimension);
+        actual = Elementwise.Divide(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 
@@ -397,7 +397,7 @@ public partial class MatrixTest
             { -2/ 1.2, -2/-0.6, -2/ 0.8 },
         };
 
-        double[,] actual = Elementwise.Divide(scalar, matrix);
+        double[,] actual = Elementwise.Divide(scalar, new Matrix<double>(matrix));
 
         Assert.AreSequenceEqual(expected, actual);
     }
@@ -423,7 +423,7 @@ public partial class MatrixTest
             { 8, 25, 18 },
         };
 
-        double[,] actual = Elementwise.Multiply(a, b);
+        double[,] actual = Elementwise.Multiply(new Matrix<double>(a), new Matrix<double>(b));
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 
@@ -468,7 +468,7 @@ public partial class MatrixTest
             {  4,  0 },
         };
 
-        double[,] actual = Elementwise.Multiply(a, b);
+        double[,] actual = Elementwise.Multiply(new Matrix<double>(a), new Matrix<double>(b));
         Assert.AreSequenceEqual(expected, actual);
     }
 
@@ -543,7 +543,7 @@ public partial class MatrixTest
         double[,] actual = Elementwise.AddToDiagonal(a, 1.0);
         Assert.AreSequenceEqual(expected, actual);
 
-        actual = Elementwise.SubtractFromDiagonal(actual, 1.0);
+        actual = Elementwise.SubtractFromDiagonal(new Matrix<double>(actual), 1.0);
         Assert.IsTrue(actual.IsEqual(a));
     }
 
@@ -568,7 +568,7 @@ public partial class MatrixTest
             for (int j = 0; j < actual.GetLength()[1]; j++)
                 Assert.AreEqual(expected[i][j], actual[i][j]);
 
-        actual = Elementwise.SubtractFromDiagonal(actual, 1.0);
+        actual = Elementwise.SubtractFromDiagonal(new Jagged<double>(actual), 1.0);
 
         for (int i = 0; i < actual.GetLength()[0]; i++)
             for (int j = 0; j < actual.GetLength()[1]; j++)
@@ -592,7 +592,7 @@ public partial class MatrixTest
             { 0, -4, 2 },
         };
 
-        double[,] actual = Elementwise.Multiply(a, b, (VectorType)dimension);
+        double[,] actual = Elementwise.Multiply(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.AreSequenceEqual(expected, actual);
 
 
@@ -605,7 +605,7 @@ public partial class MatrixTest
             { 0, -2, 2 },
         };
 
-        actual = Elementwise.Multiply(a, b, (VectorType)dimension);
+        actual = Elementwise.Multiply(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.AreSequenceEqual(expected, actual);
     }
 
@@ -630,7 +630,7 @@ public partial class MatrixTest
             { 10, -2, 0 },
         };
 
-        double[,] actual = Elementwise.Subtract(a, b);
+        double[,] actual = Elementwise.Subtract(new Matrix<double>(a), new Matrix<double>(b));
         Assert.AreSequenceEqual(expected, actual);
     }
 
@@ -698,7 +698,7 @@ public partial class MatrixTest
             { -0.1, -0.6, -0.0 },
         };
 
-        double[,] actual = Elementwise.Subtract(a, b);
+        double[,] actual = Elementwise.Subtract(a, new Matrix<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual, 1e-6));
     }

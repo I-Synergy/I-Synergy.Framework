@@ -484,7 +484,7 @@ public class JaggedQrDecompositionTest
         double[][] vr = Jagged.RowVector(v);
         double[][] vc = Jagged.ColumnVector(v);
         double[][] t = Matrix.Dot(new Jagged<double>(vc), new Jagged<double>(vr));
-        H.Subtract((2 / v.Dot(v)).Multiply(t), result: H);
+        new Jagged<double>(H).Subtract(new Jagged<double>((2 / v.Dot(v)).Multiply(new Jagged<double>(t))), result: new Jagged<double>(H));
         return H;
     }
 

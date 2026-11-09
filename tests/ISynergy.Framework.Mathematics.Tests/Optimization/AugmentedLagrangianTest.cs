@@ -704,8 +704,8 @@ public class AugmentedLagrangianTest
         solverTest.MaxEvaluations = 0;
         bool didMinimise = solverTest.Minimize();
 
-        double[,] errorConstraintRelative = new Matrix<double>(XSolve.Subtract(solverTest.Solution, 1)).ElementwiseDivide(new Matrix<double>(XSolve)); // relative error between .Solve and .Minimize
-        double[,] errorConstraintAbsolute = XSolve.Subtract(solverTest.Solution, 1); // absolute error between .Solve and .Minimize
+        double[,] errorConstraintRelative = new Matrix<double>(new Matrix<double>(XSolve).Subtract(solverTest.Solution, 1)).ElementwiseDivide(new Matrix<double>(XSolve)); // relative error between .Solve and .Minimize
+        double[,] errorConstraintAbsolute = new Matrix<double>(XSolve).Subtract(solverTest.Solution, 1); // absolute error between .Solve and .Minimize
 
         double[] errorConstraintsTest = new double[nConstraintsTest];
         for (int i = 0; i < nConstraintsTest; i++)

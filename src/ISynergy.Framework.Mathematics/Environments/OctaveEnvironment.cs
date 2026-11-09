@@ -390,7 +390,7 @@ public abstract class OctaveEnvironment
         /// 
         public static Mat operator *(Mat a, double x)
         {
-            return a.matrix.Multiply(x);
+            return new Matrix<double>(a.matrix).Multiply(x);
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ public abstract class OctaveEnvironment
         /// 
         public static Mat operator *(double x, Mat a)
         {
-            return a.matrix.Multiply(x);
+            return new Matrix<double>(a.matrix).Multiply(x);
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ public abstract class OctaveEnvironment
         /// 
         public static Mat operator -(Mat a, Mat b)
         {
-            return a.matrix.Subtract(b.matrix);
+            return new Matrix<double>(a.matrix).Subtract(new Matrix<double>(b.matrix));
         }
 
         /// <summary>
@@ -444,7 +444,7 @@ public abstract class OctaveEnvironment
         /// 
         public static Mat operator -(Mat a, double x)
         {
-            return a.matrix.Subtract(x);
+            return new Matrix<double>(a.matrix).Subtract(x);
         }
 
         /// <summary>
@@ -453,7 +453,7 @@ public abstract class OctaveEnvironment
         /// 
         public static Mat operator -(double x, Mat a)
         {
-            return a.matrix.Subtract(x);
+            return new Matrix<double>(a.matrix).Subtract(x);
         }
 
         /// <summary>

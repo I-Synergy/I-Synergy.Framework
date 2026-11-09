@@ -193,7 +193,7 @@ public sealed class EigenvalueDecomposition : ICloneable
     /// </summary>
     public double[,] Reverse()
     {
-        return Matrix.DotWithDiagonal(new Matrix<double>(Eigenvectors), RealEigenvalues).Divide(Eigenvectors);
+        return Matrix.DotWithDiagonal(new Matrix<double>(Eigenvectors), RealEigenvalues).Divide(new Matrix<double>(Eigenvectors));
     }
     #region Private methods
 
