@@ -4,6 +4,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
 /// <summary>
@@ -15,7 +16,7 @@ public class GramSchmidtOrthogonalization
     ///     Initializes a new instance of the <see cref="GramSchmidtOrthogonalization" /> class.
     /// </summary>
     /// <param name="value">The matrix <c>A</c> to be decomposed.</param>
-    public GramSchmidtOrthogonalization(double[,] value)
+    public GramSchmidtOrthogonalization(Matrix<double> value)
         : this(value, true)
     {
     }
@@ -28,12 +29,14 @@ public class GramSchmidtOrthogonalization
     ///     True to use modified Gram-Schmidt; false
     ///     otherwise. Default is true (and is the recommended setup).
     /// </param>
-    public GramSchmidtOrthogonalization(double[,] value, bool modified)
+    public GramSchmidtOrthogonalization(Matrix<double> value, bool modified)
     {
-        if (value.GetLength(0) != value.GetLength(1))
+        var matrix = value.Array;
+
+        if (matrix.GetLength(0) != matrix.GetLength(1))
             throw new DimensionMismatchException(nameof(value), "Matrix must be square.");
 
-        var size = value.GetLength(0);
+        var size = matrix.GetLength(0);
 
         OrthogonalFactor = new double[size, size];
         UpperTriangularFactor = new double[size, size];
@@ -41,7 +44,7 @@ public class GramSchmidtOrthogonalization
         if (modified)
             for (var j = 0; j < size; j++)
             {
-                var v = value.GetColumn(j);
+                var v = matrix.GetColumn(j);
 
                 for (var i = 0; i < j; i++)
                 {
@@ -57,8 +60,8 @@ public class GramSchmidtOrthogonalization
         else
             for (var j = 0; j < size; j++)
             {
-                var v = value.GetColumn(j);
-                var a = value.GetColumn(j);
+                var v = matrix.GetColumn(j);
+                var a = matrix.GetColumn(j);
 
                 for (var i = 0; i < j; i++)
                 {

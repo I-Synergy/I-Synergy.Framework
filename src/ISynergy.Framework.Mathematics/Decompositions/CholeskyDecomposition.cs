@@ -6,6 +6,7 @@ using ISynergy.Framework.Mathematics.Vectors;
 
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
 /// <summary>
@@ -630,11 +631,11 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     ///     an already computed left triangular matrix <c>L</c>.
     /// </summary>
     /// <param name="leftTriangular">The left triangular matrix from a Cholesky decomposition.</param>
-    public static CholeskyDecomposition FromLeftTriangularMatrix(double[,] leftTriangular)
+    public static CholeskyDecomposition FromLeftTriangularMatrix(Matrix<double> leftTriangular)
     {
         var chol = new CholeskyDecomposition();
-        chol.n = leftTriangular.Rows();
-        chol.L = leftTriangular;
+        chol.n = leftTriangular.Rows;
+        chol.L = leftTriangular.Array;
         chol.IsPositiveDefinite = true;
         chol.robust = false;
         chol.Diagonal = Vector.Ones<double>(chol.n);

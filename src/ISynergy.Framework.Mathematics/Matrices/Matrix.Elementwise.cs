@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
@@ -9,9 +10,9 @@ public static partial class Matrix
     /// <summary>
     ///     Elementwise multiply operation.
     /// </summary>
-    public static double[,] ElementwiseMultiply(double[,] a, double[,] b)
+    public static double[,] ElementwiseMultiply(Matrix<double> a, Matrix<double> b)
     {
-        return Elementwise.Multiply(a, b);
+        return Elementwise.Multiply(a.Array, b.Array);
     }
 
     /// <summary>

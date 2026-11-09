@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +24,7 @@ public class NonnegativeMatrixFactorizationTest
         };
 
 
-        NonnegativeMatrixFactorization nmf = new(expected, 3);
+        NonnegativeMatrixFactorization nmf = new(new Matrix<double>(expected), 3);
 
         double[,] H = nmf.RightNonnegativeFactors;
         double[,] W = nmf.LeftNonnegativeFactors;
@@ -61,7 +62,7 @@ public class NonnegativeMatrixFactorizationTest
 
         double[,] input = data.Reshape(10, 10);
 
-        NonnegativeMatrixFactorization nmf = new(input, 2);
+        NonnegativeMatrixFactorization nmf = new(new Matrix<double>(input), 2);
 
         double[,] H = nmf.RightNonnegativeFactors;
         double[,] W = nmf.LeftNonnegativeFactors;

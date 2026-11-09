@@ -10,9 +10,10 @@ public readonly struct Jagged<T>
     /// <summary>Initializes a new jagged matrix over <paramref name="array"/>.</summary>
     /// <param name="array">The array to wrap. It is not copied.</param>
     /// <exception cref="ArgumentNullException"><paramref name="array"/> is <c>null</c>.</exception>
-    public Jagged(T[][] array)
+    /// <exception cref="ArgumentException"><paramref name="array"/> is not a <c>T[][]</c>.</exception>
+    public Jagged(System.Array array)
     {
-        Array = array ?? throw new ArgumentNullException(nameof(array));
+        Array = (T[][])(array ?? throw new ArgumentNullException(nameof(array)));
     }
 
     /// <summary>Gets the wrapped array.</summary>

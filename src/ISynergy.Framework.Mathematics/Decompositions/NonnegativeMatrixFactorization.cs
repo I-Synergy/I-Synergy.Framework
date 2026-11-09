@@ -2,6 +2,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
 /// <summary>
@@ -74,7 +75,7 @@ public class NonnegativeMatrixFactorization
     /// <param name="value">The input data matrix (must be positive).</param>
     /// <param name="r">The reduced dimension.</param>
     /// 
-    public NonnegativeMatrixFactorization(double[,] value, int r)
+    public NonnegativeMatrixFactorization(Matrix<double> value, int r)
         : this(value, r, 100) { }
 
     /// <summary>
@@ -85,11 +86,11 @@ public class NonnegativeMatrixFactorization
     /// <param name="r">The reduced dimension.</param>
     /// <param name="maxiter">The number of iterations to perform.</param>
     /// 
-    public NonnegativeMatrixFactorization(double[,] value, int r, int maxiter)
+    public NonnegativeMatrixFactorization(Matrix<double> value, int r, int maxiter)
     {
-        this.X = value;
-        this.n = value.GetLength(0);
-        this.m = value.GetLength(1);
+        this.X = value.Array;
+        this.n = value.Rows;
+        this.m = value.Columns;
         this.r = r;
 
         compute(maxiter);

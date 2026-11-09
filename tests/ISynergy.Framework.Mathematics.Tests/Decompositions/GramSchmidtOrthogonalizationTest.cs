@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -32,11 +33,11 @@ public class GramSchmidtTest
            {  3,  1 },
         };
 
-        SingularValueDecomposition svd = new(value);
+        SingularValueDecomposition svd = new(new Matrix<double>(value));
         Assert.AreEqual(2, svd.Rank);
 
 
-        GramSchmidtOrthogonalization target = new(value);
+        GramSchmidtOrthogonalization target = new(new Matrix<double>(value));
 
         double[,] Q = target.OrthogonalFactor;
         double[,] R = target.UpperTriangularFactor;
