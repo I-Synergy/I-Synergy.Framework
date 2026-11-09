@@ -2,13 +2,6 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S108 // empty blocks are required as goto targets in EISPACK port
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -693,7 +686,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
 
         L200:
             s = Math.Abs(a1) + Math.Abs(a2) + Math.Abs(a3);
-            if (s == 0.0) goto L260;
+            if (s == 0.0) continue;
             u1 = a1 / s;
             u2 = a2 / s;
             u3 = a3 / s;
@@ -763,7 +756,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             // Zero b(k+1,k)
             L240:
             s = Math.Abs(b[k1, k1]) + Math.Abs(b[k1, k]);
-            if (s == 0.0) goto L260;
+            if (s == 0.0) continue;
             u1 = b[k1, k1] / s;
             u2 = b[k1, k] / s;
             r = Special.Sign(Math.Sqrt(u1 * u1 + u2 * u2), u1);
@@ -792,7 +785,6 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
                     z[i, k] += t * v2;
                 }
 
-            L260: { } // intentional empty block - goto target
         }
 
         goto L70; // End QZ step
@@ -858,7 +850,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             if (b[en, en] < 0.0) alfr[en] = -alfr[en];
             beta[en] = Math.Abs(b[en, en]);
             alfi[en] = 0.0;
-            goto L510;
+            continue;
 
         // 2-by-2 block
         L420:
@@ -1100,7 +1092,6 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             L505:
             isw = 3 - isw;
 
-        L510: { } // intentional empty block - goto target
         }
 
         b[n - 1, 0] = epsb;
@@ -1146,7 +1137,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             // Real vector
             m = en;
             b[en, en] = 1.0;
-            if (na == -1) goto L800;
+            if (na == -1) continue;
             alfm = alfr[m];
             betm = beta[m];
 
@@ -1179,7 +1170,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
                 if (w == 0.0)
                     t = epsb;
                 b[i, en] = -r / t;
-                goto L700;
+                continue;
 
             // Real 2-by-2 block
             L640:
@@ -1198,11 +1189,10 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             L690:
                 isw = 3 - isw;
 
-            L700: { } // intentional empty block - goto target
             }
 
             // End real vector
-            goto L800;
+            continue;
 
         // Complex vector
         L710:
@@ -1245,7 +1235,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
                 r = ra;
                 s = sa;
                 isw = 2;
-                goto L790;
+                continue;
 
             L770:
                 m = i;
@@ -1315,14 +1305,12 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
                 b[i, na] = t1;
                 b[i, en] = t2;
 
-            L790: { } // intentional empty block - goto target
             }
 
         // End complex vector
         L795:
             isw = 3 - isw;
 
-        L800: { } // intentional empty block - goto target
         }
 
         // End back substitution. Transform to original coordinate system.
@@ -1354,7 +1342,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             for (i = 0; i < n; ++i)
                 z[i, j] /= d;
 
-            goto L950;
+            continue;
 
         L920:
             for (i = 0; i < n; ++i)
@@ -1381,7 +1369,6 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
         L945:
             isw = 3 - isw;
 
-        L950: { } // intentional empty block - goto target
         }
 
     }

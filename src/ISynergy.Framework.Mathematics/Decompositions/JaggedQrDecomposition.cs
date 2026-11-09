@@ -3,12 +3,6 @@ using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1192, S3427 // algorithm comments and repeated strings are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -248,7 +242,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
                     X[i][j] += s * qr[i][k];
             }
 
-        // Solve R*X = Y;
+        // Solve the triangular system R * X = Y
         for (var k = p - 1; k >= 0; k--)
         {
             for (var j = 0; j < X[k].Length; j++)
@@ -292,7 +286,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
                 X[i] += s * qr[i][k];
         }
 
-        // Solve R*X = Y;
+        // Solve the triangular system R * X = Y
         for (var k = p - 1; k >= 0; k--)
         {
             X[k] /= Diagonal[k];
@@ -378,7 +372,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
                     X[i][j] += s * qr[i][k];
             }
 
-        // Solve R*X = Y;
+        // Solve the triangular system R * X = Y
         for (var k = p - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)

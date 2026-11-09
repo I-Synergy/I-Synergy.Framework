@@ -4,12 +4,6 @@ using ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125 // commented-out Lagrangian terms are algorithm documentation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -299,7 +293,9 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
     {
         // Compute
         //
-        //   Phi(x) = f(x) + rho/2 sum(c_i(x)²) - sum(lambda_i * c_i(x))
+        //   The augmented Lagrangian is the objective value f(x), plus rho over two
+        //   times the sum of the squared constraint values c_i(x), minus the sum of the
+        //   multipliers lambda_i times the constraint values c_i(x).
         //
 
         double phi = Function(x);
@@ -311,7 +307,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
             double actual = equalityConstraints[i].Function(x);
             double c = actual - equalityConstraints[i].Value;
 
-            phi += rho2 * c * c; // - lambda[i] * c;
+            phi += rho2 * c * c;
         }
 
         // For each "lesser than" inequality constraint
@@ -321,7 +317,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
             double c = actual - lesserThanConstraints[i].Value;
 
             if (c > 0)
-                phi += rho2 * c * c; // - mu[i] * c;
+                phi += rho2 * c * c;
         }
 
         // For each "greater than" inequality constraint
@@ -331,7 +327,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
             double c = greaterThanConstraints[i].Value - actual;
 
             if (c > 0)
-                phi += rho2 * c * c; // - nu[i] * c;
+                phi += rho2 * c * c;
         }
 
         return phi;
@@ -357,7 +353,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
             double[] cg = equalityConstraints[i].Gradient(x);
 
             for (var j = 0; j < cg.Length; j++)
-                g[j] += rho * c * cg[j]; // - lambda[i] * cg[j];
+                g[j] += rho * c * cg[j];
         }
 
         // For each "lesser than" inequality constraint
@@ -371,7 +367,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
             {
                 // Constraint is being violated
                 for (var j = 0; j < cg.Length; j++)
-                    g[j] += rho * c * cg[j]; //- mu[i] * cg[j];
+                    g[j] += rho * c * cg[j];
             }
         }
 
@@ -386,7 +382,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
             {
                 // Constraint is being violated
                 for (var j = 0; j < cg.Length; j++)
-                    g[j] += rho * c * -cg[j]; //- nu[i] * -cg[j];
+                    g[j] += rho * c * -cg[j];
             }
         }
 

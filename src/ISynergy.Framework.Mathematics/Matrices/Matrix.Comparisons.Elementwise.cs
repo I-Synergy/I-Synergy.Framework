@@ -1,11 +1,5 @@
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1751, S3626, S2234 // loop invariant, redundant continue, and argument order are intentional in generated elementwise code
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -253,7 +247,7 @@ public static partial class Elementwise
                 {
                     spanR[i] = false; continue;
                 }
-                spanR[i] = (A == B); continue;
+                spanR[i] = (A == B);
             }
         }
 
@@ -1034,7 +1028,7 @@ public static partial class Elementwise
     /// 
     public static bool[] Equals(Double a, Double[] b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(b, a, rtol, atol);
+        return Equals(a: b, b: a, atol: rtol, rtol: atol);
     }
 
     /// <summary>
@@ -1043,7 +1037,7 @@ public static partial class Elementwise
     ///
     public static bool[,] Equals(Double a, Double[,] b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(b, a, rtol, atol);
+        return Equals(a: b, b: a, atol: rtol, rtol: atol);
     }
 
     /// <summary>
@@ -1052,6 +1046,6 @@ public static partial class Elementwise
     ///
     public static bool[][] Equals(Double a, Double[][] b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(b, a, rtol, atol);
+        return Equals(a: b, b: a, atol: rtol, rtol: atol);
     }
 }

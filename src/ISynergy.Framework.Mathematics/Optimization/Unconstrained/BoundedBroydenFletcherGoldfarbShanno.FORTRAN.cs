@@ -36,14 +36,6 @@
 
 using ISynergy.Framework.Mathematics.Common;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1110 // parentheses in ported FORTRAN algorithms are intentional
-#pragma warning disable S125, S4136, S1192, S1854, S1764, S107, S3626, S2583, S2589, S101, S1116, S3267, S2234 // FORTRAN port: commented code, overload ordering, duplicates, and naming are intentional
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
@@ -142,7 +134,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     // this variable is always free
                     iwhere[(i - (1)) + _iwhere_offset] = -1;
                     // 
-                    // otherwise set x(i)=mid(x(i), u(i), l(i)).
+                    // Otherwise, each component is set to the midpoint of its bounds.
                 }
                 else
                 {
@@ -297,8 +289,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     //
     L20:
 
-        b[(1 - (1)) + _b_offset] = (b[(1 - (1)) + _b_offset]
-            / t[(1 - (1)) + (1 - (1)) * (ldt) + _t_offset]);
+        b[0 + _b_offset] = (b[0 + _b_offset]
+            / t[0 + 0 * (ldt) + _t_offset]);
 
         if ((n < 2))
         {
@@ -336,8 +328,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 j = ((n - jj) + 1);
                 temp = (-(b[((j + 1) - (1)) + _b_offset]));
                 daxpy(j, temp,
-                    t, (1 - (1)) + ((j + 1) - (1)) * (ldt) + _t_offset, 1,
-                    b, (1 - (1)) + _b_offset, 1);
+                    t, 0 + ((j + 1) - (1)) * (ldt) + _t_offset, 1,
+                    b, 0 + _b_offset, 1);
 
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset]
                     / t[(j - (1)) + (j - (1)) * (ldt) + _t_offset]);
@@ -375,8 +367,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // solve trans(t)*x=b for t upper triangular.
     // 
     L110:
-        b[(1 - (1)) + _b_offset] = (b[(1 - (1)) + _b_offset]
-            / t[(1 - (1)) + (1 - (1)) * (ldt) + _t_offset]);
+        b[0 + _b_offset] = (b[0 + _b_offset]
+            / t[0 + 0 * (ldt) + _t_offset]);
 
         if ((n < 2))
         {
@@ -387,8 +379,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             for (j = 2; j <= n; j++)
             {
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset]
-                    - ddot((j - 1), t, (1 - (1)) + (j - (1)) * (ldt) + _t_offset,
-                    1, b, (1 - (1)) + _b_offset, 1));
+                    - ddot((j - 1), t, 0 + (j - (1)) * (ldt) + _t_offset,
+                    1, b, 0 + _b_offset, 1));
 
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset]
                     / t[(j - (1)) + (j - (1)) * (ldt) + _t_offset]);
@@ -533,8 +525,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             for (i = 1; i <= col; i++)
             {
-                p[(i - (1)) + _p_offset] = (-((p[(i - (1)) + _p_offset]
-                    / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]))));
+                p[(i - (1)) + _p_offset] = -(p[(i - (1)) + _p_offset]
+                    / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
             }
         }
 
@@ -621,7 +613,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // c                 0   if x(i) is free and has bounds, and is moved
     // c                 1   if x(i) is fixed at l(i), and l(i) .ne. u(i)
     // c                 2   if x(i) is fixed at u(i), and u(i) .ne. l(i)
-    // c                 3   if x(i) is always fixed, i.e.,  u(i)=x(i)=l(i)
+    // c                 3   if the component is always fixed, i.e., the value equals both bounds
     // c                 -1  if x(i) is always free, i.e., it has no bounds.
     // c
     // c     t is a double precision working array of dimension n. 
@@ -900,7 +892,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
                         nbreak = (nbreak + 1);
                         iorder[(nbreak - (1)) + _iorder_offset] = i;
-                        t[(nbreak - (1)) + _t_offset] = (tl / ((-(neggi))));
+                        t[(nbreak - (1)) + _t_offset] = tl / -neggi;
                         if (((nbreak == 1) || (t[(nbreak - (1)) + _t_offset] < bkmin)))
                         {
                             bkmin = t[(nbreak - (1)) + _t_offset];
@@ -968,12 +960,16 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         // c     Initialize derivative f2.
         // 
-        f2 = (-((theta * f1)));
+        f2 = -(theta * f1);
         f2_org = f2;
         if ((col > 0))
         {
+            double[] bmvInput = p;
+            int bmvInputOffset = _p_offset;
+            double[] bmvOutput = v;
+            int bmvOutputOffset = _v_offset;
             bmv(m, sy, _sy_offset, wt, _wt_offset,
-                col, p, _p_offset, v, _v_offset, ref info);
+                col, bmvInput, bmvInputOffset, bmvOutput, bmvOutputOffset, ref info);
 
             if ((info != 0))
             {
@@ -983,7 +979,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             f2 = (f2 - BoundedBroydenFletcherGoldfarbShanno.ddot(col2, v, _v_offset, 1, p, _p_offset, 1));
         }
 
-        dtm = (-((f1 / f2)));
+        dtm = -(f1 / f2);
         tsum = 0.0;
         nseg = 1;
 
@@ -1150,20 +1146,18 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if ((nleft > 0))
         {
-            dtm = (-((f1 / f2)));
+            dtm = -(f1 / f2);
             goto L777;
             // to repeat the loop for unsearched intervals. 
         }
 
         if (bnded)
         {
-            f1 = 0.0;
-            f2 = 0.0;
             dtm = 0.0;
         }
         else
         {
-            dtm = (-((f1 / f2)));
+            dtm = -(f1 / f2);
         }
 
     // 
@@ -1274,13 +1268,13 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 for (i = 1; i <= nfree; i++)
                 {
                     k = index[(i - (1)) + _index_offset];
-                    r[(i - (1)) + _r_offset] = ((-((theta * ((z[(k - (1))
-                        + _z_offset] - x[(k - (1)) + _x_offset]))))) - g[(k - (1)) + _g_offset]);
+                    r[(i - (1)) + _r_offset] = -(theta * (z[(k - (1))
+                        + _z_offset] - x[(k - (1)) + _x_offset])) - g[(k - (1)) + _g_offset];
                 }
             }
 
             bmv(m, sy, _sy_offset, wt, _wt_offset, col, wa,
-                (((2 * m) + 1) - (1)) + _wa_offset, wa, (1 - (1)) + _wa_offset, ref info);
+                (((2 * m) + 1) - (1)) + _wa_offset, wa, 0 + _wa_offset, ref info);
 
             if ((info != 0))
             {
@@ -1556,7 +1550,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         // Restore local variables.
         // 
-        if ((isave[(1 - (1)) + _isave_offset] == 1))
+        if ((isave[0 + _isave_offset] == 1))
         {
             brackt = true;
         }
@@ -1565,7 +1559,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             brackt = false;
         }
         stage = isave[(2 - (1)) + _isave_offset];
-        ginit = dsave[(1 - (1)) + _dsave_offset];
+        ginit = dsave[0 + _dsave_offset];
         gtest = dsave[(2 - (1)) + _dsave_offset];
         gx = dsave[(3 - (1)) + _dsave_offset];
         gy = dsave[(4 - (1)) + _dsave_offset];
@@ -1592,7 +1586,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         // c     Test for warnings.
         // 
-        if ((brackt && (((stp <= stmin) || (stp >= stmax)))))
+        if (brackt && (stp <= stmin || stp >= stmax))
         {
             task = "WARNING: ROUNDING ERRORS PREVENT PROGRESS";
         }
@@ -1604,7 +1598,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             task = "WARNING: STP = STPMAX";
         }
-        if (((stp == stpmin) && (((f > ftest) || (g >= gtest)))))
+        if (stp == stpmin && (f > ftest || g >= gtest))
         {
             task = "WARNING: STP = STPMIN";
         }
@@ -1612,7 +1606,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         // c     Test for convergence.
         // 
-        if (((f <= ftest) && (System.Math.Abs(g) <= (gtol * ((-(ginit)))))))
+        if (f <= ftest && System.Math.Abs(g) <= gtol * -ginit)
         {
             task = "CONVERGENCE";
         }
@@ -1672,7 +1666,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             if ((System.Math.Abs((sty - stx)) >= (0.6600000000000000310862446895043831318617 * width1)))
             {
-                stp = (stx + (0.5 * ((sty - stx))));
+                stp = stx + 0.5 * (sty - stx);
             }
             width1 = width;
             width = System.Math.Abs((sty - stx));
@@ -1687,8 +1681,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         }
         else
         {
-            stmin = (stp + (1.100000000000000088817841970012523233891 * ((stp - stx))));
-            stmax = (stp + (4.0 * ((stp - stx))));
+            stmin = stp + 1.100000000000000088817841970012523233891 * (stp - stx);
+            stmax = stp + 4.0 * (stp - stx);
         }
 
         // 
@@ -1700,7 +1694,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // c     If further progress is not possible, let stp be the best
         // c     point obtained during the search.
         // 
-        if (((brackt && (((stp <= stmin) || (stp >= stmax)))) || ((brackt && ((stmax - stmin) <= (xtol * stmax))))))
+        if ((brackt && (stp <= stmin || stp >= stmax)) || (brackt && stmax - stmin <= xtol * stmax))
         {
             stp = stx;
         }
@@ -1716,15 +1710,15 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         if (brackt)
         {
-            isave[(1 - (1)) + _isave_offset] = 1;
+            isave[0 + _isave_offset] = 1;
         }
         else
         {
-            isave[(1 - (1)) + _isave_offset] = 0;
+            isave[0 + _isave_offset] = 0;
         }
 
         isave[(2 - (1)) + _isave_offset] = stage;
-        dsave[(1 - (1)) + _dsave_offset] = ginit;
+        dsave[0 + _dsave_offset] = ginit;
         dsave[(2 - (1)) + _dsave_offset] = gtest;
         dsave[(3 - (1)) + _dsave_offset] = gx;
         dsave[(4 - (1)) + _dsave_offset] = gy;
@@ -1852,7 +1846,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         double stpf = 0.0d;
         double stpq = 0.0d;
         double theta = 0.0d;
-        sgnd = (dp * ((dx / System.Math.Abs(dx))));
+        sgnd = dp * (dx / System.Math.Abs(dx));
 
         // 
         // c     First case: A higher function value. The minimum is bracketed. 
@@ -1863,20 +1857,20 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if ((fp > fx))
         {
-            theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
+            theta = 3.0 * (fx - fp) / (stp - stx) + dx + dp;
 
             s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
 
-            gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dx / s)) * ((dp / s))))));
+            gamma = s * System.Math.Sqrt(System.Math.Pow(theta / s, 2) - (dx / s) * (dp / s));
             if ((stp < stx))
             {
                 gamma = (-(gamma));
             }
-            p = (((gamma - dx)) + theta);
-            q = (((((gamma - dx)) + gamma)) + dp);
+            p = gamma - dx + theta;
+            q = gamma - dx + gamma + dp;
             r = (p / q);
-            stpc = (stx + (r * ((stp - stx))));
-            stpq = (stx + (((((dx / (((((fx - fp)) / ((stp - stx))) + dx)))) / 2.0)) * ((stp - stx))));
+            stpc = stx + r * (stp - stx);
+            stpq = stx + dx / ((fx - fp) / (stp - stx) + dx) / 2.0 * (stp - stx);
 
             if ((System.Math.Abs((stpc - stx)) < System.Math.Abs((stpq - stx))))
             {
@@ -1884,7 +1878,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
             else
             {
-                stpf = (stpc + (((stpq - stpc)) / 2.0));
+                stpf = stpc + (stpq - stpc) / 2.0;
             }
 
             brackt = true;
@@ -1899,20 +1893,20 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         }
         else if ((sgnd < 0.0))
         {
-            theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
+            theta = 3.0 * (fx - fp) / (stp - stx) + dx + dp;
             s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
-            gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dx / s)) * ((dp / s))))));
+            gamma = s * System.Math.Sqrt(System.Math.Pow(theta / s, 2) - (dx / s) * (dp / s));
 
             if ((stp > stx))
             {
                 gamma = (-(gamma));
             }
 
-            p = (((gamma - dp)) + theta);
-            q = (((((gamma - dp)) + gamma)) + dx);
+            p = gamma - dp + theta;
+            q = gamma - dp + gamma + dx;
             r = (p / q);
-            stpc = (stp + (r * ((stx - stp))));
-            stpq = (stp + (((dp / ((dp - dx)))) * ((stx - stp))));
+            stpc = stp + r * (stx - stp);
+            stpq = stp + dp / (dp - dx) * (stx - stp);
 
             if ((System.Math.Abs((stpc - stp)) > System.Math.Abs((stpq - stp))))
             {
@@ -1938,28 +1932,28 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // c        is beyond stp. Otherwise the cubic step is defined to be the 
             // c        secant step.
             // 
-            theta = ((((3.0 * ((fx - fp))) / ((stp - stx))) + dx) + dp);
+            theta = 3.0 * (fx - fp) / (stp - stx) + dx + dp;
             s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dx), System.Math.Abs(dp));
 
             // 
             // c        The case gamma = 0 only arises if the cubic does not tend
             // c        to infinity in the direction of the step.
             // 
-            gamma = (s * System.Math.Sqrt(System.Math.Max(0.0,
-                ((System.Math.Pow(((theta / s)), 2)) - (((dx / s)) * ((dp / s)))))));
+            gamma = s * System.Math.Sqrt(System.Math.Max(0.0,
+                System.Math.Pow(theta / s, 2) - (dx / s) * (dp / s)));
 
             if ((stp > stx))
             {
                 gamma = (-(gamma));
             }
 
-            p = (((gamma - dp)) + theta);
-            q = (((gamma + ((dx - dp)))) + gamma);
+            p = gamma - dp + theta;
+            q = gamma + (dx - dp) + gamma;
             r = (p / q);
 
             if (((r < 0.0) && (gamma != 0.0)))
             {
-                stpc = (stp + (r * ((stx - stp))));
+                stpc = stp + r * (stx - stp);
             }
             else if ((stp > stx))
             {
@@ -1970,7 +1964,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 stpc = stpmin;
             }
 
-            stpq = (stp + (((dp / ((dp - dx)))) * ((stx - stp))));
+            stpq = stp + dp / (dp - dx) * (stx - stp);
 
             if (brackt)
             {
@@ -1989,13 +1983,13 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 }
                 if ((stp > stx))
                 {
-                    stpf = System.Math.Min((stp +
-                        (0.6600000000000000310862446895043831318617 * ((sty - stp)))), stpf);
+                    stpf = System.Math.Min(stp +
+                        0.6600000000000000310862446895043831318617 * (sty - stp), stpf);
                 }
                 else
                 {
-                    stpf = System.Math.Max((stp +
-                        (0.6600000000000000310862446895043831318617 * ((sty - stp)))), stpf);
+                    stpf = System.Math.Max(stp +
+                        0.6600000000000000310862446895043831318617 * (sty - stp), stpf);
                 }
             }
             else
@@ -2028,19 +2022,19 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             if (brackt)
             {
-                theta = ((((3.0 * ((fp - fy))) / ((sty - stp))) + dy) + dp);
+                theta = 3.0 * (fp - fy) / (sty - stp) + dy + dp;
                 s = Common.Tools.Max(System.Math.Abs(theta), System.Math.Abs(dy), System.Math.Abs(dp));
-                gamma = (s * System.Math.Sqrt(((System.Math.Pow(((theta / s)), 2)) - (((dy / s)) * ((dp / s))))));
+                gamma = s * System.Math.Sqrt(System.Math.Pow(theta / s, 2) - (dy / s) * (dp / s));
 
                 if ((stp > sty))
                 {
                     gamma = (-(gamma));
                 }
 
-                p = (((gamma - dp)) + theta);
-                q = (((((gamma - dp)) + gamma)) + dy);
+                p = gamma - dp + theta;
+                q = gamma - dp + gamma + dy;
                 r = (p / q);
-                stpc = (stp + (r * ((sty - stp))));
+                stpc = stp + r * (sty - stp);
                 stpf = stpc;
             }
             else if ((stp > stx))
@@ -2238,7 +2232,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // c                                          limited memory BFGS matrix:
     // c         ws(n,m) stores S, a set of s-vectors;
     // c         wy(n,m) stores Y, a set of y-vectors;
-    // c         sy(m,m) stores S'Y;
+    // c         sy stores S'Y
     // c         wtyy(m,m) stores the Cholesky factorization
     // c                                   of (theta*S'S+LD^(-1)L')
     // c         theta is the scaling factor specifying B_0 = theta I;
@@ -2330,12 +2324,12 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     for (jy = 1; jy <= (m - 1); jy++)
                     {
                         js = (m + jy);
-                        dcopy((m - jy), wn1, ((jy + 1) - (1)) + ((jy + 1) - (1)) * ((2 * m))
-                            + _wn1_offset, 1, wn1, (jy - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset, 1);
-                        dcopy((m - jy), wn1, ((js + 1) - (1)) + ((js + 1) - (1)) * ((2 * m))
-                            + _wn1_offset, 1, wn1, (js - (1)) + (js - (1)) * ((2 * m)) + _wn1_offset, 1);
-                        dcopy((m - 1), wn1, ((m + 2) - (1)) + ((jy + 1) - (1)) * ((2 * m))
-                            + _wn1_offset, 1, wn1, ((m + 1) - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset, 1);
+                        dcopy((m - jy), wn1, ((jy + 1) - (1)) + ((jy + 1) - (1)) * (2 * m)
+                            + _wn1_offset, 1, wn1, (jy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset, 1);
+                        dcopy((m - jy), wn1, ((js + 1) - (1)) + ((js + 1) - (1)) * (2 * m)
+                            + _wn1_offset, 1, wn1, (js - (1)) + (js - (1)) * (2 * m) + _wn1_offset, 1);
+                        dcopy((m - 1), wn1, ((m + 2) - (1)) + ((jy + 1) - (1)) * (2 * m)
+                            + _wn1_offset, 1, wn1, ((m + 1) - (1)) + (jy - (1)) * (2 * m) + _wn1_offset, 1);
                     }
                 }
             }
@@ -2383,9 +2377,9 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         }
                     }
 
-                    wn1[(iy - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] = temp1;
-                    wn1[(is2 - (1)) + (js - (1)) * ((2 * m)) + _wn1_offset] = temp2;
-                    wn1[(is2 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] = temp3;
+                    wn1[(iy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] = temp1;
+                    wn1[(is2 - (1)) + (js - (1)) * (2 * m) + _wn1_offset] = temp2;
+                    wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] = temp3;
                     jpntr = ((jpntr) % (m) + 1);
                 }
             }
@@ -2414,7 +2408,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         }
                     }
                     ipntr = ((ipntr) % (m) + 1);
-                    wn1[(is2 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] = temp3;
+                    wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] = temp3;
                 }
             }
             upcl = (col - 1);
@@ -2463,10 +2457,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                             }
                         }
 
-                        wn1[(iy - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] =
-                            ((wn1[(iy - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] + temp1) - temp3);
-                        wn1[(is2 - (1)) + (js - (1)) * ((2 * m)) + _wn1_offset] =
-                            ((wn1[(is2 - (1)) + (js - (1)) * ((2 * m)) + _wn1_offset] - temp2) + temp4);
+                        wn1[(iy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] =
+                            ((wn1[(iy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] + temp1) - temp3);
+                        wn1[(is2 - (1)) + (js - (1)) * (2 * m) + _wn1_offset] =
+                            ((wn1[(is2 - (1)) + (js - (1)) * (2 * m) + _wn1_offset] - temp2) + temp4);
                         jpntr = ((jpntr) % (m) + 1);
                     }
                 }
@@ -2506,13 +2500,13 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
                         if ((is2 <= (jy + m)))
                         {
-                            wn1[(is2 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] =
-                                ((wn1[(is2 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] + temp1) - temp3);
+                            wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] =
+                                ((wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] + temp1) - temp3);
                         }
                         else
                         {
-                            wn1[(is2 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] =
-                                ((wn1[(is2 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] - temp1) + temp3);
+                            wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] =
+                                ((wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] - temp1) + temp3);
                         }
                         jpntr = ((jpntr) % (m) + 1);
                     }
@@ -2536,28 +2530,28 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     {
                         js = (col + jy);
                         js1 = (m + jy);
-                        wn[(jy - (1)) + (iy - (1)) * ((2 * m)) + _wn_offset] =
-                            (wn1[(iy - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset] / theta);
-                        wn[(js - (1)) + (is2 - (1)) * ((2 * m)) + _wn_offset] =
-                            (wn1[(is1 - (1)) + (js1 - (1)) * ((2 * m)) + _wn1_offset] * theta);
+                        wn[(jy - (1)) + (iy - (1)) * (2 * m) + _wn_offset] =
+                            (wn1[(iy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] / theta);
+                        wn[(js - (1)) + (is2 - (1)) * (2 * m) + _wn_offset] =
+                            (wn1[(is1 - (1)) + (js1 - (1)) * (2 * m) + _wn1_offset] * theta);
                     }
                 }
                 {
                     for (jy = 1; jy <= (iy - 1); jy++)
                     {
-                        wn[(jy - (1)) + (is2 - (1)) * ((2 * m)) + _wn_offset] =
-                            (-(wn1[(is1 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset]));
+                        wn[(jy - (1)) + (is2 - (1)) * (2 * m) + _wn_offset] =
+                            (-(wn1[(is1 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset]));
                     }
                 }
                 {
                     for (jy = iy; jy <= col; jy++)
                     {
-                        wn[(jy - (1)) + (is2 - (1)) * ((2 * m)) + _wn_offset] =
-                            wn1[(is1 - (1)) + (jy - (1)) * ((2 * m)) + _wn1_offset];
+                        wn[(jy - (1)) + (is2 - (1)) * (2 * m) + _wn_offset] =
+                            wn1[(is1 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset];
                     }
                 }
 
-                wn[(iy - (1)) + (iy - (1)) * ((2 * m)) + _wn_offset] = (wn[(iy - (1)) + (iy - (1)) * ((2 * m))
+                wn[(iy - (1)) + (iy - (1)) * (2 * m) + _wn_offset] = (wn[(iy - (1)) + (iy - (1)) * (2 * m)
                     + _wn_offset] + sy[(iy - (1)) + (iy - (1)) * (m) + _sy_offset]);
             }
         }
@@ -2581,8 +2575,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             for (js = (col + 1); js <= col2; js++)
             {
-                dtrsl(wn, _wn_offset, m2, col, wn, (1 - (1))
-                    + (js - (1)) * ((2 * m)) + _wn_offset, 11, ref info);
+                dtrsl(wn, _wn_offset, m2, col, wn, 0
+                    + (js - (1)) * (2 * m) + _wn_offset, 11, ref info);
             }
         }
 
@@ -2597,10 +2591,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 {
                     for (js = is2; js <= col2; js++)
                     {
-                        wn[(is2 - (1)) + (js - (1)) * ((2 * m)) + _wn_offset] =
-                            (wn[(is2 - (1)) + (js - (1)) * ((2 * m)) + _wn_offset]
-                            + ddot(col, wn, (1 - (1)) + (is2 - (1)) * ((2 * m))
-                            + _wn_offset, 1, wn, (1 - (1)) + (js - (1)) * ((2 * m)) + _wn_offset, 1));
+                        wn[(is2 - (1)) + (js - (1)) * (2 * m) + _wn_offset] =
+                            (wn[(is2 - (1)) + (js - (1)) * (2 * m) + _wn_offset]
+                            + ddot(col, wn, 0 + (is2 - (1)) * (2 * m)
+                            + _wn_offset, 1, wn, 0 + (js - (1)) * (2 * m) + _wn_offset, 1));
                     }
                 }
             }
@@ -2610,12 +2604,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // c     Cholesky factorization of (2,2) block of wn.
         // 
         dpofa(wn, ((col + 1) - (1)) + ((col + 1) - (1))
-            * ((2 * m)) + _wn_offset, m2, col, ref info);
+            * (2 * m) + _wn_offset, m2, col, ref info);
 
         if ((info != 0))
         {
             info = -2;
-            return;
         }
 
     }
@@ -2674,7 +2667,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             for (j = 1; j <= col; j++)
             {
-                wt[(1 - (1)) + (j - (1)) * (m) + _wt_offset] = (theta * ss[(1 - (1))
+                wt[0 + (j - (1)) * (m) + _wt_offset] = (theta * ss[0
                     + (j - (1)) * (m) + _ss_offset]);
             }
         }
@@ -2820,7 +2813,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
         }
 
-        wrk = ((((ileave < (n + 1))) || ((nenter > 0))) || updatd);
+        wrk = ileave < n + 1 || nenter > 0 || updatd;
 
         // 
         // c     Find the index set of free and active variables at the GCP.
@@ -2950,8 +2943,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         if ((n > 1))
         {
             i = 1;
-            out2 = t[(1 - (1)) + _t_offset];
-            indxou = iorder[(1 - (1)) + _iorder_offset];
+            out2 = t[0 + _t_offset];
+            indxou = iorder[0 + _iorder_offset];
             ddum = t[(n - (1)) + _t_offset];
             indxin = iorder[(n - (1)) + _iorder_offset];
 
@@ -3030,7 +3023,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         double a1 = 0.0d;
         double a2 = 0.0d;
 
-        if ((task.Substring((1) - 1, 5).StartsWith("FG_LN", StringComparison.OrdinalIgnoreCase)))
+        if ((task.Substring(0, 5).StartsWith("FG_LN", StringComparison.OrdinalIgnoreCase)))
         {
             goto L556;
         }
@@ -3269,7 +3262,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // c       iwhere(i)=0 or -3 if x(i) is free and has bounds,
     // c                 1       if x(i) is fixed at l(i), and l(i) .ne. u(i)
     // c                 2       if x(i) is fixed at u(i), and u(i) .ne. l(i)
-    // c                 3       if x(i) is always fixed, i.e.,  u(i)=x(i)=l(i)
+    // c                 3       if the component is always fixed, i.e., the value equals both bounds
     // c                -1       if x(i) is always free, i.e., no bounds on it.
     // c
     // c     indx2 is an integer working array of dimension n.
@@ -3424,22 +3417,18 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         double sbtime = 0.0d;
         double lnscht = 0.0d;
         double time1 = 0.0d;
-        // double time2 = 0.0d;
         double gd = 0.0d;
         double gdold = 0.0d;
         double stp = 0.0d;
         double stpmx = 0.0d;
-        // double time = 0.0d;
         // float epsilon = 0.0f;
 
         if ((task.StartsWith("START", StringComparison.OrdinalIgnoreCase)))
         {
             // 
-            // epsmch = (double)(Epsilon.epsilon(1.0));
             epsmch = Constants.DoubleEpsilon;
 
             // 
-            //Timer.timer(time1);
             // 
             // c        Initialize counters and scalars when task='START'.
             // 
@@ -3488,7 +3477,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             if ((iprint >= 1))
             {
                 // c                                open a summary file 'iterate.dat'
-                ; // WARNING: Unimplemented statement in Fortran source.
+                // WARNING: Unimplemented statement in Fortran source.
             }
             // 
             // c        Check the input arguments for errors.
@@ -3517,11 +3506,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             // c          restore local variables.
             // 
-            prjctd = lsave[(1 - (1)) + _lsave_offset];
+            prjctd = lsave[0 + _lsave_offset];
             cnstnd = lsave[(2 - (1)) + _lsave_offset];
             boxed = lsave[(3 - (1)) + _lsave_offset];
             updatd = lsave[(4 - (1)) + _lsave_offset];
-            nintol = isave[(1 - (1)) + _isave_offset];
+            nintol = isave[0 + _isave_offset];
             itfile = isave[(3 - (1)) + _isave_offset];
             iback = isave[(4 - (1)) + _isave_offset];
             nskip = isave[(5 - (1)) + _isave_offset];
@@ -3539,7 +3528,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             nact = isave[(18 - (1)) + _isave_offset];
             ileave = isave[(19 - (1)) + _isave_offset];
             nenter = isave[(20 - (1)) + _isave_offset];
-            theta = dsave[(1 - (1)) + _dsave_offset];
+            theta = dsave[0 + _dsave_offset];
             fold = dsave[(2 - (1)) + _dsave_offset];
             tol = dsave[(3 - (1)) + _dsave_offset];
             dnorm = dsave[(4 - (1)) + _dsave_offset];
@@ -3559,22 +3548,22 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // c        After returning from the driver go to the point where execution
             // c        is to resume.
             // 
-            if ((task.Substring((1) - 1, 5).StartsWith("FG_LN", StringComparison.OrdinalIgnoreCase)))
+            if ((task.Substring(0, 5).StartsWith("FG_LN", StringComparison.OrdinalIgnoreCase)))
             {
                 goto L666;
             }
 
-            if ((task.Substring((1) - 1, 5).StartsWith("NEW_X", StringComparison.OrdinalIgnoreCase)))
+            if ((task.Substring(0, 5).StartsWith("NEW_X", StringComparison.OrdinalIgnoreCase)))
             {
                 goto L777;
             }
 
-            if ((task.Substring((1) - 1, 5).StartsWith("FG_ST", StringComparison.OrdinalIgnoreCase)))
+            if ((task.Substring(0, 5).StartsWith("FG_ST", StringComparison.OrdinalIgnoreCase)))
             {
                 goto L111;
             }
 
-            if ((task.Substring((1) - 1, 4).StartsWith("STOP", StringComparison.OrdinalIgnoreCase)))
+            if ((task.Substring(0, 4).StartsWith("STOP", StringComparison.OrdinalIgnoreCase)))
             {
                 if ((task.Substring((7) - 1, 9).StartsWith("CPU", StringComparison.OrdinalIgnoreCase)))
                 {
@@ -3649,7 +3638,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         cauchy(n, x, _x_offset, l, _l_offset, u, _u_offset, nbd, _nbd_offset,
             g, _g_offset, indx2, _indx2_offset, iwhere, _iwhere_offset, t, _t_offset,
             d, _d_offset, z, _z_offset, m, wy, _wy_offset, ws, _ws_offset, sy, _sy_offset,
-            wt, _wt_offset, theta, col, head, wa, (1 - (1)) + _wa_offset, wa,
+            wt, _wt_offset, theta, col, head, wa, 0 + _wa_offset, wa,
             (((2 * m) + 1) - (1)) + _wa_offset, wa, (((4 * m) + 1) - (1)) + _wa_offset, wa,
             (((6 * m) + 1) - (1)) + _wa_offset, ref nseg, iprint, sbgnrm, ref info, epsmch);
 
@@ -3881,7 +3870,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         ddum = Common.Tools.Max(System.Math.Abs(fold), System.Math.Abs(f), 1.0);
 
-        if ((((fold - f)) <= (tol * ddum)))
+        if (fold - f <= tol * ddum)
         {
             // terminate the algorithm.
             task = "CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH";
@@ -3914,9 +3903,9 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         }
         else
         {
-            dr = (((gd - gdold)) * stp);
+            dr = (gd - gdold) * stp;
             dscal(n, stp, d, _d_offset, 1);
-            ddum = (-((gdold * stp)));
+            ddum = -(gdold * stp);
         }
 
         if ((dr <= (epsmch * ddum)))
@@ -3996,11 +3985,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         //   Save local variables.
         // 
-        lsave[(1 - (1)) + _lsave_offset] = prjctd;
+        lsave[0 + _lsave_offset] = prjctd;
         lsave[(2 - (1)) + _lsave_offset] = cnstnd;
         lsave[(3 - (1)) + _lsave_offset] = boxed;
         lsave[(4 - (1)) + _lsave_offset] = updatd;
-        isave[(1 - (1)) + _isave_offset] = nintol;
+        isave[0 + _isave_offset] = nintol;
         isave[(3 - (1)) + _isave_offset] = itfile;
         isave[(4 - (1)) + _isave_offset] = iback;
         isave[(5 - (1)) + _isave_offset] = nskip;
@@ -4018,7 +4007,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         isave[(18 - (1)) + _isave_offset] = nact;
         isave[(19 - (1)) + _isave_offset] = ileave;
         isave[(20 - (1)) + _isave_offset] = nenter;
-        dsave[(1 - (1)) + _dsave_offset] = theta;
+        dsave[0 + _dsave_offset] = theta;
         dsave[(2 - (1)) + _dsave_offset] = fold;
         dsave[(3 - (1)) + _dsave_offset] = tol;
         dsave[(4 - (1)) + _dsave_offset] = dnorm;
@@ -4035,7 +4024,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         dsave[(15 - (1)) + _dsave_offset] = gdold;
         dsave[(16 - (1)) + _dsave_offset] = dtd;
 
-        return;
     }
 
     // 
@@ -4083,7 +4071,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         if ((iupdat <= m))
         {
             col = iupdat;
-            itail = ((((head + iupdat) - 2)) % (m) + 1);
+            itail = (head + iupdat - 2) % m + 1;
         }
         else
         {
@@ -4094,8 +4082,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         // c     Update matrices WS and WY.
         // 
-        dcopy(n, d, _d_offset, 1, ws, (1 - (1)) + (itail - (1)) * (n) + _ws_offset, 1);
-        dcopy(n, r, _r_offset, 1, wy, (1 - (1)) + (itail - (1)) * (n) + _wy_offset, 1);
+        dcopy(n, d, _d_offset, 1, ws, 0 + (itail - (1)) * (n) + _ws_offset, 1);
+        dcopy(n, r, _r_offset, 1, wy, 0 + (itail - (1)) * (n) + _wy_offset, 1);
 
         // 
         // c     Set theta=yy/ys.
@@ -4114,7 +4102,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 for (j = 1; j <= (col - 1); j++)
                 {
                     dcopy(j, ss, (2 - (1)) + ((j + 1) - (1)) * (m)
-                        + _ss_offset, 1, ss, (1 - (1)) + (j - (1)) * (m) + _ss_offset, 1);
+                        + _ss_offset, 1, ss, 0 + (j - (1)) * (m) + _ss_offset, 1);
                     dcopy((col - j), sy, ((j + 1) - (1)) + ((j + 1)
                         - (1)) * (m) + _sy_offset, 1, sy, (j - (1)) + (j - (1)) * (m) + _sy_offset, 1);
                 }
@@ -4129,11 +4117,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 sy[(col - (1)) + (j - (1)) * (m) + _sy_offset] =
                     ddot(n,
                       d, _d_offset, 1,
-                    wy, (1 - (1)) + (pointr - (1)) * (n) + _wy_offset, 1);
+                    wy, 0 + (pointr - (1)) * (n) + _wy_offset, 1);
 
                 ss[(j - (1)) + (col - (1)) * (m) + _ss_offset] =
                     ddot(n,
-                      ws, (1 - (1)) + (pointr - (1)) * (n) + _ws_offset, 1,
+                      ws, 0 + (pointr - (1)) * (n) + _ws_offset, 1,
                       d, _d_offset, 1);
 
                 pointr = ((pointr) % (m) + 1);
@@ -4150,7 +4138,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         sy[(col - (1)) + (col - (1)) * (m) + _sy_offset] = dr;
 
-        return;
     }
 
     // 
@@ -4201,14 +4188,14 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     {
                         if ((nbd[(i - (1)) + _nbd_offset] >= 2))
                         {
-                            gi = System.Math.Max(((x[(i - (1)) + _x_offset] - u[(i - (1)) + _u_offset])), gi);
+                            gi = System.Math.Max(x[(i - (1)) + _x_offset] - u[(i - (1)) + _u_offset], gi);
                         }
                     }
                     else
                     {
                         if ((nbd[(i - (1)) + _nbd_offset] <= 2))
                         {
-                            gi = System.Math.Min(((x[(i - (1)) + _x_offset] - l[(i - (1)) + _l_offset])), gi);
+                            gi = System.Math.Min(x[(i - (1)) + _x_offset] - l[(i - (1)) + _l_offset], gi);
                         }
                     }
                 }
@@ -4366,7 +4353,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
     // c                                     its projection in the feasible set
     // c         If lsave(2) = .true.  then  the problem is constrained;
     // c         If lsave(3) = .true.  then  each variable has upper and lower
-    // c                                     bounds;
+    // c                                     bounds
     // c
     // c     isave is an integer working array of dimension 44.
     // c       On exit with 'task' = NEW_X, the following information is 
@@ -4486,12 +4473,12 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if ((task.StartsWith("START", StringComparison.OrdinalIgnoreCase)))
         {
-            isave[(1 - (1)) + _isave_offset] = (m * n);
+            isave[0 + _isave_offset] = (m * n);
             isave[(2 - (1)) + _isave_offset] = ((int)System.Math.Pow(m, 2));
             isave[(3 - (1)) + _isave_offset] = (4 * ((int)System.Math.Pow(m, 2)));
             isave[(4 - (1)) + _isave_offset] = 1;
-            isave[(5 - (1)) + _isave_offset] = (isave[(4 - (1)) + _isave_offset] + isave[(1 - (1)) + _isave_offset]);
-            isave[(6 - (1)) + _isave_offset] = (isave[(5 - (1)) + _isave_offset] + isave[(1 - (1)) + _isave_offset]);
+            isave[(5 - (1)) + _isave_offset] = (isave[(4 - (1)) + _isave_offset] + isave[0 + _isave_offset]);
+            isave[(6 - (1)) + _isave_offset] = (isave[(5 - (1)) + _isave_offset] + isave[0 + _isave_offset]);
             isave[(7 - (1)) + _isave_offset] = (isave[(6 - (1)) + _isave_offset] + isave[(2 - (1)) + _isave_offset]);
             isave[(8 - (1)) + _isave_offset] = (isave[(7 - (1)) + _isave_offset] + isave[(2 - (1)) + _isave_offset]);
             isave[(9 - (1)) + _isave_offset] = (isave[(8 - (1)) + _isave_offset] + isave[(2 - (1)) + _isave_offset]);
@@ -4524,7 +4511,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             (lz - (1)) + _wa_offset, wa, (lr - (1)) + _wa_offset, wa,
             (ld - (1)) + _wa_offset, wa, (lt - (1)) + _wa_offset, wa,
             (lxp - (1)) + _wa_offset, wa, (lwa - (1)) + _wa_offset, iwa,
-            (1 - (1)) + _iwa_offset, iwa, ((n + 1) - (1)) + _iwa_offset,
+            0 + _iwa_offset, iwa, ((n + 1) - (1)) + _iwa_offset,
             iwa, (((2 * n) + 1) - (1)) + _iwa_offset, ref task, iprint, ref csave,
             lsave, _lsave_offset, isave, (22 - (1)) + _isave_offset, dsave,
             _dsave_offset);
@@ -4899,8 +4886,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             for (i = 1; i <= n; i++)
             {
-                dd_p = (dd_p + (((x[(i - (1)) + _x_offset]
-                    - xx[(i - (1)) + _xx_offset])) * gg[(i - (1)) + _gg_offset]));
+                dd_p = dd_p + (x[(i - (1)) + _x_offset]
+                    - xx[(i - (1)) + _xx_offset]) * gg[(i - (1)) + _gg_offset];
             }
         }
 
@@ -4992,7 +4979,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // DISPLAY: "----------------exit SUBSM --------------------"
         }
 
-        return;
     }
 
     // c                                                                       
@@ -5068,8 +5054,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     for (k = 1; k <= jm1; k++)
                     {
                         t = (a[(k - (1)) + (j - (1)) * (lda) + _a_offset]
-                            - ddot((k - 1), a, (1 - (1)) + (k - (1)) * (lda)
-                            + _a_offset, 1, a, (1 - (1)) + (j - (1)) * (lda) + _a_offset, 1));
+                            - ddot((k - 1), a, 0 + (k - (1)) * (lda)
+                            + _a_offset, 1, a, 0 + (j - (1)) * (lda) + _a_offset, 1));
 
                         t = (t / a[(k - (1)) + (k - (1)) * (lda) + _a_offset]);
                         a[(k - (1)) + (j - (1)) * (lda) + _a_offset] = t;
@@ -5082,7 +5068,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 // c     ......exit
                 if ((s <= 0.0e0))
                 {
-                    goto L40;
+                    return;
                 }
 
                 a[(j - (1)) + (j - (1)) * (lda) + _a_offset] = System.Math.Sqrt(s);
@@ -5091,8 +5077,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         info = 0;
 
-    L40:
-        return;
     }
 
     // *     .. Scalar Arguments ..
@@ -5183,7 +5167,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
         }
 
-        return;
     }
 
     // *     .. Scalar Arguments ..
@@ -5233,11 +5216,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         iy = 1;
         if ((incx < 0))
         {
-            ix = (((((-(n)) + 1)) * incx) + 1);
+            ix = (-n + 1) * incx + 1;
         }
         if ((incy < 0))
         {
-            iy = (((((-(n)) + 1)) * incy) + 1);
+            iy = (-n + 1) * incy + 1;
         }
 
         {
@@ -5321,11 +5304,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         iy = 1;
         if ((incx < 0))
         {
-            ix = (((((-(n)) + 1)) * incx) + 1);
+            ix = (-n + 1) * incx + 1;
         }
         if ((incy < 0))
         {
-            iy = (((((-(n)) + 1)) * incy) + 1);
+            iy = (-n + 1) * incy + 1;
         }
         {
             for (i = 1; i <= n; i++)
@@ -5469,11 +5452,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             iy = 1;
             if ((incx < 0))
             {
-                ix = (((((-(n)) + 1)) * incx) + 1);
+                ix = (-n + 1) * incx + 1;
             }
             if ((incy < 0))
             {
-                iy = (((((-(n)) + 1)) * incy) + 1);
+                iy = (-n + 1) * incy + 1;
             }
             {
                 for (i = 1; i <= n; i++)
@@ -5485,6 +5468,5 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 }
             }
         }
-        return;
     }
 }

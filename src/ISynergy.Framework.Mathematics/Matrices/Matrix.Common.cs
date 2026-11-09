@@ -8,12 +8,6 @@ using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1192, S2342, S2346 // repeated strings and enum naming are intentional in matrix library
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -26,9 +20,9 @@ namespace ISynergy.Framework.Mathematics.Matrices;
 public enum MatrixType
 {
     /// <summary>
-    ///     Symmetric matrix.
+    ///     No special matrix type; the matrix is symmetric (the default).
     /// </summary>
-    Symmetric = 0,
+    None = 0,
 
     /// <summary>
     ///     Lower (left) triangular matrix.

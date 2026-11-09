@@ -3,13 +3,6 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Integration.Base;
 using System.Diagnostics;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1116, S1117, S2245 // GOTO labels need empty statements; variable shadowing and algorithm comments are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Integration;
@@ -266,12 +259,12 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         get => reltol;
         set
         {
-            var limit = Math.Max(Constants.SingleEpsilon * 50.0, 5e-15);
+            var minTolerance = Math.Max(Constants.SingleEpsilon * 50.0, 5e-15);
 
-            if (value <= limit)
+            if (value <= minTolerance)
                 throw new ArgumentOutOfRangeException(nameof(value),
                     "Tolerance must be higher than machine precision"
-                    + "(must be greater than " + limit + ")");
+                    + "(must be greater than " + minTolerance + ")");
 
             reltol = value;
         }
@@ -357,7 +350,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 bound = b;
                 inf = -1;
             }
-            else // if (Double.IsInfinity(b))
+            else
             {
                 bound = a;
                 inf = 1;
@@ -728,7 +721,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 if (errsum <= errbnd) goto L115;
                 if (ier != 0) goto L100;
                 if (last == 2) goto L80;
-                if (noext) goto L90;
+                if (noext) continue;
 
                 erlarg -= erlast;
 
@@ -738,7 +731,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 /*           test whether the interval to be bisected next is the */
                 /*           smallest interval. */
 
-                if (Math.Abs(blist[startB + maxerr] - alist[startA + maxerr]) > small) goto L90;
+                if (Math.Abs(blist[startB + maxerr] - alist[startA + maxerr]) > small) continue;
                 extrap = true;
                 nrmax = 2;
             L40:
@@ -753,14 +746,21 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 jupbnd = last;
                 if (last > limit / 2 + 2) jupbnd = limit + 3 - last;
                 i__2 = jupbnd;
+                var continueOuter = false;
                 for (k = id; k <= i__2; ++k)
                 {
                     maxerr = iord[startI + nrmax];
                     errmax = elist[startE + maxerr];
-                    if (Math.Abs(blist[startB + maxerr] - alist[startA + maxerr]) > small) goto L90;
+                    if (Math.Abs(blist[startB + maxerr] - alist[startA + maxerr]) > small)
+                    {
+                        continueOuter = true;
+                        break;
+                    }
+
                     ++nrmax;
-                    /* L50: */
                 }
+
+                if (continueOuter) continue;
 
             /*           perform extrapolation. */
 
@@ -797,13 +797,12 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 extrap = false;
                 small *= .5;
                 erlarg = errsum;
-                goto L90;
+                continue;
             L80:
                 small = .375;
                 erlarg = errsum;
                 ertest = errbnd;
                 rlist2_[1] = area;
-            L90:;
             }
 
         /*           set final result and error estimate. */
@@ -958,10 +957,9 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             epstab[k1 - 1] = res;
             k1 += -2;
             error = err2 + Math.Abs(res - e2) + err3;
-            if (error > abserr) goto L40;
+            if (error > abserr) continue;
             abserr = error;
             result = res;
-        L40:;
         }
 
     /*           shift the table. */

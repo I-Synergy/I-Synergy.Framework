@@ -3,13 +3,6 @@ using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1854, S1939, S2292 // useless assignments, redundant interfaces, and backing fields are acceptable in this COBYLA port
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -124,14 +117,9 @@ public enum CobylaStatus
 /// </code>
 /// </example>
 ///
-public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
+public class Cobyla : BaseOptimizationMethod,
     IOptimizationMethod<CobylaStatus>
 {
-
-    double rhobeg = 0.5;
-    double rhoend = 1.0e-6;
-    int maxfun = 3500;
-    int iterations;
 
     readonly NonlinearConstraint[] constraints;
     /// <summary>
@@ -143,32 +131,21 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     ///   The number of iterations performed
     ///   in the previous optimization.</value>
     ///   
-    public int Iterations
-    {
-        get { return iterations; }
-    }
+    public int Iterations { get; private set; }
 
     /// <summary>
     ///   Gets or sets the value of RHOBEG. 
     ///   Default is 0.5.
     /// </summary>
     /// 
-    public double RhoBeg
-    {
-        get { return rhobeg; }
-        set { rhobeg = value; }
-    }
+    public double RhoBeg { get; set; } = 0.5;
 
     /// <summary>
     ///   Gets or sets the value of RHOEND. 
     ///   Default is 1.0e-6.
     /// </summary>
     /// 
-    public double RhoEnd
-    {
-        get { return rhoend; }
-        set { rhoend = value; }
-    }
+    public double RhoEnd { get; set; } = 1.0e-6;
 
     /// <summary>
     ///   Gets or sets the maximum number of iterations
@@ -176,11 +153,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     ///   is 0 (iterate until convergence).
     /// </summary>
     /// 
-    public int MaxIterations
-    {
-        get { return maxfun; }
-        set { maxfun = value; }
-    }
+    public int MaxIterations { get; set; } = 3500;
 
     /// <summary>
     ///   Get the exit code returned in the last call to the
@@ -352,7 +325,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
 
         var np = n + 1;
         var mp = m + 1;
-        var rho = rhobeg;
+        var rho = RhoBeg;
         var parmu = 0.0;
 
         var iflag = false;
@@ -372,7 +345,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
         var dx = new double[1 + n];
         var w = new double[1 + n];
 
-        iterations = 0;
+        Iterations = 0;
         var temp = 1.0 / rho;
 
         for (var i = 1; i <= n; ++i)
@@ -392,13 +365,13 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
     //     the algorithm.
 
     L_40:
-        if (iterations >= maxfun && iterations > 0)
+        if (Iterations >= MaxIterations && Iterations > 0)
         {
             status = CobylaStatus.MaxIterationsReached;
             goto L_600;
         }
 
-        ++iterations;
+        ++Iterations;
 
         // Compute objective function
         f = Function(x);
@@ -427,7 +400,7 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
         for (var i = 1; i <= mpp; ++i)
             datmat[i, jdrop] = con[i];
 
-        if (iterations <= np)
+        if (Iterations <= np)
         {
 
             //     Exchange the new vertex of the initial simplex with the optimal vertex if
@@ -459,9 +432,9 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
                 }
             }
 
-            if (iterations <= n)
+            if (Iterations <= n)
             {
-                jdrop = iterations;
+                jdrop = Iterations;
                 x[jdrop - 1] += rho;
                 goto L_40;
             }
@@ -851,13 +824,13 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
 
         //     Otherwise reduce RHO if it is not at its least value and reset PARMU.
 
-        if (rho > rhoend)
+        if (rho > RhoEnd)
         {
             double cmin = 0.0, cmax = 0.0;
 
             rho *= 0.5;
-            if (rho <= 1.5 * rhoend)
-                rho = rhoend;
+            if (rho <= 1.5 * RhoEnd)
+                rho = RhoEnd;
 
             if (parmu > 0.0)
             {
@@ -905,12 +878,9 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
         for (var k = 1; k <= n; ++k)
             x[k - 1] = sim[k, np];
 
-        f = datmat[mp, np];
-        resmax = datmat[mpp, np];
-
     L_620:
 
-        maxfun = iterations;
+        MaxIterations = Iterations;
 
         if (status == CobylaStatus.Success)
         {

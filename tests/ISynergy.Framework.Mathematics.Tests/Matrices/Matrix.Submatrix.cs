@@ -1,4 +1,5 @@
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Statistics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Tests;
@@ -53,7 +54,7 @@ public partial class MatrixTest
         Assert.IsTrue(Matrix.IsEqual(actual, expected));
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        actual = Matrix.Submatrix(value, null, null);
+        actual = Matrix.Get(value, (int[])null, (int[])null);
 #pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(Matrix.IsEqual(actual, value));
     }
@@ -136,7 +137,7 @@ public partial class MatrixTest
         Assert.IsTrue(Matrix.IsEqual(actual, expected2));
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        actual = Matrix.Submatrix(value, null, null);
+        actual = Matrix.Get(value, (int[])null, (int[])null);
 #pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(Matrix.IsEqual(actual, value));
     }
@@ -145,11 +146,11 @@ public partial class MatrixTest
     public void SubgroupTest2()
     {
         double[] value = [1, 2, 3, 4, 5, 6, 7];
-        int[] idx = [0, 0, 0, 5, 5, 5, 5];
+        int[] idx = [0, 0, 0, 1, 1, 1, 1];
 
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[][] groups = value.Subgroups(idx);
+        double[][] groups = Classes.Separate(value, idx);
 #pragma warning restore CS0618 // Type or member is obsolete
 
         Assert.HasCount(2, groups);
@@ -174,7 +175,7 @@ public partial class MatrixTest
 
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[][] groups = value.Subgroups(idx, 5);
+        double[][] groups = Classes.Separate(value, idx, 5);
 #pragma warning restore CS0618 // Type or member is obsolete
 
         Assert.HasCount(5, groups);

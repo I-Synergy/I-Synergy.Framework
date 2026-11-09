@@ -228,7 +228,7 @@ public class LuDecompositionTest
         int[] idx = p.ArgSort();
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[,] r = target.LowerTriangularFactor.Dot(target.UpperTriangularFactor).Submatrix(idx, null).Transpose();
+        double[,] r = target.LowerTriangularFactor.Dot(target.UpperTriangularFactor).Get(idx, null).Transpose();
 #pragma warning restore CS0618 // Type or member is obsolete
 
         Assert.IsTrue(Matrix.IsEqual(b, r, 1e-3));

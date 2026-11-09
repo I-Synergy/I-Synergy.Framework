@@ -1,13 +1,6 @@
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S4136, S1192, S3427 // method overloads and string literals are intentional in statistical APIs
-
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 static partial class Measures
@@ -321,6 +314,59 @@ static partial class Measures
     }
 
     /// <summary>
+    ///   Computes the Standard Deviation of the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">A double array containing the vector members.</param>
+    /// <param name="weights">A vector containing how many times each element
+    /// in <see param="values"/> repeats itself in the non-weighted data.</param>
+    /// 
+    /// <returns>The standard deviation of the given data.</returns>
+    /// 
+    public static double WeightedStandardDeviation(this double[] values, int[] weights)
+    {
+        return Math.Sqrt(WeightedVariance(values, weights));
+    }
+
+    /// <summary>
+    ///   Computes the Standard Deviation of the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">A double array containing the vector members.</param>
+    /// <param name="weights">A vector containing how many times each element
+    /// in <see param="values"/> repeats itself in the non-weighted data.</param>
+    /// <param name="mean">The mean of the vector, if already known.</param>
+    /// 
+    /// <returns>The standard deviation of the given data.</returns>
+    /// 
+    public static double WeightedStandardDeviation(this double[] values, int[] weights, double mean)
+    {
+        return Math.Sqrt(WeightedVariance(values, weights, mean, true));
+    }
+
+    /// <summary>
+    ///   Computes the Standard Deviation of the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">A double array containing the vector members.</param>
+    /// <param name="weights">A vector containing how many times each element
+    /// in <see param="values"/> repeats itself in the non-weighted data.</param>
+    /// <param name="mean">The mean of the vector, if already known.</param>
+    /// <param name="unbiased">
+    ///   Pass true to compute the sample variance; or pass false to compute the 
+    ///   population variance. For <see cref="WeightType.Repetition">integers weights
+    ///   </see>, the bias correction is equivalent to the non-weighted case. For 
+    ///   <see cref="WeightType.Fraction">fractional weights</see>, the variance
+    ///   bias cannot be completely eliminated.</param>
+    /// 
+    /// <returns>The standard deviation of the given data.</returns>
+    /// 
+    public static double WeightedStandardDeviation(this double[] values, int[] weights, double mean, bool unbiased)
+    {
+        return Math.Sqrt(WeightedVariance(values, weights, mean, unbiased));
+    }
+
+    /// <summary>
     ///   Computes the weighted Variance of the given values.
     /// </summary>
     /// 
@@ -456,59 +502,6 @@ static partial class Measures
         }
 
         return correct(unbiased, weightType, sum, weightSum, squareSum);
-    }
-
-    /// <summary>
-    ///   Computes the Standard Deviation of the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">A double array containing the vector members.</param>
-    /// <param name="weights">A vector containing how many times each element
-    /// in <see param="values"/> repeats itself in the non-weighted data.</param>
-    /// 
-    /// <returns>The standard deviation of the given data.</returns>
-    /// 
-    public static double WeightedStandardDeviation(this double[] values, int[] weights)
-    {
-        return Math.Sqrt(WeightedVariance(values, weights));
-    }
-
-    /// <summary>
-    ///   Computes the Standard Deviation of the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">A double array containing the vector members.</param>
-    /// <param name="weights">A vector containing how many times each element
-    /// in <see param="values"/> repeats itself in the non-weighted data.</param>
-    /// <param name="mean">The mean of the vector, if already known.</param>
-    /// 
-    /// <returns>The standard deviation of the given data.</returns>
-    /// 
-    public static double WeightedStandardDeviation(this double[] values, int[] weights, double mean)
-    {
-        return Math.Sqrt(WeightedVariance(values, weights, mean, true));
-    }
-
-    /// <summary>
-    ///   Computes the Standard Deviation of the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">A double array containing the vector members.</param>
-    /// <param name="weights">A vector containing how many times each element
-    /// in <see param="values"/> repeats itself in the non-weighted data.</param>
-    /// <param name="mean">The mean of the vector, if already known.</param>
-    /// <param name="unbiased">
-    ///   Pass true to compute the sample variance; or pass false to compute the 
-    ///   population variance. For <see cref="WeightType.Repetition">integers weights
-    ///   </see>, the bias correction is equivalent to the non-weighted case. For 
-    ///   <see cref="WeightType.Fraction">fractional weights</see>, the variance
-    ///   bias cannot be completely eliminated.</param>
-    /// 
-    /// <returns>The standard deviation of the given data.</returns>
-    /// 
-    public static double WeightedStandardDeviation(this double[] values, int[] weights, double mean, bool unbiased)
-    {
-        return Math.Sqrt(WeightedVariance(values, weights, mean, unbiased));
     }
 
     /// <summary>
@@ -1068,6 +1061,35 @@ static partial class Measures
         return bestValue;
     }
 
+    private static T weighted_mode_bag<T>(T[] values, int[] weights)
+    {
+        var bestValue = values[0];
+        int bestCount = 1;
+
+        var set = new Dictionary<T, int>();
+
+        for (var i = 0; i < values.Length; i++)
+        {
+            T v = values[i];
+
+            int count;
+            if (!set.TryGetValue(v, out count))
+                count = weights[i];
+            else
+                count = count + weights[i];
+
+            set[v] = count;
+
+            if (count > bestCount)
+            {
+                bestCount = count;
+                bestValue = v;
+            }
+        }
+
+        return bestValue;
+    }
+
     private static T weighted_mode_sort<T>(T[] values, double[] weights, bool inPlace, bool alreadySorted)
     {
         if (!alreadySorted)
@@ -1103,36 +1125,6 @@ static partial class Measures
 
         return bestValue;
     }
-
-    private static T weighted_mode_bag<T>(T[] values, int[] weights)
-    {
-        var bestValue = values[0];
-        int bestCount = 1;
-
-        var set = new Dictionary<T, int>();
-
-        for (var i = 0; i < values.Length; i++)
-        {
-            T v = values[i];
-
-            int count;
-            if (!set.TryGetValue(v, out count))
-                count = weights[i];
-            else
-                count = count + weights[i];
-
-            set[v] = count;
-
-            if (count > bestCount)
-            {
-                bestCount = count;
-                bestValue = v;
-            }
-        }
-
-        return bestValue;
-    }
-
     private static T weighted_mode_sort<T>(T[] values, int[] weights, bool inPlace, bool alreadySorted)
     {
         if (!alreadySorted)
@@ -1214,49 +1206,6 @@ static partial class Measures
     }
 
     /// <summary>
-    ///   Gets the minimum value in a vector of observations that has a weight higher than zero.
-    /// </summary>
-    /// 
-    /// <param name="values">A number array containing the vector values.</param>
-    /// <param name="weights">A vector containing the importance of each sample in <see param="values"/>.</param>
-    /// <param name="imin">The index of the minimum element in the vector, or -1 if it could not be found.</param>
-    /// <param name="alreadySorted">Pass true if the list of values is already sorted.</param>
-    /// 
-    /// <returns>The minimum value in the given data.</returns>
-    /// 
-    public static double WeightedMin(this double[] values, double[] weights, out int imin, bool alreadySorted = false)
-    {
-        imin = -1;
-
-        if (alreadySorted)
-        {
-            // Look for the first value whose weight is different from zero
-            for (var i = 0; i < weights.Length; i++)
-            {
-                if (weights[i] > 0)
-                {
-                    imin = i;
-                    return values[imin];
-                }
-            }
-
-            return Double.PositiveInfinity;
-        }
-        // Base case for non sorted arrays
-        double min = Double.PositiveInfinity;
-        for (var i = 0; i < values.Length; i++)
-        {
-            if (values[i] < min && weights[i] > 0)
-            {
-                min = values[i];
-                imin = i;
-            }
-        }
-
-        return min;
-    }
-
-    /// <summary>
     ///   Gets the maximum value in a vector of observations that has a weight higher than zero.
     /// </summary>
     /// 
@@ -1298,6 +1247,49 @@ static partial class Measures
         }
 
         return max;
+    }
+
+    /// <summary>
+    ///   Gets the minimum value in a vector of observations that has a weight higher than zero.
+    /// </summary>
+    /// 
+    /// <param name="values">A number array containing the vector values.</param>
+    /// <param name="weights">A vector containing the importance of each sample in <see param="values"/>.</param>
+    /// <param name="imin">The index of the minimum element in the vector, or -1 if it could not be found.</param>
+    /// <param name="alreadySorted">Pass true if the list of values is already sorted.</param>
+    /// 
+    /// <returns>The minimum value in the given data.</returns>
+    /// 
+    public static double WeightedMin(this double[] values, double[] weights, out int imin, bool alreadySorted = false)
+    {
+        imin = -1;
+
+        if (alreadySorted)
+        {
+            // Look for the first value whose weight is different from zero
+            for (var i = 0; i < weights.Length; i++)
+            {
+                if (weights[i] > 0)
+                {
+                    imin = i;
+                    return values[imin];
+                }
+            }
+
+            return Double.PositiveInfinity;
+        }
+        // Base case for non sorted arrays
+        double min = Double.PositiveInfinity;
+        for (var i = 0; i < values.Length; i++)
+        {
+            if (values[i] < min && weights[i] > 0)
+            {
+                min = values[i];
+                imin = i;
+            }
+        }
+
+        return min;
     }
 
     /// <summary>
@@ -1370,4 +1362,3 @@ static partial class Measures
         }
     }
 }
-

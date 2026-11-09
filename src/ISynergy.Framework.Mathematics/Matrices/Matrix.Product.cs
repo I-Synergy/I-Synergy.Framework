@@ -1,5 +1,4 @@
 
-#pragma warning disable S6640, S4136, S2368, S3776, S1192 // unsafe/overloads/params are intentional in numerical matrix library
 using ISynergy.Framework.Mathematics.Exceptions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -147,109 +146,6 @@ public static partial class Matrix
     {
         return Dot(a, b, Jagged.Create<double>(a.Rows(), b.Columns()));
     }
-    /// <summary>
-    ///   Computes the product <c>a*B*c</c> of a row vector <c>a</c>, 
-    ///   a square matrix <c>B</c> and a column vector <c>c</c>.
-    /// </summary>
-    /// 
-    /// <param name="rowVector">The left vector <c>a</c>.</param>
-    /// <param name="matrix">The square matrix <c>B</c>.</param>
-    /// <param name="columnVector">The column vector <c>c</c>.</param>
-    ///
-    /// <returns>The product <c>a*B*c</c> of the given vector <c>a</c>,
-    ///   matrix <c>B</c> and vector <c>c</c>.</returns>
-    /// 
-    public static double DotAndDot(this double[] rowVector, double[][] matrix, double[] columnVector)
-    {
-#if DEBUG
-        if (rowVector.Length != matrix.Rows() || matrix.Columns() != columnVector.Length)
-            throw new DimensionMismatchException("Matrices must have compatible dimensions.");
-#endif
-        double sum = 0;
-
-        for (var i = 0; i < rowVector.Length; i++)
-        {
-            double s = 0;
-            for (var j = 0; j < columnVector.Length; j++)
-                s += (matrix[i][j] * columnVector[j]);
-            sum += (rowVector[i] * s);
-        }
-
-        return sum;
-    }
-
-    /// <summary>
-    ///   Computes the product <c>a*B*c</c> of a row vector <c>a</c>, 
-    ///   a square matrix <c>B</c> and a column vector <c>c</c>.
-    /// </summary>
-    /// 
-    /// <param name="rowVector">The left vector <c>a</c>.</param>
-    /// <param name="matrix">The square matrix <c>B</c>.</param>
-    /// <param name="columnVector">The column vector <c>c</c>.</param>
-    ///
-    /// <returns>The product <c>a*B*c</c> of the given vector <c>a</c>,
-    ///   matrix <c>B</c> and vector <c>c</c>.</returns>
-    /// 
-    public static double DotAndDot(this double[] rowVector, double[,] matrix, double[] columnVector)
-    {
-        int cols = matrix.Columns();
-        int rows = matrix.Rows();
-
-        // Validate dimensions in all build configurations.
-        // In Release the pointer arithmetic pa2 = a + cols would stride out of bounds
-        // if the dimensions were wrong, so this guard must not be DEBUG-only.
-        if (rowVector.Length != rows || cols != columnVector.Length)
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        double result = 0;
-
-        unsafe
-        {
-            fixed (double* r = rowVector)
-            fixed (double* a = matrix)
-            fixed (double* c = columnVector)
-            {
-                double* pa1 = a;
-                double* pa2 = a + cols;
-                double* pr = r;
-
-                // Process rows two at a time
-                for (var i = 0; i < rows / 2; i++)
-                {
-                    double sum1 = 0, sum2 = 0;
-                    double* pc = c;
-
-                    for (var j = 0; j < cols; j++)
-                    {
-                        sum1 += ((*pa1++) * (*pc));
-                        sum2 += ((*pa2++) * (*pc));
-                        pc++;
-                    }
-
-                    result += ((*pr++) * sum1);
-                    result += ((*pr++) * sum2);
-
-                    // Now we skip a row
-                    pa1 = pa2;
-                    pa2 += cols;
-                }
-
-                // Process the remainder
-                for (var i = 0; i < rows % 2; i++)
-                {
-                    double sum = 0;
-                    double* pc = c;
-
-                    for (var j = 0; j < cols; j++)
-                        sum += ((*pa1++) * (*pc++));
-
-                    result += ((*pr++) * sum);
-                }
-            }
-        }
-
-        return result;
-    }
-
     #region dot
 
     /// <summary>
@@ -267,7 +163,6 @@ public static partial class Matrix
         int N = result.Rows();
         int K = a.Columns();
         int M = result.Columns();
-        int stride = b.Columns();
 #if DEBUG
         if (a.Columns() != b.Rows() || result.Rows() > a.Rows() || result.Columns() > b.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
@@ -280,34 +175,17 @@ public static partial class Matrix
 #endif
         var t = new double[K];
 
-        unsafe
+        for (var j = 0; j < M; j++)
         {
-            fixed (double* A = a)
-            fixed (double* B = b)
-            fixed (double* T = t)
-            fixed (double* R = result)
-            {
-                for (var j = 0; j < M; j++)
-                {
-                    double* pb = B + j;
-                    for (var k = 0; k < K; k++)
-                    {
-                        T[k] = *pb;
-                        pb += stride;
-                    }
+            for (var k = 0; k < K; k++)
+                t[k] = b[k, j];
 
-                    double* pa = A;
-                    double* pr = R + j;
-                    for (var i = 0; i < N; i++)
-                    {
-                        double s = 0;
-                        for (var k = 0; k < K; k++)
-                            s += (pa[k] * T[k]);
-                        *pr = s;
-                        pa += K;
-                        pr += M;
-                    }
-                }
+            for (var i = 0; i < N; i++)
+            {
+                double s = 0;
+                for (var k = 0; k < K; k++)
+                    s += a[i, k] * t[k];
+                result[i, j] = s;
             }
         }
 #if DEBUG
@@ -378,31 +256,19 @@ public static partial class Matrix
 #endif
         int K = a.Columns();
         int M = result.Columns();
-        int stride = b.Columns();
         var t = new double[K];
 
-        unsafe
+        for (var j = 0; j < M; j++)
         {
-            fixed (double* B = b)
-            fixed (double* T = t)
-            {
-                for (var j = 0; j < M; j++)
-                {
-                    double* pb = B + j;
-                    for (var k = 0; k < K; k++)
-                    {
-                        T[k] = *pb;
-                        pb += stride;
-                    }
+            for (var k = 0; k < K; k++)
+                t[k] = b[k, j];
 
-                    for (var i = 0; i < a.Length; i++)
-                    {
-                        double s = 0;
-                        for (var k = 0; k < a[i].Length; k++)
-                            s += (a[i][k] * T[k]);
-                        result[i][j] = s;
-                    }
-                }
+            for (var i = 0; i < a.Length; i++)
+            {
+                double s = 0;
+                for (var k = 0; k < a[i].Length; k++)
+                    s += a[i][k] * t[k];
+                result[i][j] = s;
             }
         }
 #if DEBUG
@@ -435,23 +301,18 @@ public static partial class Matrix
 
         var t = new double[K];
 
-        unsafe
+        for (var j = 0; j < M; j++)
         {
-            fixed (double* A = a)
-                for (var j = 0; j < M; j++)
-                {
-                    for (var k = 0; k < t.Length; k++)
-                        t[k] = b[k][j];
+            for (var k = 0; k < t.Length; k++)
+                t[k] = b[k][j];
 
-                    double* pa = A;
-                    for (var i = 0; i < N; i++)
-                    {
-                        double s = 0;
-                        for (var k = 0; k < t.Length; k++)
-                            s += ((*pa++) * t[k]);
-                        result[i][j] = s;
-                    }
-                }
+            for (var i = 0; i < N; i++)
+            {
+                double s = 0;
+                for (var k = 0; k < t.Length; k++)
+                    s += a[i, k] * t[k];
+                result[i][j] = s;
+            }
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.ToMatrix().To<double[,]>(), 1e-4))
@@ -530,49 +391,30 @@ public static partial class Matrix
         if (cols != columnVector.Length || result.Length > rows)
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
 #endif
-        unsafe
+        // Process rows two at a time
+        for (var i = 0; i < rows / 2; i++)
         {
-            fixed (double* a = matrix)
-            fixed (double* x = columnVector)
-            fixed (double* r = result)
+            double sum1 = 0, sum2 = 0;
+
+            for (var j = 0; j < cols; j++)
             {
-                double* pa1 = a;
-                double* pa2 = a + cols;
-                double* pr = r;
-
-                // Process rows two at a time
-                for (var i = 0; i < rows / 2; i++)
-                {
-                    double sum1 = 0, sum2 = 0;
-                    double* px = x;
-
-                    for (var j = 0; j < cols; j++)
-                    {
-                        sum1 += ((*pa1++) * (*px));
-                        sum2 += ((*pa2++) * (*px));
-                        px++;
-                    }
-
-                    *pr++ = sum1;
-                    *pr++ = sum2;
-
-                    // Now we skip a row
-                    pa1 = pa2;
-                    pa2 += cols;
-                }
-
-                // Process the remainder
-                for (var i = 0; i < rows % 2; i++)
-                {
-                    double sum = 0;
-                    double* px = x;
-
-                    for (var j = 0; j < cols; j++)
-                        sum += ((*pa1++) * (*px++));
-
-                    *pr = sum;
-                }
+                sum1 += matrix[2 * i, j] * columnVector[j];
+                sum2 += matrix[2 * i + 1, j] * columnVector[j];
             }
+
+            result[2 * i] = sum1;
+            result[2 * i + 1] = sum2;
+        }
+
+        // Process the remainder
+        for (var i = (rows / 2) * 2; i < rows; i++)
+        {
+            double sum = 0;
+
+            for (var j = 0; j < cols; j++)
+                sum += matrix[i, j] * columnVector[j];
+
+            result[i] = sum;
         }
 
         return result;
@@ -606,6 +448,89 @@ public static partial class Matrix
 
     #endregion
 
+    /// <summary>
+    ///   Computes the product <c>a*B*c</c> of a row vector <c>a</c>, 
+    ///   a square matrix <c>B</c> and a column vector <c>c</c>.
+    /// </summary>
+    /// 
+    /// <param name="rowVector">The left vector <c>a</c>.</param>
+    /// <param name="matrix">The square matrix <c>B</c>.</param>
+    /// <param name="columnVector">The column vector <c>c</c>.</param>
+    ///
+    /// <returns>The product <c>a*B*c</c> of the given vector <c>a</c>,
+    ///   matrix <c>B</c> and vector <c>c</c>.</returns>
+    /// 
+    public static double DotAndDot(this double[] rowVector, double[][] matrix, double[] columnVector)
+    {
+#if DEBUG
+        if (rowVector.Length != matrix.Rows() || matrix.Columns() != columnVector.Length)
+            throw new DimensionMismatchException("Matrices must have compatible dimensions.");
+#endif
+        double sum = 0;
+
+        for (var i = 0; i < rowVector.Length; i++)
+        {
+            double s = 0;
+            for (var j = 0; j < columnVector.Length; j++)
+                s += (matrix[i][j] * columnVector[j]);
+            sum += (rowVector[i] * s);
+        }
+
+        return sum;
+    }
+
+    /// <summary>
+    ///   Computes the product <c>a*B*c</c> of a row vector <c>a</c>, 
+    ///   a square matrix <c>B</c> and a column vector <c>c</c>.
+    /// </summary>
+    /// 
+    /// <param name="rowVector">The left vector <c>a</c>.</param>
+    /// <param name="matrix">The square matrix <c>B</c>.</param>
+    /// <param name="columnVector">The column vector <c>c</c>.</param>
+    ///
+    /// <returns>The product <c>a*B*c</c> of the given vector <c>a</c>,
+    ///   matrix <c>B</c> and vector <c>c</c>.</returns>
+    /// 
+    public static double DotAndDot(this double[] rowVector, double[,] matrix, double[] columnVector)
+    {
+        int cols = matrix.Columns();
+        int rows = matrix.Rows();
+
+        // Validate dimensions in all build configurations: the loop below reads rows in
+        // pairs, so the guard must not be DEBUG-only.
+        if (rowVector.Length != rows || cols != columnVector.Length)
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+        double result = 0;
+
+        // Process rows two at a time
+        for (var i = 0; i < rows / 2; i++)
+        {
+            double sum1 = 0, sum2 = 0;
+
+            for (var j = 0; j < cols; j++)
+            {
+                sum1 += matrix[2 * i, j] * columnVector[j];
+                sum2 += matrix[2 * i + 1, j] * columnVector[j];
+            }
+
+            result += rowVector[2 * i] * sum1;
+            result += rowVector[2 * i + 1] * sum2;
+        }
+
+        // Process the remainder
+        for (var i = (rows / 2) * 2; i < rows; i++)
+        {
+            double sum = 0;
+
+            for (var j = 0; j < cols; j++)
+                sum += matrix[i, j] * columnVector[j];
+
+            result += rowVector[i] * sum;
+        }
+
+        return result;
+    }
+
     #region dot with transposed
 
     /// <summary>
@@ -630,28 +555,14 @@ public static partial class Matrix
         int m = a.Rows();
         int p = b.Rows();
 
-        unsafe
-        {
-            fixed (double* A = a)
-            fixed (double* B = b)
-            fixed (double* R = result)
+        for (var i = 0; i < m; i++)
+            for (var j = 0; j < p; j++)
             {
-                double* pr = R;
-                for (var i = 0; i < m; i++)
-                {
-                    double* pb = B;
-                    for (var j = 0; j < p; j++, pr++)
-                    {
-                        double* pa = A + n * i;
-
-                        double s = 0;
-                        for (var k = 0; k < n; k++)
-                            s += ((*pa++) * (*pb++));
-                        *pr = s;
-                    }
-                }
+                double s = 0;
+                for (var k = 0; k < n; k++)
+                    s += a[i, k] * b[j, k];
+                result[i, j] = s;
             }
-        }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
@@ -671,79 +582,6 @@ public static partial class Matrix
     public static double[,] DotWithTransposed(this double[,] a, double[,] b)
     {
         return DotWithTransposed(a, b, new double[a.Rows(), b.Rows()]);
-    }
-
-    /// <summary>
-    ///   Computes the product <c>A'*B</c> of transposed of matrix <c>A</c> and <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The transposed left matrix <c>A</c>.</param>
-    /// <param name="b">The right matrix <c>B</c>.</param>
-    ///
-    /// <returns>The product <c>A'*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
-    /// 
-    public static double[,] TransposeAndDot(this double[,] a, double[,] b)
-    {
-        return TransposeAndDot(a, b, Matrix.Create<double>(a.Columns(), b.Columns()));
-    }
-
-    /// <summary>
-    ///   Computes the product <c>A'*B</c> of matrix <c>A</c> transposed and matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The transposed left matrix <c>A</c>.</param>
-    /// <param name="b">The right matrix <c>B</c>.</param>
-    /// <param name="result">The matrix <c>R</c> to store the product <c>R = A'*B</c>
-    ///   of the given matrices <c>A</c> and <c>B</c>.</param>
-    /// 
-    public static double[,] TransposeAndDot(this double[,] a, double[,] b, double[,] result)
-    {
-        int n = a.Rows();
-        int m = a.Columns();
-        int p = b.Columns();
-
-#if DEBUG
-        if (n != b.Rows() || result.Rows() > m || result.Columns() > p)
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
-        var C = a.Transpose().To<double[,]>().Dot(b.To<double[,]>());
-#endif
-        unsafe
-        {
-            fixed (double* R = result)
-            fixed (double* B = b)
-            fixed (double* ptemp = new double[p])
-            {
-                double* pr = R;
-
-                for (int i = 0; i < m; i++)
-                {
-                    double* pt = ptemp;
-                    double* pb = B;
-
-                    for (int k = 0; k < n; k++)
-                    {
-                        double aval = a[k, i];
-                        for (int j = 0; j < p; j++)
-                            *pt++ += (aval * (*pb++));
-                        pt = ptemp;
-                    }
-
-                    // Update the results row and clear the cache
-                    for (int j = 0; j < p; j++)
-                    {
-                        *pr++ = *pt;
-                        *pt++ = 0;
-                    }
-                }
-            }
-        }
-
-#if DEBUG
-        if (!C.IsEqual(result.To<double[,]>(), 1e-4))
-            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
-#endif
-
-        return result;
     }
 
     /// <summary>
@@ -780,21 +618,16 @@ public static partial class Matrix
 #endif
         int n = b.Rows();
 
-        unsafe
+        for (var i = 0; i < a.Length; i++)
         {
-            fixed (double* B = b)
-                for (var i = 0; i < a.Length; i++)
-                {
-                    double* pb = B;
-                    double[] arow = a[i];
-                    for (var j = 0; j < n; j++)
-                    {
-                        double sum = 0;
-                        for (var k = 0; k < arow.Length; k++)
-                            sum += (arow[k] * (*pb++));
-                        result[i][j] = sum;
-                    }
-                }
+            double[] arow = a[i];
+            for (var j = 0; j < n; j++)
+            {
+                double sum = 0;
+                for (var k = 0; k < arow.Length; k++)
+                    sum += arow[k] * b[j, k];
+                result[i][j] = sum;
+            }
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
@@ -822,21 +655,16 @@ public static partial class Matrix
 #endif
         int n = a.Rows();
 
-        unsafe
+        for (var j = 0; j < b.Length; j++)
         {
-            fixed (double* A = a)
-                for (var j = 0; j < b.Length; j++)
-                {
-                    double* pa = A;
-                    for (var i = 0; i < n; i++)
-                    {
-                        double sum = 0;
-                        double[] brow = b[j];
-                        for (var k = 0; k < brow.Length; k++)
-                            sum += ((*pa++) * brow[k]);
-                        result[i][j] = sum;
-                    }
-                }
+            double[] brow = b[j];
+            for (var i = 0; i < n; i++)
+            {
+                double sum = 0;
+                for (var k = 0; k < brow.Length; k++)
+                    sum += a[i, k] * brow[k];
+                result[i][j] = sum;
+            }
         }
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
@@ -942,9 +770,97 @@ public static partial class Matrix
         return a.Dot(columnVector.Transpose(out t), result);
     }
 
+    /// <summary>
+    ///   Computes the product <c>A*B'</c> of matrix <c>A</c> and transpose of <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The left matrix <c>A</c>.</param>
+    /// <param name="b">The transposed right matrix <c>B</c>.</param>
+    ///
+    /// <returns>The product <c>A*B'</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
+    /// 
+    public static double[][] DotWithTransposed(this double[][] a, double[,] b)
+    {
+        return DotWithTransposed(a, b, Jagged.Create<double>(a.Length, b.Rows()));
+    }
+
+    /// <summary>
+    ///   Computes the product <c>A*B'</c> of matrix <c>A</c> and transpose of <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The left matrix <c>A</c>.</param>
+    /// <param name="b">The transposed right matrix <c>B</c>.</param>
+    ///
+    /// <returns>The product <c>A*B'</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
+    /// 
+    public static double[][] DotWithTransposed(this double[,] a, double[][] b)
+    {
+        return DotWithTransposed(a, b, Jagged.Create<double>(a.Rows(), b.Length));
+    }
+
     #endregion
 
     #region transpose and dot
+    /// <summary>
+    ///   Computes the product <c>A'*B</c> of transposed of matrix <c>A</c> and <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The transposed left matrix <c>A</c>.</param>
+    /// <param name="b">The right matrix <c>B</c>.</param>
+    ///
+    /// <returns>The product <c>A'*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
+    /// 
+    public static double[,] TransposeAndDot(this double[,] a, double[,] b)
+    {
+        return TransposeAndDot(a, b, Matrix.Create<double>(a.Columns(), b.Columns()));
+    }
+
+    /// <summary>
+    ///   Computes the product <c>A'*B</c> of matrix <c>A</c> transposed and matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The transposed left matrix <c>A</c>.</param>
+    /// <param name="b">The right matrix <c>B</c>.</param>
+    /// <param name="result">The matrix <c>R</c> to store the product <c>R = A'*B</c>
+    ///   of the given matrices <c>A</c> and <c>B</c>.</param>
+    /// 
+    public static double[,] TransposeAndDot(this double[,] a, double[,] b, double[,] result)
+    {
+        int n = a.Rows();
+        int m = a.Columns();
+        int p = b.Columns();
+
+#if DEBUG
+        if (n != b.Rows() || result.Rows() > m || result.Columns() > p)
+            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+        var C = a.Transpose().To<double[,]>().Dot(b.To<double[,]>());
+#endif
+        var ptemp = new double[p];
+        for (var i = 0; i < m; i++)
+        {
+            for (var k = 0; k < n; k++)
+            {
+                double aval = a[k, i];
+                for (var j = 0; j < p; j++)
+                    ptemp[j] += aval * b[k, j];
+            }
+
+            // Update the results row and clear the cache
+            for (var j = 0; j < p; j++)
+            {
+                result[i, j] = ptemp[j];
+                ptemp[j] = 0;
+            }
+        }
+
+#if DEBUG
+        if (!C.IsEqual(result.To<double[,]>(), 1e-4))
+            throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
+#endif
+
+        return result;
+    }
+
     /// <summary>
     ///   Computes the product <c>A'*B</c> of matrix <c>A</c> transposed and matrix <c>B</c>.
     /// </summary>
@@ -965,34 +881,21 @@ public static partial class Matrix
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = a.Transpose().To<double[,]>().Dot(b.To<double[,]>());
 #endif
-        unsafe
+        var ptemp = new double[p];
+        for (var i = 0; i < m; i++)
         {
-            fixed (double* R = result)
-            fixed (double* B = b)
-            fixed (double* ptemp = new double[p])
+            for (var k = 0; k < n; k++)
             {
-                double* pr = R;
+                int aval = a[k, i];
+                for (var j = 0; j < p; j++)
+                    ptemp[j] += aval * b[k, j];
+            }
 
-                for (var i = 0; i < m; i++)
-                {
-                    double* pt = ptemp;
-                    double* pb = B;
-
-                    for (var k = 0; k < n; k++)
-                    {
-                        int aval = a[k, i];
-                        for (var j = 0; j < p; j++)
-                            *pt++ += (aval * (*pb++));
-                        pt = ptemp;
-                    }
-
-                    // Update the results row and clear the cache
-                    for (var j = 0; j < p; j++)
-                    {
-                        *pr++ = *pt;
-                        *pt++ = 0;
-                    }
-                }
+            // Update the results row and clear the cache
+            for (var j = 0; j < p; j++)
+            {
+                result[i, j] = ptemp[j];
+                ptemp[j] = 0;
             }
         }
 
@@ -1269,6 +1172,30 @@ public static partial class Matrix
     }
 
     /// <summary>
+    ///   Computes the product A'*B of matrix <c>A</c> and diagonal matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The left matrix <c>A</c>.</param>
+    /// <param name="b">The diagonal vector of right matrix <c>B</c>.</param>
+    /// 
+    public static double[,] TransposeAndDotWithDiagonal(this double[,] a, double[] b)
+    {
+        return TransposeAndDotWithDiagonal(a, b, Matrix.Create<double>(a.Columns(), b.Length));
+    }
+
+    /// <summary>
+    ///   Computes the product A'*B of matrix <c>A</c> and diagonal matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The left matrix <c>A</c>.</param>
+    /// <param name="b">The diagonal vector of right matrix <c>B</c>.</param>
+    /// 
+    public static double[][] TransposeAndDotWithDiagonal(this double[][] a, double[] b)
+    {
+        return TransposeAndDotWithDiagonal(a, b, Jagged.Create<double>(a.Columns(), b.Length));
+    }
+
+    /// <summary>
     ///   Computes the product A*B of matrix <c>A</c> and diagonal matrix <c>B</c>.
     /// </summary>
     /// 
@@ -1287,6 +1214,20 @@ public static partial class Matrix
     /// </summary>
     /// 
     /// <param name="a">The left matrix <c>A</c>.</param>
+    /// <param name="b">The diagonal vector of right matrix <c>B</c>.</param>
+    ///
+    /// <returns>The product <c>A*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
+    /// 
+    public static double[][] DotWithDiagonal(this double[][] a, double[] b)
+    {
+        return DotWithDiagonal(a, b, Jagged.Create<double>(a.Length, b.Length));
+    }
+
+    /// <summary>
+    ///   Computes the product A*B of matrix <c>A</c> and diagonal matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The left matrix <c>A</c>.</param>
     /// <param name="diagonal">The diagonal vector of right matrix <c>B</c>.</param>
     /// <param name="result">The matrix <c>R</c> to store the product <c>R = A*B</c>
     ///   of the given matrices <c>A</c> and <c>B</c>.</param>
@@ -1298,18 +1239,9 @@ public static partial class Matrix
 #endif
         int rows = a.Rows();
 
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                double* A = ptrA;
-                double* R = ptrR;
-                for (var i = 0; i < rows; i++)
-                    for (var j = 0; j < diagonal.Length; j++)
-                        *R++ = ((*A++) * diagonal[j]);
-            }
-        }
+        for (var i = 0; i < rows; i++)
+            for (var j = 0; j < diagonal.Length; j++)
+                result[i, j] = a[i, j] * diagonal[j];
 #if DEBUG
         if (!Matrix.IsEqual(C, result.To<double[,]>(), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
@@ -1355,18 +1287,9 @@ public static partial class Matrix
     {
         int rows = a.Rows();
 
-        unsafe
-        {
-            fixed (double* ptrA = a)
-            fixed (double* ptrR = result)
-            {
-                double* A = ptrA;
-                double* R = ptrR;
-                for (var i = 0; i < rows; i++)
-                    for (var j = 0; j < diagonal.Length; j++)
-                        (*R++) = ((*A++) / diagonal[j]);
-            }
-        }
+        for (var i = 0; i < rows; i++)
+            for (var j = 0; j < diagonal.Length; j++)
+                result[i, j] = a[i, j] / diagonal[j];
 
         return result;
     }
@@ -1389,6 +1312,32 @@ public static partial class Matrix
         return result;
     }
 
+    /// <summary>
+    ///   Computes the product A*inv(B) of matrix <c>A</c> and diagonal matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The left matrix <c>A</c>.</param>
+    /// <param name="b">The diagonal vector of inverse right matrix <c>B</c>.</param>
+    /// <returns>The product <c>A*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
+    /// 
+    public static double[,] DivideByDiagonal(this double[,] a, double[] b)
+    {
+        return DivideByDiagonal(a, b, Matrix.CreateAs<double, double>(a));
+    }
+
+    /// <summary>
+    ///   Computes the product A*inv(B) of matrix <c>A</c> and diagonal matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The left matrix <c>A</c>.</param>
+    /// <param name="b">The diagonal vector of inverse right matrix <c>B</c>.</param>
+    /// <returns>The product <c>A*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
+    /// 
+    public static double[][] DivideByDiagonal(this double[][] a, double[] b)
+    {
+        return DivideByDiagonal(a, b, Jagged.CreateAs<double, double>(a));
+    }
+
     #endregion
 
     /// <summary>
@@ -1404,18 +1353,11 @@ public static partial class Matrix
     /// 
     public static double[,] Outer(this double[] a, double[] b, double[,] result)
     {
-        unsafe
+        for (var i = 0; i < a.Length; i++)
         {
-            fixed (double* R = result)
-            {
-                double* pr = R;
-                for (var i = 0; i < a.Length; i++)
-                {
-                    double x = a[i];
-                    for (var j = 0; j < b.Length; j++)
-                        *pr++ = (x * b[j]);
-                }
-            }
+            double x = a[i];
+            for (var j = 0; j < b.Length; j++)
+                result[i, j] = x * b[j];
         }
 
         return result;
@@ -1438,6 +1380,22 @@ public static partial class Matrix
             for (var j = 0; j < b.Length; j++)
                 result[i][j] = (a[i] * b[j]);
         return result;
+    }
+
+    /// <summary>
+    ///   Gets the outer product (matrix product) between two vectors (a*bT).
+    /// </summary>
+    /// 
+    /// <remarks>
+    ///   In linear algebra, the outer product typically refers to the tensor
+    ///   product of two vectors. The result of applying the outer product to
+    ///   a pair of vectors is a matrix. The name contrasts with the inner product,
+    ///   which takes as input a pair of vectors and produces a scalar.
+    /// </remarks>
+    /// 
+    public static double[,] Outer(this double[] a, double[] b)
+    {
+        return Outer(a, b, new double[a.Length, b.Length]);
     }
 
     /// <summary>
@@ -1481,36 +1439,14 @@ public static partial class Matrix
         int brows = b.Rows();
         int bcols = b.Columns();
 
-        int ccols = acols * bcols;
-        int block = brows * ccols;
-
-        unsafe
-        {
-            fixed (double* ptrR = result)
-            fixed (double* ptrA = a)
-            fixed (double* ptrB = b)
+        for (var i = 0; i < arows; i++)
+            for (var j = 0; j < acols; j++)
             {
-                double* A = ptrA;
-                double* Ri = ptrR;
-
-                for (var i = 0; i < arows; Ri += block, i++)
-                {
-                    double* Rj = Ri;
-
-                    for (var j = 0; j < acols; j++, Rj += bcols, A++)
-                    {
-                        double* R = Rj;
-                        double* B = ptrB;
-
-                        for (var k = 0; k < brows; k++, R += ccols)
-                        {
-                            for (var l = 0; l < bcols; l++, B++)
-                                *(R + l) = ((*A) * (*B));
-                        }
-                    }
-                }
+                double aval = a[i, j];
+                for (var k = 0; k < brows; k++)
+                    for (var l = 0; l < bcols; l++)
+                        result[i * brows + k, j * bcols + l] = aval * b[k, l];
             }
-        }
 
         return result;
     }
@@ -1566,20 +1502,14 @@ public static partial class Matrix
         int brows = b.Rows();
         int bcols = b.Columns();
 
-        unsafe
-        {
-            fixed (double* B = b)
-                for (var i = 0; i < arows; i++)
-                    for (var j = 0; j < acols; j++)
-                    {
-                        double aval = a[i][j];
-                        double* pb = B;
-
-                        for (var k = 0; k < brows; k++)
-                            for (var l = 0; l < bcols; l++)
-                                result[i * brows + k][j * bcols + l] = (aval * (*pb++));
-                    }
-        }
+        for (var i = 0; i < arows; i++)
+            for (var j = 0; j < acols; j++)
+            {
+                double aval = a[i][j];
+                for (var k = 0; k < brows; k++)
+                    for (var l = 0; l < bcols; l++)
+                        result[i * brows + k][j * bcols + l] = aval * b[k, l];
+            }
 
         return result;
     }
@@ -1630,115 +1560,14 @@ public static partial class Matrix
     /// 
     public static double[] Kronecker(this double[] a, double[] b, double[] result)
     {
-        unsafe
+        for (var i = 0; i < a.Length; i++)
         {
-            fixed (double* R = result)
-            {
-                double* pr = R;
-                for (var i = 0; i < a.Length; i++)
-                {
-                    double x = a[i];
-                    for (var j = 0; j < b.Length; j++)
-                        *pr++ = (x * b[j]);
-                }
-            }
+            double x = a[i];
+            for (var j = 0; j < b.Length; j++)
+                result[i * b.Length + j] = x * b[j];
         }
 
         return result;
-    }
-
-    #endregion
-
-    /// <summary>
-    ///   Computes the product A*B of matrix <c>A</c> and diagonal matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The left matrix <c>A</c>.</param>
-    /// <param name="b">The diagonal vector of right matrix <c>B</c>.</param>
-    ///
-    /// <returns>The product <c>A*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
-    /// 
-    public static double[][] DotWithDiagonal(this double[][] a, double[] b)
-    {
-        return DotWithDiagonal(a, b, Jagged.Create<double>(a.Length, b.Length));
-    }
-
-    /// <summary>
-    ///   Computes the product A'*B of matrix <c>A</c> and diagonal matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The left matrix <c>A</c>.</param>
-    /// <param name="b">The diagonal vector of right matrix <c>B</c>.</param>
-    /// 
-    public static double[,] TransposeAndDotWithDiagonal(this double[,] a, double[] b)
-    {
-        return TransposeAndDotWithDiagonal(a, b, Matrix.Create<double>(a.Columns(), b.Length));
-    }
-
-    /// <summary>
-    ///   Computes the product A'*B of matrix <c>A</c> and diagonal matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The left matrix <c>A</c>.</param>
-    /// <param name="b">The diagonal vector of right matrix <c>B</c>.</param>
-    /// 
-    public static double[][] TransposeAndDotWithDiagonal(this double[][] a, double[] b)
-    {
-        return TransposeAndDotWithDiagonal(a, b, Jagged.Create<double>(a.Columns(), b.Length));
-    }
-
-    /// <summary>
-    ///   Computes the product A*inv(B) of matrix <c>A</c> and diagonal matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The left matrix <c>A</c>.</param>
-    /// <param name="b">The diagonal vector of inverse right matrix <c>B</c>.</param>
-    /// <returns>The product <c>A*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
-    /// 
-    public static double[,] DivideByDiagonal(this double[,] a, double[] b)
-    {
-        return DivideByDiagonal(a, b, Matrix.CreateAs<double, double>(a));
-    }
-
-    /// <summary>
-    ///   Computes the product A*inv(B) of matrix <c>A</c> and diagonal matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The left matrix <c>A</c>.</param>
-    /// <param name="b">The diagonal vector of inverse right matrix <c>B</c>.</param>
-    /// <returns>The product <c>A*B</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
-    /// 
-    public static double[][] DivideByDiagonal(this double[][] a, double[] b)
-    {
-        return DivideByDiagonal(a, b, Jagged.CreateAs<double, double>(a));
-    }
-
-    /// <summary>
-    ///   Computes the product <c>A*B'</c> of matrix <c>A</c> and transpose of <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The left matrix <c>A</c>.</param>
-    /// <param name="b">The transposed right matrix <c>B</c>.</param>
-    ///
-    /// <returns>The product <c>A*B'</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
-    /// 
-    public static double[][] DotWithTransposed(this double[][] a, double[,] b)
-    {
-        return DotWithTransposed(a, b, Jagged.Create<double>(a.Length, b.Rows()));
-    }
-
-    /// <summary>
-    ///   Computes the product <c>A*B'</c> of matrix <c>A</c> and transpose of <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The left matrix <c>A</c>.</param>
-    /// <param name="b">The transposed right matrix <c>B</c>.</param>
-    ///
-    /// <returns>The product <c>A*B'</c> of the given matrices <c>A</c> and <c>B</c>.</returns>
-    /// 
-    public static double[][] DotWithTransposed(this double[,] a, double[][] b)
-    {
-        return DotWithTransposed(a, b, Jagged.Create<double>(a.Rows(), b.Length));
     }
 
     /// <summary>
@@ -1819,19 +1648,6 @@ public static partial class Matrix
         return Kronecker(a, b, new double[a.Length * b.Length]);
     }
 
-    /// <summary>
-    ///   Gets the outer product (matrix product) between two vectors (a*bT).
-    /// </summary>
-    /// 
-    /// <remarks>
-    ///   In linear algebra, the outer product typically refers to the tensor
-    ///   product of two vectors. The result of applying the outer product to
-    ///   a pair of vectors is a matrix. The name contrasts with the inner product,
-    ///   which takes as input a pair of vectors and produces a scalar.
-    /// </remarks>
-    /// 
-    public static double[,] Outer(this double[] a, double[] b)
-    {
-        return Outer(a, b, new double[a.Length, b.Length]);
-    }
+    #endregion
+
 }

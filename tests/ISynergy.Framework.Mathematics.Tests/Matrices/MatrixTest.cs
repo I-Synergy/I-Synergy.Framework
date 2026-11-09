@@ -963,7 +963,7 @@ public partial class MatrixTest
         };
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[] vcut = v.Submatrix(0, 1); // { 9, 4 }
+        double[] vcut = v.Get(0, 2); // { 9, 4 }
 #pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(new double[] { 9, 4 }.IsEqual(vcut));
 
@@ -3538,7 +3538,7 @@ public partial class MatrixTest
         {
             int[] idx = values.Top(5);
 #pragma warning disable CS0618 // Type or member is obsolete
-            double[] selected = values.Submatrix(idx);
+            double[] selected = values.Get(idx);
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.HasCount(5, idx);
             Assert.AreEqual(9, selected[0]);
@@ -3551,7 +3551,7 @@ public partial class MatrixTest
         {
             int[] idx = values.Bottom(5);
 #pragma warning disable CS0618 // Type or member is obsolete
-            double[] selected = values.Submatrix(idx);
+            double[] selected = values.Get(idx);
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.HasCount(5, idx);
             Assert.AreEqual(-2, selected[0]);
@@ -3573,10 +3573,10 @@ public partial class MatrixTest
             for (int k = 1; k < 11; k++)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
-                double[] actualTop = values.Submatrix(values.Top(k));
+                double[] actualTop = values.Get(values.Top(k));
 #pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning disable CS0618 // Type or member is obsolete
-                double[] actualBottom = values.Submatrix(values.Bottom(k));
+                double[] actualBottom = values.Get(values.Bottom(k));
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 Array.Sort(values);

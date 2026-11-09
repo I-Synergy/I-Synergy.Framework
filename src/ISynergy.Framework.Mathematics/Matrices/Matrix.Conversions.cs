@@ -5,11 +5,6 @@ using System.Data;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -1312,7 +1307,7 @@ public static partial class Matrix
     public static int[] ToInt32(this bool[] value, int[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = value[i] ? (Int32)1 : (Int32)0;
+            result[i] = value[i] ? 1 : 0;
         return result;
     }
 
@@ -1354,7 +1349,7 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = value[i][j] ? (Int32)1 : (Int32)0;
+                result[i][j] = value[i][j] ? 1 : 0;
         return result;
     }
 

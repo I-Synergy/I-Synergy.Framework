@@ -29,7 +29,7 @@ public partial class MatrixTest
 
         a = [2, 7, 3, 4, 5, 6, 1, 8];
 #pragma warning disable CS0618 // Type or member is obsolete
-        double expected = (int)Measures.Median(a.Submatrix(4, 7));
+        double expected = (int)Measures.Median(a.Get(4, 8));
 #pragma warning restore CS0618 // Type or member is obsolete
         int actual = Sort.Partition(a, 4, 7);
         Assert.AreEqual(expected, actual);

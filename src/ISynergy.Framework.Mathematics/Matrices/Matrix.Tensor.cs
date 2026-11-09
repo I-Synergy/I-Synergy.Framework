@@ -1,11 +1,6 @@
 using ISynergy.Framework.Core.Extensions;
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -68,9 +63,7 @@ public static partial class Matrix
         if (order == MatrixOrder.CRowMajor)
         {
             var dst = Array.CreateInstance(t, array.Length);
-#pragma warning disable CS0618 // Type or member is obsolete
             Buffer.BlockCopy(array, 0, dst, 0, dst.Length * Marshal.SizeOf(t));
-#pragma warning restore CS0618 // Type or member is obsolete
             return dst;
         }
 
@@ -194,10 +187,8 @@ public static partial class Matrix
         var type = source.GetInnerMostType();
         var r = Array.CreateInstance(type, length);
         var rowSize = source.Length / source.GetLength(dimension);
-#pragma warning disable CS0618 // Type or member is obsolete
         Buffer.BlockCopy(source, start * rowSize * Marshal.SizeOf(type), r, 0,
             rows * rowSize * Marshal.SizeOf(type));
-#pragma warning restore CS0618 // Type or member is obsolete
         return r;
     }
 
@@ -230,10 +221,8 @@ public static partial class Matrix
         var type = destination.GetInnerMostType();
         var rowSize = destination.Length / destination.GetLength(0);
         var length = end - start;
-#pragma warning disable CS0618 // Type or member is obsolete
         Buffer.BlockCopy(value, 0, destination, start * rowSize * Marshal.SizeOf(type),
             length * rowSize * Marshal.SizeOf(type));
-#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     /// <summary>

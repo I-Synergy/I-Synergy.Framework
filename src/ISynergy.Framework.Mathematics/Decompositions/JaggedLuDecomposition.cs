@@ -2,12 +2,6 @@ using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1192 // algorithm comments and repeated strings are intentional in numerical code
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -291,7 +285,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
                 for (var j = 0; j < rows; j++)
                     X[i][j] -= X[k][j] * lu[i][k];
 
-        // Solve U*X = I;
+        // Back-substitute through U to solve for the inverse X.
         for (var k = rows - 1; k >= 0; k--)
         {
             for (var j = 0; j < rows; j++)
@@ -350,7 +344,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
                 for (var j = 0; j < count; j++)
                     X[i][j] -= X[k][j] * lu[i][k];
 
-        // Solve U*X = Y;
+        // Back-substitute through U to solve for X.
         for (var k = cols - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)
@@ -393,7 +387,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
                 X[i] -= lu[i][j] * X[j];
         }
 
-        // Solve U*X = Y;
+        // Back-substitute through U to solve for X.
         for (var i = rows - 1; i >= 0; i--)
         {
             for (var j = rows - 1; j > i; j--)
@@ -442,7 +436,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
                 for (var j = 0; j < count; j++)
                     X[j][i] -= X[j][k] * lu[i][k];
 
-        // Solve U*X = Y;
+        // Back-substitute through U to solve for X.
         for (var k = rows - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)

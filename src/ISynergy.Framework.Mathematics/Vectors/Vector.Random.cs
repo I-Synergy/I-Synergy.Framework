@@ -2,11 +2,6 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Vectors;
@@ -34,7 +29,7 @@ public static partial class Vector
 
         var vector = new double[size];
         for (var i = 0; i < size; i++)
-            vector[i] = (double)random.NextDouble() * (max - min) + min;
+            vector[i] = random.NextDouble() * (max - min) + min;
         return vector;
     }
 
@@ -101,7 +96,7 @@ public static partial class Vector
     /// 
     public static int[] Sample(int sampleSize, int populationSize)
     {
-        if ((int)sampleSize > populationSize)
+        if (sampleSize > populationSize)
         {
             throw new ArgumentOutOfRangeException(nameof(sampleSize), String.Format(
                 "The sample size {0} must be less than the size of the population {1}.",

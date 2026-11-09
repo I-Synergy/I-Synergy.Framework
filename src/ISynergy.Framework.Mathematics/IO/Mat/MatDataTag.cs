@@ -3,35 +3,18 @@ namespace ISynergy.Framework.Mathematics.IO.Mat;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125 // struct layout diagram comment is documentation, not commented code
 
 
 /*
-      
- 0   ||   1   ||   2   ||   3   ||   4   ||   5   ||   6   ||   7    
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-||         data type          ||          number of bytes         |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-||                                                               |
-~                       variable size                           ~
-||                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  MAT-file v5 binary layout reference (documentation only).
 
-             MAT-file data element format (v5)
-             8 bytes header / variable payload
- 0   ||   1   ||   2   ||   3   ||   4   ||   5   ||   6   ||   7    
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-||   number of bytes  ||   data type   ||           data           |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  Regular data element: an eight byte header holding the data type in the
+  first four bytes and the number of bytes of the payload in the next four
+  bytes, followed by the variable sized payload.
 
-            MAT-file small data element format (v5)
-                8 bytes header + fixed payload
-     
+  Small data element: an eight byte header holding the number of bytes in
+  the first four bytes and the data type in the next four bytes, followed by
+  a fixed four byte payload packed into the remaining bytes of the header.
 */
 
 /// <summary>

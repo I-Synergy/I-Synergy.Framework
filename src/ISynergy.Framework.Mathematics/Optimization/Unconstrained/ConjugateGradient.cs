@@ -3,13 +3,6 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1450, S1135 // write-only fields are algorithm state; TODO comments are deferred refactoring notes
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -149,29 +142,23 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
     IGradientOptimizationMethod, IOptimizationMethod<ConjugateGradientCode>,
     ISupportsCancellation
 {
-    // TODO: Move to separate classes
+    // The resumable state of the line search is grouped in LineSearchState below.
 
     private bool brackt;
 
     private double[] d;
     private double dg2;
-    private double dgtest;
     private double dgx;
     private double dgy;
     private readonly double epsilon = 1e-5;
-    private double finit;
-    private double ftest1;
 
     private readonly double ftol = 1e-4;
     private double fx;
     private double fy;
 
-    private double[] g; // gradient at current solution
     private double[] gold;
     private readonly double gtol = 0.1;
-    private int infoc;
     private readonly int maxfev = 40;
-    private bool stage1;
     private double stmax;
 
     private double stmin;
@@ -180,8 +167,6 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
     private double stx;
     private double sty;
     private double[] w;
-    private double width;
-    private double width1;
     private readonly double xtol = 1e-17;
 
     /// <summary>
@@ -296,7 +281,8 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         var x = Solution;
 
         var f = Function(x);
-        g = Gradient(x);
+        var state = new LineSearchState(d, w);
+        state.g = Gradient(x);
 
         var method = (int)Method;
 
@@ -308,10 +294,10 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         Searches = 0; // Number of line search iterations after Wolfe conditions were satisfied.
         double dg0 = 0;
 
-        for (var i = 0; i < g.Length; ++i)
-            d[i] = -g[i];
+        for (var i = 0; i < state.g.Length; ++i)
+            d[i] = -state.g[i];
 
-        var gnorm = g.Euclidean();
+        var gnorm = state.g.Euclidean();
         var xnorm = Math.Max(1.0, x.Euclidean());
         var stp1 = 1.0 / gnorm;
         var f_old = f;
@@ -320,7 +306,7 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         // Make initial progress report with initialization parameters
         if (Progress is not null)
             Progress(this, new OptimizationProgressEventArgs
-                (Iterations, Evaluations, new OptimizationStep(g, gnorm, Solution, xnorm, f, stp1), finish));
+                (Iterations, Evaluations, new OptimizationStep(state.g, gnorm, Solution, xnorm, f, stp1), finish));
         // Main iteration
         while (!finish)
         {
@@ -344,10 +330,10 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
             double dgout = 0;
 
             // Save original gradient
-            for (var i = 0; i < g.Length; i++)
-                gold[i] = g[i];
+            for (var i = 0; i < state.g.Length; i++)
+                gold[i] = state.g[i];
 
-            var dg = d.Dot(g);
+            var dg = d.Dot(state.g);
             var dgold = dg;
             var stp = 1.0;
 
@@ -363,14 +349,14 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         L72:
 
             // Call to the line search subroutine
-            Status = cvsmod(ref f, new LineSearchState(d, w), ref stp, ref info, ref nfev, ref dg, ref dgout);
+            Status = cvsmod(ref f, state, ref stp, ref info, ref nfev, ref dg, ref dgout);
 
             if (Status != ConjugateGradientCode.Success)
                 return false;
 
             // Test if descent direction is obtained for methods 2 and 3
-            double gg = Matrix.Dot(g, g);
-            double gg0 = Matrix.Dot(g, gold);
+            double gg = Matrix.Dot(state.g, state.g);
+            double gg0 = Matrix.Dot(state.g, gold);
             var betapr = (gg - gg0) / (gnorm * gnorm);
 
             // When nrst > n and irest == 1 then restart.
@@ -423,13 +409,13 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
             }
 
             // Compute the new direction
-            for (var i = 0; i < g.Length; i++)
-                d[i] = -g[i] + beta * d[i];
+            for (var i = 0; i < state.g.Length; i++)
+                d[i] = -state.g[i] + beta * d[i];
 
             dg0 = dgold * stp;
 
             // Check for termination
-            gnorm = g.Euclidean();
+            gnorm = state.g.Euclidean();
             xnorm = Math.Max(1.0, x.Euclidean());
 
             // Convergence test
@@ -452,16 +438,17 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
             if (Progress is not null)
                 Progress(this, new OptimizationProgressEventArgs(Iterations,
-                    Evaluations, new OptimizationStep(g, gnorm, Solution, xnorm, f, stp), finish));
+                    Evaluations, new OptimizationStep(state.g, gnorm, Solution, xnorm, f, stp), finish));
         }
 
         return Status == ConjugateGradientCode.Success;
     }
 
     /// <summary>
-    ///     Groups the search direction and work buffers used during the line search.
+    ///     Groups the search direction, the work buffer and the resumable state of
+    ///     the line search used while running the More'-Thuente search.
     /// </summary>
-    private readonly struct LineSearchState
+    private sealed class LineSearchState
     {
         public LineSearchState(double[] direction, double[] work)
         {
@@ -474,6 +461,30 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
         /// <summary>Gets the work buffer holding the previous solution.</summary>
         public double[] Work { get; }
+
+        /// <summary>Gets or sets the gradient at the current trial point.</summary>
+        public double[] g;
+
+        /// <summary>Gets or sets the sufficient decrease test value for the search direction.</summary>
+        public double dgtest;
+
+        /// <summary>Gets or sets the function value at the start of the line search.</summary>
+        public double finit;
+
+        /// <summary>Gets or sets the modified function value used by the line search tests.</summary>
+        public double ftest1;
+
+        /// <summary>Gets or sets the index of the interval of uncertainty.</summary>
+        public int infoc;
+
+        /// <summary>Gets or sets whether the search is still in its first stage.</summary>
+        public bool stage1;
+
+        /// <summary>Gets or sets the width of the interval of uncertainty.</summary>
+        public double width;
+
+        /// <summary>Gets or sets the previous width of the interval of uncertainty.</summary>
+        public double width1;
     }
 
     private ConjugateGradientCode cvsmod(ref double f, LineSearchState state, ref double stp, ref int info,
@@ -487,7 +498,7 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         if (info == 1)
             goto L321;
 
-        infoc = 1;
+        state.infoc = 1;
 
         if (stp <= 0) // Check the input parameters for errors
             return ConjugateGradientCode.StepSize;
@@ -500,12 +511,12 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
         // Initialize local variables
         brackt = false;
-        stage1 = true;
+        state.stage1 = true;
         nfev = 0;
-        finit = f;
-        dgtest = ftol * dginit;
-        width = stpmax - stpmin;
-        width1 = width / 0.5;
+        state.finit = f;
+        state.dgtest = ftol * dginit;
+        state.width = stpmax - stpmin;
+        state.width1 = state.width / 0.5;
 
         for (var j = 0; j < x.Length; ++j)
             wa[j] = x[j];
@@ -519,10 +530,10 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         //   function, and derivative at the current step.
 
         stx = 0;
-        fx = finit;
+        fx = state.finit;
         dgx = dginit;
         sty = 0;
-        fy = finit;
+        fy = state.finit;
         dgy = dginit;
     L30: // Start of iteration.
 
@@ -550,7 +561,7 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         // let STP be the lowest point obtained so far.
 
         if (brackt && (stp <= stmin || stp >= stmax) || nfev >= maxfev - 1 ||
-            infoc == 0 || brackt && stmax - stmin <= xtol * stmax)
+            state.infoc == 0 || brackt && stmax - stmin <= xtol * stmax)
             stp = stx;
 
         // Evaluate the function and gradient at STP
@@ -561,24 +572,24 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
         // Fetch function and gradient
         f = Function(x);
-        g = Gradient(x);
+        state.g = Gradient(x);
 
         info = 0;
         nfev++;
         dg2 = 0;
 
-        for (var j = 0; j < g.Length; ++j)
-            dg2 += g[j] * s[j];
+        for (var j = 0; j < state.g.Length; ++j)
+            dg2 += state.g[j] * s[j];
 
-        ftest1 = finit + stp * dgtest;
+        state.ftest1 = state.finit + stp * state.dgtest;
 
-        if (brackt && (stp <= stmin || stp >= stmax) || infoc == 0)
+        if (brackt && (stp <= stmin || stp >= stmax) || state.infoc == 0)
             return ConjugateGradientCode.RoundingErrors;
 
-        if (stp == stpmax && f <= ftest1 && dg2 <= dgtest)
+        if (stp == stpmax && f <= state.ftest1 && dg2 <= state.dgtest)
             return ConjugateGradientCode.StepHigh;
 
-        if (stp == stpmin && (f > ftest1 || dg2 >= dgtest))
+        if (stp == stpmin && (f > state.ftest1 || dg2 >= state.dgtest))
             return ConjugateGradientCode.StepLow;
 
         if (nfev >= maxfev)
@@ -591,7 +602,7 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         //  at least one interpolation is not easy, since the code may 
         //  override an interpolation) 
 
-        if (f <= ftest1 && Math.Abs(dg2) <= gtol * -dginit && nfev > 1)
+        if (f <= state.ftest1 && Math.Abs(dg2) <= gtol * -dginit && nfev > 1)
         {
             info = 1;
             dgout = dg2;
@@ -601,7 +612,7 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
         // In the first stage we seek a step for which the modified
         // function has a nonpositive value and nonnegative derivative.
-        if (stage1 && f <= ftest1 && dg2 >= Math.Min(ftol, gtol) * dginit) stage1 = false;
+        if (state.stage1 && f <= state.ftest1 && dg2 >= Math.Min(ftol, gtol) * dginit) state.stage1 = false;
 
         // A modified function is used to predict the step only if
         // we have not obtained a step for which the modified function
@@ -609,15 +620,15 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         // and if a lower function value has been obtained but the 
         // decrease is not sufficient.
 
-        if (stage1 && f <= fx && f > ftest1)
+        if (state.stage1 && f <= fx && f > state.ftest1)
         {
             // Define the modified function and derivative values
-            var fm = f - stp * dgtest;
-            var fxm = fx - stx * dgtest;
-            var fym = fy - sty * dgtest;
-            var dgm = dg2 - dgtest;
-            var dgxm = dgx - dgtest;
-            var dgym = dgy - dgtest;
+            var fm = f - stp * state.dgtest;
+            var fxm = fx - stx * state.dgtest;
+            var fym = fy - sty * state.dgtest;
+            var dgm = dg2 - state.dgtest;
+            var dgxm = dgx - state.dgtest;
+            var dgym = dgy - state.dgtest;
 
             // Call CSTEPM to update the interval of
             // uncertainty and to compute the new step.
@@ -626,10 +637,10 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
                 ref sty, ref fym, ref dgym, ref stp, fm, dgm, ref brackt, stpmin, stpmax);
 
             // Reset the function and gradient values for f.
-            fx = fxm + stx * dgtest;
-            fy = fym + sty * dgtest;
-            dgx = dgxm + dgtest;
-            dgy = dgym + dgtest;
+            fx = fxm + stx * state.dgtest;
+            fy = fym + sty * state.dgtest;
+            dgx = dgxm + state.dgtest;
+            dgy = dgym + state.dgtest;
         }
         else
         {
@@ -644,11 +655,11 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
         if (brackt)
         {
-            if (Math.Abs(sty - stx) >= 0.66 * width1)
+            if (Math.Abs(sty - stx) >= 0.66 * state.width1)
                 stp = stx + 0.5 * (sty - stx);
 
-            width1 = width;
-            width = Math.Abs(sty - stx);
+            state.width1 = state.width;
+            state.width = Math.Abs(sty - stx);
         }
 
         goto L30;

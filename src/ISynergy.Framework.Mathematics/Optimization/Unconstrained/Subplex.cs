@@ -29,12 +29,6 @@ using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1854 // initial assignments before loop reassignment are intentional in ported algorithms
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -202,7 +196,7 @@ public class Subplex : BaseOptimizationMethod, IOptimizationMethod<NelderMeadSta
 
     private NelderMeadStatus sbplx_minimize()
     {
-        var ret = NelderMeadStatus.Success;
+        NelderMeadStatus ret;
 
         var x = Solution;
         Value = Function(x);
@@ -222,7 +216,7 @@ public class Subplex : BaseOptimizationMethod, IOptimizationMethod<NelderMeadSta
             double normi = 0;
             double normdx = 0;
             int ns, nsubs = 0;
-            var nevals = Convergence.Evaluations;
+            int nevals;
             double fdiff, fdiff_max = 0;
 
             Array.Copy(x, xprev, x.Length);

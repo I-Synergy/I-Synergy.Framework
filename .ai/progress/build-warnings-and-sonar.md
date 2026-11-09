@@ -52,3 +52,20 @@ The Mathematics port is now fixed rather than suppressed:
 - Public API changes are listed in `CHANGELOG.md` (Cdf97, FieldNames method,
   MonteCarloIntegration RNG type, interface variance, sealed QuadraticObjectiveFunction,
   OptimizationStep, OctaveEnvironment field initialization).
+
+## Pragma removal wave (2026-11-09)
+
+User asked to remove the pre-existing blanket `#pragma warning disable` blocks too. Removing
+1,412 pragma lines across 264 files exposed 1,974 findings. Status:
+
+- Fixed: 775 mechanical findings (S1905, S1110, S125, S1117, S1066, S1854, S3626, S4136,
+  S1764, S2234, S1135, S1939, S2292, S1116, S8969, S3427, S2245, S1450, S108, S101, S2346,
+  S4456, S1133, S6640, S1871, S1264) across the Mathematics project.
+- Also fixed the S8969 findings this exposed in Core (`RedBlackTree{T}.Balancing.cs`).
+- Tests adapted to removed obsolete APIs (`Submatrix` -> `Get`, `Subgroups` -> `Classes.Separate`).
+- Found and fixed a control-flow regression from the `goto L90` rewrite in
+  `InfiniteAdaptiveGaussKronrod` (caught by `MultipleTests_Examples`).
+- Remaining after this wave: **S2368 (582)**, **S907 (296)**, **S1244 (218)**, **S1199 (103)**.
+  These are structural: public array-based API, goto-based Fortran ports, exact float
+  semantics and nested scoping blocks.
+- Verification: Release build 0 errors; Mathematics 954 passed / 1 skipped; full test suite green.

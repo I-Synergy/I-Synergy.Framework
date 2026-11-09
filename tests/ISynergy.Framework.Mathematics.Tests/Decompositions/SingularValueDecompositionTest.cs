@@ -131,7 +131,7 @@ public class SingularValueDecompositionTest
         };
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[,] matrix = target.RightSingularVectors.Submatrix(0, 3, 0, 1);
+        double[,] matrix = target.RightSingularVectors.Get(0, 4, 0, 2);
 #pragma warning restore CS0618 // Type or member is obsolete
 
         // V can be different, but for the economy SVD it is often equal

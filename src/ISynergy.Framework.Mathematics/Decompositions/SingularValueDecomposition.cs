@@ -4,12 +4,6 @@ using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1117 // algorithm code and variable shadowing is intentional
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -395,7 +389,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
 
         var pp = p - 1;
         var iter = 0;
-        var eps = Constants.DoubleEpsilon;
+        var epsilon = Constants.DoubleEpsilon;
         while (p > 0)
         {
             int k, kase;
@@ -417,7 +411,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 if (k == -1)
                     break;
 
-                var alpha = tiny + eps * (Math.Abs(Diagonal[k]) + Math.Abs(Diagonal[k + 1]));
+                var alpha = tiny + epsilon * (Math.Abs(Diagonal[k]) + Math.Abs(Diagonal[k + 1]));
                 if (Math.Abs(e[k]) <= alpha || double.IsNaN(e[k]))
                 {
                     e[k] = 0;
@@ -441,7 +435,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                     var t = (ks != p ? Math.Abs(e[ks]) : 0) +
                             (ks != k + 1 ? Math.Abs(e[ks - 1]) : 0);
 
-                    if (Math.Abs(Diagonal[ks]) <= eps * t)
+                    if (Math.Abs(Diagonal[ks]) <= epsilon * t)
                     {
                         Diagonal[ks] = 0;
                         break;
@@ -1185,9 +1179,9 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
         svd.Ordering = (int[])Ordering.Clone();
         svd.swapped = swapped;
         if (LeftSingularVectors is not null)
-            svd.LeftSingularVectors = (double[,])LeftSingularVectors.MemberwiseClone();
+            svd.LeftSingularVectors = LeftSingularVectors.MemberwiseClone();
         if (RightSingularVectors is not null)
-            svd.RightSingularVectors = (double[,])RightSingularVectors.MemberwiseClone();
+            svd.RightSingularVectors = RightSingularVectors.MemberwiseClone();
 
         return svd;
     }

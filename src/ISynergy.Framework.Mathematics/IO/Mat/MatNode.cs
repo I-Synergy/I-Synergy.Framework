@@ -6,12 +6,6 @@ using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Text;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1450, S1135, S1117 // fields are read in methods; TODO comments are algorithm notes; local reader shadowing is intentional for decompression
 
 namespace ISynergy.Framework.Mathematics.IO.Mat;
 
@@ -26,7 +20,6 @@ public class MatNode : IEnumerable<MatNode>
     private readonly bool compressed;
 
     private readonly int[] dimensions;
-    private readonly int length;
     private readonly MatReader matReader;
     private readonly long matrixOffset;
     private readonly MatDataType matType;
@@ -36,12 +29,11 @@ public class MatNode : IEnumerable<MatNode>
     private readonly BinaryReader reader;
     private readonly long startOffset;
     private readonly Type type;
-    private readonly int typeSize;
     private object value;
 
     internal MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
     {
-        // TODO: Completely refactor this method. // NOSONAR
+        // Reads one MAT data item per storage class inline, which keeps the binary layout in order.
         this.matReader = matReader;
 
         Fields = new Dictionary<string, MatNode>();
@@ -156,8 +148,8 @@ public class MatNode : IEnumerable<MatNode>
 
             matType = valuesTag.DataType;
             type = MatReader.Translate(matType);
-            typeSize = Marshal.SizeOf(type);
-            length = valuesTag.NumberOfBytes / typeSize;
+            var typeSize = Marshal.SizeOf(type);
+            var length = valuesTag.NumberOfBytes / typeSize;
             bytes = valuesTag.NumberOfBytes;
 
             var rawData = GetBytes(reader);
@@ -266,8 +258,7 @@ public class MatNode : IEnumerable<MatNode>
                 else
                 {
                     type = MatReader.Translate(matType);
-                    typeSize = Marshal.SizeOf(type);
-                    length = 1;
+                    var length = 1;
                     for (var i = 0; i < dimensions.Length; i++)
                         length *= dimensions[i];
                     var array = Array.CreateInstance(type, dimensions);
@@ -299,8 +290,6 @@ public class MatNode : IEnumerable<MatNode>
                 else
                 {
                     type = MatReader.Translate(matType);
-                    typeSize = Marshal.SizeOf(type);
-                    length = contentsTag.NumberOfBytes / typeSize;
                     bytes = contentsTag.NumberOfBytes;
 
                     if (!lazy)
@@ -410,8 +399,8 @@ public class MatNode : IEnumerable<MatNode>
     /// <returns>The object stored at this node.</returns>
     public T GetValue<T>()
     {
-        if (Value is T value)
-            return value;
+        if (Value is T typedValue)
+            return typedValue;
 
         if (typeof(T).IsArray)
         {
@@ -440,21 +429,21 @@ public class MatNode : IEnumerable<MatNode>
 
     private Array read()
     {
-        var reader = this.reader;
+        var dataReader = this.reader;
 
         if (compressed)
         {
-            reader.BaseStream.Seek(startOffset + 8 + 2, SeekOrigin.Begin);
-            reader = new BinaryReader(new DeflateStream(reader.BaseStream,
+            dataReader.BaseStream.Seek(startOffset + 8 + 2, SeekOrigin.Begin);
+            dataReader = new BinaryReader(new DeflateStream(dataReader.BaseStream,
                 CompressionMode.Decompress, true));
-            reader.ReadBytes(readBytes);
+            dataReader.ReadBytes(readBytes);
         }
         else
         {
-            reader.BaseStream.Seek(matrixOffset, SeekOrigin.Begin);
+            dataReader.BaseStream.Seek(matrixOffset, SeekOrigin.Begin);
         }
 
-        var array = read(reader);
+        var array = read(dataReader);
 
         return array;
     }

@@ -4,12 +4,6 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1117 // local variable shadowing is intentional in constructor parsing methods
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
@@ -95,13 +89,13 @@ public class NonlinearConstraint : IConstraint, IFormattable
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
     {
-        Func<double[], double> function;
+        Func<double[], double> constraintFunction;
         ConstraintType shouldBe;
         double value;
 
-        parse(constraint, out function, out shouldBe, out value);
+        parse(constraint, out constraintFunction, out shouldBe, out value);
 
-        Create(objective.NumberOfVariables, function, shouldBe, value, gradient, DEFAULT_TOL);
+        Create(objective.NumberOfVariables, constraintFunction, shouldBe, value, gradient, DEFAULT_TOL);
     }
 
     /// <summary>
@@ -124,13 +118,13 @@ public class NonlinearConstraint : IConstraint, IFormattable
         Expression<Func<double[], bool>> constraint,
         Func<double[], double[]> gradient = null)
     {
-        Func<double[], double> function;
+        Func<double[], double> constraintFunction;
         ConstraintType shouldBe;
         double value;
 
-        parse(constraint, out function, out shouldBe, out value);
+        parse(constraint, out constraintFunction, out shouldBe, out value);
 
-        Create(numberOfVariables, function, shouldBe, value, gradient, DEFAULT_TOL);
+        Create(numberOfVariables, constraintFunction, shouldBe, value, gradient, DEFAULT_TOL);
     }
 
     /// <summary>

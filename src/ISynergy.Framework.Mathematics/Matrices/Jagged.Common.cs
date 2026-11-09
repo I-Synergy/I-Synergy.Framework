@@ -3,12 +3,6 @@
 using ISynergy.Framework.Mathematics.Decompositions;
 using System.Collections;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1135 // commented code and TODO comments are deferred template generation notes
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -96,7 +90,7 @@ public static partial class Matrix
                 destination[i, j] = matrix[i][j];
     }
 
-    // TODO: Use T4 templates for the equality comparisons
+    // Note: these equality comparisons are repetitive and are a candidate for T4 generation.
     #region Transpose
 
     /// <summary>
@@ -437,7 +431,7 @@ public static partial class Matrix
 
         return true;
     }
-    // TODO: Move to T4 template
+    // Note: this member is repetitive and is a candidate for T4 generation.
     /// <summary>
     ///     Gets the trace of a matrix.
     /// </summary>
@@ -507,25 +501,6 @@ public static partial class Matrix
 
         return true;
     }
-
-    ///// <summary>
-    /////   Determines whether a jagged array is a rectangular
-    /////   matrix (containing all inner arrays of same size).
-    ///// </summary>
-    ///// 
-    //public static bool IsRectangular<T>(this T[][] array)
-    //{
-    //    if (array.Length == 0)
-    //        return true;
-    //    int cols = array[0].Length;
-    //    for (var i = 0; i < array.Length; i++)
-    //    {
-    //        if (array[0].Length != cols)
-    //            return false;
-    //    }
-
-    //    return true;
-    //}
 
     #endregion
     #region Operation Mapping (Apply)

@@ -2,12 +2,6 @@ using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1192, S3427, S3626, S4136 // duplicate strings, overload ordering, redundant jumps are intentional in statistical calculations
 
 
 namespace ISynergy.Framework.Mathematics.Statistics;
@@ -71,11 +65,10 @@ public static partial class Measures
     ///   The dimension along which the means will be calculated. Pass
     ///   0 to compute a row vector containing the mean of each column,
     ///   or 1 to compute a column vector containing the mean of each row.
-    ///   Default value is 0.
     /// </param>
     /// <returns>Returns a vector containing the means of the given matrix.</returns>
     /// 
-    public static double[] WeightedMean(this double[][] matrix, double[] weights, int dimension = 0)
+    public static double[] WeightedMean(this double[][] matrix, double[] weights, int dimension)
     {
         int rows = matrix.Length;
 
@@ -165,11 +158,10 @@ public static partial class Measures
     ///   The dimension along which the means will be calculated. Pass
     ///   0 to compute a row vector containing the mean of each column,
     ///   or 1 to compute a column vector containing the mean of each row.
-    ///   Default value is 0.
     /// </param>
     /// <returns>Returns a vector containing the means of the given matrix.</returns>
     /// 
-    public static double[] WeightedMean(this double[,] matrix, double[] weights, int dimension = 0)
+    public static double[] WeightedMean(this double[,] matrix, double[] weights, int dimension)
     {
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
@@ -252,11 +244,10 @@ public static partial class Measures
     ///   The dimension along which the means will be calculated. Pass
     ///   0 to compute a row vector containing the mean of each column,
     ///   or 1 to compute a column vector containing the mean of each row.
-    ///   Default value is 0.
     /// </param>
     /// <returns>Returns a vector containing the means of the given matrix.</returns>
     /// 
-    public static double[] WeightedMean(this double[][] matrix, int[] weights, int dimension = 0)
+    public static double[] WeightedMean(this double[][] matrix, int[] weights, int dimension)
     {
         int rows = matrix.Length;
 
@@ -346,11 +337,10 @@ public static partial class Measures
     ///   The dimension along which the means will be calculated. Pass
     ///   0 to compute a row vector containing the mean of each column,
     ///   or 1 to compute a column vector containing the mean of each row.
-    ///   Default value is 0.
     /// </param>
     /// <returns>Returns a vector containing the means of the given matrix.</returns>
     /// 
-    public static double[] WeightedMean(this double[,] matrix, int[] weights, int dimension = 0)
+    public static double[] WeightedMean(this double[,] matrix, int[] weights, int dimension)
     {
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);

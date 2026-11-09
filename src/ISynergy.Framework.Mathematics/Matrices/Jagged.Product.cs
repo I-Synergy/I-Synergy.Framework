@@ -1,9 +1,4 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -488,7 +483,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -506,7 +501,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -524,7 +519,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -542,7 +537,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -596,7 +591,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -614,7 +609,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -632,7 +627,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -650,7 +645,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -668,7 +663,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -686,7 +681,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -704,7 +699,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (float)((double)a[i] * (double)b[j]);
+                result[i][j] = (float)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -722,7 +717,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((double)a[i] * (double)b[j]);
+                result[i][j] = (int)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -758,7 +753,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -794,7 +789,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (float)((double)a[i] * (double)b[j]);
+                result[i][j] = (float)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -812,7 +807,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -830,7 +825,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((double)a[i] * (double)b[j]);
+                result[i][j] = (int)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -884,7 +879,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -902,7 +897,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (long)((long)a[i] * (long)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -920,7 +915,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -938,7 +933,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -956,7 +951,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (long)((long)a[i] * (long)b[j]);
+                result[i][j] = a[i] * (long)b[j];
         return result;
     }
     /// <summary>
@@ -974,7 +969,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -992,7 +987,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -1010,7 +1005,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (long)((long)a[i] * (long)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1028,7 +1023,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1046,7 +1041,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1100,7 +1095,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1136,7 +1131,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (decimal)((decimal)a[i] * (decimal)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1154,7 +1149,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -1172,7 +1167,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -1190,7 +1185,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (decimal)((decimal)a[i] * (decimal)b[j]);
+                result[i][j] = a[i] * (decimal)b[j];
         return result;
     }
     /// <summary>
@@ -1208,7 +1203,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1226,7 +1221,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -1244,7 +1239,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (decimal)((decimal)a[i] * (decimal)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1262,7 +1257,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = (int)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1280,7 +1275,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1334,7 +1329,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1370,7 +1365,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (byte)((byte)a[i] * (byte)b[j]);
+                result[i][j] = (byte)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -1388,7 +1383,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1406,7 +1401,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1424,7 +1419,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (byte)((byte)a[i] * (byte)b[j]);
+                result[i][j] = (byte)(a[i] * (byte)b[j]);
         return result;
     }
     /// <summary>
@@ -1442,7 +1437,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1460,7 +1455,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -1478,7 +1473,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (byte)((byte)a[i] * (byte)b[j]);
+                result[i][j] = (byte)(a[i] * (byte)b[j]);
         return result;
     }
     /// <summary>
@@ -1496,7 +1491,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1514,7 +1509,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1568,7 +1563,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1604,7 +1599,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (short)((short)a[i] * (short)b[j]);
+                result[i][j] = (short)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -1622,7 +1617,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1640,7 +1635,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1658,7 +1653,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (short)((short)a[i] * (short)b[j]);
+                result[i][j] = (short)(a[i] * (short)b[j]);
         return result;
     }
     /// <summary>
@@ -1676,7 +1671,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1694,7 +1689,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -1712,7 +1707,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (short)((short)a[i] * (short)b[j]);
+                result[i][j] = (short)(a[i] * (short)b[j]);
         return result;
     }
     /// <summary>
@@ -1730,7 +1725,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1748,7 +1743,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1802,7 +1797,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1838,7 +1833,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (sbyte)((sbyte)a[i] * (sbyte)b[j]);
+                result[i][j] = (sbyte)(a[i] * b[j]);
         return result;
     }
     /// <summary>
@@ -1856,7 +1851,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1874,7 +1869,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1892,7 +1887,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (sbyte)((sbyte)a[i] * (sbyte)b[j]);
+                result[i][j] = (sbyte)(a[i] * (sbyte)b[j]);
         return result;
     }
     /// <summary>
@@ -1910,7 +1905,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1928,7 +1923,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * (int)b[j];
         return result;
     }
     /// <summary>
@@ -1946,7 +1941,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (sbyte)((sbyte)a[i] * (sbyte)b[j]);
+                result[i][j] = (sbyte)(a[i] * (sbyte)b[j]);
         return result;
     }
     /// <summary>
@@ -1964,7 +1959,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (int)((int)a[i] * (int)b[j]);
+                result[i][j] = a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -1982,7 +1977,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>
@@ -2036,7 +2031,7 @@ public static partial class Jagged
     {
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)((double)a[i] * (double)b[j]);
+                result[i][j] = (double)a[i] * b[j];
         return result;
     }
     /// <summary>

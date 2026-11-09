@@ -2,12 +2,6 @@ using ISynergy.Framework.Mathematics.Enumerations;
 using ISynergy.Framework.Mathematics.Exceptions;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S2436 // multiple type parameters are required for the elementwise check helper methods
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -406,7 +400,7 @@ public static partial class Elementwise
             for (int j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Sqrt((double)v));
+                result[i][j] = Math.Sqrt(v);
             }
         }
         return result;
@@ -430,7 +424,7 @@ public static partial class Elementwise
             for (int j = 0; j < cols; j++)
             {
                 var v = value[i, j];
-                result[i, j] = (double)(Math.Sqrt((double)v));
+                result[i, j] = Math.Sqrt(v);
             }
         }
 
@@ -450,7 +444,7 @@ public static partial class Elementwise
         for (int i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Sqrt((double)v));
+            result[i] = Math.Sqrt(v);
         }
 
         return result;
@@ -483,7 +477,7 @@ public static partial class Elementwise
         for (int i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Pow((double)Math.Abs(v), y));
+            result[i] = Math.Pow(Math.Abs(v), y);
         }
 
         return result;
@@ -516,7 +510,7 @@ public static partial class Elementwise
             for (int j = 0; j < cols; j++)
             {
                 var v = value[i, j];
-                result[i, j] = (double)(Math.Abs(v));
+                result[i, j] = Math.Abs(v);
             }
         }
 

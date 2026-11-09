@@ -2,12 +2,6 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1117, S1121 // variable shadowing and assignments in expressions are intentional in EISPACK-ported eigenvalue algorithm
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -336,7 +330,7 @@ public sealed class EigenvalueDecomposition : ICloneable
 
         double f = 0;
         double tst1 = 0;
-        var eps = 2 * Constants.DoubleEpsilon;
+        var epsilon = 2 * Constants.DoubleEpsilon;
 
         for (var l = 0; l < n; l++)
         {
@@ -345,7 +339,7 @@ public sealed class EigenvalueDecomposition : ICloneable
             var m = l;
             while (m < n)
             {
-                if (Math.Abs(ImaginaryEigenvalues[m]) <= eps * tst1)
+                if (Math.Abs(ImaginaryEigenvalues[m]) <= epsilon * tst1)
                     break;
                 m++;
             }
@@ -408,7 +402,7 @@ public sealed class EigenvalueDecomposition : ICloneable
                     RealEigenvalues[l] = c * p;
 
                     // Check for convergence.
-                } while (Math.Abs(ImaginaryEigenvalues[l]) > eps * tst1);
+                } while (Math.Abs(ImaginaryEigenvalues[l]) > epsilon * tst1);
             }
 
             RealEigenvalues[l] = RealEigenvalues[l] + f;
@@ -556,10 +550,10 @@ public sealed class EigenvalueDecomposition : ICloneable
         // This is derived from the Algol procedure hqr2, by Martin and Wilkinson, Handbook for Auto. Comp.,
         // Vol.ii-Linear Algebra, and the corresponding  Fortran subroutine in EISPACK.
         var nn = this.n;
-        var n = nn - 1;
+        var n1 = nn - 1;
         var low = 0;
         var high = nn - 1;
-        var eps = 2 * Constants.DoubleEpsilon;
+        var epsilon = 2 * Constants.DoubleEpsilon;
         double exshift = 0;
         double p = 0;
         double q = 0;
@@ -587,10 +581,10 @@ public sealed class EigenvalueDecomposition : ICloneable
 
         // Outer loop over eigenvalue index
         var iter = 0;
-        while (n >= low)
+        while (n1 >= low)
         {
             // Look for single small sub-diagonal element
-            var l = n;
+            var l = n1;
             while (l > low)
             {
                 s = Math.Abs(H[l - 1, l - 1]) + Math.Abs(H[l, l]);
@@ -601,44 +595,44 @@ public sealed class EigenvalueDecomposition : ICloneable
                 if (double.IsNaN(s))
                     break;
 
-                if (Math.Abs(H[l, l - 1]) < eps * s)
+                if (Math.Abs(H[l, l - 1]) < epsilon * s)
                     break;
 
                 l--;
             }
 
             // Check for convergence
-            if (l == n)
+            if (l == n1)
             {
                 // One root found
-                H[n, n] = H[n, n] + exshift;
-                RealEigenvalues[n] = H[n, n];
-                ImaginaryEigenvalues[n] = 0;
-                n--;
+                H[n1, n1] = H[n1, n1] + exshift;
+                RealEigenvalues[n1] = H[n1, n1];
+                ImaginaryEigenvalues[n1] = 0;
+                n1--;
                 iter = 0;
             }
-            else if (l == n - 1)
+            else if (l == n1 - 1)
             {
                 // Two roots found
-                w = H[n, n - 1] * H[n - 1, n];
-                p = (H[n - 1, n - 1] - H[n, n]) / 2;
+                w = H[n1, n1 - 1] * H[n1 - 1, n1];
+                p = (H[n1 - 1, n1 - 1] - H[n1, n1]) / 2;
                 q = p * p + w;
                 z = Math.Sqrt(Math.Abs(q));
-                H[n, n] = H[n, n] + exshift;
-                H[n - 1, n - 1] = H[n - 1, n - 1] + exshift;
-                x = H[n, n];
+                H[n1, n1] = H[n1, n1] + exshift;
+                H[n1 - 1, n1 - 1] = H[n1 - 1, n1 - 1] + exshift;
+                x = H[n1, n1];
 
                 if (q >= 0)
                 {
                     // Real pair
                     z = p >= 0 ? p + z : p - z;
-                    RealEigenvalues[n - 1] = x + z;
-                    RealEigenvalues[n] = RealEigenvalues[n - 1];
+                    RealEigenvalues[n1 - 1] = x + z;
+                    RealEigenvalues[n1] = RealEigenvalues[n1 - 1];
                     if (z != 0)
-                        RealEigenvalues[n] = x - w / z;
-                    ImaginaryEigenvalues[n - 1] = 0;
-                    ImaginaryEigenvalues[n] = 0;
-                    x = H[n, n - 1];
+                        RealEigenvalues[n1] = x - w / z;
+                    ImaginaryEigenvalues[n1 - 1] = 0;
+                    ImaginaryEigenvalues[n1] = 0;
+                    x = H[n1, n1 - 1];
                     s = Math.Abs(x) + Math.Abs(z);
                     p = x / s;
                     q = z / s;
@@ -647,39 +641,39 @@ public sealed class EigenvalueDecomposition : ICloneable
                     q = q / r;
 
                     // Row modification
-                    for (var j = n - 1; j < nn; j++)
+                    for (var j = n1 - 1; j < nn; j++)
                     {
-                        z = H[n - 1, j];
-                        H[n - 1, j] = q * z + p * H[n, j];
-                        H[n, j] = q * H[n, j] - p * z;
+                        z = H[n1 - 1, j];
+                        H[n1 - 1, j] = q * z + p * H[n1, j];
+                        H[n1, j] = q * H[n1, j] - p * z;
                     }
 
                     // Column modification
-                    for (var i = 0; i <= n; i++)
+                    for (var i = 0; i <= n1; i++)
                     {
-                        z = H[i, n - 1];
-                        H[i, n - 1] = q * z + p * H[i, n];
-                        H[i, n] = q * H[i, n] - p * z;
+                        z = H[i, n1 - 1];
+                        H[i, n1 - 1] = q * z + p * H[i, n1];
+                        H[i, n1] = q * H[i, n1] - p * z;
                     }
 
                     // Accumulate transformations
                     for (var i = low; i <= high; i++)
                     {
-                        z = Eigenvectors[i, n - 1];
-                        Eigenvectors[i, n - 1] = q * z + p * Eigenvectors[i, n];
-                        Eigenvectors[i, n] = q * Eigenvectors[i, n] - p * z;
+                        z = Eigenvectors[i, n1 - 1];
+                        Eigenvectors[i, n1 - 1] = q * z + p * Eigenvectors[i, n1];
+                        Eigenvectors[i, n1] = q * Eigenvectors[i, n1] - p * z;
                     }
                 }
                 else
                 {
                     // Complex pair
-                    RealEigenvalues[n - 1] = x + p;
-                    RealEigenvalues[n] = x + p;
-                    ImaginaryEigenvalues[n - 1] = z;
-                    ImaginaryEigenvalues[n] = -z;
+                    RealEigenvalues[n1 - 1] = x + p;
+                    RealEigenvalues[n1] = x + p;
+                    ImaginaryEigenvalues[n1 - 1] = z;
+                    ImaginaryEigenvalues[n1] = -z;
                 }
 
-                n = n - 2;
+                n1 = n1 - 2;
                 iter = 0;
             }
             else
@@ -687,23 +681,23 @@ public sealed class EigenvalueDecomposition : ICloneable
                 // No convergence yet     
 
                 // Form shift
-                x = H[n, n];
+                x = H[n1, n1];
                 y = 0;
                 w = 0;
-                if (l < n)
+                if (l < n1)
                 {
-                    y = H[n - 1, n - 1];
-                    w = H[n, n - 1] * H[n - 1, n];
+                    y = H[n1 - 1, n1 - 1];
+                    w = H[n1, n1 - 1] * H[n1 - 1, n1];
                 }
 
                 // Wilkinson's original ad hoc shift
                 if (iter == 10)
                 {
                     exshift += x;
-                    for (var i = low; i <= n; i++)
+                    for (var i = low; i <= n1; i++)
                         H[i, i] -= x;
 
-                    s = Math.Abs(H[n, n - 1]) + Math.Abs(H[n - 1, n - 2]);
+                    s = Math.Abs(H[n1, n1 - 1]) + Math.Abs(H[n1 - 1, n1 - 2]);
                     x = y = 0.75 * s;
                     w = -0.4375 * s * s;
                 }
@@ -718,7 +712,7 @@ public sealed class EigenvalueDecomposition : ICloneable
                         s = Math.Sqrt(s);
                         if (y < x) s = -s;
                         s = x - w / ((y - x) / 2 + s);
-                        for (var i = low; i <= n; i++)
+                        for (var i = low; i <= n1; i++)
                             H[i, i] -= s;
                         exshift += s;
                         x = y = w = 0.964;
@@ -728,7 +722,7 @@ public sealed class EigenvalueDecomposition : ICloneable
                 iter = iter + 1;
 
                 // Look for two consecutive small sub-diagonal elements
-                var m = n - 2;
+                var m = n1 - 2;
                 while (m >= l)
                 {
                     z = H[m, m];
@@ -743,23 +737,23 @@ public sealed class EigenvalueDecomposition : ICloneable
                     r = r / s;
                     if (m == l)
                         break;
-                    if (Math.Abs(H[m, m - 1]) * (Math.Abs(q) + Math.Abs(r)) < eps * (Math.Abs(p) *
+                    if (Math.Abs(H[m, m - 1]) * (Math.Abs(q) + Math.Abs(r)) < epsilon * (Math.Abs(p) *
                         (Math.Abs(H[m - 1, m - 1]) + Math.Abs(z) + Math.Abs(H[m + 1, m + 1]))))
                         break;
                     m--;
                 }
 
-                for (var i = m + 2; i <= n; i++)
+                for (var i = m + 2; i <= n1; i++)
                 {
                     H[i, i - 2] = 0;
                     if (i > m + 2)
                         H[i, i - 3] = 0;
                 }
 
-                // Double QR step involving rows l:n and columns m:n
-                for (var k = m; k <= n - 1; k++)
+                // Double QR step involving rows l to n and columns m to n
+                for (var k = m; k <= n1 - 1; k++)
                 {
-                    var notlast = k != n - 1;
+                    var notlast = k != n1 - 1;
                     if (k != m)
                     {
                         p = H[k, k - 1];
@@ -808,7 +802,7 @@ public sealed class EigenvalueDecomposition : ICloneable
                         }
 
                         // Column modification
-                        for (var i = 0; i <= Math.Min(n, k + 3); i++)
+                        for (var i = 0; i <= Math.Min(n1, k + 3); i++)
                         {
                             p = x * H[i, k] + y * H[i, k + 1];
                             if (notlast)
@@ -842,22 +836,22 @@ public sealed class EigenvalueDecomposition : ICloneable
         // Backsubstitute to find vectors of upper triangular form
         if (norm == 0) return;
 
-        for (n = nn - 1; n >= 0; n--)
+        for (n1 = nn - 1; n1 >= 0; n1--)
         {
-            p = RealEigenvalues[n];
-            q = ImaginaryEigenvalues[n];
+            p = RealEigenvalues[n1];
+            q = ImaginaryEigenvalues[n1];
 
             // Real vector
             if (q == 0)
             {
-                var l = n;
-                H[n, n] = 1;
-                for (var i = n - 1; i >= 0; i--)
+                var l = n1;
+                H[n1, n1] = 1;
+                for (var i = n1 - 1; i >= 0; i--)
                 {
                     w = H[i, i] - p;
                     r = 0;
-                    for (var j = l; j <= n; j++)
-                        r = r + H[i, j] * H[j, n];
+                    for (var j = l; j <= n1; j++)
+                        r = r + H[i, j] * H[j, n1];
 
                     if (ImaginaryEigenvalues[i] < 0)
                     {
@@ -869,7 +863,7 @@ public sealed class EigenvalueDecomposition : ICloneable
                         l = i;
                         if (ImaginaryEigenvalues[i] == 0)
                         {
-                            H[i, n] = w != 0 ? -r / w : -r / (eps * norm);
+                            H[i, n1] = w != 0 ? -r / w : -r / (epsilon * norm);
                         }
                         else
                         {
@@ -879,45 +873,45 @@ public sealed class EigenvalueDecomposition : ICloneable
                             q = (RealEigenvalues[i] - p) * (RealEigenvalues[i] - p) +
                                 ImaginaryEigenvalues[i] * ImaginaryEigenvalues[i];
                             t = (x * s - z * r) / q;
-                            H[i, n] = t;
-                            H[i + 1, n] = Math.Abs(x) > Math.Abs(z) ? (-r - w * t) / x : (-s - y * t) / z;
+                            H[i, n1] = t;
+                            H[i + 1, n1] = Math.Abs(x) > Math.Abs(z) ? (-r - w * t) / x : (-s - y * t) / z;
                         }
 
                         // Overflow control
-                        t = Math.Abs(H[i, n]);
-                        if (eps * t * t > 1)
-                            for (var j = i; j <= n; j++)
-                                H[j, n] = H[j, n] / t;
+                        t = Math.Abs(H[i, n1]);
+                        if (epsilon * t * t > 1)
+                            for (var j = i; j <= n1; j++)
+                                H[j, n1] = H[j, n1] / t;
                     }
                 }
             }
             else if (q < 0)
             {
                 // Complex vector
-                var l = n - 1;
+                var l = n1 - 1;
 
                 // Last vector component imaginary so matrix is triangular
-                if (Math.Abs(H[n, n - 1]) > Math.Abs(H[n - 1, n]))
+                if (Math.Abs(H[n1, n1 - 1]) > Math.Abs(H[n1 - 1, n1]))
                 {
-                    H[n - 1, n - 1] = q / H[n, n - 1];
-                    H[n - 1, n] = -(H[n, n] - p) / H[n, n - 1];
+                    H[n1 - 1, n1 - 1] = q / H[n1, n1 - 1];
+                    H[n1 - 1, n1] = -(H[n1, n1] - p) / H[n1, n1 - 1];
                 }
                 else
                 {
-                    cdiv(0, -H[n - 1, n], H[n - 1, n - 1] - p, q, out H[n - 1, n - 1], out H[n - 1, n]);
+                    cdiv(0, -H[n1 - 1, n1], H[n1 - 1, n1 - 1] - p, q, out H[n1 - 1, n1 - 1], out H[n1 - 1, n1]);
                 }
 
-                H[n, n - 1] = 0;
-                H[n, n] = 1;
-                for (var i = n - 2; i >= 0; i--)
+                H[n1, n1 - 1] = 0;
+                H[n1, n1] = 1;
+                for (var i = n1 - 2; i >= 0; i--)
                 {
                     double ra, sa, vr, vi;
                     ra = 0;
                     sa = 0;
-                    for (var j = l; j <= n; j++)
+                    for (var j = l; j <= n1; j++)
                     {
-                        ra = ra + H[i, j] * H[j, n - 1];
-                        sa = sa + H[i, j] * H[j, n];
+                        ra = ra + H[i, j] * H[j, n1 - 1];
+                        sa = sa + H[i, j] * H[j, n1];
                     }
 
                     w = H[i, i] - p;
@@ -933,7 +927,7 @@ public sealed class EigenvalueDecomposition : ICloneable
                         l = i;
                         if (ImaginaryEigenvalues[i] == 0)
                         {
-                            cdiv(-ra, -sa, w, q, out H[i, n - 1], out H[i, n]);
+                            cdiv(-ra, -sa, w, q, out H[i, n1 - 1], out H[i, n1]);
                         }
                         else
                         {
@@ -944,29 +938,29 @@ public sealed class EigenvalueDecomposition : ICloneable
                                 ImaginaryEigenvalues[i] * ImaginaryEigenvalues[i] - q * q;
                             vi = (RealEigenvalues[i] - p) * 2 * q;
                             if ((vr == 0) && (vi == 0))
-                                vr = eps * norm * (Math.Abs(w) + Math.Abs(q) + Math.Abs(x) + Math.Abs(y) +
+                                vr = epsilon * norm * (Math.Abs(w) + Math.Abs(q) + Math.Abs(x) + Math.Abs(y) +
                                                    Math.Abs(z));
-                            cdiv(x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi, out H[i, n - 1],
-                                out H[i, n]);
+                            cdiv(x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi, out H[i, n1 - 1],
+                                out H[i, n1]);
                             if (Math.Abs(x) > Math.Abs(z) + Math.Abs(q))
                             {
-                                H[i + 1, n - 1] = (-ra - w * H[i, n - 1] + q * H[i, n]) / x;
-                                H[i + 1, n] = (-sa - w * H[i, n] - q * H[i, n - 1]) / x;
+                                H[i + 1, n1 - 1] = (-ra - w * H[i, n1 - 1] + q * H[i, n1]) / x;
+                                H[i + 1, n1] = (-sa - w * H[i, n1] - q * H[i, n1 - 1]) / x;
                             }
                             else
                             {
-                                cdiv(-r - y * H[i, n - 1], -s - y * H[i, n], z, q, out H[i + 1, n - 1],
-                                    out H[i + 1, n]);
+                                cdiv(-r - y * H[i, n1 - 1], -s - y * H[i, n1], z, q, out H[i + 1, n1 - 1],
+                                    out H[i + 1, n1]);
                             }
                         }
 
                         // Overflow control
-                        t = Math.Max(Math.Abs(H[i, n - 1]), Math.Abs(H[i, n]));
-                        if (eps * t * t > 1)
-                            for (var j = i; j <= n; j++)
+                        t = Math.Max(Math.Abs(H[i, n1 - 1]), Math.Abs(H[i, n1]));
+                        if (epsilon * t * t > 1)
+                            for (var j = i; j <= n1; j++)
                             {
-                                H[j, n - 1] = H[j, n - 1] / t;
-                                H[j, n] = H[j, n] / t;
+                                H[j, n1 - 1] = H[j, n1 - 1] / t;
+                                H[j, n1] = H[j, n1] / t;
                             }
                     }
                 }

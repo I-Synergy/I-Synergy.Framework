@@ -2,12 +2,6 @@
 using System.Runtime.InteropServices;
 using ISynergy.Framework.Mathematics.Common;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S4136, S1871, S1066, S2234 // generated comparison code: overload ordering, duplicate branches, collapsible ifs, argument order are intentional
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -52,16 +46,8 @@ public static partial class Matrix
                 var C = A;
                 var D = B;
                 var delta = Math.Abs(C - D);
-                if (C == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
-                else if (D == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
+                if ((C == 0 || D == 0) && delta <= rtol)
+                    continue;
 
                 if (delta <= Math.Abs(C) * rtol)
                     continue;
@@ -160,16 +146,8 @@ public static partial class Matrix
                 var C = A;
                 var D = B;
                 var delta = Math.Abs(C - D);
-                if (C == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
-                else if (D == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
+                if ((C == 0 || D == 0) && delta <= rtol)
+                    continue;
 
                 if (delta <= Math.Abs(C) * rtol)
                     continue;
@@ -262,16 +240,8 @@ public static partial class Matrix
                     var C = A;
                     var D = B;
                     var delta = Math.Abs(C - D);
-                    if (C == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
-                    else if (D == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
+                    if ((C == 0 || D == 0) && delta <= rtol)
+                        continue;
 
                     if (delta <= Math.Abs(C) * rtol)
                         continue;
@@ -366,16 +336,8 @@ public static partial class Matrix
                     var C = A;
                     var D = B;
                     var delta = Math.Abs(C - D);
-                    if (C == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
-                    else if (D == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
+                    if ((C == 0 || D == 0) && delta <= rtol)
+                        continue;
 
                     if (delta <= Math.Abs(C) * rtol)
                         continue;
@@ -472,16 +434,8 @@ public static partial class Matrix
                     var C = A;
                     var D = B;
                     var delta = Math.Abs(C - D);
-                    if (C == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
-                    else if (D == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
+                    if ((C == 0 || D == 0) && delta <= rtol)
+                        continue;
 
                     if (delta <= Math.Abs(C) * rtol)
                         continue;
@@ -566,16 +520,8 @@ public static partial class Matrix
                 var C = A;
                 var D = B;
                 var delta = Math.Abs(C - D);
-                if (C == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
-                else if (D == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
+                if ((C == 0 || D == 0) && delta <= rtol)
+                    continue;
 
                 if (delta <= Math.Abs(C) * rtol)
                     continue;
@@ -662,16 +608,8 @@ public static partial class Matrix
                 var C = A;
                 var D = B;
                 var delta = Math.Abs(C - D);
-                if (C == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
-                else if (D == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
+                if ((C == 0 || D == 0) && delta <= rtol)
+                    continue;
 
                 if (delta <= Math.Abs(C) * rtol)
                     continue;
@@ -755,16 +693,8 @@ public static partial class Matrix
                     var C = A;
                     var D = B;
                     var delta = Math.Abs(C - D);
-                    if (C == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
-                    else if (D == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
+                    if ((C == 0 || D == 0) && delta <= rtol)
+                        continue;
 
                     if (delta <= Math.Abs(C) * rtol)
                         continue;
@@ -826,7 +756,7 @@ public static partial class Matrix
     /// 
     public static bool IsEqual(this Double a, Double[] b, Double atol = 0, Double rtol = 0)
     {
-        return IsEqual(b, a, rtol, atol);
+        return IsEqual(a: b, b: a, atol: rtol, rtol: atol);
     }
 
     /// <summary>
@@ -835,7 +765,7 @@ public static partial class Matrix
     ///
     public static bool IsEqual(this Double a, Double[,] b, Double atol = 0, Double rtol = 0)
     {
-        return IsEqual(b, a, rtol, atol);
+        return IsEqual(a: b, b: a, atol: rtol, rtol: atol);
     }
 
     /// <summary>
@@ -844,7 +774,7 @@ public static partial class Matrix
     ///
     public static bool IsEqual(this Double a, Double[][] b, Double atol = 0, Double rtol = 0)
     {
-        return IsEqual(b, a, rtol, atol);
+        return IsEqual(a: b, b: a, atol: rtol, rtol: atol);
     }
 
     /// <summary>
@@ -871,16 +801,8 @@ public static partial class Matrix
                 var C = A;
                 var D = B;
                 var delta = Math.Abs(C - D);
-                if (C == 0)
-                {
-                    if (delta <= rtol)
-                        return true;
-                }
-                else if (D == 0)
-                {
-                    if (delta <= rtol)
-                        return true;
-                }
+                if ((C == 0 || D == 0) && delta <= rtol)
+                    return true;
 
                 if (delta <= Math.Abs(C) * rtol)
                     return true;
@@ -931,6 +853,77 @@ public static partial class Matrix
     }
 
     /// <summary>
+    ///   Determines whether two vectors contain the same values.
+    /// </summary>
+    /// 
+    public static bool IsEqual(this Int32[] a, Int32[] b, Int32 atol = 0, Double rtol = 0)
+    {
+        if (a == b)
+            return true;
+        if (a is null && b is null)
+            return true;
+        if (a is null ^ b is null)
+            return false;
+        int[] la = a.GetLength(true);
+        int[] lb = b.GetLength(true);
+        if (la.Length != lb.Length)
+            return false;
+        for (int i = 0; i < la.Length; i++)
+            if (la[i] != lb[i])
+                return false;
+
+        if (rtol > 0)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                var A = a[i];
+                var B = b[i];
+                if (A == B)
+                    continue;
+                var C = A;
+                var D = B;
+                var delta = Math.Abs(C - D);
+                if ((C == 0 || D == 0) && delta <= rtol)
+                    continue;
+
+                if (delta <= Math.Abs(C) * rtol)
+                    continue;
+                return false;
+            }
+
+        }
+        else if (atol > 0)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                var A = a[i];
+                var B = b[i];
+                if (A == B)
+                    continue;
+                var C = A;
+                var D = B;
+                if (Math.Abs(C - D) <= atol)
+                    continue;
+                return false;
+            }
+
+        }
+        else
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                var A = a[i];
+                var B = b[i];
+                if (A != B)
+                    return false;
+            }
+
+        }
+
+        return true;
+    }
+
+    /// <summary>
     ///   Determines a matrix is symmetric.
     /// </summary>
     ///
@@ -959,16 +952,8 @@ public static partial class Matrix
                     var C = A;
                     var D = B;
                     var delta = Math.Abs(C - D);
-                    if (C == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
-                    else if (D == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
+                    if ((C == 0 || D == 0) && delta <= rtol)
+                        continue;
 
                     if (delta <= Math.Abs(C) * rtol)
                         continue;
@@ -1054,16 +1039,8 @@ public static partial class Matrix
                     var C = A;
                     var D = B;
                     var delta = Math.Abs(C - D);
-                    if (C == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
-                    else if (D == 0)
-                    {
-                        if (delta <= rtol)
-                            continue;
-                    }
+                    if ((C == 0 || D == 0) && delta <= rtol)
+                        continue;
 
                     if (delta <= Math.Abs(C) * rtol)
                         continue;
@@ -1114,85 +1091,6 @@ public static partial class Matrix
                     if (A != B)
                         return false;
                 }
-
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    ///   Determines whether two vectors contain the same values.
-    /// </summary>
-    /// 
-    public static bool IsEqual(this Int32[] a, Int32[] b, Int32 atol = 0, Double rtol = 0)
-    {
-        if (a == b)
-            return true;
-        if (a is null && b is null)
-            return true;
-        if (a is null ^ b is null)
-            return false;
-        int[] la = a.GetLength(true);
-        int[] lb = b.GetLength(true);
-        if (la.Length != lb.Length)
-            return false;
-        for (int i = 0; i < la.Length; i++)
-            if (la[i] != lb[i])
-                return false;
-
-        if (rtol > 0)
-        {
-            for (int i = 0; i < a.Length; i++)
-            {
-                var A = a[i];
-                var B = b[i];
-                if (A == B)
-                    continue;
-                var C = A;
-                var D = B;
-                var delta = Math.Abs(C - D);
-                if (C == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
-                else if (D == 0)
-                {
-                    if (delta <= rtol)
-                        continue;
-                }
-
-                if (delta <= Math.Abs(C) * rtol)
-                    continue;
-                return false;
-            }
-
-        }
-        else if (atol > 0)
-        {
-            for (int i = 0; i < a.Length; i++)
-            {
-                var A = a[i];
-                var B = b[i];
-                if (A == B)
-                    continue;
-                var C = A;
-                var D = B;
-                if (Math.Abs(C - D) <= atol)
-                    continue;
-                return false;
-            }
-
-        }
-        else
-        {
-            for (int i = 0; i < a.Length; i++)
-            {
-                var A = a[i];
-                var B = b[i];
-                if (A != B)
-                    return false;
-            }
 
         }
 

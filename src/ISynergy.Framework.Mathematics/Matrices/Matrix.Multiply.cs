@@ -1,11 +1,6 @@
 using ISynergy.Framework.Mathematics.Enumerations;
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -210,7 +205,7 @@ public static partial class Elementwise
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < result.Length; i++)
             for (var j = 0; j < result[i].Length; j++)
-                result[i][j] = (double)((double)(a[i][j]) * (double)(b[i][j]));
+                result[i][j] = a[i][j] * b[i][j];
 
         return result;
     }
@@ -233,7 +228,7 @@ public static partial class Elementwise
         var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
         for (var i = 0; i < spanA.Length; i++)
-            spanR[i] = (double)((double)spanA[i] * (double)spanB[i]);
+            spanR[i] = spanA[i] * spanB[i];
 
         return result;
     }
@@ -252,7 +247,7 @@ public static partial class Elementwise
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < a[i].Length; j++)
-                result[i][j] = (double)((double)a[i][j] * (double)b);
+                result[i][j] = a[i][j] * b;
         return result;
     }
 
@@ -270,7 +265,7 @@ public static partial class Elementwise
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < b.Length; i++)
             for (var j = 0; j < b[i].Length; j++)
-                result[i][j] = (double)((double)a * (double)b[i][j]);
+                result[i][j] = a * b[i][j];
         return result;
     }
 
@@ -291,7 +286,7 @@ public static partial class Elementwise
         var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
         for (var j = 0; j < spanB.Length; j++)
-            spanR[j] = (double)((double)a * (double)spanB[j]);
+            spanR[j] = a * spanB[j];
 
         return result;
     }
@@ -313,7 +308,7 @@ public static partial class Elementwise
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
         var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
         for (var i = 0; i < spanA.Length; i++)
-            spanR[i] = (double)((double)spanA[i] * (double)b);
+            spanR[i] = spanA[i] * b;
 
         return result;
     }
@@ -331,7 +326,7 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < a.Length; i++)
-            result[i] = (double)((double)a[i] * (double)b[i]);
+            result[i] = a[i] * b[i];
         return result;
     }
 
@@ -348,7 +343,7 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < a.Length; i++)
-            result[i] = (double)((double)a[i] * (double)b);
+            result[i] = a[i] * b;
         return result;
     }
 
@@ -365,7 +360,7 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < b.Length; i++)
-            result[i] = (double)((double)a * (double)b[i]);
+            result[i] = a * b[i];
         return result;
     }
 
@@ -440,13 +435,13 @@ public static partial class Elementwise
         {
             for (var i = 0; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i, j] = (double)((double)a[i, j] * (double)b[j]);
+                    result[i, j] = a[i, j] * b[j];
         }
         else
         {
             for (var i = 0; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i, j] = (double)((double)a[i, j] * (double)b[i]);
+                    result[i, j] = a[i, j] * b[i];
         }
 
         return result;
@@ -476,13 +471,13 @@ public static partial class Elementwise
         {
             for (var i = 0; i < a.Length; i++)
                 for (var j = 0; j < a[i].Length; j++)
-                    result[i][j] = (double)((double)a[i][j] * (double)b[j]);
+                    result[i][j] = a[i][j] * b[j];
         }
         else
         {
             for (var i = 0; i < a.Length; i++)
                 for (var j = 0; j < a[i].Length; j++)
-                    result[i][j] = (double)((double)a[i][j] * (double)b[i]);
+                    result[i][j] = a[i][j] * b[i];
         }
 
         return result;
@@ -590,7 +585,7 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = (double)((double)a * (double)b[j, j]);
+            result[j, j] = a * b[j, j];
         return result;
     }
 
@@ -598,7 +593,7 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < b.Length; i++)
-            result[i][i] = (double)((double)a * (double)b[i][i]);
+            result[i][i] = a * b[i][i];
         return result;
     }
 
@@ -608,7 +603,7 @@ public static partial class Elementwise
         int rows = b.GetLength(0);
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = (double)((double)a[j] * (double)b[j, j]);
+            result[j, j] = a[j] * b[j, j];
         return result;
     }
 
@@ -616,7 +611,7 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < b.Length; i++)
-            result[i][i] = (double)((double)a[i] * (double)b[i][i]);
+            result[i][i] = a[i] * b[i][i];
         return result;
     }
 
@@ -626,7 +621,7 @@ public static partial class Elementwise
         int rows = a.GetLength(0);
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = (double)((double)a[j, j] * (double)b);
+            result[j, j] = a[j, j] * b;
         return result;
     }
 
@@ -634,7 +629,7 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < a.Length; i++)
-            result[i][i] = (double)((double)a[i][i] * (double)b);
+            result[i][i] = a[i][i] * b;
         return result;
     }
 
@@ -644,7 +639,7 @@ public static partial class Elementwise
         int rows = b.Length;
 
         for (var j = 0; j < rows; j++)
-            result[j, j] = (double)((double)a[j, j] * (double)b[j]);
+            result[j, j] = a[j, j] * b[j];
         return result;
     }
 
@@ -652,7 +647,7 @@ public static partial class Elementwise
     {
         check<double, double, double>(a: a, b: b, result: result);
         for (var i = 0; i < b.Length; i++)
-            result[i][i] = (double)((double)a[i][i] * (double)b[i]);
+            result[i][i] = a[i][i] * b[i];
         return result;
     }
 

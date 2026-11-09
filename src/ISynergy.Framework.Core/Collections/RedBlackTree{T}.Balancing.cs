@@ -77,10 +77,10 @@ public partial class RedBlackTree<T>
             p.Color = RedBlackTreeNodeTypes.Black;
             p.Parent!.Color = RedBlackTreeNodeTypes.Red;
 
-            if (item == p.Left && p == p.Parent!.Left)
-                tree.rotate_right(p.Parent!);
-            else if (item == p.Right && p == p.Parent!.Right)
-                tree.rotate_left(p.Parent!);
+            if (item == p.Left && p == p.Parent.Left)
+                tree.rotate_right(p.Parent);
+            else if (item == p.Right && p == p.Parent.Right)
+                tree.rotate_left(p.Parent);
         }
 
         /// <summary>

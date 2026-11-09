@@ -1,10 +1,5 @@
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -67,7 +62,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Exp((double)v));
+            result[i] = Math.Exp(v);
         }
 
         return result;
@@ -90,7 +85,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Exp((double)v));
+            spanR[j] = Math.Exp(v);
         }
 
         return result;
@@ -111,7 +106,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Exp((double)v));
+                result[i][j] = Math.Exp(v);
             }
         }
         return result;
@@ -157,7 +152,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Log((double)v));
+            result[i] = Math.Log(v);
         }
 
         return result;
@@ -180,7 +175,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Log((double)v));
+            spanR[j] = Math.Log(v);
         }
 
         return result;
@@ -201,7 +196,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Log((double)v));
+                result[i][j] = Math.Log(v);
             }
         }
         return result;
@@ -337,7 +332,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Abs(v));
+            result[i] = Math.Abs(v);
         }
 
         return result;
@@ -360,7 +355,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Abs(v));
+            spanR[j] = Math.Abs(v);
         }
 
         return result;
@@ -381,7 +376,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Abs(v));
+                result[i][j] = Math.Abs(v);
             }
         }
         return result;
@@ -418,7 +413,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Sqrt((double)v));
+            result[i] = Math.Sqrt(v);
         }
 
         return result;
@@ -441,7 +436,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Sqrt((double)v));
+            spanR[j] = Math.Sqrt(v);
         }
 
         return result;
@@ -462,7 +457,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Sqrt((double)v));
+                result[i][j] = Math.Sqrt(v);
             }
         }
         return result;
@@ -508,7 +503,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
+            result[i] = Math.Sign(v) * Math.Sqrt(v);
         }
 
         return result;
@@ -531,7 +526,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
+            spanR[j] = Math.Sign(v) * Math.Sqrt(v);
         }
 
         return result;
@@ -552,7 +547,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
+                result[i][j] = Math.Sign(v) * Math.Sqrt(v);
             }
         }
         return result;
@@ -598,7 +593,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Floor((double)v));
+            result[i] = Math.Floor(v);
         }
 
         return result;
@@ -621,7 +616,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Floor((double)v));
+            spanR[j] = Math.Floor(v);
         }
 
         return result;
@@ -642,7 +637,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Floor((double)v));
+                result[i][j] = Math.Floor(v);
             }
         }
         return result;
@@ -688,7 +683,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Ceiling((double)v));
+            result[i] = Math.Ceiling(v);
         }
 
         return result;
@@ -711,7 +706,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Ceiling((double)v));
+            spanR[j] = Math.Ceiling(v);
         }
 
         return result;
@@ -732,7 +727,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Ceiling((double)v));
+                result[i][j] = Math.Ceiling(v);
             }
         }
         return result;
@@ -778,7 +773,7 @@ public static partial class Matrix
         for (var i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Round((double)v));
+            result[i] = Math.Round(v);
         }
 
         return result;
@@ -801,7 +796,7 @@ public static partial class Matrix
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
-            spanR[j] = (double)(Math.Round((double)v));
+            spanR[j] = Math.Round(v);
         }
 
         return result;
@@ -822,7 +817,7 @@ public static partial class Matrix
             for (var j = 0; j < value[i].Length; j++)
             {
                 var v = value[i][j];
-                result[i][j] = (double)(Math.Round((double)v));
+                result[i][j] = Math.Round(v);
             }
         }
         return result;

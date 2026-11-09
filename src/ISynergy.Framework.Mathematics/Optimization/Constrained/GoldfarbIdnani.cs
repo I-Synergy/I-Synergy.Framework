@@ -6,13 +6,6 @@ using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1450, S1481, S1066, S2234, S1939 // FORTRAN port: write-only fields, unused locals, collapsible ifs, argument order, and redundant interfaces are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -104,7 +97,7 @@ public enum GoldfarbIdnaniStatus
 /// </example>
 /// <seealso cref="AugmentedLagrangian" />
 public class GoldfarbIdnani : BaseGradientOptimizationMethod,
-    IOptimizationMethod, IOptimizationMethod<GoldfarbIdnaniStatus>
+    IOptimizationMethod<GoldfarbIdnaniStatus>
 {
     private readonly double[] constraintTolerances;
     private double[] constraintValues;
@@ -115,7 +108,6 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     private double[] iwuv;
     private double[] iwzv;
 
-    private int r;
     private double[] work;
 
     /// <summary>
@@ -336,7 +328,7 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
 
         NumberOfEqualities = numberOfEqualities;
         NumberOfConstraints = constraintMatrix.GetLength(0);
-        r = Math.Min(NumberOfVariables, NumberOfConstraints);
+        var r = Math.Min(NumberOfVariables, NumberOfConstraints);
 
         ActiveConstraints = new int[NumberOfConstraints];
         Lagrangian = new double[NumberOfConstraints];
@@ -631,10 +623,8 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
                 temp = iwsv[i] / iwnbv[i];
             }
 
-            // if (work(iwsv+i) .LT. 0.d0) then 
-            //     nvl = i 
-            //     goto 72 
-            // endif 
+            // The original Fortran routine checked here for a negative work value and
+            // then jumped to its label 72 instead of continuing the loop.
         }
 
         if (nvl == -1)
@@ -762,12 +752,11 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         tt = -iwsv[nvl] / sum;
         var t2min = true;
 
-        if (!t1inf)
-            if (t1 < tt)
-            {
-                tt = t1;
-                t2min = false;
-            }
+        if (!t1inf && t1 < tt)
+        {
+            tt = t1;
+            t2min = false;
+        }
 
         // take step in primal and dual space 
         for (var i = 0; i < sol.Length; i++)

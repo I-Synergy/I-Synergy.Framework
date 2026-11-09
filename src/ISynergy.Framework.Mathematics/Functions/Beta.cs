@@ -24,13 +24,6 @@ namespace ISynergy.Framework.Mathematics.Functions;
 using ISynergy.Framework.Mathematics.Common;
 using System;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1192, S1854 // duplicate strings and useless assignments are inherent in ported numerical algorithms
 
 
 /// <summary>
@@ -574,7 +567,6 @@ public static class Beta
 
             /* compute the step to the next approximation of x */
             d = (y - y0) / d;
-            x = x0;
             x0 = x0 - d;
 
             if (x0 <= 0.0)

@@ -1,4 +1,3 @@
-#pragma warning disable CA1069 // intentional enum aliases
 /*
  *      Limited memory BFGS (L-BFGS).
  *
@@ -62,18 +61,11 @@ license.
 
 using ISynergy.Framework.Mathematics.Common;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1854, S1264, S101 // LIBLBFGS port: commented code, useless assignments, while-true loops, and naming are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
-internal class lbfgs_parameter_t
+internal class LbfgsParameters
 {
     public double delta;
     public double epsilon;
@@ -93,9 +85,9 @@ internal class lbfgs_parameter_t
     public double xtol;
 }
 
-internal static class LBFGS
+internal static class Lbfgs
 {
-    private static readonly lbfgs_parameter_t _defparam = new()
+    private static readonly LbfgsParameters _defparam = new()
     {
         m = 6,
         epsilon = 1e-5,
@@ -115,7 +107,7 @@ internal static class LBFGS
         orthantwise_end = -1
     };
     internal static int main(double[] start, Func<double[], double> fn, Func<double[], double[]> gn,
-        EventHandler<OptimizationProgressEventArgs> progress, lbfgs_parameter_t param)
+        EventHandler<OptimizationProgressEventArgs> progress, LbfgsParameters param)
     {
         double fx = 0;
 
@@ -134,7 +126,6 @@ internal static class LBFGS
         if (progress is not null)
             progress(null, new OptimizationProgressEventArgs(0, 0, new OptimizationStep(null, 0, start, 0, fx, 0), false));
 
-        //lbfgs_free(x);
         return (int)ret;
     }
 
@@ -243,7 +234,7 @@ internal static class LBFGS
         lbfgs_evaluate_t proc_evaluate,
         lbfgs_progress_t proc_progress,
         object instance,
-        lbfgs_parameter_t _param
+        LbfgsParameters _param
     )
     {
         Code ret;
@@ -258,16 +249,16 @@ internal static class LBFGS
         double[] xp = null;
         double[] g = null, gp = null, pg = null;
         double[] d = null, w = null, pf = null;
-        iteration_data_t[] lm = null;
-        iteration_data_t it = null;
+        IterationData[] lm = null;
+        IterationData it = null;
         double ys, yy;
         double xnorm, gnorm, beta;
         var fx = 0.0;
         var rate = 0.0;
-        line_search_proc linesearch = line_search_morethuente;
+        line_search_proc linesearch;
 
         /* ruct a callback data. */
-        var cd = new callback_data_t();
+        var cd = new CallbackData();
         cd.n = n;
         cd.instance = instance;
         cd.proc_evaluate = proc_evaluate;
@@ -333,7 +324,7 @@ internal static class LBFGS
         }
 
         /* Allocate limited memory storage. */
-        lm = new iteration_data_t[m];
+        lm = new IterationData[m];
 
         if (lm is null)
         {
@@ -344,7 +335,7 @@ internal static class LBFGS
         /* Initialize the limited memory. */
         for (i = 0; i < m; ++i)
         {
-            it = lm[i] = new iteration_data_t();
+            it = lm[i] = new IterationData();
             it.alpha = 0;
             it.ys = 0;
             it.s = vecalloc(n * sizeof(double));
@@ -415,7 +406,7 @@ internal static class LBFGS
             /* Search for an optimal step. */
             if (param.orthantwise_c == 0.0)
             {
-                var args = new line_search_args
+                var args = new LineSearchArgs
                 {
                     n = n,
                     x = x,
@@ -435,7 +426,7 @@ internal static class LBFGS
             }
             else
             {
-                var args = new line_search_args
+                var args = new LineSearchArgs
                 {
                     n = n,
                     x = x,
@@ -476,7 +467,7 @@ internal static class LBFGS
 
             /* Report the progress. */
             if (cd.proc_progress is not null
-                && (ret = cd.proc_progress(new lbfgs_progress_info(cd.instance, x, g, fx, xnorm,
+                && (ret = cd.proc_progress(new LbfgsProgressInfo(cd.instance, x, g, fx, xnorm,
                     gnorm, step, cd.n, k, ls))) != 0)
                 goto lbfgs_exit;
 
@@ -574,7 +565,7 @@ internal static class LBFGS
             j = end;
             for (i = 0; i < bound; ++i)
             {
-                j = (j + m - 1) % m; /* if (--j == -1) j = m-1; */
+                j = (j + m - 1) % m; /* wrap-around decrement: -1 maps back to m - 1 */
                 it = lm[j];
                 /* \alpha_{j} = \rho_{j} s^{t}_{j} \cdot q_{k+1}. */
                 vecdot(out it.alpha, it.s, d, n);
@@ -593,7 +584,7 @@ internal static class LBFGS
                 beta /= it.ys;
                 /* \gamma_{i+1} = \gamma_{i} + (\alpha_{j} - \beta_{j}) s_{j}. */
                 vecadd(d, it.s, it.alpha - beta, n);
-                j = (j + 1) % m; /* if (++j == m) j = 0; */
+                j = (j + 1) % m; /* wrap-around increment: m maps back to 0 */
             }
 
             /*
@@ -616,7 +607,7 @@ internal static class LBFGS
 
         return ret;
     }
-    private static Code line_search_backtracking(line_search_args args)
+    private static Code line_search_backtracking(LineSearchArgs args)
     {
         var n = args.n;
         var x = args.x;
@@ -700,7 +691,7 @@ internal static class LBFGS
             stp *= width;
         }
     }
-    private static Code line_search_backtracking_owlqn(line_search_args args)
+    private static Code line_search_backtracking_owlqn(LineSearchArgs args)
     {
         var n = args.n;
         var x = args.x;
@@ -761,7 +752,7 @@ internal static class LBFGS
             stp *= width;
         }
     }
-    private static Code line_search_morethuente(line_search_args args)
+    private static Code line_search_morethuente(LineSearchArgs args)
     {
         var n = args.n;
         var x = args.x;
@@ -904,7 +895,7 @@ internal static class LBFGS
                     Call update_trial_interval() to update the interval of
                     uncertainty and to compute the new step.
                  */
-                var ti = new trial_interval
+                var ti = new TrialInterval
                 {
                     x = stx,
                     fx = fxm,
@@ -927,8 +918,6 @@ internal static class LBFGS
                 fym = ti.fy;
                 dgym = ti.dy;
                 stp = ti.t;
-                fm = ti.ft;
-                dgm = ti.dt;
                 brackt = ti.brackt;
 
                 /* Reset the function and gradient values for f. */
@@ -943,7 +932,7 @@ internal static class LBFGS
                     Call update_trial_interval() to update the interval of
                     uncertainty and to compute the new step.
                  */
-                var ti = new trial_interval
+                var ti = new TrialInterval
                 {
                     x = stx,
                     fx = fx,
@@ -967,7 +956,6 @@ internal static class LBFGS
                 dgy = ti.dy;
                 stp = ti.t;
                 f = ti.ft;
-                dg = ti.dt;
                 brackt = ti.brackt;
             }
 
@@ -1119,7 +1107,7 @@ internal static class LBFGS
      * guaranteed sufficient decrease. ACM Transactions on Mathematical
      * Software (TOMS), Vol 20, No 3, pp. 286-307, 1994.
      */
-    private static Code update_trial_interval(trial_interval ti)
+    private static Code update_trial_interval(TrialInterval ti)
     {
         ref double x = ref ti.x;
         ref double fx = ref ti.fx;
@@ -1424,72 +1412,72 @@ internal static class LBFGS
         LBFGSERR_INVALID_X_SSE,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::epsilon specified.
+         * Invalid parameter LbfgsParameters::epsilon specified.
          */
         LBFGSERR_INVALID_EPSILON,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::past specified.
+         * Invalid parameter LbfgsParameters::past specified.
          */
         LBFGSERR_INVALID_TESTPERIOD,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::delta specified.
+         * Invalid parameter LbfgsParameters::delta specified.
          */
         LBFGSERR_INVALID_DELTA,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::linesearch specified.
+         * Invalid parameter LbfgsParameters::linesearch specified.
          */
         LBFGSERR_INVALID_LINESEARCH,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::max_step specified.
+         * Invalid parameter LbfgsParameters::max_step specified.
          */
         LBFGSERR_INVALID_MINSTEP,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::max_step specified.
+         * Invalid parameter LbfgsParameters::max_step specified.
          */
         LBFGSERR_INVALID_MAXSTEP,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::ftol specified.
+         * Invalid parameter LbfgsParameters::ftol specified.
          */
         LBFGSERR_INVALID_FTOL,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::wolfe specified.
+         * Invalid parameter LbfgsParameters::wolfe specified.
          */
         LBFGSERR_INVALID_WOLFE,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::gtol specified.
+         * Invalid parameter LbfgsParameters::gtol specified.
          */
         LBFGSERR_INVALID_GTOL,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::xtol specified.
+         * Invalid parameter LbfgsParameters::xtol specified.
          */
         LBFGSERR_INVALID_XTOL,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::max_linesearch specified.
+         * Invalid parameter LbfgsParameters::max_linesearch specified.
          */
         LBFGSERR_INVALID_MAXLINESEARCH,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::orthantwise_c specified.
+         * Invalid parameter LbfgsParameters::orthantwise_c specified.
          */
         LBFGSERR_INVALID_ORTHANTWISE,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::orthantwise_start specified.
+         * Invalid parameter LbfgsParameters::orthantwise_start specified.
          */
         LBFGSERR_INVALID_ORTHANTWISE_START,
 
         /**
-         * Invalid parameter lbfgs_parameter_t::orthantwise_end specified.
+         * Invalid parameter LbfgsParameters::orthantwise_end specified.
          */
         LBFGSERR_INVALID_ORTHANTWISE_END,
 
@@ -1511,12 +1499,12 @@ internal static class LBFGS
         LBFGSERR_ROUNDING_ERROR,
 
         /**
-         * The line-search step became smaller than lbfgs_parameter_t::min_step.
+         * The line-search step became smaller than LbfgsParameters::min_step.
          */
         LBFGSERR_MINIMUMSTEP,
 
         /**
-         * The line-search step became larger than lbfgs_parameter_t::max_step.
+         * The line-search step became larger than LbfgsParameters::max_step.
          */
         LBFGSERR_MAXIMUMSTEP,
 
@@ -1532,7 +1520,7 @@ internal static class LBFGS
 
         /**
          * Relative width of the interval of uncertainty is at most
-         * lbfgs_parameter_t::xtol.
+         * LbfgsParameters::xtol.
          */
         LBFGSERR_WIDTHTOOSMALL,
 
@@ -1547,7 +1535,7 @@ internal static class LBFGS
         LBFGSERR_INCREASEGRADIENT
     }
     private delegate Code line_search_proc(
-        line_search_args args
+        LineSearchArgs args
     );
     /**
      * Callback interface to provide objective function and gradient evaluations.
@@ -1595,12 +1583,12 @@ internal static class LBFGS
      * non-zero value will cancel the optimization process.
      */
     private delegate Code lbfgs_progress_t(
-        lbfgs_progress_info info
+        LbfgsProgressInfo info
     );
 
-    private readonly struct lbfgs_progress_info
+    private readonly struct LbfgsProgressInfo
     {
-        public lbfgs_progress_info(object instance, double[] x, double[] g, double fx, double xnorm,
+        public LbfgsProgressInfo(object instance, double[] x, double[] g, double fx, double xnorm,
             double gnorm, double step, int n, int k, Code ls)
         {
             Instance = instance;
@@ -1641,7 +1629,7 @@ internal static class LBFGS
         public double Du { get; }
     }
 
-    private sealed class line_search_args
+    private sealed class LineSearchArgs
     {
         public int n;
         public double[] x;
@@ -1652,11 +1640,11 @@ internal static class LBFGS
         public double[] xp;
         public double[] gp;
         public double[] wp;
-        public callback_data_t cd;
-        public lbfgs_parameter_t param;
+        public CallbackData cd;
+        public LbfgsParameters param;
     }
 
-    private sealed class trial_interval
+    private sealed class TrialInterval
     {
         public double x;
         public double fx;
@@ -1672,7 +1660,7 @@ internal static class LBFGS
         public int brackt;
     }
 
-    private sealed class callback_data_t
+    private sealed class CallbackData
     {
         public object instance;
         public int n;
@@ -1680,7 +1668,7 @@ internal static class LBFGS
         public lbfgs_progress_t proc_progress;
     }
 
-    private sealed class iteration_data_t
+    private sealed class IterationData
     {
         public double alpha;
         public double[] s; /* [n] */
