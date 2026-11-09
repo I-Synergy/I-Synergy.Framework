@@ -88,10 +88,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         prjctd = false;
         cnstnd = false;
         boxed = true;
-        // 
-        // c     Project the initial x to the feasible set if necessary.
-        // 
-        {
             for (i = 1; i <= n; i++)
             {
                 if ((nbd[(i - (1)) + _nbd_offset] > 0))
@@ -118,11 +114,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     }
                 }
             }
-        }
-        // 
-        // c     Initialize iwhere and assign values to cnstnd and boxed.
-        // 
-        {
             for (i = 1; i <= n; i++)
             {
                 if ((nbd[(i - (1)) + _nbd_offset] != 2))
@@ -151,7 +142,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     }
                 }
             }
-        }
 
         if ((iprint >= 0))
         {
@@ -243,8 +233,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         int Case = 0;
         int j = 0;
         int jj = 0;
-
-        {
             for (info = 1; info <= n; info++)
             {
                 // ......exit
@@ -253,7 +241,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     return;
                 }
             }
-        }
 
         info = 0;
 
@@ -271,18 +258,15 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             Case = (Case + 2);
         }
-
-        {
-            int _cg_tmp = Case;
-            if (_cg_tmp == 1)
+            int _cg_tmp__r1 = Case;
+            if (_cg_tmp__r1 == 1)
                 goto L20;
-            if (_cg_tmp == 2)
+            if (_cg_tmp__r1 == 2)
                 goto L50;
-            if (_cg_tmp == 3)
+            if (_cg_tmp__r1 == 3)
                 goto L80;
-            if (_cg_tmp == 4)
+            if (_cg_tmp__r1 == 4)
                 goto L110;
-        }
 
     //
     // solve t*x=b for t lower triangular
@@ -296,8 +280,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             return;
         }
-
-        {
             for (j = 2; j <= n; j++)
             {
                 temp = (-(b[((j - 1) - (1)) + _b_offset]));
@@ -306,7 +288,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset] / t[(j - (1))
                     + (j - (1)) * (ldt) + _t_offset]);
             }
-        }
         return;
 
     // 
@@ -321,8 +302,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             return;
         }
-
-        {
             for (jj = 2; jj <= n; jj++)
             {
                 j = ((n - jj) + 1);
@@ -334,7 +313,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset]
                     / t[(j - (1)) + (j - (1)) * (ldt) + _t_offset]);
             }
-        }
 
         return;
     // 
@@ -348,8 +326,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             return;
         }
-
-        {
             for (jj = 2; jj <= n; jj++)
             {
                 j = ((n - jj) + 1);
@@ -360,7 +336,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset] / t[(j - (1))
                     + (j - (1)) * (ldt) + _t_offset]);
             }
-        }
         return;
 
     // 
@@ -374,8 +349,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             return;
         }
-
-        {
             for (j = 2; j <= n; j++)
             {
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset]
@@ -385,7 +358,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 b[(j - (1)) + _b_offset] = (b[(j - (1)) + _b_offset]
                     / t[(j - (1)) + (j - (1)) * (ldt) + _t_offset]);
             }
-        }
     }
 
     // 
@@ -472,23 +444,19 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         //  solve Jp2=v2+LD^(-1)v1.
         //
         p[((col + 1) - (1)) + _p_offset] = v[((col + 1) - (1)) + _v_offset];
-        {
             for (i = 2; i <= col; i++)
             {
                 i2 = (col + i);
                 sum = 0.0e0;
-                {
                     for (k = 1; k <= (i - 1); k++)
                     {
                         sum = (sum + ((sy[(i - (1)) + (k - (1)) * (m)
                             + _sy_offset] * v[(k - (1)) + _v_offset]) / sy[(k - (1))
                             + (k - (1)) * (m) + _sy_offset]));
                     }
-                }
 
                 p[(i2 - (1)) + _p_offset] = (v[(i2 - (1)) + _v_offset] + sum);
             }
-        }
 
         // Solve the triangular system
         dtrsl(wt, _wt_offset, m, col, p,
@@ -496,16 +464,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if ((info != 0))
             return;
-
-        // 
-        // solve D^(1/2)p1=v1.
-        {
             for (i = 1; i <= col; i++)
             {
                 p[(i - (1)) + _p_offset] = (v[(i - (1)) + _v_offset]
                     / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
             }
-        }
 
         // 
         //  PART II: solve [ -D^(1/2)   D^(-1/2)*L'  ] [ p1 ] = [ p1 ]
@@ -518,32 +481,21 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if ((info != 0))
             return;
-
-        // 
-        // compute p1 = -D^(-1/2)(p1-D^(-1/2)L'p2)
-        //            = -D^(-1/2)p1+D^(-1)L'p2.  
-        {
             for (i = 1; i <= col; i++)
             {
                 p[(i - (1)) + _p_offset] = -(p[(i - (1)) + _p_offset]
                     / System.Math.Sqrt(sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
             }
-        }
-
-        {
             for (i = 1; i <= col; i++)
             {
                 sum = 0.0e0;
-                {
                     for (k = (i + 1); k <= col; k++)
                     {
                         sum = (sum + ((sy[(k - (1)) + (i - (1)) * (m) + _sy_offset]
                             * p[((col + k) - (1)) + _p_offset]) / sy[(i - (1)) + (i - (1)) * (m) + _sy_offset]));
                     }
-                }
                 p[(i - (1)) + _p_offset] = (p[(i - (1)) + _p_offset] + sum);
             }
-        }
     }
 
     // 
@@ -802,21 +754,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             // DISPLAY: '---------------- CAUCHY entered-------------------'
         }
-        // 
-        // c     We set p to zero and build it up as we determine d.
-        // 
-        {
             for (i = 1; i <= col2; i++)
             {
                 p[(i - (1)) + _p_offset] = 0.0;
             }
-        }
-        // 
-        // c     In the following loop we determine for each variable its bound
-        // c        status and its breakpoint, and update p accordingly.
-        // c        Smallest breakpoint is identified.
-        // 
-        {
             for (i = 1; i <= n; i++)
             {
                 neggi = (-(g[(i - (1)) + _g_offset]));
@@ -873,9 +814,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 {
                     d[(i - (1)) + _d_offset] = neggi;
                     f1 = (f1 - (neggi * neggi));
-
-                    // calculate p := p - W'e_i* (g_i).
-                    {
                         for (j = 1; j <= col; j++)
                         {
                             p[(j - (1)) + _p_offset] = (p[(j - (1))
@@ -884,7 +822,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                                 + _p_offset] + (ws[(i - (1)) + (pointr - (1)) * (n) + _ws_offset] * neggi));
                             pointr = ((pointr) % (m) + 1);
                         }
-                    }
                     if ((((nbd[(i - (1)) + _nbd_offset] <= 2)
                         && (nbd[(i - (1)) + _nbd_offset] != 0)) && (neggi < 0.0)))
                     {
@@ -924,7 +861,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     }
                 }
             }
-        }
         // 
         // The indices of the nonzero components of d are now stored
         // in iorder(1),...,iorder(nbreak) and iorder(nfree),...,iorder(n).
@@ -946,16 +882,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // is a zero vector, return with the initial xcp as GCP.
             return;
         }
-
-        // 
-        // c     Initialize c = W'(xcp - x) = 0.
-        // 
-        {
             for (j = 1; j <= col2; j++)
             {
                 c[(j - (1)) + _c_offset] = 0.0;
             }
-        }
 
         // 
         // c     Initialize derivative f2.
@@ -1109,7 +1039,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // choose wbp,
             // the row of W corresponding to the breakpoint encountered.
             pointr = head;
-            {
                 for (j = 1; j <= col; j++)
                 {
                     wbp[(j - (1)) + _wbp_offset] = wy[(ibp - (1))
@@ -1120,7 +1049,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
                     pointr = ((pointr) % (m) + 1);
                 }
-            }
 
             // compute (wbp)Mc, (wbp)Mp, and (wbp)M(wbp)'.
             bmv(m, sy, _sy_offset, wt, _wt_offset, col, wbp,
@@ -1255,23 +1183,19 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if (((!cnstnd) && (col > 0)))
         {
-            {
                 for (i = 1; i <= n; i++)
                 {
                     r[(i - (1)) + _r_offset] = (-(g[(i - (1)) + _g_offset]));
                 }
-            }
         }
         else
         {
-            {
                 for (i = 1; i <= nfree; i++)
                 {
                     k = index[(i - (1)) + _index_offset];
                     r[(i - (1)) + _r_offset] = -(theta * (z[(k - (1))
                         + _z_offset] - x[(k - (1)) + _x_offset])) - g[(k - (1)) + _g_offset];
                 }
-            }
 
             bmv(m, sy, _sy_offset, wt, _wt_offset, col, wa,
                 (((2 * m) + 1) - (1)) + _wa_offset, wa, 0 + _wa_offset, ref info);
@@ -1283,13 +1207,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
 
             pointr = head;
-
-            {
                 for (j = 1; j <= col; j++)
                 {
                     a1 = wa[(j - (1)) + _wa_offset];
                     a2 = (theta * wa[((col + j) - (1)) + _wa_offset]);
-                    {
                         for (i = 1; i <= nfree; i++)
                         {
                             k = index[(i - (1)) + _index_offset];
@@ -1297,11 +1218,9 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                                 + (wy[(k - (1)) + (pointr - (1)) * (n) + _wy_offset] * a1))
                                 + (ws[(k - (1)) + (pointr - (1)) * (n) + _ws_offset] * a2));
                         }
-                    }
 
                     pointr = ((pointr) % (m) + 1);
                 }
-            }
         }
     }
 
@@ -2120,11 +2039,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             task = "ERROR: FACTR .LT. 0";
         }
-
-        // 
-        // c     Check the validity of the arrays nbd(i), u(i), and l(i).
-        // 
-        {
             for (i = 1; i <= n; i++)
             {
                 if (((nbd[(i - (1)) + _nbd_offset] < 0) || (nbd[(i - (1)) + _nbd_offset] > 3)))
@@ -2142,7 +2056,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     k = i;
                 }
             }
-        }
 
     }
 
@@ -2319,8 +2232,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             if ((iupdat > m))
             {
-                // c                                 shift old part of WN1.
-                {
                     for (jy = 1; jy <= (m - 1); jy++)
                     {
                         js = (m + jy);
@@ -2331,7 +2242,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         dcopy((m - 1), wn1, ((m + 2) - (1)) + ((jy + 1) - (1)) * (2 * m)
                             + _wn1_offset, 1, wn1, ((m + 1) - (1)) + (jy - (1)) * (2 * m) + _wn1_offset, 1);
                     }
-                }
             }
 
             // 
@@ -2348,25 +2258,18 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 ipntr = (ipntr - m);
             }
             jpntr = head;
-            {
                 for (jy = 1; jy <= col; jy++)
                 {
                     js = (m + jy);
                     temp1 = 0.0;
                     temp2 = 0.0;
                     temp3 = 0.0;
-
-                    // c             compute element jy of row 'col' of Y'ZZ'Y
-                    {
                         for (k = pbegin; k <= pend; k++)
                         {
                             k1 = ind[(k - (1)) + _ind_offset];
                             temp1 = (temp1 + (wy[(k1 - (1)) + (ipntr - (1))
                                 * (n) + _wy_offset] * wy[(k1 - (1)) + (jpntr - (1)) * (n) + _wy_offset]));
                         }
-                    }
-                    // c             compute elements jy of row 'col' of L_a and S'AA'S
-                    {
                         for (k = dbegin; k <= dend; k++)
                         {
                             k1 = ind[(k - (1)) + _ind_offset];
@@ -2375,14 +2278,12 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                             temp3 = (temp3 + (ws[(k1 - (1)) + (ipntr - (1))
                                 * (n) + _ws_offset] * wy[(k1 - (1)) + (jpntr - (1)) * (n) + _wy_offset]));
                         }
-                    }
 
                     wn1[(iy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] = temp1;
                     wn1[(is2 - (1)) + (js - (1)) * (2 * m) + _wn1_offset] = temp2;
                     wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] = temp3;
                     jpntr = ((jpntr) % (m) + 1);
                 }
-            }
 
             // 
             // c          put new column in block (2,1).
@@ -2393,24 +2294,19 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 jpntr = (jpntr - m);
             }
             ipntr = head;
-            {
                 for (i = 1; i <= col; i++)
                 {
                     is2 = (m + i);
                     temp3 = 0.0;
-                    // c             compute element i of column 'col' of R_z
-                    {
                         for (k = pbegin; k <= pend; k++)
                         {
                             k1 = ind[(k - (1)) + _ind_offset];
                             temp3 = (temp3 + (ws[(k1 - (1)) + (ipntr - (1))
                                 * (n) + _ws_offset] * wy[(k1 - (1)) + (jpntr - (1)) * (n) + _wy_offset]));
                         }
-                    }
                     ipntr = ((ipntr) % (m) + 1);
                     wn1[(is2 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] = temp3;
                 }
-            }
             upcl = (col - 1);
         }
         else
@@ -2423,12 +2319,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // c       in the set of free variables.
 
         ipntr = head;
-        {
             for (iy = 1; iy <= upcl; iy++)
             {
                 is2 = (m + iy);
                 jpntr = head;
-                {
                     for (jy = 1; jy <= iy; jy++)
                     {
                         js = (m + jy);
@@ -2436,7 +2330,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         temp2 = 0.0;
                         temp3 = 0.0;
                         temp4 = 0.0;
-                        {
                             for (k = 1; k <= nenter; k++)
                             {
                                 k1 = indx2[(k - (1)) + _indx2_offset];
@@ -2445,8 +2338,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                                 temp2 = (temp2 + (ws[(k1 - (1)) + (ipntr - (1))
                                     * (n) + _ws_offset] * ws[(k1 - (1)) + (jpntr - (1)) * (n) + _ws_offset]));
                             }
-                        }
-                        {
                             for (k = ileave; k <= n; k++)
                             {
                                 k1 = indx2[(k - (1)) + _indx2_offset];
@@ -2455,7 +2346,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                                 temp4 = (temp4 + (ws[(k1 - (1)) + (ipntr
                                     - (1)) * (n) + _ws_offset] * ws[(k1 - (1)) + (jpntr - (1)) * (n) + _ws_offset]));
                             }
-                        }
 
                         wn1[(iy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] =
                             ((wn1[(iy - (1)) + (jy - (1)) * (2 * m) + _wn1_offset] + temp1) - temp3);
@@ -2463,40 +2353,32 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                             ((wn1[(is2 - (1)) + (js - (1)) * (2 * m) + _wn1_offset] - temp2) + temp4);
                         jpntr = ((jpntr) % (m) + 1);
                     }
-                }
 
                 ipntr = ((ipntr) % (m) + 1);
             }
-        }
 
         // 
         // c       modify the old parts in block (2,1).
         ipntr = head;
-        {
             for (is2 = (m + 1); is2 <= (m + upcl); is2++)
             {
                 jpntr = head;
-                {
                     for (jy = 1; jy <= upcl; jy++)
                     {
                         temp1 = 0.0;
                         temp3 = 0.0;
-                        {
                             for (k = 1; k <= nenter; k++)
                             {
                                 k1 = indx2[(k - (1)) + _indx2_offset];
                                 temp1 = (temp1 + (ws[(k1 - (1)) + (ipntr
                                     - (1)) * (n) + _ws_offset] * wy[(k1 - (1)) + (jpntr - (1)) * (n) + _wy_offset]));
                             }
-                        }
-                        {
                             for (k = ileave; k <= n; k++)
                             {
                                 k1 = indx2[(k - (1)) + _indx2_offset];
                                 temp3 = (temp3 + (ws[(k1 - (1)) + (ipntr - (1))
                                     * (n) + _ws_offset] * wy[(k1 - (1)) + (jpntr - (1)) * (n) + _wy_offset]));
                             }
-                        }
 
                         if ((is2 <= (jy + m)))
                         {
@@ -2510,22 +2392,18 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         }
                         jpntr = ((jpntr) % (m) + 1);
                     }
-                }
                 ipntr = ((ipntr) % (m) + 1);
             }
-        }
 
         // 
         // c     Form the upper triangle of WN = [D+Y' ZZ'Y/theta   -L_a'+R_z' ] 
         // c                                     [-L_a +R_z        S'AA'S*theta]
         // 
         m2 = (2 * m);
-        {
             for (iy = 1; iy <= col; iy++)
             {
                 is2 = (col + iy);
                 is1 = (m + iy);
-                {
                     for (jy = 1; jy <= iy; jy++)
                     {
                         js = (col + jy);
@@ -2535,26 +2413,20 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         wn[(js - (1)) + (is2 - (1)) * (2 * m) + _wn_offset] =
                             (wn1[(is1 - (1)) + (js1 - (1)) * (2 * m) + _wn1_offset] * theta);
                     }
-                }
-                {
                     for (jy = 1; jy <= (iy - 1); jy++)
                     {
                         wn[(jy - (1)) + (is2 - (1)) * (2 * m) + _wn_offset] =
                             (-(wn1[(is1 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset]));
                     }
-                }
-                {
                     for (jy = iy; jy <= col; jy++)
                     {
                         wn[(jy - (1)) + (is2 - (1)) * (2 * m) + _wn_offset] =
                             wn1[(is1 - (1)) + (jy - (1)) * (2 * m) + _wn1_offset];
                     }
-                }
 
                 wn[(iy - (1)) + (iy - (1)) * (2 * m) + _wn_offset] = (wn[(iy - (1)) + (iy - (1)) * (2 * m)
                     + _wn_offset] + sy[(iy - (1)) + (iy - (1)) * (m) + _sy_offset]);
             }
-        }
 
         // 
         // c     Form the upper triangle of WN= [  LL'            L^-1(-L_a'+R_z')]
@@ -2572,23 +2444,13 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         // c        then form L^-1(-L_a'+R_z') in the (1,2) block.
         col2 = (2 * col);
-        {
             for (js = (col + 1); js <= col2; js++)
             {
                 dtrsl(wn, _wn_offset, m2, col, wn, 0
                     + (js - (1)) * (2 * m) + _wn_offset, 11, ref info);
             }
-        }
-
-        // 
-        // c     Form S'AA'S*theta + (L^-1(-L_a'+R_z'))'L^-1(-L_a'+R_z') in the
-        // c        upper triangle of (2,2) block of wn.
-        // 
-        // 
-        {
             for (is2 = (col + 1); is2 <= col2; is2++)
             {
-                {
                     for (js = is2; js <= col2; js++)
                     {
                         wn[(is2 - (1)) + (js - (1)) * (2 * m) + _wn_offset] =
@@ -2596,9 +2458,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                             + ddot(col, wn, 0 + (is2 - (1)) * (2 * m)
                             + _wn_offset, 1, wn, 0 + (js - (1)) * (2 * m) + _wn_offset, 1));
                     }
-                }
             }
-        }
 
         // 
         // c     Cholesky factorization of (2,2) block of wn.
@@ -2664,38 +2524,29 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         int k1 = 0;
 
         double ddum = 0.0d;
-        {
             for (j = 1; j <= col; j++)
             {
                 wt[0 + (j - (1)) * (m) + _wt_offset] = (theta * ss[0
                     + (j - (1)) * (m) + _ss_offset]);
             }
-        }
-
-        {
             for (i = 2; i <= col; i++)
             {
-                {
                     for (j = i; j <= col; j++)
                     {
                         k1 = (System.Math.Min(i, j) - 1);
 
                         ddum = 0.0;
-                        {
                             for (k = 1; k <= k1; k++)
                             {
                                 ddum = (ddum + ((sy[(i - (1)) + (k - (1)) * (m)
                                     + _sy_offset] * sy[(j - (1)) + (k - (1)) * (m)
                                     + _sy_offset]) / sy[(k - (1)) + (k - (1)) * (m) + _sy_offset]));
                             }
-                        }
 
                         wt[(i - (1)) + (j - (1)) * (m) + _wt_offset] = (ddum
                             + (theta * ss[(i - (1)) + (j - (1)) * (m) + _ss_offset]));
                     }
-                }
             }
-        }
 
         // 
         // c     Cholesky factorize T to J*J' with 
@@ -2768,8 +2619,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if (((iter > 0) && cnstnd))
         {
-            // c                           count the entering and leaving variables.
-            {
                 for (i = 1; i <= nfree; i++)
                 {
                     k = index[(i - (1)) + _index_offset];
@@ -2789,8 +2638,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         }
                     }
                 }
-            }
-            {
                 for (i = (1 + nfree); i <= n; i++)
                 {
                     k = index[(i - (1)) + _index_offset];
@@ -2804,7 +2651,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         }
                     }
                 }
-            }
 
             if ((iprint >= 99))
             {
@@ -2820,7 +2666,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // 
         nfree = 0;
         iact = (n + 1);
-        {
             for (i = 1; i <= n; i++)
             {
                 if ((iwhere[(i - (1)) + _iwhere_offset] <= 0))
@@ -2834,7 +2679,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     index[(iact - (1)) + _index_offset] = i;
                 }
             }
-        }
 
         if ((iprint >= 99))
         {
@@ -2905,10 +2749,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if ((iheap == 0))
         {
-            // 
-            // c        Rearrange the elements t(1) to t(n) to form a heap.
-            // 
-            {
                 for (k = 2; k <= n; k++)
                 {
                     ddum = t[(k - (1)) + _t_offset];
@@ -2933,7 +2773,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     t[(i - (1)) + _t_offset] = ddum;
                     iorder[(i - (1)) + _iorder_offset] = indxin;
                 }
-            }
         }
         // 
         // c     Assign to 'out' the value of t(1), the least member of the heap,
@@ -3042,7 +2881,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
             else
             {
-                {
                     for (i = 1; i <= n; i++)
                     {
                         a1 = d[(i - (1)) + _d_offset];
@@ -3074,7 +2912,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                             }
                         }
                     }
-                }
             }
         }
 
@@ -3135,12 +2972,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
             else
             {
-                {
                     for (i = 1; i <= n; i++)
                     {
                         x[(i - (1)) + _x_offset] = ((stp * d[(i - (1)) + _d_offset]) + t[(i - (1)) + _t_offset]);
                     }
-                }
             }
         }
         else
@@ -3883,16 +3718,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // i.e., to issue a warning if iback>10 in the line search.
             goto L999;
         }
-
-        // 
-        // Compute d=newx-oldx, r=newg-oldg, rr=y'y and dr=y's.
-        // 
-        {
             for (i = 1; i <= n; i++)
             {
                 r[(i - (1)) + _r_offset] = (g[(i - (1)) + _g_offset] - r[(i - (1)) + _r_offset]);
             }
-        }
 
         rr = ddot(n, r, _r_offset, 1, r, _r_offset, 1);
 
@@ -4097,8 +3926,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         if ((iupdat > m))
         {
-            // c                              move old information
-            {
                 for (j = 1; j <= (col - 1); j++)
                 {
                     dcopy(j, ss, (2 - (1)) + ((j + 1) - (1)) * (m)
@@ -4106,12 +3933,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     dcopy((col - j), sy, ((j + 1) - (1)) + ((j + 1)
                         - (1)) * (m) + _sy_offset, 1, sy, (j - (1)) + (j - (1)) * (m) + _sy_offset, 1);
                 }
-            }
         }
         // c        add new information: the last row of SY
         // c                                             and the last column of SS:
         pointr = head;
-        {
             for (j = 1; j <= (col - 1); j++)
             {
                 sy[(col - (1)) + (j - (1)) * (m) + _sy_offset] =
@@ -4126,7 +3951,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
                 pointr = ((pointr) % (m) + 1);
             }
-        }
         if ((stp == 1.0))
         {
             ss[(col - (1)) + (col - (1)) * (m) + _ss_offset] = dtd;
@@ -4178,7 +4002,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         int i = 0;
         double gi = 0.0d;
         sbgnrm = 0.0;
-        {
             for (i = 1; i <= n; i++)
             {
                 gi = g[(i - (1)) + _g_offset];
@@ -4201,7 +4024,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 }
                 sbgnrm = System.Math.Max(sbgnrm, System.Math.Abs(gi));
             }
-        }
     }
 
     // c                                                                       
@@ -4745,12 +4567,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // Compute wv = W'Zd.
         // 
         pointr = head;
-        {
             for (i = 1; i <= col; i++)
             {
                 temp1 = 0.0;
                 temp2 = 0.0;
-                {
                     for (j = 1; j <= nsub; j++)
                     {
                         k = ind[(j - (1)) + _ind_offset];
@@ -4759,13 +4579,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         temp2 = (temp2 + (ws[(k - (1)) + (pointr - (1))
                             * (n) + _ws_offset] * d[(j - (1)) + _d_offset]));
                     }
-                }
 
                 wv[(i - (1)) + _wv_offset] = temp1;
                 wv[((col + i) - (1)) + _wv_offset] = (theta * temp2);
                 pointr = ((pointr) % (m) + 1);
             }
-        }
 
         // 
         // Compute wv:=K^(-1)wv.
@@ -4779,13 +4597,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             return;
         }
-
-        {
             for (i = 1; i <= col; i++)
             {
                 wv[(i - (1)) + _wv_offset] = (-(wv[(i - (1)) + _wv_offset]));
             }
-        }
 
         dtrsl(wn, _wn_offset, m2, col2, wv, _wv_offset, 1, ref info);
 
@@ -4798,11 +4613,9 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // Compute d = (1/theta)d + (1/theta**2)Z'W wv.
         // 
         pointr = head;
-        {
             for (jy = 1; jy <= col; jy++)
             {
                 js = (col + jy);
-                {
                     for (i = 1; i <= nsub; i++)
                     {
                         k = ind[(i - (1)) + _ind_offset];
@@ -4811,11 +4624,9 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                             + _wv_offset]) / theta)) + (ws[(k - (1))
                             + (pointr - (1)) * (n) + _ws_offset] * wv[(js - (1)) + _wv_offset]));
                     }
-                }
 
                 pointr = ((pointr) % (m) + 1);
             }
-        }
         dscal(nsub, (1.0 / theta), d, _d_offset, 1);
 
         //  
@@ -4825,9 +4636,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         iword = 0;
 
         dcopy(n, x, _x_offset, 1, xp, _xp_offset, 1);
-
-        // c
-        {
             for (i = 1; i <= nsub; i++)
             {
                 k = ind[(i - (1)) + _ind_offset];
@@ -4873,7 +4681,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     x[(k - (1)) + _x_offset] = (xk + dk);
                 }
             }
-        }
         if ((iword == 0))
         {
             goto L911;
@@ -4883,13 +4690,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // check sign of the directional derivative
         // 
         dd_p = 0.0;
-        {
             for (i = 1; i <= n; i++)
             {
                 dd_p = dd_p + (x[(i - (1)) + _x_offset]
                     - xx[(i - (1)) + _xx_offset]) * gg[(i - (1)) + _gg_offset];
             }
-        }
 
         if ((dd_p > 0.0))
         {
@@ -4909,7 +4714,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         alpha = 1.0;
         temp1 = alpha;
         ibd = 0;
-        {
             for (i = 1; i <= nsub; i++)
             {
                 k = ind[(i - (1)) + _ind_offset];
@@ -4948,7 +4752,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     }
                 }
             }
-        }
 
         if ((alpha < 1.0))
         {
@@ -4965,13 +4768,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 d[(ibd - (1)) + _d_offset] = 0.0;
             }
         }
-        {
             for (i = 1; i <= nsub; i++)
             {
                 k = ind[(i - (1)) + _ind_offset];
                 x[(k - (1)) + _x_offset] = (x[(k - (1)) + _x_offset] + (alpha * d[(i - (1)) + _d_offset]));
             }
-        }
     L911:
 
         if ((iprint >= 99))
@@ -5039,7 +4840,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         int j = 0;
         int jm1 = 0;
         int k = 0;
-        {
             for (j = 1; j <= n; j++)
             {
                 info = j;
@@ -5049,8 +4849,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 {
                     goto L20;
                 }
-
-                {
                     for (k = 1; k <= jm1; k++)
                     {
                         t = (a[(k - (1)) + (j - (1)) * (lda) + _a_offset]
@@ -5061,7 +4859,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         a[(k - (1)) + (j - (1)) * (lda) + _a_offset] = t;
                         s = (s + (t * t));
                     }
-                }
 
             L20:
                 s = (a[(j - (1)) + (j - (1)) * (lda) + _a_offset] - s);
@@ -5073,7 +4870,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
                 a[(j - (1)) + (j - (1)) * (lda) + _a_offset] = System.Math.Sqrt(s);
             }
-        }
 
         info = 0;
 
@@ -5120,13 +4916,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // *        code for increment not equal to 1
         // *
         nincx = (n * incx);
-        {
-            int _i_inc = incx;
-            for (i = 1; (_i_inc < 0) ? i >= nincx : i <= nincx; i += _i_inc)
+            int _i_inc__r2 = incx;
+            for (i = 1; (_i_inc__r2 < 0) ? i >= nincx : i <= nincx; i += _i_inc__r2)
             {
                 dx[(i - (1)) + _dx_offset] = (da * dx[(i - (1)) + _dx_offset]);
             }
-        }
         return;
     // *
     // *        code for increment equal to 1
@@ -5141,12 +4935,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             goto L40;
         }
-        {
             for (i = 1; i <= m; i++)
             {
                 dx[(i - (1)) + _dx_offset] = (da * dx[(i - (1)) + _dx_offset]);
             }
-        }
 
         if ((n < 5))
         {
@@ -5155,9 +4947,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
     L40:
         mp1 = (m + 1);
-        {
-            int _i_inc = 5;
-            for (i = mp1; i <= n; i += _i_inc)
+            int _i_inc__r3 = 5;
+            for (i = mp1; i <= n; i += _i_inc__r3)
             {
                 dx[(i - (1)) + _dx_offset] = (da * dx[(i - (1)) + _dx_offset]);
                 dx[((i + 1) - (1)) + _dx_offset] = (da * dx[((i + 1) - (1)) + _dx_offset]);
@@ -5165,7 +4956,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 dx[((i + 3) - (1)) + _dx_offset] = (da * dx[((i + 3) - (1)) + _dx_offset]);
                 dx[((i + 4) - (1)) + _dx_offset] = (da * dx[((i + 4) - (1)) + _dx_offset]);
             }
-        }
 
     }
 
@@ -5222,15 +5012,12 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             iy = (-n + 1) * incy + 1;
         }
-
-        {
             for (i = 1; i <= n; i++)
             {
                 dtemp = (dtemp + (dx[(ix - (1)) + _dx_offset] * dy[(iy - (1)) + _dy_offset]));
                 ix = (ix + incx);
                 iy = (iy + incy);
             }
-        }
         ddot = dtemp;
         return ddot;
 
@@ -5247,13 +5034,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             goto L40;
         }
-
-        {
             for (i = 1; i <= m; i++)
             {
                 dtemp = (dtemp + (dx[(i - (1)) + _dx_offset] * dy[(i - (1)) + _dy_offset]));
             }
-        }
 
         if ((n < 5))
         {
@@ -5262,9 +5046,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
     L40:
         mp1 = (m + 1);
-        {
-            int _i_inc = 5;
-            for (i = mp1; i <= n; i += _i_inc)
+            int _i_inc__r4 = 5;
+            for (i = mp1; i <= n; i += _i_inc__r4)
             {
                 dtemp = (((((dtemp + (dx[(i - (1)) + _dx_offset] * dy[(i - (1))
                     + _dy_offset])) + (dx[((i + 1) - (1)) + _dx_offset] * dy[((i + 1) - (1))
@@ -5272,7 +5055,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     + _dy_offset])) + (dx[((i + 3) - (1)) + _dx_offset] * dy[((i + 3) - (1))
                     + _dy_offset])) + (dx[((i + 4) - (1)) + _dx_offset] * dy[((i + 4) - (1)) + _dy_offset]));
             }
-        }
     L60:
         ddot = dtemp;
         return ddot;
@@ -5310,14 +5092,12 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             iy = (-n + 1) * incy + 1;
         }
-        {
             for (i = 1; i <= n; i++)
             {
                 dy[(iy - (1)) + _dy_offset] = dx[(ix - (1)) + _dx_offset];
                 ix = (ix + incx);
                 iy = (iy + incy);
             }
-        }
         return;
     // c
     // c        code for both increments equal to 1
@@ -5331,12 +5111,10 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             goto L40;
         }
-        {
             for (i = 1; i <= m; i++)
             {
                 dy[(i - (1)) + _dy_offset] = dx[(i - (1)) + _dx_offset];
             }
-        }
         if ((n < 7))
         {
             return;
@@ -5344,9 +5122,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
     L40:
         mp1 = (m + 1);
-        {
-            int _i_inc = 7;
-            for (i = mp1; i <= n; i += _i_inc)
+            int _i_inc__r5 = 7;
+            for (i = mp1; i <= n; i += _i_inc__r5)
             {
                 dy[(i - (1)) + _dy_offset] = dx[(i - (1)) + _dx_offset];
                 dy[((i + 1) - (1)) + _dy_offset] = dx[((i + 1) - (1)) + _dx_offset];
@@ -5356,7 +5133,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                 dy[((i + 5) - (1)) + _dy_offset] = dx[((i + 5) - (1)) + _dx_offset];
                 dy[((i + 6) - (1)) + _dy_offset] = dx[((i + 6) - (1)) + _dx_offset];
             }
-        }
     }
 
     // *     .. Scalar Arguments ..
@@ -5412,13 +5188,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             m = (n) % (4);
             if ((m != 0))
             {
-                {
                     for (i = 1; i <= m; i++)
                     {
                         dy[(i - (1)) + _dy_offset] = (dy[(i - (1)) + _dy_offset]
                             + (da * dx[(i - (1)) + _dx_offset]));
                     }
-                }
             }
 
             if ((n < 4))
@@ -5427,9 +5201,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             }
 
             mp1 = (m + 1);
-            {
-                int _i_inc = 4;
-                for (i = mp1; i <= n; i += _i_inc)
+                int _i_inc__r6 = 4;
+                for (i = mp1; i <= n; i += _i_inc__r6)
                 {
                     dy[(i - (1)) + _dy_offset] = (dy[(i - (1)) + _dy_offset]
                         + (da * dx[(i - (1)) + _dx_offset]));
@@ -5440,7 +5213,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     dy[((i + 3) - (1)) + _dy_offset] = (dy[((i + 3) - (1)) + _dy_offset]
                         + (da * dx[((i + 3) - (1)) + _dx_offset]));
                 }
-            }
         }
         else
         {
@@ -5458,7 +5230,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             {
                 iy = (-n + 1) * incy + 1;
             }
-            {
                 for (i = 1; i <= n; i++)
                 {
                     dy[(iy - (1)) + _dy_offset] = (dy[(iy - (1)) + _dy_offset]
@@ -5466,7 +5237,6 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     ix = (ix + incx);
                     iy = (iy + incy);
                 }
-            }
         }
     }
 }

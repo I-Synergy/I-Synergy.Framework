@@ -1043,44 +1043,41 @@ public class Cobyla : BaseOptimizationMethod,
         for (var k = 1; k <= n; ++k)
             dxnew[k] = a[k, kk];
         var tot = 0.0;
-
-        {
-            int k = n;
-            while (k > nact)
+            int k__r1 = n;
+            while (k__r1 > nact)
             {
-                var sp = 0.0;
-                var spabs = 0.0;
-                for (var i = 1; i <= n; ++i)
+                var sp__r2 = 0.0;
+                var spabs__r3 = 0.0;
+                for (var i__r4 = 1; i__r4 <= n; ++i__r4)
                 {
-                    temp = z[i, k] * dxnew[i];
-                    sp += temp;
-                    spabs += Math.Abs(temp);
+                    temp = z[i__r4, k__r1] * dxnew[i__r4];
+                    sp__r2 += temp;
+                    spabs__r3 += Math.Abs(temp);
                 }
-                var acca = spabs + 0.1 * Math.Abs(sp);
-                var accb = spabs + 0.2 * Math.Abs(sp);
-                if (spabs >= acca || acca >= accb) sp = 0.0;
+                var acca__r5 = spabs__r3 + 0.1 * Math.Abs(sp__r2);
+                var accb__r6 = spabs__r3 + 0.2 * Math.Abs(sp__r2);
+                if (spabs__r3 >= acca__r5 || acca__r5 >= accb__r6) sp__r2 = 0.0;
 
                 if (tot == 0.0)
                 {
-                    tot = sp;
+                    tot = sp__r2;
                 }
                 else
                 {
-                    var kp = k + 1;
-                    temp = Math.Sqrt(sp * sp + tot * tot);
-                    var alpha = sp / temp;
-                    var beta = tot / temp;
+                    var kp__r7 = k__r1 + 1;
+                    temp = Math.Sqrt(sp__r2 * sp__r2 + tot * tot);
+                    var alpha__r8 = sp__r2 / temp;
+                    var beta__r9 = tot / temp;
                     tot = temp;
-                    for (var i = 1; i <= n; ++i)
+                    for (var i__r4 = 1; i__r4 <= n; ++i__r4)
                     {
-                        temp = alpha * z[i, k] + beta * z[i, kp];
-                        z[i, kp] = alpha * z[i, kp] - beta * z[i, k];
-                        z[i, k] = temp;
+                        temp = alpha__r8 * z[i__r4, k__r1] + beta__r9 * z[i__r4, kp__r7];
+                        z[i__r4, kp__r7] = alpha__r8 * z[i__r4, kp__r7] - beta__r9 * z[i__r4, k__r1];
+                        z[i__r4, k__r1] = temp;
                     }
                 }
-                --k;
+                --k__r1;
             }
-        }
 
         //     Add the new constraint if this can be done without a deletion from the
         //     active set.
@@ -1102,46 +1099,44 @@ public class Cobyla : BaseOptimizationMethod,
         //     constraint to be deleted, but branch if no suitable index can be found.
 
         var ratio = -1.0;
-        {
-            int k = nact;
+            int k__r10 = nact;
             do
             {
-                var zdotv = 0.0;
-                var zdvabs = 0.0;
+                var zdotv__r11 = 0.0;
+                var zdvabs__r12 = 0.0;
 
-                for (var i = 1; i <= n; ++i)
+                for (var i__r13 = 1; i__r13 <= n; ++i__r13)
                 {
-                    temp = z[i, k] * dxnew[i];
-                    zdotv = zdotv + temp;
-                    zdvabs = zdvabs + Math.Abs(temp);
+                    temp = z[i__r13, k__r10] * dxnew[i__r13];
+                    zdotv__r11 = zdotv__r11 + temp;
+                    zdvabs__r12 = zdvabs__r12 + Math.Abs(temp);
                 }
 
-                var acca = zdvabs + 0.1 * Math.Abs(zdotv);
-                var accb = zdvabs + 0.2 * Math.Abs(zdotv);
+                var acca__r14 = zdvabs__r12 + 0.1 * Math.Abs(zdotv__r11);
+                var accb__r15 = zdvabs__r12 + 0.2 * Math.Abs(zdotv__r11);
 
-                if (zdvabs < acca && acca < accb)
+                if (zdvabs__r12 < acca__r14 && acca__r14 < accb__r15)
                 {
-                    temp = zdotv / zdota[k];
+                    temp = zdotv__r11 / zdota[k__r10];
 
-                    if (temp > 0.0 && iact[k] <= m)
+                    if (temp > 0.0 && iact[k__r10] <= m)
                     {
-                        var tempa = vmultc[k] / temp;
-                        if (ratio < 0.0 || tempa < ratio) ratio = tempa;
+                        var tempa__r16 = vmultc[k__r10] / temp;
+                        if (ratio < 0.0 || tempa__r16 < ratio) ratio = tempa__r16;
                     }
 
-                    if (k >= 2)
+                    if (k__r10 >= 2)
                     {
-                        var kw = iact[k];
-                        for (var i = 1; i <= n; ++i) dxnew[i] -= temp * a[i, kw];
+                        var kw__r17 = iact[k__r10];
+                        for (var i__r13 = 1; i__r13 <= n; ++i__r13) dxnew[i__r13] -= temp * a[i__r13, kw__r17];
                     }
-                    vmultd[k] = temp;
+                    vmultd[k__r10] = temp;
                 }
                 else
                 {
-                    vmultd[k] = 0.0;
+                    vmultd[k__r10] = 0.0;
                 }
-            } while (--k > 0);
-        }
+            } while (--k__r10 > 0);
 
         if (ratio < 0.0)
             goto L_490;
@@ -1383,45 +1378,37 @@ public class Cobyla : BaseOptimizationMethod,
                 resmax = Math.Max(resmax, temp);
             }
         }
-
-        //     Set VMULTD to the VMULTC vector that would occur if DX became DXNEW. A
-        //     device is included to force VMULTD(K) = 0.0 if deviations from this value
-        //     can be attributed to computer rounding errors. First calculate the new
-        //     Lagrange multipliers.
-
-        {
-            int k = nact;
+            int k__r18 = nact;
 
         L_390:
-            var zdotw = 0.0;
-            var zdwabs = 0.0;
-            for (var i = 1; i <= n; ++i)
+            var zdotw__r19 = 0.0;
+            var zdwabs__r20 = 0.0;
+            for (var i__r21 = 1; i__r21 <= n; ++i__r21)
             {
-                temp = z[i, k] * dxnew[i];
-                zdotw += temp;
-                zdwabs += Math.Abs(temp);
+                temp = z[i__r21, k__r18] * dxnew[i__r21];
+                zdotw__r19 += temp;
+                zdwabs__r20 += Math.Abs(temp);
             }
 
-            var acca = zdwabs + 0.1 * Math.Abs(zdotw);
-            var accb = zdwabs + 0.2 * Math.Abs(zdotw);
+            var acca__r22 = zdwabs__r20 + 0.1 * Math.Abs(zdotw__r19);
+            var accb__r23 = zdwabs__r20 + 0.2 * Math.Abs(zdotw__r19);
 
-            if (zdwabs >= acca || acca >= accb)
-                zdotw = 0.0;
+            if (zdwabs__r20 >= acca__r22 || acca__r22 >= accb__r23)
+                zdotw__r19 = 0.0;
 
-            vmultd[k] = zdotw / zdota[k];
+            vmultd[k__r18] = zdotw__r19 / zdota[k__r18];
 
-            if (k >= 2)
+            if (k__r18 >= 2)
             {
-                kk = iact[k];
-                for (var i = 1; i <= n; ++i)
-                    dxnew[i] -= vmultd[k] * a[i, kk];
-                --k;
+                kk = iact[k__r18];
+                for (var i__r21 = 1; i__r21 <= n; ++i__r21)
+                    dxnew[i__r21] -= vmultd[k__r18] * a[i__r21, kk];
+                --k__r18;
                 goto L_390;
             }
 
             if (mcon > m)
                 vmultd[nact] = Math.Max(0.0, vmultd[nact]);
-        }
 
         //     Complete VMULTC by finding the new constraint residuals.
 

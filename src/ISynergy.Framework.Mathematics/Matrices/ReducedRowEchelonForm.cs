@@ -69,13 +69,9 @@ public class ReducedRowEchelonForm
                     rref[r, j] = rref[i, j];
                     rref[i, j] = temp;
                 }
-
-                // Update indices
-                {
-                    var temp = pivot[r];
+                    var temp__r1 = pivot[r];
                     pivot[r] = pivot[i];
-                    pivot[i] = temp;
-                }
+                    pivot[i] = temp__r1;
             }
 
             // Set to reduced row echelon form

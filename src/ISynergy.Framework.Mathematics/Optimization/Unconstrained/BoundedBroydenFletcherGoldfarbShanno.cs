@@ -199,32 +199,26 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
             work = new double[totalSize];
 
         var i = 0;
-
-        {
             for (i = 0; i < UpperBounds.Length; i++)
             {
-                var hasUpper = !double.IsInfinity(UpperBounds[i]);
-                var hasLower = !double.IsInfinity(LowerBounds[i]);
+                var hasUpper__r1 = !double.IsInfinity(UpperBounds[i]);
+                var hasLower__r2 = !double.IsInfinity(LowerBounds[i]);
 
-                if (hasUpper && hasLower)
+                if (hasUpper__r1 && hasLower__r2)
                     nbd[i] = 2;
-                else if (hasUpper)
+                else if (hasUpper__r1)
                     nbd[i] = 3;
-                else if (hasLower)
+                else if (hasLower__r2)
                     nbd[i] = 1;
                 else nbd[i] = 0; // unbounded
 
-                if (hasLower)
+                if (hasLower__r2)
                     l[i] = LowerBounds[i];
-                if (hasUpper)
+                if (hasUpper__r1)
                     u[i] = UpperBounds[i];
             }
-        }
-        // We now define the starting point.
-        {
             for (i = 0; i < n; i++)
                 x[i] = Solution[i];
-        }
 
         double newF = 0;
         double[] newG = null;

@@ -371,35 +371,31 @@ public class Subplex : BaseOptimizationMethod, IOptimizationMethod<NelderMeadSta
             // compute change in optimal point
             for (var i = 0; i < x.Length; i++)
                 dx[i] = x[i] - xprev[i];
-
-            // setting step sizes
-            {
-                double scale;
+                double scale__r1;
                 if (nsubs == 1)
                 {
-                    scale = psi;
+                    scale__r1 = psi;
                 }
                 else
                 {
-                    double stepnorm = 0, dxnorm = 0;
-                    for (var i = 0; i < dx.Length; i++)
+                    double stepnorm__r2 = 0, dxnorm__r3 = 0;
+                    for (var i__r4 = 0; i__r4 < dx.Length; i__r4++)
                     {
-                        stepnorm += Math.Abs(xstep[i]);
-                        dxnorm += Math.Abs(dx[i]);
+                        stepnorm__r2 += Math.Abs(xstep[i__r4]);
+                        dxnorm__r3 += Math.Abs(dx[i__r4]);
                     }
 
-                    scale = dxnorm / stepnorm;
+                    scale__r1 = dxnorm__r3 / stepnorm__r2;
 
-                    if (scale < omega)
-                        scale = omega;
+                    if (scale__r1 < omega)
+                        scale__r1 = omega;
 
-                    if (scale > 1 / omega)
-                        scale = 1 / omega;
+                    if (scale__r1 > 1 / omega)
+                        scale__r1 = 1 / omega;
                 }
-                Trace.WriteLine("sbplx: stepsize scale factor = " + scale);
-                for (var i = 0; i < xstep.Length; i++)
-                    xstep[i] = dx[i] == 0 ? -(xstep[i] * scale) : Special.Sign(xstep[i] * scale, dx[i]);
-            }
+                Trace.WriteLine("sbplx: stepsize scale factor = " + scale__r1);
+                for (var i__r4 = 0; i__r4 < xstep.Length; i__r4++)
+                    xstep[i__r4] = dx[i__r4] == 0 ? -(xstep[i__r4] * scale__r1) : Special.Sign(xstep[i__r4] * scale__r1, dx[i__r4]);
         }
     }
     /// <summary>
