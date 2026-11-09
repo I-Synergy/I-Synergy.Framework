@@ -1,4 +1,5 @@
-#pragma warning disable CA1861 // constant arrays must stay inline inside expression trees
+﻿#pragma warning disable CA1861 // constant arrays must stay inline inside expression trees
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -444,7 +445,7 @@ public class AugmentedLagrangianTest
         List<NonlinearConstraint> constraints =
         [
             new QuadraticConstraint(objective,
-                quadraticTerms: A,
+                quadraticTerms: new Matrix<double>(A),
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: k
             ),
             new NonlinearConstraint(objective,
@@ -536,7 +537,7 @@ public class AugmentedLagrangianTest
         List<NonlinearConstraint> constraints =
         [
             new QuadraticConstraint(objective,
-                quadraticTerms: A,
+                quadraticTerms: new Matrix<double>(A),
                 shouldBe: ConstraintType.LesserThanOrEqualTo, value: k
             ),
         ];
@@ -703,7 +704,7 @@ public class AugmentedLagrangianTest
         solverTest.MaxEvaluations = 0;
         bool didMinimise = solverTest.Minimize();
 
-        double[,] errorConstraintRelative = XSolve.Subtract(solverTest.Solution, 1).ElementwiseDivide(XSolve); // relative error between .Solve and .Minimize
+        double[,] errorConstraintRelative = new Matrix<double>(XSolve.Subtract(solverTest.Solution, 1)).ElementwiseDivide(new Matrix<double>(XSolve)); // relative error between .Solve and .Minimize
         double[,] errorConstraintAbsolute = XSolve.Subtract(solverTest.Solution, 1); // absolute error between .Solve and .Minimize
 
         double[] errorConstraintsTest = new double[nConstraintsTest];

@@ -1,3 +1,4 @@
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances;
@@ -214,7 +215,7 @@ public class DistanceTest
 
         // There are multiple ways to create a Mahalanobis 
         // distance. The easiest method by far is by using:
-        Mahalanobis mahalanobis = Mahalanobis.FromCovarianceMatrix(covariance);
+        Mahalanobis mahalanobis = Mahalanobis.FromCovarianceMatrix(new Matrix<double>(covariance));
 
         // Then, you can compute the distance using:
         double distance = mahalanobis.Distance(x, y);
@@ -226,7 +227,7 @@ public class DistanceTest
         Mahalanobis fromCholesky = new(new CholeskyDecomposition(covariance));
         Mahalanobis fromSVD = new(new SingularValueDecomposition(covariance));
         Mahalanobis fromPrecision1 = new(covariance.Inverse());
-        Mahalanobis fromPrecision2 = Mahalanobis.FromPrecisionMatrix(covariance.Inverse());
+        Mahalanobis fromPrecision2 = Mahalanobis.FromPrecisionMatrix(new Matrix<double>(covariance.Inverse()));
 
         // They all should produce equivalent results:
         double a = fromCholesky.Distance(x, y);
@@ -263,7 +264,7 @@ public class DistanceTest
 
         // There are multiple ways to create a Mahalanobis 
         // distance. The easiest method by far is by using:
-        SquareMahalanobis mahalanobis = SquareMahalanobis.FromCovarianceMatrix(covariance);
+        SquareMahalanobis mahalanobis = SquareMahalanobis.FromCovarianceMatrix(new Matrix<double>(covariance));
 
         // Then, you can compute the distance using:
         double distance = mahalanobis.Distance(x, y);
@@ -275,7 +276,7 @@ public class DistanceTest
         SquareMahalanobis fromCholesky = new(new CholeskyDecomposition(covariance));
         SquareMahalanobis fromSVD = new(new SingularValueDecomposition(covariance));
         SquareMahalanobis fromPrecision1 = new(covariance.Inverse());
-        SquareMahalanobis fromPrecision2 = SquareMahalanobis.FromPrecisionMatrix(covariance.Inverse());
+        SquareMahalanobis fromPrecision2 = SquareMahalanobis.FromPrecisionMatrix(new Matrix<double>(covariance.Inverse()));
 
         // They all should produce equivalent results:
         double a = fromCholesky.Distance(x, y);

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 
 
@@ -14,9 +15,9 @@ public class AbsoluteLoss : LossBase<double[][]>
     ///     Initializes a new instance of the <see cref="AbsoluteLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public AbsoluteLoss(double[][] expected)
+    public AbsoluteLoss(Jagged<double> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
     }
 
     /// <summary>

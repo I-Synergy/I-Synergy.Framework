@@ -1,4 +1,4 @@
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances.Base;
 
 
@@ -56,9 +56,9 @@ public class Mahalanobis : BaseMahalanobis
     ///   of the given covariance matrix.
     /// </returns>
     /// 
-    public static Mahalanobis FromCovarianceMatrix(double[,] covariance)
+    public static Mahalanobis FromCovarianceMatrix(Matrix<double> covariance)
     {
-        return new Mahalanobis(new CholeskyDecomposition(covariance));
+        return new Mahalanobis(new CholeskyDecomposition(covariance.Array));
     }
 
     /// <summary>
@@ -71,9 +71,9 @@ public class Mahalanobis : BaseMahalanobis
     ///   A Mahalanobis distance using the given precision matrix.
     /// </returns>
     /// 
-    public static Mahalanobis FromPrecisionMatrix(double[,] precision)
+    public static Mahalanobis FromPrecisionMatrix(Matrix<double> precision)
     {
-        return new Mahalanobis(precision);
+        return new Mahalanobis(precision.Array);
     }
 
     /// <summary>

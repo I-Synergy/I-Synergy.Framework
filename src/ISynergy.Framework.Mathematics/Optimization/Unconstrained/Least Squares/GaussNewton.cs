@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -173,6 +174,6 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
         for (var i = 0; i < Deltas.Length; i++)
             Solution[i] -= Deltas[i];
 
-        return ComputeError(inputs, outputs);
+        return ComputeError(new Jagged<double>(inputs), outputs);
     }
 }

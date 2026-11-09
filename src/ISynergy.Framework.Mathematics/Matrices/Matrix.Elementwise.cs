@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 
 
@@ -18,9 +18,9 @@ public static partial class Matrix
     /// <summary>
     ///   Elementwise divide operation.
     /// </summary>
-    public static double[,] ElementwiseDivide(this double[,] a, double[,] b)
+    public static double[,] ElementwiseDivide(this Matrix<double> a, Matrix<double> b)
     {
-        return Elementwise.Divide(a, b);
+        return Elementwise.Divide(a.Array, b.Array);
     }
 
     /// <summary>

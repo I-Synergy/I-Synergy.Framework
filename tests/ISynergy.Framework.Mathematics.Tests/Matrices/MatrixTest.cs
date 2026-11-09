@@ -1,5 +1,6 @@
-#pragma warning disable CA1861 // expected values in assertions stay inline
+﻿#pragma warning disable CA1861 // expected values in assertions stay inline
 using ISynergy.Framework.Core.Ranges;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Enumerations;
@@ -344,7 +345,7 @@ public partial class MatrixTest
             { 2, 1, 2 },
         };
 
-        double[,] actual = Matrix.ElementwiseDivide(a, b);
+        double[,] actual = Matrix.ElementwiseDivide(new Matrix<double>(a), new Matrix<double>(b));
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 

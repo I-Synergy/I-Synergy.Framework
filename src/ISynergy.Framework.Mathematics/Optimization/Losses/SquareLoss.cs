@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 
@@ -17,7 +18,7 @@ public class EuclideanLoss : SquareLoss
     ///     Initializes a new instance of the <see cref="EuclideanLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public EuclideanLoss(double[][] expected)
+    public EuclideanLoss(Jagged<double> expected)
         : base(expected)
     {
     }
@@ -42,9 +43,9 @@ public class SquareLoss : LossBase<double[][]>
     ///     Initializes a new instance of the <see cref="SquareLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public SquareLoss(double[][] expected)
+    public SquareLoss(Jagged<double> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
     }
 
     /// <summary>

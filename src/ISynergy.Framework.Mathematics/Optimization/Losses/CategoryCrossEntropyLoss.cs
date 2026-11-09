@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 
@@ -17,9 +18,9 @@ public class CategoryCrossEntropyLoss : LossBase<bool[][]>, ILoss<int[]>, ILoss<
     ///     Initializes a new instance of the <see cref="CategoryCrossEntropyLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public CategoryCrossEntropyLoss(double[][] expected)
+    public CategoryCrossEntropyLoss(Jagged<double> expected)
     {
-        Expected = Classes.Decide(expected);
+        Expected = Classes.Decide(expected.Array);
     }
 
     /// <summary>
@@ -35,9 +36,9 @@ public class CategoryCrossEntropyLoss : LossBase<bool[][]>, ILoss<int[]>, ILoss<
     ///     Initializes a new instance of the <see cref="CategoryCrossEntropyLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public CategoryCrossEntropyLoss(bool[][] expected)
+    public CategoryCrossEntropyLoss(Jagged<bool> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
     }
 
     /// <summary>

@@ -1,8 +1,9 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -639,11 +640,11 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     ///     an already computed left triangular matrix <c>L</c>.
     /// </summary>
     /// <param name="leftTriangular">The left triangular matrix from a Cholesky decomposition.</param>
-    public static JaggedCholeskyDecomposition FromLeftTriangularMatrix(double[][] leftTriangular)
+    public static JaggedCholeskyDecomposition FromLeftTriangularMatrix(Jagged<double> leftTriangular)
     {
         var chol = new JaggedCholeskyDecomposition();
-        chol.n = leftTriangular.Length;
-        chol.L = leftTriangular;
+        chol.n = leftTriangular.Rows;
+        chol.L = leftTriangular.Array;
         chol.positiveDefinite = true;
         chol.robust = false;
         chol.Diagonal = Vector.Ones<double>(chol.n);

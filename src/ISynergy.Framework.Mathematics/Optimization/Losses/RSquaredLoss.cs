@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 using ISynergy.Framework.Mathematics.Vectors;
@@ -65,11 +66,11 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
     /// <param name="numberOfInputs">The number if variables being fit.</param>
-    public RSquaredLoss(int numberOfInputs, double[][] expected)
+    public RSquaredLoss(int numberOfInputs, Jagged<double> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
         NumberOfInputs = numberOfInputs;
-        Weights = Vector.Ones(expected.Length);
+        Weights = Vector.Ones(expected.Array.Length);
     }
 
     /// <summary>

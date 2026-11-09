@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -283,7 +284,7 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod
             for (var i = 0; i < Solution.Length; i++)
                 Solution[i] = weights[i] + deltas[i];
             // Calculate the new error
-            sumOfSquaredErrors = ComputeError(inputs, outputs);
+            sumOfSquaredErrors = ComputeError(new Jagged<double>(inputs), outputs);
 
             // Update the objective function
             current = sumOfSquaredErrors;

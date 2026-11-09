@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 
@@ -26,18 +27,18 @@ public class QuadraticConstraint : NonlinearConstraint
     ///     constraints should set this to a small positive value. Default is 0.
     /// </param>
     public QuadraticConstraint(IObjectiveFunction objective,
-        double[,] quadraticTerms, double[] linearTerms = null,
+        Matrix<double> quadraticTerms, double[] linearTerms = null,
         ConstraintType shouldBe = ConstraintType.LesserThanOrEqualTo,
         double value = 0, double withinTolerance = 0.0)
     {
         var n = objective.NumberOfVariables;
 
-        ArgumentNullException.ThrowIfNull(quadraticTerms);
+        ArgumentNullException.ThrowIfNull(quadraticTerms.Array);
 
-        if (quadraticTerms.GetLength(0) != quadraticTerms.GetLength(1))
+        if (quadraticTerms.Array.GetLength(0) != quadraticTerms.Array.GetLength(1))
             throw new DimensionMismatchException(nameof(quadraticTerms), "Matrix must be square.");
 
-        if (quadraticTerms.GetLength(0) != n)
+        if (quadraticTerms.Array.GetLength(0) != n)
             throw new DimensionMismatchException(nameof(quadraticTerms),
                 "Matrix rows must match the number of variables in the objective function.");
 
@@ -53,7 +54,7 @@ public class QuadraticConstraint : NonlinearConstraint
             linearTerms = new double[n];
         }
 
-        QuadraticTerms = quadraticTerms;
+        QuadraticTerms = quadraticTerms.Array;
         LinearTerms = linearTerms;
 
         Create(n, function, shouldBe, value, gradient, withinTolerance);

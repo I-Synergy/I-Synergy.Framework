@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.MachineLearning;
 using ISynergy.Framework.Mathematics.Statistics;
@@ -144,13 +145,13 @@ public abstract class BaseLeastSquaresMethod : ParallelLearningBase, IConvergenc
     /// <param name="input">The input points.</param>
     /// <param name="output">The output points.</param>
     /// <returns>The sum of squared errors for the data.</returns>
-    public double ComputeError(double[][] input, double[] output)
+    public double ComputeError(Jagged<double> input, double[] output)
     {
         double sumOfSquaredErrors = 0;
 
-        for (var i = 0; i < input.Length; i++)
+        for (var i = 0; i < input.Array.Length; i++)
         {
-            var actual = Function(Solution, input[i]);
+            var actual = Function(Solution, input.Array[i]);
             var expected = output[i];
 
             var e = expected - actual;
