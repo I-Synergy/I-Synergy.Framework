@@ -277,9 +277,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector4 operator +(Vector4 vector, float value)
+    public static Vector4 Add(Vector4 vector, float value)
     {
-        return new Vector4(vector.X + value, vector.Y + value, vector.Z + value, vector.W + value);
+        return vector + value;
     }
 
     /// <summary>
@@ -291,9 +291,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector4 Add(Vector4 vector, float value)
+    public static Vector4 operator +(Vector4 vector, float value)
     {
-        return vector + value;
+        return new Vector4(vector.X + value, vector.Y + value, vector.Z + value, vector.W + value);
     }
 
     /// <summary>
@@ -336,9 +336,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector4 operator -(Vector4 vector, float value)
+    public static Vector4 Subtract(Vector4 vector, float value)
     {
-        return new Vector4(vector.X - value, vector.Y - value, vector.Z - value, vector.W - value);
+        return vector - value;
     }
 
     /// <summary>
@@ -350,9 +350,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector4 Subtract(Vector4 vector, float value)
+    public static Vector4 operator -(Vector4 vector, float value)
     {
-        return vector - value;
+        return new Vector4(vector.X - value, vector.Y - value, vector.Z - value, vector.W - value);
     }
 
     /// <summary>
@@ -395,9 +395,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector4 operator *(Vector4 vector, float factor)
+    public static Vector4 Multiply(Vector4 vector, float factor)
     {
-        return new Vector4(vector.X * factor, vector.Y * factor, vector.Z * factor, vector.W * factor);
+        return vector * factor;
     }
 
     /// <summary>
@@ -409,9 +409,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector4 Multiply(Vector4 vector, float factor)
+    public static Vector4 operator *(Vector4 vector, float factor)
     {
-        return vector * factor;
+        return new Vector4(vector.X * factor, vector.Y * factor, vector.Z * factor, vector.W * factor);
     }
 
     /// <summary>
@@ -454,9 +454,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector4 operator /(Vector4 vector, float factor)
+    public static Vector4 Divide(Vector4 vector, float factor)
     {
-        return new Vector4(vector.X / factor, vector.Y / factor, vector.Z / factor, vector.W / factor);
+        return vector / factor;
     }
 
     /// <summary>
@@ -468,9 +468,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector4 Divide(Vector4 vector, float factor)
+    public static Vector4 operator /(Vector4 vector, float factor)
     {
-        return vector / factor;
+        return new Vector4(vector.X / factor, vector.Y / factor, vector.Z / factor, vector.W / factor);
     }
 
     /// <summary>

@@ -64,8 +64,7 @@ namespace ISynergy.Framework.Mathematics.Kinematics;
 [Serializable]
 public class DenavitHartenbergModel : IEnumerable<DenavitHartenbergJoint>
 {
-    // TODO: remove the NonSerialized tags in case AForge.NET implements // NOSONAR
-    // [Serializable] for those structs in the future (AForge.NET Issue 349)
+    // Math.NET parity: the fields below are marked NonSerialized to match upstream, where the underlying AForge.NET structs are not [Serializable].
     /// <summary>
     ///     Initializes a new instance of the <see cref="DenavitHartenbergModel" />
     ///     class given a specified model position in 3D space.

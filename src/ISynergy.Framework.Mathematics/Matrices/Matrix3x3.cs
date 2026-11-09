@@ -396,6 +396,36 @@ public struct Matrix3x3
     }
 
     /// <summary>
+    /// Multiplies specified matrix by the specified vector.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to multiply by vector.</param>
+    /// <param name="vector">Vector to multiply matrix by.</param>
+    /// 
+    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
+    /// by the specified vector.</returns>
+    ///
+    public static Vector3 Multiply(Matrix3x3 matrix, Vector3 vector)
+    {
+        return matrix * vector;
+    }
+
+    /// <summary>
+    /// Multiplies matrix by the specified factor.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to multiply.</param>
+    /// <param name="factor">Factor to multiple the specified matrix by.</param>
+    /// 
+    /// <returns>Returns new matrix with all components equal to corresponding components of the
+    /// specified matrix multiples by the specified factor.</returns>
+    /// 
+    public static Matrix3x3 Multiply(Matrix3x3 matrix, float factor)
+    {
+        return matrix * factor;
+    }
+
+    /// <summary>
     /// Adds corresponding components of two matrices.
     /// </summary>
     /// 
@@ -437,6 +467,21 @@ public struct Matrix3x3
     public static Matrix3x3 Add(Matrix3x3 matrix1, Matrix3x3 matrix2)
     {
         return matrix1 + matrix2;
+    }
+
+    /// <summary>
+    /// Adds specified value to all components of the specified matrix.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to add value to.</param>
+    /// <param name="value">Value to add to all components of the specified matrix.</param>
+    /// 
+    /// <returns>Returns new matrix with all components equal to corresponding components of the
+    /// specified matrix increased by the specified value.</returns>
+    /// 
+    public static Matrix3x3 Add(Matrix3x3 matrix, float value)
+    {
+        return matrix + value;
     }
 
     /// <summary>
@@ -502,21 +547,6 @@ public struct Matrix3x3
     }
 
     /// <summary>
-    /// Multiplies specified matrix by the specified vector.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to multiply by vector.</param>
-    /// <param name="vector">Vector to multiply matrix by.</param>
-    /// 
-    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
-    /// by the specified vector.</returns>
-    ///
-    public static Vector3 Multiply(Matrix3x3 matrix, Vector3 vector)
-    {
-        return matrix * vector;
-    }
-
-    /// <summary>
     /// Multiplies matrix by the specified factor.
     /// </summary>
     /// 
@@ -546,21 +576,6 @@ public struct Matrix3x3
     }
 
     /// <summary>
-    /// Multiplies matrix by the specified factor.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to multiply.</param>
-    /// <param name="factor">Factor to multiple the specified matrix by.</param>
-    /// 
-    /// <returns>Returns new matrix with all components equal to corresponding components of the
-    /// specified matrix multiples by the specified factor.</returns>
-    /// 
-    public static Matrix3x3 Multiply(Matrix3x3 matrix, float factor)
-    {
-        return matrix * factor;
-    }
-
-    /// <summary>
     /// Adds specified value to all components of the specified matrix.
     /// </summary>
     /// 
@@ -587,21 +602,6 @@ public struct Matrix3x3
         m.V22 = matrix.V22 + value;
 
         return m;
-    }
-
-    /// <summary>
-    /// Adds specified value to all components of the specified matrix.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to add value to.</param>
-    /// <param name="value">Value to add to all components of the specified matrix.</param>
-    /// 
-    /// <returns>Returns new matrix with all components equal to corresponding components of the
-    /// specified matrix increased by the specified value.</returns>
-    /// 
-    public static Matrix3x3 Add(Matrix3x3 matrix, float value)
-    {
-        return matrix + value;
     }
 
     /// <summary>

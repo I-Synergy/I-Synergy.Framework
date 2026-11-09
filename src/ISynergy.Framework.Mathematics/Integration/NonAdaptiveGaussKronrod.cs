@@ -240,12 +240,13 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
     /// </returns>
     public bool Compute()
     {
-        int errorCode;
-
         qng_(Function, Range.Min, Range.Max, ToleranceAbsolute, ToleranceRelative,
-            out result, out error, out evaluations, out errorCode);
+            out var quadpack);
 
-        Status = (NonAdaptiveGaussKronrodStatus)errorCode;
+        result = quadpack.Result;
+        error = quadpack.Abserr;
+        evaluations = quadpack.Neval;
+        Status = (NonAdaptiveGaussKronrodStatus)quadpack.Ier;
 
         return Status == NonAdaptiveGaussKronrodStatus.Success;
     }
@@ -293,20 +294,30 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
     /// <returns>The integral's value in the current interval.</returns>
     public static double Integrate(Func<double, double> f, double a, double b, double tolerance)
     {
-        double result;
-        double error;
-        int evaluations;
-        int errorCode;
+        qng_(f, a, b, 0, tolerance, out var quadpack);
 
-        qng_(f, a, b, 0, tolerance, out result, out error, out evaluations, out errorCode);
-
-        return result;
+        return quadpack.Result;
     }
+    internal readonly struct QuadpackResult
+    {
+        public readonly double Result;
+        public readonly double Abserr;
+        public readonly int Neval;
+        public readonly int Ier;
+
+        public QuadpackResult(double result, double abserr, int neval, int ier)
+        {
+            Result = result;
+            Abserr = abserr;
+            Neval = neval;
+            Ier = ier;
+        }
+    }
+
     #region Quadpack
 
     internal static int qng_(Func<double, double> f, double a, double b,
-        double epsabs, double epsrel, out double result, out double abserr,
-        out int neval, out int ier)
+        double epsabs, double epsrel, out QuadpackResult quadpack)
     {
         /* Local variables */
         int k, l;
@@ -335,10 +346,10 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
         /*           test on validity of parameters */
         /*           ------------------------------ */
 
-        result = 0.0f;
-        abserr = 0.0f;
-        neval = 0;
-        ier = 6;
+        double result = 0.0;
+        double abserr = 0.0;
+        int neval = 0;
+        int ier = 6;
 
         if (epsabs <= 0.0f && epsrel < Math.Max(5e-15, epmach * 50f)) goto L80;
 
@@ -463,6 +474,7 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
         Trace.Write("abnormal return from  qng");
 
     L999:
+        quadpack = new QuadpackResult(result, abserr, neval, ier);
         return 0;
     } /* qng_ */
 

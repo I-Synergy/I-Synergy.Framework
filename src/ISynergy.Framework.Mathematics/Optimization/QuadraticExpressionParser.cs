@@ -40,10 +40,8 @@ internal static class QuadraticExpressionParser
         var symbol = new Regex(@"[a-zA-Z]", RegexOptions.None, TimeSpan.FromMilliseconds(100));
         var matches = r.Matches(f, 0);
 
-        foreach (Match m in matches)
+        foreach (var term in matches.Select(m => m.Value))
         {
-            var term = m.Value;
-
             double scalar = term[0] == '-' ? -1 : 1;
 
             // Extract value
@@ -113,7 +111,7 @@ internal static class QuadraticExpressionParser
                         return term;
                     }
 
-                    if ((lb ?? rb ?? (Expression)lm ?? lu) is not null)
+                    if (lb is not null || rb is not null || lu is not null)
                     {
                         double n;
                         var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb ?? ru, out n);

@@ -360,10 +360,8 @@ public class LinearConstraint : IConstraint
 
         MatchCollection matches = r.Matches(lhs, 0);
 
-        foreach (Match m in matches)
+        foreach (var term in matches.Select(m => m.Value))
         {
-            string term = m.Value;
-
             double scalar = term[0] == '-' ? -1 : 1;
 
             // Extract value

@@ -9,9 +9,9 @@ public class REnvironmentTest : REnvironment
     [TestMethod]
     public void eyeTest()
     {
-        vec x = c(1, 2, 3, 4);
+        Vec x = c(1, 2, 3, 4);
 
-        mat m = matrix(x, 2, 2);
+        Mat m = matrix(x, 2, 2);
 
         double[,] actual = m;
         Assert.AreEqual(1, actual[0, 0]);

@@ -131,7 +131,7 @@ namespace ISynergy.Framework.Mathematics.Optimization;
 ///     </para>
 /// </example>
 /// <seealso cref="GoldfarbIdnani" />
-public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
+public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEquatable<QuadraticObjectiveFunction>
 {
     /// <summary>
     ///     Creates a new objective function specified through a string.
@@ -429,7 +429,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
     /// </returns>
     public static bool TryParse(string str, CultureInfo culture, out QuadraticObjectiveFunction function)
     {
-        // TODO: implement this method without the try-catch block. // NOSONAR
+        // Math.NET parity: TryParse delegates to the parsing constructor and reports failure via FormatException; there is no separate non-throwing parser.
         try
         {
             function = new QuadraticObjectiveFunction(str, culture);
@@ -587,6 +587,75 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
         {
             ConstantTerm = constantTerm
         };
+    }
+
+    #endregion
+
+    #region Equality
+
+    /// <summary>
+    ///     Determines whether two quadratic objective functions are equal.
+    /// </summary>
+    /// <param name="left">The first objective function.</param>
+    /// <param name="right">The second objective function.</param>
+    /// <returns><c>true</c> if both are equal; otherwise <c>false</c>.</returns>
+    public static bool operator ==(QuadraticObjectiveFunction left, QuadraticObjectiveFunction right)
+    {
+        return Equals(left, right);
+    }
+
+    /// <summary>
+    ///     Determines whether two quadratic objective functions are different.
+    /// </summary>
+    /// <param name="left">The first objective function.</param>
+    /// <param name="right">The second objective function.</param>
+    /// <returns><c>true</c> if both differ; otherwise <c>false</c>.</returns>
+    public static bool operator !=(QuadraticObjectiveFunction left, QuadraticObjectiveFunction right)
+    {
+        return !Equals(left, right);
+    }
+
+    /// <summary>
+    ///     Determines whether the specified <see cref="object" /> is equal to this instance.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current instance.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
+    /// </returns>
+    public override bool Equals(object obj)
+    {
+        return Equals(obj as QuadraticObjectiveFunction);
+    }
+
+    /// <summary>
+    ///     Determines whether the specified objective function is equal to this instance.
+    /// </summary>
+    /// <param name="other">The objective function to compare with the current instance.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified objective function is equal to this instance; otherwise, <c>false</c>.
+    /// </returns>
+    public bool Equals(QuadraticObjectiveFunction other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+
+        return NumberOfVariables == other.NumberOfVariables
+            && ConstantTerm == other.ConstantTerm
+            && LinearTerms.IsEqual(other.LinearTerms)
+            && QuadraticTerms.IsEqual(other.QuadraticTerms);
+    }
+
+    /// <summary>
+    ///     Returns a hash code for this instance.
+    /// </summary>
+    /// <returns>
+    ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+    /// </returns>
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(NumberOfVariables, ConstantTerm);
     }
 
     #endregion

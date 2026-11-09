@@ -59,13 +59,7 @@ public static partial class Matrix
     /// <param name="value">The value to be removed.</param>
     public static T[] RemoveAll<T>(this T[] values, T value)
     {
-        var result = new List<T>(values.Length);
-
-        foreach (var v in values) // NOSONAR
-            if (!Equals(v, value))
-                result.Add(v);
-
-        return result.ToArray();
+        return values.Where(v => !Equals(v, value)).ToArray();
     }
 
     /// <summary>
@@ -209,6 +203,7 @@ public static partial class Matrix
 
         return set.ToArray();
     }
+
     /// <summary>
     ///     Gets the number of distinct values
     ///     present in each column of a matrix.
@@ -317,6 +312,17 @@ public static partial class Matrix
     }
 
     /// <summary>
+    ///     Gets the indices of the first element matching a certain criteria.
+    /// </summary>
+    /// <typeparam name="T">The type of the array.</typeparam>
+    /// <param name="data">The array to search inside.</param>
+    /// <param name="func">The search criteria.</param>
+    public static int First<T>(this T[] data, Func<T, bool> func)
+    {
+        return Find(data, func, true)[0];
+    }
+
+    /// <summary>
     ///     Returns the last <paramref name="count" /> elements of an array.
     /// </summary>
     public static T[] Last<T>(this T[] values, int count)
@@ -373,6 +379,7 @@ public static partial class Matrix
     {
         return (T)System.Convert.ChangeType(value, typeof(T));
     }
+
     #region Row and column getters and setters
 
     /// <summary>
@@ -453,6 +460,31 @@ public static partial class Matrix
     }
 
     /// <summary>
+    ///     Gets a column vector from a matrix.
+    /// </summary>
+    public static T[,] GetColumns<T>(this T[,] m, params int[] index)
+    {
+        return GetColumns(m, index, null);
+    }
+
+    /// <summary>
+    ///     Gets a column vector from a matrix.
+    /// </summary>
+    public static T[,] GetColumns<T>(this T[,] m, int[] index, T[,] result = null)
+    {
+        var rows = m.GetLength(0);
+
+        if (result is null)
+            result = new T[rows, index.Length];
+
+        for (var i = 0; i < rows; i++)
+            for (var j = 0; j < index.Length; j++)
+                result[i, j] = m[i, index[j]];
+
+        return result;
+    }
+
+    /// <summary>
     ///     Gets a row vector from a matrix.
     /// </summary>
     public static T[] GetRow<T>(this T[][] m, int index, T[] result = null)
@@ -504,31 +536,6 @@ public static partial class Matrix
             for (var i = 0; i < index.Length; i++)
                 m[index[i]].CopyTo(result[i], 0);
         }
-
-        return result;
-    }
-
-    /// <summary>
-    ///     Gets a column vector from a matrix.
-    /// </summary>
-    public static T[,] GetColumns<T>(this T[,] m, params int[] index)
-    {
-        return GetColumns(m, index, null);
-    }
-
-    /// <summary>
-    ///     Gets a column vector from a matrix.
-    /// </summary>
-    public static T[,] GetColumns<T>(this T[,] m, int[] index, T[,] result = null)
-    {
-        var rows = m.GetLength(0);
-
-        if (result is null)
-            result = new T[rows, index.Length];
-
-        for (var i = 0; i < rows; i++)
-            for (var j = 0; j < index.Length; j++)
-                result[i, j] = m[i, index[j]];
 
         return result;
     }
@@ -690,45 +697,6 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///     Returns a new matrix with a given column vector inserted at the end of the original matrix.
-    /// </summary>
-    public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource value)
-    {
-        return InsertRow(matrix, value, matrix.Length);
-    }
-
-    /// <summary>
-    ///     Returns a new matrix with a given row vector inserted at the end of the original matrix.
-    /// </summary>
-    public static T[,] InsertRow<T, TSource>(this T[,] matrix, TSource[] row)
-    {
-        return InsertRow(matrix, row, matrix.GetLength(0));
-    }
-
-    /// <summary>
-    ///     Returns a new matrix with a given row vector inserted at the end of the original matrix.
-    /// </summary>
-    public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource[] row)
-    {
-        return InsertRow(matrix, row, matrix.Length);
-    }
-
-    /// <summary>
-    ///     Returns a new matrix with a new row vector inserted at the end of the original matrix.
-    /// </summary>
-    public static T[,] InsertRow<T>(this T[,] matrix)
-    {
-        return InsertRow(matrix, new T[matrix.GetLength(1)], matrix.GetLength(0));
-    }
-
-    /// <summary>
-    ///     Returns a new matrix with a new row vector inserted at the end of the original matrix.
-    /// </summary>
-    public static T[][] InsertRow<T>(this T[][] matrix)
-    {
-        return InsertRow(matrix, new T[matrix[0].Length], matrix.Length);
-    }
-    /// <summary>
     ///     Returns a new matrix with a given column vector inserted at a given index.
     /// </summary>
     public static T[,] InsertColumn<T, TSource>(this T[,] matrix, TSource[] column, int index)
@@ -851,6 +819,46 @@ public static partial class Matrix
             X[i][index] = cast<T>(value);
 
         return X;
+    }
+
+    /// <summary>
+    ///     Returns a new matrix with a given column vector inserted at the end of the original matrix.
+    /// </summary>
+    public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource value)
+    {
+        return InsertRow(matrix, value, matrix.Length);
+    }
+
+    /// <summary>
+    ///     Returns a new matrix with a given row vector inserted at the end of the original matrix.
+    /// </summary>
+    public static T[,] InsertRow<T, TSource>(this T[,] matrix, TSource[] row)
+    {
+        return InsertRow(matrix, row, matrix.GetLength(0));
+    }
+
+    /// <summary>
+    ///     Returns a new matrix with a given row vector inserted at the end of the original matrix.
+    /// </summary>
+    public static T[][] InsertRow<T, TSource>(this T[][] matrix, TSource[] row)
+    {
+        return InsertRow(matrix, row, matrix.Length);
+    }
+
+    /// <summary>
+    ///     Returns a new matrix with a new row vector inserted at the end of the original matrix.
+    /// </summary>
+    public static T[,] InsertRow<T>(this T[,] matrix)
+    {
+        return InsertRow(matrix, new T[matrix.GetLength(1)], matrix.GetLength(0));
+    }
+
+    /// <summary>
+    ///     Returns a new matrix with a new row vector inserted at the end of the original matrix.
+    /// </summary>
+    public static T[][] InsertRow<T>(this T[][] matrix)
+    {
+        return InsertRow(matrix, new T[matrix[0].Length], matrix.Length);
     }
 
     /// <summary>
@@ -1039,17 +1047,6 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///     Gets the indices of the first element matching a certain criteria.
-    /// </summary>
-    /// <typeparam name="T">The type of the array.</typeparam>
-    /// <param name="data">The array to search inside.</param>
-    /// <param name="func">The search criteria.</param>
-    public static int First<T>(this T[] data, Func<T, bool> func)
-    {
-        return Find(data, func, true)[0];
-    }
-
-    /// <summary>
     ///     Gets the indices of the first element matching a certain criteria, or null if the element could not be found.
     /// </summary>
     /// <typeparam name="T">The type of the array.</typeparam>
@@ -1153,4 +1150,5 @@ public static partial class Matrix
     }
 
     #endregion
+
 }

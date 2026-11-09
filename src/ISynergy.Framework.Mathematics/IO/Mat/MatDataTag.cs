@@ -1,5 +1,6 @@
 namespace ISynergy.Framework.Mathematics.IO.Mat;
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
@@ -32,8 +33,53 @@ using System.Runtime.InteropServices;
                 8 bytes header + fixed payload
      
 */
+
+/// <summary>
+///   Four-byte buffer holding a small data element payload.
+///   Replaces the previous fixed-size buffer so the containing struct no longer needs unsafe code.
+/// </summary>
+[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
+internal struct SmallDataBuffer
+{
+    private byte _element0;
+    private byte _element1;
+    private byte _element2;
+    private byte _element3;
+
+    /// <summary>
+    ///   Gets or sets the byte at the given position.
+    /// </summary>
+    public byte this[int index]
+    {
+        get => index switch
+        {
+            0 => _element0,
+            1 => _element1,
+            2 => _element2,
+            3 => _element3,
+            _ => throw new ArgumentOutOfRangeException(nameof(index))
+        };
+        set
+        {
+            switch (index)
+            {
+                case 0: _element0 = value; break;
+                case 1: _element1 = value; break;
+                case 2: _element2 = value; break;
+                case 3: _element3 = value; break;
+                default: throw new ArgumentOutOfRangeException(nameof(index));
+            }
+        }
+    }
+
+    /// <summary>
+    ///   Returns a read-only view over the four bytes of the buffer.
+    /// </summary>
+    public ReadOnlySpan<byte> AsSpan() => MemoryMarshal.CreateReadOnlySpan(ref _element0, 4);
+}
+
 [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8)]
-internal unsafe struct MatDataTag
+internal struct MatDataTag
 {
     [FieldOffset(0)]
     public MatDataType DataType;
@@ -48,7 +94,7 @@ internal unsafe struct MatDataTag
     public MatDataType SmallData_Type;
 
     [FieldOffset(4)]
-    public fixed byte SmallData_Value[4];
+    public SmallDataBuffer SmallData_Value;
 
     public bool IsSmallFormat { get { return SmallData_NumberOfBytes != 0; } }
 

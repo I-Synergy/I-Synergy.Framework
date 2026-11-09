@@ -14,7 +14,7 @@ namespace ISynergy.Framework.Mathematics.Distances.Base;
 /// <typeparam name="T">The type of the first element to be compared.</typeparam>
 /// <typeparam name="U">The type of the second element to be compared.</typeparam>
 /// 
-public interface ISimilarity<T, U> // NOSONAR
+public interface ISimilarity<in T, in U>
 {
     /// <summary>
     ///   Gets a similarity measure between two points.
@@ -34,7 +34,7 @@ public interface ISimilarity<T, U> // NOSONAR
 /// 
 /// <typeparam name="T">The type of the elements to be compared.</typeparam>
 /// 
-public interface ISimilarity<T> : ISimilarity<T, T> // NOSONAR
+public interface ISimilarity<in T> : ISimilarity<T, T>
 {
 
 }

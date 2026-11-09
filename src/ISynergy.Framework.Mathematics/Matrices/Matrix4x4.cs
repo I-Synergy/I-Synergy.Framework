@@ -595,6 +595,21 @@ public struct Matrix4x4
     }
 
     /// <summary>
+    /// Multiplies specified matrix by the specified vector.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to multiply by vector.</param>
+    /// <param name="vector">Vector to multiply matrix by.</param>
+    /// 
+    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
+    /// by the specified vector.</returns>
+    ///
+    public static Vector4 Multiply(Matrix4x4 matrix, Vector4 vector)
+    {
+        return matrix * vector;
+    }
+
+    /// <summary>
     /// Adds corresponding components of two matrices.
     /// </summary>
     /// 
@@ -716,21 +731,6 @@ public struct Matrix4x4
             matrix.V20 * vector.X + matrix.V21 * vector.Y + matrix.V22 * vector.Z + matrix.V23 * vector.W,
             matrix.V30 * vector.X + matrix.V31 * vector.Y + matrix.V32 * vector.Z + matrix.V33 * vector.W
             );
-    }
-
-    /// <summary>
-    /// Multiplies specified matrix by the specified vector.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to multiply by vector.</param>
-    /// <param name="vector">Vector to multiply matrix by.</param>
-    /// 
-    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
-    /// by the specified vector.</returns>
-    ///
-    public static Vector4 Multiply(Matrix4x4 matrix, Vector4 vector)
-    {
-        return matrix * vector;
     }
 
     /// <summary>

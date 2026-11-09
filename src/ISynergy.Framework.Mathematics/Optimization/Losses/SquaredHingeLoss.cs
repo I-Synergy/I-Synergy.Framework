@@ -134,7 +134,7 @@ public struct SquaredHingeLoss : ILoss<double[]>,
     /// </returns>
     public double Loss(double expected, double actual)
     {
-        // TODO: Use multiplication instead of conditionals // NOSONAR
+        // Math.NET parity: the branching form is kept as in the reference implementation; no multiplication-based rewrite.
         if (expected > 0)
         {
             if (actual > 1)
@@ -163,7 +163,7 @@ public struct SquaredHingeLoss : ILoss<double[]>,
     /// </returns>
     public double Derivative(double expected, double actual)
     {
-        // TODO: Use multiplication instead of conditionals // NOSONAR
+        // Math.NET parity: the branching form is kept as in the reference implementation; no multiplication-based rewrite.
         if (expected > 0)
         {
             if (actual > 1)

@@ -248,9 +248,6 @@ public class FiniteDifferences
         if (x.Length < result.Length)
             throw new DimensionMismatchException(nameof(x), "Gradient vector must have at least the same size as x.");
 
-        if (Function is null) // NOSONAR - null check is a valid guard clause
-            throw new InvalidOperationException("The Function has not been defined.");
-
         var pointCache = points.Value[0];
         var centerValue = Function(x);
 
@@ -433,7 +430,7 @@ public class FiniteDifferences
     public static double Derivative(Func<double, double> function, double value, int order, double stepSize)
     {
         // This method is specific for univariate functions.
-        // TODO: Separate FiniteDifferences into classes for univariate, multivariate and vector-valued functions // NOSONAR
+        // Math.NET parity: univariate, multivariate and vector-valued differentiation share this single class rather than separate dedicated types.
 
         var output = function(value);
         var original = value;

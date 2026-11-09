@@ -274,7 +274,7 @@ public class TrustRegionNewtonMethod : BaseGradientOptimizationMethod
                     break;
             }
 
-            // TODO: Use these status codes in a TrustRegionNewtonMethodStatus enumeration // NOSONAR
+            // Math.NET parity: the termination conditions below are reported through Trace output only; there is no TrustRegionNewtonMethodStatus enumeration.
 
             if (f < -1.0e+32)
             {

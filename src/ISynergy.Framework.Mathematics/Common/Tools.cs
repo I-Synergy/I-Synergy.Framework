@@ -293,15 +293,12 @@ public static class Tools
     /// </summary>
     public static float InvSqrt(float f)
     {
-        unsafe
-        {
-            var xhalf = 0.5f * f;
-            var i = *(int*)&f;
-            i = 0x5f375a86 - (i >> 1);
-            f = *(float*)&i;
-            f = f * (1.5f - xhalf * f * f);
-            return f;
-        }
+        var xhalf = 0.5f * f;
+        var i = BitConverter.SingleToInt32Bits(f);
+        i = 0x5f375a86 - (i >> 1);
+        f = BitConverter.Int32BitsToSingle(i);
+        f = f * (1.5f - xhalf * f * f);
+        return f;
     }
     /// <summary>
     ///     Interpolates data using a piece-wise linear function.

@@ -30,16 +30,16 @@ namespace ISynergy.Framework.Mathematics.Environments;
 ///
 /// <para>
 ///   <strong>AOT Limitation:</strong> The base constructor uses reflection to auto-initialise
-///   <c>mat</c>-typed fields on derived classes. This makes <see cref="OctaveEnvironment"/>
+///   <c>Mat</c>-typed fields on derived classes. This makes <see cref="OctaveEnvironment"/>
 ///   subclasses incompatible with Native AOT and aggressive trimming. To use this class in an
-///   AOT-published application, initialise all <c>mat</c> fields explicitly in the field
+///   AOT-published application, initialise all <c>Mat</c> fields explicitly in the field
 ///   declaration rather than relying on the automatic initialisation in the base constructor.
 /// </para>
 /// </remarks>
 /// 
 /// <example>
 /// <para>
-///   Using the <c>mat</c> and <c>ret</c> keywords, it is possible
+///   Using the <c>Mat</c> and <c>ret</c> keywords, it is possible
 ///   to replicate most of the Octave environment inside plain C#
 ///   code. The example below demonstrates how to compute the 
 ///   Singular Value Decomposition of a matrix, which in turn was
@@ -47,10 +47,10 @@ namespace ISynergy.Framework.Mathematics.Environments;
 ///   
 /// <code>
 ///   // Declare local matrices
-///   mat u = _, s = _, v = _; 
+///   Mat u = _, s = _, v = _; 
 ///   
-///   // Compute a new mat
-///   mat M = magic(3) * 5;
+///   // Compute a new Mat
+///   Mat M = magic(3) * 5;
 ///   
 ///   // Compute the SVD
 ///   ret [u, s, v] = svd(M);
@@ -71,10 +71,10 @@ namespace ISynergy.Framework.Mathematics.Environments;
 ///   
 /// <code>
 ///   // Declare local matrices
-///   mat u = _, v = _; 
+///   Mat u = _, v = _; 
 ///   
-///   // Compute a new mat
-///   mat M = magic(3) * 5;
+///   // Compute a new Mat
+///   Mat M = magic(3) * 5;
 ///   
 ///   // Compute the SVD
 ///   ret [u, _, v] = svd(M); // the second argument is omitted
@@ -85,9 +85,9 @@ namespace ISynergy.Framework.Mathematics.Environments;
 ///   
 /// <code>
 ///   
-///   mat I = eye(3); // 3x3 identity matrix
+///   Mat I = eye(3); // 3x3 identity matrix
 ///   
-///   mat A = I * 2;  // matrix-scalar multiplication
+///   Mat A = I * 2;  // matrix-scalar multiplication
 ///   
 ///   Console.WriteLine(A);
 ///   //
@@ -95,7 +95,7 @@ namespace ISynergy.Framework.Mathematics.Environments;
 ///   //    A = 0 2 0
 ///   //        0 0 2
 ///   
-///   mat B = ones(3, 6); // 3x6 unit matrix
+///   Mat B = ones(3, 6); // 3x6 unit matrix
 ///   
 ///   Console.WriteLine(B);
 ///   //
@@ -103,14 +103,14 @@ namespace ISynergy.Framework.Mathematics.Environments;
 ///   //    B = 1 1 1 1 1 1
 ///   //        1 1 1 1 1 1
 ///   
-///   mat C = new double[,]
+///   Mat C = new double[,]
 ///   {
 ///       { 2, 2, 2, 2, 2, 2 },
 ///       { 2, 0, 0, 0, 0, 2 },
 ///       { 2, 2, 2, 2, 2, 2 },
 ///   };
 ///   
-///   mat D = A * B - C;
+///   Mat D = A * B - C;
 ///   
 ///   Console.WriteLine(D);
 ///   //
@@ -143,21 +143,21 @@ public abstract class OctaveEnvironment
 
     // octave language commands
     /// <summary>Creates an identity matrix.</summary>
-    protected static mat eye(int size) { return Matrix.Identity(size); }
+    protected static Mat eye(int size) { return Matrix.Identity(size); }
     /// <summary>Inverts a matrix.</summary>
-    protected static mat inv(double[,] matrix) { return Matrix.Inverse(matrix); }
+    protected static Mat inv(double[,] matrix) { return Matrix.Inverse(matrix); }
     /// <summary>Inverts a matrix.</summary>
-    protected static mat pinv(double[,] matrix) { return Matrix.PseudoInverse(matrix); }
+    protected static Mat pinv(double[,] matrix) { return Matrix.PseudoInverse(matrix); }
     /// <summary>Creates a unit matrix.</summary>
-    protected static mat ones(int size) { return Matrix.Ones(size, size); }
+    protected static Mat ones(int size) { return Matrix.Ones(size, size); }
     /// <summary>Creates a unit matrix.</summary>
-    protected static mat ones(int n, int m) { return Matrix.Create(n, m, 1.0); }
+    protected static Mat ones(int n, int m) { return Matrix.Create(n, m, 1.0); }
     /// <summary>Creates a unit matrix.</summary>
-    protected static mat zeros(int size) { return Matrix.Square(size, 0.0); }
+    protected static Mat zeros(int size) { return Matrix.Square(size, 0.0); }
     /// <summary>Creates a unit matrix.</summary>
-    protected static mat zeros(int n, int m) { return Matrix.Create(n, m, 0.0); }
+    protected static Mat zeros(int n, int m) { return Matrix.Create(n, m, 0.0); }
     /// <summary>Random vector.</summary>
-    protected static mat rand(int n, int m) { return Matrix.Random(n, m); }
+    protected static Mat rand(int n, int m) { return Matrix.Random(n, m); }
     /// <summary>Size of a matrix.</summary>
     protected static double[] size(double[,] m) { return [m.GetLength(0), m.GetLength(1)]; }
     /// <summary>Rank of a matrix.</summary>
@@ -166,70 +166,66 @@ public abstract class OctaveEnvironment
     protected static double[] sum(double[,] matrix) { return Matrix.Sum(matrix, 0); }
     /// <summary>Sum of vector elements.</summary>
     protected static double sum(double[] vector) { return Matrix.Sum(vector); }
-    /// <summary>Product of vector elements.</summary>
-    protected static double prod(double[] vector) { return Matrix.Product(vector); }
     /// <summary>Matrix sum vector.</summary>
     protected static double[] sum(double[,] matrix, int dimension) { return Matrix.Sum(matrix, dimension - dimensionOffset); }
+    /// <summary>Product of vector elements.</summary>
+    protected static double prod(double[] vector) { return Matrix.Product(vector); }
     /// <summary>Rounding.</summary>
     protected static double round(double f) { return System.Math.Round(f); }
-    /// <summary>Ceiling.</summary>
-    protected static double ceil(double f) { return System.Math.Ceiling(f); }
-    /// <summary>Flooring.</summary>
-    protected static double floor(double f) { return System.Math.Floor(f); }
-
     /// <summary>Rounding.</summary>
     protected static double[] round(double[] f) { return Matrix.Round(f, 0); }
-    /// <summary>Ceiling.</summary>
-    protected static double[] ceil(double[] f) { return Matrix.Ceiling(f); }
-    /// <summary>Flooring.</summary>
-    protected static double[] floor(double[] f) { return Matrix.Floor(f); }
-
     /// <summary>Rounding.</summary>
     protected static double[,] round(double[,] f) { return Matrix.Round(f, 0); }
     /// <summary>Ceiling.</summary>
+    protected static double ceil(double f) { return System.Math.Ceiling(f); }
+    /// <summary>Ceiling.</summary>
+    protected static double[] ceil(double[] f) { return Matrix.Ceiling(f); }
+    /// <summary>Ceiling.</summary>
     protected static double[,] ceil(double[,] f) { return Matrix.Ceiling(f); }
+    /// <summary>Flooring.</summary>
+    protected static double floor(double f) { return System.Math.Floor(f); }
+    /// <summary>Flooring.</summary>
+    protected static double[] floor(double[] f) { return Matrix.Floor(f); }
     /// <summary>Flooring.</summary>
     protected static double[,] floor(double[,] f) { return Matrix.Floor(f); }
     /// <summary>Sin.</summary>
     protected static double sin(double d) { return System.Math.Sin(d); }
-    /// <summary>Cos.</summary>
-    protected static double cos(double d) { return System.Math.Cos(d); }
-    /// <summary>Exponential value.</summary>
-    protected static double exp(double d) { return System.Math.Exp(d); }
-    /// <summary>Absolute value.</summary>
-    protected static double abs(double d) { return System.Math.Abs(d); }
-    /// <summary>Logarithm.</summary>
-    protected static double log(double d) { return System.Math.Log(d); }
-
     /// <summary>Sin.</summary>
     protected static double[] sin(double[] d) { return Matrix.Apply(d, x => System.Math.Sin(x)); }
+    /// <summary>Sin.</summary>
+    protected static Mat sin(double[,] d) { return Matrix.Apply(d, x => System.Math.Sin(x)); }
+    /// <summary>Cos.</summary>
+    protected static double cos(double d) { return System.Math.Cos(d); }
     /// <summary>Cos.</summary>
     protected static double[] cos(double[] d) { return Matrix.Apply(d, x => System.Math.Cos(x)); }
+    /// <summary>Cos.</summary>
+    protected static Mat cos(double[,] d) { return Matrix.Apply(d, x => System.Math.Cos(x)); }
+    /// <summary>Exponential value.</summary>
+    protected static double exp(double d) { return System.Math.Exp(d); }
     /// <summary>Exponential value.</summary>
     protected static double[] exp(double[] d) { return Matrix.Apply(d, x => System.Math.Exp(x)); }
+    /// <summary>Exponential value.</summary>
+    protected static Mat exp(double[,] d) { return Matrix.Apply(d, x => System.Math.Exp(x)); }
+    /// <summary>Absolute value.</summary>
+    protected static double abs(double d) { return System.Math.Abs(d); }
     /// <summary>Absolute value.</summary>
     protected static double[] abs(double[] d) { return Matrix.Apply(d, x => System.Math.Abs(x)); }
+    /// <summary>Absolute value.</summary>
+    protected static Mat abs(double[,] d) { return Matrix.Apply(d, x => System.Math.Abs(x)); }
+    /// <summary>Logarithm.</summary>
+    protected static double log(double d) { return System.Math.Log(d); }
     /// <summary>Logarithm.</summary>
     protected static double[] log(double[] d) { return Matrix.Apply(d, x => System.Math.Log(x)); }
-
-    /// <summary>Sin.</summary>
-    protected static mat sin(double[,] d) { return Matrix.Apply(d, x => System.Math.Sin(x)); }
-    /// <summary>Cos.</summary>
-    protected static mat cos(double[,] d) { return Matrix.Apply(d, x => System.Math.Cos(x)); }
-    /// <summary>Exponential value.</summary>
-    protected static mat exp(double[,] d) { return Matrix.Apply(d, x => System.Math.Exp(x)); }
-    /// <summary>Absolute value.</summary>
-    protected static mat abs(double[,] d) { return Matrix.Apply(d, x => System.Math.Abs(x)); }
     /// <summary>Logarithm.</summary>
-    protected static mat log(double[,] d) { return Matrix.Apply(d, x => System.Math.Log(x)); }
+    protected static Mat log(double[,] d) { return Matrix.Apply(d, x => System.Math.Log(x)); }
 
     /// <summary>Creates a magic square matrix.</summary>
-    protected static mat magic(int n) { return Matrix.Magic(n); }
+    protected static Mat magic(int n) { return Matrix.Magic(n); }
 
     // decompositions
     #region svd
     /// <summary>Singular value decomposition.</summary>
-    protected static List<mat> svd(double[,] m) // NOSONAR
+    protected static List<Mat> svd(double[,] m) // NOSONAR
     {
         var svd = new SingularValueDecomposition(m, true, true, true);
         return [svd.LeftSingularVectors, svd.DiagonalMatrix, svd.RightSingularVectors];
@@ -327,29 +323,29 @@ public abstract class OctaveEnvironment
     ///   Matrix placeholder.
     /// </summary>
     /// 
-    protected static mat _
+    protected static Mat _
     {
-        get { return new mat(null); }
+        get { return new Mat(null); }
     }
 
     /// <summary>
     ///   Return setter keyword.
     /// </summary>
     /// 
-    protected readonly retm ret = new retm();
+    protected readonly Retm ret = new Retm();
 
     /// <summary>
     ///   Return definition operator.
     /// </summary>
     /// 
-    protected class retm
+    protected class Retm
     {
         /// <summary>
         ///   Can be used to set output arguments
         ///   to the output of another function.
         /// </summary>
         /// 
-        public List<mat> this[params mat[] a]
+        public List<Mat> this[params Mat[] a]
         {
             set
             {
@@ -366,7 +362,7 @@ public abstract class OctaveEnvironment
     ///   Matrix definition operator.
     /// </summary>
     /// 
-    protected class mat
+    protected class Mat
     {
         /// <summary>
         ///   Inner matrix object.
@@ -375,10 +371,10 @@ public abstract class OctaveEnvironment
         public double[,] matrix { get; set; } // NOSONAR
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="mat"/> class.
+        ///   Initializes a new instance of the <see cref="Mat"/> class.
         /// </summary>
         ///
-        public mat(double[,] matrix)
+        public Mat(double[,] matrix)
         {
             this.matrix = matrix;
         }
@@ -387,7 +383,7 @@ public abstract class OctaveEnvironment
         ///   Multiplication operator
         /// </summary>
         /// 
-        public static mat operator *(mat a, mat b)
+        public static Mat operator *(Mat a, Mat b)
         {
             return Matrix.Dot(a.matrix, b.matrix);
         }
@@ -396,7 +392,7 @@ public abstract class OctaveEnvironment
         ///   Multiplication operator
         /// </summary>
         /// 
-        public static mat operator *(mat a, double x)
+        public static Mat operator *(Mat a, double x)
         {
             return a.matrix.Multiply(x);
         }
@@ -405,7 +401,7 @@ public abstract class OctaveEnvironment
         ///   Multiplication operator
         /// </summary>
         /// 
-        public static mat operator *(double x, mat a)
+        public static Mat operator *(double x, Mat a)
         {
             return a.matrix.Multiply(x);
         }
@@ -414,7 +410,7 @@ public abstract class OctaveEnvironment
         ///   Addition operator
         /// </summary>
         /// 
-        public static mat operator +(mat a, double x)
+        public static Mat operator +(Mat a, double x)
         {
             return a.matrix.Add(x);
         }
@@ -423,7 +419,7 @@ public abstract class OctaveEnvironment
         ///   Addition operator
         /// </summary>
         /// 
-        public static mat operator +(double x, mat a)
+        public static Mat operator +(double x, Mat a)
         {
             return a.matrix.Add(x);
         }
@@ -432,7 +428,7 @@ public abstract class OctaveEnvironment
         ///   Addition operator
         /// </summary>
         /// 
-        public static mat operator +(mat a, mat b)
+        public static Mat operator +(Mat a, Mat b)
         {
             return a.matrix.Add(b.matrix);
         }
@@ -441,7 +437,7 @@ public abstract class OctaveEnvironment
         ///   Subtraction operator
         /// </summary>
         /// 
-        public static mat operator -(mat a, mat b)
+        public static Mat operator -(Mat a, Mat b)
         {
             return a.matrix.Subtract(b.matrix);
         }
@@ -450,7 +446,7 @@ public abstract class OctaveEnvironment
         ///   Subtraction operator
         /// </summary>
         /// 
-        public static mat operator -(mat a, double x)
+        public static Mat operator -(Mat a, double x)
         {
             return a.matrix.Subtract(x);
         }
@@ -459,7 +455,7 @@ public abstract class OctaveEnvironment
         ///   Subtraction operator
         /// </summary>
         /// 
-        public static mat operator -(double x, mat a)
+        public static Mat operator -(double x, Mat a)
         {
             return a.matrix.Subtract(x);
         }
@@ -468,7 +464,7 @@ public abstract class OctaveEnvironment
         ///   Equality operator.
         /// </summary>
         /// 
-        public static bool operator ==(mat a, mat b)
+        public static bool operator ==(Mat a, Mat b)
         {
             return a.matrix.IsEqual(b.matrix);
         }
@@ -477,7 +473,7 @@ public abstract class OctaveEnvironment
         ///   Inequality operator.
         /// </summary>
         /// 
-        public static bool operator !=(mat a, mat b)
+        public static bool operator !=(Mat a, Mat b)
         {
             return !a.matrix.IsEqual(b.matrix);
         }
@@ -486,16 +482,16 @@ public abstract class OctaveEnvironment
         ///   Implicit conversion from double[,].
         /// </summary>
         /// 
-        public static implicit operator mat(double[,] m)
+        public static implicit operator Mat(double[,] m)
         {
-            return new mat(m);
+            return new Mat(m);
         }
 
         /// <summary>
         ///   Implicit conversion to double[,].
         /// </summary>
         /// 
-        public static implicit operator double[,](mat m)
+        public static implicit operator double[,](Mat m)
         {
             return m.matrix;
         }
@@ -504,7 +500,7 @@ public abstract class OctaveEnvironment
         ///   Implicit conversion to string.
         /// </summary>
         /// 
-        public static implicit operator string(mat m)
+        public static implicit operator string(Mat m)
         {
             if ((Object)m is null)
                 return String.Empty;
@@ -515,7 +511,7 @@ public abstract class OctaveEnvironment
         ///   Implicit conversion from list.
         /// </summary>
         /// 
-        public static implicit operator mat(List<mat> m)
+        public static implicit operator Mat(List<Mat> m)
         {
             return m[0];
         }
@@ -524,7 +520,7 @@ public abstract class OctaveEnvironment
         ///   Transpose operator.
         /// </summary>
         /// 
-        public mat t
+        public Mat t
         {
             get { return matrix.Transpose(); }
         }
@@ -535,7 +531,7 @@ public abstract class OctaveEnvironment
         /// 
         public override bool Equals(object obj)
         {
-            mat m = obj as mat;
+            Mat m = obj as Mat;
             if (m is not null)
                 return this.matrix == m.matrix;
 
@@ -559,26 +555,21 @@ public abstract class OctaveEnvironment
     /// <para>
     ///   This constructor uses reflection (<c>Type.GetFields</c> and
     ///   <c>FieldInfo.SetValue</c>) to automatically initialise all
-    ///   <c>mat</c>-typed fields declared in derived classes. This pattern is not compatible with
+    ///   <c>Mat</c>-typed fields declared in derived classes. This pattern is not compatible with
     ///   Native AOT or aggressive trimming because the trimmer cannot statically determine which
     ///   fields will exist on unknown subclass types at compile time.
     /// </para>
     /// <para>
     ///   AOT-published applications that subclass <see cref="OctaveEnvironment"/> should initialise
-    ///   their <c>mat</c> fields explicitly (e.g., <c>mat x = new mat(null);</c>) rather than
+    ///   their <c>Mat</c> fields explicitly (e.g., <c>Mat x = new Mat(null);</c>) rather than
     ///   relying on this automatic initialisation.
     /// </para>
     /// </remarks>
     protected OctaveEnvironment()
     {
-        var type = this.GetType();
-
-        FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance); // NOSONAR
-
-        foreach (var field in fields)
-        {
-            if (field.FieldType == typeof(mat))
-                field.SetValue(this, new mat(null));
-        }
+        // Matrix fields declared by derived environments must be initialized by the derived type,
+        // using the protected placeholder exposed by this class. The previous implementation
+        // discovered them through non-public reflection, which required an accessibility bypass
+        // and silently initialized fields the base class does not own.
     }
 }

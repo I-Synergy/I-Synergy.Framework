@@ -53,6 +53,43 @@ public static partial class Measures
 
         return sum / values.Length;
     }
+
+    /// <summary>
+    ///   Computes the mean of the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">A unsigned short array containing the vector members.</param>
+    /// 
+    /// <returns>The mean of the given data.</returns>
+    /// 
+    public static double Mean(this ushort[] values)
+    {
+        double sum = 0.0;
+
+        for (var i = 0; i < values.Length; i++)
+            sum += values[i];
+
+        return sum / values.Length;
+    }
+
+    /// <summary>
+    ///   Computes the mean of the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">A float array containing the vector members.</param>
+    /// 
+    /// <returns>The mean of the given data.</returns>
+    /// 
+    public static float Mean(this float[] values)
+    {
+        float sum = 0;
+
+        for (var i = 0; i < values.Length; i++)
+            sum += values[i];
+
+        return sum / values.Length;
+    }
+
     /// <summary>
     ///   Computes the Geometric mean of the given values.
     /// </summary>
@@ -62,6 +99,24 @@ public static partial class Measures
     /// <returns>The geometric mean of the given data.</returns>
     /// 
     public static double GeometricMean(this double[] values)
+    {
+        double sum = 1.0;
+
+        for (var i = 0; i < values.Length; i++)
+            sum *= values[i];
+
+        return Math.Pow(sum, 1.0 / values.Length);
+    }
+
+    /// <summary>
+    ///   Computes the geometric mean of the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">A double array containing the vector members.</param>
+    /// 
+    /// <returns>The geometric mean of the given data.</returns>
+    /// 
+    public static double GeometricMean(this int[] values)
     {
         double sum = 1.0;
 
@@ -87,24 +142,6 @@ public static partial class Measures
             lnsum += Math.Log(values[i]);
 
         return lnsum / values.Length;
-    }
-
-    /// <summary>
-    ///   Computes the geometric mean of the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">A double array containing the vector members.</param>
-    /// 
-    /// <returns>The geometric mean of the given data.</returns>
-    /// 
-    public static double GeometricMean(this int[] values)
-    {
-        double sum = 1.0;
-
-        for (var i = 0; i < values.Length; i++)
-            sum *= values[i];
-
-        return Math.Pow(sum, 1.0 / values.Length);
     }
 
     /// <summary>
@@ -146,42 +183,6 @@ public static partial class Measures
         }
 
         return sum / n;
-    }
-
-    /// <summary>
-    ///   Computes the mean of the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">A unsigned short array containing the vector members.</param>
-    /// 
-    /// <returns>The mean of the given data.</returns>
-    /// 
-    public static double Mean(this ushort[] values)
-    {
-        double sum = 0.0;
-
-        for (var i = 0; i < values.Length; i++)
-            sum += values[i];
-
-        return sum / values.Length;
-    }
-
-    /// <summary>
-    ///   Computes the mean of the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">A float array containing the vector members.</param>
-    /// 
-    /// <returns>The mean of the given data.</returns>
-    /// 
-    public static float Mean(this float[] values)
-    {
-        float sum = 0;
-
-        for (var i = 0; i < values.Length; i++)
-            sum += values[i];
-
-        return sum / values.Length;
     }
 
     /// <summary>
@@ -546,7 +547,7 @@ public static partial class Measures
     ///   
     /// <returns>The variance of the given data.</returns>
     /// 
-    public static double Variance(this double[] values, double mean, bool unbiased = true)
+    public static double Variance(this double[] values, double mean, bool unbiased)
     {
         double variance = 0.0;
 
@@ -1224,52 +1225,6 @@ public static partial class Measures
     }
 
     /// <summary>
-    ///   Computes the entropy function for a set of numerical values in a 
-    ///   given Probability Density Function (pdf).
-    /// </summary>
-    /// 
-    /// <param name="values">A number array containing the vector values.</param>
-    /// <param name="pdf">A probability distribution function.</param>
-    /// <param name="weights">The importance for each sample.</param>
-    /// 
-    /// <returns>The distribution's entropy for the given values.</returns>
-    /// 
-    public static double WeightedEntropy(this double[] values, double[] weights, Func<double, double> pdf)
-    {
-        double sum = 0;
-        for (var i = 0; i < values.Length; i++)
-        {
-            double p = pdf(values[i]) * weights[i];
-            sum += p * Math.Log(p);
-        }
-
-        return sum;
-    }
-
-    /// <summary>
-    ///   Computes the entropy function for a set of numerical values in a 
-    ///   given Probability Density Function (pdf).
-    /// </summary>
-    /// 
-    /// <param name="values">A number array containing the vector values.</param>
-    /// <param name="pdf">A probability distribution function.</param>
-    /// <param name="weights">The repetition counts for each sample.</param>
-    /// 
-    /// <returns>The distribution's entropy for the given values.</returns>
-    /// 
-    public static double WeightedEntropy(this double[] values, int[] weights, Func<double, double> pdf)
-    {
-        double sum = 0;
-        for (var i = 0; i < values.Length; i++)
-        {
-            double p = pdf(values[i]);
-            sum += p * Math.Log(p) * weights[i];
-        }
-
-        return sum;
-    }
-
-    /// <summary>
     ///   Computes the entropy for the given values.
     /// </summary>
     /// 
@@ -1295,7 +1250,7 @@ public static partial class Measures
     ///
     /// <returns>The calculated entropy for the given values.</returns>
     ///
-    public static double Entropy(this double[] values, double eps = 0) // NOSONAR
+    public static double Entropy(this double[] values, double eps)
     {
         double sum = 0;
         foreach (double v in values) // NOSONAR
@@ -1313,7 +1268,7 @@ public static partial class Measures
     ///
     /// <returns>The calculated entropy for the given values.</returns>
     ///
-    public static double Entropy(this double[,] values, double eps = 0) // NOSONAR
+    public static double Entropy(this double[,] values, double eps)
     {
         double sum = 0;
         foreach (double v in values) // NOSONAR
@@ -1371,6 +1326,121 @@ public static partial class Measures
         }
 
         return entropy;
+    }
+
+    /// <summary>
+    ///   Computes the entropy for the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">An array of integer symbols.</param>
+    /// <param name="startValue">The starting symbol.</param>
+    /// <param name="endValue">The ending symbol.</param>
+    /// <returns>The evaluated entropy.</returns>
+    /// 
+    public static double Entropy(IList<int> values, int startValue, int endValue)
+    {
+        double entropy = 0;
+        double total = values.Count;
+
+        // Build the histogram of class occurrences in a single pass over the relevant values.
+        var counts = new int[Math.Max(0, endValue - startValue + 1)];
+        foreach (var v in values.Where(v => v >= startValue && v <= endValue))
+            counts[v - startValue]++;
+
+        // For each class
+        for (var c = startValue; c <= endValue; c++)
+        {
+            int count = counts[c - startValue];
+
+            if (count > 0)
+            {
+                // Avoid situations limiting situations
+                //  by forcing 0 * Math.Log(0) to be 0.
+
+                double p = count / total;
+                entropy -= p * Math.Log(p, 2);
+            }
+        }
+
+        return entropy;
+    }
+
+    /// <summary>
+    ///   Computes the entropy for the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">An array of integer symbols.</param>
+    /// <param name="valueRange">The range of symbols.</param>
+    /// <returns>The evaluated entropy.</returns>
+    /// 
+    public static double Entropy(double[] values, NumericRange valueRange)
+    {
+        return Entropy(values, valueRange.Min, valueRange.Max);
+    }
+
+    /// <summary>
+    ///   Computes the entropy for the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">An array of integer symbols.</param>
+    /// <param name="classes">The number of distinct classes.</param>
+    /// <returns>The evaluated entropy.</returns>
+    /// 
+    public static double Entropy(int[] values, int classes)
+    {
+        return Entropy(values, 0, classes - 1);
+    }
+
+    /// <summary>
+    ///   Computes the entropy for the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">An array of integer symbols.</param>
+    /// <param name="classes">The number of distinct classes.</param>
+    /// <returns>The evaluated entropy.</returns>
+    /// 
+    public static double Entropy(IList<int> values, int classes)
+    {
+        return Entropy(values, 0, classes - 1);
+    }
+
+    /// <summary>
+    ///   Computes the entropy function for a set of numerical values in a 
+    ///   given Probability Density Function (pdf).
+    /// </summary>
+    /// 
+    /// <param name="values">A number array containing the vector values.</param>
+    /// <param name="pdf">A probability distribution function.</param>
+    /// <param name="weights">The importance for each sample.</param>
+    /// 
+    /// <returns>The distribution's entropy for the given values.</returns>
+    /// 
+    public static double WeightedEntropy(this double[] values, double[] weights, Func<double, double> pdf)
+    {
+        return Entropy(values, weights, pdf);
+    }
+
+    /// <summary>
+    ///   Computes the entropy function for a set of numerical values in a 
+    ///   given Probability Density Function (pdf).
+    /// </summary>
+    /// 
+    /// <param name="values">A number array containing the vector values.</param>
+    /// <param name="pdf">A probability distribution function.</param>
+    /// <param name="weights">The repetition counts for each sample.</param>
+    /// 
+    /// <returns>The distribution's entropy for the given values.</returns>
+    /// 
+    public static double WeightedEntropy(this double[] values, int[] weights, Func<double, double> pdf)
+    {
+        double sum = 0;
+        for (var i = 0; i < values.Length; i++)
+        {
+            double p = pdf(values[i]);
+            sum += p * Math.Log(p) * weights[i];
+        }
+
+        return sum;
     }
 
     /// <summary>
@@ -1457,42 +1527,6 @@ public static partial class Measures
     /// <param name="values">An array of integer symbols.</param>
     /// <param name="startValue">The starting symbol.</param>
     /// <param name="endValue">The ending symbol.</param>
-    /// <returns>The evaluated entropy.</returns>
-    /// 
-    public static double Entropy(IList<int> values, int startValue, int endValue)
-    {
-        double entropy = 0;
-        double total = values.Count;
-
-        // For each class
-        for (var c = startValue; c <= endValue; c++)
-        {
-            int count = 0;
-
-            // Count the number of instances inside
-            foreach (int v in values) // NOSONAR
-                if (v == c) count++;
-
-            if (count > 0)
-            {
-                // Avoid situations limiting situations
-                //  by forcing 0 * Math.Log(0) to be 0.
-
-                double p = count / total;
-                entropy -= p * Math.Log(p, 2);
-            }
-        }
-
-        return entropy;
-    }
-
-    /// <summary>
-    ///   Computes the entropy for the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">An array of integer symbols.</param>
-    /// <param name="startValue">The starting symbol.</param>
-    /// <param name="endValue">The ending symbol.</param>
     /// <param name="weights">The importance for each sample.</param>
     /// 
     /// <returns>The evaluated entropy.</returns>
@@ -1530,19 +1564,6 @@ public static partial class Measures
     /// </summary>
     /// 
     /// <param name="values">An array of integer symbols.</param>
-    /// <param name="valueRange">The range of symbols.</param>
-    /// <returns>The evaluated entropy.</returns>
-    /// 
-    public static double Entropy(double[] values, NumericRange valueRange)
-    {
-        return Entropy(values, valueRange.Min, valueRange.Max);
-    }
-
-    /// <summary>
-    ///   Computes the entropy for the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">An array of integer symbols.</param>
     /// <param name="classes">The number of distinct classes.</param>
     /// <param name="weights">The importance for each sample.</param>
     /// 
@@ -1566,32 +1587,6 @@ public static partial class Measures
     public static double WeightedEntropy(double[] values, double[] weights, int classes)
     {
         return WeightedEntropy(values, weights, 0, classes - 1);
-    }
-
-    /// <summary>
-    ///   Computes the entropy for the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">An array of integer symbols.</param>
-    /// <param name="classes">The number of distinct classes.</param>
-    /// <returns>The evaluated entropy.</returns>
-    /// 
-    public static double Entropy(int[] values, int classes)
-    {
-        return Entropy(values, 0, classes - 1);
-    }
-
-    /// <summary>
-    ///   Computes the entropy for the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">An array of integer symbols.</param>
-    /// <param name="classes">The number of distinct classes.</param>
-    /// <returns>The evaluated entropy.</returns>
-    /// 
-    public static double Entropy(IList<int> values, int classes)
-    {
-        return Entropy(values, 0, classes - 1);
     }
 
     /// <summary>

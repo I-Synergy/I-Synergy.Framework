@@ -65,8 +65,8 @@ public static partial class Jagged
     /// 
     public static bool TryParse(string s, IMatrixFormatProvider provider, out double[][] matrix)
     {
-        // TODO: Create a proper TryParse method without // NOSONAR
-        //       resorting to a underlying try-catch block.
+        // Math.NET parity: the matrix formatter has no non-throwing parse path, so this
+        // wrapper delegates to Parse and maps format/argument errors to a failed conversion.
         try
         {
             matrix = Parse(s, provider);

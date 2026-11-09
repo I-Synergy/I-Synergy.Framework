@@ -30,7 +30,7 @@ public class MatReaderTest
         MatReader reader = new(pathInt32);
 
         // Let's check what is the name of the variable we need to load:
-        string[] names = reader.FieldNames; // should be { "a" }
+        string[] names = reader.FieldNames(); // should be { "a" }
 
         // Ok, so we have to load the matrix called "a".
 
@@ -79,7 +79,7 @@ public class MatReaderTest
 
         // (in case he didn't know the name of the variable,
         // we would have inspected the FieldNames property:
-        string[] names = reader.FieldNames; // should contain "arr"
+        string[] names = reader.FieldNames(); // should contain "arr"
         #endregion
 
         Assert.AreSequenceEqual(new sbyte[,]

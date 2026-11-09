@@ -8,7 +8,6 @@ using System.Text;
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
 
-
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
 /// <summary>
@@ -150,6 +149,31 @@ public static partial class NpyFormat
     }
 
     /// <summary>
+    ///     Loads a multi-dimensional array from a stream.
+    /// </summary>
+    /// <param name="stream">The stream containing the matrix to be loaded.</param>
+    /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
+    public static Array LoadMatrix(Stream stream)
+    {
+        using (var reader = new BinaryReader(stream, Encoding.ASCII
+            , true
+        ))
+        {
+            int bytes;
+            Type type;
+            int[] shape;
+            if (!parseReader(reader, out bytes, out type, out shape))
+                throw new FormatException();
+
+            Array matrix = Matrix.Zeros(type, shape);
+
+            if (type == typeof(string))
+                return readStringMatrix(reader, matrix, bytes);
+            return readValueMatrix(reader, matrix, bytes, shape);
+        }
+    }
+
+    /// <summary>
     ///     Loads a jagged array from an array of bytes.
     /// </summary>
     /// <param name="bytes">The bytes that contain the matrix to be loaded.</param>
@@ -172,30 +196,6 @@ public static partial class NpyFormat
         using (var stream = new FileStream(path, FileMode.Open))
         {
             return LoadJagged(stream);
-        }
-    }
-    /// <summary>
-    ///     Loads a multi-dimensional array from a stream.
-    /// </summary>
-    /// <param name="stream">The stream containing the matrix to be loaded.</param>
-    /// <returns>A multi-dimensional array containing the values available in the given stream.</returns>
-    public static Array LoadMatrix(Stream stream)
-    {
-        using (var reader = new BinaryReader(stream, Encoding.ASCII
-            , true
-        ))
-        {
-            int bytes;
-            Type type;
-            int[] shape;
-            if (!parseReader(reader, out bytes, out type, out shape))
-                throw new FormatException();
-
-            Array matrix = Matrix.Zeros(type, shape);
-
-            if (type == typeof(string))
-                return readStringMatrix(reader, matrix, bytes, type, shape);
-            return readValueMatrix(reader, matrix, bytes, type, shape);
         }
     }
 
@@ -221,17 +221,17 @@ public static partial class NpyFormat
 
             if (type == typeof(string))
             {
-                var result = readStringMatrix(reader, matrix, bytes, type, shape);
+                var result = readStringMatrix(reader, matrix, bytes);
 
                 if (trim)
                     return result.Trim();
                 return result;
             }
 
-            return readValueJagged(reader, matrix, bytes, type, shape);
+            return readValueJagged(reader, matrix, bytes, shape);
         }
     }
-    private static Array readValueMatrix(BinaryReader reader, Array matrix, int bytes, Type type, int[] shape)
+    private static Array readValueMatrix(BinaryReader reader, Array matrix, int bytes, int[] shape)
     {
         var total = 1;
         for (var i = 0; i < shape.Length; i++)
@@ -244,7 +244,7 @@ public static partial class NpyFormat
         return matrix;
     }
 
-    private static Array readValueJagged(BinaryReader reader, Array matrix, int bytes, Type type, int[] shape)
+    private static Array readValueJagged(BinaryReader reader, Array matrix, int bytes, int[] shape)
     {
         var last = shape[shape.Length - 1];
         var buffer = new byte[bytes * last];
@@ -275,7 +275,7 @@ public static partial class NpyFormat
         return matrix;
     }
 
-    private static Array readStringMatrix(BinaryReader reader, Array matrix, int bytes, Type type, int[] shape)
+    private static Array readStringMatrix(BinaryReader reader, Array matrix, int bytes)
     {
         if (bytes <= 0)
             throw new InvalidDataException($"Invalid NumPy string element size {bytes}: must be greater than zero.");

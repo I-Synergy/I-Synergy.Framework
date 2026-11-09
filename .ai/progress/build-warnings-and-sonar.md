@@ -32,3 +32,23 @@ Started: 2026-11-09
 - The SonarCloud failure comes from an **organization-level** setting
   (`"parentOrigin":"INSTANCE"`), not from this repository; `ci.yml` now overrides it per project
   so the pipeline is unblocked, and the setting should also be corrected in SonarCloud.
+
+## Follow-up (user decision): fix the Mathematics port too
+
+The user chose to fix all 272 Mathematics warnings instead of suppressing them. Plan:
+- 6 disjoint directory groups, fixed in two waves, no concurrent builds; central build + tests.
+- Remove the project NoWarn afterwards and keep only genuinely unavoidable suppressions, if any.
+- Public API changes are explicitly accepted (S107/S3241/S101/S3246/S3427/S4035/S4050).
+
+## Follow-up outcome (2026-11-09)
+
+The Mathematics port is now fixed rather than suppressed:
+- All 272 analyzer locations resolved (overload adjacency, TODOs, parameter bundles,
+  void returns, unsafe removal, deserialization callbacks, duplicate writes, naming).
+- `<NoWarn>` in `ISynergy.Framework.Mathematics.csproj` is back to `CS8981;CS1591`.
+- Release build of the project with the analyzer injected: **0 warnings, 0 errors**.
+- `ISynergy.Framework.Mathematics.Tests`: 954 passed, 1 skipped.
+- Full solution build: 0 errors; full test suite: all projects pass.
+- Public API changes are listed in `CHANGELOG.md` (Cdf97, FieldNames method,
+  MonteCarloIntegration RNG type, interface variance, sealed QuadraticObjectiveFunction,
+  OptimizationStep, OctaveEnvironment field initialization).

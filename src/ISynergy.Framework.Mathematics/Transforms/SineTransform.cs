@@ -42,7 +42,7 @@ public static class SineTransform
     /// <summary>
     ///     Forward Discrete Sine Transform.
     /// </summary>
-    public static void DST(double[] data) // NOSONAR
+    public static void DST(double[] data)
     {
         var result = new double[data.Length];
 
@@ -52,27 +52,6 @@ public static class SineTransform
             for (var i = 1; i < data.Length + 1; i++)
                 sum += data[i - 1] * Math.Sin(Math.PI * (k * i / (data.Length + 1.0)));
             result[k - 1] = sum;
-        }
-
-        for (var i = 0; i < data.Length; i++)
-            data[i] = result[i];
-    }
-
-    /// <summary>
-    ///     Inverse Discrete Sine Transform.
-    /// </summary>
-    public static void IDST(double[] data)
-    {
-        var result = new double[data.Length];
-
-        var inverse = 2.0 / (data.Length + 1);
-
-        for (var k = 1; k < result.Length + 1; k++)
-        {
-            double sum = 0;
-            for (var i = 1; i < data.Length + 1; i++)
-                sum += data[i - 1] * Math.Sin(Math.PI * (k * i / (data.Length + 1.0)));
-            result[k - 1] = sum * inverse;
         }
 
         for (var i = 0; i < data.Length; i++)
@@ -111,6 +90,27 @@ public static class SineTransform
             for (var i = 0; i < col.Length; i++)
                 data[i][j] = col[i];
         }
+    }
+
+    /// <summary>
+    ///     Inverse Discrete Sine Transform.
+    /// </summary>
+    public static void IDST(double[] data)
+    {
+        var result = new double[data.Length];
+
+        var inverse = 2.0 / (data.Length + 1);
+
+        for (var k = 1; k < result.Length + 1; k++)
+        {
+            double sum = 0;
+            for (var i = 1; i < data.Length + 1; i++)
+                sum += data[i - 1] * Math.Sin(Math.PI * (k * i / (data.Length + 1.0)));
+            result[k - 1] = sum * inverse;
+        }
+
+        for (var i = 0; i < data.Length; i++)
+            data[i] = result[i];
     }
 
     /// <summary>

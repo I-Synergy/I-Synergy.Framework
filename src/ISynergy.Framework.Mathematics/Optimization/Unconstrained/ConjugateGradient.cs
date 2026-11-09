@@ -320,7 +320,7 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         // Make initial progress report with initialization parameters
         if (Progress is not null)
             Progress(this, new OptimizationProgressEventArgs
-                (Iterations, Evaluations, g, gnorm, Solution, xnorm, f, stp1, finish));
+                (Iterations, Evaluations, new OptimizationStep(g, gnorm, Solution, xnorm, f, stp1), finish));
         // Main iteration
         while (!finish)
         {
@@ -363,7 +363,7 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         L72:
 
             // Call to the line search subroutine
-            Status = cvsmod(ref f, d, ref stp, ref info, ref nfev, w, ref dg, ref dgout);
+            Status = cvsmod(ref f, new LineSearchState(d, w), ref stp, ref info, ref nfev, ref dg, ref dgout);
 
             if (Status != ConjugateGradientCode.Success)
                 return false;
@@ -452,15 +452,36 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
             if (Progress is not null)
                 Progress(this, new OptimizationProgressEventArgs(Iterations,
-                    Evaluations, g, gnorm, Solution, xnorm, f, stp, finish));
+                    Evaluations, new OptimizationStep(g, gnorm, Solution, xnorm, f, stp), finish));
         }
 
         return Status == ConjugateGradientCode.Success;
     }
 
-    private ConjugateGradientCode cvsmod(ref double f, double[] s, ref double stp, ref int info,
-        ref int nfev, double[] wa, ref double dginit, ref double dgout)
+    /// <summary>
+    ///     Groups the search direction and work buffers used during the line search.
+    /// </summary>
+    private readonly struct LineSearchState
     {
+        public LineSearchState(double[] direction, double[] work)
+        {
+            Direction = direction;
+            Work = work;
+        }
+
+        /// <summary>Gets the search direction vector.</summary>
+        public double[] Direction { get; }
+
+        /// <summary>Gets the work buffer holding the previous solution.</summary>
+        public double[] Work { get; }
+    }
+
+    private ConjugateGradientCode cvsmod(ref double f, LineSearchState state, ref double stp, ref int info,
+        ref int nfev, ref double dginit, ref double dgout)
+    {
+        var s = state.Direction;
+        var wa = state.Work;
+
         var x = Solution;
 
         if (info == 1)

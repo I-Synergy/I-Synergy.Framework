@@ -132,7 +132,7 @@ internal static class LBFGS
             fx = fn(start);
 
         if (progress is not null)
-            progress(null, new OptimizationProgressEventArgs(0, 0, null, 0, start, 0, fx, 0, false));
+            progress(null, new OptimizationProgressEventArgs(0, 0, new OptimizationStep(null, 0, start, 0, fx, 0), false));
 
         //lbfgs_free(x);
         return (int)ret;
@@ -140,18 +140,20 @@ internal static class LBFGS
 
     private static lbfgs_progress_t ProgressMethod(EventHandler<OptimizationProgressEventArgs> progress)
     {
-        lbfgs_progress_t target = (instance, x, g, fx, xnorm, gnorm, step, n, k, ls) =>
+        lbfgs_progress_t target = info =>
         {
             if (progress is not null)
                 progress(null,
                     new OptimizationProgressEventArgs(0, 0,
-                        (double[])g.Clone(),
-                        gnorm,
-                        (double[])x.Clone(),
-                        xnorm,
-                        fx, step, false)
+                        new OptimizationStep(
+                            (double[])info.G.Clone(),
+                            info.Gnorm,
+                            (double[])info.X.Clone(),
+                            info.Xnorm,
+                            info.Fx, info.Step),
+                        false)
                     {
-                        Tag = Tuple.Create(n, k, ls)
+                        Tag = Tuple.Create(info.N, info.K, info.Ls)
                     });
             return 0;
         };
@@ -413,13 +415,43 @@ internal static class LBFGS
             /* Search for an optimal step. */
             if (param.orthantwise_c == 0.0)
             {
-                ls = linesearch(n, x, ref fx, g,
-                    d, ref step, xp, gp, w, ref cd, ref param);
+                var args = new line_search_args
+                {
+                    n = n,
+                    x = x,
+                    f = fx,
+                    g = g,
+                    s = d,
+                    stp = step,
+                    xp = xp,
+                    gp = gp,
+                    wp = w,
+                    cd = cd,
+                    param = param
+                };
+                ls = linesearch(args);
+                fx = args.f;
+                step = args.stp;
             }
             else
             {
-                ls = linesearch(n, x, ref fx, g, d, ref step,
-                    xp, pg, w, ref cd, ref param);
+                var args = new line_search_args
+                {
+                    n = n,
+                    x = x,
+                    f = fx,
+                    g = g,
+                    s = d,
+                    stp = step,
+                    xp = xp,
+                    gp = pg,
+                    wp = w,
+                    cd = cd,
+                    param = param
+                };
+                ls = linesearch(args);
+                fx = args.f;
+                step = args.stp;
                 owlqn_pseudo_gradient(
                     pg, x, g, n,
                     param.orthantwise_c, param.orthantwise_start, param.orthantwise_end
@@ -444,8 +476,8 @@ internal static class LBFGS
 
             /* Report the progress. */
             if (cd.proc_progress is not null
-                && (ret = cd.proc_progress(cd.instance, x, g, fx, xnorm,
-                    gnorm, step, cd.n, k, ls)) != 0)
+                && (ret = cd.proc_progress(new lbfgs_progress_info(cd.instance, x, g, fx, xnorm,
+                    gnorm, step, cd.n, k, ls))) != 0)
                 goto lbfgs_exit;
 
             /*
@@ -584,20 +616,17 @@ internal static class LBFGS
 
         return ret;
     }
-    private static Code line_search_backtracking(
-        int n,
-        double[] x,
-        ref double f,
-        double[] g,
-        double[] s,
-        ref double stp,
-        double[] xp,
-        double[] gp,
-        double[] wp,
-        ref callback_data_t cd,
-        ref lbfgs_parameter_t param
-    )
+    private static Code line_search_backtracking(line_search_args args)
     {
+        var n = args.n;
+        var x = args.x;
+        ref double f = ref args.f;
+        var g = args.g;
+        var s = args.s;
+        ref double stp = ref args.stp;
+        var xp = args.xp;
+        var cd = args.cd;
+        var param = args.param;
         var count = 0;
         double width, dg;
         double finit, dginit = 0.0, dgtest;
@@ -671,20 +700,19 @@ internal static class LBFGS
             stp *= width;
         }
     }
-    private static Code line_search_backtracking_owlqn(
-        int n,
-        double[] x,
-        ref double f,
-        double[] g,
-        double[] s,
-        ref double stp,
-        double[] xp,
-        double[] gp,
-        double[] wp,
-        ref callback_data_t cd,
-        ref lbfgs_parameter_t param
-    )
+    private static Code line_search_backtracking_owlqn(line_search_args args)
     {
+        var n = args.n;
+        var x = args.x;
+        ref double f = ref args.f;
+        var g = args.g;
+        var s = args.s;
+        ref double stp = ref args.stp;
+        var xp = args.xp;
+        var gp = args.gp;
+        var wp = args.wp;
+        var cd = args.cd;
+        var param = args.param;
         int i, count = 0;
         double width = 0.5, norm = 0.0;
         double finit = f, dgtest;
@@ -733,20 +761,17 @@ internal static class LBFGS
             stp *= width;
         }
     }
-    private static Code line_search_morethuente(
-        int n,
-        double[] x,
-        ref double f,
-        double[] g,
-        double[] s,
-        ref double stp,
-        double[] xp,
-        double[] gp,
-        double[] wa,
-        ref callback_data_t cd,
-        ref lbfgs_parameter_t param
-    )
+    private static Code line_search_morethuente(line_search_args args)
     {
+        var n = args.n;
+        var x = args.x;
+        ref double f = ref args.f;
+        var g = args.g;
+        var s = args.s;
+        ref double stp = ref args.stp;
+        var xp = args.xp;
+        var cd = args.cd;
+        var param = args.param;
         var count = 0;
         int brackt, stage1;
         Code uinfo = 0;
@@ -879,12 +904,32 @@ internal static class LBFGS
                     Call update_trial_interval() to update the interval of
                     uncertainty and to compute the new step.
                  */
-                uinfo = update_trial_interval(
-                    ref stx, ref fxm, ref dgxm,
-                    ref sty, ref fym, ref dgym,
-                    ref stp, ref fm, ref dgm,
-                    stmin, stmax, ref brackt
-                );
+                var ti = new trial_interval
+                {
+                    x = stx,
+                    fx = fxm,
+                    dx = dgxm,
+                    y = sty,
+                    fy = fym,
+                    dy = dgym,
+                    t = stp,
+                    ft = fm,
+                    dt = dgm,
+                    tmin = stmin,
+                    tmax = stmax,
+                    brackt = brackt
+                };
+                uinfo = update_trial_interval(ti);
+                stx = ti.x;
+                fxm = ti.fx;
+                dgxm = ti.dx;
+                sty = ti.y;
+                fym = ti.fy;
+                dgym = ti.dy;
+                stp = ti.t;
+                fm = ti.ft;
+                dgm = ti.dt;
+                brackt = ti.brackt;
 
                 /* Reset the function and gradient values for f. */
                 fx = fxm + stx * dgtest;
@@ -898,12 +943,32 @@ internal static class LBFGS
                     Call update_trial_interval() to update the interval of
                     uncertainty and to compute the new step.
                  */
-                uinfo = update_trial_interval(
-                    ref stx, ref fx, ref dgx,
-                    ref sty, ref fy, ref dgy,
-                    ref stp, ref f, ref dg,
-                    stmin, stmax, ref brackt
-                );
+                var ti = new trial_interval
+                {
+                    x = stx,
+                    fx = fx,
+                    dx = dgx,
+                    y = sty,
+                    fy = fy,
+                    dy = dgy,
+                    t = stp,
+                    ft = f,
+                    dt = dg,
+                    tmin = stmin,
+                    tmax = stmax,
+                    brackt = brackt
+                };
+                uinfo = update_trial_interval(ti);
+                stx = ti.x;
+                fx = ti.fx;
+                dgx = ti.dx;
+                sty = ti.y;
+                fy = ti.fy;
+                dgy = ti.dy;
+                stp = ti.t;
+                f = ti.ft;
+                dg = ti.dt;
+                brackt = ti.brackt;
             }
 
             /*
@@ -927,25 +992,29 @@ internal static class LBFGS
      * @param  fv      The value of f(v).
      * @param  du      The value of f'(v).
      */
-    private static void CUBIC_MINIMIZER(ref double cm, ref double u, ref double fu, ref double du, ref double v,
-        ref double fv, ref double dv, ref double a, ref double d, ref double gamma, ref double theta, ref double p,
-        ref double q,
-        ref double r, ref double s)
+    private static double CUBIC_MINIMIZER(CubicPoint pointX, CubicPoint pointY)
     {
-        d = v - u;
-        theta = (fu - fv) * 3 / d + du + dv;
-        p = Math.Abs(theta);
-        q = Math.Abs(du);
-        r = Math.Abs(dv);
-        s = Tools.Max(p, q, r);
+        var u = pointX.U;
+        var fu = pointX.Fu;
+        var du = pointX.Du;
+        var v = pointY.U;
+        var fv = pointY.Fu;
+        var dv = pointY.Du;
+
+        var d = v - u;
+        var theta = (fu - fv) * 3 / d + du + dv;
+        var p = Math.Abs(theta);
+        var q = Math.Abs(du);
+        var r = Math.Abs(dv);
+        var s = Tools.Max(p, q, r);
         /* gamma = s*System.Math.Sqrt((theta/s)**2 - (du/s) * (dv/s)) */
-        a = theta / s;
-        gamma = s * Math.Sqrt(a * a - du / s * (dv / s));
+        var a = theta / s;
+        var gamma = s * Math.Sqrt(a * a - du / s * (dv / s));
         if (v < u) gamma = -gamma;
         p = gamma - du + theta;
         q = gamma - du + gamma + dv;
         r = p / q;
-        cm = u + r * d;
+        return u + r * d;
     }
 
     /**
@@ -960,30 +1029,34 @@ internal static class LBFGS
      * @param  xmin    The maximum value.
      * @param  xmin    The minimum value.
      */
-    private static void CUBIC_MINIMIZER2(ref double cm, ref double u, ref double fu, ref double du, ref double v,
-        ref double fv, ref double dv, ref double xmin, ref double xmax, ref double a, ref double d,
-        ref double gamma, ref double theta, ref double p, ref double q,
-        ref double r, ref double s)
+    private static double CUBIC_MINIMIZER2(CubicPoint pointX, CubicPoint pointY, double xmin, double xmax)
     {
-        d = v - u;
-        theta = (fu - fv) * 3 / d + du + dv;
-        p = Math.Abs(theta);
-        q = Math.Abs(du);
-        r = Math.Abs(dv);
-        s = Tools.Max(p, q, r);
+        var u = pointX.U;
+        var fu = pointX.Fu;
+        var du = pointX.Du;
+        var v = pointY.U;
+        var fv = pointY.Fu;
+        var dv = pointY.Du;
+
+        var d = v - u;
+        var theta = (fu - fv) * 3 / d + du + dv;
+        var p = Math.Abs(theta);
+        var q = Math.Abs(du);
+        var r = Math.Abs(dv);
+        var s = Tools.Max(p, q, r);
         /* gamma = s*System.Math.Sqrt((theta/s)**2 - (du/s) * (dv/s)) */
-        a = theta / s;
-        gamma = s * Math.Sqrt(Math.Max(0, a * a - du / s * (dv / s)));
+        var a = theta / s;
+        var gamma = s * Math.Sqrt(Math.Max(0, a * a - du / s * (dv / s)));
         if (u < v) gamma = -gamma;
         p = gamma - dv + theta;
         q = gamma - dv + gamma + du;
         r = p / q;
         if (r < 0.0 && gamma != 0.0)
-            cm = v - r * d;
+            return v - r * d;
         else if (a < 0)
-            cm = xmax;
+            return xmax;
         else
-            cm = xmin;
+            return xmin;
     }
 
     /**
@@ -1046,34 +1119,26 @@ internal static class LBFGS
      * guaranteed sufficient decrease. ACM Transactions on Mathematical
      * Software (TOMS), Vol 20, No 3, pp. 286-307, 1994.
      */
-    private static Code update_trial_interval(
-        ref double x,
-        ref double fx,
-        ref double dx,
-        ref double y,
-        ref double fy,
-        ref double dy,
-        ref double t,
-        ref double ft,
-        ref double dt,
-        double tmin,
-        double tmax,
-        ref int brackt
-    )
+    private static Code update_trial_interval(trial_interval ti)
     {
+        ref double x = ref ti.x;
+        ref double fx = ref ti.fx;
+        ref double dx = ref ti.dx;
+        ref double y = ref ti.y;
+        ref double fy = ref ti.fy;
+        ref double dy = ref ti.dy;
+        ref double t = ref ti.t;
+        ref double ft = ref ti.ft;
+        ref double dt = ref ti.dt;
+        double tmin = ti.tmin;
+        double tmax = ti.tmax;
+        ref int brackt = ref ti.brackt;
         int bound;
         var dsign = fsigndiff(dt, dx);
         double mc = 0; /* minimizer of an interpolated cubic. */
         double mq = 0; /* minimizer of an interpolated quadratic. */
         double newt = 0; /* new trial value. */
-        double a = 0,
-            d = 0,
-            gamma = 0,
-            theta = 0,
-            p = 0,
-            q = 0,
-            r = 0,
-            s = 0; /* for CUBIC_MINIMIZER and QUARD_MINIMIZER. */
+        double a = 0; /* scratch for QUARD_MINIMIZER and QUARD_MINIMIZER2. */
 
         /* Check the input parameters for errors. */
         if (brackt > 0)
@@ -1102,8 +1167,7 @@ internal static class LBFGS
              */
             brackt = 1;
             bound = 1;
-            CUBIC_MINIMIZER(ref mc, ref x, ref fx, ref dx, ref t, ref ft, ref dt, ref a, ref d, ref gamma,
-                ref theta, ref p, ref q, ref r, ref s);
+            mc = CUBIC_MINIMIZER(new CubicPoint(x, fx, dx), new CubicPoint(t, ft, dt));
             QUARD_MINIMIZER(ref mq, ref x, ref fx, ref dx, ref t, ref ft, ref a);
 
             if (Math.Abs(mc - x) < Math.Abs(mq - x))
@@ -1121,8 +1185,7 @@ internal static class LBFGS
              */
             brackt = 1;
             bound = 0;
-            CUBIC_MINIMIZER(ref mc, ref x, ref fx, ref dx, ref t, ref ft, ref dt, ref a, ref d, ref gamma,
-                ref theta, ref p, ref q, ref r, ref s);
+            mc = CUBIC_MINIMIZER(new CubicPoint(x, fx, dx), new CubicPoint(t, ft, dt));
             QUARD_MINIMIZER2(ref mq, ref x, ref dx, ref t, ref dt, ref a);
             if (Math.Abs(mc - t) > Math.Abs(mq - t))
                 newt = mc;
@@ -1143,8 +1206,7 @@ internal static class LBFGS
                 farthest away is taken.
              */
             bound = 1;
-            CUBIC_MINIMIZER2(ref mc, ref x, ref fx, ref dx, ref t, ref ft, ref dt, ref tmin, ref tmax, ref a, ref d,
-                ref gamma, ref theta, ref p, ref q, ref r, ref s);
+            mc = CUBIC_MINIMIZER2(new CubicPoint(x, fx, dx), new CubicPoint(t, ft, dt), tmin, tmax);
             QUARD_MINIMIZER2(ref mq, ref x, ref dx, ref t, ref dt, ref a);
             if (brackt != 0)
             {
@@ -1171,8 +1233,7 @@ internal static class LBFGS
              */
             bound = 0;
             if (brackt != 0)
-                CUBIC_MINIMIZER(ref newt, ref t, ref ft, ref dt, ref y, ref fy, ref dy, ref a, ref d, ref gamma,
-                    ref theta, ref p, ref q, ref r, ref s);
+                newt = CUBIC_MINIMIZER(new CubicPoint(t, ft, dt), new CubicPoint(y, fy, dy));
             else if (x < t)
                 newt = tmax;
             else
@@ -1486,17 +1547,7 @@ internal static class LBFGS
         LBFGSERR_INCREASEGRADIENT
     }
     private delegate Code line_search_proc(
-        int n,
-        double[] x,
-        ref double f,
-        double[] g,
-        double[] s,
-        ref double stp,
-        double[] xp,
-        double[] gp,
-        double[] wa,
-        ref callback_data_t cd,
-        ref lbfgs_parameter_t param
+        line_search_args args
     );
     /**
      * Callback interface to provide objective function and gradient evaluations.
@@ -1544,17 +1595,82 @@ internal static class LBFGS
      * non-zero value will cancel the optimization process.
      */
     private delegate Code lbfgs_progress_t(
-        object instance,
-        double[] x,
-        double[] g,
-        double fx,
-        double xnorm,
-        double gnorm,
-        double step,
-        int n,
-        int k,
-        Code ls
+        lbfgs_progress_info info
     );
+
+    private readonly struct lbfgs_progress_info
+    {
+        public lbfgs_progress_info(object instance, double[] x, double[] g, double fx, double xnorm,
+            double gnorm, double step, int n, int k, Code ls)
+        {
+            Instance = instance;
+            X = x;
+            G = g;
+            Fx = fx;
+            Xnorm = xnorm;
+            Gnorm = gnorm;
+            Step = step;
+            N = n;
+            K = k;
+            Ls = ls;
+        }
+
+        public object Instance { get; }
+        public double[] X { get; }
+        public double[] G { get; }
+        public double Fx { get; }
+        public double Xnorm { get; }
+        public double Gnorm { get; }
+        public double Step { get; }
+        public int N { get; }
+        public int K { get; }
+        public Code Ls { get; }
+    }
+
+    private readonly struct CubicPoint
+    {
+        public CubicPoint(double u, double fu, double du)
+        {
+            U = u;
+            Fu = fu;
+            Du = du;
+        }
+
+        public double U { get; }
+        public double Fu { get; }
+        public double Du { get; }
+    }
+
+    private sealed class line_search_args
+    {
+        public int n;
+        public double[] x;
+        public double f;
+        public double[] g;
+        public double[] s;
+        public double stp;
+        public double[] xp;
+        public double[] gp;
+        public double[] wp;
+        public callback_data_t cd;
+        public lbfgs_parameter_t param;
+    }
+
+    private sealed class trial_interval
+    {
+        public double x;
+        public double fx;
+        public double dx;
+        public double y;
+        public double fy;
+        public double dy;
+        public double t;
+        public double ft;
+        public double dt;
+        public double tmin;
+        public double tmax;
+        public int brackt;
+    }
 
     private sealed class callback_data_t
     {

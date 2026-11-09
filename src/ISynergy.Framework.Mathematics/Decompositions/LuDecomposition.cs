@@ -99,63 +99,53 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
             PivotPermutationVector[i] = i;
 
         var LUcolj = new double[rows];
-        unsafe
+        // Outer loop.
+        for (var j = 0; j < cols; j++)
         {
-            fixed (double* LU = lu)
+            // Make a copy of the j-th column to localize references.
+            for (var i = 0; i < rows; i++)
+                LUcolj[i] = lu[i, j];
+
+            // Apply previous transformations.
+            for (var i = 0; i < rows; i++)
             {
-                // Outer loop.
-                for (var j = 0; j < cols; j++)
-                {
-                    // Make a copy of the j-th column to localize references.
-                    for (var i = 0; i < rows; i++)
-                        LUcolj[i] = lu[i, j];
+                double s = 0;
 
-                    // Apply previous transformations.
-                    for (var i = 0; i < rows; i++)
-                    {
-                        double s = 0;
+                // Most of the time is spent in the following dot product.
+                var kmax = Math.Min(i, j);
+                for (var k = 0; k < kmax; k++)
+                    s += lu[i, k] * LUcolj[k];
 
-                        // Most of the time is spent in the following dot product.
-                        // Pointer safety invariants:
-                        //   - i ∈ [0, rows) and cols is fixed, so i*cols+k < rows*cols = lu.Length
-                        //   - kmax = min(i,j) ≤ min(i, cols-1) < cols, so LUrowi[k] never exceeds the row boundary
-                        //   - LUcolj has length rows and k < kmax ≤ i < rows, so LUcolj[k] is always in bounds
-                        var kmax = Math.Min(i, j);
-                        var LUrowi = &LU[i * cols];
-                        for (var k = 0; k < kmax; k++)
-                            s += LUrowi[k] * LUcolj[k];
-
-                        LUrowi[j] = LUcolj[i] -= s;
-                    }
-
-                    // Find pivot and exchange if necessary.
-                    var p = j;
-                    for (var i = j + 1; i < rows; i++)
-                        if (Math.Abs(LUcolj[i]) > Math.Abs(LUcolj[p]))
-                            p = i;
-
-                    if (p != j)
-                    {
-                        for (var k = 0; k < cols; k++)
-                        {
-                            var t = lu[p, k];
-                            lu[p, k] = lu[j, k];
-                            lu[j, k] = t;
-                        }
-
-                        var v = PivotPermutationVector[p];
-                        PivotPermutationVector[p] = PivotPermutationVector[j];
-                        PivotPermutationVector[j] = v;
-
-                        pivotSign = -pivotSign;
-                    }
-
-                    // Compute multipliers.
-                    if (j < rows && lu[j, j] != 0)
-                        for (var i = j + 1; i < rows; i++)
-                            lu[i, j] /= lu[j, j];
-                }
+                LUcolj[i] -= s;
+                lu[i, j] = LUcolj[i];
             }
+
+            // Find pivot and exchange if necessary.
+            var p = j;
+            for (var i = j + 1; i < rows; i++)
+                if (Math.Abs(LUcolj[i]) > Math.Abs(LUcolj[p]))
+                    p = i;
+
+            if (p != j)
+            {
+                for (var k = 0; k < cols; k++)
+                {
+                    var t = lu[p, k];
+                    lu[p, k] = lu[j, k];
+                    lu[j, k] = t;
+                }
+
+                var v = PivotPermutationVector[p];
+                PivotPermutationVector[p] = PivotPermutationVector[j];
+                PivotPermutationVector[j] = v;
+
+                pivotSign = -pivotSign;
+            }
+
+            // Compute multipliers.
+            if (j < rows && lu[j, j] != 0)
+                for (var i = j + 1; i < rows; i++)
+                    lu[i, j] /= lu[j, j];
         }
     }
 

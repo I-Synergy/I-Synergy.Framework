@@ -166,7 +166,7 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
 
         return true;
     }
-    private double runEpoch()
+    private void runEpoch()
     {
         // Compute the true gradient
         gradient = Gradient(Solution);
@@ -207,7 +207,7 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
 
         var value = Function(parameters);
 
-        return convergence.NewValue = value;
+        convergence.NewValue = value;
     }
 
     /// <summary>

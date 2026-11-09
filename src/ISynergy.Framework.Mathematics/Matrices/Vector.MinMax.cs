@@ -117,25 +117,6 @@ public static partial class Matrix
 
         return max;
     }
-
-    /// <summary>
-    ///     Gets the minimum non-null element in a vector.
-    /// </summary>
-    public static T? Min<T>(this T?[] values, out int imin)
-        where T : struct, IComparable<T>
-    {
-        imin = -1;
-        T? min = null;
-
-        for (var i = 0; i < values.Length; i++)
-            if (values[i].HasValue && (min is null || values[i].Value.CompareTo(min.Value) < 0))
-            {
-                min = values[i];
-                imin = i;
-            }
-
-        return min;
-    }
     /// <summary>
     ///     Gets the maximum element in a vector.
     /// </summary>
@@ -178,36 +159,6 @@ public static partial class Matrix
         int imax;
         return Max(values, out imax);
     }
-    /// <summary>
-    ///     Gets the minimum element in a vector.
-    /// </summary>
-    public static T Min<T>(this T[] values, out int imin)
-        where T : IComparable<T>
-    {
-        imin = 0;
-        var min = values[0];
-        for (var i = 1; i < values.Length; i++)
-            if (values[i].CompareTo(min) < 0)
-            {
-                min = values[i];
-                imin = i;
-            }
-
-        return min;
-    }
-
-    /// <summary>
-    ///     Gets the minimum element in a vector.
-    /// </summary>
-    public static T Min<T>(this T[] values)
-        where T : IComparable<T>
-    {
-        int imin;
-        return Min(values, out imin);
-    }
-
-    #endregion
-    #region limited length
 
     /// <summary>
     ///     Gets the maximum element in a vector up to a fixed length.
@@ -236,6 +187,54 @@ public static partial class Matrix
         int imax;
         return Max(values, length, out imax);
     }
+
+    /// <summary>
+    ///     Gets the minimum non-null element in a vector.
+    /// </summary>
+    public static T? Min<T>(this T?[] values, out int imin)
+        where T : struct, IComparable<T>
+    {
+        imin = -1;
+        T? min = null;
+
+        for (var i = 0; i < values.Length; i++)
+            if (values[i].HasValue && (min is null || values[i].Value.CompareTo(min.Value) < 0))
+            {
+                min = values[i];
+                imin = i;
+            }
+
+        return min;
+    }
+
+    /// <summary>
+    ///     Gets the minimum element in a vector.
+    /// </summary>
+    public static T Min<T>(this T[] values, out int imin)
+        where T : IComparable<T>
+    {
+        imin = 0;
+        var min = values[0];
+        for (var i = 1; i < values.Length; i++)
+            if (values[i].CompareTo(min) < 0)
+            {
+                min = values[i];
+                imin = i;
+            }
+
+        return min;
+    }
+
+    /// <summary>
+    ///     Gets the minimum element in a vector.
+    /// </summary>
+    public static T Min<T>(this T[] values)
+        where T : IComparable<T>
+    {
+        int imin;
+        return Min(values, out imin);
+    }
+
     /// <summary>
     ///     Gets the minimum element in a vector up to a fixed length.
     /// </summary>

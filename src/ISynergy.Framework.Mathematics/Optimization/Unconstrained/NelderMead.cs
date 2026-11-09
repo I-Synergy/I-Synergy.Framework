@@ -692,7 +692,7 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
     {
         var maxtime = stop.MaximumTime;
         var start = stop.StartTime;
-        return maxtime > TimeSpan.Zero && DateTime.Now - start >= maxtime;
+        return maxtime > TimeSpan.Zero && DateTime.Now >= start + maxtime;
     }
     internal static bool relstop(double old, double n, double reltol, double abstol)
     {

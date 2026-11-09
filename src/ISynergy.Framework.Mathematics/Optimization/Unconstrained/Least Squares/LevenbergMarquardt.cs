@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Mathematics.Optimization;
 /// </example>
 /// <seealso cref="GaussNewton" />
 /// <seealso cref="FiniteDifferences" />
-public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, IConvergenceLearning
+public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod
 {
     private const double lambdaMax = 1e25;
     private JaggedCholeskyDecomposition decomposition;

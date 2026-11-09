@@ -66,9 +66,9 @@ public class MatReader : IDisposable
     ///   retrieve a variable or navigate the variable hierarchy.
     /// </summary>
     /// 
-    public string[] FieldNames
+    public string[] FieldNames()
     {
-        get { return contents.Keys.OrderBy(x => x).ToArray(); }
+        return contents.Keys.OrderBy(x => x).ToArray();
     }
 
     /// <summary>

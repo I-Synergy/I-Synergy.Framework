@@ -5,15 +5,7 @@
         <PackageId>I-Synergy.Framework.Mathematics</PackageId>
         <Description>I-Synergy Mathematics Framework</Description>
         <PackageTags>I-Synergy, Framework, Mathematics</PackageTags>
-        <!--
-            Math.NET Numerics port. The SonarCloud organization already ignores every issue
-            under this path (sonar.issue.ignore.allfile), and sonar-project.properties lists
-            the per-rule exclusions for the same reason. Mirror those rules here so the
-            build log does not repeat what the quality gate deliberately ignores: overload
-            adjacency, parameter count, unused status returns, ported type names, TODOs in
-            upstream code, and the parallel matrix/jagged implementations.
-        -->
-        <NoWarn>CS8981;CS1591;S101;S1066;S107;S1133;S1135;S1144;S1172;S127;S1751;S1854;S1939;S1994;S2234;S2245;S2326;S2328;S2342;S2365;S2583;S2589;S3011;S3218;S3220;S3241;S3246;S3267;S3358;S3427;S3973;S4035;S4050;S4136;S4143;S4144;S5766;S6561;S6640</NoWarn>
+        <NoWarn>CS8981;CS1591</NoWarn>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>disable</Nullable>
     </PropertyGroup>

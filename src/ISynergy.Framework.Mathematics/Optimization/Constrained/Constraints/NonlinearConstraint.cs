@@ -277,6 +277,17 @@ public class NonlinearConstraint : IConstraint, IFormattable
     }
 
     /// <summary>
+    ///     Returns a <see cref="string" /> that represents this instance.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return ToString("G", CultureInfo.CurrentCulture);
+    }
+
+    /// <summary>
     ///     Creates a nonlinear constraint.
     /// </summary>
     protected void Create(int numberOfVariables,
@@ -381,15 +392,5 @@ public class NonlinearConstraint : IConstraint, IFormattable
         var functionExpression = Expression.Lambda(left, constraint.Parameters.ToArray());
 
         function = functionExpression.Compile() as Func<double[], double>;
-    }
-    /// <summary>
-    ///     Returns a <see cref="string" /> that represents this instance.
-    /// </summary>
-    /// <returns>
-    ///     A <see cref="string" /> that represents this instance.
-    /// </returns>
-    public override string ToString()
-    {
-        return ToString("G", CultureInfo.CurrentCulture);
     }
 }

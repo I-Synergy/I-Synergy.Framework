@@ -28,13 +28,12 @@ using ISynergy.Framework.Mathematics.Wavelets.Base;
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
 
-
 namespace ISynergy.Framework.Mathematics.Wavelets;
 
 /// <summary>
 ///     Cohen-Daubechies-Feauveau Wavelet Transform
 /// </summary>
-public class CDF97 : IWavelet // NOSONAR
+public class Cdf97 : IWavelet
 {
     // Constants as used by Gregoire P.
     private const double alpha = -1.586134342;
@@ -49,7 +48,7 @@ public class CDF97 : IWavelet // NOSONAR
     ///     Constructs a new Cohen-Daubechies-Feauveau Wavelet Transform.
     /// </summary>
     /// <param name="levels">The number of iterations for the 2D transform.</param>
-    public CDF97(int levels)
+    public Cdf97(int levels)
     {
         this.levels = levels;
     }
@@ -85,6 +84,7 @@ public class CDF97 : IWavelet // NOSONAR
     {
         IWT97(data, levels);
     }
+
     /// <summary>
     ///     Forward biorthogonal 9/7 wavelet transform
     /// </summary>
@@ -127,6 +127,25 @@ public class CDF97 : IWavelet // NOSONAR
 
         for (var i = 0; i < n; i++)
             x[i] = tempbank[i];
+    }
+
+    /// <summary>
+    ///     Forward biorthogonal 9/7 2D wavelet transform
+    /// </summary>
+    public static double[,] FWT97(double[,] data, int levels) // NOSONAR
+    {
+        var w = data.GetLength(0);
+        var h = data.GetLength(1);
+
+        for (var i = 0; i < levels; i++)
+        {
+            fwt2d(data, w, h);
+            fwt2d(data, w, h);
+            w >>= 1;
+            h >>= 1;
+        }
+
+        return data;
     }
 
     /// <summary>
@@ -175,25 +194,6 @@ public class CDF97 : IWavelet // NOSONAR
     }
 
     /// <summary>
-    ///     Forward biorthogonal 9/7 2D wavelet transform
-    /// </summary>
-    public static double[,] FWT97(double[,] data, int levels) // NOSONAR
-    {
-        var w = data.GetLength(0);
-        var h = data.GetLength(1);
-
-        for (var i = 0; i < levels; i++)
-        {
-            fwt2d(data, w, h);
-            fwt2d(data, w, h);
-            w >>= 1;
-            h >>= 1;
-        }
-
-        return data;
-    }
-
-    /// <summary>
     ///     Inverse biorthogonal 9/7 2D wavelet transform
     /// </summary>
     public static double[,] IWT97(double[,] data, int levels) // NOSONAR
@@ -217,7 +217,7 @@ public class CDF97 : IWavelet // NOSONAR
 
         return data;
     }
-    private static double[,] fwt2d(double[,] x, int width, int height)
+    private static void fwt2d(double[,] x, int width, int height)
     {
         for (var j = 0; j < width; j++)
         {
@@ -255,7 +255,6 @@ public class CDF97 : IWavelet // NOSONAR
             for (var j = 0; j < width; j++)
                 x[i, j] = tempbank[i, j];
 
-        return x;
     }
 
     private static double[,] iwt2d(double[,] x, int width, int height)

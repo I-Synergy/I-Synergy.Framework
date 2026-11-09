@@ -50,7 +50,7 @@ public static class CosineTransform
     /// <summary>
     ///     Forward Discrete Cosine Transform.
     /// </summary>
-    public static void DCT(double[] data) // NOSONAR
+    public static void DCT(double[] data)
     {
         var result = new double[data.Length];
         var c = Math.PI / (2.0 * data.Length);
@@ -69,27 +69,6 @@ public static class CosineTransform
             data[i] = result[i];
     }
 
-    /// <summary>
-    ///     Inverse Discrete Cosine Transform.
-    /// </summary>
-    public static void IDCT(double[] data)
-    {
-        var result = new double[data.Length];
-        var c = Math.PI / (2.0 * data.Length);
-        var scale = Math.Sqrt(2.0 / data.Length);
-
-        for (var k = 0; k < data.Length; k++)
-        {
-            var sum = data[0] / Constants.Sqrt2;
-            for (var n = 1; n < data.Length; n++)
-                sum += data[n] * Math.Cos((2 * k + 1) * n * c);
-
-            result[k] = scale * sum;
-        }
-
-        for (var i = 0; i < data.Length; i++)
-            data[i] = result[i];
-    }
     /// <summary>
     ///     Forward 2D Discrete Cosine Transform.
     /// </summary>
@@ -156,5 +135,26 @@ public static class CosineTransform
             for (var j = 0; j < row.Length; j++)
                 data[i, j] = row[j];
         }
+    }
+    /// <summary>
+    ///     Inverse Discrete Cosine Transform.
+    /// </summary>
+    public static void IDCT(double[] data)
+    {
+        var result = new double[data.Length];
+        var c = Math.PI / (2.0 * data.Length);
+        var scale = Math.Sqrt(2.0 / data.Length);
+
+        for (var k = 0; k < data.Length; k++)
+        {
+            var sum = data[0] / Constants.Sqrt2;
+            for (var n = 1; n < data.Length; n++)
+                sum += data[n] * Math.Cos((2 * k + 1) * n * c);
+
+            result[k] = scale * sum;
+        }
+
+        for (var i = 0; i < data.Length; i++)
+            data[i] = result[i];
     }
 }

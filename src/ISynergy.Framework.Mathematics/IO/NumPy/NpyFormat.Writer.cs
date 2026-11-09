@@ -113,30 +113,24 @@ public static partial class NpyFormat
 
         ulong writtenBytes = 0;
 
-        unsafe
+        foreach (var s in matrix.Enumerate<string>(shape))
         {
-            fixed (byte* b = buffer)
+            if (s is not null)
             {
-                foreach (var s in matrix.Enumerate<string>(shape))
-                {
-                    if (s is not null)
-                    {
-                        var c = 0;
-                        for (var i = 0; i < s.Length; i++)
-                            b[c++] = (byte)s[i];
-                        for (; c < buffer.Length; c++)
-                            b[c] = byte.MinValue;
+                var c = 0;
+                for (var i = 0; i < s.Length; i++)
+                    buffer[c++] = (byte)s[i];
+                for (; c < buffer.Length; c++)
+                    buffer[c] = byte.MinValue;
 
-                        reader.Write(buffer, 0, bytes);
-                    }
-                    else
-                    {
-                        reader.Write(empty, 0, bytes);
-                    }
-
-                    writtenBytes += (ulong)buffer.LongLength;
-                }
+                reader.Write(buffer, 0, bytes);
             }
+            else
+            {
+                reader.Write(empty, 0, bytes);
+            }
+
+            writtenBytes += (ulong)buffer.LongLength;
         }
 
         return writtenBytes;
@@ -182,9 +176,7 @@ public static partial class NpyFormat
 
         if (type == typeof(string))
         {
-            foreach (var s in array.Enumerate<string>())
-                if (s.Length > bytes)
-                    bytes = s.Length;
+            bytes = Math.Max(bytes, array.Enumerate<string>().Select(s => s.Length).DefaultIfEmpty(0).Max());
         }
         else if (type == typeof(bool))
         {

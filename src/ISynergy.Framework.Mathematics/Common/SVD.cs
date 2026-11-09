@@ -248,7 +248,6 @@ internal static class svd
 
                 if (flag != 0)
                 {
-                    c = 0.0; // NOSONAR - SVD algorithm initialization, overwritten conditionally in loop
                     s = 1.0;
                     for (i = l; i <= k; i++)
                     {

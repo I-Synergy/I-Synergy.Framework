@@ -8,7 +8,6 @@ using ISynergy.Framework.Mathematics.Vectors;
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
 
-
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
@@ -50,6 +49,42 @@ public static class Classes
         for (var i = 0; i < r.Length; i++)
             r[i] = (double)data[i][positiveColumn] / (data[i][positiveColumn] + data[i][negativeColumn]);
         return r;
+    }
+
+    /// <summary>
+    ///   Gets the percentage of positive samples in a set of class labels.
+    /// </summary>
+    /// 
+    /// <param name="y">The class labels.</param>
+    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
+    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
+    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
+    /// 
+    public static double GetRatio(int[] y, out int positives, out int negatives)
+    {
+        return GetRatio(y.ToBoolean(), out positives, out negatives);
+    }
+
+    /// <summary>
+    ///   Gets the percentage of positive samples in a set of class labels.
+    /// </summary>
+    /// 
+    /// <param name="y">The class labels.</param>
+    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
+    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
+    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
+    /// 
+    public static double GetRatio(this bool[] y, out int positives, out int negatives)
+    {
+        positives = 0;
+        for (var i = 0; i < y.Length; i++)
+        {
+            if (y[i])
+                positives++;
+        }
+
+        negatives = y.Length - positives;
+        return positives / (double)(positives + negatives);
     }
 
     /// <summary>
@@ -413,42 +448,6 @@ public static class Classes
         for (var i = 0; i < testing.Count; i++)
             indices[testing[i]] = 1;
         return indices;
-    }
-
-    /// <summary>
-    ///   Gets the percentage of positive samples in a set of class labels.
-    /// </summary>
-    /// 
-    /// <param name="y">The class labels.</param>
-    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
-    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
-    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
-    /// 
-    public static double GetRatio(int[] y, out int positives, out int negatives)
-    {
-        return GetRatio(y.ToBoolean(), out positives, out negatives);
-    }
-
-    /// <summary>
-    ///   Gets the percentage of positive samples in a set of class labels.
-    /// </summary>
-    /// 
-    /// <param name="y">The class labels.</param>
-    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
-    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
-    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
-    /// 
-    public static double GetRatio(this bool[] y, out int positives, out int negatives)
-    {
-        positives = 0;
-        for (var i = 0; i < y.Length; i++)
-        {
-            if (y[i])
-                positives++;
-        }
-
-        negatives = y.Length - positives;
-        return positives / (double)(positives + negatives);
     }
 
     /// <summary>

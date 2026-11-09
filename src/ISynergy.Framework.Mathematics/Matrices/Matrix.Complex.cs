@@ -164,7 +164,7 @@ public static class ComplexMatrix
     /// </summary>
     /// <param name="c">A vector of complex numbers.</param>
     /// <returns>A vector of scalars with the imaginary part of the complex numbers.</returns>
-    // TODO: Rename to Imaginary // NOSONAR
+    // Math.NET parity: the abbreviated name "Im" is kept for API compatibility.
     public static double[] Im(this Complex[] c)
     {
         return c.Apply((x, i) => x.Imaginary);

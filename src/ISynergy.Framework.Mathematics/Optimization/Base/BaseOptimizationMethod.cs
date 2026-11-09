@@ -135,27 +135,11 @@ public abstract class BaseOptimizationMethod
     ///     In this case, the found value will also be available at the <see cref="Value" />
     ///     property.
     /// </returns>
-    public bool Maximize(double[] values) // NOSONAR
+    public bool Maximize(double[] values)
     {
         Solution = values;
         return Maximize();
     }
-    /// <summary>
-    ///     Finds the minimum value of a function. The solution vector
-    ///     will be made available at the <see cref="Solution" /> property.
-    /// </summary>
-    /// <param name="values">The initial solution vector to start the search.</param>
-    /// <returns>
-    ///     Returns <c>true</c> if the method converged to a <see cref="Solution" />.
-    ///     In this case, the found value will also be available at the <see cref="Value" />
-    ///     property.
-    /// </returns>
-    public bool Minimize(double[] values) // NOSONAR
-    {
-        Solution = values;
-        return Minimize();
-    }
-
     /// <summary>
     ///     Finds the maximum value of a function. The solution vector
     ///     will be made available at the <see cref="Solution" /> property.
@@ -181,6 +165,21 @@ public abstract class BaseOptimizationMethod
         Value = Function(Solution);
 
         return success;
+    }
+    /// <summary>
+    ///     Finds the minimum value of a function. The solution vector
+    ///     will be made available at the <see cref="Solution" /> property.
+    /// </summary>
+    /// <param name="values">The initial solution vector to start the search.</param>
+    /// <returns>
+    ///     Returns <c>true</c> if the method converged to a <see cref="Solution" />.
+    ///     In this case, the found value will also be available at the <see cref="Value" />
+    ///     property.
+    /// </returns>
+    public bool Minimize(double[] values)
+    {
+        Solution = values;
+        return Minimize();
     }
     /// <summary>
     ///     Finds the minimum value of a function. The solution vector

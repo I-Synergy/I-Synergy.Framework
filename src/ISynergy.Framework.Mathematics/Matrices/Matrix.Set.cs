@@ -45,7 +45,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[][] destination, T[][] value)
     {
-        set(destination, null, null, value, null, null);
+        set(destination, null, value, null, null);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[,] destination, T[,] value)
     {
-        set(destination, null, null, value, null, null);
+        set(destination, null, value, null, null);
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public static partial class Matrix
     {
         int endIndex = end(endColumn, destination.Columns());
         int[] columnIndices = Vector.Range(startColumn, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public static partial class Matrix
     {
         int endIndex = end(endColumn, destination.Columns());
         int[] columnIndices = Vector.Range(startColumn, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -123,7 +123,7 @@ public static partial class Matrix
     {
         int endIndex = end(endRow, destination.Rows());
         int[] rowIndices = Vector.Range(startRow, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -140,7 +140,7 @@ public static partial class Matrix
     {
         int endIndex = end(endRow, destination.Rows());
         int[] rowIndices = Vector.Range(startRow, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ public static partial class Matrix
         int[] rowIndices = Vector.Range(startRow, rowIndex);
         int colIndex = end(endCol, destination.Columns());
         int[] columnIndices = Vector.Range(startCol, colIndex);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -229,7 +229,7 @@ public static partial class Matrix
         int[] rowIndices = Vector.Range(startRow, rowIndex);
         int colIndex = end(endCol, destination.Columns());
         int[] columnIndices = Vector.Range(startCol, colIndex);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -244,7 +244,7 @@ public static partial class Matrix
     public static void Set<T>(this T[][] destination, T value, int[] rowIndices, int[] columnIndices)
     {
         var values = Jagged.Create<T>(destination.Rows(), destination.Columns(), value);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -259,7 +259,7 @@ public static partial class Matrix
     public static void Set<T>(this T[,] destination, T value, int[] rowIndices, int[] columnIndices)
     {
         var values = Matrix.Create<T>(destination.Rows(), destination.Columns(), value);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -273,7 +273,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[][] destination, T[][] value, int[] rowIndices, int[] columnIndices)
     {
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -287,7 +287,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[,] destination, T[,] value, int[] rowIndices, int[] columnIndices)
     {
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value, rowIndices, columnIndices);
     }
     /// <summary>
     ///   Sets a region of a matrix to the given values.
@@ -360,8 +360,11 @@ public static partial class Matrix
             destination[indices[i]] = value;
     }
 
+    // The destination row indices are always the same array as the source row indices
+    // at every call site, and the mapping uses the source rows, so no separate
+    // destination row index argument is required.
     private static void set<T>(this
-        T[,] dst, int[] dstRowIndices, int[] dstColumnIndices,
+        T[,] dst, int[] dstColumnIndices,
         T[,] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
         ArgumentNullException.ThrowIfNull(src);
@@ -374,8 +377,6 @@ public static partial class Matrix
         if (srcColumnIndices is null)
             srcColumnIndices = Vector.Range(0, src.Columns());
 
-        if (dstRowIndices is null)
-            dstRowIndices = Vector.Range(0, dst.Rows()); // NOSONAR - null coalescing pattern
         if (dstColumnIndices is null)
             dstColumnIndices = Vector.Range(0, dst.Columns());
 
@@ -394,7 +395,7 @@ public static partial class Matrix
     }
 
     private static void set<T>(this
-        T[][] dst, int[] dstRowIndices, int[] dstColumnIndices,
+        T[][] dst, int[] dstColumnIndices,
         T[][] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
         ArgumentNullException.ThrowIfNull(src);
@@ -406,8 +407,6 @@ public static partial class Matrix
         if (srcColumnIndices is null)
             srcColumnIndices = Vector.Range(0, src.Columns());
 
-        if (dstRowIndices is null)
-            dstRowIndices = Vector.Range(0, dst.Rows()); // NOSONAR - null coalescing pattern
         if (dstColumnIndices is null)
             dstColumnIndices = Vector.Range(0, dst.Columns());
 

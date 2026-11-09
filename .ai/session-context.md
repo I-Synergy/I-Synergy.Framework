@@ -28,8 +28,8 @@ job 128895030909, plus the SonarCloud analysis error that failed it.
   finalizer-free types is suppressed with a comment because S3971 forbids `GC.SuppressFinalize`;
   S101/S110/S2436/S4035/S1133 on public API, P/Invoke structs and DNS constants are suppressed;
   everything else is a real change (S3776 refactored into helpers).
-- **Do not edit the Math.NET port**: it is a port; its analyzer diagnostics are suppressed at the
-  project level, matching the existing SonarCloud organization exclusion.
+- **Fix the Math.NET port instead of suppressing it**: the user chose to resolve all 272 findings in
+  the port, including overload layout and public API changes. The project-level `NoWarn` was removed.
 - **Do not implement `IDisposable` on the Blazor dialog components**: doing so made Blazor dispose
   the reused view model on close and broke reopening the dialog. The cleanup method is renamed
   `DetachViewModel` instead (S2953 fix without a lifetime change).
@@ -40,12 +40,16 @@ job 128895030909, plus the SonarCloud analysis error that failed it.
 - **OPEN**: `tests/` still emits ~1 500 analyzer warnings locally (not part of the CI run; the
   scanner excludes test projects). Treat as a separate cleanup.
 - **ASSUMED**: the local `XA0033` warning is environmental (local JDK 25); CI installs JDK 21.
+- **OPEN**: the Mathematics public API changes are breaking; release notes must call them out
+  (see `CHANGELOG.md`).
 
 ## Files Modified
 - `.github/workflows/ci.yml`, `.github/workflows/validate-template.yml` - Sonar override, action majors
 - `.editorconfig` - no analyzers on `obj/`
 - `src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj` - documented NoWarn
 - 170 files under `src/`, `samples/`, `performance/`, `tools/` - per-warning fixes
+- 104 files under `src/ISynergy.Framework.Mathematics/` - full port cleanup (0 warnings)
+- 4 test files - renamed APIs (`Mat`/`Vec`/`Cdf97`, `FieldNames()`), Octave field initializers
 - `CHANGELOG.md` - Fixed entries
 - `.ai/plans/build-warnings-and-sonar.md`, `.ai/progress/build-warnings-and-sonar.md`
 

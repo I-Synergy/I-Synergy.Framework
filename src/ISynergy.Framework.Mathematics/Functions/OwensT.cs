@@ -60,52 +60,6 @@ using System;
 /// 
 public static class OwensT
 {
-    /// <summary>
-    ///   Computes Owen's T function for arbitrary H and A.
-    /// </summary>
-    /// 
-    /// <param name="h">Owen's T function argument H.</param>
-    /// <param name="a">Owen's T function argument A.</param>
-    /// 
-    /// <returns>The value of Owen's T function.</returns>
-    /// 
-    public static double Function(double h, double a)
-    {
-        double absa;
-        double absh;
-        double ah;
-        const double cut = 0.67;
-        double normah;
-        double normh;
-        double value;
-
-        absh = Math.Abs(h);
-        absa = Math.Abs(a);
-        ah = absa * absh;
-
-        if (absa <= 1.0)
-        {
-            value = Function(absh, absa, ah);
-        }
-        else if (absh <= cut)
-        {
-            value = 0.25 - (-0.5 + Normal.Function(absh)) * (-0.5 + Normal.Function(ah))
-              - Function(ah, 1.0 / absa, absh);
-        }
-        else
-        {
-            normh = Normal.Complemented(absh);
-            normah = Normal.Complemented(ah);
-            value = 0.5 * (normh + normah) - normh * normah
-            - Function(ah, 1.0 / absa, absh);
-        }
-
-        if (a < 0.0)
-            value = -value;
-
-        return value;
-    }
-
     private static readonly double[] arange =
     [
         0.025, 0.09, 0.15, 0.36, 0.5,
@@ -177,6 +131,52 @@ public static class OwensT
         0.81130545742299586629E-02,  0.60419009528470238773E-02,
         0.38862217010742057883E-02,  0.16793031084546090448E-02
     ];
+
+    /// <summary>
+    ///   Computes Owen's T function for arbitrary H and A.
+    /// </summary>
+    /// 
+    /// <param name="h">Owen's T function argument H.</param>
+    /// <param name="a">Owen's T function argument A.</param>
+    /// 
+    /// <returns>The value of Owen's T function.</returns>
+    /// 
+    public static double Function(double h, double a)
+    {
+        double absa;
+        double absh;
+        double ah;
+        const double cut = 0.67;
+        double normah;
+        double normh;
+        double value;
+
+        absh = Math.Abs(h);
+        absa = Math.Abs(a);
+        ah = absa * absh;
+
+        if (absa <= 1.0)
+        {
+            value = Function(absh, absa, ah);
+        }
+        else if (absh <= cut)
+        {
+            value = 0.25 - (-0.5 + Normal.Function(absh)) * (-0.5 + Normal.Function(ah))
+              - Function(ah, 1.0 / absa, absh);
+        }
+        else
+        {
+            normh = Normal.Complemented(absh);
+            normah = Normal.Complemented(ah);
+            value = 0.5 * (normh + normah) - normh * normah
+            - Function(ah, 1.0 / absa, absh);
+        }
+
+        if (a < 0.0)
+            value = -value;
+
+        return value;
+    }
 
     /// <summary>
     ///   Owen's T function for a restricted range of parameters.

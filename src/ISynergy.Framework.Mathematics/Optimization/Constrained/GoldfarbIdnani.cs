@@ -186,8 +186,8 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     /// <param name="numberOfEqualities">The number of equalities in the constraints.</param>
     public GoldfarbIdnani(double[,] quadratic, double[] linear,
         double[,] constraintMatrix, double[] constraintValues, int numberOfEqualities = 0)
-        : this(new QuadraticObjectiveFunction(quadratic, linear), constraintMatrix, constraintValues,
-            numberOfEqualities)
+        : this(new QuadraticObjectiveFunction(quadratic, linear, System.Array.Empty<string>()),
+            constraintMatrix, constraintValues, numberOfEqualities)
     {
     }
     /// <summary>
@@ -666,7 +666,6 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         // ... and r = R^{-1} d_1, check also if r has positive elements
         // (among the entries corresponding to inequalities constraints). 
 
-        l1 = 0;
         var it1 = 0; // NOSONAR - initialized to default, may be conditionally set in loop
         double t1 = 0;
         var t1inf = true;

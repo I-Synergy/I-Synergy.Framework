@@ -53,6 +53,70 @@ public static partial class Matrix
     {
         return Exp(value, JaggedCreateAs<double, double>(value));
     }
+
+    /// <summary>
+    ///   Elementwise exponential.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Exp(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Exp((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise exponential.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Exp(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Exp((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise exponential.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Exp(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Exp((double)v));
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     ///   Elementwise logarithm.
     /// </summary>
@@ -79,6 +143,70 @@ public static partial class Matrix
     {
         return Log(value, JaggedCreateAs<double, double>(value));
     }
+
+    /// <summary>
+    ///   Elementwise logarithm.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Log(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Log((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise logarithm.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Log(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Log((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise logarithm.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Log(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Log((double)v));
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     ///   Elementwise sign.
     /// </summary>
@@ -105,6 +233,70 @@ public static partial class Matrix
     {
         return Sign(value, JaggedCreateAs<double, double>(value));
     }
+
+    /// <summary>
+    ///   Elementwise sign.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Sign(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Sign(v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise sign.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Sign(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Sign(v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise sign.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Sign(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Sign(v));
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     ///   Elementwise absolute value.
     /// </summary>
@@ -133,6 +325,69 @@ public static partial class Matrix
     }
 
     /// <summary>
+    ///   Elementwise absolute value.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Abs(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Abs(v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise absolute value.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Abs(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Abs(v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise absolute value.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Abs(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Abs(v));
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
     ///   Elementwise square-root.
     /// </summary>
     /// 
@@ -149,6 +404,70 @@ public static partial class Matrix
     {
         return Sqrt(value, JaggedCreateAs<double, double>(value));
     }
+
+    /// <summary>
+    ///   Elementwise square-root.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Sqrt(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Sqrt((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise square-root.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Sqrt(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Sqrt((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise square-root.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Sqrt(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Sqrt((double)v));
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     ///   Elementwise signed square-root.
     /// </summary>
@@ -175,6 +494,70 @@ public static partial class Matrix
     {
         return SignSqrt(value, JaggedCreateAs<double, double>(value));
     }
+
+    /// <summary>
+    ///   Elementwise signed square-root.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] SignSqrt(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise signed square-root.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] SignSqrt(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise signed square-root.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] SignSqrt(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     ///   Elementwise floor.
     /// </summary>
@@ -201,6 +584,70 @@ public static partial class Matrix
     {
         return Floor(value, JaggedCreateAs<double, double>(value));
     }
+
+    /// <summary>
+    ///   Elementwise floor.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Floor(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Floor((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise floor.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Floor(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Floor((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise floor.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Floor(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Floor((double)v));
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     ///   Elementwise ceiling.
     /// </summary>
@@ -227,6 +674,70 @@ public static partial class Matrix
     {
         return Ceiling(value, JaggedCreateAs<double, double>(value));
     }
+
+    /// <summary>
+    ///   Elementwise ceiling.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Ceiling(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Ceiling((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise ceiling.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Ceiling(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Ceiling((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise ceiling.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Ceiling(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Ceiling((double)v));
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     ///   Elementwise round.
     /// </summary>
@@ -252,6 +763,69 @@ public static partial class Matrix
     public static double[][] Round(this double[][] value)
     {
         return Round(value, JaggedCreateAs<double, double>(value));
+    }
+
+    /// <summary>
+    ///   Elementwise round.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[] Round(this double[] value, double[] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            var v = value[i];
+            result[i] = (double)(Math.Round((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise round.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Round(this double[,] value, double[,] result)
+    {
+        if (value.Length == 0)
+            return result;
+        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        for (var j = 0; j < spanV.Length; j++)
+        {
+            var v = spanV[j];
+            spanR[j] = (double)(Math.Round((double)v));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Elementwise round.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    ///
+    public static double[][] Round(this double[][] value, double[][] result)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            for (var j = 0; j < value[i].Length; j++)
+            {
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Round((double)v));
+            }
+        }
+        return result;
     }
 
     /// <summary>
@@ -288,42 +862,6 @@ public static partial class Matrix
     public static double[][] SignedPow(this double[][] value, double y)
     {
         return SignedPow(value, y, JaggedCreateAs<double, double>(value));
-    }
-
-    /// <summary>
-    ///   Elementwise power.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="y">A power.</param>
-    /// 
-    public static double[] Pow(this double[] value, double y)
-    {
-        return Pow(value, y, new double[value.Length]);
-    }
-
-    /// <summary>
-    ///   Elementwise power.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="y">A power.</param>
-    /// 
-    public static double[,] Pow(this double[,] value, double y)
-    {
-        return Pow(value, y, MatrixCreateAs<double, double>(value));
-    }
-
-    /// <summary>
-    ///   Elementwise power.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="y">A power.</param>
-    /// 
-    public static double[][] Pow(this double[][] value, double y)
-    {
-        return Pow(value, y, JaggedCreateAs<double, double>(value));
     }
 
     /// <summary>
@@ -391,6 +929,43 @@ public static partial class Matrix
         }
         return result;
     }
+
+    /// <summary>
+    ///   Elementwise power.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="y">A power.</param>
+    /// 
+    public static double[] Pow(this double[] value, double y)
+    {
+        return Pow(value, y, new double[value.Length]);
+    }
+
+    /// <summary>
+    ///   Elementwise power.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="y">A power.</param>
+    /// 
+    public static double[,] Pow(this double[,] value, double y)
+    {
+        return Pow(value, y, MatrixCreateAs<double, double>(value));
+    }
+
+    /// <summary>
+    ///   Elementwise power.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="y">A power.</param>
+    /// 
+    public static double[][] Pow(this double[][] value, double y)
+    {
+        return Pow(value, y, JaggedCreateAs<double, double>(value));
+    }
+
     /// <summary>
     ///   Elementwise power.
     /// </summary>
@@ -457,564 +1032,6 @@ public static partial class Matrix
         return result;
     }
 
-    /// <summary>
-    ///   Elementwise exponential.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Exp(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Exp((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise exponential.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Exp(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Exp((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise exponential.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Exp(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Exp((double)v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise logarithm.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Log(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Log((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise logarithm.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Log(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Log((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise logarithm.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Log(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Log((double)v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise sign.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Sign(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Sign(v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise sign.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Sign(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Sign(v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise sign.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Sign(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Sign(v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise absolute value.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Abs(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Abs(v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise absolute value.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Abs(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Abs(v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise absolute value.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Abs(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Abs(v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise square-root.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Sqrt(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Sqrt((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise square-root.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Sqrt(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Sqrt((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise square-root.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Sqrt(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Sqrt((double)v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise signed square-root.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] SignSqrt(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise signed square-root.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] SignSqrt(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise signed square-root.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] SignSqrt(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Sign(v) * Math.Sqrt((double)v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise floor.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Floor(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Floor((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise floor.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Floor(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Floor((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise floor.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Floor(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Floor((double)v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise ceiling.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Ceiling(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Ceiling((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise ceiling.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Ceiling(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Ceiling((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise ceiling.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Ceiling(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Ceiling((double)v));
-            }
-        }
-        return result;
-    }
-    /// <summary>
-    ///   Elementwise round.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[] Round(this double[] value, double[] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            var v = value[i];
-            result[i] = (double)(Math.Round((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise round.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[,] Round(this double[,] value, double[,] result)
-    {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
-        for (var j = 0; j < spanV.Length; j++)
-        {
-            var v = spanV[j];
-            spanR[j] = (double)(Math.Round((double)v));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Elementwise round.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    ///
-    public static double[][] Round(this double[][] value, double[][] result)
-    {
-        for (var i = 0; i < value.Length; i++)
-        {
-            for (var j = 0; j < value[i].Length; j++)
-            {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Round((double)v));
-            }
-        }
-        return result;
-    }
 
     private static TOutput[,] MatrixCreateAs<TInput, TOutput>(TInput[,] matrix)
     {

@@ -71,8 +71,8 @@ public static partial class Vector
     /// </result>
     public static bool TryParse(string s, IMatrixFormatProvider provider, out double[] vector)
     {
-        // TODO: Create a proper TryParse method without // NOSONAR
-        //       resorting to a underlying try-catch block.
+        // Math.NET parity: Parse throws on malformed input, so TryParse has to
+        // rely on the underlying try-catch to translate that into a false result.
         try
         {
             vector = Parse(s, provider);

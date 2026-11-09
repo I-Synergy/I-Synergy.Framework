@@ -12,7 +12,6 @@ namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
 {
-
     /// <summary>
     ///   Returns a sub matrix extracted from the current matrix.
     /// </summary>
@@ -243,20 +242,6 @@ public static partial class Matrix
         return destination;
     }
 
-    private static int end(int end, int length)
-    {
-        if (end <= 0)
-            end = length + end;
-        return end;
-    }
-
-    private static int index(int end, int length)
-    {
-        if (end < 0)
-            end = length + end;
-        return end;
-    }
-
     /// <summary>
     ///   Returns a sub matrix extracted from the current matrix.
     /// </summary>
@@ -271,46 +256,6 @@ public static partial class Matrix
         int startRow, int endRow, int startColumn, int endColumn)
     {
         return get(source, null, startRow, endRow, startColumn, endColumn, false);
-    }
-
-    /// <summary>
-    ///   Returns a sub matrix extracted from the current matrix.
-    /// </summary>
-    /// 
-    /// <param name="destination">The matrix where the values should be stored.</param>
-    /// <param name="values">The values to be stored.</param>
-    /// <param name="startRow">Start row index in the destination matrix.</param>
-    /// <param name="endRow">End row index in the destination matrix.</param>
-    /// <param name="startColumn">Start column index in the destination matrix.</param>
-    /// <param name="endColumn">End column index in the destination matrix.</param>
-    /// 
-    public static T[][] Set<T>(this T[][] destination,
-        int startRow, int endRow, int startColumn, int endColumn, T[][] values)
-    {
-        return set(destination, values, startRow, endRow, startColumn, endColumn);
-    }
-
-    /// <summary>
-    ///   Sets elements from a matrix to a given value.
-    /// </summary>
-    /// 
-    /// <param name="values">The matrix of values to be changed.</param>
-    /// <param name="match">The function used to determine whether an 
-    ///   element in the matrix should be changed or not.</param>
-    /// <param name="value">The values to set the elements to.</param>
-    /// 
-    public static T[][] Set<T>(this T[][] values, Func<T, bool> match, T value)
-    {
-        for (var i = 0; i < values.Length; i++)
-        {
-            for (var j = 0; j < values[i].Length; j++)
-            {
-                if (match(values[i][j]))
-                    values[i][j] = value;
-            }
-        }
-
-        return values;
     }
 
     /// <summary>
@@ -391,6 +336,7 @@ public static partial class Matrix
 
         return destination;
     }
+
     /// <summary>
     ///   Returns a sub matrix extracted from the current matrix.
     /// </summary>
@@ -542,6 +488,7 @@ public static partial class Matrix
 
         return destination;
     }
+
     /// <summary>
     ///   Returns a subvector extracted from the current vector.
     /// </summary>
@@ -657,6 +604,61 @@ public static partial class Matrix
 
         return destination;
     }
+
+    private static int end(int end, int length)
+    {
+        if (end <= 0)
+            end = length + end;
+        return end;
+    }
+
+    private static int index(int end, int length)
+    {
+        if (end < 0)
+            end = length + end;
+        return end;
+    }
+
+    /// <summary>
+    ///   Returns a sub matrix extracted from the current matrix.
+    /// </summary>
+    /// 
+    /// <param name="destination">The matrix where the values should be stored.</param>
+    /// <param name="values">The values to be stored.</param>
+    /// <param name="startRow">Start row index in the destination matrix.</param>
+    /// <param name="endRow">End row index in the destination matrix.</param>
+    /// <param name="startColumn">Start column index in the destination matrix.</param>
+    /// <param name="endColumn">End column index in the destination matrix.</param>
+    /// 
+    public static T[][] Set<T>(this T[][] destination,
+        int startRow, int endRow, int startColumn, int endColumn, T[][] values)
+    {
+        return set(destination, values, startRow, endRow, startColumn, endColumn);
+    }
+
+    /// <summary>
+    ///   Sets elements from a matrix to a given value.
+    /// </summary>
+    /// 
+    /// <param name="values">The matrix of values to be changed.</param>
+    /// <param name="match">The function used to determine whether an 
+    ///   element in the matrix should be changed or not.</param>
+    /// <param name="value">The values to set the elements to.</param>
+    /// 
+    public static T[][] Set<T>(this T[][] values, Func<T, bool> match, T value)
+    {
+        for (var i = 0; i < values.Length; i++)
+        {
+            for (var j = 0; j < values[i].Length; j++)
+            {
+                if (match(values[i][j]))
+                    values[i][j] = value;
+            }
+        }
+
+        return values;
+    }
+
     /// <summary>
     ///   Extracts a selected area from a matrix.
     /// </summary>

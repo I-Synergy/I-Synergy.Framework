@@ -3,6 +3,7 @@ namespace ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -78,25 +79,18 @@ public struct Hamming : IMetric<byte[]>, IMetric<string>, IDistance<double[]>, I
     /// 
     public double Distance(double[] x, double[] y)
     {
-        unsafe
+        var xBytes = MemoryMarshal.AsBytes(x.AsSpan());
+        var yBytes = MemoryMarshal.AsBytes(y.AsSpan());
+        int sum = 0;
+
+        for (var i = 0; i < xBytes.Length; i++)
         {
-            fixed (double* X = x, Y = y)
-            {
-                byte* px = (byte*)X;
-                byte* py = (byte*)Y;
-                int n = x.Length * sizeof(double);
-                int sum = 0;
-
-                for (var i = 0; i < n; i++)
-                {
-                    byte xx = (byte)px[i];
-                    byte yy = (byte)py[i];
-                    sum += lookup[(byte)(xx ^ yy)];
-                }
-
-                return sum;
-            }
+            byte xx = xBytes[i];
+            byte yy = yBytes[i];
+            sum += lookup[(byte)(xx ^ yy)];
         }
+
+        return sum;
     }
 
     /// <summary>

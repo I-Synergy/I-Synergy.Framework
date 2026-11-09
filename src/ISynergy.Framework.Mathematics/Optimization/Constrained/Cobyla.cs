@@ -788,7 +788,8 @@ public class Cobyla : BaseOptimizationMethod, IOptimizationMethod,
 
                 if (trured > 0.0)
                 {
-                    temp = 0.0; for (var k = 1; k <= n; ++k)
+                    temp = 0.0;
+                    for (var k = 1; k <= n; ++k)
                         temp += Math.Pow(dx[k] - sim[k, j], 2.0);
                     temp = Math.Sqrt(temp);
                 }

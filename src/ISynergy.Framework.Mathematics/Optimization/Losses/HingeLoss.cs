@@ -1,5 +1,6 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
+using System.Runtime.Serialization;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -16,7 +17,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 [Serializable]
 public struct HingeLoss : ILoss<double[]>,
     IDifferentiableLoss<bool, double, double>,
-    IDifferentiableLoss<double, double, double>
+    IDifferentiableLoss<double, double, double>, IDeserializationCallback
 {
     /// <summary>
     ///     Gets or sets the expected outputs (the ground truth).
@@ -172,5 +173,11 @@ public struct HingeLoss : ILoss<double[]>,
     public double Derivative(double expected, double actual)
     {
         return Derivative(Classes.Decide(expected), actual);
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (Expected is null)
+            throw new SerializationException("The deserialized hinge loss does not contain expected values.");
     }
 }

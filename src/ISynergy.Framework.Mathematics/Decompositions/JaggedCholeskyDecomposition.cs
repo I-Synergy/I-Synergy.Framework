@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -37,7 +38,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 ///     </para>
 /// </remarks>
 [Serializable]
-public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomposition<double>
+public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomposition<double>, IDeserializationCallback
 {
     private const string DestroyedMessage = "The decomposition has been destroyed.";
     private const string UndefinedMessage = "The decomposition is undefined (zero in diagonal).";
@@ -269,6 +270,108 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     }
 
     /// <summary>
+    ///     Solves a set of equation systems of type <c>A * X = B</c>.
+    /// </summary>
+    /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
+    /// <returns>Matrix <c>X</c> so that <c>L * L' * X = B</c>.</returns>
+    /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
+    /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
+    /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
+    /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
+    public double[][] Solve(double[][] value, bool inPlace)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        if (value.Length != n)
+            throw new ArgumentException(
+                "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
+
+        if (!robust && !positiveDefinite)
+            throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
+
+        if (destroyed)
+            throw new InvalidOperationException(DestroyedMessage);
+
+        if (IsUndefined)
+            throw new InvalidOperationException(UndefinedMessage);
+
+        var B = inPlace ? value : value.MemberwiseClone();
+
+        for (var k = 0; k < n; k++)
+            for (var j = 0; j < B[k].Length; j++)
+            {
+                for (var i = 0; i < k; i++)
+                    B[k][j] -= B[i][j] * L[k][i];
+                B[k][j] /= L[k][k];
+            }
+
+        if (robust)
+            for (var k = 0; k < Diagonal.Length; k++)
+                for (var j = 0; j < B[k].Length; j++)
+                    B[k][j] /= Diagonal[k];
+
+        for (var k = n - 1; k >= 0; k--)
+            for (var j = 0; j < B[k].Length; j++)
+            {
+                for (var i = k + 1; i < n; i++)
+                    B[k][j] -= B[i][j] * L[i][k];
+
+                B[k][j] /= L[k][k];
+            }
+
+        return B;
+    }
+
+    /// <summary>
+    ///     Solves a set of equation systems of type <c>A * x = b</c>.
+    /// </summary>
+    /// <param name="value">Right hand side column vector with as many rows as <c>A</c>.</param>
+    /// <returns>Vector <c>x</c> so that <c>L * L' * x = b</c>.</returns>
+    /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
+    /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
+    /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
+    /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
+    public double[] Solve(double[] value, bool inPlace)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        if (value.Length != n)
+            throw new ArgumentException(
+                "Argument vector should have the same length as rows in the decomposed matrix.", nameof(value));
+
+        if (!robust && !positiveDefinite)
+            throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
+
+        if (destroyed)
+            throw new InvalidOperationException(DestroyedMessage);
+
+        if (IsUndefined)
+            throw new InvalidOperationException(UndefinedMessage);
+
+        var B = inPlace ? value : value.Copy();
+
+        for (var k = 0; k < n; k++)
+        {
+            for (var i = 0; i < k; i++)
+                B[k] -= B[i] * L[k][i];
+            B[k] /= L[k][k];
+        }
+
+        if (robust)
+            for (var k = 0; k < Diagonal.Length; k++)
+                B[k] /= Diagonal[k];
+
+        for (var k = n - 1; k >= 0; k--)
+        {
+            for (var i = k + 1; i < n; i++)
+                B[k] -= B[i] * L[i][k];
+            B[k] /= L[k][k];
+        }
+
+        return B;
+    }
+
+    /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
     /// </summary>
     /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
@@ -385,108 +488,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
 
         for (var i = 0; i < L.Length; i++)
             L[i][i] = 1;
-    }
-
-    /// <summary>
-    ///     Solves a set of equation systems of type <c>A * X = B</c>.
-    /// </summary>
-    /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
-    /// <returns>Matrix <c>X</c> so that <c>L * L' * X = B</c>.</returns>
-    /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
-    /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
-    /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
-    /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
-    public double[][] Solve(double[][] value, bool inPlace)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-
-        if (value.Length != n)
-            throw new ArgumentException(
-                "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
-
-        if (!robust && !positiveDefinite)
-            throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
-
-        if (destroyed)
-            throw new InvalidOperationException(DestroyedMessage);
-
-        if (IsUndefined)
-            throw new InvalidOperationException(UndefinedMessage);
-
-        var B = inPlace ? value : value.MemberwiseClone();
-
-        for (var k = 0; k < n; k++)
-            for (var j = 0; j < B[k].Length; j++)
-            {
-                for (var i = 0; i < k; i++)
-                    B[k][j] -= B[i][j] * L[k][i];
-                B[k][j] /= L[k][k];
-            }
-
-        if (robust)
-            for (var k = 0; k < Diagonal.Length; k++)
-                for (var j = 0; j < B[k].Length; j++)
-                    B[k][j] /= Diagonal[k];
-
-        for (var k = n - 1; k >= 0; k--)
-            for (var j = 0; j < B[k].Length; j++)
-            {
-                for (var i = k + 1; i < n; i++)
-                    B[k][j] -= B[i][j] * L[i][k];
-
-                B[k][j] /= L[k][k];
-            }
-
-        return B;
-    }
-
-    /// <summary>
-    ///     Solves a set of equation systems of type <c>A * x = b</c>.
-    /// </summary>
-    /// <param name="value">Right hand side column vector with as many rows as <c>A</c>.</param>
-    /// <returns>Vector <c>x</c> so that <c>L * L' * x = b</c>.</returns>
-    /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
-    /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
-    /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
-    /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
-    public double[] Solve(double[] value, bool inPlace)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-
-        if (value.Length != n)
-            throw new ArgumentException(
-                "Argument vector should have the same length as rows in the decomposed matrix.", nameof(value));
-
-        if (!robust && !positiveDefinite)
-            throw new NonPositiveDefiniteMatrixException("Decomposed matrix is not positive definite.");
-
-        if (destroyed)
-            throw new InvalidOperationException(DestroyedMessage);
-
-        if (IsUndefined)
-            throw new InvalidOperationException(UndefinedMessage);
-
-        var B = inPlace ? value : value.Copy();
-
-        for (var k = 0; k < n; k++)
-        {
-            for (var i = 0; i < k; i++)
-                B[k] -= B[i] * L[k][i];
-            B[k] /= L[k][k];
-        }
-
-        if (robust)
-            for (var k = 0; k < Diagonal.Length; k++)
-                B[k] /= Diagonal[k];
-
-        for (var k = n - 1; k >= 0; k--)
-        {
-            for (var i = k + 1; i < n; i++)
-                B[k] -= B[i] * L[i][k];
-            B[k] /= L[k][k];
-        }
-
-        return B;
     }
 
     /// <summary>
@@ -676,6 +677,12 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
         clone.robust = robust;
         clone.positiveDefinite = positiveDefinite;
         return clone;
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (L is null || L.Length != n)
+            throw new SerializationException("The deserialized Cholesky decomposition is invalid.");
     }
 
     #endregion

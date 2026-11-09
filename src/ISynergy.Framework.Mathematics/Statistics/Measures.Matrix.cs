@@ -1093,6 +1093,72 @@ public static partial class Measures
     {
         return Scatter(matrix, means, matrix.GetLength(0) - 1, 0);
     }
+
+    /// <summary>
+    ///   Calculates the covariance matrix of a sample matrix.
+    /// </summary> 
+    /// 
+    /// <remarks>
+    ///   In statistics and probability theory, the covariance matrix is a matrix of
+    ///   covariances between elements of a vector. It is the natural generalization
+    ///   to higher dimensions of the concept of the variance of a scalar-valued
+    ///   random variable.
+    /// </remarks>
+    /// 
+    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
+    /// <returns>The covariance matrix.</returns>
+    /// 
+    public static double[][] Covariance(this double[][] matrix)
+    {
+        return Covariance(matrix, Mean(matrix, dimension: 0));
+    }
+
+    /// <summary>
+    ///   Calculates the covariance matrix of a sample matrix.
+    /// </summary>
+    /// 
+    /// <remarks>
+    ///   In statistics and probability theory, the covariance matrix is a matrix of
+    ///   covariances between elements of a vector. It is the natural generalization
+    ///   to higher dimensions of the concept of the variance of a scalar-valued
+    ///   random variable.
+    /// </remarks>
+    /// 
+    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
+    /// <param name="dimension">
+    ///   The dimension of the matrix to consider as observations. Pass 0 if the matrix has
+    ///   observations as rows and variables as columns, pass 1 otherwise. Default is 0.
+    /// </param>
+    /// 
+    /// <returns>The covariance matrix.</returns>
+    /// 
+    public static double[][] Covariance(this double[][] matrix, int dimension)
+    {
+        int size = (dimension == 0) ? matrix.Length : matrix[0].Length;
+        return Scatter(matrix, Mean(matrix, dimension), size - 1, dimension);
+    }
+
+    /// <summary>
+    ///   Calculates the covariance matrix of a sample matrix.
+    /// </summary> 
+    /// 
+    /// <remarks>
+    ///   In statistics and probability theory, the covariance matrix is a matrix of
+    ///   covariances between elements of a vector. It is the natural generalization
+    ///   to higher dimensions of the concept of the variance of a scalar-valued
+    ///   random variable.
+    /// </remarks>
+    /// 
+    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
+    /// <param name="means">The mean value of the given values, if already known.</param>
+    /// 
+    /// <returns>The covariance matrix.</returns>
+    /// 
+    public static double[][] Covariance(this double[][] matrix, double[] means)
+    {
+        return Scatter(matrix, means, matrix.Length - 1, 0);
+    }
+
     /// <summary>
     ///   Calculates the scatter matrix of a sample matrix.
     /// </summary>
@@ -1229,70 +1295,6 @@ public static partial class Measures
         return cov;
     }
 
-    /// <summary>
-    ///   Calculates the covariance matrix of a sample matrix.
-    /// </summary> 
-    /// 
-    /// <remarks>
-    ///   In statistics and probability theory, the covariance matrix is a matrix of
-    ///   covariances between elements of a vector. It is the natural generalization
-    ///   to higher dimensions of the concept of the variance of a scalar-valued
-    ///   random variable.
-    /// </remarks>
-    /// 
-    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
-    /// <returns>The covariance matrix.</returns>
-    /// 
-    public static double[][] Covariance(this double[][] matrix)
-    {
-        return Covariance(matrix, Mean(matrix, dimension: 0));
-    }
-
-    /// <summary>
-    ///   Calculates the covariance matrix of a sample matrix.
-    /// </summary>
-    /// 
-    /// <remarks>
-    ///   In statistics and probability theory, the covariance matrix is a matrix of
-    ///   covariances between elements of a vector. It is the natural generalization
-    ///   to higher dimensions of the concept of the variance of a scalar-valued
-    ///   random variable.
-    /// </remarks>
-    /// 
-    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
-    /// <param name="dimension">
-    ///   The dimension of the matrix to consider as observations. Pass 0 if the matrix has
-    ///   observations as rows and variables as columns, pass 1 otherwise. Default is 0.
-    /// </param>
-    /// 
-    /// <returns>The covariance matrix.</returns>
-    /// 
-    public static double[][] Covariance(this double[][] matrix, int dimension)
-    {
-        int size = (dimension == 0) ? matrix.Length : matrix[0].Length;
-        return Scatter(matrix, Mean(matrix, dimension), size - 1, dimension);
-    }
-
-    /// <summary>
-    ///   Calculates the covariance matrix of a sample matrix.
-    /// </summary> 
-    /// 
-    /// <remarks>
-    ///   In statistics and probability theory, the covariance matrix is a matrix of
-    ///   covariances between elements of a vector. It is the natural generalization
-    ///   to higher dimensions of the concept of the variance of a scalar-valued
-    ///   random variable.
-    /// </remarks>
-    /// 
-    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
-    /// <param name="means">The mean value of the given values, if already known.</param>
-    /// 
-    /// <returns>The covariance matrix.</returns>
-    /// 
-    public static double[][] Covariance(this double[][] matrix, double[] means)
-    {
-        return Scatter(matrix, means, matrix.Length - 1, 0);
-    }
     /// <summary>
     ///   Calculates the scatter matrix of a sample matrix.
     /// </summary>

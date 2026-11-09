@@ -108,12 +108,35 @@ public static class Gabor
     }
 
     /// <summary>
+    ///     Bundles the shape parameters of a 2-D Gabor kernel.
+    /// </summary>
+    private readonly struct KernelParameters
+    {
+        public readonly double Lambda;
+        public readonly double Theta;
+        public readonly double Psi;
+        public readonly double Sigma;
+        public readonly double Gamma;
+        public readonly bool Normalized;
+
+        public KernelParameters(double lambda, double theta, double psi, double sigma, double gamma, bool normalized)
+        {
+            Lambda = lambda;
+            Theta = theta;
+            Psi = psi;
+            Sigma = sigma;
+            Gamma = gamma;
+            Normalized = normalized;
+        }
+    }
+
+    /// <summary>
     ///     Computes the 2-D Gabor kernel.
     /// </summary>
     public static double[,] Kernel2D(double lambda, double theta, double psi,
         double sigma, double gamma)
     {
-        return Kernel2D(3, lambda, theta, psi, sigma, gamma, false, GaborKernelKind.Real);
+        return Kernel2D(3, new KernelParameters(lambda, theta, psi, sigma, gamma, false), GaborKernelKind.Real);
     }
 
     /// <summary>
@@ -122,7 +145,7 @@ public static class Gabor
     public static double[,] Kernel2D(double lambda, double theta, double psi,
         double sigma, double gamma, bool normalized)
     {
-        return Kernel2D(3, lambda, theta, psi, sigma, gamma, normalized, GaborKernelKind.Imaginary);
+        return Kernel2D(3, new KernelParameters(lambda, theta, psi, sigma, gamma, normalized), GaborKernelKind.Imaginary);
     }
 
     /// <summary>
@@ -131,15 +154,21 @@ public static class Gabor
     public static double[,] Kernel2D(int size, double lambda, double theta, double psi,
         double sigma, double gamma, bool normalized)
     {
-        return Kernel2D(size, lambda, theta, psi, sigma,
-            gamma, normalized, GaborKernelKind.Imaginary);
+        return Kernel2D(size, new KernelParameters(lambda, theta, psi, sigma, gamma, normalized), GaborKernelKind.Imaginary);
     }
+
     /// <summary>
     ///     Computes the 2-D Gabor kernel.
     /// </summary>
-    public static double[,] Kernel2D(int size, double lambda, double theta,
-        double psi, double sigma, double gamma, bool normalized, GaborKernelKind function)
+    private static double[,] Kernel2D(int size, in KernelParameters parameters, GaborKernelKind function)
     {
+        var lambda = parameters.Lambda;
+        var theta = parameters.Theta;
+        var psi = parameters.Psi;
+        var sigma = parameters.Sigma;
+        var gamma = parameters.Gamma;
+        var normalized = parameters.Normalized;
+
         var sigmaX = sigma;
         var sigmaY = sigma / gamma;
 

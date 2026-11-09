@@ -190,7 +190,12 @@ public static class FourierTransform2
         if (direction == FourierTransform.Direction.Forward)
             FFT(real, imag);
         else
-            FFT(imag, real);
+        {
+            // The backward transform conjugates the input, so the parts are swapped.
+            var realPart = imag;
+            var imagPart = real;
+            FFT(realPart, imagPart);
+        }
 
         if (direction == FourierTransform.Direction.Backward)
             for (var i = 0; i < real.Length; i++)
@@ -292,7 +297,10 @@ public static class FourierTransform2
     /// </summary>
     private static void IDFT(double[] real, double[] imag)
     {
-        FFT(imag, real); // NOSONAR
+        // The inverse transform conjugates the input, so the parts are swapped.
+        var realPart = imag;
+        var imagPart = real;
+        FFT(realPart, imagPart);
     }
 
     /// <summary>

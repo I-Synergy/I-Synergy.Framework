@@ -68,21 +68,6 @@ public static partial class Jagged
     ///   Creates a zero-valued matrix.
     /// </summary>
     /// 
-    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
-    /// <param name="rows">The number of rows in the matrix.</param>
-    /// <param name="columns">The number of columns in the matrix.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static T[][] Ones<T>(int rows, int columns)
-    {
-        return Create<T>(rows, columns, Constants.One<T>());
-    }
-
-    /// <summary>
-    ///   Creates a zero-valued matrix.
-    /// </summary>
-    /// 
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// 
@@ -109,6 +94,48 @@ public static partial class Jagged
     }
 
     /// <summary>
+    ///   Creates a jagged matrix with all values set to zero.
+    /// </summary>
+    /// 
+    /// <param name="elementType">The type of the elements to be contained in the matrix.</param>
+    /// <param name="shape">The number of dimensions that the matrix should have.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static Array Zeros(Type elementType, params int[] shape)
+    {
+        return Create(elementType, shape, elementType.GetDefaultValue());
+    }
+
+    /// <summary>
+    ///   Creates a jagged matrix with all values set to zero.
+    /// </summary>
+    /// 
+    /// <param name="shape">The number of dimensions that the matrix should have.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static Array Zeros<T>(params int[] shape)
+    {
+        return Create(typeof(T), shape, 0);
+    }
+
+    /// <summary>
+    ///   Creates a zero-valued matrix.
+    /// </summary>
+    /// 
+    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
+    /// <param name="rows">The number of rows in the matrix.</param>
+    /// <param name="columns">The number of columns in the matrix.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static T[][] Ones<T>(int rows, int columns)
+    {
+        return Create<T>(rows, columns, Constants.One<T>());
+    }
+
+    /// <summary>
     ///   Creates a zero-valued matrix.
     /// </summary>
     /// 
@@ -121,6 +148,7 @@ public static partial class Jagged
     {
         return Ones<double>(rows, columns);
     }
+
     /// <summary>
     ///   Creates a jagged matrix with all values set to a given value.
     /// </summary>
@@ -159,25 +187,6 @@ public static partial class Jagged
         return create(elementType, shape, 0, value);
     }
 
-    private static Array create(Type elementType, int[] shape, int dimension, object value)
-    {
-        Type arrayType = elementType.MakeArrayType(shape.Length - dimension - 1, jagged: true);
-        Array array = Array.CreateInstance(arrayType, shape[dimension]);
-
-        if (dimension < shape.Length - 1)
-        {
-            for (var i = 0; i < array.Length; i++)
-                array.SetValue(create(elementType, shape, dimension + 1, value), i);
-        }
-        else
-        {
-            for (var i = 0; i < array.Length; i++)
-                array.SetValue(value, i);
-        }
-
-        return array;
-    }
-
     /// <summary>
     ///   Creates a jagged matrix with all values set to a given value.
     /// </summary>
@@ -190,48 +199,6 @@ public static partial class Jagged
     public static Array Create<T>(int[] shape, T value)
     {
         return Create(typeof(T), shape, value);
-    }
-
-    /// <summary>
-    ///   Creates a jagged matrix with all values set to zero.
-    /// </summary>
-    /// 
-    /// <param name="elementType">The type of the elements to be contained in the matrix.</param>
-    /// <param name="shape">The number of dimensions that the matrix should have.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static Array Zeros(Type elementType, params int[] shape)
-    {
-        return Create(elementType, shape, elementType.GetDefaultValue());
-    }
-    /// <summary>
-    ///   Creates a jagged matrix with all values set to zero.
-    /// </summary>
-    /// 
-    /// <param name="shape">The number of dimensions that the matrix should have.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static Array Zeros<T>(params int[] shape)
-    {
-        return Create(typeof(T), shape, 0);
-    }
-
-    /// <summary>
-    ///   Creates a jagged matrix with all values set to a given value.
-    /// </summary>
-    /// 
-    /// <param name="size">The number of rows and columns in the matrix.</param>
-    /// <param name="value">The initial values for the matrix.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    /// <seealso cref="Matrix.Create{T}(int, int, T)"/>
-    /// 
-    public static T[][] Square<T>(int size, T value)
-    {
-        return Create(size, size, value);
     }
 
     /// <summary>
@@ -289,6 +256,40 @@ public static partial class Jagged
     public static T[][] Create<T>(T[,] values)
     {
         return values.ToJagged();
+    }
+
+    private static Array create(Type elementType, int[] shape, int dimension, object value)
+    {
+        Type arrayType = elementType.MakeArrayType(shape.Length - dimension - 1, jagged: true);
+        Array array = Array.CreateInstance(arrayType, shape[dimension]);
+
+        if (dimension < shape.Length - 1)
+        {
+            for (var i = 0; i < array.Length; i++)
+                array.SetValue(create(elementType, shape, dimension + 1, value), i);
+        }
+        else
+        {
+            for (var i = 0; i < array.Length; i++)
+                array.SetValue(value, i);
+        }
+
+        return array;
+    }
+
+    /// <summary>
+    ///   Creates a jagged matrix with all values set to a given value.
+    /// </summary>
+    /// 
+    /// <param name="size">The number of rows and columns in the matrix.</param>
+    /// <param name="value">The initial values for the matrix.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    /// <seealso cref="Matrix.Create{T}(int, int, T)"/>
+    public static T[][] Square<T>(int size, T value)
+    {
+        return Create(size, size, value);
     }
 
     /// <summary>
@@ -438,6 +439,7 @@ public static partial class Jagged
             result[i][indices[i]] = 1;
         return result;
     }
+
     /// <summary>
     ///   Creates a matrix of k-hot vectors, where all values at each row are 
     ///   zero except for the ones in the positions where <paramref name="mask"/>
@@ -611,6 +613,48 @@ public static partial class Jagged
     }
 
     /// <summary>
+    ///   Returns a new multidimensional matrix.
+    /// </summary>
+    /// 
+    public static TOutput[][] CreateAs<TInput, TOutput>(TInput[,] matrix)
+    {
+        int rows = matrix.GetLength(0);
+        int cols = matrix.GetLength(1);
+        var r = new TOutput[rows][];
+        for (var i = 0; i < r.Length; i++)
+            r[i] = new TOutput[cols];
+        return r;
+    }
+
+    /// <summary>
+    ///   Returns a new multidimensional matrix.
+    /// </summary>
+    /// 
+    public static TOutput[][] CreateAs<TInput, TOutput>(TInput[][] matrix)
+    {
+        var r = new TOutput[matrix.Length][];
+        for (var i = 0; i < r.Length; i++)
+            r[i] = new TOutput[matrix[i].Length];
+        return r;
+    }
+
+    /// <summary>
+    ///   Returns a new multidimensional matrix.
+    /// </summary>
+    /// 
+    public static TOutput[][][] CreateAs<TInput, TOutput>(TInput[][][] matrix)
+    {
+        var r = new TOutput[matrix.Length][][];
+        for (var i = 0; i < r.Length; i++)
+        {
+            r[i] = new TOutput[matrix[i].Length][];
+            for (var j = 0; j < r[i].Length; j++)
+                r[i][j] = new TOutput[matrix[i][j].Length];
+        }
+        return r;
+    }
+
+    /// <summary>
     ///   Creates a 1xN matrix with a single row vector of size N.
     /// </summary>
     /// 
@@ -660,6 +704,7 @@ public static partial class Jagged
     }
 
     #region Diagonal matrices
+
     /// <summary>
     ///   Returns a square diagonal matrix of the given size.
     /// </summary>
@@ -791,48 +836,9 @@ public static partial class Jagged
 
         return result;
     }
+
     #endregion
-    /// <summary>
-    ///   Returns a new multidimensional matrix.
-    /// </summary>
-    /// 
-    public static TOutput[][] CreateAs<TInput, TOutput>(TInput[,] matrix)
-    {
-        int rows = matrix.GetLength(0);
-        int cols = matrix.GetLength(1);
-        var r = new TOutput[rows][];
-        for (var i = 0; i < r.Length; i++)
-            r[i] = new TOutput[cols];
-        return r;
-    }
 
-    /// <summary>
-    ///   Returns a new multidimensional matrix.
-    /// </summary>
-    /// 
-    public static TOutput[][] CreateAs<TInput, TOutput>(TInput[][] matrix)
-    {
-        var r = new TOutput[matrix.Length][];
-        for (var i = 0; i < r.Length; i++)
-            r[i] = new TOutput[matrix[i].Length];
-        return r;
-    }
-
-    /// <summary>
-    ///   Returns a new multidimensional matrix.
-    /// </summary>
-    /// 
-    public static TOutput[][][] CreateAs<TInput, TOutput>(TInput[][][] matrix)
-    {
-        var r = new TOutput[matrix.Length][][];
-        for (var i = 0; i < r.Length; i++)
-        {
-            r[i] = new TOutput[matrix[i].Length][];
-            for (var j = 0; j < r[i].Length; j++)
-                r[i][j] = new TOutput[matrix[i][j].Length];
-        }
-        return r;
-    }
     /// <summary>
     ///   Transforms a vector into a matrix of given dimensions.
     /// </summary>
@@ -867,6 +873,7 @@ public static partial class Jagged
     }
 
     #region Random matrices
+
     /// <summary>
     ///   Creates a square matrix matrix with random data.
     /// </summary>
@@ -911,6 +918,7 @@ public static partial class Jagged
     }
 
     #endregion
+
     /// <summary>
     ///   Enumerates through all elements in a matrix.
     /// </summary>
@@ -1171,6 +1179,7 @@ public static partial class Jagged
             }
         }
     }
+
     /// <summary>
     ///   Gets the transpose of a matrix.
     /// </summary>
@@ -1196,4 +1205,5 @@ public static partial class Jagged
 
         return result;
     }
+
 }

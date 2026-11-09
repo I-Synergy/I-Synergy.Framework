@@ -160,10 +160,6 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
     IGradientOptimizationMethod, IOptimizationMethod<BoundedBroydenFletcherGoldfarbShannoStatus>,
     ISupportsCancellation
 {
-    // those values need not be modified
-    private const double stpmin = 1e-20;
-    private const double stpmax = 1e20;
-
     private int corrections = 5;
 
     private double factr = 1e+5;
@@ -297,7 +293,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
             return true;
         }
         if (Progress is not null)
-            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, newG, 0, null, 0, f, 0, false)
+            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, new OptimizationStep(newG, 0, null, 0, f, 0), false)
             {
                 Tag = new BoundedBroydenFletcherGoldfarbShannoInnerStatus(
                     isave, dsave, lsave, csave, work)
@@ -317,7 +313,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         Evaluations++;
 
         if (Progress is not null)
-            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, newG, 0, null, 0, newF, 0, true)
+            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, new OptimizationStep(newG, 0, null, 0, newF, 0), true)
             {
                 Tag = new BoundedBroydenFletcherGoldfarbShannoInnerStatus(
                     isave, dsave, lsave, csave, work)

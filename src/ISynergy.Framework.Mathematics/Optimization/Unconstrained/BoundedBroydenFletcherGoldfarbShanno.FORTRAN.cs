@@ -1022,16 +1022,14 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         }
         else
         {
-            if ((iter == 2))
+            if ((iter == 2) && (ibkmin != nbreak))
             {
                 // Replace the already used smallest breakpoint with the
                 // breakpoint numbered nbreak > nlast, before heapsort call.
 
-                if ((ibkmin != nbreak))
-                {
-                    t[(ibkmin - (1)) + _t_offset] = t[(nbreak - (1)) + _t_offset];
-                    iorder[(ibkmin - (1)) + _iorder_offset] = iorder[(nbreak - (1)) + _iorder_offset];
-                }
+                t[(ibkmin - (1)) + _t_offset] = t[(nbreak - (1)) + _t_offset];
+                iorder[(ibkmin - (1)) + _iorder_offset] = iorder[(nbreak - (1)) + _iorder_offset];
+
                 // Update heap structure of breakpoints
                 //   (if iter=2, initialize heap).
             }
@@ -2142,15 +2140,12 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     info = -6;
                     k = i;
                 }
-                if ((nbd[(i - (1)) + _nbd_offset] == 2))
+                if ((nbd[(i - (1)) + _nbd_offset] == 2) && (l[(i - (1)) + _l_offset] > u[(i - (1)) + _u_offset]))
                 {
-                    if ((l[(i - (1)) + _l_offset] > u[(i - (1)) + _u_offset]))
-                    {
-                        // c                                    return
-                        task = "ERROR: NO FEASIBLE SOLUTION";
-                        info = -7;
-                        k = i;
-                    }
+                    // c                                    return
+                    task = "ERROR: NO FEASIBLE SOLUTION";
+                    info = -7;
+                    k = i;
                 }
             }
         }

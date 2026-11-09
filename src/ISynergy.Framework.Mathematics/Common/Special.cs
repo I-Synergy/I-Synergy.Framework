@@ -357,39 +357,6 @@ public static class Special
     }
 
     /// <summary>
-    ///     Returns the log factorial of a number (ln(n!))
-    /// </summary>
-    public static double LogFactorial(double n)
-    {
-        return Gamma.Log(n + 1.0);
-    }
-
-    /// <summary>
-    ///     Returns the log factorial of a number (ln(n!))
-    /// </summary>
-    public static double LogFactorial(int n)
-    {
-        if (lnfcache is null)
-            lnfcache = new double[101];
-
-        if (n < 0)
-            // Factorial is not defined for negative numbers.
-            throw new ArgumentException("Argument cannot be negative.", nameof(n));
-        if (n <= 1)
-            // Factorial for n between 0 and 1 is 1, so log(factorial(n)) is 0.
-            return 0.0;
-        if (n <= 100)
-        {
-            // Compute the factorial using ln(gamma(n)) approximation, using the cache
-            // if the value has been previously computed.
-            if (lnfcache[n] <= 0)
-                lnfcache[n] = Gamma.Log(n + 1.0);
-            return lnfcache[n];
-        }
-        return Gamma.Log(n + 1.0);
-    }
-
-    /// <summary>
     ///     Computes the factorial of a number (n!)
     /// </summary>
     public static double Factorial(int n)
@@ -423,6 +390,39 @@ public static class Special
         }
 
         return fcache[n];
+    }
+
+    /// <summary>
+    ///     Returns the log factorial of a number (ln(n!))
+    /// </summary>
+    public static double LogFactorial(double n)
+    {
+        return Gamma.Log(n + 1.0);
+    }
+
+    /// <summary>
+    ///     Returns the log factorial of a number (ln(n!))
+    /// </summary>
+    public static double LogFactorial(int n)
+    {
+        if (lnfcache is null)
+            lnfcache = new double[101];
+
+        if (n < 0)
+            // Factorial is not defined for negative numbers.
+            throw new ArgumentException("Argument cannot be negative.", nameof(n));
+        if (n <= 1)
+            // Factorial for n between 0 and 1 is 1, so log(factorial(n)) is 0.
+            return 0.0;
+        if (n <= 100)
+        {
+            // Compute the factorial using ln(gamma(n)) approximation, using the cache
+            // if the value has been previously computed.
+            if (lnfcache[n] <= 0)
+                lnfcache[n] = Gamma.Log(n + 1.0);
+            return lnfcache[n];
+        }
+        return Gamma.Log(n + 1.0);
     }
 
     // factorial function caches

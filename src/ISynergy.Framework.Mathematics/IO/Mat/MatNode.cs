@@ -4,6 +4,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using System.Text;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -38,7 +39,7 @@ public class MatNode : IEnumerable<MatNode>
     private readonly int typeSize;
     private object value;
 
-    internal unsafe MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
+    internal MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
     {
         // TODO: Completely refactor this method. // NOSONAR
         this.matReader = matReader;
@@ -109,11 +110,11 @@ public class MatNode : IEnumerable<MatNode>
 
         if (nameTag.IsSmallFormat)
         {
-            // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+            // SmallData_Value is an inline 4-byte buffer. Guard against malformed MAT data
             // that could cause the string constructor to read past the 4-byte boundary.
             if (nameTag.SmallData_NumberOfBytes < 0 || nameTag.SmallData_NumberOfBytes > 4)
                 throw new InvalidDataException($"Malformed MAT file: name small-data length {nameTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
-            Name = new string((sbyte*)nameTag.SmallData_Value, 0, nameTag.SmallData_NumberOfBytes);
+            Name = Encoding.UTF8.GetString(nameTag.SmallData_Value.AsSpan().Slice(0, nameTag.SmallData_NumberOfBytes));
         }
         else
         {
@@ -198,7 +199,7 @@ public class MatNode : IEnumerable<MatNode>
                 throw new NotSupportedException(
                     "Small format struct field name length is not supported at position " + readBytes + ".");
 
-            var fieldNameLength = *(int*)fieldNameLengthTag.SmallData_Value;
+            var fieldNameLength = MemoryMarshal.Read<int>(fieldNameLengthTag.SmallData_Value.AsSpan());
 
             if (fieldNameLengthTag.DataType != MatDataType.miINT32)
                 throw new NotSupportedException("Unexpected struct field name length data type at position " +
@@ -256,12 +257,11 @@ public class MatNode : IEnumerable<MatNode>
                 matType = contentsTag.SmallData_Type;
                 if (matType == MatDataType.miUTF8)
                 {
-                    // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+                    // SmallData_Value is an inline 4-byte buffer. Guard against malformed MAT data
                     // that could cause the string constructor to read past the 4-byte boundary.
                     if (contentsTag.SmallData_NumberOfBytes < 0 || contentsTag.SmallData_NumberOfBytes > 4)
                         throw new InvalidDataException($"Malformed MAT file: content small-data length {contentsTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
-                    value = new string((sbyte*)contentsTag.SmallData_Value, 0,
-                        contentsTag.SmallData_NumberOfBytes);
+                    value = Encoding.UTF8.GetString(contentsTag.SmallData_Value.AsSpan().Slice(0, contentsTag.SmallData_NumberOfBytes));
                 }
                 else
                 {

@@ -2,6 +2,7 @@ namespace ISynergy.Framework.Mathematics.Distances;
 
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System;
+using System.Runtime.Serialization;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -30,8 +31,8 @@ using System;
 ///   interface that are not really metrics. Use at your own risk.</para>
 /// </remarks>
 /// 
-[Serializable] // NOSONAR
-public struct Minkowski : IMetric<double[]>, IMetric<int[]>, ICloneable
+[Serializable]
+public struct Minkowski : IMetric<double[]>, IMetric<int[]>, ICloneable, ISerializable
 {
     private double p;
 
@@ -55,6 +56,42 @@ public struct Minkowski : IMetric<double[]>, IMetric<int[]>, ICloneable
             throw new ArgumentOutOfRangeException(nameof(p), "The Minkowski distance is not a metric for p < 1.");
 
         this.p = p;
+    }
+
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="Minkowski"/> class during deserialization.
+    /// </summary>
+    /// 
+    /// <param name="info">The serialization data holding the Minkowski order <c>p</c>.</param>
+    /// <param name="context">The source of the serialized stream.</param>
+    /// 
+    /// <exception cref="System.ArgumentNullException">The serialization data is <c>null</c>.</exception>
+    /// <exception cref="System.Runtime.Serialization.SerializationException">The deserialized Minkowski order is not a valid metric order.</exception>
+    /// 
+    private Minkowski(SerializationInfo info, StreamingContext context)
+    {
+        ArgumentNullException.ThrowIfNull(info);
+
+        p = info.GetDouble("p");
+
+        if (p < 1)
+            throw new SerializationException("The deserialized Minkowski order is not a metric, as it is lower than 1.");
+    }
+
+    /// <summary>
+    ///   Populates a <see cref="SerializationInfo"/> with the data needed to serialize this instance.
+    /// </summary>
+    /// 
+    /// <param name="info">The serialization data to populate.</param>
+    /// <param name="context">The destination of the serialized stream.</param>
+    /// 
+    /// <exception cref="System.ArgumentNullException">The serialization data is <c>null</c>.</exception>
+    /// 
+    public void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        ArgumentNullException.ThrowIfNull(info);
+
+        info.AddValue("p", p);
     }
 
     /// <summary>

@@ -29,6 +29,19 @@ public static partial class Vector
     ///   Creates a zero-valued vector.
     /// </summary>
     /// 
+    /// <param name="size">The number of elements in the vector.</param>
+    /// 
+    /// <returns>A vector of the specified size.</returns>
+    /// 
+    public static double[] Zeros(int size)
+    {
+        return Zeros<double>(size);
+    }
+
+    /// <summary>
+    ///   Creates a zero-valued vector.
+    /// </summary>
+    /// 
     /// <typeparam name="T">The type of the vector to be created.</typeparam>
     /// <param name="size">The number of elements in the vector.</param>
     /// 
@@ -52,19 +65,6 @@ public static partial class Vector
     public static T[] Ones<T>(bool[] mask)
     {
         return Create(Constants.One<T>(), mask);
-    }
-
-    /// <summary>
-    ///   Creates a zero-valued vector.
-    /// </summary>
-    /// 
-    /// <param name="size">The number of elements in the vector.</param>
-    /// 
-    /// <returns>A vector of the specified size.</returns>
-    /// 
-    public static double[] Zeros(int size)
-    {
-        return Zeros<double>(size);
     }
 
     /// <summary>

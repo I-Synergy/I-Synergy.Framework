@@ -64,22 +64,6 @@ public static partial class Matrix
     /// <summary>
     ///     Converts an array into a multidimensional array.
     /// </summary>
-    public static T[][] ToJagged<T>(this T[] array, bool asColumnVector = true)
-    {
-        if (asColumnVector)
-        {
-            var m = new T[array.Length][];
-            for (var i = 0; i < array.Length; i++)
-                m[i] = [array[i]];
-            return m;
-        }
-
-        return [array];
-    }
-
-    /// <summary>
-    ///     Converts an array into a multidimensional array.
-    /// </summary>
     public static T[,] ToMatrix<T>(this T[] array, bool asColumnVector = false)
     {
         if (asColumnVector)
@@ -96,6 +80,146 @@ public static partial class Matrix
                 m[0, i] = array[i];
             return m;
         }
+    }
+
+
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static double[,] ToMatrix(this DataTable table)
+    {
+        return ToMatrix<double>(table);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static double[,] ToMatrix(this DataTable table, out string[] columnNames)
+    {
+        return ToMatrix<double>(table, out columnNames);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static double[,] ToMatrix(this DataTable table, IFormatProvider provider)
+    {
+        return ToMatrix<double>(table, provider);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static double[,] ToMatrix(this DataTable table, params string[] columnNames)
+    {
+        return ToMatrix<double>(table, columnNames);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static T[,] ToMatrix<T>(this DataTable table, IFormatProvider provider)
+    {
+        string[] names;
+        return ToMatrix<T>(table, out names, provider);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static T[,] ToMatrix<T>(this DataTable table)
+    {
+        string[] names;
+        return ToMatrix<T>(table, out names);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static T[,] ToMatrix<T>(this DataTable table, out string[] columnNames)
+    {
+        var m = new T[table.Rows.Count, table.Columns.Count];
+        columnNames = new string[table.Columns.Count];
+
+        for (var j = 0; j < table.Columns.Count; j++)
+        {
+            for (var i = 0; i < table.Rows.Count; i++)
+            {
+                var obj = table.Rows[i][j];
+                m[i, j] = (T)System.Convert.ChangeType(obj, typeof(T));
+            }
+
+            columnNames[j] = table.Columns[j].Caption;
+        }
+
+        return m;
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static T[,] ToMatrix<T>(this DataTable table, out string[] columnNames, IFormatProvider provider)
+    {
+        var m = new T[table.Rows.Count, table.Columns.Count];
+        columnNames = new string[table.Columns.Count];
+
+        for (var j = 0; j < table.Columns.Count; j++)
+        {
+            for (var i = 0; i < table.Rows.Count; i++)
+            {
+                var obj = table.Rows[i][j];
+                m[i, j] = (T)System.Convert.ChangeType(obj, typeof(T), provider);
+            }
+
+            columnNames[j] = table.Columns[j].Caption;
+        }
+
+        return m;
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static T[,] ToMatrix<T>(this DataTable table, params string[] columnNames)
+    {
+        var m = new T[table.Rows.Count, columnNames.Length];
+
+        for (var j = 0; j < columnNames.Length; j++)
+            for (var i = 0; i < table.Rows.Count; i++)
+                m[i, j] = (T)System.Convert.ChangeType(table.Rows[i][columnNames[j]], typeof(T));
+
+        return m;
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[,] array.
+    /// </summary>
+    public static T[,] ToMatrix<T>(this DataTable table, IFormatProvider provider, params string[] columnNames)
+    {
+        var m = new T[table.Rows.Count, columnNames.Length];
+
+        for (var j = 0; j < columnNames.Length; j++)
+            for (var i = 0; i < table.Rows.Count; i++)
+                m[i, j] = (T)System.Convert.ChangeType(table.Rows[i][columnNames[j]], typeof(T), provider);
+
+        return m;
+    }
+
+    /// <summary>
+    ///     Converts an array into a multidimensional array.
+    /// </summary>
+    public static T[][] ToJagged<T>(this T[] array, bool asColumnVector = true)
+    {
+        if (asColumnVector)
+        {
+            var m = new T[array.Length][];
+            for (var i = 0; i < array.Length; i++)
+                m[i] = [array[i]];
+            return m;
+        }
+
+        return [array];
     }
 
     /// <summary>
@@ -148,6 +272,131 @@ public static partial class Matrix
 
         return array;
     }
+    /// <summary>
+    ///     Converts a DataTable to a double[][] array.
+    /// </summary>
+    public static double[][] ToJagged(this DataTable table)
+    {
+        return ToJagged<double>(table);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[][] array.
+    /// </summary>
+    public static double[][] ToJagged(this DataTable table, IFormatProvider provider)
+    {
+        return ToJagged<double>(table, provider);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[][] array.
+    /// </summary>
+    public static double[][] ToJagged(this DataTable table, out string[] columnNames)
+    {
+        return ToJagged<double>(table, out columnNames);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[][] array.
+    /// </summary>
+    public static double[][] ToJagged(this DataTable table, IFormatProvider provider, out string[] columnNames)
+    {
+        return ToJagged<double>(table, provider, out columnNames);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a double[][] array.
+    /// </summary>
+    public static double[][] ToJagged(this DataTable table, params string[] columnNames)
+    {
+        return ToJagged<double>(table, columnNames);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a T[][] array.
+    /// </summary>
+    public static T[][] ToJagged<T>(this DataTable table)
+    {
+        string[] names;
+        return ToJagged<T>(table, out names);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a T[][] array.
+    /// </summary>
+    public static T[][] ToJagged<T>(this DataTable table, IFormatProvider provider)
+    {
+        string[] names;
+        return ToJagged<T>(table, provider, out names);
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a T[][] array.
+    /// </summary>
+    public static T[][] ToJagged<T>(this DataTable table, out string[] columnNames)
+    {
+        var m = new T[table.Rows.Count][];
+        columnNames = new string[table.Columns.Count];
+
+        for (var i = 0; i < table.Rows.Count; i++)
+            m[i] = new T[table.Columns.Count];
+
+        for (var j = 0; j < table.Columns.Count; j++)
+        {
+            for (var i = 0; i < table.Rows.Count; i++)
+            {
+                var value = table.Rows[i][j];
+                m[i][j] = (T)System.Convert.ChangeType(value, typeof(T));
+            }
+
+            columnNames[j] = table.Columns[j].Caption;
+        }
+
+        return m;
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a T[][] array.
+    /// </summary>
+    public static T[][] ToJagged<T>(this DataTable table, IFormatProvider provider, out string[] columnNames)
+    {
+        var m = new T[table.Rows.Count][];
+        columnNames = new string[table.Columns.Count];
+
+        for (var i = 0; i < table.Rows.Count; i++)
+            m[i] = new T[table.Columns.Count];
+
+        for (var j = 0; j < table.Columns.Count; j++)
+        {
+            for (var i = 0; i < table.Rows.Count; i++)
+                m[i][j] = (T)System.Convert.ChangeType(table.Rows[i][j], typeof(T), provider);
+
+            columnNames[j] = table.Columns[j].Caption;
+        }
+
+        return m;
+    }
+
+    /// <summary>
+    ///     Converts a DataTable to a T[][] array.
+    /// </summary>
+    public static T[][] ToJagged<T>(this DataTable table, params string[] columnNames)
+    {
+        var m = new T[table.Rows.Count][];
+
+        for (var i = 0; i < table.Rows.Count; i++)
+            m[i] = new T[columnNames.Length];
+
+        for (var j = 0; j < columnNames.Length; j++)
+        {
+            var col = table.Columns[columnNames[j]];
+
+            for (var i = 0; i < table.Rows.Count; i++)
+                m[i][j] = (T)System.Convert.ChangeType(table.Rows[i][col], typeof(T));
+        }
+
+        return m;
+    }
 
     /// <summary>
     ///     Creates a vector containing every index that can be used to
@@ -194,7 +443,6 @@ public static partial class Matrix
             .Sequences(firstColumnChangesFaster: order == MatrixOrder.FortranColumnMajor);
     }
 
-    #region Type conversions
 
     /// <summary>
     ///     Converts the values of a vector using the given converter expression.
@@ -310,8 +558,8 @@ public static partial class Matrix
             return array;
 
         if (!outputType.IsArray && array.Length == 1)
-            foreach (var obj in array) // NOSONAR - loop invariant is intentional for single-element array
-                return obj.To(outputType);
+            // The array has exactly one element; all its indices are zero.
+            return array.GetValue(new int[array.Rank]).To(outputType);
 
         Array result;
 
@@ -493,132 +741,6 @@ public static partial class Matrix
         if (inputArray is not null)
             return To(inputArray, outputElementType);
         return inputValue.To(outputElementType);
-    }
-
-    #endregion
-
-    #region DataTable Conversions
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static double[,] ToMatrix(this DataTable table)
-    {
-        return ToMatrix<double>(table);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static double[,] ToMatrix(this DataTable table, out string[] columnNames)
-    {
-        return ToMatrix<double>(table, out columnNames);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static double[,] ToMatrix(this DataTable table, IFormatProvider provider)
-    {
-        return ToMatrix<double>(table, provider);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static double[,] ToMatrix(this DataTable table, params string[] columnNames)
-    {
-        return ToMatrix<double>(table, columnNames);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static T[,] ToMatrix<T>(this DataTable table, IFormatProvider provider)
-    {
-        string[] names;
-        return ToMatrix<T>(table, out names, provider);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static T[,] ToMatrix<T>(this DataTable table)
-    {
-        string[] names;
-        return ToMatrix<T>(table, out names);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static T[,] ToMatrix<T>(this DataTable table, out string[] columnNames)
-    {
-        var m = new T[table.Rows.Count, table.Columns.Count];
-        columnNames = new string[table.Columns.Count];
-
-        for (var j = 0; j < table.Columns.Count; j++)
-        {
-            for (var i = 0; i < table.Rows.Count; i++)
-            {
-                var obj = table.Rows[i][j];
-                m[i, j] = (T)System.Convert.ChangeType(obj, typeof(T));
-            }
-
-            columnNames[j] = table.Columns[j].Caption;
-        }
-
-        return m;
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static T[,] ToMatrix<T>(this DataTable table, out string[] columnNames, IFormatProvider provider)
-    {
-        var m = new T[table.Rows.Count, table.Columns.Count];
-        columnNames = new string[table.Columns.Count];
-
-        for (var j = 0; j < table.Columns.Count; j++)
-        {
-            for (var i = 0; i < table.Rows.Count; i++)
-            {
-                var obj = table.Rows[i][j];
-                m[i, j] = (T)System.Convert.ChangeType(obj, typeof(T), provider);
-            }
-
-            columnNames[j] = table.Columns[j].Caption;
-        }
-
-        return m;
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static T[,] ToMatrix<T>(this DataTable table, params string[] columnNames)
-    {
-        var m = new T[table.Rows.Count, columnNames.Length];
-
-        for (var j = 0; j < columnNames.Length; j++)
-            for (var i = 0; i < table.Rows.Count; i++)
-                m[i, j] = (T)System.Convert.ChangeType(table.Rows[i][columnNames[j]], typeof(T));
-
-        return m;
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[,] array.
-    /// </summary>
-    public static T[,] ToMatrix<T>(this DataTable table, IFormatProvider provider, params string[] columnNames)
-    {
-        var m = new T[table.Rows.Count, columnNames.Length];
-
-        for (var j = 0; j < columnNames.Length; j++)
-            for (var i = 0; i < table.Rows.Count; i++)
-                m[i, j] = (T)System.Convert.ChangeType(table.Rows[i][columnNames[j]], typeof(T), provider);
-
-        return m;
     }
 
     /// <summary>
@@ -811,131 +933,6 @@ public static partial class Matrix
             return typeof(int);
 
         return typeof(object);
-    }
-    /// <summary>
-    ///     Converts a DataTable to a double[][] array.
-    /// </summary>
-    public static double[][] ToJagged(this DataTable table)
-    {
-        return ToJagged<double>(table);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[][] array.
-    /// </summary>
-    public static double[][] ToJagged(this DataTable table, IFormatProvider provider)
-    {
-        return ToJagged<double>(table, provider);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[][] array.
-    /// </summary>
-    public static double[][] ToJagged(this DataTable table, out string[] columnNames)
-    {
-        return ToJagged<double>(table, out columnNames);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[][] array.
-    /// </summary>
-    public static double[][] ToJagged(this DataTable table, IFormatProvider provider, out string[] columnNames)
-    {
-        return ToJagged<double>(table, provider, out columnNames);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a double[][] array.
-    /// </summary>
-    public static double[][] ToJagged(this DataTable table, params string[] columnNames)
-    {
-        return ToJagged<double>(table, columnNames);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a T[][] array.
-    /// </summary>
-    public static T[][] ToJagged<T>(this DataTable table)
-    {
-        string[] names;
-        return ToJagged<T>(table, out names);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a T[][] array.
-    /// </summary>
-    public static T[][] ToJagged<T>(this DataTable table, IFormatProvider provider)
-    {
-        string[] names;
-        return ToJagged<T>(table, provider, out names);
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a T[][] array.
-    /// </summary>
-    public static T[][] ToJagged<T>(this DataTable table, out string[] columnNames)
-    {
-        var m = new T[table.Rows.Count][];
-        columnNames = new string[table.Columns.Count];
-
-        for (var i = 0; i < table.Rows.Count; i++)
-            m[i] = new T[table.Columns.Count];
-
-        for (var j = 0; j < table.Columns.Count; j++)
-        {
-            for (var i = 0; i < table.Rows.Count; i++)
-            {
-                var value = table.Rows[i][j];
-                m[i][j] = (T)System.Convert.ChangeType(value, typeof(T));
-            }
-
-            columnNames[j] = table.Columns[j].Caption;
-        }
-
-        return m;
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a T[][] array.
-    /// </summary>
-    public static T[][] ToJagged<T>(this DataTable table, IFormatProvider provider, out string[] columnNames)
-    {
-        var m = new T[table.Rows.Count][];
-        columnNames = new string[table.Columns.Count];
-
-        for (var i = 0; i < table.Rows.Count; i++)
-            m[i] = new T[table.Columns.Count];
-
-        for (var j = 0; j < table.Columns.Count; j++)
-        {
-            for (var i = 0; i < table.Rows.Count; i++)
-                m[i][j] = (T)System.Convert.ChangeType(table.Rows[i][j], typeof(T), provider);
-
-            columnNames[j] = table.Columns[j].Caption;
-        }
-
-        return m;
-    }
-
-    /// <summary>
-    ///     Converts a DataTable to a T[][] array.
-    /// </summary>
-    public static T[][] ToJagged<T>(this DataTable table, params string[] columnNames)
-    {
-        var m = new T[table.Rows.Count][];
-
-        for (var i = 0; i < table.Rows.Count; i++)
-            m[i] = new T[columnNames.Length];
-
-        for (var j = 0; j < columnNames.Length; j++)
-        {
-            var col = table.Columns[columnNames[j]];
-
-            for (var i = 0; i < table.Rows.Count; i++)
-                m[i][j] = (T)System.Convert.ChangeType(table.Rows[i][col], typeof(T));
-        }
-
-        return m;
     }
     /// <summary>
     ///     Converts a DataTable to a double[][] array.
@@ -1139,7 +1136,6 @@ public static partial class Matrix
 
         return m;
     }
-    #endregion
 
     /// <summary>
     ///   Converts a integer to a boolean.
@@ -1158,6 +1154,145 @@ public static partial class Matrix
     {
         for (int i = 0; i < value.Length; i++)
             result[i] = value[i] != 0;
+        return result;
+    }
+    /// <summary>
+    ///   Converts a string to a boolean.
+    /// </summary>
+    /// 
+    public static bool[] ToBoolean(this string[] value)
+    {
+        return ToBoolean(value, new bool[value.Length]);
+    }
+
+    /// <summary>
+    ///   Converts a string to a boolean.
+    /// </summary>
+    /// 
+    public static bool[,] ToBoolean(this string[,] value)
+    {
+        return ToBoolean(value, Matrix.CreateAs<string, bool>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a boolean.
+    /// </summary>
+    /// 
+    public static bool[,,] ToBoolean(this string[,,] value)
+    {
+        return ToBoolean(value, Matrix.CreateAs<string, bool>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a boolean.
+    /// </summary>
+    /// 
+    public static bool[][] ToBoolean(this string[][] value)
+    {
+        return ToBoolean(value, Jagged.CreateAs<string, bool>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a boolean.
+    /// </summary>
+    /// 
+    public static bool[][][] ToBoolean(this string[][][] value)
+    {
+        return ToBoolean(value, Jagged.CreateAs<string, bool>(value));
+    }
+
+
+
+
+    /// <summary>
+    ///   Converts a string array to a boolean array.
+    /// </summary>
+    /// 
+    public static bool[] ToBoolean(this string[] value, bool[] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            result[i] = Boolean.Parse(value[i]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional string array to a multidimensional boolean array.
+    /// </summary>
+    /// 
+    public static bool[,] ToBoolean(this string[,] value, bool[,] result)
+    {
+        int r = value.GetLength(0);
+        int c = value.GetLength(1);
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                result[i, j] = Boolean.Parse(value[i, j]);
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional string array to a multidimensional boolean array.
+    /// </summary>
+    /// 
+    public static bool[,,] ToBoolean(this string[,,] value, bool[,,] result)
+    {
+        int r = value.GetLength(0);
+        int c = value.GetLength(1);
+        int d = value.GetLength(2);
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                for (int k = 0; k < d; k++)
+                    result[i, j, k] = Boolean.Parse(value[i, j, k]);
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional string array to a jagged boolean array.
+    /// </summary>
+    /// 
+    public static bool[][] ToBoolean(this string[,] value, bool[][] result)
+    {
+        for (int i = 0; i < result.Length; i++)
+            for (int j = 0; j < result[i].Length; j++)
+                result[i][j] = Boolean.Parse(value[i, j]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a jagged string array to a jagged boolean array.
+    /// </summary>
+    /// 
+    public static bool[][] ToBoolean(this string[][] value, bool[][] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
+                result[i][j] = Boolean.Parse(value[i][j]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a jagged string array to a jagged boolean array.
+    /// </summary>
+    /// 
+    public static bool[][][] ToBoolean(this string[][][] value, bool[][][] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
+                for (int k = 0; k < value[i][j].Length; k++)
+                    result[i][j][k] = Boolean.Parse(value[i][j][k]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a jagged string array to a multidimensional boolean array.
+    /// </summary>
+    /// 
+    public static bool[,] ToBoolean(this string[][] value, bool[,] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
+                result[i, j] = Boolean.Parse(value[i][j]);
         return result;
     }
 
@@ -1224,107 +1359,12 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///   Converts a double-precision floating point to a single-precision floating point.
-    /// </summary>
-    /// 
-    public static float[][] ToSingle(this double[][] value)
-    {
-        return ToSingle(value, Jagged.CreateAs<double, float>(value));
-    }
-
-    /// <summary>
-    ///   Converts a jagged double-precision floating point array to a jagged single-precision floating point array.
-    /// </summary>
-    /// 
-    public static float[][] ToSingle(this double[][] value, float[][] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = (Single)value[i][j];
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a double-precision floating point to a single-precision floating point.
-    /// </summary>
-    /// 
-    public static float[,,] ToSingle(this double[,,] value)
-    {
-        return ToSingle(value, Matrix.CreateAs<double, float>(value));
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional double-precision floating point array to a multidimensional single-precision floating point array.
-    /// </summary>
-    /// 
-    public static float[,,] ToSingle(this double[,,] value, float[,,] result)
-    {
-        int d0 = value.GetLength(0);
-        int d1 = value.GetLength(1);
-        int d2 = value.GetLength(2);
-        for (int i = 0; i < d0; i++)
-            for (int j = 0; j < d1; j++)
-                for (int k = 0; k < d2; k++)
-                    result[i, j, k] = (Single)value[i, j, k];
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a double-precision floating point to a single-precision floating point.
-    /// </summary>
-    /// 
-    public static float[,] ToSingle(this double[,] value)
-    {
-        return ToSingle(value, Matrix.CreateAs<double, float>(value));
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional double-precision floating point array to a multidimensional single-precision floating point array.
-    /// </summary>
-    /// 
-    public static float[,] ToSingle(this double[,] value, float[,] result)
-    {
-        int rows = value.GetLength(0);
-        int cols = value.GetLength(1);
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < cols; j++)
-                result[i, j] = (Single)value[i, j];
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a double-precision floating point to a short integer.
-    /// </summary>
-    /// 
-    public static short[,] ToInt16(this double[,] value)
-    {
-        return ToInt16(value, Matrix.CreateAs<double, short>(value));
-    }
-
-    /// <summary>
     ///   Converts a double-precision floating point to a integer.
     /// </summary>
     /// 
     public static int[,] ToInt32(this double[,] value)
     {
         return ToInt32(value, Matrix.CreateAs<double, int>(value));
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional double-precision floating point array to a multidimensional short integer array.
-    /// </summary>
-    /// 
-    public static short[,] ToInt16(this double[,] value, short[,] result)
-    {
-        int rows = value.GetLength(0);
-        int cols = value.GetLength(1);
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < cols; j++)
-                result[i, j] = (Int16)value[i, j];
-
-        return result;
     }
 
     /// <summary>
@@ -1338,50 +1378,6 @@ public static partial class Matrix
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < cols; j++)
                 result[i, j] = (Int32)value[i, j];
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a double-precision floating point to a decimal fixed-point.
-    /// </summary>
-    /// 
-    public static decimal[] ToDecimal(this double[] value)
-    {
-        return ToDecimal(value, new decimal[value.Length]);
-    }
-
-    /// <summary>
-    ///   Converts a double-precision floating point array to a decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[] ToDecimal(this double[] value, decimal[] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            result[i] = (Decimal)value[i];
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a string to a single-precision floating point.
-    /// </summary>
-    /// 
-    public static float[,] ToSingle(this string[,] value)
-    {
-        return ToSingle(value, Matrix.CreateAs<string, float>(value));
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional string array to a multidimensional single-precision floating point array.
-    /// </summary>
-    /// 
-    public static float[,] ToSingle(this string[,] value, float[,] result)
-    {
-        int r = value.GetLength(0);
-        int c = value.GetLength(1);
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-                result[i, j] = Single.Parse(value[i, j]);
 
         return result;
     }
@@ -1520,6 +1516,241 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 result[i, j] = Int32.Parse(value[i][j]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a double-precision floating point to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[][] ToSingle(this double[][] value)
+    {
+        return ToSingle(value, Jagged.CreateAs<double, float>(value));
+    }
+
+    /// <summary>
+    ///   Converts a jagged double-precision floating point array to a jagged single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[][] ToSingle(this double[][] value, float[][] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
+                result[i][j] = (Single)value[i][j];
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a double-precision floating point to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[,,] ToSingle(this double[,,] value)
+    {
+        return ToSingle(value, Matrix.CreateAs<double, float>(value));
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional double-precision floating point array to a multidimensional single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[,,] ToSingle(this double[,,] value, float[,,] result)
+    {
+        int d0 = value.GetLength(0);
+        int d1 = value.GetLength(1);
+        int d2 = value.GetLength(2);
+        for (int i = 0; i < d0; i++)
+            for (int j = 0; j < d1; j++)
+                for (int k = 0; k < d2; k++)
+                    result[i, j, k] = (Single)value[i, j, k];
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a double-precision floating point to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[,] ToSingle(this double[,] value)
+    {
+        return ToSingle(value, Matrix.CreateAs<double, float>(value));
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional double-precision floating point array to a multidimensional single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[,] ToSingle(this double[,] value, float[,] result)
+    {
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Single)value[i, j];
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a string to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[,] ToSingle(this string[,] value)
+    {
+        return ToSingle(value, Matrix.CreateAs<string, float>(value));
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional string array to a multidimensional single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[,] ToSingle(this string[,] value, float[,] result)
+    {
+        int r = value.GetLength(0);
+        int c = value.GetLength(1);
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                result[i, j] = Single.Parse(value[i, j]);
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a string to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[] ToSingle(this string[] value)
+    {
+        return ToSingle(value, new float[value.Length]);
+    }
+
+    /// <summary>
+    ///   Converts a string to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[,,] ToSingle(this string[,,] value)
+    {
+        return ToSingle(value, Matrix.CreateAs<string, float>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[][] ToSingle(this string[][] value)
+    {
+        return ToSingle(value, Jagged.CreateAs<string, float>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a single-precision floating point.
+    /// </summary>
+    /// 
+    public static float[][][] ToSingle(this string[][][] value)
+    {
+        return ToSingle(value, Jagged.CreateAs<string, float>(value));
+    }
+
+
+
+
+    /// <summary>
+    ///   Converts a string array to a single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[] ToSingle(this string[] value, float[] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            result[i] = Single.Parse(value[i]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional string array to a multidimensional single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[,,] ToSingle(this string[,,] value, float[,,] result)
+    {
+        int r = value.GetLength(0);
+        int c = value.GetLength(1);
+        int d = value.GetLength(2);
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                for (int k = 0; k < d; k++)
+                    result[i, j, k] = Single.Parse(value[i, j, k]);
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional string array to a jagged single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[][] ToSingle(this string[,] value, float[][] result)
+    {
+        for (int i = 0; i < result.Length; i++)
+            for (int j = 0; j < result[i].Length; j++)
+                result[i][j] = Single.Parse(value[i, j]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a jagged string array to a jagged single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[][] ToSingle(this string[][] value, float[][] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
+                result[i][j] = Single.Parse(value[i][j]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a jagged string array to a jagged single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[][][] ToSingle(this string[][][] value, float[][][] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
+                for (int k = 0; k < value[i][j].Length; k++)
+                    result[i][j][k] = Single.Parse(value[i][j][k]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a jagged string array to a multidimensional single-precision floating point array.
+    /// </summary>
+    /// 
+    public static float[,] ToSingle(this string[][] value, float[,] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
+                result[i, j] = Single.Parse(value[i][j]);
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a double-precision floating point to a short integer.
+    /// </summary>
+    /// 
+    public static short[,] ToInt16(this double[,] value)
+    {
+        return ToInt16(value, Matrix.CreateAs<double, short>(value));
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional double-precision floating point array to a multidimensional short integer array.
+    /// </summary>
+    /// 
+    public static short[,] ToInt16(this double[,] value, short[,] result)
+    {
+        int rows = value.GetLength(0);
+        int cols = value.GetLength(1);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result[i, j] = (Int16)value[i, j];
+
         return result;
     }
     /// <summary>
@@ -1663,60 +1894,103 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///   Converts a string to a single-precision floating point.
+    ///   Converts a double-precision floating point to a decimal fixed-point.
     /// </summary>
     /// 
-    public static float[] ToSingle(this string[] value)
+    public static decimal[] ToDecimal(this double[] value)
     {
-        return ToSingle(value, new float[value.Length]);
+        return ToDecimal(value, new decimal[value.Length]);
     }
 
     /// <summary>
-    ///   Converts a string to a single-precision floating point.
+    ///   Converts a double-precision floating point array to a decimal fixed-point array.
     /// </summary>
     /// 
-    public static float[,,] ToSingle(this string[,,] value)
-    {
-        return ToSingle(value, Matrix.CreateAs<string, float>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a single-precision floating point.
-    /// </summary>
-    /// 
-    public static float[][] ToSingle(this string[][] value)
-    {
-        return ToSingle(value, Jagged.CreateAs<string, float>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a single-precision floating point.
-    /// </summary>
-    /// 
-    public static float[][][] ToSingle(this string[][][] value)
-    {
-        return ToSingle(value, Jagged.CreateAs<string, float>(value));
-    }
-
-
-
-
-    /// <summary>
-    ///   Converts a string array to a single-precision floating point array.
-    /// </summary>
-    /// 
-    public static float[] ToSingle(this string[] value, float[] result)
+    public static decimal[] ToDecimal(this double[] value, decimal[] result)
     {
         for (int i = 0; i < value.Length; i++)
-            result[i] = Single.Parse(value[i]);
+            result[i] = (Decimal)value[i];
+        return result;
+    }
+    /// <summary>
+    ///   Converts a string to a decimal fixed-point.
+    /// </summary>
+    /// 
+    public static decimal[] ToDecimal(this string[] value)
+    {
+        return ToDecimal(value, new decimal[value.Length]);
+    }
+
+    /// <summary>
+    ///   Converts a string to a decimal fixed-point.
+    /// </summary>
+    /// 
+    public static decimal[,] ToDecimal(this string[,] value)
+    {
+        return ToDecimal(value, Matrix.CreateAs<string, decimal>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a decimal fixed-point.
+    /// </summary>
+    /// 
+    public static decimal[,,] ToDecimal(this string[,,] value)
+    {
+        return ToDecimal(value, Matrix.CreateAs<string, decimal>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a decimal fixed-point.
+    /// </summary>
+    /// 
+    public static decimal[][] ToDecimal(this string[][] value)
+    {
+        return ToDecimal(value, Jagged.CreateAs<string, decimal>(value));
+    }
+
+    /// <summary>
+    ///   Converts a string to a decimal fixed-point.
+    /// </summary>
+    /// 
+    public static decimal[][][] ToDecimal(this string[][][] value)
+    {
+        return ToDecimal(value, Jagged.CreateAs<string, decimal>(value));
+    }
+
+
+
+
+    /// <summary>
+    ///   Converts a string array to a decimal fixed-point array.
+    /// </summary>
+    /// 
+    public static decimal[] ToDecimal(this string[] value, decimal[] result)
+    {
+        for (int i = 0; i < value.Length; i++)
+            result[i] = Decimal.Parse(value[i]);
         return result;
     }
 
     /// <summary>
-    ///   Converts a multidimensional string array to a multidimensional single-precision floating point array.
+    ///   Converts a multidimensional string array to a multidimensional decimal fixed-point array.
     /// </summary>
     /// 
-    public static float[,,] ToSingle(this string[,,] value, float[,,] result)
+    public static decimal[,] ToDecimal(this string[,] value, decimal[,] result)
+    {
+        int r = value.GetLength(0);
+        int c = value.GetLength(1);
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                result[i, j] = Decimal.Parse(value[i, j]);
+
+        return result;
+    }
+
+    /// <summary>
+    ///   Converts a multidimensional string array to a multidimensional decimal fixed-point array.
+    /// </summary>
+    /// 
+    public static decimal[,,] ToDecimal(this string[,,] value, decimal[,,] result)
     {
         int r = value.GetLength(0);
         int c = value.GetLength(1);
@@ -1724,57 +1998,57 @@ public static partial class Matrix
         for (int i = 0; i < r; i++)
             for (int j = 0; j < c; j++)
                 for (int k = 0; k < d; k++)
-                    result[i, j, k] = Single.Parse(value[i, j, k]);
+                    result[i, j, k] = Decimal.Parse(value[i, j, k]);
 
         return result;
     }
 
     /// <summary>
-    ///   Converts a multidimensional string array to a jagged single-precision floating point array.
+    ///   Converts a multidimensional string array to a jagged decimal fixed-point array.
     /// </summary>
     /// 
-    public static float[][] ToSingle(this string[,] value, float[][] result)
+    public static decimal[][] ToDecimal(this string[,] value, decimal[][] result)
     {
         for (int i = 0; i < result.Length; i++)
             for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Single.Parse(value[i, j]);
+                result[i][j] = Decimal.Parse(value[i, j]);
         return result;
     }
 
     /// <summary>
-    ///   Converts a jagged string array to a jagged single-precision floating point array.
+    ///   Converts a jagged string array to a jagged decimal fixed-point array.
     /// </summary>
     /// 
-    public static float[][] ToSingle(this string[][] value, float[][] result)
+    public static decimal[][] ToDecimal(this string[][] value, decimal[][] result)
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Single.Parse(value[i][j]);
+                result[i][j] = Decimal.Parse(value[i][j]);
         return result;
     }
 
     /// <summary>
-    ///   Converts a jagged string array to a jagged single-precision floating point array.
+    ///   Converts a jagged string array to a jagged decimal fixed-point array.
     /// </summary>
     /// 
-    public static float[][][] ToSingle(this string[][][] value, float[][][] result)
+    public static decimal[][][] ToDecimal(this string[][][] value, decimal[][][] result)
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Single.Parse(value[i][j][k]);
+                    result[i][j][k] = Decimal.Parse(value[i][j][k]);
         return result;
     }
 
     /// <summary>
-    ///   Converts a jagged string array to a multidimensional single-precision floating point array.
+    ///   Converts a jagged string array to a multidimensional decimal fixed-point array.
     /// </summary>
     /// 
-    public static float[,] ToSingle(this string[][] value, float[,] result)
+    public static decimal[,] ToDecimal(this string[][] value, decimal[,] result)
     {
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Single.Parse(value[i][j]);
+                result[i, j] = Decimal.Parse(value[i][j]);
         return result;
     }
 
@@ -2190,284 +2464,6 @@ public static partial class Matrix
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 result[i, j] = SByte.Parse(value[i][j]);
-        return result;
-    }
-    /// <summary>
-    ///   Converts a string to a decimal fixed-point.
-    /// </summary>
-    /// 
-    public static decimal[] ToDecimal(this string[] value)
-    {
-        return ToDecimal(value, new decimal[value.Length]);
-    }
-
-    /// <summary>
-    ///   Converts a string to a decimal fixed-point.
-    /// </summary>
-    /// 
-    public static decimal[,] ToDecimal(this string[,] value)
-    {
-        return ToDecimal(value, Matrix.CreateAs<string, decimal>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a decimal fixed-point.
-    /// </summary>
-    /// 
-    public static decimal[,,] ToDecimal(this string[,,] value)
-    {
-        return ToDecimal(value, Matrix.CreateAs<string, decimal>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a decimal fixed-point.
-    /// </summary>
-    /// 
-    public static decimal[][] ToDecimal(this string[][] value)
-    {
-        return ToDecimal(value, Jagged.CreateAs<string, decimal>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a decimal fixed-point.
-    /// </summary>
-    /// 
-    public static decimal[][][] ToDecimal(this string[][][] value)
-    {
-        return ToDecimal(value, Jagged.CreateAs<string, decimal>(value));
-    }
-
-
-
-
-    /// <summary>
-    ///   Converts a string array to a decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[] ToDecimal(this string[] value, decimal[] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            result[i] = Decimal.Parse(value[i]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional string array to a multidimensional decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[,] ToDecimal(this string[,] value, decimal[,] result)
-    {
-        int r = value.GetLength(0);
-        int c = value.GetLength(1);
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-                result[i, j] = Decimal.Parse(value[i, j]);
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional string array to a multidimensional decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[,,] ToDecimal(this string[,,] value, decimal[,,] result)
-    {
-        int r = value.GetLength(0);
-        int c = value.GetLength(1);
-        int d = value.GetLength(2);
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-                for (int k = 0; k < d; k++)
-                    result[i, j, k] = Decimal.Parse(value[i, j, k]);
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional string array to a jagged decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[][] ToDecimal(this string[,] value, decimal[][] result)
-    {
-        for (int i = 0; i < result.Length; i++)
-            for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Decimal.Parse(value[i, j]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a jagged string array to a jagged decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[][] ToDecimal(this string[][] value, decimal[][] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Decimal.Parse(value[i][j]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a jagged string array to a jagged decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[][][] ToDecimal(this string[][][] value, decimal[][][] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            for (int j = 0; j < value[i].Length; j++)
-                for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Decimal.Parse(value[i][j][k]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a jagged string array to a multidimensional decimal fixed-point array.
-    /// </summary>
-    /// 
-    public static decimal[,] ToDecimal(this string[][] value, decimal[,] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Decimal.Parse(value[i][j]);
-        return result;
-    }
-    /// <summary>
-    ///   Converts a string to a boolean.
-    /// </summary>
-    /// 
-    public static bool[] ToBoolean(this string[] value)
-    {
-        return ToBoolean(value, new bool[value.Length]);
-    }
-
-    /// <summary>
-    ///   Converts a string to a boolean.
-    /// </summary>
-    /// 
-    public static bool[,] ToBoolean(this string[,] value)
-    {
-        return ToBoolean(value, Matrix.CreateAs<string, bool>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a boolean.
-    /// </summary>
-    /// 
-    public static bool[,,] ToBoolean(this string[,,] value)
-    {
-        return ToBoolean(value, Matrix.CreateAs<string, bool>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a boolean.
-    /// </summary>
-    /// 
-    public static bool[][] ToBoolean(this string[][] value)
-    {
-        return ToBoolean(value, Jagged.CreateAs<string, bool>(value));
-    }
-
-    /// <summary>
-    ///   Converts a string to a boolean.
-    /// </summary>
-    /// 
-    public static bool[][][] ToBoolean(this string[][][] value)
-    {
-        return ToBoolean(value, Jagged.CreateAs<string, bool>(value));
-    }
-
-
-
-
-    /// <summary>
-    ///   Converts a string array to a boolean array.
-    /// </summary>
-    /// 
-    public static bool[] ToBoolean(this string[] value, bool[] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            result[i] = Boolean.Parse(value[i]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional string array to a multidimensional boolean array.
-    /// </summary>
-    /// 
-    public static bool[,] ToBoolean(this string[,] value, bool[,] result)
-    {
-        int r = value.GetLength(0);
-        int c = value.GetLength(1);
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-                result[i, j] = Boolean.Parse(value[i, j]);
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional string array to a multidimensional boolean array.
-    /// </summary>
-    /// 
-    public static bool[,,] ToBoolean(this string[,,] value, bool[,,] result)
-    {
-        int r = value.GetLength(0);
-        int c = value.GetLength(1);
-        int d = value.GetLength(2);
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-                for (int k = 0; k < d; k++)
-                    result[i, j, k] = Boolean.Parse(value[i, j, k]);
-
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a multidimensional string array to a jagged boolean array.
-    /// </summary>
-    /// 
-    public static bool[][] ToBoolean(this string[,] value, bool[][] result)
-    {
-        for (int i = 0; i < result.Length; i++)
-            for (int j = 0; j < result[i].Length; j++)
-                result[i][j] = Boolean.Parse(value[i, j]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a jagged string array to a jagged boolean array.
-    /// </summary>
-    /// 
-    public static bool[][] ToBoolean(this string[][] value, bool[][] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            for (int j = 0; j < value[i].Length; j++)
-                result[i][j] = Boolean.Parse(value[i][j]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a jagged string array to a jagged boolean array.
-    /// </summary>
-    /// 
-    public static bool[][][] ToBoolean(this string[][][] value, bool[][][] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            for (int j = 0; j < value[i].Length; j++)
-                for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Boolean.Parse(value[i][j][k]);
-        return result;
-    }
-
-    /// <summary>
-    ///   Converts a jagged string array to a multidimensional boolean array.
-    /// </summary>
-    /// 
-    public static bool[,] ToBoolean(this string[][] value, bool[,] result)
-    {
-        for (int i = 0; i < value.Length; i++)
-            for (int j = 0; j < value[i].Length; j++)
-                result[i, j] = Boolean.Parse(value[i][j]);
         return result;
     }
 

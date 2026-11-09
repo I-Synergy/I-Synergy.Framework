@@ -17,7 +17,7 @@ internal struct ArrayFlags
 
     [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
     [FieldOffset(1)]
-    public ArrayFlagsType Flags;
+    public MatFlag Flags;
 
     [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
     [FieldOffset(4)]
@@ -25,7 +25,7 @@ internal struct ArrayFlags
 }
 
 [Flags]
-internal enum ArrayFlagsType : byte // NOSONAR
+internal enum MatFlag : byte
 {
     None = 0,
     Logical = 2,

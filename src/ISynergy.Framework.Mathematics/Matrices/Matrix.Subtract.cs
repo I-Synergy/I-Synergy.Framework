@@ -197,104 +197,6 @@ public static partial class Elementwise
     }
 
     /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[,] SubtractFromDiagonal(this double a, double[,] b)
-    {
-        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
-    }
-
-    /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[][] SubtractFromDiagonal(this double a, double[][] b)
-    {
-        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
-    }
-
-    /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[,] SubtractFromDiagonal(this double[] a, double[,] b)
-    {
-        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
-    }
-
-    /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[][] SubtractFromDiagonal(this double[] a, double[][] b)
-    {
-        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
-    }
-
-    /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[,] SubtractFromDiagonal(this double[,] a, double b)
-    {
-        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
-    }
-
-    /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[][] SubtractFromDiagonal(this double[][] a, double b)
-    {
-        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
-    }
-
-    /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[,] SubtractFromDiagonal(this double[,] a, double[] b)
-    {
-        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
-    }
-
-    /// <summary>
-    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
-    /// </summary>
-    /// 
-    /// <param name="a">The scalar <c>a</c>.</param>
-    /// <param name="b">The matrix <c>B</c>.</param>
-    /// 
-    public static double[][] SubtractFromDiagonal(this double[][] a, double[] b)
-    {
-        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
-    }
-
-    #region Matrix matrix
-
-    /// <summary>
     ///   Elementwise subtraction between a matrix <c>A</c> and a matrix <c>B</c>.
     /// </summary>
     /// 
@@ -335,8 +237,6 @@ public static partial class Elementwise
 
         return result;
     }
-    #endregion
-    #region Matrix with scalar
 
     /// <summary>
     ///   Elementwise subtraction between a matrix <c>A</c> and a scalar <c>b</c>.
@@ -417,8 +317,6 @@ public static partial class Elementwise
 
         return result;
     }
-    #endregion
-    #region vector vector
 
     /// <summary>
     ///   Elementwise subtraction between a vector <c>a</c> and a vector<c>b</c>.
@@ -436,8 +334,6 @@ public static partial class Elementwise
             result[i] = (double)((double)a[i] - (double)b[i]);
         return result;
     }
-    #endregion
-    #region Vector with scalar
 
     /// <summary>
     ///   Elementwise subtraction between a vector <c>a</c> and a scalar <c>b</c>.
@@ -472,8 +368,7 @@ public static partial class Elementwise
             result[i] = (double)((double)a - (double)b[i]);
         return result;
     }
-    #endregion
-    #region Matrix vector (enumeration)
+
     /// <summary>
     ///   Elementwise subtraction between a matrix <c>A</c> and a vector<c>b</c>.
     /// </summary>
@@ -592,8 +487,128 @@ public static partial class Elementwise
 
         return result;
     }
-    #endregion
-    #region Diagonal
+
+    /// <summary>
+    /// Obsolete. Please specify a <see cref="VectorType"/> in place of an integer in the dimension argument.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="dimension"></param>
+    /// <returns></returns>
+    public static double[,] Subtract(this double[,] a, double[] b, int dimension)
+    {
+        return Subtract(a, b, dimension, MatrixCreateAs<double, double>(a));
+    }
+
+    /// <summary>
+    /// Obsolete. Please specify a <see cref="VectorType"/> in place of an integer in the dimension argument.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="dimension"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public static double[,] Subtract(this double[,] a, double[] b, int dimension, double[,] result)
+    {
+        return Subtract(a, b, (VectorType)dimension, result);
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[,] SubtractFromDiagonal(this double a, double[,] b)
+    {
+        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[][] SubtractFromDiagonal(this double a, double[][] b)
+    {
+        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[,] SubtractFromDiagonal(this double[] a, double[,] b)
+    {
+        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[][] SubtractFromDiagonal(this double[] a, double[][] b)
+    {
+        return SubtractFromDiagonal(a, b, b.MemberwiseClone());
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[,] SubtractFromDiagonal(this double[,] a, double b)
+    {
+        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[][] SubtractFromDiagonal(this double[][] a, double b)
+    {
+        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[,] SubtractFromDiagonal(this double[,] a, double[] b)
+    {
+        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
+    }
+
+    /// <summary>
+    ///   Elementwise subtraction between a scalar <c>a</c> and to the main diagonal of matrix <c>B</c>.
+    /// </summary>
+    /// 
+    /// <param name="a">The scalar <c>a</c>.</param>
+    /// <param name="b">The matrix <c>B</c>.</param>
+    /// 
+    public static double[][] SubtractFromDiagonal(this double[][] a, double[] b)
+    {
+        return SubtractFromDiagonal(a, b, a.MemberwiseClone());
+    }
+
     public static double[,] SubtractFromDiagonal(this double a, double[,] b, double[,] result)
     {
         check<double, double, double>(a: a, b: b, result: result);
@@ -666,30 +681,4 @@ public static partial class Elementwise
         return result;
     }
 
-    #endregion
-
-    /// <summary>
-    /// Obsolete. Please specify a <see cref="VectorType"/> in place of an integer in the dimension argument.
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="dimension"></param>
-    /// <returns></returns>
-    public static double[,] Subtract(this double[,] a, double[] b, int dimension)
-    {
-        return Subtract(a, b, dimension, MatrixCreateAs<double, double>(a));
-    }
-
-    /// <summary>
-    /// Obsolete. Please specify a <see cref="VectorType"/> in place of an integer in the dimension argument.
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="dimension"></param>
-    /// <param name="result"></param>
-    /// <returns></returns>
-    public static double[,] Subtract(this double[,] a, double[] b, int dimension, double[,] result)
-    {
-        return Subtract(a, b, (VectorType)dimension, result);
-    }
 }

@@ -183,18 +183,6 @@ public static partial class Matrix
     /// <summary>
     ///     Creates a zero-valued matrix.
     /// </summary>
-    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
-    /// <param name="rows">The number of rows in the matrix.</param>
-    /// <param name="columns">The number of columns in the matrix.</param>
-    /// <returns>A matrix of the specified size.</returns>
-    public static T[,] Ones<T>(int rows, int columns)
-    {
-        return Create(rows, columns, Constants.One<T>());
-    }
-
-    /// <summary>
-    ///     Creates a zero-valued matrix.
-    /// </summary>
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <returns>A vector of the specified size.</returns>
@@ -223,6 +211,18 @@ public static partial class Matrix
     public static double[,] Ones(int rows, int columns)
     {
         return Ones<double>(rows, columns);
+    }
+
+    /// <summary>
+    ///     Creates a zero-valued matrix.
+    /// </summary>
+    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
+    /// <param name="rows">The number of rows in the matrix.</param>
+    /// <param name="columns">The number of columns in the matrix.</param>
+    /// <returns>A matrix of the specified size.</returns>
+    public static T[,] Ones<T>(int rows, int columns)
+    {
+        return Create(rows, columns, Constants.One<T>());
     }
 
     /// <summary>
@@ -260,18 +260,6 @@ public static partial class Matrix
     /// <summary>
     ///     Creates a matrix with all values set to a given value.
     /// </summary>
-    /// <param name="size">The number of rows and columns in the matrix.</param>
-    /// <param name="value">The initial values for the matrix.</param>
-    /// <returns>A matrix of the specified size.</returns>
-    /// <seealso cref="Jagged.Create{T}(int, int, T)" />
-    public static T[,] Square<T>(int size, T value)
-    {
-        return Create(size, size, value);
-    }
-
-    /// <summary>
-    ///     Creates a matrix with all values set to a given value.
-    /// </summary>
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <param name="values">The initial values for the matrix.</param>
@@ -299,6 +287,18 @@ public static partial class Matrix
     public static T[,] Create<T>(T[,] values)
     {
         return (T[,])values.Clone();
+    }
+
+    /// <summary>
+    ///     Creates a matrix with all values set to a given value.
+    /// </summary>
+    /// <param name="size">The number of rows and columns in the matrix.</param>
+    /// <param name="value">The initial values for the matrix.</param>
+    /// <returns>A matrix of the specified size.</returns>
+    /// <seealso cref="Jagged.Create{T}(int, int, T)" />
+    public static T[,] Square<T>(int size, T value)
+    {
+        return Create(size, size, value);
     }
     /// <summary>
     ///     Creates a matrix of one-hot vectors, where all values at each row are
@@ -475,32 +475,6 @@ public static partial class Matrix
         return Array.CreateInstance(type.GetInnerMostType(), outputShape);
     }
 
-    internal static int[] GetShape(Array matrix, Type type)
-    {
-        var outputShape = matrix.GetLength(true);
-
-        if (type.IsArray)
-        {
-            var inputRank = matrix.GetRank(true);
-            var outputRank = type.GetArrayRank(true);
-
-            if (inputRank > outputRank)
-            {
-                outputShape = outputShape.Where(i => i != 1).ToArray();
-                var extra = outputRank - outputShape.Length;
-                if (extra > 0)
-                    outputShape = outputShape.Concatenate(Vector.Ones<int>(extra));
-            }
-            else if (inputRank < outputRank)
-            {
-                var extra = outputRank - inputRank;
-                outputShape = outputShape.Concatenate(Vector.Ones<int>(extra));
-            }
-        }
-
-        return outputShape;
-    }
-
     /// <summary>
     ///     Creates a new multidimensional matrix with the same shape as another matrix.
     /// </summary>
@@ -539,6 +513,32 @@ public static partial class Matrix
     public static TOutput[,] CreateAs<TInput, TOutput>(TInput[][] matrix)
     {
         return new TOutput[matrix.Length, matrix[0].Length];
+    }
+
+    internal static int[] GetShape(Array matrix, Type type)
+    {
+        var outputShape = matrix.GetLength(true);
+
+        if (type.IsArray)
+        {
+            var inputRank = matrix.GetRank(true);
+            var outputRank = type.GetArrayRank(true);
+
+            if (inputRank > outputRank)
+            {
+                outputShape = outputShape.Where(i => i != 1).ToArray();
+                var extra = outputRank - outputShape.Length;
+                if (extra > 0)
+                    outputShape = outputShape.Concatenate(Vector.Ones<int>(extra));
+            }
+            else if (inputRank < outputRank)
+            {
+                var extra = outputRank - inputRank;
+                outputShape = outputShape.Concatenate(Vector.Ones<int>(extra));
+            }
+        }
+
+        return outputShape;
     }
 
     #endregion
@@ -1121,6 +1121,20 @@ public static partial class Matrix
     }
 
     /// <summary>
+    ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
+    /// </summary>
+    /// 
+    public static double[][] Mesh(
+        NumericRange rowRange, NumericRange colRange,
+        double rowStepSize, double colStepSize)
+    {
+        double[] x = Vector.Interval(rowRange, rowStepSize);
+        double[] y = Vector.Interval(colRange, colStepSize);
+        double[][] mesh = Matrix.Cartesian(x, y);
+        return mesh;
+    }
+
+    /// <summary>
     ///     Creates a bi-dimensional mesh matrix.
     /// </summary>
     /// <param name="x">The values to be replicated vertically.</param>
@@ -1246,7 +1260,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Concatenate<T>(this T[,] a, T[,] b)
     {
-        return Concatenate([a, b]);
+        return Concatenate<T>(matrices: new T[][,] { a, b });
     }
 
     /// <summary>
@@ -1254,7 +1268,7 @@ public static partial class Matrix
     /// </summary>
     public static T[][] Concatenate<T>(this T[][] a, T[][] b)
     {
-        return Concatenate([a, b]);
+        return Concatenate<T>(matrices: new T[][][] { a, b });
     }
 
     /// <summary>
@@ -1564,18 +1578,4 @@ public static partial class Matrix
     }
 
     #endregion
-
-    /// <summary>
-    ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
-    /// </summary>
-    [Obsolete("Please specify the number of steps instead of the step size for the rows and columns.")] // NOSONAR
-    public static double[][] Mesh(
-        NumericRange rowRange, NumericRange colRange,
-        double rowStepSize, double colStepSize)
-    {
-        double[] x = Vector.Interval(rowRange, rowStepSize);
-        double[] y = Vector.Interval(colRange, colStepSize);
-        double[][] mesh = Matrix.Cartesian(x, y);
-        return mesh;
-    }
 }

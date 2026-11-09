@@ -14,10 +14,10 @@ namespace ISynergy.Framework.Mathematics.Geometry;
 /// </summary>
 /// 
 [Serializable]
-public class Plane : IEquatable<Plane>, IFormattable
+public sealed class Plane : IEquatable<Plane>, IFormattable
 {
     [NonSerialized]
-    private Vector3 _normal;
+    private readonly Vector3 _normal;
 
     /// <summary>
     ///   Creates a new <see cref="Plane"/> object
@@ -119,7 +119,6 @@ public class Plane : IEquatable<Plane>, IFormattable
     public float A
     {
         get { return _normal.X; }
-        set { _normal.X = value; }
     }
 
     /// <summary>
@@ -130,7 +129,6 @@ public class Plane : IEquatable<Plane>, IFormattable
     public float B
     {
         get { return _normal.Y; }
-        set { _normal.Y = value; }
     }
 
     /// <summary>
@@ -141,7 +139,6 @@ public class Plane : IEquatable<Plane>, IFormattable
     public float C
     {
         get { return _normal.Z; }
-        set { _normal.Z = value; }
     }
 
     /// <summary>
@@ -149,7 +146,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     ///   between the plane and the origin.
     /// </summary>
     ///
-    public float Offset { get; set; }
+    public float Offset { get; }
     /// <summary>
     ///   Computes the distance from point to plane.
     /// </summary>
@@ -175,10 +172,11 @@ public class Plane : IEquatable<Plane>, IFormattable
     ///   by the <see cref="Normal"/> vector's norm.
     /// </summary>
     /// 
-    public void Normalize()
+    public Plane Normalize()
     {
-        float norm = _normal.Normalize();
-        Offset /= norm;
+        var normal = _normal;
+        float norm = normal.Normalize();
+        return new Plane(normal, Offset / norm);
     }
 
     /// <summary>
@@ -271,7 +269,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     ///   algorithms and data structures like a hash table. 
     /// </returns>
     /// 
-    public override int GetHashCode() // NOSONAR
+    public override int GetHashCode()
     {
         return Offset.GetHashCode() + 13 * _normal.GetHashCode();
     }

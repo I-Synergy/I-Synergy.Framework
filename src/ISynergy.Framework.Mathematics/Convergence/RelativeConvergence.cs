@@ -54,14 +54,6 @@ public class RelativeConvergence : ISingleValueConvergence
     /// <summary>
     ///     Initializes a new instance of the <see cref="RelativeConvergence" /> class.
     /// </summary>
-    public RelativeConvergence()
-    {
-        init();
-    }
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="RelativeConvergence" /> class.
-    /// </summary>
     /// <param name="iterations">
     ///     The maximum number of iterations which should be
     ///     performed by the iterative algorithm. Setting to zero indicates there

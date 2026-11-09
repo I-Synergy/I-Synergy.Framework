@@ -334,7 +334,12 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         if (!double.IsInfinity(a) && !double.IsInfinity(b))
         {
             NonAdaptiveGaussKronrod.qng_(Function, a, b, ToleranceAbsolute, ToleranceRelative,
-                out result, out error, out evaluations, out errorCode);
+                out var quadpack);
+
+            result = quadpack.Result;
+            error = quadpack.Abserr;
+            evaluations = quadpack.Neval;
+            errorCode = quadpack.Ier;
         }
 
         else
@@ -468,7 +473,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
     }
     #region Quadpack
 
-    private static int qagi_(Func<double, double> f, double bound, int inf, double epsabs,
+    private static void qagi_(Func<double, double> f, double bound, int inf, double epsabs,
         double epsrel, out double result, out double abserr, out int neval,
         out int ier, int limit, int lenw, out int last, int[] iwork,
         double[] dwork)
@@ -489,22 +494,16 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
         if (limit < 1 || lenw < limit << 2) goto L10;
 
-        unsafe
         {
-            /*         preparef call for qagie. */
-            fixed (double* work = &dwork[10])
-            fixed (int* Iwork = &iwork[10])
-            {
-                l1 = limit + 1;
-                l2 = limit + l1;
-                l3 = limit + l2;
+            l1 = limit + 1;
+            l2 = limit + l1;
+            l3 = limit + l2;
 
-                qagie_(f, ref bound, ref inf, ref epsabs, ref epsrel, ref limit, ref result,
-                    ref abserr, ref neval, ref ier, &work[1], &work[l1], &work[l2],
-                    &work[l3], &Iwork[1], ref last);
+            qagie_(f, ref bound, ref inf, ref epsabs, ref epsrel, ref limit, ref result,
+                ref abserr, ref neval, ref ier, dwork, dwork, dwork, dwork, iwork,
+                10, 9 + l1, 9 + l2, 9 + l3, 10, ref last);
 
-                /*         call error handler i necessary. */
-            }
+            /*         call error handler i necessary. */
         }
 
     L10:
@@ -513,13 +512,13 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             // intentional empty block - error level not set
         }
 
-        return 0;
     }
 
-    private static unsafe int qagie_(Func<double, double> f, ref double bound, ref int inf, ref double epsabs,
+    private static void qagie_(Func<double, double> f, ref double bound, ref int inf, ref double epsabs,
         ref double epsrel, ref int limit, ref double result, ref double abserr,
-        ref int neval, ref int ier, double* alist__, double* blist,
-        double* rlist, double* elist, int* iord, ref int last)
+        ref int neval, ref int ier, double[] alist, double[] blist,
+        double[] rlist, double[] elist, int[] iord,
+        int startA, int startB, int startR, int startE, int startI, ref int last)
     {
         /* System generated locals */
         int i__1, i__2;
@@ -550,8 +549,6 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         var res3la_ = new double[3 + 1];
         var rlist2_ = new double[52 + 1];
 
-        fixed (double* res3la = res3la_)
-        fixed (double* rlist2 = rlist2_)
         {
             double error1 = 0;
             double error2 = 0;
@@ -571,13 +568,6 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             double ertest = 0;
             double errsum;
 
-            /* Parameter adjustments */
-            --iord;
-            --elist;
-            --rlist;
-            --blist;
-            --alist__;
-
             /* Function Body */
             epmach = Constants.SingleEpsilon;
 
@@ -590,15 +580,15 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             last = 0;
             result = 0.0;
             abserr = 0.0;
-            alist__[1] = 0.0;
-            blist[1] = 1.0;
-            rlist[1] = 0.0;
-            elist[1] = 0.0;
-            iord[1] = 0;
+            alist[startA + 1] = 0.0;
+            blist[startB + 1] = 1.0;
+            rlist[startR + 1] = 0.0;
+            elist[startE + 1] = 0.0;
+            iord[startI + 1] = 0;
 
             if (epsabs <= 0.0 && epsrel < Math.Max(epmach * 50.0, 5e-15)) ier = 6;
 
-            if (ier == 6) return 0;
+            if (ier == 6) return;
             /*           first approximation to the integral */
             /*           ----------------------------------- */
 
@@ -617,9 +607,9 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             /*           test on accuracy */
 
             last = 1;
-            rlist[1] = result;
-            elist[1] = abserr;
-            iord[1] = 1;
+            rlist[startR + 1] = result;
+            elist[startE + 1] = abserr;
+            iord[startI + 1] = 1;
             dres = Math.Abs(result);
 
             errbnd = Math.Max(epsabs, epsrel * dres);
@@ -632,7 +622,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
             uflow = float.MinValue;
             oflow = float.MaxValue;
-            rlist2[0] = result;
+            rlist2_[0] = result;
             errmax = abserr;
             maxerr = 1;
             area = result;
@@ -660,10 +650,10 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 /*           bisect the subinterval with nrmax-th largest */
                 /*           error estimate. */
 
-                a1 = alist__[maxerr];
-                b1 = (alist__[maxerr] + blist[maxerr]) * .5;
+                a1 = alist[startA + maxerr];
+                b1 = (alist[startA + maxerr] + blist[startB + maxerr]) * .5;
                 a2 = b1;
-                b2 = blist[maxerr];
+                b2 = blist[startB + maxerr];
                 erlast = errmax;
 
                 qk15i_(f, ref boun, ref inf, a1, b1, ref area1,
@@ -678,16 +668,16 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 area12 = area1 + area2;
                 erro12 = error1 + error2;
                 errsum = errsum + erro12 - errmax;
-                area = area + area12 - rlist[maxerr];
+                area = area + area12 - rlist[startR + maxerr];
                 if (defab1 == error1 || defab2 == error2) goto L15;
-                if (Math.Abs(rlist[maxerr] - area12) > Math.Abs(area12) * 1e-5 || erro12 < errmax * 0.99) goto L10;
+                if (Math.Abs(rlist[startR + maxerr] - area12) > Math.Abs(area12) * 1e-5 || erro12 < errmax * 0.99) goto L10;
                 if (extrap) ++iroff2;
                 if (!extrap) ++iroff1;
                 L10:
                 if (last > 10 && erro12 > errmax) ++iroff3;
                 L15:
-                rlist[maxerr] = area1;
-                rlist[last] = area2;
+                rlist[startR + maxerr] = area1;
+                rlist[startR + last] = area2;
                 errbnd = Math.Max(epsabs, epsrel * Math.Abs(area));
 
                 /*           test for roundof error and eventually */
@@ -711,20 +701,20 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 /*           append the newly-created intervals to the list. */
 
                 if (error2 > error1) goto L20;
-                alist__[last] = a2;
-                blist[maxerr] = b1;
-                blist[last] = b2;
-                elist[maxerr] = error1;
-                elist[last] = error2;
+                alist[startA + last] = a2;
+                blist[startB + maxerr] = b1;
+                blist[startB + last] = b2;
+                elist[startE + maxerr] = error1;
+                elist[startE + last] = error2;
                 goto L30;
             L20:
-                alist__[maxerr] = a2;
-                alist__[last] = a1;
-                blist[last] = b1;
-                rlist[maxerr] = area2;
-                rlist[last] = area1;
-                elist[maxerr] = error2;
-                elist[last] = error1;
+                alist[startA + maxerr] = a2;
+                alist[startA + last] = a1;
+                blist[startB + last] = b1;
+                rlist[startR + maxerr] = area2;
+                rlist[startR + last] = area1;
+                elist[startE + maxerr] = error2;
+                elist[startE + last] = error1;
 
             /*           call subroutine qpsrt to maintain the descending ordering */
             /*           in the list o error estimates and select the */
@@ -733,7 +723,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
             L30:
                 qpsrt_(ref limit, ref last, ref maxerr, ref errmax,
-                    &elist[1], &iord[1], ref nrmax);
+                    elist, iord, startE + 1, startI + 1, ref nrmax);
 
                 if (errsum <= errbnd) goto L115;
                 if (ier != 0) goto L100;
@@ -748,7 +738,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 /*           test whether the interval to be bisected next is the */
                 /*           smallest interval. */
 
-                if (Math.Abs(blist[maxerr] - alist__[maxerr]) > small) goto L90;
+                if (Math.Abs(blist[startB + maxerr] - alist[startA + maxerr]) > small) goto L90;
                 extrap = true;
                 nrmax = 2;
             L40:
@@ -765,9 +755,9 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 i__2 = jupbnd;
                 for (k = id; k <= i__2; ++k)
                 {
-                    maxerr = iord[nrmax];
-                    errmax = elist[maxerr];
-                    if (Math.Abs(blist[maxerr] - alist__[maxerr]) > small) goto L90;
+                    maxerr = iord[startI + nrmax];
+                    errmax = elist[startE + maxerr];
+                    if (Math.Abs(blist[startB + maxerr] - alist[startA + maxerr]) > small) goto L90;
                     ++nrmax;
                     /* L50: */
                 }
@@ -779,8 +769,8 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
                 Debug.Assert(numrl2 > 1);
 
-                rlist2[numrl2 - 1] = area;
-                qelg_(ref numrl2, rlist2, ref reseps, ref abseps, res3la, ref nres);
+                rlist2_[numrl2 - 1] = area;
+                qelg_(ref numrl2, rlist2_, ref reseps, ref abseps, res3la_, ref nres);
 
                 ++ktmin;
 
@@ -801,8 +791,8 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 L70:
                 if (numrl2 == 1) noext = true;
                 if (ier == 5) goto L100;
-                maxerr = iord[1];
-                errmax = elist[maxerr];
+                maxerr = iord[startI + 1];
+                errmax = elist[startE + maxerr];
                 nrmax = 1;
                 extrap = false;
                 small *= .5;
@@ -812,7 +802,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 small = .375;
                 erlarg = errsum;
                 ertest = errbnd;
-                rlist2[1] = area;
+                rlist2_[1] = area;
             L90:;
             }
 
@@ -846,7 +836,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         L115:
             result = 0.0;
             for (k = 1; k <= last; ++k)
-                result += rlist[k];
+                result += rlist[startR + k];
             /* L120: */
             abserr = errsum;
         L130:
@@ -855,11 +845,10 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             if (ier > 2) --ier;
         }
 
-        return 0;
     }
 
-    private static unsafe int qelg_(ref int n, double* epstab, ref double result,
-        ref double abserr, double* res3la, ref int nres)
+    private static void qelg_(ref int n, double[] epstab, ref double result,
+        ref double abserr, double[] res3la, ref int nres)
     {
         /* System generated locals */
         int i__1;
@@ -880,8 +869,6 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
         /* ***first executable statement  qelg */
         /* Parameter adjustments */
-        --res3la;
-        --epstab;
 
         /* Function Body */
         epmach = Constants.SingleEpsilon;
@@ -891,29 +878,29 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
         Debug.Assert(n > 0 && n < 52);
 
-        result = epstab[n];
+        result = epstab[n - 1];
         if (n < 3) goto L100;
         limexp = 50;
 
         Debug.Assert(n > 0 && n < 52);
         Debug.Assert(n + 2 > 0 && n + 2 < 52);
 
-        epstab[n + 2] = epstab[n];
+        epstab[n + 2 - 1] = epstab[n - 1];
         newelm = (n - 1) / 2;
-        epstab[n] = oflow;
+        epstab[n - 1] = oflow;
         num = n;
         k1 = n;
         for (i__ = 1; i__ <= newelm; ++i__)
         {
             k2 = k1 - 1;
             k3 = k1 - 2;
-            res = epstab[k1 + 2];
+            res = epstab[k1 + 2 - 1];
 
             Debug.Assert(k3 > 0 && k3 < 52);
             Debug.Assert(k2 > 0 && k2 < 52);
 
-            e0 = epstab[k3];
-            e1 = epstab[k2];
+            e0 = epstab[k3 - 1];
+            e1 = epstab[k2 - 1];
             e2 = res;
             e1abs = Math.Abs(e1);
             delta2 = e2 - e1;
@@ -937,8 +924,8 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
             Debug.Assert(k1 > 0 && k1 < 52);
 
-            e3 = epstab[k1];
-            epstab[k1] = e1;
+            e3 = epstab[k1 - 1];
+            epstab[k1 - 1] = e1;
             delta1 = e1 - e3;
             err1 = Math.Abs(delta1);
             tol1 = Math.Max(e1abs, Math.Abs(e3)) * epmach;
@@ -968,7 +955,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
             Debug.Assert(k1 > 0 && k1 < 52);
 
-            epstab[k1] = res;
+            epstab[k1 - 1] = res;
             k1 += -2;
             error = err2 + Math.Abs(res - e2) + err3;
             if (error > abserr) goto L40;
@@ -992,7 +979,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             Debug.Assert(ib > 0 && ib < 52);
             Debug.Assert(ib2 > 0 && ib2 < 52);
 
-            epstab[ib] = epstab[ib2];
+            epstab[ib - 1] = epstab[ib2 - 1];
             ib = ib2;
             /* L60: */
         }
@@ -1004,7 +991,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             Debug.Assert(i__ > 0 && i__ < 52);
             Debug.Assert(indx > 0 && indx < 52);
 
-            epstab[i__] = epstab[indx];
+            epstab[i__ - 1] = epstab[indx - 1];
             ++indx;
             /* L70: */
         }
@@ -1014,24 +1001,23 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
         Debug.Assert(nres > 0 && nres < 4);
 
-        res3la[nres] = result;
+        res3la[nres - 1] = result;
         abserr = oflow;
         goto L100;
 
     /*           compute error estimate */
 
     L90:
-        abserr = Math.Abs(result - res3la[3]) + Math.Abs(result -
-                                                         res3la[2]) + Math.Abs(result - res3la[1]);
+        abserr = Math.Abs(result - res3la[2]) + Math.Abs(result -
+                                                         res3la[1]) + Math.Abs(result - res3la[0]);
+        res3la[0] = res3la[1];
         res3la[1] = res3la[2];
-        res3la[2] = res3la[3];
-        res3la[3] = result;
+        res3la[2] = result;
     L100:
         abserr = Math.Max(abserr, epmach * 5.0 * Math.Abs(result));
-        return 0;
     } /* qelg_ */
 
-    private static unsafe int qk15i_(Func<double, double> f, ref double boun, ref int inf, double a,
+    private static void qk15i_(Func<double, double> f, ref double boun, ref int inf, double a,
         double b, ref double result, ref double abserr, ref double resabs, ref double resasc)
     {
         /* Initialized data */
@@ -1060,88 +1046,84 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         /* Local variables */
         int j;
         double fc;
-        var fv1_ = new double[7 + 1];
-        var fv2_ = new double[7 + 1];
+        var fv1 = new double[7 + 1];
+        var fv2 = new double[7 + 1];
 
-        fixed (double* fv1 = fv1_)
-        fixed (double* fv2 = fv2_)
+        double absc, din, resg, resk, fsum, absc1;
+        double absc2, fval1, fval2, hlgth, centr, reskh, uflow;
+        double tabsc1, tabsc2, epmach;
+        /* ***first executable statement  qk15i */
+        epmach = Constants.SingleEpsilon;
+        uflow = float.MinValue;
+        din = Math.Min(1, inf);
+
+        centr = (a + b) * .5;
+        hlgth = (b - a) * .5;
+        tabsc1 = boun + din * (1.0 - centr) / centr;
+        fval1 = f(tabsc1);
+
+        if (inf == 2)
+            fval1 += f(-tabsc1);
+
+        fc = fval1 / centr / centr;
+
+        /*           compute the 15-point kronrod approximation to */
+        /*           the integral, and estimate the error. */
+
+        resg = wg[7] * fc;
+        resk = wgk[7] * fc;
+        resabs = Math.Abs(resk);
+        for (j = 1; j <= 7; ++j)
         {
-            double absc, din, resg, resk, fsum, absc1;
-            double absc2, fval1, fval2, hlgth, centr, reskh, uflow;
-            double tabsc1, tabsc2, epmach;
-            /* ***first executable statement  qk15i */
-            epmach = Constants.SingleEpsilon;
-            uflow = float.MinValue;
-            din = Math.Min(1, inf);
-
-            centr = (a + b) * .5;
-            hlgth = (b - a) * .5;
-            tabsc1 = boun + din * (1.0 - centr) / centr;
+            absc = hlgth * xgk[j - 1];
+            absc1 = centr - absc;
+            absc2 = centr + absc;
+            tabsc1 = boun + din * (1.0 - absc1) / absc1;
+            tabsc2 = boun + din * (1.0 - absc2) / absc2;
             fval1 = f(tabsc1);
+            fval2 = f(tabsc2);
+            if (inf == 2) fval1 += f(-tabsc1);
+            if (inf == 2) fval2 += f(-tabsc2);
+            fval1 = fval1 / absc1 / absc1;
+            fval2 = fval2 / absc2 / absc2;
 
-            if (inf == 2)
-                fval1 += f(-tabsc1);
+            Debug.Assert(j > 0);
 
-            fc = fval1 / centr / centr;
-
-            /*           compute the 15-point kronrod approximation to */
-            /*           the integral, and estimate the error. */
-
-            resg = wg[7] * fc;
-            resk = wgk[7] * fc;
-            resabs = Math.Abs(resk);
-            for (j = 1; j <= 7; ++j)
-            {
-                absc = hlgth * xgk[j - 1];
-                absc1 = centr - absc;
-                absc2 = centr + absc;
-                tabsc1 = boun + din * (1.0 - absc1) / absc1;
-                tabsc2 = boun + din * (1.0 - absc2) / absc2;
-                fval1 = f(tabsc1);
-                fval2 = f(tabsc2);
-                if (inf == 2) fval1 += f(-tabsc1);
-                if (inf == 2) fval2 += f(-tabsc2);
-                fval1 = fval1 / absc1 / absc1;
-                fval2 = fval2 / absc2 / absc2;
-
-                Debug.Assert(j > 0);
-
-                fv1[j - 1] = fval1;
-                fv2[j - 1] = fval2;
-                fsum = fval1 + fval2;
-                resg += wg[j - 1] * fsum;
-                resk += wgk[j - 1] * fsum;
-                resabs += wgk[j - 1] * (Math.Abs(fval1) + Math.Abs(fval2));
-                /* L10: */
-            }
-
-            reskh = resk * .5;
-            resasc = wgk[7] * Math.Abs(fc - reskh);
-            for (j = 1; j <= 7; ++j)
-            {
-                Debug.Assert(j > 0);
-
-                resasc += wgk[j - 1] * (Math.Abs(fv1[j - 1] - reskh)
-                                        + Math.Abs(fv2[j - 1] - reskh));
-                /* L20: */
-            }
-
-            result = resk * hlgth;
-            resasc *= hlgth;
-            resabs *= hlgth;
-            abserr = Math.Abs((resk - resg) * hlgth);
-
-            if (resasc != 0.0 && abserr != 0.0)
-                abserr = resasc * Math.Min(1.0, Math.Pow(abserr * 200.0 / resasc, 1.5));
-
-            if (resabs > uflow / (epmach * 50.0)) abserr = Math.Max(epmach * 50.0 * resabs, abserr);
+            fv1[j - 1] = fval1;
+            fv2[j - 1] = fval2;
+            fsum = fval1 + fval2;
+            resg += wg[j - 1] * fsum;
+            resk += wgk[j - 1] * fsum;
+            resabs += wgk[j - 1] * (Math.Abs(fval1) + Math.Abs(fval2));
+            /* L10: */
         }
 
-        return 0;
+        reskh = resk * .5;
+        resasc = wgk[7] * Math.Abs(fc - reskh);
+        for (j = 1; j <= 7; ++j)
+        {
+            Debug.Assert(j > 0);
+
+            resasc += wgk[j - 1] * (Math.Abs(fv1[j - 1] - reskh)
+                                    + Math.Abs(fv2[j - 1] - reskh));
+            /* L20: */
+        }
+
+        result = resk * hlgth;
+        resasc *= hlgth;
+        resabs *= hlgth;
+        abserr = Math.Abs((resk - resg) * hlgth);
+
+        if (resasc != 0.0 && abserr != 0.0)
+            abserr = resasc * Math.Min(1.0, Math.Pow(abserr * 200.0 / resasc, 1.5));
+
+        if (resabs > uflow / (epmach * 50.0)) abserr = Math.Max(epmach * 50.0 * resabs, abserr);
+
+        return;
     }
 
-    private static unsafe int qpsrt_(ref int limit, ref int last, ref int maxerr,
-        ref double ermax, double* elist, int* iord, ref int nrmax)
+    private static void qpsrt_(ref int limit, ref int last, ref int maxerr,
+        ref double ermax, double[] elist, int[] iord, int startE, int startI, ref int nrmax)
     {
         /* System generated locals */
         int i__1;
@@ -1151,8 +1133,8 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         double errmin, errmax;
         /* Function Body */
         if (last > 2) goto L10;
-        iord[1] = 1;
-        iord[2] = 2;
+        iord[startI + 1] = 1;
+        iord[startI + 2] = 2;
         goto L90;
 
     /*           this part o the routine is only executed */
@@ -1162,16 +1144,16 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
     /*           nrmax-th largest error estimate. */
 
     L10:
-        errmax = elist[maxerr];
+        errmax = elist[startE + maxerr];
         if (nrmax == 1) goto L30;
         ido = nrmax - 1;
         i__1 = ido;
         for (i__ = 1; i__ <= i__1; ++i__)
         {
-            isucc = iord[nrmax - 1];
+            isucc = iord[startI + nrmax - 1];
             /* ***jump out o do-loop */
-            if (errmax <= elist[isucc]) goto L30;
-            iord[nrmax] = isucc;
+            if (errmax <= elist[startE + isucc]) goto L30;
+            iord[startI + nrmax] = isucc;
             --nrmax;
             /* L20: */
         }
@@ -1184,7 +1166,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
     L30:
         jupbn = last;
         if (last > limit / 2 + 2) jupbn = limit + 3 - last;
-        errmin = elist[last];
+        errmin = elist[startE + last];
 
         /*           insert errmax by traversing the list top-down, */
         /*           starting comparison from the element elist(iord(nrmax+1)). */
@@ -1195,45 +1177,44 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
 
         for (i__ = ibeg; i__ <= jbnd; ++i__)
         {
-            isucc = iord[i__];
+            isucc = iord[startI + i__];
             /* ***jump out o do-loop */
-            if (errmax >= elist[isucc]) goto L60;
-            iord[i__ - 1] = isucc;
+            if (errmax >= elist[startE + isucc]) goto L60;
+            iord[startI + i__ - 1] = isucc;
             /* L40: */
         }
 
     L50:
-        iord[jbnd] = maxerr;
-        iord[jupbn] = last;
+        iord[startI + jbnd] = maxerr;
+        iord[startI + jupbn] = last;
         goto L90;
 
     /*           insert errmin by traversing the list bottom-up. */
 
     L60:
-        iord[i__ - 1] = maxerr;
+        iord[startI + i__ - 1] = maxerr;
         k = jbnd;
         i__1 = jbnd;
         for (j = i__; j <= i__1; ++j)
         {
-            isucc = iord[k];
+            isucc = iord[startI + k];
             /* ***jump out o do-loop */
-            if (errmin < elist[isucc]) goto L80;
-            iord[k + 1] = isucc;
+            if (errmin < elist[startE + isucc]) goto L80;
+            iord[startI + k + 1] = isucc;
             --k;
             /* L70: */
         }
 
-        iord[i__] = last;
+        iord[startI + i__] = last;
         goto L90;
     L80:
-        iord[k + 1] = last;
+        iord[startI + k + 1] = last;
 
     /*           set maxerr and ermax. */
 
     L90:
-        maxerr = iord[nrmax];
-        ermax = elist[maxerr];
-        return 0;
+        maxerr = iord[startI + nrmax];
+        ermax = elist[startE + maxerr];
     } /* qpsrt_ */
 
     #endregion

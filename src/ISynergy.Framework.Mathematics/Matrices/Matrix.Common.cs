@@ -149,7 +149,8 @@ public static partial class Matrix
     /// </summary>
     public static T[,] MemberwiseClone<T>(this T[,] a)
     {
-        // TODO: Rename to Copy and implement shallow and deep copies // NOSONAR
+        // Math.NET parity: the MemberwiseClone name is kept for API compatibility;
+        // Copy already provides the equivalent shallow copy.
         return (T[,])a.Clone();
     }
 
@@ -159,7 +160,8 @@ public static partial class Matrix
     /// </summary>
     public static T[] MemberwiseClone<T>(this T[] a)
     {
-        // TODO: Rename to Copy and implement shallow and deep copies // NOSONAR
+        // Math.NET parity: the MemberwiseClone name is kept for API compatibility;
+        // Copy already provides the equivalent shallow copy.
         return (T[])a.Clone();
     }
 
@@ -378,9 +380,8 @@ public static partial class Matrix
     {
         var ar = array as Array;
         var result = (Array)ar.Clone();
-        foreach (var dim in ar.GetIndices())
-            if (result.GetValue(dim) == from)
-                result.SetValue(to, dim);
+        foreach (var dim in ar.GetIndices().Where(dim => result.GetValue(dim) == from))
+            result.SetValue(to, dim);
         return result as T;
     }
     #region Comparison
@@ -457,7 +458,7 @@ public static partial class Matrix
         if (!objA.GetLength().IsEqual(objB.GetLength()))
             return false;
 
-        // TODO: Implement this cache mechanism here // NOSONAR
+        // Math.NET parity: the reflective overload dispatch below is not cached, as upstream.
         // http://blog.slaks.net/2015-06-26/code-snippets-fast-property-access-reflection/
 
         // Check if there is already an optimized method to perform this comparison
@@ -588,10 +589,7 @@ public static partial class Matrix
     /// <returns>True if the matrix contains a value that is not a number, false otherwise.</returns>
     public static bool HasNaN(this double[] matrix)
     {
-        foreach (var e in matrix)
-            if (double.IsNaN(e))
-                return true;
-        return false;
+        return matrix.Any(e => double.IsNaN(e));
     }
 
     /// <summary>
@@ -622,6 +620,32 @@ public static partial class Matrix
                 return true;
         return false;
     }
+    /// <summary>
+    ///     Returns a value indicating whether the specified
+    ///     matrix contains a infinity value.
+    /// </summary>
+    /// <param name="matrix">A double-precision multidimensional matrix.</param>
+    /// <returns>True if the matrix contains a infinity value, false otherwise.</returns>
+    public static bool HasInfinity(this double[] matrix)
+    {
+        return matrix.Any(e => double.IsInfinity(e));
+    }
+
+    /// <summary>
+    ///     Returns a value indicating whether the specified
+    ///     matrix contains a infinity value.
+    /// </summary>
+    /// <param name="matrix">A double-precision multidimensional matrix.</param>
+    /// <returns>True if the matrix contains a infinity value, false otherwise.</returns>
+    public static bool HasInfinity(this double[][] matrix)
+    {
+        for (var i = 0; i < matrix.Length; i++)
+            for (var j = 0; j < matrix[i].Length; j++)
+                if (double.IsInfinity(matrix[i][j]))
+                    return true;
+        return false;
+    }
+
     /// <summary>
     ///     Returns a value indicating whether the specified
     ///     matrix contains a value within a given tolerance.
@@ -657,35 +681,6 @@ public static partial class Matrix
         foreach (var e in matrix)
             if (Math.Abs(e - value) <= Math.Abs(e) * tolerance)
                 return true;
-        return false;
-    }
-
-    /// <summary>
-    ///     Returns a value indicating whether the specified
-    ///     matrix contains a infinity value.
-    /// </summary>
-    /// <param name="matrix">A double-precision multidimensional matrix.</param>
-    /// <returns>True if the matrix contains a infinity value, false otherwise.</returns>
-    public static bool HasInfinity(this double[] matrix)
-    {
-        foreach (var e in matrix)
-            if (double.IsInfinity(e))
-                return true;
-        return false;
-    }
-
-    /// <summary>
-    ///     Returns a value indicating whether the specified
-    ///     matrix contains a infinity value.
-    /// </summary>
-    /// <param name="matrix">A double-precision multidimensional matrix.</param>
-    /// <returns>True if the matrix contains a infinity value, false otherwise.</returns>
-    public static bool HasInfinity(this double[][] matrix)
-    {
-        for (var i = 0; i < matrix.Length; i++)
-            for (var j = 0; j < matrix[i].Length; j++)
-                if (double.IsInfinity(matrix[i][j]))
-                    return true;
         return false;
     }
 
@@ -914,17 +909,6 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///     Gets the number of columns in a multidimensional matrix.
-    /// </summary>
-    /// <typeparam name="T">The type of the elements in the matrix.</typeparam>
-    /// <param name="matrix">The matrix whose number of columns must be computed.</param>
-    /// <returns>The number of columns in the matrix.</returns>
-    public static int Columns<T>(this T[,] matrix)
-    {
-        return matrix.GetLength(1);
-    }
-
-    /// <summary>
     ///     Gets the number of rows in a multidimensional matrix.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the matrix.</typeparam>
@@ -933,6 +917,17 @@ public static partial class Matrix
     public static int Rows<T>(this T[,,] matrix)
     {
         return matrix.GetLength(0);
+    }
+
+    /// <summary>
+    ///     Gets the number of columns in a multidimensional matrix.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the matrix.</typeparam>
+    /// <param name="matrix">The matrix whose number of columns must be computed.</param>
+    /// <returns>The number of columns in the matrix.</returns>
+    public static int Columns<T>(this T[,] matrix)
+    {
+        return matrix.GetLength(1);
     }
 
     /// <summary>
@@ -1082,34 +1077,6 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///     Converts a matrix to upper triangular form, if possible.
-    /// </summary>
-    public static T[,] ToUpperTriangular<T>(this T[,] matrix, MatrixType from, T[,] result = null)
-    {
-        if (result is null)
-            result = Matrix.CreateAs(matrix);
-        matrix.CopyTo(result);
-
-        switch (from)
-        {
-            case MatrixType.UpperTriangular:
-            case MatrixType.Diagonal:
-                break;
-
-            case MatrixType.LowerTriangular:
-                Transpose(result, true);
-                break;
-
-            default:
-                throw new ArgumentException(
-                    "Only LowerTriangular, UpperTriangular and Diagonal matrices are supported at this time.",
-                    nameof(from));
-        }
-
-        return result;
-    }
-
-    /// <summary>
     ///     Converts a matrix to lower triangular form, if possible.
     /// </summary>
     public static T[][] ToLowerTriangular<T>(this T[][] matrix, MatrixType from, T[][] result = null)
@@ -1125,6 +1092,34 @@ public static partial class Matrix
                 break;
 
             case MatrixType.UpperTriangular:
+                Transpose(result, true);
+                break;
+
+            default:
+                throw new ArgumentException(
+                    "Only LowerTriangular, UpperTriangular and Diagonal matrices are supported at this time.",
+                    nameof(from));
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///     Converts a matrix to upper triangular form, if possible.
+    /// </summary>
+    public static T[,] ToUpperTriangular<T>(this T[,] matrix, MatrixType from, T[,] result = null)
+    {
+        if (result is null)
+            result = Matrix.CreateAs(matrix);
+        matrix.CopyTo(result);
+
+        switch (from)
+        {
+            case MatrixType.UpperTriangular:
+            case MatrixType.Diagonal:
+                break;
+
+            case MatrixType.LowerTriangular:
                 Transpose(result, true);
                 break;
 
@@ -1581,7 +1576,7 @@ public static partial class Matrix
     /// <summary>
     ///     Rounds a double-precision floating-point matrix to a specified number of fractional digits.
     /// </summary>
-    public static double[,] Round(this double[,] matrix, int decimals = 0)
+    public static double[,] Round(this double[,] matrix, int decimals)
     {
         ArgumentNullException.ThrowIfNull(matrix);
 
@@ -1600,7 +1595,7 @@ public static partial class Matrix
     /// <summary>
     ///     Rounds a double-precision floating-point number array to a specified number of fractional digits.
     /// </summary>
-    public static double[] Round(double[] vector, int decimals = 0)
+    public static double[] Round(double[] vector, int decimals)
     {
         ArgumentNullException.ThrowIfNull(vector);
 

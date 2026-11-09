@@ -17,7 +17,8 @@ namespace ISynergy.Framework.Mathematics.Vectors;
 [Serializable]
 public struct Vector3
 {
-    // TODO: Possibly replace with the types in System.Numerics? // NOSONAR
+    // Math.NET parity: this structure mirrors the System.Numerics vector types but is
+    // kept separate to preserve the public API of this framework.
 
     /// <summary>
     /// X coordinate of the vector.
@@ -42,7 +43,12 @@ public struct Vector3
     {
         get
         {
-            return X > Y ? X > Z ? X : Z : Y > Z ? Y : Z; // NOSONAR
+            if (X > Y)
+            {
+                return X > Z ? X : Z;
+            }
+
+            return Y > Z ? Y : Z;
         }
     }
 
@@ -56,7 +62,12 @@ public struct Vector3
     {
         get
         {
-            return X < Y ? X < Z ? X : Z : Y < Z ? Y : Z; // NOSONAR
+            if (X < Y)
+            {
+                return X < Z ? X : Z;
+            }
+
+            return Y < Z ? Y : Z;
         }
     }
 
@@ -75,7 +86,12 @@ public struct Vector3
     {
         get
         {
-            return X >= Y ? X >= Z ? 0 : 2 : Y >= Z ? 1 : 2; // NOSONAR
+            if (X >= Y)
+            {
+                return X >= Z ? 0 : 2;
+            }
+
+            return Y >= Z ? 1 : 2;
         }
     }
 
@@ -94,7 +110,12 @@ public struct Vector3
     {
         get
         {
-            return X <= Y ? X <= Z ? 0 : 2 : Y <= Z ? 1 : 2; // NOSONAR
+            if (X <= Y)
+            {
+                return X <= Z ? 0 : 2;
+            }
+
+            return Y <= Z ? 1 : 2;
         }
     }
 
@@ -212,9 +233,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector3 operator +(Vector3 vector, float value)
+    public static Vector3 Add(Vector3 vector, float value)
     {
-        return new Vector3(vector.X + value, vector.Y + value, vector.Z + value);
+        return vector + value;
     }
 
     /// <summary>
@@ -226,9 +247,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector3 Add(Vector3 vector, float value)
+    public static Vector3 operator +(Vector3 vector, float value)
     {
-        return vector + value;
+        return new Vector3(vector.X + value, vector.Y + value, vector.Z + value);
     }
 
     /// <summary>
@@ -270,9 +291,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector3 operator -(Vector3 vector, float value)
+    public static Vector3 Subtract(Vector3 vector, float value)
     {
-        return new Vector3(vector.X - value, vector.Y - value, vector.Z - value);
+        return vector - value;
     }
 
     /// <summary>
@@ -284,9 +305,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector3 Subtract(Vector3 vector, float value)
+    public static Vector3 operator -(Vector3 vector, float value)
     {
-        return vector - value;
+        return new Vector3(vector.X - value, vector.Y - value, vector.Z - value);
     }
 
     /// <summary>
@@ -328,9 +349,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector3 operator *(Vector3 vector, float factor)
+    public static Vector3 Multiply(Vector3 vector, float factor)
     {
-        return new Vector3(vector.X * factor, vector.Y * factor, vector.Z * factor);
+        return vector * factor;
     }
 
     /// <summary>
@@ -342,9 +363,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector3 Multiply(Vector3 vector, float factor)
+    public static Vector3 operator *(Vector3 vector, float factor)
     {
-        return vector * factor;
+        return new Vector3(vector.X * factor, vector.Y * factor, vector.Z * factor);
     }
 
     /// <summary>
@@ -386,9 +407,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector3 operator /(Vector3 vector, float factor)
+    public static Vector3 Divide(Vector3 vector, float factor)
     {
-        return new Vector3(vector.X / factor, vector.Y / factor, vector.Z / factor);
+        return vector / factor;
     }
 
     /// <summary>
@@ -400,9 +421,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector3 Divide(Vector3 vector, float factor)
+    public static Vector3 operator /(Vector3 vector, float factor)
     {
-        return vector / factor;
+        return new Vector3(vector.X / factor, vector.Y / factor, vector.Z / factor);
     }
 
     /// <summary>

@@ -6,7 +6,6 @@ using ISynergy.Framework.Mathematics.Wavelets.Base;
 #pragma warning disable S1905 // casts may be intentional for type clarity
 #pragma warning disable S1199 // nested blocks required in algorithm implementation
 
-
 namespace ISynergy.Framework.Mathematics.Wavelets;
 
 /// <summary>
@@ -52,19 +51,19 @@ public class Haar : IWavelet
     }
 
     /// <summary>
-    ///     1-D Backward (Inverse) Discrete Wavelet Transform.
-    /// </summary>
-    public void Backward(double[] data)
-    {
-        IWT(data);
-    }
-
-    /// <summary>
     ///     2-D Forward Discrete Wavelet Transform.
     /// </summary>
     public void Forward(double[,] data)
     {
         FWT(data, levels);
+    }
+
+    /// <summary>
+    ///     1-D Backward (Inverse) Discrete Wavelet Transform.
+    /// </summary>
+    public void Backward(double[] data)
+    {
+        IWT(data);
     }
 
     /// <summary>
@@ -74,6 +73,7 @@ public class Haar : IWavelet
     {
         IWT(data, levels);
     }
+
     /// <summary>
     ///     Discrete Haar Wavelet Transform
     /// </summary>
@@ -93,24 +93,6 @@ public class Haar : IWavelet
             data[i] = temp[i];
     }
 
-    /// <summary>
-    ///     Inverse Haar Wavelet Transform
-    /// </summary>
-    public static void IWT(double[] data)
-    {
-        var temp = new double[data.Length];
-
-        var h = data.Length >> 1;
-        for (var i = 0; i < h; i++)
-        {
-            var k = i << 1;
-            temp[k] = (data[i] * s0 + data[i + h] * w0) / w0;
-            temp[k + 1] = (data[i] * s1 + data[i + h] * w1) / s0;
-        }
-
-        for (var i = 0; i < data.Length; i++)
-            data[i] = temp[i];
-    }
     /// <summary>
     ///     Discrete Haar Wavelet 2D Transform
     /// </summary>
@@ -152,6 +134,25 @@ public class Haar : IWavelet
                     data[i, j] = col[i];
             }
         }
+    }
+
+    /// <summary>
+    ///     Inverse Haar Wavelet Transform
+    /// </summary>
+    public static void IWT(double[] data)
+    {
+        var temp = new double[data.Length];
+
+        var h = data.Length >> 1;
+        for (var i = 0; i < h; i++)
+        {
+            var k = i << 1;
+            temp[k] = (data[i] * s0 + data[i + h] * w0) / w0;
+            temp[k + 1] = (data[i] * s1 + data[i + h] * w1) / s0;
+        }
+
+        for (var i = 0; i < data.Length; i++)
+            data[i] = temp[i];
     }
 
     /// <summary>

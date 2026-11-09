@@ -365,18 +365,6 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     }
 
     /// <summary>
-    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
-    /// </summary>
-    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
-    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[][] SolveForDiagonal(double[] diagonal)
-    {
-        ArgumentNullException.ThrowIfNull(diagonal);
-
-        return Solve(Jagged.Diagonal(diagonal));
-    }
-
-    /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = B</c>.
     /// </summary>
     /// <param name="value">Right hand side column vector with as many rows as <c>A</c>.</param>
@@ -414,6 +402,18 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
         }
 
         return X;
+    }
+
+    /// <summary>
+    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
+    /// </summary>
+    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
+    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
+    public double[][] SolveForDiagonal(double[] diagonal)
+    {
+        ArgumentNullException.ThrowIfNull(diagonal);
+
+        return Solve(Jagged.Diagonal(diagonal));
     }
 
     /// <summary>

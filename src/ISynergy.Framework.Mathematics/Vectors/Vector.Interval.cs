@@ -182,9 +182,11 @@ public static partial class Vector
     }
 
     /// <summary>
-    ///   Obsolete. Please use Vector.Range(a, b, stepSize) instead.
+    ///   Creates an interval vector using a fixed step size.
     /// </summary>
-    [Obsolete("Please use Vector.Range(a, b, stepSize) instead.")] // NOSONAR
+    ///
+    /// <seealso cref="Vector.Range(double, double, double)"/>
+    ///
     public static double[] Interval(double a, double b, double stepSize)
     {
         if (a == b)
@@ -213,9 +215,11 @@ public static partial class Vector
     }
 
     /// <summary>
-    ///   Obsolete. Please use Vector.Range(range, stepSize) instead.
+    ///   Creates an interval vector using a fixed step size.
     /// </summary>
-    [Obsolete("Please use Vector.Range(range, stepSize) instead.")] // NOSONAR
+    ///
+    /// <seealso cref="Vector.Range(NumericRange, double)"/>
+    ///
     public static double[] Interval(this NumericRange range, double stepSize)
     {
         return Interval(range.Min, range.Max, stepSize);

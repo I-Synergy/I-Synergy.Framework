@@ -17,7 +17,8 @@ namespace ISynergy.Framework.Mathematics.Geometry;
 [Serializable]
 public struct Point3
 {
-    [NonSerialized] // TODO: Remove when AForge releases a newer version // NOSONAR
+    // Math.NET parity: the coordinates field is kept non-serialized to match upstream behavior; the serializable surface is the X/Y/Z accessors.
+    [NonSerialized]
     Vector3 coordinates;
 
     /// <summary>

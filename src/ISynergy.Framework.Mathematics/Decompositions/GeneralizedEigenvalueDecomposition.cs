@@ -133,7 +133,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
         // remaining 2-by-2 blocks correspond to pairs of complex
         // eigenvalues, and returns quantities whose ratios give the
         // generalized eigenvalues.
-        qzval(n, A, B, RealAlphas, ImaginaryAlphas, Betas, matz, Eigenvectors);
+        qzval(n, A, B, RealAlphas, ImaginaryAlphas, Betas, new QzEigenvectorContext(matz, Eigenvectors));
 
         // computes the eigenvectors of the triangular problem and
         // transforms the results back to the original coordinate system.
@@ -272,7 +272,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     ///     it is usually followed by  qzit,  qzval  and, possibly,  qzvec.
     ///     For the full documentation, please check the original function.
     /// </remarks>
-    private static int qzhes(int n, double[,] a, double[,] b, bool matz, double[,] z)
+    private static void qzhes(int n, double[,] a, double[,] b, bool matz, double[,] z)
     {
         int i, j, k, l;
         double r, s, t;
@@ -291,7 +291,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             }
 
         // Reduce b to upper triangular form
-        if (n <= 1) return 0;
+        if (n <= 1) return;
         for (l = 0; l < n - 1; ++l)
         {
             l1 = l + 1;
@@ -341,7 +341,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
         }
 
         // Reduce a to upper Hessenberg form, while keeping b triangular
-        if (n == 2) return 0;
+        if (n == 2) return;
         for (k = 0; k < n - 2; ++k)
         {
             nk1 = n - 2 - k;
@@ -416,7 +416,6 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
             }
         }
 
-        return 0;
     }
 
     /// <summary>
@@ -435,7 +434,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     ///     followed by  qzval  and, possibly,  qzvec.
     ///     For the full documentation, please check the original function.
     /// </remarks>
-    private static int qzit(int n, double[,] a, double[,] b, double eps1, bool matz, double[,] z, ref int ierr)
+    private static void qzit(int n, double[,] a, double[,] b, double eps1, bool matz, double[,] z, ref int ierr)
     {
         int i, j, k, l = 0;
         double r, s, t, a1, a2, a3 = 0;
@@ -806,7 +805,6 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     L1001:
         if (n > 1)
             b[n - 1, 0] = epsb;
-        return 0;
     }
 
     /// <summary>
@@ -825,8 +823,8 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     ///     and  qzit  and may be followed by  qzvec.
     ///     For the full documentation, please check the original function.
     /// </remarks>
-    private static int qzval(int n, double[,] a, double[,] b, double[] alfr, double[] alfi, double[] beta,
-        bool matz, double[,] z)
+    private static void qzval(int n, double[,] a, double[,] b, double[] alfr, double[] alfi, double[] beta,
+        QzEigenvectorContext vec)
     {
         int i, j;
         int na, en, nn;
@@ -935,12 +933,12 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
                 b[i, na] += t * v2;
             }
 
-            if (matz)
+            if (vec.Matz)
                 for (i = 0; i < n; ++i)
                 {
-                    t = z[i, en] + u2 * z[i, na];
-                    z[i, en] += t * v1;
-                    z[i, na] += t * v2;
+                    t = vec.Z[i, en] + u2 * vec.Z[i, na];
+                    vec.Z[i, en] += t * v1;
+                    vec.Z[i, na] += t * v2;
                 }
 
             if (bn == 0.0) goto L475;
@@ -1107,7 +1105,6 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
 
         b[n - 1, 0] = epsb;
 
-        return 0;
     }
 
     /// <summary>
@@ -1125,7 +1122,7 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     ///     it is usually preceded by  qzhes,  qzit, and  qzval.
     ///     For the full documentation, please check the original function.
     /// </remarks>
-    private static int qzvec(int n, double[,] a, double[,] b, double[] alfr, double[] alfi, double[] beta,
+    private static void qzvec(int n, double[,] a, double[,] b, double[] alfr, double[] alfi, double[] beta,
         double[,] z)
     {
         int i, j, k, m;
@@ -1387,7 +1384,6 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
         L950: { } // intentional empty block - goto target
         }
 
-        return 0;
     }
 
     #endregion
@@ -1415,4 +1411,17 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     }
 
     #endregion
+
+    private readonly struct QzEigenvectorContext
+    {
+        public QzEigenvectorContext(bool matz, double[,] z)
+        {
+            Matz = matz;
+            Z = z;
+        }
+
+        public bool Matz { get; }
+
+        public double[,] Z { get; }
+    }
 }

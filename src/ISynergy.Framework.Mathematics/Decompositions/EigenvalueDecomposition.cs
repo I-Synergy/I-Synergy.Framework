@@ -468,10 +468,11 @@ public sealed class EigenvalueDecomposition : ICloneable
                 }
 
                 var g = Math.Sqrt(h);
-                if (ort[m] > 0) g = -g;
+                var ortM = ort[m];
+                if (ortM > 0) g = -g;
 
-                h = h - ort[m] * g;
-                ort[m] = ort[m] - g;
+                h = h - ortM * g;
+                ortM = ortM - g;
 
                 // Apply Householder similarity transformation
                 // H = (I - u * u' / h) * H * (I - u * u') / h)
@@ -479,25 +480,25 @@ public sealed class EigenvalueDecomposition : ICloneable
                 {
                     double f = 0;
                     for (var i = high; i >= m; i--)
-                        f += ort[i] * H[i, j];
+                        f += (i == m ? ortM : ort[i]) * H[i, j];
 
                     f = f / h;
                     for (var i = m; i <= high; i++)
-                        H[i, j] -= f * ort[i];
+                        H[i, j] -= f * (i == m ? ortM : ort[i]);
                 }
 
                 for (var i = 0; i <= high; i++)
                 {
                     double f = 0;
                     for (var j = high; j >= m; j--)
-                        f += ort[j] * H[i, j];
+                        f += (j == m ? ortM : ort[j]) * H[i, j];
 
                     f = f / h;
                     for (var j = m; j <= high; j++)
-                        H[i, j] -= f * ort[j];
+                        H[i, j] -= f * (j == m ? ortM : ort[j]);
                 }
 
-                ort[m] = scale * ort[m]; // NOSONAR - self-referential update
+                ort[m] = scale * ortM;
                 H[m, m - 1] = scale * g;
             }
         }

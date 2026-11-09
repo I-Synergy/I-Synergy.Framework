@@ -25,14 +25,14 @@ public static partial class Elementwise
         return b.Length;
     }
 
-    private static int cols<U>(U[][] b)
-    {
-        return b[0].Length;
-    }
-
     private static int rows<U>(U[,] b)
     {
         return b.GetLength(0);
+    }
+
+    private static int cols<U>(U[][] b)
+    {
+        return b[0].Length;
     }
 
     private static int cols<U>(U[,] b)
@@ -356,11 +356,6 @@ public static partial class Elementwise
         return r;
     }
 
-    private static TOutput[,] MatrixCreateAs<TInput, TOutput>(TInput[][] matrix)
-    {
-        return new TOutput[matrix.Length, matrix[0].Length];
-    }
-
     private static TOutput[][] JaggedCreateAs<TInput, TOutput>(TInput[,] matrix)
     {
         var r = new TOutput[matrix.GetLength(0)][];
@@ -406,15 +401,12 @@ public static partial class Elementwise
     /// 
     public static double[][] Sqrt(this double[][] value, double[][] result)
     {
-        unsafe
+        for (int i = 0; i < value.Length; i++)
         {
-            for (int i = 0; i < value.Length; i++)
+            for (int j = 0; j < value[i].Length; j++)
             {
-                for (int j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Sqrt((double)v));
-                }
+                var v = value[i][j];
+                result[i][j] = (double)(Math.Sqrt((double)v));
             }
         }
         return result;
@@ -430,18 +422,15 @@ public static partial class Elementwise
     /// 
     public static double[,] Sqrt(this double[,] value, double[,] result)
     {
-        unsafe
+        var rows = value.GetLength(0);
+        var cols = value.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
+            for (int j = 0; j < cols; j++)
             {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (int j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Sqrt((double)v));
-                }
+                var v = value[i, j];
+                result[i, j] = (double)(Math.Sqrt((double)v));
             }
         }
 
@@ -519,18 +508,15 @@ public static partial class Elementwise
     /// 
     public static double[,] Abs(this double[,] value, double[,] result)
     {
-        unsafe
+        var rows = value.GetLength(0);
+        var cols = value.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
+            for (int j = 0; j < cols; j++)
             {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (int j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Abs(v));
-                }
+                var v = value[i, j];
+                result[i, j] = (double)(Math.Abs(v));
             }
         }
 

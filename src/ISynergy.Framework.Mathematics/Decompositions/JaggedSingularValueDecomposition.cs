@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -43,7 +44,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 ///     </para>
 /// </remarks>
 [Serializable]
-public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayDecomposition<double>
+public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayDecomposition<double>, IDeserializationCallback
 {
     private const double eps = 2 * Constants.DoubleEpsilon;
     private const double tiny = Constants.DoubleSmall;
@@ -226,22 +227,22 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
             {
                 // Compute the transformation for the k-th column and place the k-th diagonal in s[k].
                 // Compute 2-norm of k-th column without under/overflow.
-                Diagonal[k] = 0;
+                var d = 0.0;
                 for (var i = k; i < a.Length; i++)
-                    Diagonal[k] = Tools.Hypotenuse(Diagonal[k], a[i][k]);
+                    d = Tools.Hypotenuse(d, a[i][k]);
 
-                if (Diagonal[k] != 0)
+                if (d != 0)
                 {
                     if (a[k][k] < 0)
-                        Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
+                        d = -d;
 
                     for (var i = k; i < a.Length; i++)
-                        a[i][k] /= Diagonal[k];
+                        a[i][k] /= d;
 
                     a[k][k] += 1;
                 }
 
-                Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
+                Diagonal[k] = -d;
             }
 
             for (var j = k + 1; j < n; j++)
@@ -277,22 +278,22 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                 // Compute the k-th row transformation and place the
                 // k-th super-diagonal in e[k].
                 // Compute 2-norm without under/overflow.
-                e[k] = 0;
+                var e0 = 0.0;
                 for (var i = k + 1; i < e.Length; i++)
-                    e[k] = Tools.Hypotenuse(e[k], e[i]);
+                    e0 = Tools.Hypotenuse(e0, e[i]);
 
-                if (e[k] != 0)
+                if (e0 != 0)
                 {
                     if (e[k + 1] < 0)
-                        e[k] = -e[k]; // NOSONAR - self-referential update
+                        e0 = -e0;
 
                     for (var i = k + 1; i < e.Length; i++)
-                        e[i] /= e[k];
+                        e[i] /= e0;
 
                     e[k + 1] += 1;
                 }
 
-                e[k] = -e[k]; // NOSONAR - self-referential update
+                e[k] = -e0;
                 if ((k + 1 < m) && (e[k] != 0))
                 {
                     // Apply the transformation.
@@ -375,8 +376,9 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
             for (var k = n - 1; k >= 0; k--)
             {
                 if ((k < nrt) && (e[k] != 0))
-                    // TODO: The following is a pseudo correction to make SVD
-                    //  work on matrices with n > m (less rows than columns).
+                    // Math.NET parity: the following is a pseudo-correction so SVD
+                    //  works on matrices with n > m (fewer rows than columns);
+                    //  no separate transpose-and-swap implementation is provided.
 
                     // For the proper correction, compute the decomposition of the
                     //  transpose of A and swap the left and right eigenvectors
@@ -878,18 +880,6 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     }
 
     /// <summary>
-    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
-    /// </summary>
-    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
-    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[][] SolveForDiagonal(double[] diagonal)
-    {
-        ArgumentNullException.ThrowIfNull(diagonal);
-
-        return Solve(Jagged.Diagonal(diagonal));
-    }
-
-    /// <summary>
     ///     Solves a linear equation system of the form Ax = b.
     /// </summary>
     /// <param name="value">The b from the equation Ax = b.</param>
@@ -950,6 +940,18 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
 
         //(V x L* x Ut x Y)
         return Matrix.Dot(VLU, Y);
+    }
+
+    /// <summary>
+    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
+    /// </summary>
+    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
+    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
+    public double[][] SolveForDiagonal(double[] diagonal)
+    {
+        ArgumentNullException.ThrowIfNull(diagonal);
+
+        return Solve(Jagged.Diagonal(diagonal));
     }
 
     /// <summary>
@@ -1186,6 +1188,12 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
             svd.RightSingularVectors = (double[][])RightSingularVectors.MemberwiseClone();
 
         return svd;
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (Diagonal is null || LeftSingularVectors is null || RightSingularVectors is null)
+            throw new SerializationException("The deserialized singular value decomposition is invalid.");
     }
 
     #endregion

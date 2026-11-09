@@ -1,5 +1,6 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
+using System.Runtime.Serialization;
 
 #pragma warning disable S1244 // float equality is intentional in numerical algorithms
 #pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
@@ -60,7 +61,7 @@ public class AccuracyLoss : ZeroOneLoss
 /// </summary>
 [Serializable]
 public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
-    ILoss<double[][]>, ILoss<double[]>
+    ILoss<double[][]>, ILoss<double[]>, IDeserializationCallback
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="ZeroOneLoss" /> class.
@@ -214,5 +215,11 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
         if (Mean)
             return error / (double)Expected.Length;
         return error;
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (Expected is null)
+            throw new SerializationException("The deserialized zero-one loss does not contain expected values.");
     }
 }

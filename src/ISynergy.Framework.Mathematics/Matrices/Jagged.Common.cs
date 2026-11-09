@@ -33,10 +33,7 @@ public static partial class Matrix
     /// </summary>
     public static T[][] Copy<T>(this T[][] a)
     {
-        var clone = new T[a.Length][];
-        for (var i = 0; i < a.Length; i++)
-            clone[i] = (T[])a[i].Clone();
-        return clone;
+        return MemberwiseClone(a);
     }
     /// <summary>
     ///     Copies the content of an array to another array.

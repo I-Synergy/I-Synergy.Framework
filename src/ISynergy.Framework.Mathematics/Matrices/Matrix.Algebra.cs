@@ -298,8 +298,8 @@ public static partial class Matrix
         if (n == 0)
             return Matrix.Identity(matrix.GetLength(0));
 
-        // TODO: Reduce the number of memory allocations // NOSONAR
-        // TODO: Use bitwise operations instead of strings // NOSONAR
+        // Math.NET parity: as in the upstream implementation the exponent is walked
+        // through its binary string form and every squaring allocates a new matrix.
 
         var result = matrix;
         var bin = System.Convert.ToString(n, 2);
@@ -350,6 +350,6 @@ public static partial class Matrix
     /// </summary>
     public static T[][] Cartesian<T>(this T[] sequence1, T[] sequence2)
     {
-        return Cartesian([sequence1, sequence2]);
+        return Cartesian<T>(sequences: new[] { sequence1, sequence2 });
     }
 }

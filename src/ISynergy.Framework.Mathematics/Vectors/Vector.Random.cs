@@ -22,6 +22,40 @@ public static partial class Vector
     }
 
     /// <summary>
+    ///   Creates a vector with uniformly distributed random data.
+    /// </summary>
+    /// 
+    public static double[] Random(int size, double min, double max) // NOSONAR
+    {
+        if (size < 0)
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
+
+        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
+
+        var vector = new double[size];
+        for (var i = 0; i < size; i++)
+            vector[i] = (double)random.NextDouble() * (max - min) + min;
+        return vector;
+    }
+
+    /// <summary>
+    ///   Creates a vector with uniformly distributed random data.
+    /// </summary>
+    /// 
+    public static int[] Random(int size, int min, int max)
+    {
+        if (size < 0)
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
+
+        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
+
+        var vector = new int[size];
+        for (var i = 0; i < size; i++)
+            vector[i] = (int)random.NextDouble() * (max - min) + min;
+        return vector;
+    }
+
+    /// <summary>
     ///     Draws a random sample from a group of observations, with or without repetitions.
     /// </summary>
     /// <typeparam name="T">The type of the observations.</typeparam>
@@ -145,39 +179,5 @@ public static partial class Vector
         Array.Sort(x, idx);
 
         return idx;
-    }
-
-    /// <summary>
-    ///   Creates a vector with uniformly distributed random data.
-    /// </summary>
-    /// 
-    public static double[] Random(int size, double min, double max) // NOSONAR
-    {
-        if (size < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
-
-        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
-
-        var vector = new double[size];
-        for (var i = 0; i < size; i++)
-            vector[i] = (double)random.NextDouble() * (max - min) + min;
-        return vector;
-    }
-
-    /// <summary>
-    ///   Creates a vector with uniformly distributed random data.
-    /// </summary>
-    /// 
-    public static int[] Random(int size, int min, int max)
-    {
-        if (size < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
-
-        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
-
-        var vector = new int[size];
-        for (var i = 0; i < size; i++)
-            vector[i] = (int)random.NextDouble() * (max - min) + min;
-        return vector;
     }
 }

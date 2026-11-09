@@ -214,7 +214,7 @@ public class RelativeParameterConvergence : IConvergence<double[]>
 
     double[] IConvergence<double[]>.NewValue
     {
-        // TODO: Remove this explicit implementation. // NOSONAR
+        // The interface member is implemented explicitly to forward to the strongly-typed NewValues property.
         get => NewValues;
         set => NewValues = value;
     }

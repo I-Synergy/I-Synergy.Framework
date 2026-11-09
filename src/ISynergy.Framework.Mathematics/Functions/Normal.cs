@@ -346,7 +346,8 @@ public static class Normal
 
         double sum = a + h * b;
         double term = a;
-        for (var i = 2; sum != term; i += 2)
+        var i = 2;
+        while (sum != term)
         {
             term = sum;
 
@@ -355,6 +356,7 @@ public static class Normal
             pwr *= q;
 
             sum = term + pwr * (a + h * b);
+            i += 2;
         }
 
         sum *= Math.Exp(-0.5 * x * x - 0.91893853320467274178);

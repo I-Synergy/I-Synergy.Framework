@@ -95,7 +95,7 @@ public static partial class Distance
             {
                 var t = Type.GetType("ISynergy.Framework.Mathematics.Distances." + method.Name);
 
-                // TODO: Remove the following special case, as it is needed only for preserving compatibility. // NOSONAR
+                // Compatibility special case: 'BitwiseHamming' has no type in the Distances namespace, so it is mapped to Hamming directly.
                 if (t is null && methodInfo.Name == "BitwiseHamming")
                     return new Hamming() as IDistance<T>;
 
