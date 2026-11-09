@@ -22,9 +22,9 @@ public class JaggedSingularValueDecompositionTest
 
                 value[i][j] = double.NaN;
 
-                JaggedSingularValueDecomposition target = new(value);
+                JaggedSingularValueDecomposition target = new(new Jagged<double>(value));
 
-                double[][] solution = target.Solve(I);
+                double[][] solution = target.Solve(new Jagged<double>(I));
                 double[][] inverse = target.Inverse();
 
                 Assert.IsTrue(Matrix.IsEqual(solution, inverse));
@@ -40,14 +40,14 @@ public class JaggedSingularValueDecompositionTest
             [1.0, 1.0], [2.0, 2.0]
         };
 
-        JaggedSingularValueDecomposition target = new(value);
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value));
 
         double[][] expected = new double[][]
         {
             [0.1, 0.2], [0.1, 0.2]
         };
 
-        double[][] actual = target.Solve(Jagged.Identity(2));
+        double[][] actual = target.Solve(new Jagged<double>(Jagged.Identity(2)));
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-5));
         actual = target.Inverse();
@@ -67,9 +67,9 @@ public class JaggedSingularValueDecompositionTest
             {
                 double[][] value = Jagged.Magic(n);
 
-                JaggedSingularValueDecomposition target = new(value);
+                JaggedSingularValueDecomposition target = new(new Jagged<double>(value));
 
-                double[][] solution = target.Solve(I);
+                double[][] solution = target.Solve(new Jagged<double>(I));
                 double[][] inverse = target.Inverse();
                 double[][] reverse = target.Reverse();
 
@@ -96,7 +96,7 @@ public class JaggedSingularValueDecompositionTest
             [1, 2], [3, 4], [5, 6], [7, 8]
         }.Transpose(); // value is 2x4, having less rows than columns.
 
-        JaggedSingularValueDecomposition target = new(value, true, true, false);
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value), true, true, false);
 
         double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
@@ -151,7 +151,7 @@ public class JaggedSingularValueDecompositionTest
             [1, 2], [3, 4], [5, 6], [7, 8]
         }.Transpose(); // value is 2x4, having less rows than columns.
 
-        JaggedSingularValueDecomposition target = new(value, true, true, true);
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value), true, true, true);
 
         double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
@@ -204,7 +204,7 @@ public class JaggedSingularValueDecompositionTest
         }; // value is 4x2, thus having more rows than columns
 
 
-        JaggedSingularValueDecomposition target = new(value, true, true, false);
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value), true, true, false);
 
         double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
@@ -258,7 +258,7 @@ public class JaggedSingularValueDecompositionTest
             [1, 2], [3, 4], [5, 6], [7, 8]
         }.Transpose(); // value is 2x4, having less rows than columns.
 
-        JaggedSingularValueDecomposition target = new(value, true, false, true);
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value), true, false, true);
 
 
         // Checking values
@@ -306,7 +306,7 @@ public class JaggedSingularValueDecompositionTest
             [1, 2], [3, 4], [5, 6], [7, 8]
         }.Transpose(); // value is 2x4, having less rows than columns.
 
-        JaggedSingularValueDecomposition target = new(value, false, true, true);
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value), false, true, true);
 
 
         // Checking values
@@ -368,8 +368,8 @@ public class JaggedSingularValueDecompositionTest
         double[][] cvalue1 = value1.Copy();
         double[][] cvalue2 = value2.Copy();
 
-        JaggedSingularValueDecomposition target1 = new(cvalue1, true, true, true, true);
-        JaggedSingularValueDecomposition target2 = new(cvalue2, true, true, true, true);
+        JaggedSingularValueDecomposition target1 = new(new Jagged<double>(cvalue1), true, true, true, true);
+        JaggedSingularValueDecomposition target2 = new(new Jagged<double>(cvalue2), true, true, true, true);
 
         Assert.IsFalse(value1.IsEqual(cvalue1, 1e-3));
         Assert.IsTrue(value2.IsEqual(cvalue2, 1e-3)); // due to auto-transpose
@@ -407,7 +407,7 @@ public class JaggedSingularValueDecompositionTest
 
 
 
-        JaggedSingularValueDecomposition target = new(value,
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value),
             computeLeftSingularVectors: true,
             computeRightSingularVectors: true);
 
@@ -451,7 +451,7 @@ public class JaggedSingularValueDecompositionTest
 
 
 
-        JaggedSingularValueDecomposition target = new(value,
+        JaggedSingularValueDecomposition target = new(new Jagged<double>(value),
             computeLeftSingularVectors: true,
             computeRightSingularVectors: true);
 
@@ -509,7 +509,7 @@ public class JaggedSingularValueDecompositionTest
 
         Assert.IsTrue(expected.IsEqual(X));
 
-        X = new JaggedSingularValueDecomposition(A).Solve(B);
+        X = new JaggedSingularValueDecomposition(new Jagged<double>(A)).Solve(new Jagged<double>(B));
 
         Assert.IsTrue(expected.IsEqual(X));
     }

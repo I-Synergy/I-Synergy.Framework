@@ -62,14 +62,15 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     ///     True if the decomposition should be performed on
     ///     the transpose of A rather than A itself, false otherwise. Default is false.
     /// </param>
-    public JaggedLuDecomposition(double[][] value, bool transpose = false, bool inPlace = false)
+    public JaggedLuDecomposition(Jagged<double> value, bool transpose = false, bool inPlace = false)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
+        var matrix = value.Array;
+        if (matrix is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (transpose)
-            lu = value.Transpose(inPlace);
+            lu = matrix.Transpose(inPlace);
         else
-            lu = inPlace ? value : value.MemberwiseClone();
+            lu = inPlace ? matrix : matrix.MemberwiseClone();
 
         rows = lu.Length;
         cols = lu[0].Length;
@@ -312,7 +313,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[][])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Jagged{Double})" />
     ///     methods.
     /// </summary>
     public double[][] GetInformationMatrix()
@@ -326,19 +327,20 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     /// </summary>
     /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[][] Solve(double[][] value)
+    public double[][] Solve(Jagged<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Length != rows)
+        if (valueArray.Length != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new InvalidOperationException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var count = value[0].Length;
-        var X = value.Get(PivotPermutationVector, null);
+        var count = valueArray[0].Length;
+        var X = valueArray.Get(PivotPermutationVector, null);
         // Solve L*Y = B(piv,:)
         for (var k = 0; k < cols; k++)
             for (var i = k + 1; i < cols; i++)
@@ -408,7 +410,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     {
         ArgumentNullException.ThrowIfNull(diagonal);
 
-        return Solve(Jagged.Diagonal(diagonal));
+        return Solve(new Jagged<double>(Jagged.Diagonal(diagonal)));
     }
 
     /// <summary>
@@ -416,18 +418,19 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     /// </summary>
     /// <param name="value">Right hand side matrix with as many columns as <c>A</c> and any number of rows.</param>
     /// <returns>Matrix <c>X</c> so that <c>X * L * U = A</c>.</returns>
-    public double[][] SolveTranspose(double[][] value)
+    public double[][] SolveTranspose(Jagged<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Length != rows)
+        if (valueArray.Length != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new SingularMatrixException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var X = value.Get(null, PivotPermutationVector);
+        var X = valueArray.Get(null, PivotPermutationVector);
 
         var count = X[0].Length;
 

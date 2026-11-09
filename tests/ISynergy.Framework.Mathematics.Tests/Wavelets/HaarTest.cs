@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Formats;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -21,7 +22,7 @@ public class HaarTest
 
         double[,] data = (double[,])original.Clone();
 
-        Haar.FWT(data, 1);
+        Haar.FWT(new Matrix<double>(data), 1);
 
         double[,] expected =
         {
@@ -35,7 +36,7 @@ public class HaarTest
 
         Assert.IsTrue(Matrix.IsEqual(expected, data, 1e-5));
 
-        Haar.IWT(data, 1);
+        Haar.IWT(new Matrix<double>(data), 1);
 
         Assert.IsTrue(Matrix.IsEqual(data, original, 0.0001));
     }
@@ -55,7 +56,7 @@ public class HaarTest
 
         double[,] data = (double[,])original.Clone();
 
-        Haar.FWT(data, levels);
+        Haar.FWT(new Matrix<double>(data), levels);
 
         double[,] expected =
         {
@@ -69,7 +70,7 @@ public class HaarTest
 
         Assert.IsTrue(Matrix.IsEqual(expected, data, 1e-5));
 
-        Haar.IWT(data, levels);
+        Haar.IWT(new Matrix<double>(data), levels);
 
         Assert.IsTrue(Matrix.IsEqual(data, original, 0.0001));
     }

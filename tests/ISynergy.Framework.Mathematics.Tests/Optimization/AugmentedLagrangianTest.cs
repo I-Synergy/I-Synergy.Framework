@@ -367,7 +367,7 @@ public class AugmentedLagrangianTest
         double[,] a = Matrix.Identity(2); // Set up the constraint matrix...
         double[] b = Vector.Zeros(2);     // ...and the values they must be greater than
         int numberOfEqualities = 0;
-        LinearConstraintCollection linearConstraints = LinearConstraintCollection.Create(a, b, numberOfEqualities);
+        LinearConstraintCollection linearConstraints = LinearConstraintCollection.Create(new Matrix<double>(a), b, numberOfEqualities);
 
         // Finally, we create the non-linear programming solver
         AugmentedLagrangian solver = new(f, linearConstraints);

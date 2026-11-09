@@ -157,7 +157,7 @@ public class FiniteDifferencesTest
             double[,] Q = Matrix.DotWithTransposed(new Matrix<double>(mat), new Matrix<double>(mat));
             double[] d = Vector.Random(Size);
 
-            QuadraticObjectiveFunction qof = new(Q, d);
+            QuadraticObjectiveFunction qof = new(new Matrix<double>(Q), d);
 
             FiniteDifferences calculator = new(Size, qof.Function);
 

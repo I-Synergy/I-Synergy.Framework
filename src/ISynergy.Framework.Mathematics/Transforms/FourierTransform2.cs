@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Numerics;
 
@@ -90,55 +91,56 @@ public static class FourierTransform2
     /// </summary>
     /// <param name="data">The data to transform.</param>
     /// <param name="direction">The transformation direction.</param>
-    public static void DFT2(Complex[][] data, FourierTransform.Direction direction)
+    public static void DFT2(Jagged<Complex> data, FourierTransform.Direction direction)
     {
-        var m = data.Columns();
+        var dataArray = data.Array;
+        var m = dataArray.Columns();
 
         if (direction == FourierTransform.Direction.Forward)
         {
             // process rows
-            for (var i = 0; i < data.Length; i++)
+            for (var i = 0; i < dataArray.Length; i++)
                 // transform it
-                DFT(data[i], FourierTransform.Direction.Forward);
+                DFT(dataArray[i], FourierTransform.Direction.Forward);
 
             // process columns
-            var col = new Complex[data.Length];
+            var col = new Complex[dataArray.Length];
             for (var j = 0; j < m; j++)
             {
                 // copy column
                 for (var i = 0; i < col.Length; i++)
-                    col[i] = data[i][j];
+                    col[i] = dataArray[i][j];
 
                 // transform it
                 DFT(col, FourierTransform.Direction.Forward);
 
                 // copy back
                 for (var i = 0; i < col.Length; i++)
-                    data[i][j] = col[i];
+                    dataArray[i][j] = col[i];
             }
         }
         else
         {
             // process columns
-            var col = new Complex[data.Length];
+            var col = new Complex[dataArray.Length];
             for (var j = 0; j < m; j++)
             {
                 // copy column
                 for (var i = 0; i < col.Length; i++)
-                    col[i] = data[i][j];
+                    col[i] = dataArray[i][j];
 
                 // transform it
                 DFT(col, FourierTransform.Direction.Backward);
 
                 // copy back
                 for (var i = 0; i < col.Length; i++)
-                    data[i][j] = col[i];
+                    dataArray[i][j] = col[i];
             }
 
             // process rows
-            for (var i = 0; i < data.Length; i++)
+            for (var i = 0; i < dataArray.Length; i++)
                 // transform it
-                DFT(data[i], FourierTransform.Direction.Backward);
+                DFT(dataArray[i], FourierTransform.Direction.Backward);
         }
     }
 
@@ -205,15 +207,16 @@ public static class FourierTransform2
     /// </summary>
     /// <param name="data">The data to transform.</param>
     /// <param name="direction">The Transformation direction.</param>
-    public static void FFT2(Complex[][] data, FourierTransform.Direction direction)
+    public static void FFT2(Jagged<Complex> data, FourierTransform.Direction direction)
     {
-        var n = data.Length;
-        var m = data[0].Length;
+        var dataArray = data.Array;
+        var n = dataArray.Length;
+        var m = dataArray[0].Length;
 
         // process rows
-        for (var i = 0; i < data.Length; i++)
+        for (var i = 0; i < dataArray.Length; i++)
             // transform it
-            FFT(data[i], direction);
+            FFT(dataArray[i], direction);
 
         // process columns
         var col = new Complex[n];
@@ -221,14 +224,14 @@ public static class FourierTransform2
         {
             // copy column
             for (var i = 0; i < col.Length; i++)
-                col[i] = data[i][j];
+                col[i] = dataArray[i][j];
 
             // transform it
             FFT(col, direction);
 
             // copy back
             for (var i = 0; i < col.Length; i++)
-                data[i][j] = col[i];
+                dataArray[i][j] = col[i];
         }
     }
 

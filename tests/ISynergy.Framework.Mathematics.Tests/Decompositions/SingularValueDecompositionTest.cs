@@ -16,7 +16,7 @@ public class SingularValueDecompositionTest
               { 2.0, 2.0 }
         };
 
-        SingularValueDecomposition target = new(value);
+        SingularValueDecomposition target = new(new Matrix<double>(value));
 
         double[,] expected = new double[,]
         {
@@ -24,7 +24,7 @@ public class SingularValueDecompositionTest
            { 0.1, 0.2 }
         };
 
-        double[,] actual = target.Solve(Matrix.Identity(2));
+        double[,] actual = target.Solve(new Matrix<double>(Matrix.Identity(2)));
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-3));
 
@@ -45,9 +45,9 @@ public class SingularValueDecompositionTest
             {
                 double[,] value = Matrix.Magic(n);
 
-                SingularValueDecomposition target = new(value);
+                SingularValueDecomposition target = new(new Matrix<double>(value));
 
-                double[,] solution = target.Solve(I);
+                double[,] solution = target.Solve(new Matrix<double>(I));
                 double[,] inverse = target.Inverse();
                 double[,] reverse = target.Reverse();
 
@@ -72,9 +72,9 @@ public class SingularValueDecompositionTest
 
                 value[i, j] = double.NaN;
 
-                SingularValueDecomposition target = new(value);
+                SingularValueDecomposition target = new(new Matrix<double>(value));
 
-                double[,] solution = target.Solve(I);
+                double[,] solution = target.Solve(new Matrix<double>(I));
                 double[,] inverse = target.Inverse();
 
                 Assert.IsTrue(Matrix.IsEqual(solution, inverse));
@@ -103,7 +103,7 @@ public class SingularValueDecompositionTest
              { 7, 8 }
          }.Transpose(); // value is 2x4, having less rows than columns.
 
-        SingularValueDecomposition target = new(value, true, true, false);
+        SingularValueDecomposition target = new(new Matrix<double>(value), true, true, false);
 
         double[,] actual = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(target.LeftSingularVectors), new Matrix<double>(target.DiagonalMatrix))), new Matrix<double>(target.RightSingularVectors.Transpose()));
 
@@ -136,7 +136,7 @@ public class SingularValueDecompositionTest
 
         // V can be different, but for the economy SVD it is often equal
         Assert.IsTrue(
-            Matrix.IsEqual(matrix, V, 0.0001));
+            Matrix.IsEqual(matrix, new Matrix<double>(V), 0.0001));
 
         double[,] S =
         {
@@ -166,7 +166,7 @@ public class SingularValueDecompositionTest
              { 7, 8 }
          }.Transpose(); // value is 2x4, having less rows than columns.
 
-        SingularValueDecomposition target = new(value, true, true, true);
+        SingularValueDecomposition target = new(new Matrix<double>(value), true, true, true);
 
         double[,] actual = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(target.LeftSingularVectors), new Matrix<double>(Matrix.Diagonal(target.Diagonal)))), new Matrix<double>(target.RightSingularVectors.Transpose()));
 
@@ -222,7 +222,7 @@ public class SingularValueDecompositionTest
          }; // value is 4x2, thus having more rows than columns
 
 
-        SingularValueDecomposition target = new(value, true, true, false);
+        SingularValueDecomposition target = new(new Matrix<double>(value), true, true, false);
 
         double[,] actual = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(target.LeftSingularVectors), new Matrix<double>(Matrix.Diagonal(target.Diagonal)))), new Matrix<double>(target.RightSingularVectors.Transpose()));
 
@@ -279,7 +279,7 @@ public class SingularValueDecompositionTest
              { 7, 8 }
          }.Transpose(); // value is 2x4, having less rows than columns.
 
-        SingularValueDecomposition target = new(value, true, false, true);
+        SingularValueDecomposition target = new(new Matrix<double>(value), true, false, true);
 
 
         // Checking values
@@ -330,7 +330,7 @@ public class SingularValueDecompositionTest
              { 7, 8 }
          }.Transpose(); // value is 2x4, having less rows than columns.
 
-        SingularValueDecomposition target = new(value, false, true, true);
+        SingularValueDecomposition target = new(new Matrix<double>(value), false, true, true);
 
 
         // Checking values
@@ -392,8 +392,8 @@ public class SingularValueDecompositionTest
         double[,] cvalue1 = value1.Copy();
         double[,] cvalue2 = value2.Copy();
 
-        SingularValueDecomposition target1 = new(cvalue1, true, true, true, true);
-        SingularValueDecomposition target2 = new(cvalue2, true, true, true, true);
+        SingularValueDecomposition target1 = new(new Matrix<double>(cvalue1), true, true, true, true);
+        SingularValueDecomposition target2 = new(new Matrix<double>(cvalue2), true, true, true, true);
 
         Assert.IsFalse(cvalue1.IsEqual(value1, 1e-5));
         // Assert.IsFalse(cvalue2.IsEqual(value2, 1e-5));
@@ -430,7 +430,7 @@ public class SingularValueDecompositionTest
 
 
 
-        SingularValueDecomposition target = new(value,
+        SingularValueDecomposition target = new(new Matrix<double>(value),
             computeLeftSingularVectors: true,
             computeRightSingularVectors: true);
 
@@ -480,7 +480,7 @@ public class SingularValueDecompositionTest
 
         Assert.IsTrue(expected.IsEqual(X));
 
-        X = new SingularValueDecomposition(A).Solve(B);
+        X = new SingularValueDecomposition(new Matrix<double>(A)).Solve(new Matrix<double>(B));
 
         Assert.IsTrue(expected.IsEqual(X));
     }

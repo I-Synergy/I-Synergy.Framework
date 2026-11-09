@@ -135,15 +135,17 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
     /// <param name="quadraticTerms">A Hessian matrix of quadratic terms defining the quadratic objective function.</param>
     /// <param name="linearTerms">The vector of linear terms associated with <paramref name="quadraticTerms" />.</param>
     /// <param name="variables">The name for each variable in the problem.</param>
-    public QuadraticObjectiveFunction(double[,] quadraticTerms, double[] linearTerms, params string[] variables)
+    public QuadraticObjectiveFunction(Matrix<double> quadraticTerms, double[] linearTerms, params string[] variables)
     {
-        if (!quadraticTerms.IsSquare())
+        var hessian = quadraticTerms.Array;
+
+        if (!hessian.IsSquare())
             throw new DimensionMismatchException(nameof(quadraticTerms), "The matrix must be square.");
 
-        if (!quadraticTerms.IsSymmetric(rtol: 1e-6))
+        if (!hessian.IsSymmetric(rtol: 1e-6))
             throw new NonSymmetricMatrixException("The matrix must be symmetric.");
 
-        if (quadraticTerms.Rows() != linearTerms.Length)
+        if (hessian.Rows() != linearTerms.Length)
             throw new DimensionMismatchException(nameof(linearTerms),
                 "The vector of linear terms must have the same length as the Hessian matrix side.");
 
@@ -166,7 +168,7 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
             InnerIndices[i] = var;
         }
 
-        QuadraticTerms = quadraticTerms;
+        QuadraticTerms = hessian;
         LinearTerms = linearTerms;
         NumberOfVariables = LinearTerms.Length;
 
@@ -460,7 +462,7 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
         for (var i = 0; i < variables.Length; i++)
             variables[i] = a.InnerIndices[i];
 
-        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
+        return new QuadraticObjectiveFunction(new Matrix<double>(quadraticTerms), linearTerms, variables)
         {
             ConstantTerm = constantTerm
         };
@@ -541,7 +543,7 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
             variables = Array.Empty<string>();
         }
 
-        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
+        return new QuadraticObjectiveFunction(new Matrix<double>(quadraticTerms), linearTerms, variables)
         {
             ConstantTerm = constantTerm
         };
@@ -579,7 +581,7 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
             variables = Array.Empty<string>();
         }
 
-        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
+        return new QuadraticObjectiveFunction(new Matrix<double>(quadraticTerms), linearTerms, variables)
         {
             ConstantTerm = constantTerm
         };

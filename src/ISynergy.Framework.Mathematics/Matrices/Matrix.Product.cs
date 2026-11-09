@@ -193,7 +193,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -238,7 +238,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, new Jagged<double>(resultArray).ToMatrix().To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -282,7 +282,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, new Jagged<double>(resultArray).ToMatrix().To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -328,7 +328,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, new Jagged<double>(resultArray).ToMatrix().To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -586,7 +586,7 @@ public static partial class Matrix
                 resultArray[i, j] = s;
             }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -655,7 +655,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -695,7 +695,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -734,7 +734,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -887,7 +887,7 @@ public static partial class Matrix
         }
 
 #if DEBUG
-        if (!C.IsEqual(resultArray.To<double[,]>(), 1e-4))
+        if (!C.IsEqual(new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
 
@@ -936,7 +936,7 @@ public static partial class Matrix
         }
 
 #if DEBUG
-        if (!C.IsEqual(resultArray.To<double[,]>(), 1e-4))
+        if (!C.IsEqual(new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
 
@@ -981,7 +981,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -1116,7 +1116,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -1186,7 +1186,7 @@ public static partial class Matrix
             for (var j = 0; j < m; j++)
                 resultArray[j, i] = (aArray[i, j] * diagonal[i]);
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -1213,7 +1213,7 @@ public static partial class Matrix
             for (var j = 0; j < m; j++)
                 resultArray[j][i] = (aArray[i][j] * diagonal[i]);
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -1293,7 +1293,7 @@ public static partial class Matrix
             for (var j = 0; j < diagonal.Length; j++)
                 resultArray[i, j] = aArray[i, j] * diagonal[j];
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -1320,7 +1320,7 @@ public static partial class Matrix
             for (var j = 0; j < diagonal.Length; j++)
                 resultArray[i][j] = (aArray[i][j] * diagonal[j]);
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Matrix<double>(resultArray.To<double[,]>()), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;

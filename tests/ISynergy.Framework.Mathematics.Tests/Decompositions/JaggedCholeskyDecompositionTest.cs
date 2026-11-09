@@ -30,11 +30,11 @@ public class JaggedCholeskyDecompositionTest
 
                 bool thrown = false;
 
-                JaggedCholeskyDecomposition target = new(value);
+                JaggedCholeskyDecomposition target = new(new Jagged<double>(value));
 
                 try
                 {
-                    target.Solve(I);
+                    target.Solve(new Jagged<double>(I));
                 }
                 catch (Exception)
                 {
@@ -66,7 +66,7 @@ public class JaggedCholeskyDecompositionTest
         };
 
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged());
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
         double[][] L = chol.LeftTriangularFactor;
 
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.0001));
@@ -75,7 +75,7 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Jagged<double>(L), new Jagged<double>(L.Transpose())), value, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-3));
 
-        Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
+        Assert.AreEqual(new LuDecomposition(new Matrix<double>(value)).Determinant, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
     }
 
@@ -89,18 +89,18 @@ public class JaggedCholeskyDecompositionTest
            {  0, -1,  2 }
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged());
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
         double[][] L = chol.LeftTriangularFactor;
 
         double[][] B = Jagged.ColumnVector(new double[] { 1, 2, 3 });
 
         double[][] expected = Jagged.ColumnVector([2.5, 4.0, 3.5]);
 
-        double[][] actual = chol.Solve(B);
+        double[][] actual = chol.Solve(new Jagged<double>(B));
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
         Assert.AreNotSame(B, actual);
 
-        actual = chol.Solve(B, true);
+        actual = chol.Solve(new Jagged<double>(B), true);
         Assert.AreSame(B, actual);
         Assert.IsTrue(Matrix.IsEqual(expected, B, 1e-10));
 
@@ -117,7 +117,7 @@ public class JaggedCholeskyDecompositionTest
            {  0, -1,  2 }
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged());
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
         double[][] L = chol.LeftTriangularFactor;
 
         double[] B = [1, 2, 3];
@@ -145,7 +145,7 @@ public class JaggedCholeskyDecompositionTest
            {  6, -2,  0,  0 },
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged(), true);
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()), true);
         double[][] L = chol.LeftTriangularFactor;
 
         double[][] B = Jagged.Identity(4);
@@ -157,7 +157,7 @@ public class JaggedCholeskyDecompositionTest
             { 1.4000,    4.2000,    5.4000,   -2.5000 },
             { -0.5000,  -2.0000,   -2.5000,    1.0000 },
         };
-        double[][] actual = chol.Solve(B);
+        double[][] actual = chol.Solve(new Jagged<double>(B));
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
 
@@ -175,7 +175,7 @@ public class JaggedCholeskyDecompositionTest
            {  6, -2,  0,  0 },
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged(), true);
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()), true);
         double[][] L = chol.LeftTriangularFactor;
 
         double[] B = [1, 2, 3, 4];
@@ -197,7 +197,7 @@ public class JaggedCholeskyDecompositionTest
            {  6, -2,  0,  0 },
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged(), true);
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()), true);
         double[][] L = chol.LeftTriangularFactor;
 
         double[][] expected = Matrix.Inverse(new Matrix<double>(value).ToJagged());
@@ -234,7 +234,7 @@ public class JaggedCholeskyDecompositionTest
 
 
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged(), true);
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()), true);
         double[][] L = chol.LeftTriangularFactor;
         double[][] D = chol.DiagonalMatrix;
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -244,7 +244,7 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(L), new Jagged<double>(D))), new Jagged<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
-        Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
+        Assert.AreEqual(new LuDecomposition(new Matrix<double>(value)).Determinant, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
     }
 
@@ -275,7 +275,7 @@ public class JaggedCholeskyDecompositionTest
             {      0,         0,         0,    1.0000 },
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged(), true);
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()), true);
         double[][] L = chol.LeftTriangularFactor;
         double[][] D = chol.DiagonalMatrix;
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -285,7 +285,7 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(L), new Jagged<double>(D))), new Jagged<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
-        Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
+        Assert.AreEqual(new LuDecomposition(new Matrix<double>(value)).Determinant, chol.Determinant, 1e-10);
         Assert.IsFalse(chol.IsPositiveDefinite);
     }
 
@@ -309,7 +309,7 @@ public class JaggedCholeskyDecompositionTest
         };
 
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged(), robust: false, valueType: MatrixType.LowerTriangular);
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()), robust: false, valueType: MatrixType.LowerTriangular);
         double[][] L = chol.LeftTriangularFactor;
 
         Assert.IsTrue(Matrix.IsEqual(L, expected, 1e-4));
@@ -326,7 +326,7 @@ public class JaggedCholeskyDecompositionTest
              {  0.0000, -0.6667,  1.0000 }
         };
 
-        chol = new JaggedCholeskyDecomposition(new Matrix<double>(value).ToJagged(), robust: true, valueType: MatrixType.LowerTriangular);
+        chol = new JaggedCholeskyDecomposition(new Jagged<double>(new Matrix<double>(value).ToJagged()), robust: true, valueType: MatrixType.LowerTriangular);
         L = chol.LeftTriangularFactor;
 
         Assert.IsTrue(Matrix.IsEqual(L, expected2, 1e-4));
@@ -340,7 +340,7 @@ public class JaggedCholeskyDecompositionTest
     [TestMethod]
     public void LogDeterminantTest()
     {
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(bigmatrix).ToJagged());
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(bigmatrix).ToJagged()));
         Assert.AreEqual(0.0, chol.Determinant);
         Assert.AreEqual(-2224.8931093738875, chol.LogDeterminant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
@@ -360,7 +360,7 @@ public class JaggedCholeskyDecompositionTest
            {  1, -2,  1,  7 },
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged());
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
         Assert.AreEqual(2232, chol.Determinant, 1e-12);
         Assert.IsTrue(chol.Nonsingular);
         //Assert.IsTrue(chol.Symmetric);
@@ -377,7 +377,7 @@ public class JaggedCholeskyDecompositionTest
            {  1, -2,  1,  7 },
         };
 
-        JaggedCholeskyDecomposition chol = new(new Matrix<double>(value).ToJagged());
+        JaggedCholeskyDecomposition chol = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
         Assert.AreEqual(2232, chol.Determinant, 1e-12);
 
         double expected = Math.Log(2232);

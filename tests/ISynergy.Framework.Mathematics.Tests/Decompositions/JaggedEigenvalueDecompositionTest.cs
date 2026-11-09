@@ -22,7 +22,7 @@ public class JaggedEigenvalueDecompositionTest
 
                 value[i][j] = double.NaN;
 
-                JaggedEigenvalueDecomposition target = new(value);
+                JaggedEigenvalueDecomposition target = new(new Jagged<double>(value));
                 Assert.IsNotNull(target);
             }
         }
@@ -38,7 +38,7 @@ public class JaggedEigenvalueDecompositionTest
             [2, 4]
         ];
 
-        JaggedEigenvalueDecomposition target = new(A);
+        JaggedEigenvalueDecomposition target = new(new Jagged<double>(A));
 
         double[][] D = target.DiagonalMatrix;
         double[][] Q = target.Eigenvectors;
@@ -85,7 +85,7 @@ public class JaggedEigenvalueDecompositionTest
             [-1, 2, 3]
         ];
 
-        JaggedEigenvalueDecomposition target = new(A);
+        JaggedEigenvalueDecomposition target = new(new Jagged<double>(A));
         double[][] D = target.DiagonalMatrix;
         double[][] Q = target.Eigenvectors;
 

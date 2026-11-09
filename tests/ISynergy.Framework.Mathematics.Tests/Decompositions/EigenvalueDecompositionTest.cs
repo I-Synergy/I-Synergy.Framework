@@ -22,7 +22,7 @@ public class EigenvalueDecompositionTest
 
                 value[i, j] = double.NaN;
 
-                EigenvalueDecomposition target = new(value);
+                EigenvalueDecomposition target = new(new Matrix<double>(value));
                 Assert.IsNotNull(target);
             }
         }
@@ -38,7 +38,7 @@ public class EigenvalueDecompositionTest
             { 2, 4 }
         };
 
-        EigenvalueDecomposition target = new(A);
+        EigenvalueDecomposition target = new(new Matrix<double>(A));
 
         double[,] D = target.DiagonalMatrix;
         double[,] Q = target.Eigenvectors;
@@ -87,7 +87,7 @@ public class EigenvalueDecompositionTest
             { -1, 2, 3 }
         };
 
-        EigenvalueDecomposition target = new(A);
+        EigenvalueDecomposition target = new(new Matrix<double>(A));
         double[,] D = target.DiagonalMatrix;
         double[,] Q = target.Eigenvectors;
 

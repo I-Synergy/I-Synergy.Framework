@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Wavelets.Base;
 
 
@@ -48,7 +49,7 @@ public class Haar : IWavelet
     /// <summary>
     ///     2-D Forward Discrete Wavelet Transform.
     /// </summary>
-    public void Forward(double[,] data)
+    public void Forward(Matrix<double> data)
     {
         FWT(data, levels);
     }
@@ -64,7 +65,7 @@ public class Haar : IWavelet
     /// <summary>
     ///     2-D Backward (Inverse) Discrete Wavelet Transform.
     /// </summary>
-    public void Backward(double[,] data)
+    public void Backward(Matrix<double> data)
     {
         IWT(data, levels);
     }
@@ -91,10 +92,11 @@ public class Haar : IWavelet
     /// <summary>
     ///     Discrete Haar Wavelet 2D Transform
     /// </summary>
-    public static void FWT(double[,] data, int iterations)
+    public static void FWT(Matrix<double> data, int iterations)
     {
-        var rows = data.GetLength(0);
-        var cols = data.GetLength(1);
+        var dataArray = data.Array;
+        var rows = dataArray.GetLength(0);
+        var cols = dataArray.GetLength(1);
 
         double[] row;
         double[] col;
@@ -110,23 +112,23 @@ public class Haar : IWavelet
             for (var i = 0; i < levRows; i++)
             {
                 for (var j = 0; j < row.Length; j++)
-                    row[j] = data[i, j];
+                    row[j] = dataArray[i, j];
 
                 FWT(row);
 
                 for (var j = 0; j < row.Length; j++)
-                    data[i, j] = row[j];
+                    dataArray[i, j] = row[j];
             }
             col = new double[levRows];
             for (var j = 0; j < levCols; j++)
             {
                 for (var i = 0; i < col.Length; i++)
-                    col[i] = data[i, j];
+                    col[i] = dataArray[i, j];
 
                 FWT(col);
 
                 for (var i = 0; i < col.Length; i++)
-                    data[i, j] = col[i];
+                    dataArray[i, j] = col[i];
             }
         }
     }
@@ -153,10 +155,11 @@ public class Haar : IWavelet
     /// <summary>
     ///     Inverse Haar Wavelet 2D Transform
     /// </summary>
-    public static void IWT(double[,] data, int iterations)
+    public static void IWT(Matrix<double> data, int iterations)
     {
-        var rows = data.GetLength(0);
-        var cols = data.GetLength(1);
+        var dataArray = data.Array;
+        var rows = dataArray.GetLength(0);
+        var cols = dataArray.GetLength(1);
 
         double[] col;
         double[] row;
@@ -172,24 +175,24 @@ public class Haar : IWavelet
             for (var j = 0; j < levCols; j++)
             {
                 for (var i = 0; i < col.Length; i++)
-                    col[i] = data[i, j];
+                    col[i] = dataArray[i, j];
 
                 IWT(col);
 
                 for (var i = 0; i < col.Length; i++)
-                    data[i, j] = col[i];
+                    dataArray[i, j] = col[i];
             }
 
             row = new double[levCols];
             for (var i = 0; i < levRows; i++)
             {
                 for (var j = 0; j < row.Length; j++)
-                    row[j] = data[i, j];
+                    row[j] = dataArray[i, j];
 
                 IWT(row);
 
                 for (var j = 0; j < row.Length; j++)
-                    data[i, j] = row[j];
+                    dataArray[i, j] = row[j];
             }
         }
     }

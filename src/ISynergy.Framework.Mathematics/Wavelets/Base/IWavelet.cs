@@ -1,5 +1,7 @@
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
+
 namespace ISynergy.Framework.Mathematics.Wavelets.Base;
 
 /// <summary>
@@ -18,7 +20,7 @@ public interface IWavelet
     ///   2-D Forward Discrete Wavelet Transform.
     /// </summary>
     /// 
-    void Forward(double[,] data);
+    void Forward(Matrix<double> data);
 
     /// <summary>
     ///   1-D Backward (Inverse) Discrete Wavelet Transform.
@@ -30,5 +32,5 @@ public interface IWavelet
     ///   2-D Backward (Inverse) Discrete Wavelet Transform.
     /// </summary>
     /// 
-    void Backward(double[,] data);
+    void Backward(Matrix<double> data);
 }

@@ -1,5 +1,6 @@
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -33,7 +34,7 @@ public static partial class Norm
     /// </summary>
     public static double Norm2(this double[,] a)
     {
-        return new SingularValueDecomposition(a, false, false).TwoNorm;
+        return new SingularValueDecomposition(new Matrix<double>(a), false, false).TwoNorm;
     }
 
     /// <summary>
@@ -41,6 +42,6 @@ public static partial class Norm
     /// </summary>
     public static double Norm2(this double[][] a)
     {
-        return new JaggedSingularValueDecomposition(a, false, false).TwoNorm;
+        return new JaggedSingularValueDecomposition(new Jagged<double>(a), false, false).TwoNorm;
     }
 }

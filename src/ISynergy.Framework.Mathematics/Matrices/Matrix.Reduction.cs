@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -1341,8 +1342,8 @@ public static partial class Matrix
         int rows = matrix.Rows();
         int cols = matrix.Columns();
         if (dimension == 1)
-            return CumulativeSum(matrix, dimension, Jagged.Zeros<double>(rows, cols));
-        return CumulativeSum(matrix, dimension, Jagged.Zeros<double>(cols, rows));
+            return CumulativeSum(matrix, dimension, new Jagged<double>(Jagged.Zeros<double>(rows, cols)));
+        return CumulativeSum(matrix, dimension, new Jagged<double>(Jagged.Zeros<double>(cols, rows)));
     }
 
     /// <summary>
@@ -1355,31 +1356,32 @@ public static partial class Matrix
     /// <param name="result">A location where the result of this operation will be stored,
     ///   avoiding unnecessary memory allocations.</param>
     ///
-    public static double[][] CumulativeSum(this double[][] matrix, int dimension, double[][] result)
+    public static double[][] CumulativeSum(this double[][] matrix, int dimension, Jagged<double> result)
     {
+        var resultArray = result.Array;
         int rows = matrix.Rows();
         int cols = matrix.Columns();
 
         if (dimension == 1)
         {
-            matrix.GetRow(0, result: result[0]);
+            matrix.GetRow(0, result: resultArray[0]);
             for (var i = 1; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i][j] = result[i - 1][j] + matrix[i][j];
+                    resultArray[i][j] = resultArray[i - 1][j] + matrix[i][j];
         }
         else if (dimension == 0)
         {
-            matrix.GetColumn(0, result: result[0]);
+            matrix.GetColumn(0, result: resultArray[0]);
             for (var i = 1; i < cols; i++)
                 for (var j = 0; j < rows; j++)
-                    result[i][j] = result[i - 1][j] + matrix[j][i];
+                    resultArray[i][j] = resultArray[i - 1][j] + matrix[j][i];
         }
         else
         {
             throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -1395,8 +1397,8 @@ public static partial class Matrix
         int rows = matrix.Rows();
         int cols = matrix.Columns();
         if (dimension == 1)
-            return CumulativeSum(matrix, dimension, Matrix.Zeros<double>(rows, cols));
-        return CumulativeSum(matrix, dimension, Matrix.Zeros<double>(cols, rows));
+            return CumulativeSum(matrix, dimension, new Matrix<double>(Matrix.Zeros<double>(rows, cols)));
+        return CumulativeSum(matrix, dimension, new Matrix<double>(Matrix.Zeros<double>(cols, rows)));
     }
 
     /// <summary>
@@ -1409,31 +1411,32 @@ public static partial class Matrix
     /// <param name="result">A location where the result of this operation will be stored,
     ///   avoiding unnecessary memory allocations.</param>
     ///
-    public static double[,] CumulativeSum(this double[,] matrix, int dimension, double[,] result)
+    public static double[,] CumulativeSum(this double[,] matrix, int dimension, Matrix<double> result)
     {
+        var resultArray = result.Array;
         int rows = matrix.Rows();
         int cols = matrix.Columns();
 
         if (dimension == 1)
         {
-            result.SetColumn(0, matrix.GetRow(0));
+            resultArray.SetColumn(0, matrix.GetRow(0));
             for (var i = 1; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i, j] = result[i - 1, j] + matrix[i, j];
+                    resultArray[i, j] = resultArray[i - 1, j] + matrix[i, j];
         }
         else if (dimension == 0)
         {
-            result.SetColumn(0, matrix.GetColumn(0));
+            resultArray.SetColumn(0, matrix.GetColumn(0));
             for (var i = 1; i < cols; i++)
                 for (var j = 0; j < rows; j++)
-                    result[i, j] = result[i - 1, j] + matrix[j, i];
+                    resultArray[i, j] = resultArray[i - 1, j] + matrix[j, i];
         }
         else
         {
             throw new ArgumentException("Invalid dimension", nameof(dimension));
         }
 
-        return result;
+        return resultArray;
     }
 
 }

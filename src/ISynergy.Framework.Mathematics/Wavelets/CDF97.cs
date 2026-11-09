@@ -20,6 +20,7 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Wavelets.Base;
 
 
@@ -59,7 +60,7 @@ public class Cdf97 : IWavelet
     /// <summary>
     ///     2-D Forward Discrete Wavelet Transform.
     /// </summary>
-    public void Forward(double[,] data)
+    public void Forward(Matrix<double> data)
     {
         FWT97(data, levels);
     }
@@ -75,7 +76,7 @@ public class Cdf97 : IWavelet
     /// <summary>
     ///     2-D Backward (Inverse) Discrete Wavelet Transform.
     /// </summary>
-    public void Backward(double[,] data)
+    public void Backward(Matrix<double> data)
     {
         IWT97(data, levels);
     }
@@ -127,20 +128,21 @@ public class Cdf97 : IWavelet
     /// <summary>
     ///     Forward biorthogonal 9/7 2D wavelet transform
     /// </summary>
-    public static double[,] FWT97(double[,] data, int levels) // NOSONAR
+    public static double[,] FWT97(Matrix<double> data, int levels) // NOSONAR
     {
-        var w = data.GetLength(0);
-        var h = data.GetLength(1);
+        var dataArray = data.Array;
+        var w = dataArray.GetLength(0);
+        var h = dataArray.GetLength(1);
 
         for (var i = 0; i < levels; i++)
         {
-            fwt2d(data, w, h);
-            fwt2d(data, w, h);
+            fwt2d(dataArray, w, h);
+            fwt2d(dataArray, w, h);
             w >>= 1;
             h >>= 1;
         }
 
-        return data;
+        return dataArray;
     }
 
     /// <summary>
@@ -191,10 +193,11 @@ public class Cdf97 : IWavelet
     /// <summary>
     ///     Inverse biorthogonal 9/7 2D wavelet transform
     /// </summary>
-    public static double[,] IWT97(double[,] data, int levels) // NOSONAR
+    public static double[,] IWT97(Matrix<double> data, int levels) // NOSONAR
     {
-        var w = data.GetLength(0);
-        var h = data.GetLength(1);
+        var dataArray = data.Array;
+        var w = dataArray.GetLength(0);
+        var h = dataArray.GetLength(1);
 
         for (var i = 0; i < levels - 1; i++)
         {
@@ -204,13 +207,13 @@ public class Cdf97 : IWavelet
 
         for (var i = 0; i < levels; i++)
         {
-            data = iwt2d(data, w, h);
-            data = iwt2d(data, w, h);
+            dataArray = iwt2d(dataArray, w, h);
+            dataArray = iwt2d(dataArray, w, h);
             h <<= 1;
             w <<= 1;
         }
 
-        return data;
+        return dataArray;
     }
     private static void fwt2d(double[,] x, int width, int height)
     {

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Comparers;
 using ISynergy.Framework.Mathematics.Vectors;
@@ -239,11 +240,12 @@ public static partial class Matrix
     /// </summary>
     /// <param name="keys">The key value for each column.</param>
     /// <param name="values">The matrix to be sorted.</param>
-    public static TValue[,] Sort<TKey, TValue>(TKey[] keys, TValue[,] values)
+    public static TValue[,] Sort<TKey, TValue>(TKey[] keys, Matrix<TValue> values)
     {
+        var valuesArray = values.Array;
         var indices = Vector.Range(keys.Length);
         Array.Sort(keys.Copy(), indices);
-        return values.Get(0, values.Rows(), indices);
+        return valuesArray.Get(0, valuesArray.Rows(), indices);
     }
 
     /// <summary>
@@ -252,11 +254,12 @@ public static partial class Matrix
     /// <param name="keys">The key value for each column.</param>
     /// <param name="values">The matrix to be sorted.</param>
     /// <param name="comparer">The comparer to use.</param>
-    public static TValue[,] Sort<TKey, TValue>(TKey[] keys, TValue[,] values, IComparer<TKey> comparer)
+    public static TValue[,] Sort<TKey, TValue>(TKey[] keys, Matrix<TValue> values, IComparer<TKey> comparer)
     {
+        var valuesArray = values.Array;
         var indices = Vector.Range(keys.Length);
         Array.Sort(keys.Copy(), indices, comparer);
-        return values.Get(0, values.Rows(), indices);
+        return valuesArray.Get(0, valuesArray.Rows(), indices);
     }
 
     /// <summary>
@@ -265,11 +268,12 @@ public static partial class Matrix
     /// <param name="keys">The key value for each column.</param>
     /// <param name="values">The matrix to be sorted.</param>
     /// <param name="comparer">The comparer to use.</param>
-    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values, IComparer<TKey> comparer) // NOSONAR
+    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, Jagged<TValue> values, IComparer<TKey> comparer) // NOSONAR
     {
+        var valuesArray = values.Array;
         var indices = Vector.Range(keys.Length);
         Array.Sort(keys.Copy(), indices, comparer);
-        return values.Submatrix(null, indices);
+        return valuesArray.Submatrix(null, indices);
     }
 
     /// <summary>
@@ -277,11 +281,12 @@ public static partial class Matrix
     /// </summary>
     /// <param name="keys">The key value for each column.</param>
     /// <param name="values">The matrix to be sorted.</param>
-    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, TValue[][] values)
+    public static TValue[][] Sort<TKey, TValue>(TKey[] keys, Jagged<TValue> values)
     {
+        var valuesArray = values.Array;
         var indices = Vector.Range(keys.Length);
         Array.Sort(keys.Copy(), indices);
-        return values.Submatrix(null, indices);
+        return valuesArray.Submatrix(null, indices);
     }
 
     /// <summary>
@@ -380,21 +385,22 @@ public static partial class Matrix
     /// <summary>
     ///     Gets a column vector from a matrix.
     /// </summary>
-    public static T[,] GetPlane<T>(this T[,,] m, int index, T[,] result = null)
+    public static T[,] GetPlane<T>(this T[,,] m, int index, Matrix<T> result = default)
     {
+        var resultArray = result.Array;
         var rows = m.Rows();
         var cols = m.Columns();
         var depth = m.Depth();
 
-        if (result is null)
-            result = new T[rows, cols];
+        if (resultArray is null)
+            resultArray = new T[rows, cols];
 
         index = Matrix.index(index, depth);
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < cols; j++)
-                result[i, j] = m[i, j, index];
+                resultArray[i, j] = m[i, j, index];
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -432,26 +438,27 @@ public static partial class Matrix
     /// </summary>
     public static T[][] GetColumns<T>(this T[][] m, params int[] index)
     {
-        return GetColumns(m, index, null);
+        return GetColumns(m, index, default);
     }
 
     /// <summary>
     ///     Gets a column vector from a matrix.
     /// </summary>
-    public static T[][] GetColumns<T>(this T[][] m, int[] index, T[][] result = null)
+    public static T[][] GetColumns<T>(this T[][] m, int[] index, Jagged<T> result = default)
     {
-        if (result is null)
-            result = new T[m.Length][];
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = new T[m.Length][];
 
-        for (var i = 0; i < result.Length; i++)
+        for (var i = 0; i < resultArray.Length; i++)
         {
-            if (result[i] is null)
-                result[i] = new T[index.Length];
+            if (resultArray[i] is null)
+                resultArray[i] = new T[index.Length];
             for (var j = 0; j < index.Length; j++)
-                result[i][j] = m[i][index[j]];
+                resultArray[i][j] = m[i][index[j]];
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -459,24 +466,25 @@ public static partial class Matrix
     /// </summary>
     public static T[,] GetColumns<T>(this T[,] m, params int[] index)
     {
-        return GetColumns(m, index, null);
+        return GetColumns(m, index, default);
     }
 
     /// <summary>
     ///     Gets a column vector from a matrix.
     /// </summary>
-    public static T[,] GetColumns<T>(this T[,] m, int[] index, T[,] result = null)
+    public static T[,] GetColumns<T>(this T[,] m, int[] index, Matrix<T> result = default)
     {
+        var resultArray = result.Array;
         var rows = m.GetLength(0);
 
-        if (result is null)
-            result = new T[rows, index.Length];
+        if (resultArray is null)
+            resultArray = new T[rows, index.Length];
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < index.Length; j++)
-                result[i, j] = m[i, index[j]];
+                resultArray[i, j] = m[i, index[j]];
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -512,27 +520,28 @@ public static partial class Matrix
     /// </summary>
     public static T[][] GetRows<T>(this T[][] m, params int[] index)
     {
-        return GetRows(m, index, null);
+        return GetRows(m, index, default);
     }
 
     /// <summary>
     ///     Gets a row vector from a matrix.
     /// </summary>
-    public static T[][] GetRows<T>(this T[][] m, int[] index, T[][] result)
+    public static T[][] GetRows<T>(this T[][] m, int[] index, Jagged<T> result)
     {
-        if (result is null)
+        var resultArray = result.Array;
+        if (resultArray is null)
         {
-            result = new T[index.Length][];
+            resultArray = new T[index.Length][];
             for (var i = 0; i < index.Length; i++)
-                result[i] = (T[])m[index[i]].Clone();
+                resultArray[i] = (T[])m[index[i]].Clone();
         }
         else
         {
             for (var i = 0; i < index.Length; i++)
-                m[index[i]].CopyTo(result[i], 0);
+                m[index[i]].CopyTo(resultArray[i], 0);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>

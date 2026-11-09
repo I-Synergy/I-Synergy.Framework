@@ -423,7 +423,7 @@ public partial class MatrixTest
     {
         double[,] z = new Matrix<T>(from).Convert<T, double>();
         double[,] a = Matrix.Convert<T, double>(new Matrix<T>(from));
-        double[][] b = Jagged.Convert<T, double>(from);
+        double[][] b = Jagged.Convert<T, double>(new Matrix<T>(from));
         double[,] c = (double[,])Matrix.Convert<double>(from);
         double[][] d = (double[][])Jagged.Convert<double>(from);
         double[,] e = Matrix.To<double[,]>(from);

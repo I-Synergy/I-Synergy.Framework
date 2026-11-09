@@ -54,8 +54,8 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
     ///     Pass <see langword="true" /> to sort the eigenvalues and eigenvectors at the end
     ///     of the decomposition.
     /// </param>
-    public JaggedEigenvalueDecomposition(double[][] value, bool inPlace = false, bool sort = false)
-        : this(value, value.IsSymmetric(), inPlace, sort)
+    public JaggedEigenvalueDecomposition(Jagged<double> value, bool inPlace = false, bool sort = false)
+        : this(value, value.Array.IsSymmetric(), inPlace, sort)
     {
     }
 
@@ -78,16 +78,17 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
     ///     Pass <see langword="true" /> to sort the eigenvalues and eigenvectors at the end
     ///     of the decomposition.
     /// </param>
-    public JaggedEigenvalueDecomposition(double[][] value, bool assumeSymmetric,
+    public JaggedEigenvalueDecomposition(Jagged<double> value, bool assumeSymmetric,
         bool inPlace = false, bool sort = false)
     {
-        if (value is null)
+        var matrix = value.Array;
+        if (matrix is null)
             throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
-        if (value.Length != value[0].Length)
+        if (matrix.Length != matrix[0].Length)
             throw new ArgumentException("Matrix is not a square matrix.", nameof(value));
 
-        n = value.Length;
+        n = matrix.Length;
         Eigenvectors = new double[n][];
         for (var i = 0; i < n; i++)
             Eigenvectors[i] = new double[n];
@@ -97,7 +98,7 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
 
         if (symmetric)
         {
-            Eigenvectors = inPlace ? value : value.MemberwiseClone();
+            Eigenvectors = inPlace ? matrix : matrix.MemberwiseClone();
 
             // Tridiagonalize.
             tred2();
@@ -107,7 +108,7 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
         }
         else
         {
-            H = inPlace ? value : value.MemberwiseClone();
+            H = inPlace ? matrix : matrix.MemberwiseClone();
 
             ort = new double[n];
 

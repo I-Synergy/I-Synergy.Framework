@@ -24,7 +24,7 @@ public class MunkresTest
         ];
 
         // Create a new Hungarian algorithm
-        var m = new Munkres(costMatrix);
+        var m = new Munkres(new Jagged<double>(costMatrix));
 
         bool success = m.Minimize();    // solve it (should return true)
         double[] solution = m.Solution; // Solution will be 0, 1, 2
@@ -46,7 +46,7 @@ public class MunkresTest
     {
         double[][] costMatrix = Jagged.Magic(5);
 
-        Munkres m = new(costMatrix);
+        Munkres m = new(new Jagged<double>(costMatrix));
 
         Assert.AreEqual(5, m.NumberOfTasks);
         Assert.AreEqual(5, m.NumberOfWorkers);
@@ -73,7 +73,7 @@ public class MunkresTest
             [3, 6, 9]
         ];
 
-        Munkres m = new(costMatrix);
+        Munkres m = new(new Jagged<double>(costMatrix));
 
         Assert.AreEqual(3, m.NumberOfTasks);
         Assert.AreEqual(3, m.NumberOfWorkers);
@@ -96,7 +96,7 @@ public class MunkresTest
             [3, 6, 9, 12]
         ];
 
-        Munkres m = new(costMatrix);
+        Munkres m = new(new Jagged<double>(costMatrix));
 
         Assert.AreEqual(4, m.NumberOfTasks);
         Assert.AreEqual(3, m.NumberOfWorkers);
@@ -123,7 +123,7 @@ public class MunkresTest
             [4, 8, 12]
         ];
 
-        Munkres m = new(costMatrix.Transpose());
+        Munkres m = new(new Jagged<double>(costMatrix.Transpose()));
 
         Assert.AreEqual(4, m.NumberOfTasks);
         Assert.AreEqual(3, m.NumberOfWorkers);
@@ -147,7 +147,7 @@ public class MunkresTest
             [4, 8, 12]
         ];
 
-        Munkres m = new(costMatrix);
+        Munkres m = new(new Jagged<double>(costMatrix));
 
         Assert.AreEqual(3, m.NumberOfTasks);
         Assert.AreEqual(4, m.NumberOfWorkers);
@@ -182,7 +182,7 @@ public class MunkresTest
 
         MunkresProgram.Init(new Jagged<double>(costMatrix).ToMatrix());
 
-        var m = new Munkres(costMatrix);
+        var m = new Munkres(new Jagged<double>(costMatrix));
         m.C = costMatrix.Copy();
 
         int step1 = m.RunStep(0);
@@ -232,7 +232,7 @@ public class MunkresTest
             [1.0, 5.0, 0.5]
         ];
 
-        Munkres m = new(costMatrix);
+        Munkres m = new(new Jagged<double>(costMatrix));
 
         Assert.AreEqual(3, m.NumberOfTasks);
         Assert.AreEqual(3, m.NumberOfWorkers);
@@ -255,7 +255,7 @@ public class MunkresTest
             [1.0, inf, 5.0, 0.5]
         ];
 
-        Munkres m = new(costMatrix);
+        Munkres m = new(new Jagged<double>(costMatrix));
 
         Assert.AreEqual(3, m.NumberOfTasks);
         Assert.AreEqual(3, m.NumberOfWorkers);
@@ -310,7 +310,7 @@ public class MunkresTest
             ]
         ];
 
-        Munkres m = new(costMatrix);
+        Munkres m = new(new Jagged<double>(costMatrix));
 
         Assert.AreEqual(18, m.NumberOfTasks);
         Assert.AreEqual(18, m.NumberOfWorkers);
@@ -351,7 +351,7 @@ public class MunkresTest
             { 4.6656e+002, 4.6656e+002, 1.8662e+003, 3.2659e+003, 3.2659e+003, 1.8662e+003, 1.3997e+003, 4.6656e+002, 6.5358e-012, 4.6656e+002, 1.3997e+003, 3.2659e+003, 4.1990e+003, 6.0653e+003, 5.5987e+003, 6.0653e+003, 4.1990e+003, 3.2659e+003 }
         };
 
-        Munkres m = new(new Matrix<double>(costMatrix).ToJagged());
+        Munkres m = new(new Jagged<double>(new Matrix<double>(costMatrix).ToJagged()));
 
         Assert.AreEqual(18, m.NumberOfTasks);
         Assert.AreEqual(18, m.NumberOfWorkers);
@@ -545,7 +545,7 @@ public class MunkresTest
             ]
         };
 
-        Munkres munkres = new(costMatrix);
+        Munkres munkres = new(new Jagged<double>(costMatrix));
         munkres.Tolerance = 1e-5;
 
         bool success = munkres.Minimize();

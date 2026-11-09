@@ -1,4 +1,5 @@
 
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Common;
 
@@ -126,12 +127,13 @@ public static class Sparse
     ///   Creates sparse vectors from dense arrays.
     /// </summary>
     /// 
-    public static Sparse<T>[] FromDense<T>(T[][] dense, bool removeZeros = true)
+    public static Sparse<T>[] FromDense<T>(Jagged<T> dense, bool removeZeros = true)
         where T : IEquatable<T>
     {
-        var result = new Sparse<T>[dense.Length];
+        var denseArray = dense.Array;
+        var result = new Sparse<T>[denseArray.Length];
         for (var i = 0; i < result.Length; i++)
-            result[i] = FromDense(dense[i], removeZeros);
+            result[i] = FromDense(denseArray[i], removeZeros);
         return result;
     }
 

@@ -100,13 +100,13 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
     ///     The values associated with each
     ///     vector in the <paramref name="inputs" /> data.
     /// </param>
-    public double Minimize(double[][] inputs, double[] outputs)
+    public double Minimize(Jagged<double> inputs, double[] outputs)
     {
         Convergence.CurrentIteration = 0;
 
         do
         {
-            Convergence.NewValue = iterate(inputs, outputs);
+            Convergence.NewValue = iterate(inputs.Array, outputs);
         } while (!Convergence.HasConverged);
 
         return Value = Convergence.NewValue;
@@ -166,7 +166,7 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
         // Compute Quasi-Hessian Matrix approximation
         Matrix.DotWithTransposed(new Jagged<double>(Jacobian), new Jagged<double>(Jacobian), new Jagged<double>(Hessian));
 
-        decomposition = new JaggedSingularValueDecomposition(Hessian,
+        decomposition = new JaggedSingularValueDecomposition(new Jagged<double>(Hessian),
             true, true, true);
 
         Deltas = decomposition.Solve(gradient);

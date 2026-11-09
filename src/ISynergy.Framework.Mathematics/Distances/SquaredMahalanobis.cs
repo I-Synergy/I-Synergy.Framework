@@ -42,8 +42,8 @@ public class SquareMahalanobis : BaseMahalanobis
     /// 
     /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
     /// 
-    public SquareMahalanobis(double[,] precision)
-        : base(new Matrix<double>(precision)) { }
+    public SquareMahalanobis(Matrix<double> precision)
+        : base(precision) { }
 
     /// <summary>
     ///   Creates a new Square-Mahalanobis distance from a covariance matrix.
@@ -58,7 +58,7 @@ public class SquareMahalanobis : BaseMahalanobis
     /// 
     public static SquareMahalanobis FromCovarianceMatrix(Matrix<double> covariance)
     {
-        return new SquareMahalanobis(new CholeskyDecomposition(covariance.Array));
+        return new SquareMahalanobis(new CholeskyDecomposition(covariance));
     }
 
     /// <summary>
@@ -73,6 +73,6 @@ public class SquareMahalanobis : BaseMahalanobis
     /// 
     public static SquareMahalanobis FromPrecisionMatrix(Matrix<double> precision)
     {
-        return new SquareMahalanobis(precision.Array);
+        return new SquareMahalanobis(precision);
     }
 }

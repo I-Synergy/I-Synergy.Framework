@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 
 
@@ -121,9 +122,9 @@ public abstract class REnvironment
         ///   Initializes a new instance of the <see cref="Mat"/> class.
         /// </summary>
         ///
-        public Mat(double[,] values)
+        public Mat(Matrix<double> values)
         {
-            this.data = values;
+            this.data = values.Array;
         }
 
         /// <summary>
@@ -162,7 +163,7 @@ public abstract class REnvironment
         /// 
         public static implicit operator Mat(double[,] v)
         {
-            return new Mat(v);
+            return new Mat(new Matrix<double>(v));
         }
         /// <summary>
         ///   Performs an implicit conversion from 

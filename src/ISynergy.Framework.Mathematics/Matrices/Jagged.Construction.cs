@@ -858,15 +858,16 @@ public static partial class Jagged
     /// 
     public static T[][] Reshape<T>(T[] array, int rows, int cols, MatrixOrder order = MatrixOrder.Default)
     {
-        return Jagged.Reshape(array, rows, cols, Jagged.Create<T>(rows, cols), order);
+        return Jagged.Reshape(array, rows, cols, new Jagged<T>(Jagged.Create<T>(rows, cols)), order);
     }
 
     /// <summary>
     ///   Transforms a vector into a matrix of given dimensions.
     /// </summary>
     /// 
-    public static T[][] Reshape<T>(this T[] array, int rows, int cols, T[][] result, MatrixOrder order = MatrixOrder.Default)
+    public static T[][] Reshape<T>(this T[] array, int rows, int cols, Jagged<T> resultWrapper, MatrixOrder order = MatrixOrder.Default)
     {
+        var result = resultWrapper.Array;
         if (order == MatrixOrder.CRowMajor)
         {
             int k = 0;

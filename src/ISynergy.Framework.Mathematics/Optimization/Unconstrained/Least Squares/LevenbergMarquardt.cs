@@ -130,8 +130,9 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod
     ///     The values associated with each
     ///     vector in the <paramref name="inputs" /> data.
     /// </param>
-    public double Minimize(double[][] inputs, double[] outputs)
+    public double Minimize(Jagged<double> inputs, double[] outputs)
     {
+        var inputsArray = inputs.Array;
         if (NumberOfParameters == 0)
             throw new InvalidOperationException("Please set the NumberOfVariables property first.");
 
@@ -141,8 +142,8 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod
         // and then sum all blocks into the final Hessian matrix
         // and gradient vector.
 
-        var blockSize = inputs.Length / Blocks;
-        var finalBlock = inputs.Length % Blocks;
+        var blockSize = inputsArray.Length / Blocks;
+        var finalBlock = inputsArray.Length % Blocks;
         var jacobianSize = blockSize * outputCount;
 
         // Re-allocate the partial Jacobian matrix only if needed
@@ -158,7 +159,7 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod
 
         do
         {
-            Convergence.NewValue = iterate(inputs, outputs, blockSize, finalBlock, jacobianSize);
+            Convergence.NewValue = iterate(inputsArray, outputs, blockSize, finalBlock, jacobianSize);
         } while (!Convergence.HasConverged);
         return Value = Convergence.NewValue;
     }
@@ -271,7 +272,7 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod
                 Hessian[i][i] = diagonal[i] * (1 + LearningRate);
             // Decompose to solve the linear system. The Cholesky decomposition
             // is done in place, occupying the Hessian's lower-triangular part.
-            decomposition = new JaggedCholeskyDecomposition(Hessian, true, true);
+            decomposition = new JaggedCholeskyDecomposition(new Jagged<double>(Hessian), true, true);
             // Check if the decomposition exists
             if (decomposition.IsUndefined)
                 // The Hessian is singular. Continue to the next

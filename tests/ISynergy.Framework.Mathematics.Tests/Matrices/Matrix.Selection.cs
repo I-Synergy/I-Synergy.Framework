@@ -6,6 +6,7 @@ using ISynergy.Framework.Mathematics.Statistics;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Tests;
 public partial class MatrixTest
 {
@@ -553,7 +554,7 @@ public partial class MatrixTest
         // Let's say we would like to sort the columns of the matrix 
         // according to the value of the elements in the row vector:
 
-        double[,] sortedMatrix1 = Matrix.Sort(keys: v, values: matrix);
+        double[,] sortedMatrix1 = Matrix.Sort(keys: v, values: new Matrix<double>(matrix));
 
         // The resulting matrix will be:
         double[,] expected1 =
@@ -568,7 +569,7 @@ public partial class MatrixTest
         // Now, let's say we would like to sort the columns of the matrix 
         // according to the absolute value of the elements in the row vector:
 
-        double[,] sortedMatrix2 = Matrix.Sort(keys: v, values: matrix,
+        double[,] sortedMatrix2 = Matrix.Sort(keys: v, values: new Matrix<double>(matrix),
             comparer: new GeneralComparer(ComparerDirection.Ascending, useAbsoluteValues: true));
 
         // The resulting matrix will be:

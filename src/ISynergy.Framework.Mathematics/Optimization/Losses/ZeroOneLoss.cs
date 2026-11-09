@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 using System.Runtime.Serialization;
@@ -18,7 +19,7 @@ public class AccuracyLoss : ZeroOneLoss
     ///     Initializes a new instance of the <see cref="AccuracyLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public AccuracyLoss(double[][] expected)
+    public AccuracyLoss(Jagged<double> expected)
         : base(expected)
     {
     }
@@ -62,8 +63,8 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
     ///     Initializes a new instance of the <see cref="ZeroOneLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public ZeroOneLoss(double[][] expected)
-        : this(expected.ArgMax(0))
+    public ZeroOneLoss(Jagged<double> expected)
+        : this(expected.Array.ArgMax(0))
     {
     }
 
@@ -72,8 +73,8 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
     /// </summary>
     /// <param name="classes">The number of classes.</param>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public ZeroOneLoss(int classes, double[][] expected)
-        : this(classes, expected.ArgMax(0))
+    public ZeroOneLoss(int classes, Jagged<double> expected)
+        : this(classes, expected.Array.ArgMax(0))
     {
     }
 

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Exceptions;
 
 
@@ -33,10 +34,10 @@ public static partial class Matrix
     /// <param name="startColumn">Start column index</param>
     /// <param name="endColumn">End column index</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, T[,] destination,
+    public static T[,] Get<T>(this T[,] source, Matrix<T> destination,
         int startRow, int endRow, int startColumn, int endColumn)
     {
-        ArgumentNullException.ThrowIfNull(destination);
+        var destinationArray = destination.Array ?? throw new ArgumentNullException(nameof(destination));
 
         int rows = source.Rows();
         int cols = source.Columns();
@@ -47,15 +48,15 @@ public static partial class Matrix
         endRow = end(endRow, rows);
         endColumn = end(endColumn, cols);
 
-        if (destination.GetLength(0) < endRow - startRow)
+        if (destinationArray.GetLength(0) < endRow - startRow)
             throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
 
-        if (destination.GetLength(1) < endColumn - startColumn)
+        if (destinationArray.GetLength(1) < endColumn - startColumn)
             throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
 
-        return get(source, destination, startRow, endRow, startColumn, endColumn);
+        return get(source, destinationArray, startRow, endRow, startColumn, endColumn);
     }
 
     /// <summary>
@@ -67,9 +68,9 @@ public static partial class Matrix
     /// <param name="columnIndexes">Array of column indices. Pass null to select all indices.</param>
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, int[] rowIndexes, int[] columnIndexes, T[,] result = null)
+    public static T[,] Get<T>(this T[,] source, int[] rowIndexes, int[] columnIndexes, Matrix<T> result = default)
     {
-        return get(source, result, rowIndexes, columnIndexes);
+        return get(source, result.Array, rowIndexes, columnIndexes);
     }
 
     /// <summary>
@@ -81,9 +82,9 @@ public static partial class Matrix
     /// <param name="columnMask">Array of column indicators. Pass null to select all indices.</param>
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, bool[] rowMask, bool[] columnMask, T[,] result = null)
+    public static T[,] Get<T>(this T[,] source, bool[] rowMask, bool[] columnMask, Matrix<T> result = default)
     {
-        return get(source, result, rowMask.Find(x => x), columnMask.Find(x => x));
+        return get(source, result.Array, rowMask.Find(x => x), columnMask.Find(x => x));
     }
 
     /// <summary>
@@ -95,11 +96,11 @@ public static partial class Matrix
     /// <param name="rowIndexes">Array of row indices. Pass null to select all indices.</param>
     /// <param name="columnIndexes">Array of column indices. Pass null to select all indices.</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, T[,] destination, int[] rowIndexes, int[] columnIndexes)
+    public static T[,] Get<T>(this T[,] source, Matrix<T> destination, int[] rowIndexes, int[] columnIndexes)
     {
-        ArgumentNullException.ThrowIfNull(destination);
+        var destinationArray = destination.Array ?? throw new ArgumentNullException(nameof(destination));
 
-        return get(source, destination, rowIndexes, columnIndexes);
+        return get(source, destinationArray, rowIndexes, columnIndexes);
     }
 
     /// <summary>
@@ -266,9 +267,9 @@ public static partial class Matrix
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
     public static T[][] Get<T>(this T[][] source,
-        int[] rowIndexes, int[] columnIndexes, bool reuseMemory = false, T[][] result = null)
+        int[] rowIndexes, int[] columnIndexes, bool reuseMemory = false, Jagged<T> result = default)
     {
-        return get(source, result, rowIndexes, columnIndexes, reuseMemory);
+        return get(source, result.Array, rowIndexes, columnIndexes, reuseMemory);
     }
 
     /// <summary>
@@ -285,9 +286,9 @@ public static partial class Matrix
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
     public static T[][] Get<T>(this T[][] source,
-        bool[] rowMask, bool[] columnMask, bool reuseMemory = false, T[][] result = null)
+        bool[] rowMask, bool[] columnMask, bool reuseMemory = false, Jagged<T> result = default)
     {
-        return get(source, result, rowMask.Find(x => x), columnMask.Find(x => x), reuseMemory);
+        return get(source, result.Array, rowMask.Find(x => x), columnMask.Find(x => x), reuseMemory);
     }
 
     /// <summary>
@@ -625,9 +626,9 @@ public static partial class Matrix
     /// <param name="endColumn">End column index in the destination matrix.</param>
     /// 
     public static T[][] Set<T>(this T[][] destination,
-        int startRow, int endRow, int startColumn, int endColumn, T[][] values)
+        int startRow, int endRow, int startColumn, int endColumn, Jagged<T> values)
     {
-        return set(destination, values, startRow, endRow, startColumn, endColumn);
+        return set(destination, values.Array, startRow, endRow, startColumn, endColumn);
     }
 
     /// <summary>

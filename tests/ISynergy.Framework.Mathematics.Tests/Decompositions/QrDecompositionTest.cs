@@ -20,8 +20,8 @@ public class QrDecompositionTest
             {
                 double[,] value = Matrix.Magic(n);
 
-                QrDecomposition target = new(value);
-                double[,] solution = target.Solve(I);
+                QrDecomposition target = new(new Matrix<double>(value));
+                double[,] solution = target.Solve(new Matrix<double>(I));
                 double[,] inverse = target.Inverse();
                 double[,] reverse = target.Reverse();
 
@@ -46,8 +46,8 @@ public class QrDecompositionTest
 
                 value[i, j] = double.NaN;
 
-                QrDecomposition target = new(value);
-                double[,] solution = target.Solve(I);
+                QrDecomposition target = new(new Matrix<double>(value));
+                double[,] solution = target.Solve(new Matrix<double>(I));
                 double[,] inverse = target.Inverse();
 
                 Assert.IsTrue(Matrix.IsEqual(solution, inverse));
@@ -66,7 +66,7 @@ public class QrDecompositionTest
         };
 
 
-        QrDecomposition target = new(value);
+        QrDecomposition target = new(new Matrix<double>(value));
 
         // Decomposition Identity
         double[,] Q = target.OrthogonalFactor;
@@ -78,7 +78,7 @@ public class QrDecompositionTest
         // Linear system solving
         double[,] B = Matrix.ColumnVector(new double[] { 1, 2, 3 });
         double[,] expected = Matrix.ColumnVector([2.5, 4.0, 3.5]);
-        double[,] actual = target.Solve(B);
+        double[,] actual = target.Solve(new Matrix<double>(B));
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
     }
@@ -93,7 +93,7 @@ public class QrDecompositionTest
            {  0, -1,  2 }
         };
 
-        QrDecomposition target = new(value);
+        QrDecomposition target = new(new Matrix<double>(value));
 
         // Decomposition Identity
         double[,] Q1 = target.OrthogonalFactor;
@@ -125,12 +125,12 @@ public class QrDecompositionTest
         };
 
 
-        QrDecomposition target = new(value);
+        QrDecomposition target = new(new Matrix<double>(value));
 
         double[,] actual = target.Inverse();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
 
-        target = new QrDecomposition(value.Transpose(), true);
+        target = new QrDecomposition(new Matrix<double>(value.Transpose()), true);
         actual = target.Inverse();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
     }
@@ -149,7 +149,7 @@ public class QrDecompositionTest
 
         double[] expected = [2.5000, 4.0000, 3.5000];
 
-        QrDecomposition target = new(value);
+        QrDecomposition target = new(new Matrix<double>(value));
         double[] actual = target.Solve(b);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000000000001));
@@ -190,15 +190,15 @@ public class QrDecompositionTest
                 { 0.0153  },
             };
 
-            QrDecomposition target = new(value);
-            double[,] actual = target.Solve(b);
+            QrDecomposition target = new(new Matrix<double>(value));
+            double[,] actual = target.Solve(new Matrix<double>(b));
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-6));
 
 
-            JaggedQrDecomposition target2 = new(new Matrix<double>(value).ToJagged());
-            double[][] actual2 = target2.Solve(new Matrix<double>(b).ToJagged());
+            JaggedQrDecomposition target2 = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
+            double[][] actual2 = target2.Solve(new Jagged<double>(new Matrix<double>(b).ToJagged()));
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual2, atol: 1e-4));
             Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse(), 1e-6));
@@ -209,7 +209,7 @@ public class QrDecompositionTest
             double[] b = [4, 1, 0, 0, 2, 5];
             double[] expected = [3.9286, -0.5031, 0.0153];
 
-            QrDecomposition target = new(value);
+            QrDecomposition target = new(new Matrix<double>(value));
             double[] actual = target.Solve(b);
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual, atol: 1e-4));
@@ -241,8 +241,8 @@ public class QrDecompositionTest
              { 0.8063,   -0.2188,    0.2875 },
         };
 
-        QrDecomposition target = new(b, true);
-        double[,] actual = target.SolveTranspose(a);
+        QrDecomposition target = new(new Matrix<double>(b), true);
+        double[,] actual = target.SolveTranspose(new Matrix<double>(a));
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(b.Transpose(), target.Reverse(), 1e-6));
 

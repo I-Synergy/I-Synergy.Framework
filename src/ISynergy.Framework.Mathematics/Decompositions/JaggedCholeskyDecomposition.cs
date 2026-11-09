@@ -73,17 +73,18 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     ///     location (lower part will contain the decomposition's L matrix, upper part will contains
     ///     the original matrix).
     /// </param>
-    public JaggedCholeskyDecomposition(double[][] value, bool robust = false,
+    public JaggedCholeskyDecomposition(Jagged<double> value, bool robust = false,
         bool inPlace = false, MatrixType valueType = MatrixType.UpperTriangular)
     {
-        if (value.Rows() != value.Columns())
+        var matrix = value.Array;
+        if (matrix.Rows() != matrix.Columns())
             throw new DimensionMismatchException(nameof(value), "Matrix is not square.");
 
         if (!inPlace)
-            value = value.Copy();
+            matrix = matrix.Copy();
 
-        n = value.Rows();
-        L = value.ToUpperTriangular(valueType, new Jagged<double>(value));
+        n = matrix.Rows();
+        L = matrix.ToUpperTriangular(valueType, new Jagged<double>(matrix));
         this.robust = robust;
 
         if (robust)
@@ -247,7 +248,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
-    public double[][] Solve(double[][] value)
+    public double[][] Solve(Jagged<double> value)
     {
         return Solve(value, false);
     }
@@ -274,11 +275,12 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
-    public double[][] Solve(double[][] value, bool inPlace)
+    public double[][] Solve(Jagged<double> value, bool inPlace)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Length != n)
+        if (valueArray.Length != n)
             throw new ArgumentException(
                 "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
 
@@ -291,7 +293,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
         if (IsUndefined)
             throw new InvalidOperationException(UndefinedMessage);
 
-        var B = inPlace ? value : value.MemberwiseClone();
+        var B = inPlace ? valueArray : valueArray.MemberwiseClone();
 
         for (var k = 0; k < n; k++)
             for (var j = 0; j < B[k].Length; j++)
@@ -376,7 +378,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     {
         ArgumentNullException.ThrowIfNull(diagonal);
 
-        return Solve(Jagged.Diagonal(diagonal));
+        return Solve(new Jagged<double>(Jagged.Diagonal(diagonal)));
     }
 
     /// <summary>
@@ -384,7 +386,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// </summary>
     public double[][] Inverse()
     {
-        return Solve(Jagged.Identity<double>(n));
+        return Solve(new Jagged<double>(Jagged.Identity<double>(n)));
     }
 
     /// <summary>
@@ -406,7 +408,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[][])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Jagged{Double})" />
     ///     methods.
     /// </summary>
     public double[][] GetInformationMatrix()

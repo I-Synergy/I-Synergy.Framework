@@ -1,4 +1,4 @@
-
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
@@ -16,7 +16,7 @@ public struct SquaredHingeLoss : ILoss<double[]>,
     ///     Initializes a new instance of the <see cref="SquaredHingeLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public SquaredHingeLoss(double[][] expected)
+    public SquaredHingeLoss(Jagged<double> expected)
     {
         hinge = new HingeLoss(expected);
     }

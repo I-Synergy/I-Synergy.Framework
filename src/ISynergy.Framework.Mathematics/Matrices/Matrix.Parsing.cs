@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 
 using ISynergy.Framework.Mathematics.Formats;
 using ISynergy.Framework.Mathematics.Formats.Base;
@@ -547,24 +548,24 @@ public static partial class Matrix
     /// a number less than MinValue or greater than MaxValue. This parameter is passed
     /// uninitialized. </result>
     /// 
-    public static bool TryParse(string s, IMatrixFormatProvider provider, out double[,] matrix)
+    public static bool TryParse(string s, IMatrixFormatProvider provider, out Matrix<double> matrix)
     {
         // Math.NET parity: the matrix formatter has no non-throwing parse path, so this
         // wrapper delegates to Parse and maps format/argument errors to a failed conversion.
         try
         {
-            matrix = Parse(s, provider);
+            matrix = new Matrix<double>(Parse(s, provider));
         }
         catch (FormatException)
         {
-            matrix = null;
+            matrix = default;
         }
         catch (ArgumentNullException)
         {
-            matrix = null;
+            matrix = default;
         }
 
-        return matrix is not null;
+        return matrix.Array is not null;
     }
 
     /// <summary>
@@ -586,9 +587,16 @@ public static partial class Matrix
     /// a number less than MinValue or greater than MaxValue. This parameter is passed
     /// uninitialized. </result>
     /// 
-    public static bool TryParse(string s, IMatrixFormatProvider provider, out double[][] matrix)
+    public static bool TryParse(string s, IMatrixFormatProvider provider, out Jagged<double> matrix)
     {
-        return Jagged.TryParse(s, provider, out matrix);
+        if (Jagged.TryParse(s, provider, out var jagged) && jagged.Array is not null)
+        {
+            matrix = jagged;
+            return true;
+        }
+
+        matrix = default;
+        return false;
     }
 
     #endregion

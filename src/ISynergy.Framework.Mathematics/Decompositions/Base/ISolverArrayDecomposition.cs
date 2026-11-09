@@ -1,5 +1,7 @@
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
+
 namespace ISynergy.Framework.Mathematics.Decompositions.Base;
 
 /// <summary>
@@ -12,7 +14,7 @@ public interface ISolverArrayDecomposition<T> where T : struct
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = B</c>.
     /// </summary>
-    T[][] Solve(T[][] value);
+    T[][] Solve(Jagged<T> value);
 
     /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = B</c>.
@@ -32,7 +34,7 @@ public interface ISolverArrayDecomposition<T> where T : struct
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(T[][])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Jagged{T})" />
     ///     methods.
     /// </summary>
     T[][] GetInformationMatrix();

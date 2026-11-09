@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
@@ -51,7 +52,7 @@ public class ZeroOneLossTest
             [0d, 1d, 0d, 1d]
         ];
         int[] actual = [0, 1, 0, 1];
-        double loss = new ZeroOneLoss(expected).Loss(actual);
+        double loss = new ZeroOneLoss(new Jagged<double>(expected)).Loss(actual);
         Assert.AreEqual(0, loss);
     }
 

@@ -30,11 +30,11 @@ public class CholeskyDecompositionTest
 
                 bool thrown = false;
 
-                CholeskyDecomposition target = new(value);
+                CholeskyDecomposition target = new(new Matrix<double>(value));
 
                 try
                 {
-                    target.Solve(I);
+                    target.Solve(new Matrix<double>(I));
                 }
                 catch (Exception)
                 {
@@ -66,7 +66,7 @@ public class CholeskyDecompositionTest
         };
 
 
-        CholeskyDecomposition chol = new(value);
+        CholeskyDecomposition chol = new(new Matrix<double>(value));
         double[,] L = chol.LeftTriangularFactor;
 
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.0001));
@@ -75,7 +75,7 @@ public class CholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Matrix<double>(L), new Matrix<double>(L.Transpose())), value, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-3));
 
-        Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
+        Assert.AreEqual(new LuDecomposition(new Matrix<double>(value)).Determinant, chol.Determinant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
     }
 
@@ -89,18 +89,18 @@ public class CholeskyDecompositionTest
            {  0, -1,  2 }
         };
 
-        CholeskyDecomposition chol = new(value);
+        CholeskyDecomposition chol = new(new Matrix<double>(value));
         double[,] L = chol.LeftTriangularFactor;
 
         double[,] B = Matrix.ColumnVector(new double[] { 1, 2, 3 });
 
         double[,] expected = Matrix.ColumnVector([2.5, 4.0, 3.5]);
 
-        double[,] actual = chol.Solve(B);
+        double[,] actual = chol.Solve(new Matrix<double>(B));
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
         Assert.AreNotSame(B, actual);
 
-        actual = chol.Solve(B, true);
+        actual = chol.Solve(new Matrix<double>(B), true);
         Assert.AreSame(B, actual);
         Assert.IsTrue(Matrix.IsEqual(expected, B, 1e-10));
 
@@ -117,7 +117,7 @@ public class CholeskyDecompositionTest
            {  0, -1,  2 }
         };
 
-        CholeskyDecomposition chol = new(value);
+        CholeskyDecomposition chol = new(new Matrix<double>(value));
         Assert.IsTrue(chol.IsPositiveDefinite);
         double[,] L = chol.LeftTriangularFactor;
 
@@ -146,7 +146,7 @@ public class CholeskyDecompositionTest
            {  6, -2,  0,  0 },
         };
 
-        CholeskyDecomposition chol = new(value, true);
+        CholeskyDecomposition chol = new(new Matrix<double>(value), true);
         double[,] L = chol.LeftTriangularFactor;
 
         double[,] B = Matrix.Identity(4);
@@ -158,7 +158,7 @@ public class CholeskyDecompositionTest
             { 1.4000,    4.2000,    5.4000,   -2.5000 },
             { -0.5000,  -2.0000,   -2.5000,    1.0000 },
         };
-        double[,] actual = chol.Solve(B);
+        double[,] actual = chol.Solve(new Matrix<double>(B));
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
 
@@ -176,7 +176,7 @@ public class CholeskyDecompositionTest
            {  6, -2,  0,  0 },
         };
 
-        CholeskyDecomposition chol = new(value, true);
+        CholeskyDecomposition chol = new(new Matrix<double>(value), true);
         double[,] L = chol.LeftTriangularFactor;
 
         double[] B = [1, 2, 3, 4];
@@ -206,7 +206,7 @@ public class CholeskyDecompositionTest
               { -0.50000, -2.00000, -2.50000,  1.00000 },
         };
 
-        CholeskyDecomposition chol = new(value, robust: true);
+        CholeskyDecomposition chol = new(new Matrix<double>(value), robust: true);
         double[,] L = chol.LeftTriangularFactor;
         Assert.IsFalse(chol.IsPositiveDefinite);
 
@@ -229,7 +229,7 @@ public class CholeskyDecompositionTest
             {  0, -1,  2 }
         };
 
-        CholeskyDecomposition chol = new(value, robust: false);
+        CholeskyDecomposition chol = new(new Matrix<double>(value), robust: false);
         Assert.IsTrue(chol.IsPositiveDefinite);
         double[,] L = chol.LeftTriangularFactor;
 
@@ -243,7 +243,7 @@ public class CholeskyDecompositionTest
         double[,] actual = chol.Inverse();
         Assert.IsTrue(actual.IsEqual(expected, 1e-6));
 
-        double[,] inv = chol.Solve(Matrix.Identity(3));
+        double[,] inv = chol.Solve(new Matrix<double>(Matrix.Identity(3)));
         Assert.IsTrue(inv.IsEqual(expected, 1e-6));
     }
 
@@ -273,7 +273,7 @@ public class CholeskyDecompositionTest
         };
 
 
-        CholeskyDecomposition chol = new(value, true);
+        CholeskyDecomposition chol = new(new Matrix<double>(value), true);
         double[,] L = chol.LeftTriangularFactor;
         double[,] D = chol.DiagonalMatrix;
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -284,7 +284,7 @@ public class CholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(L), new Matrix<double>(D))), new Matrix<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
-        Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
+        Assert.AreEqual(new LuDecomposition(new Matrix<double>(value)).Determinant, chol.Determinant, 1e-10);
     }
 
     [TestMethod]
@@ -314,7 +314,7 @@ public class CholeskyDecompositionTest
             {      0,         0,         0,    1.0000 },
         };
 
-        CholeskyDecomposition chol = new(value, true);
+        CholeskyDecomposition chol = new(new Matrix<double>(value), true);
         double[,] L = chol.LeftTriangularFactor;
         double[,] D = chol.DiagonalMatrix;
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.001));
@@ -325,7 +325,7 @@ public class CholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(L), new Matrix<double>(D))), new Matrix<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
-        Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
+        Assert.AreEqual(new LuDecomposition(new Matrix<double>(value)).Determinant, chol.Determinant, 1e-10);
     }
 
     [TestMethod]
@@ -349,7 +349,7 @@ public class CholeskyDecompositionTest
         };
 
 
-        CholeskyDecomposition chol = new(value, false, valueType: MatrixType.LowerTriangular);
+        CholeskyDecomposition chol = new(new Matrix<double>(value), false, valueType: MatrixType.LowerTriangular);
         double[,] L = chol.LeftTriangularFactor;
 
         Assert.IsTrue(Matrix.IsEqual(L, expected, 1e-4));
@@ -365,7 +365,7 @@ public class CholeskyDecompositionTest
              {  0.0000, -0.6667,  1.0000 }
         };
 
-        chol = new CholeskyDecomposition(value, robust: true, valueType: MatrixType.LowerTriangular);
+        chol = new CholeskyDecomposition(new Matrix<double>(value), robust: true, valueType: MatrixType.LowerTriangular);
         L = chol.LeftTriangularFactor;
 
         Assert.IsTrue(Matrix.IsEqual(L, expected2, 1e-4));
@@ -379,7 +379,7 @@ public class CholeskyDecompositionTest
     [TestMethod]
     public void LogDeterminantTest()
     {
-        CholeskyDecomposition chol = new(bigmatrix);
+        CholeskyDecomposition chol = new(new Matrix<double>(bigmatrix));
         Assert.AreEqual(0.0, chol.Determinant);
         Assert.AreEqual(-2224.8931093738875, chol.LogDeterminant, 1e-10);
         Assert.IsTrue(chol.IsPositiveDefinite);
@@ -399,7 +399,7 @@ public class CholeskyDecompositionTest
            {  1, -2,  1,  7 },
         };
 
-        CholeskyDecomposition chol = new(value);
+        CholeskyDecomposition chol = new(new Matrix<double>(value));
         //var L = chol.LeftTriangularFactor;
         //var det = L.Determinant();
         Assert.IsTrue(chol.IsPositiveDefinite);
@@ -418,7 +418,7 @@ public class CholeskyDecompositionTest
            {  0,  0,  0,  7 },
         };
 
-        CholeskyDecomposition chol = new(value);
+        CholeskyDecomposition chol = new(new Matrix<double>(value));
         //var L = chol.LeftTriangularFactor;
         //var det = L.Determinant();
         Assert.IsTrue(chol.IsPositiveDefinite);
@@ -438,7 +438,7 @@ public class CholeskyDecompositionTest
            {  1, -2,  1,  7 },
         };
 
-        CholeskyDecomposition chol = new(value);
+        CholeskyDecomposition chol = new(new Matrix<double>(value));
         Assert.AreEqual(2232, chol.Determinant, 1e-12);
         Assert.IsTrue(chol.IsPositiveDefinite);
 

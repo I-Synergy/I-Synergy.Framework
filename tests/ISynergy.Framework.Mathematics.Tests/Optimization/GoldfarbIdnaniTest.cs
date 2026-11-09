@@ -27,7 +27,7 @@ public class GoldfarbIdnaniTest
 
         double[] b = [-8, 2, 0];
 
-        GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
+        GoldfarbIdnani target = new(new Matrix<double>(D), d.Multiply(-1), new Matrix<double>(A.Transpose()), b);
 
         double[] expectedSolution = [0.4761905, 1.0476190, 2.0952381];
         double expected = -2.380952;
@@ -69,7 +69,7 @@ public class GoldfarbIdnaniTest
 
         double[] b = [-8, 2, 0];
 
-        GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
+        GoldfarbIdnani target = new(new Matrix<double>(D), d.Multiply(-1), new Matrix<double>(A.Transpose()), b);
 
         Assert.IsTrue(target.Minimize());
         double actual = target.Value;
@@ -121,7 +121,7 @@ public class GoldfarbIdnaniTest
         double[] b = [5, 3];
 
 
-        GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
+        GoldfarbIdnani target = new(new Matrix<double>(D), d.Multiply(-1), new Matrix<double>(A.Transpose()), b);
 
         Assert.IsTrue(target.Minimize());
         double actual = target.Value;
@@ -169,7 +169,7 @@ public class GoldfarbIdnaniTest
 
         double[] b = [-8, 4, -1];
 
-        GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
+        GoldfarbIdnani target = new(new Matrix<double>(D), d.Multiply(-1), new Matrix<double>(A.Transpose()), b);
 
         Assert.IsTrue(target.Minimize());
         double actual = target.Value;
@@ -223,7 +223,7 @@ public class GoldfarbIdnaniTest
         double[] b = [0, 0, 0];
 
 
-        GoldfarbIdnani target = new(D, d.Multiply(-1), A.Transpose(), b);
+        GoldfarbIdnani target = new(new Matrix<double>(D), d.Multiply(-1), new Matrix<double>(A.Transpose()), b);
 
         Assert.IsTrue(target.Minimize());
         double actual = target.Value;
@@ -275,7 +275,7 @@ public class GoldfarbIdnaniTest
 
         int meq = 2;
 
-        GoldfarbIdnani target = new(cma, dva.Multiply(-1), Ama.Transpose(), bva, meq);
+        GoldfarbIdnani target = new(new Matrix<double>(cma), dva.Multiply(-1), new Matrix<double>(Ama.Transpose()), bva, meq);
 
         Assert.IsTrue(target.Minimize());
         double value = target.Value;
@@ -411,7 +411,7 @@ public class GoldfarbIdnaniTest
 
         // Now we can finally create our optimization problem
         GoldfarbIdnani solver = new(
-            function: new QuadraticObjectiveFunction(Q, d),
+            function: new QuadraticObjectiveFunction(new Matrix<double>(Q), d),
             constraints: constraints);
 
 
@@ -1105,7 +1105,7 @@ public class GoldfarbIdnaniTest
 
         double[] d = [0, 0, 0, 0];
 
-        QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
+        QuadraticObjectiveFunction f = new(new Matrix<double>(Q), d, "a", "b", "c", "d");
 
         // Now, create the constraints
         LinearConstraintCollection constraints =
@@ -1179,7 +1179,7 @@ public class GoldfarbIdnaniTest
 
         double[] d = [0, 0, 0, 0];
 
-        QuadraticObjectiveFunction f = new(Q, d, "a", "b", "c", "d");
+        QuadraticObjectiveFunction f = new(new Matrix<double>(Q), d, "a", "b", "c", "d");
 
         // Now, create the constraints
         LinearConstraintCollection constraints =
@@ -1243,7 +1243,7 @@ public class GoldfarbIdnaniTest
         bool psd = Q.IsPositiveDefinite();
         Assert.IsTrue(psd);
 
-        GoldfarbIdnani gfI = new(Q, dvec, AMat, b, 2);
+        GoldfarbIdnani gfI = new(new Matrix<double>(Q), dvec, new Matrix<double>(AMat), b, 2);
 
         bool success = gfI.Minimize();
 
@@ -1286,7 +1286,7 @@ public class GoldfarbIdnaniTest
         bool psd = Q.IsPositiveDefinite();
         Assert.IsTrue(psd);
 
-        GoldfarbIdnani gfI = new(Q, dvec, AMat, b, 2);
+        GoldfarbIdnani gfI = new(new Matrix<double>(Q), dvec, new Matrix<double>(AMat), b, 2);
 
         for (int i = 0; i < gfI.ConstraintTolerances.Length; i++)
             Assert.AreEqual(LinearConstraint.DefaultTolerance, gfI.ConstraintTolerances[i]);
@@ -1333,7 +1333,7 @@ public class GoldfarbIdnaniTest
         bool psd = Q.IsPositiveDefinite();
         Assert.IsTrue(psd);
 
-        GoldfarbIdnani gfI = new(Q, dvec, AMat, b, 2);
+        GoldfarbIdnani gfI = new(new Matrix<double>(Q), dvec, new Matrix<double>(AMat), b, 2);
 
         for (int i = 0; i < gfI.ConstraintTolerances.Length; i++)
             gfI.ConstraintTolerances[i] = 1e-10;
@@ -1409,7 +1409,7 @@ public class GoldfarbIdnaniTest
         double[] oldb = (double[])bvec.Clone();
         double[] oldd = (double[])dvec.Clone();
 
-        GoldfarbIdnani gfI = new(DMat, dvec, AMat, bvec, 1);
+        GoldfarbIdnani gfI = new(new Matrix<double>(DMat), dvec, new Matrix<double>(AMat), bvec, 1);
 
         Assert.AreEqual(4, gfI.NumberOfVariables);
         Assert.AreEqual(9, gfI.NumberOfConstraints);
@@ -1563,17 +1563,17 @@ public class GoldfarbIdnaniTest
              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
 
 
-        GoldfarbIdnani solver = new(Q, d, A, b, 0);
+        GoldfarbIdnani solver = new(new Matrix<double>(Q), d, new Matrix<double>(A), b, 0);
 
         //for (int i = 0; i < solver.ConstraintTolerances.Length; i++)
         //    solver.ConstraintTolerances[i] = 1e-1;
 
         Assert.IsTrue(solver.Minimize());
 
-        QuadraticObjectiveFunction f = new(Q, d);
+        QuadraticObjectiveFunction f = new(new Matrix<double>(Q), d);
         f.Function(solver.Solution);
 
-        LinearConstraintCollection constraints = LinearConstraintCollection.Create(A, b, 0);
+        LinearConstraintCollection constraints = LinearConstraintCollection.Create(new Matrix<double>(A), b, 0);
 
         double[] violation = constraints.Apply(x => x.GetViolation(solver.Solution));
     }
@@ -1635,7 +1635,7 @@ public class GoldfarbIdnaniTest
             10,10,30,20,30,20
         ];
 
-        GoldfarbIdnani target = new(Q, d, A, b, 3);
+        GoldfarbIdnani target = new(new Matrix<double>(Q), d, new Matrix<double>(A), b, 3);
         double tolerance = 0.001;
         target.ConstraintTolerances.Apply(a => tolerance);
 

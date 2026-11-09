@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 
 using System.Runtime.InteropServices;
 using ISynergy.Framework.Mathematics.Common;
@@ -106,16 +107,17 @@ public static partial class Matrix
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool IsEqual(this Double[,] a, Double[,] b, Double atol = 0, Double rtol = 0)
+    public static bool IsEqual(this Double[,] a, Matrix<Double> b, Double atol = 0, Double rtol = 0)
     {
-        if (a == b)
+        var bArray = b.Array;
+        if (a == bArray)
             return true;
-        if (a is null && b is null)
+        if (a is null && bArray is null)
             return true;
-        if (a is null ^ b is null)
+        if (a is null ^ bArray is null)
             return false;
         int[] la = a.GetLength(true);
-        int[] lb = b.GetLength(true);
+        int[] lb = bArray.GetLength(true);
         if (la.Length != lb.Length)
             return false;
         for (var i = 0; i < la.Length; i++)
@@ -126,7 +128,7 @@ public static partial class Matrix
             return true;
 
         var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
-        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref bArray[0, 0], bArray.Length);
         if (rtol > 0)
         {
             for (var i = 0; i < spanA.Length; i++)
@@ -206,14 +208,15 @@ public static partial class Matrix
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool IsEqual(this Double[,] a, Double[][] b, Double atol = 0, Double rtol = 0)
+    public static bool IsEqual(this Double[,] a, Jagged<Double> b, Double atol = 0, Double rtol = 0)
     {
-        if (a is null && b is null)
+        var bArray = b.Array;
+        if (a is null && bArray is null)
             return true;
-        if (a is null ^ b is null)
+        if (a is null ^ bArray is null)
             return false;
         int[] la = a.GetLength(true);
-        int[] lb = b.GetLength(true);
+        int[] lb = bArray.GetLength(true);
         if (la.Length != lb.Length)
             return false;
         for (var i = 0; i < la.Length; i++)
@@ -222,11 +225,11 @@ public static partial class Matrix
 
         if (rtol > 0)
         {
-            for (var i = 0; i < b.Length; i++)
-                for (var j = 0; j < b[i].Length; j++)
+            for (var i = 0; i < bArray.Length; i++)
+                for (var j = 0; j < bArray[i].Length; j++)
                 {
                     var A = a[i, j];
-                    var B = b[i][j];
+                    var B = bArray[i][j];
                     if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
@@ -251,11 +254,11 @@ public static partial class Matrix
         }
         else if (atol > 0)
         {
-            for (var i = 0; i < b.Length; i++)
-                for (var j = 0; j < b[i].Length; j++)
+            for (var i = 0; i < bArray.Length; i++)
+                for (var j = 0; j < bArray[i].Length; j++)
                 {
                     var A = a[i, j];
-                    var B = b[i][j];
+                    var B = bArray[i][j];
                     if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
@@ -276,11 +279,11 @@ public static partial class Matrix
         }
         else
         {
-            for (var i = 0; i < b.Length; i++)
-                for (var j = 0; j < b[i].Length; j++)
+            for (var i = 0; i < bArray.Length; i++)
+                for (var j = 0; j < bArray[i].Length; j++)
                 {
                     var A = a[i, j];
-                    var B = b[i][j];
+                    var B = bArray[i][j];
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
                     if (Double.IsNaN(A) ^ Double.IsNaN(B))
@@ -302,14 +305,15 @@ public static partial class Matrix
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool IsEqual(this Double[][] a, Double[,] b, Double atol = 0, Double rtol = 0)
+    public static bool IsEqual(this Double[][] a, Matrix<Double> b, Double atol = 0, Double rtol = 0)
     {
-        if (a is null && b is null)
+        var bArray = b.Array;
+        if (a is null && bArray is null)
             return true;
-        if (a is null ^ b is null)
+        if (a is null ^ bArray is null)
             return false;
         int[] la = a.GetLength(true);
-        int[] lb = b.GetLength(true);
+        int[] lb = bArray.GetLength(true);
         if (la.Length != lb.Length)
             return false;
         for (var i = 0; i < la.Length; i++)
@@ -322,7 +326,7 @@ public static partial class Matrix
                 for (var j = 0; j < a[i].Length; j++)
                 {
                     var A = a[i][j];
-                    var B = b[i, j];
+                    var B = bArray[i, j];
                     if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
@@ -351,7 +355,7 @@ public static partial class Matrix
                 for (var j = 0; j < a[i].Length; j++)
                 {
                     var A = a[i][j];
-                    var B = b[i, j];
+                    var B = bArray[i, j];
                     if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
@@ -376,7 +380,7 @@ public static partial class Matrix
                 for (var j = 0; j < a[i].Length; j++)
                 {
                     var A = a[i][j];
-                    var B = b[i, j];
+                    var B = bArray[i, j];
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
                     if (Double.IsNaN(A) ^ Double.IsNaN(B))
@@ -398,16 +402,17 @@ public static partial class Matrix
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool IsEqual(this Double[][] a, Double[][] b, Double atol = 0, Double rtol = 0)
+    public static bool IsEqual(this Double[][] a, Jagged<Double> b, Double atol = 0, Double rtol = 0)
     {
-        if (a == b)
+        var bArray = b.Array;
+        if (a == bArray)
             return true;
-        if (a is null && b is null)
+        if (a is null && bArray is null)
             return true;
-        if (a is null ^ b is null)
+        if (a is null ^ bArray is null)
             return false;
         int[] la = a.GetLength(true);
-        int[] lb = b.GetLength(true);
+        int[] lb = bArray.GetLength(true);
         if (la.Length != lb.Length)
             return false;
         for (var i = 0; i < la.Length; i++)
@@ -420,7 +425,7 @@ public static partial class Matrix
                 for (var j = 0; j < a[i].Length; j++)
                 {
                     var A = a[i][j];
-                    var B = b[i][j];
+                    var B = bArray[i][j];
                     if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
@@ -449,7 +454,7 @@ public static partial class Matrix
                 for (var j = 0; j < a[i].Length; j++)
                 {
                     var A = a[i][j];
-                    var B = b[i][j];
+                    var B = bArray[i][j];
                     if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
@@ -474,7 +479,7 @@ public static partial class Matrix
                 for (var j = 0; j < a[i].Length; j++)
                 {
                     var A = a[i][j];
-                    var B = b[i][j];
+                    var B = bArray[i][j];
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
                     if (Double.IsNaN(A) ^ Double.IsNaN(B))
@@ -767,9 +772,10 @@ public static partial class Matrix
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool IsEqual(this Double a, Double[,] b, Double atol = 0, Double rtol = 0)
+    public static bool IsEqual(this Double a, Matrix<Double> b, Double atol = 0, Double rtol = 0)
     {
-        var left = b;
+        var bArray = b.Array;
+        var left = bArray;
         var right = a;
         var absTolerance = rtol;
         var relTolerance = atol;
@@ -780,9 +786,10 @@ public static partial class Matrix
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool IsEqual(this Double a, Double[][] b, Double atol = 0, Double rtol = 0)
+    public static bool IsEqual(this Double a, Jagged<Double> b, Double atol = 0, Double rtol = 0)
     {
-        var left = b;
+        var bArray = b.Array;
+        var left = bArray;
         var right = a;
         var absTolerance = rtol;
         var relTolerance = atol;

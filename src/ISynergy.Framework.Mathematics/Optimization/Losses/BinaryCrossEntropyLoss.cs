@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
@@ -19,7 +20,7 @@ public class BinaryCrossEntropyLoss : LossBase<bool[][]>,
     ///     Initializes a new instance of the <see cref="BinaryCrossEntropyLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public BinaryCrossEntropyLoss(int[][] expected)
+    public BinaryCrossEntropyLoss(Jagged<int> expected)
     {
         Expected = Classes.Decide(expected);
     }
@@ -28,7 +29,7 @@ public class BinaryCrossEntropyLoss : LossBase<bool[][]>,
     ///     Initializes a new instance of the <see cref="BinaryCrossEntropyLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public BinaryCrossEntropyLoss(double[][] expected)
+    public BinaryCrossEntropyLoss(Jagged<double> expected)
     {
         Expected = Classes.Decide(expected);
     }

@@ -20,7 +20,7 @@ public class CategoryCrossEntropyLoss : LossBase<bool[][]>, ILoss<int[]>, ILoss<
     /// <param name="expected">The expected outputs (ground truth).</param>
     public CategoryCrossEntropyLoss(Jagged<double> expected)
     {
-        Expected = Classes.Decide(expected.Array);
+        Expected = Classes.Decide(expected);
     }
 
     /// <summary>

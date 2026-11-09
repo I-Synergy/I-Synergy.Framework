@@ -21,10 +21,10 @@ public class HammingLoss : LossBase<int[][]>,
     ///     Initializes a new instance of the <see cref="HammingLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HammingLoss(double[][] expected)
+    public HammingLoss(Jagged<double> expected)
     {
-        Expected = new Jagged<double>(expected).ToInt32();
-        for (var i = 0; i < expected.Length; i++)
+        Expected = expected.ToInt32();
+        for (var i = 0; i < expected.Rows; i++)
             total += expected[i].Length;
     }
 
@@ -32,10 +32,10 @@ public class HammingLoss : LossBase<int[][]>,
     ///     Initializes a new instance of the <see cref="HammingLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HammingLoss(int[][] expected)
+    public HammingLoss(Jagged<int> expected)
     {
-        Expected = expected;
-        for (var i = 0; i < expected.Length; i++)
+        Expected = expected.Array;
+        for (var i = 0; i < expected.Rows; i++)
             total += expected[i].Length;
     }
 
@@ -44,7 +44,7 @@ public class HammingLoss : LossBase<int[][]>,
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HammingLoss(int[] expected)
-        : this(Jagged.OneHot(expected))
+        : this(new Jagged<double>(Jagged.OneHot(expected)))
     {
     }
 
@@ -52,10 +52,10 @@ public class HammingLoss : LossBase<int[][]>,
     ///     Initializes a new instance of the <see cref="HammingLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HammingLoss(bool[][] expected)
+    public HammingLoss(Jagged<bool> expected)
     {
-        Expected = new Jagged<bool>(expected).ToInt32();
-        for (var i = 0; i < expected.Length; i++)
+        Expected = expected.ToInt32();
+        for (var i = 0; i < expected.Rows; i++)
             total += expected[i].Length;
     }
 

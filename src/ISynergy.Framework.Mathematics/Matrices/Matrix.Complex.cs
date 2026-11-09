@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Exceptions;
 using System.Numerics;
@@ -262,19 +263,20 @@ public static class ComplexMatrix
     /// <summary>
     ///     Compares two matrices for equality, considering an acceptance threshold.
     /// </summary>
-    public static bool IsEqual(this Complex[][] objA, Complex[][] objB, double threshold)
+    public static bool IsEqual(this Complex[][] objA, Jagged<Complex> objB, double threshold)
     {
-        if (objA is null && objB is null) return true;
+        var objBArray = objB.Array;
+        if (objA is null && objBArray is null) return true;
         ArgumentNullException.ThrowIfNull(objA);
-        ArgumentNullException.ThrowIfNull(objB);
+        ArgumentNullException.ThrowIfNull(objBArray);
 
         for (var i = 0; i < objA.Length; i++)
             for (var j = 0; j < objA[i].Length; j++)
             {
                 var xr = objA[i][j].Real;
-                var yr = objB[i][j].Real;
+                var yr = objBArray[i][j].Real;
                 var xi = objA[i][j].Imaginary;
-                var yi = objB[i][j].Imaginary;
+                var yi = objBArray[i][j].Imaginary;
 
                 if (Math.Abs(xr - yr) > threshold || double.IsNaN(xr) ^ double.IsNaN(yr))
                     return false;

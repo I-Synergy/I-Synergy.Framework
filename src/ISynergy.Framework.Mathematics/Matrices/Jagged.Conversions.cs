@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Extensions;
 
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Jagged
@@ -12,9 +13,9 @@ public static partial class Jagged
     /// <typeparam name="TInput">The type of the input.</typeparam>
     /// <typeparam name="TOutput">The type of the output.</typeparam>
     /// <param name="matrix">The matrix to be converted.</param>
-    public static TOutput[][] Convert<TInput, TOutput>(TInput[,] matrix)
+    public static TOutput[][] Convert<TInput, TOutput>(Matrix<TInput> matrix)
     {
-        return Convert(matrix, x => (TOutput)System.Convert.ChangeType(x, typeof(TOutput)));
+        return Convert(matrix.Array, x => (TOutput)System.Convert.ChangeType(x, typeof(TOutput)));
     }
 
     /// <summary>

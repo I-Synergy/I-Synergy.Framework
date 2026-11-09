@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using System.Numerics;
 
@@ -98,10 +99,11 @@ public static class FourierTransform
     /// <param name="data">Data to transform.</param>
     /// <param name="direction">Transformation direction.</param>
     /// 
-    public static void DFT2(Complex[,] data, Direction direction)
+    public static void DFT2(Matrix<Complex> data, Direction direction)
     {
-        int n = data.GetLength(0);	// rows
-        int m = data.GetLength(1);	// columns
+        var dataArray = data.Array;
+        int n = dataArray.GetLength(0);	// rows
+        int m = dataArray.GetLength(1);	// columns
         double arg, cos, sin;
         var dst = new Complex[System.Math.Max(n, m)];
 
@@ -120,8 +122,8 @@ public static class FourierTransform
                     cos = System.Math.Cos(k * arg);
                     sin = System.Math.Sin(k * arg);
 
-                    double re = data[i, k].Real * cos - data[i, k].Imaginary * sin;
-                    double im = data[i, k].Real * sin + data[i, k].Imaginary * cos;
+                    double re = dataArray[i, k].Real * cos - dataArray[i, k].Imaginary * sin;
+                    double im = dataArray[i, k].Real * sin + dataArray[i, k].Imaginary * cos;
 
                     dst[j] += new Complex(re, im);
                 }
@@ -132,12 +134,12 @@ public static class FourierTransform
             {
                 // devide also for forward transform
                 for (var j = 0; j < dst.Length; j++)
-                    data[i, j] = dst[j] / m;
+                    dataArray[i, j] = dst[j] / m;
             }
             else
             {
                 for (var j = 0; j < dst.Length; j++)
-                    data[i, j] = dst[j];
+                    dataArray[i, j] = dst[j];
             }
         }
 
@@ -156,8 +158,8 @@ public static class FourierTransform
                     cos = System.Math.Cos(k * arg);
                     sin = System.Math.Sin(k * arg);
 
-                    double re = data[k, j].Real * cos - data[k, j].Imaginary * sin;
-                    double im = data[k, j].Real * sin + data[k, j].Imaginary * cos;
+                    double re = dataArray[k, j].Real * cos - dataArray[k, j].Imaginary * sin;
+                    double im = dataArray[k, j].Real * sin + dataArray[k, j].Imaginary * cos;
 
                     dst[i] += new Complex(re, im);
                 }
@@ -168,12 +170,12 @@ public static class FourierTransform
             {
                 // devide also for forward transform
                 for (var i = 0; i < dst.Length; i++)
-                    data[i, j] = dst[i] / n;
+                    dataArray[i, j] = dst[i] / n;
             }
             else
             {
                 for (var i = 0; i < dst.Length; i++)
-                    data[i, j] = dst[i];
+                    dataArray[i, j] = dst[i];
             }
         }
     }
@@ -246,10 +248,11 @@ public static class FourierTransform
     /// 
     /// <exception cref="ArgumentException">Incorrect data length.</exception>
     /// 
-    public static void FFT2(Complex[,] data, Direction direction)
+    public static void FFT2(Matrix<Complex> data, Direction direction)
     {
-        int k = data.GetLength(0);
-        int n = data.GetLength(1);
+        var dataArray = data.Array;
+        int k = dataArray.GetLength(0);
+        int n = dataArray.GetLength(1);
 
         // check data size
         if (!Tools.IsPowerOf2(k) || !Tools.IsPowerOf2(n))
@@ -265,14 +268,14 @@ public static class FourierTransform
         {
             // copy row
             for (var j = 0; j < row.Length; j++)
-                row[j] = data[i, j];
+                row[j] = dataArray[i, j];
 
             // transform it
             FourierTransform.FFT(row, direction);
 
             // copy back
             for (var j = 0; j < row.Length; j++)
-                data[i, j] = row[j];
+                dataArray[i, j] = row[j];
         }
 
         // process columns
@@ -282,14 +285,14 @@ public static class FourierTransform
         {
             // copy column
             for (var i = 0; i < k; i++)
-                col[i] = data[i, j];
+                col[i] = dataArray[i, j];
 
             // transform it
             FourierTransform.FFT(col, direction);
 
             // copy back
             for (var i = 0; i < k; i++)
-                data[i, j] = col[i];
+                dataArray[i, j] = col[i];
         }
     }
 

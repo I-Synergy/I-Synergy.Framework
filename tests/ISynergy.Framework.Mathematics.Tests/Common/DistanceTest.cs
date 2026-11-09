@@ -31,7 +31,7 @@ public class DistanceTest
         y = [0, 0, 0];
 
         expected = 2.07735368677415;
-        actual = Distance.Mahalanobis(x, y, cov.Inverse());
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(cov.Inverse()));
         Assert.AreEqual(expected, actual, 1e-10);
 
 
@@ -39,7 +39,7 @@ public class DistanceTest
         y = [1, 0.52, -79];
 
         expected = 277.8828871106366;
-        actual = Distance.Mahalanobis(x, y, cov.Inverse());
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(cov.Inverse()));
         Assert.AreEqual(expected, actual, 0.0000000000001);
     }
 
@@ -61,7 +61,7 @@ public class DistanceTest
         double[] x, y;
         double actual, expected;
 
-        SingularValueDecomposition svd = new(cov, true, true, true);
+        SingularValueDecomposition svd = new(new Matrix<double>(cov), true, true, true);
 
         double[,] inv = cov.Inverse();
         double[,] pinv = svd.Inverse();
@@ -82,7 +82,7 @@ public class DistanceTest
         }
 
         expected = 2.0773536867741504;
-        actual = Distance.Mahalanobis(x, y, inv);
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(inv));
         Assert.AreEqual(expected, actual, 1e-6);
 
         actual = Distance.Mahalanobis(x, y, svd);
@@ -93,7 +93,7 @@ public class DistanceTest
         y = [1, 0.52, -79];
 
         expected = 277.8828871106366;
-        actual = Distance.Mahalanobis(x, y, inv);
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(inv));
         Assert.AreEqual(expected, actual, 1e-5);
         actual = Distance.Mahalanobis(x, y, svd);
         Assert.AreEqual(expected, actual, 1e-5);
@@ -108,31 +108,31 @@ public class DistanceTest
         x = [2, 4, 1];
         y = [0, 0, 0];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
         x = [0.1, 0.12, -1];
         y = [195, 0, 2912];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
         x = [-2, -4, -1];
         y = [-2, -4, -1];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
         x = [2, 4, 1];
         y = [0, -7.2, 4.6];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
 
         x = [-2, 4, 1];
         y = [0, -0.1, 4.2];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, Matrix.Identity(3));
+        actual = Distance.Mahalanobis(x, y, new Matrix<double>(Matrix.Identity(3)));
         Assert.AreEqual(expected, actual);
     }
 
@@ -145,31 +145,31 @@ public class DistanceTest
         x = [2, 4, 1];
         y = [0, 0, 0];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
+        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(new Matrix<double>(Matrix.Identity(3))));
         Assert.AreEqual(expected, actual);
 
         x = [0.1, 0.12, -1];
         y = [195, 0, 2912];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
+        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(new Matrix<double>(Matrix.Identity(3))));
         Assert.AreEqual(expected, actual);
 
         x = [-2, -4, -1];
         y = [-2, -4, -1];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
+        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(new Matrix<double>(Matrix.Identity(3))));
         Assert.AreEqual(expected, actual);
 
         x = [2, 4, 1];
         y = [0, -7.2, 4.6];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
+        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(new Matrix<double>(Matrix.Identity(3))));
         Assert.AreEqual(expected, actual);
 
         x = [-2, 4, 1];
         y = [0, -0.1, 4.2];
         expected = Distance.Euclidean(x, y);
-        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(Matrix.Identity(3)));
+        actual = Distance.Mahalanobis(x, y, new SingularValueDecomposition(new Matrix<double>(Matrix.Identity(3))));
         Assert.AreEqual(expected, actual);
     }
 
@@ -190,7 +190,7 @@ public class DistanceTest
 
         // Run actual Test
         double expected = 0.14285714285714282;
-        double actual = Distance.SquareMahalanobis(x, y, pinv);
+        double actual = Distance.SquareMahalanobis(x, y, new Matrix<double>(pinv));
 
         Assert.AreEqual(expected, actual, 1e-6);
         Assert.IsFalse(double.IsNaN(actual));
@@ -224,9 +224,9 @@ public class DistanceTest
         // should be inverted, or if you have the precision matrix instead of
         // the covariance, you can use any of the alternative methods:
 
-        Mahalanobis fromCholesky = new(new CholeskyDecomposition(covariance));
-        Mahalanobis fromSVD = new(new SingularValueDecomposition(covariance));
-        Mahalanobis fromPrecision1 = new(covariance.Inverse());
+        Mahalanobis fromCholesky = new(new CholeskyDecomposition(new Matrix<double>(covariance)));
+        Mahalanobis fromSVD = new(new SingularValueDecomposition(new Matrix<double>(covariance)));
+        Mahalanobis fromPrecision1 = new(new Matrix<double>(covariance.Inverse()));
         Mahalanobis fromPrecision2 = Mahalanobis.FromPrecisionMatrix(new Matrix<double>(covariance.Inverse()));
 
         // They all should produce equivalent results:
@@ -236,7 +236,7 @@ public class DistanceTest
         double d = fromPrecision2.Distance(x, y);
         #endregion
 
-        double expected = Distance.Mahalanobis(x, y, new CholeskyDecomposition(covariance));
+        double expected = Distance.Mahalanobis(x, y, new CholeskyDecomposition(new Matrix<double>(covariance)));
         Assert.AreEqual(3.5185224171518357, expected, 1e-10);
         Assert.AreEqual(expected, distance, 1e-10);
         Assert.AreEqual(distance, a, 1e-10);
@@ -273,9 +273,9 @@ public class DistanceTest
         // should be inverted, or if you have the precision matrix instead of
         // the covariance, you can use any of the alternative methods:
 
-        SquareMahalanobis fromCholesky = new(new CholeskyDecomposition(covariance));
-        SquareMahalanobis fromSVD = new(new SingularValueDecomposition(covariance));
-        SquareMahalanobis fromPrecision1 = new(covariance.Inverse());
+        SquareMahalanobis fromCholesky = new(new CholeskyDecomposition(new Matrix<double>(covariance)));
+        SquareMahalanobis fromSVD = new(new SingularValueDecomposition(new Matrix<double>(covariance)));
+        SquareMahalanobis fromPrecision1 = new(new Matrix<double>(covariance.Inverse()));
         SquareMahalanobis fromPrecision2 = SquareMahalanobis.FromPrecisionMatrix(new Matrix<double>(covariance.Inverse()));
 
         // They all should produce equivalent results:
@@ -285,7 +285,7 @@ public class DistanceTest
         double d = fromPrecision2.Distance(x, y);
         #endregion
 
-        double expected = Math.Pow(Distance.SquareMahalanobis(x, y, new CholeskyDecomposition(covariance)), 2);
+        double expected = Math.Pow(Distance.SquareMahalanobis(x, y, new CholeskyDecomposition(new Matrix<double>(covariance))), 2);
         Assert.AreEqual(12.379999999999997, distance, 1e-10);
         Assert.AreEqual(3.5185224171518357 * 3.5185224171518357, distance, 1e-10);
         Assert.AreEqual(distance, a, 1e-10);

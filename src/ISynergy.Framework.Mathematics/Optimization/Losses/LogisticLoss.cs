@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
@@ -33,9 +34,9 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     ///     Initializes a new instance of the <see cref="LogisticLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public LogisticLoss(double[][] expected)
+    public LogisticLoss(Jagged<double> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
     }
 
     /// <summary>

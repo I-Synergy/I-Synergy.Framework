@@ -1,4 +1,5 @@
 
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Transforms;
 
@@ -56,10 +57,11 @@ public static class SineTransform
     /// <summary>
     ///     Forward Discrete Sine Transform.
     /// </summary>
-    public static void DST(double[][] data)
+    public static void DST(Jagged<double> data)
     {
-        var rows = data.Length;
-        var cols = data[0].Length;
+        var dataArray = data.Array;
+        var rows = dataArray.Length;
+        var cols = dataArray[0].Length;
 
         var row = new double[cols];
         var col = new double[rows];
@@ -67,23 +69,23 @@ public static class SineTransform
         for (var i = 0; i < rows; i++)
         {
             for (var j = 0; j < row.Length; j++)
-                row[j] = data[i][j];
+                row[j] = dataArray[i][j];
 
             DST(row);
 
             for (var j = 0; j < row.Length; j++)
-                data[i][j] = row[j];
+                dataArray[i][j] = row[j];
         }
 
         for (var j = 0; j < cols; j++)
         {
             for (var i = 0; i < col.Length; i++)
-                col[i] = data[i][j];
+                col[i] = dataArray[i][j];
 
             DST(col);
 
             for (var i = 0; i < col.Length; i++)
-                data[i][j] = col[i];
+                dataArray[i][j] = col[i];
         }
     }
 
@@ -111,10 +113,11 @@ public static class SineTransform
     /// <summary>
     ///     Inverse Discrete Sine Transform.
     /// </summary>
-    public static void IDST(double[][] data)
+    public static void IDST(Jagged<double> data)
     {
-        var rows = data.Length;
-        var cols = data[0].Length;
+        var dataArray = data.Array;
+        var rows = dataArray.Length;
+        var cols = dataArray[0].Length;
 
         var row = new double[cols];
         var col = new double[rows];
@@ -122,23 +125,23 @@ public static class SineTransform
         for (var j = 0; j < cols; j++)
         {
             for (var i = 0; i < row.Length; i++)
-                col[i] = data[i][j];
+                col[i] = dataArray[i][j];
 
             IDST(col);
 
             for (var i = 0; i < col.Length; i++)
-                data[i][j] = col[i];
+                dataArray[i][j] = col[i];
         }
 
         for (var i = 0; i < rows; i++)
         {
             for (var j = 0; j < row.Length; j++)
-                row[j] = data[i][j];
+                row[j] = dataArray[i][j];
 
             IDST(row);
 
             for (var j = 0; j < row.Length; j++)
-                data[i][j] = row[j];
+                dataArray[i][j] = row[j];
         }
     }
 }

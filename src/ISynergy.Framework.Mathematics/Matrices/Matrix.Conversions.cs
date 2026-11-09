@@ -1200,7 +1200,7 @@ public static partial class Matrix
     /// 
     public static bool[][][] ToBoolean(this string[][][] value)
     {
-        return ToBoolean(value, Jagged.CreateAs<string, bool>(new Jagged<string[]>(value)));
+        return ToBoolean(value, new Jagged<bool[]>(Jagged.CreateAs<string, bool>(new Jagged<string[]>(value))));
     }
 
 
@@ -1277,13 +1277,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged boolean array.
     /// </summary>
     /// 
-    public static bool[][][] ToBoolean(this string[][][] value, bool[][][] result)
+    public static bool[][][] ToBoolean(this string[][][] value, Jagged<bool[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Boolean.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = Boolean.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>
@@ -1426,7 +1427,7 @@ public static partial class Matrix
     /// 
     public static int[][][] ToInt32(this string[][][] value)
     {
-        return ToInt32(value, Jagged.CreateAs<string, int>(new Jagged<string[]>(value)));
+        return ToInt32(value, new Jagged<int[]>(Jagged.CreateAs<string, int>(new Jagged<string[]>(value))));
     }
 
     /// <summary>
@@ -1500,13 +1501,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged integer array.
     /// </summary>
     /// 
-    public static int[][][] ToInt32(this string[][][] value, int[][][] result)
+    public static int[][][] ToInt32(this string[][][] value, Jagged<int[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Int32.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = Int32.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>
@@ -1649,7 +1651,7 @@ public static partial class Matrix
     /// 
     public static float[][][] ToSingle(this string[][][] value)
     {
-        return ToSingle(value, Jagged.CreateAs<string, float>(new Jagged<string[]>(value)));
+        return ToSingle(value, new Jagged<float[]>(Jagged.CreateAs<string, float>(new Jagged<string[]>(value))));
     }
 
 
@@ -1711,13 +1713,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged single-precision floating point array.
     /// </summary>
     /// 
-    public static float[][][] ToSingle(this string[][][] value, float[][][] result)
+    public static float[][][] ToSingle(this string[][][] value, Jagged<float[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Single.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = Single.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>
@@ -1797,7 +1800,7 @@ public static partial class Matrix
     /// 
     public static short[][][] ToInt16(this string[][][] value)
     {
-        return ToInt16(value, Jagged.CreateAs<string, short>(new Jagged<string[]>(value)));
+        return ToInt16(value, new Jagged<short[]>(Jagged.CreateAs<string, short>(new Jagged<string[]>(value))));
     }
 
 
@@ -1874,13 +1877,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged short integer array.
     /// </summary>
     /// 
-    public static short[][][] ToInt16(this string[][][] value, short[][][] result)
+    public static short[][][] ToInt16(this string[][][] value, Jagged<short[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Int16.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = Int16.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>
@@ -1956,7 +1960,7 @@ public static partial class Matrix
     /// 
     public static decimal[][][] ToDecimal(this string[][][] value)
     {
-        return ToDecimal(value, Jagged.CreateAs<string, decimal>(new Jagged<string[]>(value)));
+        return ToDecimal(value, new Jagged<decimal[]>(Jagged.CreateAs<string, decimal>(new Jagged<string[]>(value))));
     }
 
 
@@ -2033,13 +2037,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged decimal fixed-point array.
     /// </summary>
     /// 
-    public static decimal[][][] ToDecimal(this string[][][] value, decimal[][][] result)
+    public static decimal[][][] ToDecimal(this string[][][] value, Jagged<decimal[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Decimal.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = Decimal.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>
@@ -2096,7 +2101,7 @@ public static partial class Matrix
     /// 
     public static long[][][] ToInt64(this string[][][] value)
     {
-        return ToInt64(value, Jagged.CreateAs<string, long>(new Jagged<string[]>(value)));
+        return ToInt64(value, new Jagged<long[]>(Jagged.CreateAs<string, long>(new Jagged<string[]>(value))));
     }
 
     /// <summary>
@@ -2170,13 +2175,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged long integer array.
     /// </summary>
     /// 
-    public static long[][][] ToInt64(this string[][][] value, long[][][] result)
+    public static long[][][] ToInt64(this string[][][] value, Jagged<long[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Int64.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = Int64.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>
@@ -2232,7 +2238,7 @@ public static partial class Matrix
     /// 
     public static byte[][][] ToByte(this string[][][] value)
     {
-        return ToByte(value, Jagged.CreateAs<string, byte>(new Jagged<string[]>(value)));
+        return ToByte(value, new Jagged<byte[]>(Jagged.CreateAs<string, byte>(new Jagged<string[]>(value))));
     }
 
 
@@ -2309,13 +2315,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged 8-bit byte array.
     /// </summary>
     /// 
-    public static byte[][][] ToByte(this string[][][] value, byte[][][] result)
+    public static byte[][][] ToByte(this string[][][] value, Jagged<byte[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = Byte.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = Byte.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>
@@ -2371,7 +2378,7 @@ public static partial class Matrix
     /// 
     public static sbyte[][][] ToSByte(this string[][][] value)
     {
-        return ToSByte(value, Jagged.CreateAs<string, sbyte>(new Jagged<string[]>(value)));
+        return ToSByte(value, new Jagged<sbyte[]>(Jagged.CreateAs<string, sbyte>(new Jagged<string[]>(value))));
     }
 
 
@@ -2448,13 +2455,14 @@ public static partial class Matrix
     ///   Converts a jagged string array to a jagged signed 7-bit byte array.
     /// </summary>
     /// 
-    public static sbyte[][][] ToSByte(this string[][][] value, sbyte[][][] result)
+    public static sbyte[][][] ToSByte(this string[][][] value, Jagged<sbyte[]> result)
     {
+        var resultArray = result.Array;
         for (int i = 0; i < value.Length; i++)
             for (int j = 0; j < value[i].Length; j++)
                 for (int k = 0; k < value[i][j].Length; k++)
-                    result[i][j][k] = SByte.Parse(value[i][j][k]);
-        return result;
+                    resultArray[i][j][k] = SByte.Parse(value[i][j][k]);
+        return resultArray;
     }
 
     /// <summary>

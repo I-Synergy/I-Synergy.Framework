@@ -522,7 +522,7 @@ public static partial class Measures
     public static double[] Quartiles(this double[,] matrix, out NumericRange[] range, QuantileMethod type = QuantileMethod.Default)
     {
         double[] q1, q3;
-        double[] median = Quartiles(matrix, out q1, out q3, type: type);
+        double[] median = Quartiles(new Matrix<double>(matrix), out q1, out q3, type: type);
 
         range = new NumericRange[median.Length];
         for (var i = 0; i < range.Length; i++)
@@ -544,7 +544,7 @@ public static partial class Measures
     public static double[] Quartiles(this double[][] matrix, out NumericRange[] range, QuantileMethod type = QuantileMethod.Default)
     {
         double[] q1, q3;
-        double[] median = Quartiles(matrix, out q1, out q3, type: type);
+        double[] median = Quartiles(new Matrix<double>(matrix), out q1, out q3, type: type);
 
         range = new NumericRange[median.Length];
         for (var i = 0; i < range.Length; i++)
@@ -565,12 +565,13 @@ public static partial class Measures
     /// 
     /// <returns>The second quartile, the median of the given data.</returns>
     /// 
-    public static double[] Quartiles(double[][] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
+    public static double[] Quartiles(Jagged<double> matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
     {
-        ArgumentNullException.ThrowIfNull(matrix);
+        ArgumentNullException.ThrowIfNull(matrix.Array);
 
-        int rows = matrix.Rows();
-        int cols = matrix.Columns();
+        var matrixArray = matrix.Array;
+        int rows = matrixArray.Rows();
+        int cols = matrixArray.Columns();
 
         double[] medians = new double[cols];
         q1 = new double[cols];
@@ -578,7 +579,7 @@ public static partial class Measures
 
         double[] data = new double[rows];
         for (var i = 0; i < cols; i++)
-            medians[i] = matrix.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
+            medians[i] = matrixArray.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
 
         return medians;
     }
@@ -594,12 +595,13 @@ public static partial class Measures
     /// 
     /// <returns>The second quartile, the median of the given data.</returns>
     /// 
-    public static double[] Quartiles(double[,] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
+    public static double[] Quartiles(Matrix<double> matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
     {
-        ArgumentNullException.ThrowIfNull(matrix);
+        ArgumentNullException.ThrowIfNull(matrix.Array);
 
-        int rows = matrix.Rows();
-        int cols = matrix.Columns();
+        var matrixArray = matrix.Array;
+        int rows = matrixArray.Rows();
+        int cols = matrixArray.Columns();
 
         double[] medians = new double[cols];
         q1 = new double[cols];
@@ -607,7 +609,7 @@ public static partial class Measures
 
         double[] data = new double[rows];
         for (var i = 0; i < cols; i++)
-            medians[i] = matrix.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
+            medians[i] = matrixArray.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
 
         return medians;
     }
@@ -1001,9 +1003,10 @@ public static partial class Measures
     /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
     /// <returns>Returns the standard error vector for the matrix.</returns>
     /// 
-    public static double[] StandardError(double[,] matrix)
+    public static double[] StandardError(Matrix<double> matrix)
     {
-        return StandardError(matrix.GetLength(0), StandardDeviation(matrix));
+        var matrixArray = matrix.Array;
+        return StandardError(matrixArray.GetLength(0), StandardDeviation(matrixArray));
     }
 
     /// <summary>
@@ -1131,7 +1134,7 @@ public static partial class Measures
     public static double[][] Covariance(this double[][] matrix, int dimension)
     {
         int size = (dimension == 0) ? matrix.Length : matrix[0].Length;
-        return Scatter(matrix, Mean(matrix, dimension), size - 1, dimension);
+        return Scatter(new Jagged<double>(matrix), Mean(matrix, dimension), size - 1, dimension);
     }
 
     /// <summary>
@@ -1152,7 +1155,7 @@ public static partial class Measures
     /// 
     public static double[][] Covariance(this double[][] matrix, double[] means)
     {
-        return Scatter(matrix, means, matrix.Length - 1, 0);
+        return Scatter(new Jagged<double>(matrix), means, matrix.Length - 1, 0);
     }
 
     /// <summary>
@@ -1172,7 +1175,7 @@ public static partial class Measures
     /// 
     public static double[,] Scatter(this double[,] matrix, double[] means)
     {
-        return Scatter(matrix, means, 1.0, 0);
+        return Scatter(new Matrix<double>(matrix), means, 1.0, 0);
     }
 
     /// <summary>
@@ -1193,7 +1196,7 @@ public static partial class Measures
     /// 
     public static double[,] Scatter(this double[,] matrix, double[] means, double divisor)
     {
-        return Scatter(matrix, means, divisor, 0);
+        return Scatter(new Matrix<double>(matrix), means, divisor, 0);
     }
 
     /// <summary>
@@ -1216,7 +1219,7 @@ public static partial class Measures
     /// 
     public static double[,] Scatter(this double[,] matrix, double[] means, int dimension)
     {
-        return Scatter(matrix, means, 1.0, dimension);
+        return Scatter(new Matrix<double>(matrix), means, 1.0, dimension);
     }
 
     /// <summary>
@@ -1308,7 +1311,7 @@ public static partial class Measures
     /// 
     public static double[][] Scatter(this double[][] matrix, double[] means)
     {
-        return Scatter(matrix, means, 1.0, 0);
+        return Scatter(new Jagged<double>(matrix), means, 1.0, 0);
     }
 
     /// <summary>
@@ -1325,7 +1328,7 @@ public static partial class Measures
     /// <returns>The covariance matrix.</returns>
     public static double[][] Scatter(this double[][] matrix, double[] means, double divisor)
     {
-        return Scatter(matrix, means, divisor, 0);
+        return Scatter(new Jagged<double>(matrix), means, divisor, 0);
     }
 
     /// <summary>
@@ -1348,7 +1351,7 @@ public static partial class Measures
     /// 
     public static double[][] Scatter(this double[][] matrix, double divisor, int dimension = 0)
     {
-        return Scatter(matrix, Mean(matrix, dimension: 0), divisor, dimension);
+        return Scatter(new Jagged<double>(matrix), Mean(matrix, dimension: 0), divisor, dimension);
     }
 
     /// <summary>
@@ -1371,7 +1374,7 @@ public static partial class Measures
     /// 
     public static double[][] Scatter(this double[][] matrix, double[] means, int dimension)
     {
-        return Scatter(matrix, means, 1.0, dimension);
+        return Scatter(new Jagged<double>(matrix), means, 1.0, dimension);
     }
 
     /// <summary>
@@ -1389,9 +1392,10 @@ public static partial class Measures
     ///   Pass 0 to if mean vector is a row vector, 1 otherwise. Default value is 0.
     /// </param>
     /// <returns>The covariance matrix.</returns>
-    public static double[][] Scatter(double[][] matrix, double[] means, double divisor, int dimension)
+    public static double[][] Scatter(Jagged<double> matrix, double[] means, double divisor, int dimension)
     {
-        int rows = matrix.Length;
+        var matrixArray = matrix.Array;
+        int rows = matrixArray.Length;
         if (rows == 0)
             return Array.Empty<double[]>();
         int cols = matrix[0].Length;

@@ -122,31 +122,32 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Reshape<T>(this T[] array, int rows, int cols, MatrixOrder order = MatrixOrder.Default)
     {
-        return Reshape(array, rows, cols, new T[rows, cols], order);
+        return Reshape(array, rows, cols, new Matrix<T>(new T[rows, cols]), order);
     }
 
     /// <summary>
     ///     Transforms a vector into a matrix of given dimensions.
     /// </summary>
-    public static T[,] Reshape<T>(this T[] array, int rows, int cols, T[,] result,
+    public static T[,] Reshape<T>(this T[] array, int rows, int cols, Matrix<T> result,
         MatrixOrder order = MatrixOrder.Default)
     {
+        var resultArray = result.Array;
         if (order == MatrixOrder.CRowMajor)
         {
             var k = 0;
             for (var i = 0; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i, j] = array[k++];
+                    resultArray[i, j] = array[k++];
         }
         else
         {
             var k = 0;
             for (var j = 0; j < cols; j++)
                 for (var i = 0; i < rows; i++)
-                    result[i, j] = array[k++];
+                    resultArray[i, j] = array[k++];
         }
 
-        return result;
+        return resultArray;
     }
 
     #region Generic matrices
@@ -1263,17 +1264,19 @@ public static partial class Matrix
     /// <summary>
     ///     Combines two matrices horizontally.
     /// </summary>
-    public static T[,] Concatenate<T>(this T[,] a, T[,] b)
+    public static T[,] Concatenate<T>(this T[,] a, Matrix<T> b)
     {
-        return Concatenate<T>(new Matrix<T>(a), new Matrix<T>(b));
+        var matrices = new Matrix<T>[] { new Matrix<T>(a), b };
+        return Concatenate<T>(matrices);
     }
 
     /// <summary>
     ///     Combines two matrices horizontally.
     /// </summary>
-    public static T[][] Concatenate<T>(this T[][] a, T[][] b)
+    public static T[][] Concatenate<T>(this T[][] a, Jagged<T> b)
     {
-        return Concatenate<T>(new Jagged<T>(a), new Jagged<T>(b));
+        var matrices = new Jagged<T>[] { new Jagged<T>(a), b };
+        return Concatenate<T>(matrices);
     }
 
     /// <summary>
@@ -1374,9 +1377,10 @@ public static partial class Matrix
     /// <summary>
     ///     Combines vectors vertically.
     /// </summary>
-    public static T[][] Stack<T>(this T[][] a, T[][] b)
+    public static T[][] Stack<T>(this T[][] a, Jagged<T> b)
     {
-        return Stack<T>(new Jagged<T>(a), new Jagged<T>(b));
+        var matrices = new Jagged<T>[] { new Jagged<T>(a), b };
+        return Stack<T>(matrices);
     }
 
     /// <summary>

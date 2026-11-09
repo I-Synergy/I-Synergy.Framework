@@ -31,7 +31,7 @@ public partial class MatrixTest
 
         double threshold = 0.2;
         bool expected = false;
-        bool actual = Matrix.IsEqual(a, b, threshold);
+        bool actual = Matrix.IsEqual(a, new Matrix<double>(b), threshold);
         Assert.AreEqual(expected, actual);
     }
 
@@ -54,7 +54,7 @@ public partial class MatrixTest
 
         double threshold = 0.03;
         bool expected = true;
-        bool actual = Matrix.IsEqual(a, b, atol: threshold);
+        bool actual = Matrix.IsEqual(a, new Matrix<double>(b), atol: threshold);
         Assert.AreEqual(expected, actual);
     }
 
@@ -718,7 +718,7 @@ public partial class MatrixTest
             {  0.1,  0.7 }
         };
 
-        double[,] actual = Elementwise.Abs(value);
+        double[,] actual = Elementwise.Abs(new Matrix<double>(value));
         Assert.IsTrue(actual.IsEqual(expected));
 
 
@@ -734,7 +734,7 @@ public partial class MatrixTest
             {  0,  6 }
         };
 
-        double[,] iactual = Elementwise.Abs(ivalue);
+        double[,] iactual = Elementwise.Abs(new Matrix<double>(ivalue));
         Assert.IsTrue(iactual.IsEqual(iexpected));
 
         double[] avalue = [-1, 2];
@@ -759,7 +759,7 @@ public partial class MatrixTest
             { 1.0000, Double.NaN },
         };
 
-        double[,] actual = Elementwise.Sqrt(value);
+        double[,] actual = Elementwise.Sqrt(new Matrix<double>(value));
         Assert.IsTrue(expected.IsEqual(actual, 0.0001));
     }
 
@@ -1231,7 +1231,7 @@ public partial class MatrixTest
         }
 
         {
-            double[][] actual = a.Concatenate(b);
+            double[][] actual = a.Concatenate(new Jagged<double>(b));
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
         }
     }
@@ -1385,7 +1385,7 @@ public partial class MatrixTest
             { 2.0, 2.0 }
         };
 
-        double[,] expected = new SingularValueDecomposition(value).Inverse();
+        double[,] expected = new SingularValueDecomposition(new Matrix<double>(value)).Inverse();
 
         double[,] actual = Matrix.Inverse(value);
 
@@ -1404,7 +1404,7 @@ public partial class MatrixTest
 
         Assert.IsFalse(value.IsSingular());
 
-        double[,] expected = new SingularValueDecomposition(value).Inverse();
+        double[,] expected = new SingularValueDecomposition(new Matrix<double>(value)).Inverse();
 
         double[,] actual = Matrix.Inverse(value);
 

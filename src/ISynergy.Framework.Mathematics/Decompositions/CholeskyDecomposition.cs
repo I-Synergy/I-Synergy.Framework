@@ -72,17 +72,18 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     ///     location (lower part will contain the decomposition's L matrix, upper part will contains
     ///     the original matrix).
     /// </param>
-    public CholeskyDecomposition(double[,] value, bool robust = false,
+    public CholeskyDecomposition(Matrix<double> value, bool robust = false,
         bool inPlace = false, MatrixType valueType = MatrixType.UpperTriangular)
     {
-        if (value.Rows() != value.Columns())
+        var matrix = value.Array;
+        if (matrix.Rows() != matrix.Columns())
             throw new DimensionMismatchException(nameof(value), "Matrix is not square.");
 
         if (!inPlace)
-            value = value.Copy();
+            matrix = matrix.Copy();
 
-        n = value.Rows();
-        L = value.ToUpperTriangular(valueType, new Matrix<double>(value));
+        n = matrix.Rows();
+        L = matrix.ToUpperTriangular(valueType, new Matrix<double>(matrix));
         this.robust = robust;
 
         if (robust)
@@ -249,7 +250,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
-    public double[,] Solve(double[,] value)
+    public double[,] Solve(Matrix<double> value)
     {
         return Solve(value, false);
     }
@@ -276,11 +277,12 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
-    public double[,] Solve(double[,] value, bool inPlace)
+    public double[,] Solve(Matrix<double> value, bool inPlace)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Rows() != n)
+        if (valueArray.Rows() != n)
             throw new ArgumentException(
                 "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
 
@@ -293,7 +295,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         if (destroyed)
             throw new InvalidOperationException(DestroyedMessage);
 
-        var B = inPlace ? value : value.MemberwiseClone();
+        var B = inPlace ? valueArray : valueArray.MemberwiseClone();
         int m = B.Columns();
 
         for (var k = 0; k < n; k++)
@@ -375,7 +377,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// </summary>
     public double[,] Inverse()
     {
-        return Solve(Matrix.Identity<double>(n));
+        return Solve(new Matrix<double>(Matrix.Identity<double>(n)));
     }
 
     /// <summary>
@@ -397,7 +399,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[,])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Matrix{Double})" />
     ///     methods.
     /// </summary>
     public double[,] GetInformationMatrix()

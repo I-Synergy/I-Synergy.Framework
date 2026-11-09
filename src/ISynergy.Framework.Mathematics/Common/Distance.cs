@@ -1,4 +1,5 @@
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
@@ -330,7 +331,7 @@ public static partial class Distance
     ///   For examples, please see <see cref="ISynergy.Framework.Mathematics.Distances.SquareMahalanobis"/> documentation page.
     /// </example>
     ///
-    public static double SquareMahalanobis(double[] x, double[] y, double[,] precision)
+    public static double SquareMahalanobis(double[] x, double[] y, Matrix<double> precision)
     {
         // Note: this is an auto-generated method stub that forwards the call
         // to the actual implementation, indicated in the next line below:
@@ -756,7 +757,7 @@ public static partial class Distance
     ///   For examples, please see <see cref="ISynergy.Framework.Mathematics.Distances.Mahalanobis"/> documentation page.
     /// </example>
     ///
-    public static double Mahalanobis(double[] x, double[] y, double[,] precision)
+    public static double Mahalanobis(double[] x, double[] y, Matrix<double> precision)
     {
         // Note: this is an auto-generated method stub that forwards the call
         // to the actual implementation, indicated in the next line below:

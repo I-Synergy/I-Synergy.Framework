@@ -21,7 +21,7 @@ public class QuadraticObjectiveFunctionTest
 
         double[] linearTerms = [1, 2, 3];
 
-        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+        QuadraticObjectiveFunction target = new(new Matrix<double>(quadraticTerms), linearTerms);
 
         Func<double[], double> function = target.Function;
         Func<double[], double[]> gradient = target.Gradient;
@@ -75,7 +75,7 @@ public class QuadraticObjectiveFunctionTest
 
         double[] linearTerms = [1, 2, 3];
 
-        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+        QuadraticObjectiveFunction target = new(new Matrix<double>(quadraticTerms), linearTerms);
 
         Func<double[], double> function = target.Function;
         Func<double[], double[]> gradient = target.Gradient;
@@ -131,7 +131,7 @@ public class QuadraticObjectiveFunctionTest
 
         double[] linearTerms = [0, 0, 0];
 
-        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+        QuadraticObjectiveFunction target = new(new Matrix<double>(quadraticTerms), linearTerms);
 
         Func<double[], double> function = target.Function;
         Func<double[], double[]> gradient = target.Gradient;
@@ -171,7 +171,7 @@ public class QuadraticObjectiveFunctionTest
 
         double[] linearTerms = [0, 0, 0];
 
-        QuadraticObjectiveFunction target = new(quadraticTerms, linearTerms);
+        QuadraticObjectiveFunction target = new(new Matrix<double>(quadraticTerms), linearTerms);
 
         Func<double[], double> function = target.Function;
         Func<double[], double[]> gradient = target.Gradient;
@@ -800,7 +800,7 @@ public class QuadraticObjectiveFunctionTest
 
         double[] linearTerms = [0, 2, 0];
 
-        Assert.Throws<NonSymmetricMatrixException>(() => new QuadraticObjectiveFunction(quadraticTerms, linearTerms));
+        Assert.Throws<NonSymmetricMatrixException>(() => new QuadraticObjectiveFunction(new Matrix<double>(quadraticTerms), linearTerms));
     }
 
     [TestMethod]

@@ -31,7 +31,7 @@ public class GeneralizedEigenvalueDecompositionTest
         // that are solutions for the equation det(A - λB) = 0
 
         // For this, we can use a Generalized Eigendecomposition
-        GeneralizedEigenvalueDecomposition gevd = new(A, B);
+        GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
         // Now, if A and B are Hermitian and B is positive
         // -definite, then the eigenvalues λ will be real:
@@ -72,7 +72,7 @@ public class GeneralizedEigenvalueDecompositionTest
         double[,] A = Matrix.Identity(100);
         double[,] B = Matrix.Identity(100);
 
-        GeneralizedEigenvalueDecomposition gevd = new(A, B);
+        GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
         double[,] expectedVectors = Matrix.Identity(100);
         double[,] expectedValues = Matrix.Identity(100);
@@ -91,7 +91,7 @@ public class GeneralizedEigenvalueDecompositionTest
                 double[,] A = Matrix.Random(j, j, -1.0, 1.0);
                 double[,] B = Matrix.Random(j, j, -1.0, 1.0);
 
-                GeneralizedEigenvalueDecomposition gevd = new(A, B);
+                GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
                 double[,] V = gevd.Eigenvectors;
                 double[,] D = gevd.DiagonalMatrix;
@@ -110,7 +110,7 @@ public class GeneralizedEigenvalueDecompositionTest
             double[,] A = Matrix.Random(j, j, -1.0, 1.0);
             double[,] B = Matrix.Random(j, j, -1.0, 1.0);
 
-            GeneralizedEigenvalueDecomposition gevd = new(A, B);
+            GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
             double[,] V = gevd.Eigenvectors;
             double[,] D = gevd.DiagonalMatrix;
@@ -150,7 +150,7 @@ public class GeneralizedEigenvalueDecompositionTest
         B[2, 2] = -1.5640121915210088;
 
 
-        GeneralizedEigenvalueDecomposition gevd = new(A, B);
+        GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
         double[,] V = gevd.Eigenvectors;
         double[,] D = gevd.DiagonalMatrix;

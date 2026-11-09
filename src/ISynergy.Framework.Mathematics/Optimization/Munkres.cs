@@ -165,9 +165,9 @@ public class Munkres : IOptimizationMethod
     ///     represents how much it costs for a particular worker to receive (be
     ///     assigned) a particular task.
     /// </param>
-    public Munkres(double[][] costMatrix)
+    public Munkres(Jagged<double> costMatrix)
     {
-        init(costMatrix);
+        init(costMatrix.Array);
     }
 
     /// <summary>
@@ -352,7 +352,7 @@ public class Munkres : IOptimizationMethod
         if (n == 0)
             throw new InvalidOperationException("There are no valid values in the cost matrix.");
 
-        validCost = costMatrix.Get(validRow, validCol, result: Jagged.Create(n, n, 10.0 * max));
+        validCost = costMatrix.Get(validRow, validCol, result: new Jagged<double>(Jagged.Create(n, n, 10.0 * max)));
 
         rowCover = new bool[n];
         colCover = new bool[n];
@@ -406,7 +406,7 @@ public class Munkres : IOptimizationMethod
             for (var c = 0; c < minCol.Length; c++)
                 min[r][c] = minRow[r] + minCol[c];
 
-        return Elementwise.Equals(C, min);
+        return Elementwise.Equals(new Jagged<double>(C), new Jagged<double>(min));
     }
 
     /// <summary>

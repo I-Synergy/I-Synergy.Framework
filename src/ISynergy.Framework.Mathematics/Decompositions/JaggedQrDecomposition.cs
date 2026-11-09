@@ -54,38 +54,39 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     ///     .the information needed to solve linear systems is computed. If set to false,
     ///     the full QR decomposition will be computed.
     /// </param>
-    public JaggedQrDecomposition(double[][] value, bool transpose = false,
+    public JaggedQrDecomposition(Jagged<double> value, bool transpose = false,
         bool economy = true, bool inPlace = false)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
+        var matrix = value.Array;
+        if (matrix is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
-        if (!transpose && value.Length < value[0].Length ||
-            transpose && value[0].Length < value.Length)
+        if (!transpose && matrix.Length < matrix[0].Length ||
+            transpose && matrix[0].Length < matrix.Length)
             throw new ArgumentException("Matrix has more columns than rows.", nameof(value));
 
         // https://www.inf.ethz.ch/personal/gander/papers/qrneu.pdf
 
         if (transpose)
         {
-            p = value.Rows();
+            p = matrix.Rows();
 
             if (economy)
                 // Compute the faster, economy-sized QR decomposition 
-                qr = value.Transpose(inPlace);
+                qr = matrix.Transpose(inPlace);
             else
                 // Create room to store the full decomposition
-                qr = Jagged.Create(value.Columns(), value.Columns(), new Jagged<double>(value), true);
+                qr = Jagged.Create(matrix.Columns(), matrix.Columns(), new Jagged<double>(matrix), true);
         }
         else
         {
-            p = value.Columns();
+            p = matrix.Columns();
 
             if (economy)
                 // Compute the faster, economy-sized QR decomposition 
-                qr = inPlace ? value : value.Copy();
+                qr = inPlace ? matrix : matrix.Copy();
             else
                 // Create room to store the full decomposition
-                qr = Jagged.Create(value.Rows(), value.Rows(), new Jagged<double>(value), false);
+                qr = Jagged.Create(matrix.Rows(), matrix.Rows(), new Jagged<double>(matrix), false);
         }
 
         this.economy = economy;
@@ -215,20 +216,21 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     /// <returns>A matrix that minimized the two norm of <c>Q * R * X - B</c>.</returns>
     /// <exception cref="T:System.ArgumentException">Matrix row dimensions must be the same.</exception>
     /// <exception cref="T:System.InvalidOperationException">Matrix is rank deficient.</exception>
-    public double[][] Solve(double[][] value)
+    public double[][] Solve(Jagged<double> value)
     {
-        if (value is null)
+        var valueArray = value.Array;
+        if (valueArray is null)
             throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
-        if (value.Length != n)
+        if (valueArray.Length != n)
             throw new ArgumentException("Matrix row dimensions must agree.");
 
         if (!FullRank)
             throw new InvalidOperationException("Matrix is rank deficient.");
 
         // Copy right hand side
-        var count = value.Columns();
-        var X = value.Copy();
+        var count = valueArray.Columns();
+        var X = valueArray.Copy();
 
         // Compute Y = transpose(Q)*B
         for (var k = 0; k < p; k++)
@@ -308,7 +310,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     {
         ArgumentNullException.ThrowIfNull(diagonal);
 
-        return Solve(Jagged.Diagonal(diagonal));
+        return Solve(new Jagged<double>(Jagged.Diagonal(diagonal)));
     }
 
     /// <summary>Least squares solution of <c>A * X = I</c></summary>
@@ -317,7 +319,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
         if (!FullRank)
             throw new InvalidOperationException("Matrix is rank deficient.");
 
-        return Solve(Jagged.Diagonal(n, n, (double)1));
+        return Solve(new Jagged<double>(Jagged.Diagonal(n, n, (double)1)));
     }
 
     /// <summary>
@@ -331,7 +333,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[][])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Jagged{Double})" />
     ///     methods.
     /// </summary>
     public double[][] GetInformationMatrix()
@@ -345,20 +347,21 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     /// <returns>A matrix that minimized the two norm of <c>X * Q * R - B</c>.</returns>
     /// <exception cref="T:System.ArgumentException">Matrix column dimensions must be the same.</exception>
     /// <exception cref="T:System.InvalidOperationException">Matrix is rank deficient.</exception>
-    public double[][] SolveTranspose(double[][] value)
+    public double[][] SolveTranspose(Jagged<double> value)
     {
-        if (value is null)
+        var valueArray = value.Array;
+        if (valueArray is null)
             throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
-        if (value.Columns() != qr.Length)
+        if (valueArray.Columns() != qr.Length)
             throw new ArgumentException("Matrix row dimensions must agree.");
 
         if (!FullRank)
             throw new InvalidOperationException("Matrix is rank deficient.");
 
         // Copy right hand side
-        var count = value.Length;
-        var X = value.Transpose();
+        var count = valueArray.Length;
+        var X = valueArray.Transpose();
 
         // Compute Y = transpose(Q)*B
         for (var k = 0; k < p; k++)

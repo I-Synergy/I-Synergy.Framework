@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Matrices;
 
@@ -27,9 +28,10 @@ public static partial class Vector
     /// <param name="toMax"></param>
     /// <param name="x"></param>
     /// <returns></returns>
-    public static double[][] Scale(double[] fromMin, double[] fromMax, double toMin, double toMax, double[][] x)
+    public static double[][] Scale(double[] fromMin, double[] fromMax, double toMin, double toMax, Jagged<double> x)
     {
-        int rows = x.Length;
+        var xArray = x.Array;
+        int rows = xArray.Length;
         int cols = fromMin.Length;
 
         double[][] result = new double[rows][];
@@ -38,7 +40,7 @@ public static partial class Vector
             result[i] = new double[cols];
             for (int j = 0; j < cols; j++)
             {
-                result[i][j] = (toMax - toMin) * (x[i][j] - fromMin[j]) / (fromMax[j] - fromMin[j]) + toMin;
+                result[i][j] = (toMax - toMin) * (xArray[i][j] - fromMin[j]) / (fromMax[j] - fromMin[j]) + toMin;
             }
         }
 

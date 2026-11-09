@@ -1,6 +1,7 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -87,29 +88,31 @@ public sealed class GeneralizedEigenvalueDecomposition : ICloneable
     ///     Pass <see langword="true" /> to sort the eigenvalues and eigenvectors at the end
     ///     of the decomposition.
     /// </param>
-    public GeneralizedEigenvalueDecomposition(double[,] a, double[,] b, bool sort = false)
+    public GeneralizedEigenvalueDecomposition(Matrix<double> a, Matrix<double> b, bool sort = false)
     {
-        if (a is null)
+        var aMatrix = a.Array;
+        var bMatrix = b.Array;
+        if (aMatrix is null)
             throw new ArgumentNullException(nameof(a), "Matrix A cannot be null.");
 
-        if (b is null)
+        if (bMatrix is null)
             throw new ArgumentNullException(nameof(b), "Matrix B cannot be null.");
 
-        if (a.GetLength(0) != a.GetLength(1))
+        if (aMatrix.GetLength(0) != aMatrix.GetLength(1))
             throw new ArgumentException("Matrix is not a square matrix.", nameof(a));
 
-        if (b.GetLength(0) != b.GetLength(1))
+        if (bMatrix.GetLength(0) != bMatrix.GetLength(1))
             throw new ArgumentException("Matrix is not a square matrix.", nameof(b));
 
-        if (a.GetLength(0) != b.GetLength(0) || a.GetLength(1) != b.GetLength(1))
+        if (aMatrix.GetLength(0) != bMatrix.GetLength(0) || aMatrix.GetLength(1) != bMatrix.GetLength(1))
             throw new ArgumentException("Matrix dimensions do not match", nameof(b));
-        n = a.GetLength(0);
+        n = aMatrix.GetLength(0);
         RealAlphas = new double[n];
         ImaginaryAlphas = new double[n];
         Betas = new double[n];
         Eigenvectors = new double[n, n];
-        var A = (double[,])a.Clone();
-        var B = (double[,])b.Clone();
+        var A = (double[,])aMatrix.Clone();
+        var B = (double[,])bMatrix.Clone();
 
         var matz = true;
         var ierr = 0;

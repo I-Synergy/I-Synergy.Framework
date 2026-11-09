@@ -54,8 +54,8 @@ public sealed class EigenvalueDecomposition : ICloneable
     ///     Pass <see langword="true" /> to sort the eigenvalues and eigenvectors at the end
     ///     of the decomposition.
     /// </param>
-    public EigenvalueDecomposition(double[,] value, bool inPlace = false, bool sort = false)
-        : this(value, value.IsSymmetric(), inPlace, sort)
+    public EigenvalueDecomposition(Matrix<double> value, bool inPlace = false, bool sort = false)
+        : this(value, value.Array.IsSymmetric(), inPlace, sort)
     {
     }
 
@@ -78,16 +78,17 @@ public sealed class EigenvalueDecomposition : ICloneable
     ///     Pass <see langword="true" /> to sort the eigenvalues and eigenvectors at the end
     ///     of the decomposition.
     /// </param>
-    public EigenvalueDecomposition(double[,] value, bool assumeSymmetric,
+    public EigenvalueDecomposition(Matrix<double> value, bool assumeSymmetric,
         bool inPlace = false, bool sort = false)
     {
-        if (value is null)
+        var matrix = value.Array;
+        if (matrix is null)
             throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
-        if (value.GetLength(0) != value.GetLength(1))
+        if (matrix.GetLength(0) != matrix.GetLength(1))
             throw new ArgumentException("Matrix is not a square matrix.", nameof(value));
 
-        n = value.GetLength(1);
+        n = matrix.GetLength(1);
         Eigenvectors = new double[n, n];
         RealEigenvalues = new double[n];
         ImaginaryEigenvalues = new double[n];
@@ -95,7 +96,7 @@ public sealed class EigenvalueDecomposition : ICloneable
 
         if (symmetric)
         {
-            Eigenvectors = inPlace ? value : (double[,])value.Clone();
+            Eigenvectors = inPlace ? matrix : (double[,])matrix.Clone();
 
             // Tridiagonalize.
             tred2();
@@ -105,7 +106,7 @@ public sealed class EigenvalueDecomposition : ICloneable
         }
         else
         {
-            H = inPlace ? value : (double[,])value.Clone();
+            H = inPlace ? matrix : (double[,])matrix.Clone();
 
             ort = new double[n];
 

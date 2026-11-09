@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 using System.Runtime.Serialization;
@@ -23,7 +24,7 @@ public struct HingeLoss : ILoss<double[]>,
     ///     Initializes a new instance of the <see cref="HingeLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HingeLoss(double[][] expected)
+    public HingeLoss(Jagged<double> expected)
     {
         Expected = Classes.Decide(expected);
     }
@@ -34,7 +35,7 @@ public struct HingeLoss : ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HingeLoss(double[] expected)
     {
-        Expected = Classes.Decide(Jagged.ColumnVector(expected));
+        Expected = Classes.Decide(new Jagged<double>(Jagged.ColumnVector(expected)));
     }
 
     /// <summary>
@@ -67,12 +68,13 @@ public struct HingeLoss : ILoss<double[]>,
     ///     The loss value between the expected values and
     ///     the actual predicted values.
     /// </returns>
-    public double Loss(double[][] actual)
+    public double Loss(Jagged<double> actual)
     {
+        var actualArray = actual.Array;
         double error = 0;
         for (var i = 0; i < Expected.Length; i++)
             for (var j = 0; j < Expected[i].Length; j++)
-                error += Loss(Expected[i][j], actual[i][j]);
+                error += Loss(Expected[i][j], actualArray[i][j]);
         return error;
     }
 

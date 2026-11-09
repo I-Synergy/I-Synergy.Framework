@@ -157,7 +157,7 @@ public abstract class OctaveEnvironment
     /// <summary>Size of a matrix.</summary>
     protected static double[] size(Matrix<double> m) { return [m.Array.GetLength(0), m.Array.GetLength(1)]; }
     /// <summary>Rank of a matrix.</summary>
-    protected static int rank(Matrix<double> m) { return new SingularValueDecomposition(m.Array).Rank; }
+    protected static int rank(Matrix<double> m) { return new SingularValueDecomposition(m).Rank; }
     /// <summary>Matrix sum vector.</summary>
     protected static double[] sum(Matrix<double> matrix) { return Matrix.Sum(matrix.Array, 0); }
     /// <summary>Sum of vector elements.</summary>
@@ -223,7 +223,7 @@ public abstract class OctaveEnvironment
     /// <summary>Singular value decomposition.</summary>
     protected static List<Mat> svd(Matrix<double> m)
     {
-        var svd = new SingularValueDecomposition(m.Array, true, true, true);
+        var svd = new SingularValueDecomposition(m, true, true, true);
         return [svd.LeftSingularVectors, svd.DiagonalMatrix, svd.RightSingularVectors];
     }
 
@@ -233,7 +233,7 @@ public abstract class OctaveEnvironment
     /// <summary>QR decomposition.</summary>
     protected static void qr(Matrix<double> m, out Matrix<double> Q, out Matrix<double> R)
     {
-        var qr = new QrDecomposition(m.Array);
+        var qr = new QrDecomposition(m);
         Q = new Matrix<double>(qr.OrthogonalFactor);
         R = new Matrix<double>(qr.UpperTriangularFactor);
     }
@@ -241,7 +241,7 @@ public abstract class OctaveEnvironment
     /// <summary>QR decomposition.</summary>
     protected static void qr(Matrix<double> m, out Matrix<double> Q, out Matrix<double> R, out double[] d)
     {
-        var qr = new QrDecomposition(m.Array);
+        var qr = new QrDecomposition(m);
         Q = new Matrix<double>(qr.OrthogonalFactor);
         R = new Matrix<double>(qr.UpperTriangularFactor);
         d = qr.Diagonal;
@@ -252,7 +252,7 @@ public abstract class OctaveEnvironment
     /// <summary>Eigenvalue decomposition.</summary>
     protected static double[] eig(Matrix<double> a, out Matrix<double> V)
     {
-        var eig = new EigenvalueDecomposition(a.Array);
+        var eig = new EigenvalueDecomposition(a);
         V = new Matrix<double>(eig.Eigenvectors);
         return eig.RealEigenvalues;
     }
@@ -260,7 +260,7 @@ public abstract class OctaveEnvironment
     /// <summary>Eigenvalue decomposition.</summary>
     protected static double[] eig(Matrix<double> a, out Matrix<double> V, out double[] im)
     {
-        var eig = new EigenvalueDecomposition(a.Array);
+        var eig = new EigenvalueDecomposition(a);
         V = new Matrix<double>(eig.Eigenvectors);
         im = eig.ImaginaryEigenvalues;
         return eig.RealEigenvalues;
@@ -269,7 +269,7 @@ public abstract class OctaveEnvironment
     /// <summary>Eigenvalue decomposition.</summary>
     protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        var eig = new GeneralizedEigenvalueDecomposition(a, b);
         V = new Matrix<double>(eig.Eigenvectors);
         return eig.RealEigenvalues;
     }
@@ -277,7 +277,7 @@ public abstract class OctaveEnvironment
     /// <summary>Eigenvalue decomposition.</summary>
     protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V, out double[] im)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        var eig = new GeneralizedEigenvalueDecomposition(a, b);
         V = new Matrix<double>(eig.Eigenvectors);
         im = eig.ImaginaryEigenvalues;
         return eig.RealEigenvalues;
@@ -286,7 +286,7 @@ public abstract class OctaveEnvironment
     /// <summary>Eigenvalue decomposition.</summary>
     protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V, out double[] alphar, out double[] beta)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        var eig = new GeneralizedEigenvalueDecomposition(a, b);
         V = new Matrix<double>(eig.Eigenvectors);
         beta = eig.Betas;
         alphar = eig.RealAlphas;
@@ -296,7 +296,7 @@ public abstract class OctaveEnvironment
     /// <summary>Eigenvalue decomposition.</summary>
     protected static double[] eig(Matrix<double> a, Matrix<double> b, out Matrix<double> V, out double[] im, out double[] alphar, out double[] alphai, out double[] beta)
     {
-        var eig = new GeneralizedEigenvalueDecomposition(a.Array, b.Array);
+        var eig = new GeneralizedEigenvalueDecomposition(a, b);
         V = new Matrix<double>(eig.Eigenvectors);
         im = eig.ImaginaryEigenvalues;
         beta = eig.Betas;
@@ -310,7 +310,7 @@ public abstract class OctaveEnvironment
     /// <summary>Cholesky decomposition.</summary>
     protected static double[,] chol(Matrix<double> a)
     {
-        var chol = new CholeskyDecomposition(a.Array);
+        var chol = new CholeskyDecomposition(a);
         return chol.LeftTriangularFactor;
     }
     #endregion
@@ -462,7 +462,7 @@ public abstract class OctaveEnvironment
         /// 
         public static bool operator ==(Mat a, Mat b)
         {
-            return a.matrix.IsEqual(b.matrix);
+            return a.matrix.IsEqual(new Matrix<double>(b.matrix));
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ public abstract class OctaveEnvironment
         /// 
         public static bool operator !=(Mat a, Mat b)
         {
-            return !a.matrix.IsEqual(b.matrix);
+            return !a.matrix.IsEqual(new Matrix<double>(b.matrix));
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -147,16 +148,18 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     /// <param name="constraintMatrix">The constraints matrix <c>A</c>.</param>
     /// <param name="constraintValues">The constraints values <c>b</c>.</param>
     /// <param name="numberOfEqualities">The number of equalities in the constraints.</param>
-    public GoldfarbIdnani(QuadraticObjectiveFunction function, double[,] constraintMatrix,
+    public GoldfarbIdnani(QuadraticObjectiveFunction function, Matrix<double> constraintMatrix,
         double[] constraintValues, int numberOfEqualities = 0)
         : base(function.NumberOfVariables, function.Function, function.Gradient)
     {
-        if (function.NumberOfVariables != constraintMatrix.GetLength(1))
+        var constraintMatrixArray = constraintMatrix.Array;
+
+        if (function.NumberOfVariables != constraintMatrixArray.GetLength(1))
             throw new ArgumentException("The number of columns in the constraint matrix A "
                                         + "should equal the number of variables in the problem.",
                 nameof(constraintMatrix));
 
-        if (constraintValues.Length != constraintMatrix.GetLength(0))
+        if (constraintValues.Length != constraintMatrixArray.GetLength(0))
             throw new DimensionMismatchException(nameof(constraintValues));
 
         if (numberOfEqualities < 0 || numberOfEqualities > constraintValues.Length)
@@ -165,7 +168,7 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         constraintTolerances = Vector.Create(constraintValues.Length, LinearConstraint.DefaultTolerance);
 
         initialize(function.NumberOfVariables, function.QuadraticTerms,
-            function.LinearTerms, constraintMatrix, constraintValues, numberOfEqualities);
+            function.LinearTerms, constraintMatrixArray, constraintValues, numberOfEqualities);
     }
 
     /// <summary>
@@ -176,8 +179,8 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     /// <param name="constraintMatrix">The constraints matrix <c>A</c>.</param>
     /// <param name="constraintValues">The constraints values <c>b</c>.</param>
     /// <param name="numberOfEqualities">The number of equalities in the constraints.</param>
-    public GoldfarbIdnani(double[,] quadratic, double[] linear,
-        double[,] constraintMatrix, double[] constraintValues, int numberOfEqualities = 0)
+    public GoldfarbIdnani(Matrix<double> quadratic, double[] linear,
+        Matrix<double> constraintMatrix, double[] constraintValues, int numberOfEqualities = 0)
         : this(new QuadraticObjectiveFunction(quadratic, linear, System.Array.Empty<string>()),
             constraintMatrix, constraintValues, numberOfEqualities)
     {

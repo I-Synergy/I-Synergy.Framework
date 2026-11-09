@@ -31,7 +31,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 ///         and right eigenvectors. If the routine is computed on A directly, the diagonal
 ///         of singular values may contain one or more zeros. The identity A = U * S * V'
 ///         may still hold, however. To overcome this problem, pass true to the
-///         <see cref="JaggedSingularValueDecomposition(double[][], bool, bool, bool)">autoTranspose</see>
+///         <see cref="JaggedSingularValueDecomposition(Jagged{Double}, bool, bool, bool)">autoTranspose</see>
 ///         argument of the class constructor.
 ///     </para>
 ///     <para>
@@ -61,7 +61,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// <param name="value">
     ///     The matrix to be decomposed.
     /// </param>
-    public JaggedSingularValueDecomposition(double[][] value)
+    public JaggedSingularValueDecomposition(Jagged<double> value)
         : this(value, true, true)
     {
     }
@@ -81,7 +81,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     ///     should be computed. Pass <see langword="false" /> otherwise. Default
     ///     is <see langword="true" />.
     /// </param>
-    public JaggedSingularValueDecomposition(double[][] value,
+    public JaggedSingularValueDecomposition(Jagged<double> value,
         bool computeLeftSingularVectors, bool computeRightSingularVectors)
         : this(value, computeLeftSingularVectors, computeRightSingularVectors, false)
     {
@@ -108,7 +108,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     ///     case JAMA's assumptions about the dimensionality of the matrix are violated.
     ///     Pass <see langword="false" /> otherwise. Default is <see langword="false" />.
     /// </param>
-    public JaggedSingularValueDecomposition(double[][] value,
+    public JaggedSingularValueDecomposition(Jagged<double> value,
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose)
         : this(value, computeLeftSingularVectors, computeRightSingularVectors, autoTranspose, false)
     {
@@ -140,25 +140,26 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     ///     <paramref name="value" /> will be destroyed in the process, resulting in less
     ///     memory comsumption.
     /// </param>
-    public JaggedSingularValueDecomposition(double[][] value,
+    public JaggedSingularValueDecomposition(Jagged<double> value,
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
     {
-        if (value is null)
+        var matrix = value.Array;
+        if (matrix is null)
             throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         double[][] a;
-        m = value.Length; // rows
+        m = matrix.Length; // rows
 
         if (m == 0)
             throw new ArgumentException("Matrix does not have any rows.", nameof(value));
 
-        n = value[0].Length; // cols
+        n = matrix[0].Length; // cols
 
         if (n == 0)
             throw new ArgumentException("Matrix does not have any columns.", nameof(value));
 
-        for (var i = 0; i < value.Length; i++)
-            if (value[i].Length != n)
+        for (var i = 0; i < matrix.Length; i++)
+            if (matrix[i].Length != n)
                 throw new ArgumentException("Matrix has rows of different sizes.", nameof(value));
         if (m < n) // Check if we are violating JAMA's assumption
         {
@@ -172,14 +173,14 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
                 Trace.WriteLine("WARNING: Computing SVD on a matrix with more columns than rows.");
 
                 // Proceed anyway
-                a = inPlace ? value : value.MemberwiseClone();
+                a = inPlace ? matrix : matrix.MemberwiseClone();
             }
             else
             {
                 // Transposing and swapping
-                a = value.Transpose(inPlace && m == n);
-                n = value.Length; // rows
-                m = value[0].Length; // cols
+                a = matrix.Transpose(inPlace && m == n);
+                n = matrix.Length; // rows
+                m = matrix[0].Length; // cols
                 swapped = true;
 
                 var aux = computeLeftSingularVectors;
@@ -190,7 +191,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         else
         {
             // Input matrix is ok
-            a = inPlace ? value : value.MemberwiseClone();
+            a = inPlace ? matrix : matrix.MemberwiseClone();
         }
         var nu = Math.Min(m, n);
         var ni = Math.Min(m + 1, n);
@@ -819,7 +820,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// </summary>
     /// <param name="value">Parameter B from the equation AX = B.</param>
     /// <returns>The solution X from equation AX = B.</returns>
-    public double[][] Solve(double[][] value)
+    public double[][] Solve(Jagged<double> value)
     {
         // Additionally an important property is that if there does not exists a solution
         // when the matrix A is singular but replacing 1/Li with 0 will provide a solution
@@ -830,7 +831,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         // L is a diagonal matrix with non-negative matrix elements having the same
         // dimension as A, Wi ? 0. The diagonal elements of L are the singular values of matrix A.
 
-        var Y = value;
+        var Y = value.Array;
 
         // Create L*, which is a diagonal matrix with elements
         //    L*[i] = 1/L[i]  if L[i] < e, else 0, 
@@ -945,7 +946,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     {
         ArgumentNullException.ThrowIfNull(diagonal);
 
-        return Solve(Jagged.Diagonal(diagonal));
+        return Solve(new Jagged<double>(Jagged.Diagonal(diagonal)));
     }
 
     /// <summary>
@@ -997,7 +998,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[][])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Jagged{Double})" />
     ///     methods.
     /// </summary>
     public double[][] GetInformationMatrix()
@@ -1038,7 +1039,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// </summary>
     /// <param name="value">Parameter B from the equation AX = B.</param>
     /// <returns>The solution X from equation AX = B.</returns>
-    public double[][] SolveTranspose(double[][] value)
+    public double[][] SolveTranspose(Jagged<double> value)
     {
         // Additionally an important property is that if there does not exists a solution
         // when the matrix A is singular but replacing 1/Li with 0 will provide a solution
@@ -1049,7 +1050,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         // L is a diagonal matrix with non-negative matrix elements having the same
         // dimension as A, Wi ? 0. The diagonal elements of L are the singular values of matrix A.
 
-        var Y = value;
+        var Y = value.Array;
 
         // Create L*, which is a diagonal matrix with elements
         //    L*[i] = 1/L[i]  if L[i] < e, else 0, 

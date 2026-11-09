@@ -3,6 +3,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
@@ -745,8 +746,9 @@ public static class Classes
     ///   is higher than zero, and false otherwise.
     /// </summary>
     /// 
-    public static bool[][] Decide(double[][] values)
+    public static bool[][] Decide(Jagged<double> valuesWrapper)
     {
+        var values = valuesWrapper.Array;
         bool[][] result = new bool[values.Length][];
         for (var i = 0; i < result.Length; i++)
             result[i] = Decide(values[i]);
@@ -758,8 +760,9 @@ public static class Classes
     ///   is higher than zero, and false otherwise.
     /// </summary>
     /// 
-    public static bool[][] Decide(int[][] values)
+    public static bool[][] Decide(Jagged<int> valuesWrapper)
     {
+        var values = valuesWrapper.Array;
         bool[][] result = new bool[values.Length][];
         for (var i = 0; i < result.Length; i++)
             result[i] = Decide(values[i]);

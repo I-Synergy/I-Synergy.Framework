@@ -45,7 +45,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     ///     Constructs a new LU decomposition.
     /// </summary>
     /// <param name="value">The matrix A to be decomposed.</param>
-    public LuDecomposition(double[,] value)
+    public LuDecomposition(Matrix<double> value)
         : this(value, false)
     {
     }
@@ -58,7 +58,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     ///     True if the decomposition should be performed on
     ///     the transpose of A rather than A itself, false otherwise. Default is false.
     /// </param>
-    public LuDecomposition(double[,] value, bool transpose)
+    public LuDecomposition(Matrix<double> value, bool transpose)
         : this(value, transpose, false)
     {
     }
@@ -76,14 +76,15 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     ///     <paramref name="value" /> matrix rather than on a copy of it. If true, the
     ///     matrix will be destroyed during the decomposition. Default is false.
     /// </param>
-    public LuDecomposition(double[,] value, bool transpose, bool inPlace)
+    public LuDecomposition(Matrix<double> value, bool transpose, bool inPlace)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
+        var matrix = value.Array;
+        if (matrix is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (transpose)
-            lu = value.Transpose(inPlace);
+            lu = matrix.Transpose(inPlace);
         else
-            lu = inPlace ? value : (double[,])value.Clone();
+            lu = inPlace ? matrix : (double[,])matrix.Clone();
 
         rows = lu.GetLength(0);
         cols = lu.GetLength(1);
@@ -319,19 +320,20 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// </summary>
     /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[,] Solve(double[,] value)
+    public double[,] Solve(Matrix<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.GetLength(0) != rows)
+        if (valueArray.GetLength(0) != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new InvalidOperationException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var count = value.GetLength(1);
-        var X = value.Get(PivotPermutationVector, null);
+        var count = valueArray.GetLength(1);
+        var X = valueArray.Get(PivotPermutationVector, null);
         // Solve L*Y = B(piv,:)
         for (var k = 0; k < cols; k++)
             for (var i = k + 1; i < cols; i++)
@@ -404,7 +406,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[,])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Matrix{Double})" />
     ///     methods.
     /// </summary>
     public double[,] GetInformationMatrix()
@@ -418,18 +420,19 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// </summary>
     /// <param name="value">Right hand side matrix with as many columns as <c>A</c> and any number of rows.</param>
     /// <returns>Matrix <c>X</c> so that <c>X * L * U = A</c>.</returns>
-    public double[,] SolveTranspose(double[,] value)
+    public double[,] SolveTranspose(Matrix<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.GetLength(0) != rows)
+        if (valueArray.GetLength(0) != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new SingularMatrixException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var X = value.Get(null, PivotPermutationVector);
+        var X = valueArray.Get(null, PivotPermutationVector);
 
         var count = X.GetLength(1);
 

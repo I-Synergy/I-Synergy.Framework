@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -257,7 +258,7 @@ public class FiniteDifferences
     /// <returns>The Hessian of the function evaluated at point <c>x</c>.</returns>
     public double[][] Hessian(double[] x)
     {
-        return Hessian(x, Jagged.Zeros(x.Length, x.Length));
+        return Hessian(x, new Jagged<double>(Jagged.Zeros(x.Length, x.Length)));
     }
 
     /// <summary>
@@ -266,8 +267,9 @@ public class FiniteDifferences
     /// <param name="x">The point where to compute the gradient.</param>
     /// <param name="result">The matrix where the Hessian should be stored.</param>
     /// <returns>The Hessian of the function evaluated at point <c>x</c>.</returns>
-    public double[][] Hessian(double[] x, double[][] result)
+    public double[][] Hessian(double[] x, Jagged<double> result)
     {
+        var resultArray = result.Array;
         var pointCache1 = points.Value[0];
         var pointCache2 = points.Value[1];
         var centerValue = Function(x);
@@ -277,18 +279,18 @@ public class FiniteDifferences
             Func<double[], double> f = x0 => derivative(Function, x0, i, pointCache2, Function(x0));
 
             // Process elements at the diagonal
-            result[i][i] = derivative(f, x, i, pointCache1, centerValue);
+            resultArray[i][i] = derivative(f, x, i, pointCache1, centerValue);
 
             // Process off-diagonal elements
             for (var j = 0; j < i; j++)
             {
                 var d = derivative(f, x, j, pointCache1, centerValue);
-                result[j][i] = d; // Hessian is symmetric, no need
-                result[i][j] = d; // to compute the derivative twice
+                resultArray[j][i] = d; // Hessian is symmetric, no need
+                resultArray[i][j] = d; // to compute the derivative twice
             }
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>

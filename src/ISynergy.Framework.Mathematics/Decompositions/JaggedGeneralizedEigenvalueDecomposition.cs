@@ -1,6 +1,7 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -84,30 +85,32 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
     ///     Pass <see langword="true" /> to sort the eigenvalues and eigenvectors at the end
     ///     of the decomposition.
     /// </param>
-    public JaggedGeneralizedEigenvalueDecomposition(double[][] a, double[][] b, bool sort = false)
+    public JaggedGeneralizedEigenvalueDecomposition(Jagged<double> a, Jagged<double> b, bool sort = false)
     {
-        if (a is null)
+        var aMatrix = a.Array;
+        var bMatrix = b.Array;
+        if (aMatrix is null)
             throw new ArgumentNullException(nameof(a), "Matrix A cannot be null.");
 
-        if (b is null)
+        if (bMatrix is null)
             throw new ArgumentNullException(nameof(b), "Matrix B cannot be null.");
 
-        if (a.Rows() != a.Columns())
+        if (aMatrix.Rows() != aMatrix.Columns())
             throw new ArgumentException("Matrix is not a square matrix.", nameof(a));
 
-        if (b.Rows() != b.Columns())
+        if (bMatrix.Rows() != bMatrix.Columns())
             throw new ArgumentException("Matrix is not a square matrix.", nameof(b));
 
-        if (a.Rows() != b.Rows() || a.Columns() != b.Columns())
+        if (aMatrix.Rows() != bMatrix.Rows() || aMatrix.Columns() != bMatrix.Columns())
             throw new ArgumentException("Matrix dimensions do not match", nameof(b));
 
-        n = a.Rows();
+        n = aMatrix.Rows();
         RealAlphas = new double[n];
         ImaginaryAlphas = new double[n];
         Betas = new double[n];
         Eigenvectors = Jagged.Zeros(n, n);
-        var A = a.Copy();
-        var B = b.Copy();
+        var A = aMatrix.Copy();
+        var B = bMatrix.Copy();
 
         var matz = true;
         var ierr = 0;

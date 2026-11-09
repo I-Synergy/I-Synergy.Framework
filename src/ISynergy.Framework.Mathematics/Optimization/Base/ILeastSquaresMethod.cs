@@ -1,5 +1,7 @@
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
+
 namespace ISynergy.Framework.Mathematics.Optimization.Base;
 
 /// <summary>
@@ -89,5 +91,5 @@ public interface ILeastSquaresMethod
     ///     The values associated with each
     ///     vector in the <paramref name="inputs" /> data.
     /// </param>
-    double Minimize(double[][] inputs, double[] outputs);
+    double Minimize(Jagged<double> inputs, double[] outputs);
 }

@@ -455,9 +455,6 @@ public static partial class Matrix
 
         ArgumentNullException.ThrowIfNull(objB);
 
-        if (!objA.GetLength().IsEqual(objB.GetLength()))
-            return false;
-
         // Math.NET parity: the reflective overload dispatch below is not cached, as upstream.
         // http://blog.slaks.net/2015-06-26/code-snippets-fast-property-access-reflection/
 
@@ -473,8 +470,19 @@ public static partial class Matrix
             typeof(Array), typeof(Array), typeof(double), typeof(double)
         ]);
 
-        if (equals != _this)
+        if (equals is not null && equals != _this)
             return (bool)equals.Invoke(null, [objA, objB, atol, rtol]);
+
+        // The multidimensional and jagged typed overloads now take Matrix<T>/Jagged<T>/Tensor3<T>
+        // for their second operand, so the plain reflection lookup above no longer finds them for a
+        // raw-array call. Re-dispatch to the wrapped overload so the optimized comparison is kept.
+        var wrapped = IsEqualDispatchWrapped(objA, objB, atol, rtol);
+        if (wrapped is not null)
+            return wrapped.Value;
+
+        // Only reached when no optimized typed overload applies: require matching dimensions first.
+        if (!objA.GetLength().IsEqual(objB.GetLength()))
+            return false;
 
         // Base case: arrays contain elements of same nature (both arrays, or both values)
         if (typeA.GetElementType().IsArray == typeB.GetElementType().IsArray)
@@ -519,6 +527,37 @@ public static partial class Matrix
     public new static bool Equals(object value)
     {
         throw new NotSupportedException("Use Matrix.IsEqual instead.");
+    }
+
+    private static bool? IsEqualDispatchWrapped(Array objA, Array objB, double atol, double rtol)
+    {
+        Type wrapperType;
+        if (objB is double[,])
+        {
+            wrapperType = typeof(Matrix<double>);
+        }
+        else if (objB is double[][])
+        {
+            wrapperType = typeof(Jagged<double>);
+        }
+        else if (objB is double[,,])
+        {
+            wrapperType = typeof(Tensor3<double>);
+        }
+        else
+        {
+            return null;
+        }
+
+        var method = typeof(Matrix).GetMethod("IsEqual", [
+            objA.GetType(), wrapperType, typeof(double), typeof(double)
+        ]);
+
+        if (method is null)
+            return null;
+
+        var wrappedB = System.Activator.CreateInstance(wrapperType, objB);
+        return (bool)method.Invoke(null, [objA, wrappedB, atol, rtol]);
     }
 
     /// <summary>
@@ -729,7 +768,7 @@ public static partial class Matrix
                 }
 
 #if DEBUG
-            if (!expected.IsEqual(matrix))
+            if (!expected.IsEqual(new Matrix<double>(matrix)))
                 throw new InvalidOperationException("Debug assertion failed: transposed matrix does not match expected.");
 #endif
 
@@ -1352,7 +1391,7 @@ public static partial class Matrix
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
-            var chol = new CholeskyDecomposition(matrix, true);
+            var chol = new CholeskyDecomposition(new Matrix<double>(matrix), true);
 
             if (!chol.IsPositiveDefinite)
                 throw new ArgumentException("The matrix could not be decomposed using " +
@@ -1362,7 +1401,7 @@ public static partial class Matrix
             return chol.Determinant;
         }
 
-        return new LuDecomposition(matrix).Determinant;
+        return new LuDecomposition(new Matrix<double>(matrix)).Determinant;
     }
 
     /// <summary>
@@ -1383,7 +1422,7 @@ public static partial class Matrix
 
         if (symmetric) // Use faster robust Cholesky decomposition
         {
-            var chol = new CholeskyDecomposition(matrix, true);
+            var chol = new CholeskyDecomposition(new Matrix<double>(matrix), true);
 
             if (!chol.IsPositiveDefinite)
                 throw new ArgumentException("The matrix could not be decomposed using " +
@@ -1393,7 +1432,7 @@ public static partial class Matrix
             return chol.LogDeterminant;
         }
 
-        return new LuDecomposition(matrix).LogDeterminant;
+        return new LuDecomposition(new Matrix<double>(matrix)).LogDeterminant;
     }
 
     /// <summary>
@@ -1403,7 +1442,7 @@ public static partial class Matrix
     {
         ArgumentNullException.ThrowIfNull(matrix);
 
-        return new SingularValueDecomposition(matrix,
+        return new SingularValueDecomposition(new Matrix<double>(matrix),
             false, false,
             true, false).PseudoDeterminant;
     }
@@ -1415,7 +1454,7 @@ public static partial class Matrix
     {
         ArgumentNullException.ThrowIfNull(matrix);
 
-        return new JaggedSingularValueDecomposition(matrix,
+        return new JaggedSingularValueDecomposition(new Jagged<double>(matrix),
             false, false,
             true, false).PseudoDeterminant;
     }
@@ -1427,7 +1466,7 @@ public static partial class Matrix
     {
         ArgumentNullException.ThrowIfNull(matrix);
 
-        return new SingularValueDecomposition(matrix,
+        return new SingularValueDecomposition(new Matrix<double>(matrix),
             false, false,
             true, false).LogPseudoDeterminant;
     }
@@ -1439,7 +1478,7 @@ public static partial class Matrix
     {
         ArgumentNullException.ThrowIfNull(matrix);
 
-        return new JaggedSingularValueDecomposition(matrix,
+        return new JaggedSingularValueDecomposition(new Jagged<double>(matrix),
             false, false,
             true, false).LogPseudoDeterminant;
     }
@@ -1448,7 +1487,7 @@ public static partial class Matrix
     /// </summary>
     public static int Rank(this double[,] matrix)
     {
-        return new SingularValueDecomposition(matrix,
+        return new SingularValueDecomposition(new Matrix<double>(matrix),
             false, false,
             true, false).Rank;
     }
@@ -1459,7 +1498,7 @@ public static partial class Matrix
     public static bool IsSingular(this double[,] matrix)
     {
         ArgumentNullException.ThrowIfNull(matrix);
-        return new SingularValueDecomposition(matrix).IsSingular;
+        return new SingularValueDecomposition(new Matrix<double>(matrix)).IsSingular;
     }
 
     /// <summary>
@@ -1469,7 +1508,7 @@ public static partial class Matrix
     {
         ArgumentNullException.ThrowIfNull(matrix);
 
-        return new CholeskyDecomposition(matrix).IsPositiveDefinite;
+        return new CholeskyDecomposition(new Matrix<double>(matrix)).IsPositiveDefinite;
     }
 
     #endregion

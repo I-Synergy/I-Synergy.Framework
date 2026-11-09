@@ -472,7 +472,7 @@ public static partial class Matrix
     /// </summary>
     public static bool IsPositiveDefinite(this double[][] matrix)
     {
-        return new JaggedCholeskyDecomposition(matrix).IsPositiveDefinite;
+        return new JaggedCholeskyDecomposition(new Jagged<double>(matrix)).IsPositiveDefinite;
     }
 
     /// <summary>

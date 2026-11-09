@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -25,27 +26,29 @@ public static partial class Matrix
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static double[,] Random(int rows, int columns, double min, double max, double[,] result = null)
+    public static double[,] Random(int rows, int columns, double min, double max, Matrix<double> result = default)
     {
-        if (result is null)
-            result = new double[rows, columns];
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = new double[rows, columns];
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i, j] = random.NextDouble() * (max - min) + min;
-        return result;
+                resultArray[i, j] = random.NextDouble() * (max - min) + min;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static double[,] Random(int size, double min, double max, bool symmetric = false, double[,] result = null)
+    public static double[,] Random(int size, double min, double max, bool symmetric = false, Matrix<double> result = default)
     {
-        if (result is null)
-            result = new double[size, size];
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = new double[size, size];
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -53,14 +56,14 @@ public static partial class Matrix
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i, j] = result[j, i] = random.NextDouble() * (max - min) + min;
+                    resultArray[i, j] = resultArray[j, i] = random.NextDouble() * (max - min) + min;
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i, j] = random.NextDouble() * (max - min) + min;
+                    resultArray[i, j] = random.NextDouble() * (max - min) + min;
         }
-        return result;
+        return resultArray;
     }
 }
