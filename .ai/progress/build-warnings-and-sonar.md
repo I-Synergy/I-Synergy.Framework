@@ -93,3 +93,18 @@ Only **S2368 (582)** remains. Analysis: 582 public declarations, 152 method grou
 43 overload sets differ only by array rank/shape. Replacing the parameters with `Array` would
 make those overloads collide; the only compliant alternatives are wrapper types per shape
 (public API redesign) or making the members non-public (removes the library's API).
+
+## S2368 migration progress
+
+Wrapper types added and made S2368-compliant (constructors take `System.Array`).
+Migrated slices so far: 582 -> 555.
+- GramSchmidtOrthogonalization, NonnegativeMatrixFactorization,
+  Cholesky/JaggedCholesky.FromLeftTriangularMatrix, ElementwiseMultiply
+- ReducedRowEchelonForm, JaggedReducedRowEchelonForm, HartleyTransform.DHT,
+  PooledCovariance, BaseMahalanobis + Mahalanobis factories, MultiplyAndAdd
+- Loss constructors, QuadraticConstraint, BaseLeastSquaresMethod.ComputeError,
+  JaggedCholesky.FromLeftTriangularMatrix, Mahalanobis/SquareMahalanobis
+  factories, ElementwiseDivide
+
+Each slice: wrappers replace the array parameters, bodies bind `.Array`, call sites
+wrap once. All Mathematics tests pass after every slice.
