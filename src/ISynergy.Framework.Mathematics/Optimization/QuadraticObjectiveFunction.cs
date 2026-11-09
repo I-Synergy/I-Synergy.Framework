@@ -637,8 +637,8 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
             return true;
 
         return NumberOfVariables == other.NumberOfVariables
-            && ConstantTerm == other.ConstantTerm
-            && LinearTerms.IsEqual(other.LinearTerms)
+            && ExactComparisons.AreEqual(ConstantTerm ,other.ConstantTerm
+)            && LinearTerms.IsEqual(other.LinearTerms)
             && QuadraticTerms.IsEqual(other.QuadraticTerms);
     }
 

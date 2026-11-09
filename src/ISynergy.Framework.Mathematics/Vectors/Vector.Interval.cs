@@ -126,7 +126,7 @@ public static partial class Vector
         if (steps == 1)
             return [a];
 
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return Vector.Create(size: steps, value: a);
 
         double[] r = new double[steps];
@@ -184,7 +184,7 @@ public static partial class Vector
     ///
     public static double[] Interval(double a, double b, double stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [a];
 
         double[] r;

@@ -611,18 +611,18 @@ public struct Matrix3x3
     public static bool operator ==(Matrix3x3 matrix1, Matrix3x3 matrix2)
     {
         return
-            matrix1.V00 == matrix2.V00 &&
-            matrix1.V01 == matrix2.V01 &&
-            matrix1.V02 == matrix2.V02 &&
-
-            matrix1.V10 == matrix2.V10 &&
-            matrix1.V11 == matrix2.V11 &&
-            matrix1.V12 == matrix2.V12 &&
-
-            matrix1.V20 == matrix2.V20 &&
-            matrix1.V21 == matrix2.V21 &&
-            matrix1.V22 == matrix2.V22
-        ;
+ExactComparisons.AreEqual(            matrix1.V00 ,matrix2.V00 )&&
+ExactComparisons.AreEqual(            matrix1.V01 ,matrix2.V01 )&&
+ExactComparisons.AreEqual(            matrix1.V02 ,matrix2.V02 )&&
+ExactComparisons.AreEqual(
+            matrix1.V10 ,matrix2.V10 )&&
+ExactComparisons.AreEqual(            matrix1.V11 ,matrix2.V11 )&&
+ExactComparisons.AreEqual(            matrix1.V12 ,matrix2.V12 )&&
+ExactComparisons.AreEqual(
+            matrix1.V20 ,matrix2.V20 )&&
+ExactComparisons.AreEqual(            matrix1.V21 ,matrix2.V21 )&&
+ExactComparisons.AreEqual(            matrix1.V22 ,matrix2.V22
+)        ;
     }
 
     /// <summary>
@@ -637,18 +637,18 @@ public struct Matrix3x3
     public static bool operator !=(Matrix3x3 matrix1, Matrix3x3 matrix2)
     {
         return
-            matrix1.V00 != matrix2.V00 ||
-            matrix1.V01 != matrix2.V01 ||
-            matrix1.V02 != matrix2.V02 ||
-
-            matrix1.V10 != matrix2.V10 ||
-            matrix1.V11 != matrix2.V11 ||
-            matrix1.V12 != matrix2.V12 ||
-
-            matrix1.V20 != matrix2.V20 ||
-            matrix1.V21 != matrix2.V21 ||
-            matrix1.V22 != matrix2.V22
-        ;
+ExactComparisons.AreNotEqual(            matrix1.V00 ,matrix2.V00 )||
+ExactComparisons.AreNotEqual(            matrix1.V01 ,matrix2.V01 )||
+ExactComparisons.AreNotEqual(            matrix1.V02 ,matrix2.V02 )||
+ExactComparisons.AreNotEqual(
+            matrix1.V10 ,matrix2.V10 )||
+ExactComparisons.AreNotEqual(            matrix1.V11 ,matrix2.V11 )||
+ExactComparisons.AreNotEqual(            matrix1.V12 ,matrix2.V12 )||
+ExactComparisons.AreNotEqual(
+            matrix1.V20 ,matrix2.V20 )||
+ExactComparisons.AreNotEqual(            matrix1.V21 ,matrix2.V21 )||
+ExactComparisons.AreNotEqual(            matrix1.V22 ,matrix2.V22
+)        ;
     }
 
     /// <summary>

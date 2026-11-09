@@ -824,7 +824,7 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
                     // Givens rotation to these columns. The i-1 element of d has to be
                     // updated to temp. 
 
-                    if (gc == 1.0)
+                    if (ExactComparisons.AreEqual(gc ,1.0))
                         continue;
 
                     if (gc == 0.0)
@@ -925,7 +925,7 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         // we can ignore the sign of gs. Otherwise we have to apply the Givens 
         // rotation to these rows/columns. 
 
-        if (gc == 1.0)
+        if (ExactComparisons.AreEqual(gc ,1.0))
             goto L798;
 
         if (gc == 0.0)

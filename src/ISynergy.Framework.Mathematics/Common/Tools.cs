@@ -574,7 +574,7 @@ public static class Tools
         }
         else if (value is double dblNumber)
         {
-            while (Math.Round(dblNumber, i) != dblNumber)
+            while (ExactComparisons.AreNotEqual(Math.Round(dblNumber, i) ,dblNumber))
                 i++;
         }
         else

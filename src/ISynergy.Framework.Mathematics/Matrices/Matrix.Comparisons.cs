@@ -33,7 +33,7 @@ public static partial class Matrix
             {
                 var A = a[i];
                 var B = b[i];
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -61,7 +61,7 @@ public static partial class Matrix
             {
                 var A = a[i];
                 var B = b[i];
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -93,7 +93,7 @@ public static partial class Matrix
                     return false;
                 if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                     return false;
-                if (A != B)
+                if (ExactComparisons.AreNotEqual(A ,B))
                     return false;
             }
 
@@ -133,7 +133,7 @@ public static partial class Matrix
             {
                 var A = spanA[i];
                 var B = spanB[i];
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -161,7 +161,7 @@ public static partial class Matrix
             {
                 var A = spanA[i];
                 var B = spanB[i];
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -193,7 +193,7 @@ public static partial class Matrix
                     return false;
                 if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                     return false;
-                if (A != B)
+                if (ExactComparisons.AreNotEqual(A ,B))
                     return false;
             }
 
@@ -227,7 +227,7 @@ public static partial class Matrix
                 {
                     var A = a[i, j];
                     var B = b[i][j];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -256,7 +256,7 @@ public static partial class Matrix
                 {
                     var A = a[i, j];
                     var B = b[i][j];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -289,7 +289,7 @@ public static partial class Matrix
                         return false;
                     if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         return false;
-                    if (A != B)
+                    if (ExactComparisons.AreNotEqual(A ,B))
                         return false;
                 }
 
@@ -323,7 +323,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = b[i, j];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -352,7 +352,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = b[i, j];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -385,7 +385,7 @@ public static partial class Matrix
                         return false;
                     if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         return false;
-                    if (A != B)
+                    if (ExactComparisons.AreNotEqual(A ,B))
                         return false;
                 }
 
@@ -421,7 +421,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = b[i][j];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -450,7 +450,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = b[i][j];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -483,7 +483,7 @@ public static partial class Matrix
                         return false;
                     if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         return false;
-                    if (A != B)
+                    if (ExactComparisons.AreNotEqual(A ,B))
                         return false;
                 }
 
@@ -507,7 +507,7 @@ public static partial class Matrix
             {
                 var A = a[i];
                 var B = b;
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -535,7 +535,7 @@ public static partial class Matrix
             {
                 var A = a[i];
                 var B = b;
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -567,7 +567,7 @@ public static partial class Matrix
                     return false;
                 if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                     return false;
-                if (A != B)
+                if (ExactComparisons.AreNotEqual(A ,B))
                     return false;
             }
 
@@ -595,7 +595,7 @@ public static partial class Matrix
             {
                 var A = spanA[i];
                 var B = b;
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -623,7 +623,7 @@ public static partial class Matrix
             {
                 var A = spanA[i];
                 var B = b;
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                     continue;
                 if (Double.IsNaN(A) && Double.IsNaN(B))
                     continue;
@@ -655,7 +655,7 @@ public static partial class Matrix
                     return false;
                 if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                     return false;
-                if (A != B)
+                if (ExactComparisons.AreNotEqual(A ,B))
                     return false;
             }
 
@@ -680,7 +680,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = b;
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -708,7 +708,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = b;
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -741,7 +741,7 @@ public static partial class Matrix
                         return false;
                     if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         return false;
-                    if (A != B)
+                    if (ExactComparisons.AreNotEqual(A ,B))
                         return false;
                 }
 
@@ -787,7 +787,7 @@ public static partial class Matrix
         {
                 var A__r1 = a;
                 var B__r2 = b;
-                if (A__r1 == B__r2)
+                if (ExactComparisons.AreEqual(A__r1 ,B__r2))
                     return true;
                 if (Double.IsNaN(A__r1) && Double.IsNaN(B__r2))
                     return true;
@@ -813,7 +813,7 @@ public static partial class Matrix
         {
                 var A__r6 = a;
                 var B__r7 = b;
-                if (A__r6 == B__r7)
+                if (ExactComparisons.AreEqual(A__r6 ,B__r7))
                     return true;
                 if (Double.IsNaN(A__r6) && Double.IsNaN(B__r7))
                     return true;
@@ -840,7 +840,7 @@ public static partial class Matrix
                 return false;
             if (Double.IsNegativeInfinity(A__r10) ^ Double.IsNegativeInfinity(B__r11))
                 return false;
-            if (A__r10 != B__r11)
+            if (ExactComparisons.AreNotEqual(A__r10 ,B__r11))
                 return false;
 
         return true;
@@ -933,7 +933,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = a[j][i];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -962,7 +962,7 @@ public static partial class Matrix
                 {
                     var A = a[i][j];
                     var B = a[j][i];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -995,7 +995,7 @@ public static partial class Matrix
                         return false;
                     if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         return false;
-                    if (A != B)
+                    if (ExactComparisons.AreNotEqual(A ,B))
                         return false;
                 }
 
@@ -1020,7 +1020,7 @@ public static partial class Matrix
                 {
                     var A = a[i, j];
                     var B = a[j, i];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -1049,7 +1049,7 @@ public static partial class Matrix
                 {
                     var A = a[i, j];
                     var B = a[j, i];
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                         continue;
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                         continue;
@@ -1082,7 +1082,7 @@ public static partial class Matrix
                         return false;
                     if (Double.IsNegativeInfinity(A) ^ Double.IsNegativeInfinity(B))
                         return false;
-                    if (A != B)
+                    if (ExactComparisons.AreNotEqual(A ,B))
                         return false;
                 }
 

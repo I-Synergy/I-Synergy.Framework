@@ -456,7 +456,7 @@ public class Cobyla : BaseOptimizationMethod,
                 nbest = j;
                 phimin = temp;
             }
-            else if (temp == phimin && parmu == 0.0 && datmat[mpp, j] < datmat[mpp, nbest])
+            else if (ExactComparisons.AreEqual(temp ,phimin )&& parmu == 0.0 && datmat[mpp, j] < datmat[mpp, nbest])
             {
                 nbest = j;
             }
@@ -695,7 +695,7 @@ public class Cobyla : BaseOptimizationMethod,
             {
                 temp = datmat[mp, j] + parmu * datmat[mpp, j];
                 if (temp < phi ||
-                    temp == phi && parmu == 0.0 && datmat[mpp, j] < datmat[mpp, np])
+ExactComparisons.AreEqual(                    temp ,phi )&& parmu == 0.0 && datmat[mpp, j] < datmat[mpp, np])
                     goto L_140;
             }
         }
@@ -716,7 +716,7 @@ public class Cobyla : BaseOptimizationMethod,
         var vmnew = f + parmu * resmax;
         var trured = vmold - vmnew;
 
-        if (parmu == 0.0 && f == datmat[mp, np])
+        if (parmu == 0.0 && ExactComparisons.AreEqual(f ,datmat[mp, np]))
         {
             prerem = prerec;
             trured = datmat[mpp, np] - resmax;
@@ -1475,7 +1475,7 @@ public class Cobyla : BaseOptimizationMethod,
         //     Otherwise switch to stage two or end the calculation.
 
         if (icon > 0) goto L_70;
-        if (step == stpful) return;
+        if (ExactComparisons.AreEqual(step ,stpful)) return;
 
         L_480:
         mcon = m + 1;

@@ -53,7 +53,7 @@ public struct Jaccard : ISimilarity<double[]>, IDistance<double[]>, ICloneable
         {
             if (x[i] != 0 || y[i] != 0)
             {
-                if (x[i] == y[i])
+                if (ExactComparisons.AreEqual(x[i] ,y[i]))
                     inter++;
                 union++;
             }
@@ -80,7 +80,7 @@ public struct Jaccard : ISimilarity<double[]>, IDistance<double[]>, ICloneable
         {
             if (x[i] != 0 || y[i] != 0)
             {
-                if (x[i] == y[i])
+                if (ExactComparisons.AreEqual(x[i] ,y[i]))
                     inter++;
                 union++;
             }

@@ -391,7 +391,7 @@ public static partial class Matrix
         var a = Math.Round(x);
         var b = x;
 
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return true;
 
         var limit = Math.Abs(a) * threshold;

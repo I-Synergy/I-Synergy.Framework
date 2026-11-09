@@ -643,7 +643,7 @@ public class AugmentedLagrangian : BaseGradientOptimizationMethod, IGradientOpti
 
         return Math.Abs(vnew - vold) < abstol
            || Math.Abs(vnew - vold) < reltol * (Math.Abs(vnew) + Math.Abs(vold)) * 0.5
-           || reltol > 0 && vnew == vold; // catch vnew == vold == 0 
+           || reltol > 0 && ExactComparisons.AreEqual(vnew ,vold); // catch vnew == vold == 0 
     }
 
 }

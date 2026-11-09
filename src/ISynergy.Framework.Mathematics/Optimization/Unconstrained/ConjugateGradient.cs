@@ -586,10 +586,10 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
         if (brackt && (stp <= stmin || stp >= stmax) || state.infoc == 0)
             return ConjugateGradientCode.RoundingErrors;
 
-        if (stp == stpmax && f <= state.ftest1 && dg2 <= state.dgtest)
+        if (ExactComparisons.AreEqual(stp ,stpmax )&& f <= state.ftest1 && dg2 <= state.dgtest)
             return ConjugateGradientCode.StepHigh;
 
-        if (stp == stpmin && (f > state.ftest1 || dg2 >= state.dgtest))
+        if (ExactComparisons.AreEqual(stp ,stpmin )&& (f > state.ftest1 || dg2 >= state.dgtest))
             return ConjugateGradientCode.StepLow;
 
         if (nfev >= maxfev)

@@ -461,7 +461,7 @@ public static partial class Measures
         Validate(matrix, window, alpha);
 
         // Handle the trivial case
-        if (alpha == 1)
+        if (ExactComparisons.AreEqual(alpha ,1))
             return matrix.GetRow(-1);
 
         double[][] truncatedSeries = window == matrix.Rows()
@@ -545,7 +545,7 @@ public static partial class Measures
         int cols = matrix.Columns();
 
         // Handle the trivial case
-        if (alpha == 1)
+        if (ExactComparisons.AreEqual(alpha ,1))
             return Matrix.Zeros(cols, cols);
 
         // Now we create the weights

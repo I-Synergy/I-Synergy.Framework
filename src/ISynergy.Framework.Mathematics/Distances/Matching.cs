@@ -61,8 +61,8 @@ public struct Matching : IDistance<double[]>, IDistance<int[]>, ICloneable
 
         for (var i = 0; i < x.Length; i++)
         {
-            if (x[i] == 1 && y[i] == 0) tf++;
-            if (x[i] == 0 && y[i] == 1) ft++;
+            if (ExactComparisons.AreEqual(x[i] ,1 )&& y[i] == 0) tf++;
+            if (x[i] == 0 && ExactComparisons.AreEqual(y[i] ,1)) ft++;
         }
 
         return (tf + ft) / (double)(x.Length);

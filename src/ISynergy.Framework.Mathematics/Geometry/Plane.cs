@@ -185,7 +185,7 @@ public sealed class Plane : IEquatable<Plane>, IFormattable
         if ((object)a is null || (object)b is null)
             return false;
 
-        return a.Offset == b.Offset && a._normal == b._normal;
+        return ExactComparisons.AreEqual(a.Offset ,b.Offset )&& a._normal == b._normal;
     }
 
     /// <summary>
@@ -199,7 +199,7 @@ public sealed class Plane : IEquatable<Plane>, IFormattable
         if ((object)a is null || (object)b is null)
             return true;
 
-        return a.Offset != b.Offset || a._normal != b._normal;
+        return ExactComparisons.AreNotEqual(a.Offset ,b.Offset )|| a._normal != b._normal;
     }
 
     /// <summary>
@@ -233,7 +233,7 @@ public sealed class Plane : IEquatable<Plane>, IFormattable
     /// 
     public bool Equals(Plane other)
     {
-        return Offset == other.Offset && _normal == other._normal;
+        return ExactComparisons.AreEqual(Offset ,other.Offset )&& _normal == other._normal;
     }
 
     /// <summary>

@@ -119,7 +119,7 @@ public static class Beta
         {
             if (x == 0.0)
                 return 0.0;
-            if (x == 1.0)
+            if (ExactComparisons.AreEqual(x ,1.0))
                 return 1.0;
             throw new ArgumentOutOfRangeException(nameof(x), "Value must be between 0 and 1.");
         }
@@ -466,7 +466,7 @@ public static class Beta
             if (i != 0)
             {
                 x = x0 + di * (x1 - x0);
-                if (x == 1.0)
+                if (ExactComparisons.AreEqual(x ,1.0))
                     x = 1.0 - Constants.DoubleEpsilon;
                 y = Incomplete(a, b, x);
                 yp = (x1 - x0) / (x1 + x0);

@@ -136,7 +136,7 @@ public sealed class JaggedGeneralizedEigenvalueDecomposition : ICloneable
             var idx = Vector.Range(n);
             Array.Sort(idx, (i, j) =>
             {
-                if (Math.Abs(RealAlphas[i]) == Math.Abs(RealAlphas[j]))
+                if (ExactComparisons.AreEqual(Math.Abs(RealAlphas[i]) ,Math.Abs(RealAlphas[j])))
                     return -Math.Abs(ImaginaryAlphas[i]).CompareTo(Math.Abs(ImaginaryAlphas[j]));
                 return -Math.Abs(RealAlphas[i]).CompareTo(Math.Abs(RealAlphas[j]));
             });

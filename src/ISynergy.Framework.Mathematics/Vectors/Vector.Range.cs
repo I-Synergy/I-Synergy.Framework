@@ -154,7 +154,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         double[] r;
@@ -242,7 +242,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, int stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -317,7 +317,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, double stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -392,7 +392,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, short stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -467,7 +467,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, byte stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -542,7 +542,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, sbyte stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -617,7 +617,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, long stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -692,7 +692,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, ulong stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -767,7 +767,7 @@ public static partial class Vector
     ///
     public static double[] Range(double a, double b, ushort stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -915,7 +915,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             yield break;
 
         if (b > a)
@@ -956,7 +956,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, int stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -992,7 +992,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, double stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -1028,7 +1028,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, short stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -1064,7 +1064,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, byte stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -1100,7 +1100,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, sbyte stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -1136,7 +1136,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, long stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -1172,7 +1172,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, ulong stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)
@@ -1208,7 +1208,7 @@ public static partial class Vector
     ///
     public static IEnumerable<double> EnumerableRange(double a, double b, ushort stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [];
 
         if (stepSize == 0)

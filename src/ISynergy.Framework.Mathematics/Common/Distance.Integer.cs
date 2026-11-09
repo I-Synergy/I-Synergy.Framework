@@ -36,7 +36,7 @@ public static partial class Distance
                 var dbz = value(b, zero);
                 var dba = value(b, a);
 
-                if (daz != dza || dbz != dzb || dab != dba)
+                if (ExactComparisons.AreNotEqual(daz ,dza )|| ExactComparisons.AreNotEqual(dbz ,dzb )|| ExactComparisons.AreNotEqual(dab ,dba))
                     return false;
             }
 

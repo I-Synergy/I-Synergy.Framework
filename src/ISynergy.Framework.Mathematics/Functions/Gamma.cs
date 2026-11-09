@@ -177,7 +177,7 @@ public static class Gamma
             {
                 p = Math.Floor(q);
 
-                if (p == q)
+                if (ExactComparisons.AreEqual(p ,q))
                     throw new OverflowException();
 
                 z = q - p;
@@ -227,7 +227,7 @@ public static class Gamma
             x += 1.0;
         }
 
-        if (x == 2.0 || x == 3.0)
+        if (ExactComparisons.AreEqual(x ,2.0 )|| ExactComparisons.AreEqual(x ,3.0))
             return z;
 
         x -= 2.0;
@@ -279,12 +279,12 @@ public static class Gamma
             var q = x;
             double p = (int)Math.Floor(q);
 
-            if (p == q)
+            if (ExactComparisons.AreEqual(p ,q))
                 throw new OverflowException("Function computation resulted in arithmetic overflow.");
 
             nz = q - p;
 
-            if (nz != 0.5)
+            if (ExactComparisons.AreNotEqual(nz ,0.5))
             {
                 if (nz > 0.5)
                 {
@@ -302,7 +302,7 @@ public static class Gamma
             x = 1.0 - x;
         }
 
-        if (x <= 10.0 && x == Math.Floor(x))
+        if (x <= 10.0 && ExactComparisons.AreEqual(x ,Math.Floor(x)))
         {
             y = 0.0;
             var n = (int)Math.Floor(x);
@@ -571,7 +571,7 @@ public static class Gamma
             w = Log(q);
             p = Math.Floor(q);
 
-            if (p == q)
+            if (ExactComparisons.AreEqual(p ,q))
                 throw new OverflowException();
 
             z = q - p;
@@ -611,7 +611,7 @@ public static class Gamma
             if (z < 0.0)
                 z = -z;
 
-            if (x == 2.0)
+            if (ExactComparisons.AreEqual(x ,2.0))
                 return Math.Log(z);
 
             x -= 2.0;
@@ -737,12 +737,12 @@ public static class Gamma
     ihalve:
 
         d = 0.0625;
-        if (x0 == double.MaxValue)
+        if (ExactComparisons.AreEqual(x0 ,double.MaxValue))
         {
             if (x <= 0.0)
                 x = 1.0;
 
-            while (x0 == double.MaxValue && !double.IsNaN(x))
+            while (ExactComparisons.AreEqual(x0 ,double.MaxValue )&& !double.IsNaN(x))
             {
                 x = (1.0 + d) * x;
                 yy = UpperIncomplete(a, x);

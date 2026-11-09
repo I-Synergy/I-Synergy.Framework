@@ -530,9 +530,9 @@ public static class Special
     /// </summary>
     public static double LogSum(double lnx, double lny)
     {
-        if (lnx == double.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lnx ,double.NegativeInfinity))
             return lny;
-        if (lny == double.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lny ,double.NegativeInfinity))
             return lnx;
 
         if (lnx > lny)
@@ -546,9 +546,9 @@ public static class Special
     /// </summary>
     public static double LogSum(float lnx, float lny)
     {
-        if (lnx == float.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lnx ,float.NegativeInfinity))
             return lny;
-        if (lny == float.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lny ,float.NegativeInfinity))
             return lnx;
 
         if (lnx > lny)

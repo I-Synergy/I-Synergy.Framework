@@ -866,7 +866,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         // in iorder(1),...,iorder(nbreak) and iorder(nfree),...,iorder(n).
         // The smallest of the nbreak breakpoints is in t(ibkmin)=bkmin.
         // 
-        if ((theta != 1.0))
+        if ((ExactComparisons.AreNotEqual(theta ,1.0)))
         {
             // complete the initialization of p for theta not= one.
             dscal(col, theta, p, ((col + 1) - (1)) + _p_offset, 1);
@@ -1513,11 +1513,11 @@ partial class BoundedBroydenFletcherGoldfarbShanno
         {
             task = "WARNING: XTOL TEST SATISFIED";
         }
-        if ((((stp == stpmax) && (f <= ftest)) && (g <= gtest)))
+        if ((((ExactComparisons.AreEqual(stp ,stpmax)) && (f <= ftest)) && (g <= gtest)))
         {
             task = "WARNING: STP = STPMAX";
         }
-        if (stp == stpmin && (f > ftest || g >= gtest))
+        if (ExactComparisons.AreEqual(stp ,stpmin )&& (f > ftest || g >= gtest))
         {
             task = "WARNING: STP = STPMIN";
         }
@@ -2966,7 +2966,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             ifun = (ifun + 1);
             nfgv = (nfgv + 1);
             iback = (ifun - 1);
-            if ((stp == 1.0))
+            if ((ExactComparisons.AreEqual(stp ,1.0)))
             {
                 dcopy(n, z, _z_offset, 1, x, _x_offset, 1);
             }
@@ -3725,7 +3725,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
         rr = ddot(n, r, _r_offset, 1, r, _r_offset, 1);
 
-        if ((stp == 1.0))
+        if ((ExactComparisons.AreEqual(stp ,1.0)))
         {
             dr = (gd - gdold);
             ddum = (-(gdold));
@@ -3951,7 +3951,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
 
                 pointr = ((pointr) % (m) + 1);
             }
-        if ((stp == 1.0))
+        if ((ExactComparisons.AreEqual(stp ,1.0)))
         {
             ss[(col - (1)) + (col - (1)) * (m) + _ss_offset] = dtd;
         }
@@ -4646,7 +4646,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                     if ((nbd[(k - (1)) + _nbd_offset] == 1))
                     {
                         x[(k - (1)) + _x_offset] = System.Math.Max(l[(k - (1)) + _l_offset], (xk + dk));
-                        if ((x[(k - (1)) + _x_offset] == l[(k - (1)) + _l_offset]))
+                        if ((ExactComparisons.AreEqual(x[(k - (1)) + _x_offset] ,l[(k - (1)) + _l_offset])))
                         {
                             iword = 1;
                         }
@@ -4657,8 +4657,8 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                         {
                             xk = System.Math.Max(l[(k - (1)) + _l_offset], (xk + dk));
                             x[(k - (1)) + _x_offset] = System.Math.Min(u[(k - (1)) + _u_offset], xk);
-                            if (((x[(k - (1)) + _x_offset] == l[(k - (1))
-                                + _l_offset]) || (x[(k - (1)) + _x_offset] == u[(k - (1)) + _u_offset])))
+                            if (((ExactComparisons.AreEqual(x[(k - (1)) + _x_offset] ,l[(k - (1))
+                                + _l_offset])) || (ExactComparisons.AreEqual(x[(k - (1)) + _x_offset] ,u[(k - (1)) + _u_offset]))))
                             {
                                 iword = 1;
                             }
@@ -4668,7 +4668,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
                             if ((nbd[(k - (1)) + _nbd_offset] == 3))
                             {
                                 x[(k - (1)) + _x_offset] = System.Math.Min(u[(k - (1)) + _u_offset], (xk + dk));
-                                if ((x[(k - (1)) + _x_offset] == u[(k - (1)) + _u_offset]))
+                                if ((ExactComparisons.AreEqual(x[(k - (1)) + _x_offset] ,u[(k - (1)) + _u_offset])))
                                 {
                                     iword = 1;
                                 }

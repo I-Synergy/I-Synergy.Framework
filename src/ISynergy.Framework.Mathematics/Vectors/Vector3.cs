@@ -432,7 +432,7 @@ public struct Vector3
     /// 
     public static bool operator ==(Vector3 vector1, Vector3 vector2)
     {
-        return vector1.X == vector2.X && vector1.Y == vector2.Y && vector1.Z == vector2.Z;
+        return ExactComparisons.AreEqual(vector1.X ,vector2.X )&& ExactComparisons.AreEqual(vector1.Y ,vector2.Y )&& ExactComparisons.AreEqual(vector1.Z ,vector2.Z);
     }
 
     /// <summary>
@@ -446,7 +446,7 @@ public struct Vector3
     /// 
     public static bool operator !=(Vector3 vector1, Vector3 vector2)
     {
-        return vector1.X != vector2.X || vector1.Y != vector2.Y || vector1.Z != vector2.Z;
+        return ExactComparisons.AreNotEqual(vector1.X ,vector2.X )|| ExactComparisons.AreNotEqual(vector1.Y ,vector2.Y )|| ExactComparisons.AreNotEqual(vector1.Z ,vector2.Z);
     }
 
     /// <summary>
@@ -459,7 +459,7 @@ public struct Vector3
     /// 
     public bool Equals(Vector3 vector)
     {
-        return vector.X == X && vector.Y == Y && vector.Z == Z;
+        return ExactComparisons.AreEqual(vector.X ,X )&& ExactComparisons.AreEqual(vector.Y ,Y )&& ExactComparisons.AreEqual(vector.Z ,Z);
     }
 
     /// <summary>

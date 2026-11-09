@@ -342,7 +342,7 @@ public static partial class Measures
         if (p == 0.0)
             return x[0];
 
-        if (p == 1.0)
+        if (ExactComparisons.AreEqual(p ,1.0))
             return x[x.Length - 1];
 
         int i = (int)Math.Ceiling(x.Length * p);
@@ -407,7 +407,7 @@ public static partial class Measures
         if (pj < lowThreshold)
             return x[0];
 
-        if (pj == 1.0)
+        if (ExactComparisons.AreEqual(pj ,1.0))
             return x[x.Length - 1];
 
         double h = x.Length * pj;
@@ -522,7 +522,7 @@ public static partial class Measures
 
     private static double Q7(double[] x, double p)
     {
-        if (p == 1.0)
+        if (ExactComparisons.AreEqual(p ,1.0))
             return x[x.Length - 1];
 
         double h = (x.Length - 1) * p + 1;

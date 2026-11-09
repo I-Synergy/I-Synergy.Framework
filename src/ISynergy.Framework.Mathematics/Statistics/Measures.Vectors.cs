@@ -1307,7 +1307,7 @@ public static partial class Measures
 
             // Count the number of instances inside
             for (var i = 0; i < values.Length; i++)
-                if (values[i] == c)
+                if (ExactComparisons.AreEqual(values[i] ,c))
                     count++;
 
             if (count > 0)
@@ -1460,7 +1460,7 @@ public static partial class Measures
 
             // Count the number of instances inside
             for (var i = 0; i < values.Length; i++)
-                if (values[i] == c)
+                if (ExactComparisons.AreEqual(values[i] ,c))
                     count += weights[i];
 
             if (count > 0)
@@ -1499,7 +1499,7 @@ public static partial class Measures
 
             // Count the number of instances inside
             for (var i = 0; i < values.Length; i++)
-                if (values[i] == c)
+                if (ExactComparisons.AreEqual(values[i] ,c))
                     classWeightSum += weights[i];
 
             if (classWeightSum > 0)

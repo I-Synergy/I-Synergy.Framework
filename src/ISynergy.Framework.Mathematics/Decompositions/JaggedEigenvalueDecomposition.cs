@@ -123,7 +123,7 @@ public sealed class JaggedEigenvalueDecomposition : ICloneable
             var idx = Vector.Range(n);
             Array.Sort(idx, (i, j) =>
             {
-                if (Math.Abs(RealEigenvalues[i]) == Math.Abs(RealEigenvalues[j]))
+                if (ExactComparisons.AreEqual(Math.Abs(RealEigenvalues[i]) ,Math.Abs(RealEigenvalues[j])))
                     return -Math.Abs(ImaginaryEigenvalues[i]).CompareTo(Math.Abs(ImaginaryEigenvalues[j]));
                 return -Math.Abs(RealEigenvalues[i]).CompareTo(Math.Abs(RealEigenvalues[j]));
             });

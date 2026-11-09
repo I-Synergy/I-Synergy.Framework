@@ -601,7 +601,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
             errbnd__r9 = Math.Max(epsabs, epsrel * dres);
             if (abserr <= epmach__r5 * 100.0 * defabs__r4 && abserr > errbnd__r9) ier = 2;
             if (limit == 1) ier = 1;
-            if (ier != 0 || abserr <= errbnd__r9 && abserr != resabs__r10 || abserr == 0.0) goto L130;
+            if (ier != 0 || abserr <= errbnd__r9 && ExactComparisons.AreNotEqual(abserr ,resabs__r10 )|| abserr == 0.0) goto L130;
 
             /*           initialization */
             /*           -------------- */
@@ -655,7 +655,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
                 erro12 = error1__r1 + error2__r2;
                 errsum__r18 = errsum__r18 + erro12 - errmax__r13;
                 area = area + area12 - rlist[startR + maxerr__r14];
-                if (defab1 == error1__r1 || defab2 == error2__r2) goto L15;
+                if (ExactComparisons.AreEqual(defab1 ,error1__r1 )|| ExactComparisons.AreEqual(defab2 ,error2__r2)) goto L15;
                 if (Math.Abs(rlist[startR + maxerr__r14] - area12) > Math.Abs(area12) * 1e-5 || erro12 < errmax__r13 * 0.99) goto L10;
                 if (extrap__r16) ++iroff2;
                 if (!extrap__r16) ++iroff1;
@@ -802,7 +802,7 @@ public class InfiniteAdaptiveGaussKronrod : IUnivariateIntegration,
         /*           ------------------------------------ */
 
         L100:
-            if (abserr == oflow) goto L115;
+            if (ExactComparisons.AreEqual(abserr ,oflow)) goto L115;
             if (ier + ierro == 0) goto L110;
             if (ierro == 3) abserr += correc__r8;
             if (ier == 0) ier = 3;

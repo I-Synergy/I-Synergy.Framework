@@ -479,8 +479,8 @@ public struct Vector4
     /// 
     public static bool operator ==(Vector4 vector1, Vector4 vector2)
     {
-        return vector1.X == vector2.X && vector1.Y == vector2.Y &&
-                 vector1.Z == vector2.Z && vector1.W == vector2.W;
+        return ExactComparisons.AreEqual(vector1.X ,vector2.X )&& ExactComparisons.AreEqual(vector1.Y ,vector2.Y )&&
+ExactComparisons.AreEqual(                 vector1.Z ,vector2.Z )&& ExactComparisons.AreEqual(vector1.W ,vector2.W);
     }
 
     /// <summary>
@@ -494,8 +494,8 @@ public struct Vector4
     /// 
     public static bool operator !=(Vector4 vector1, Vector4 vector2)
     {
-        return vector1.X != vector2.X || vector1.Y != vector2.Y ||
-                 vector1.Z != vector2.Z || vector1.W != vector2.W;
+        return ExactComparisons.AreNotEqual(vector1.X ,vector2.X )|| ExactComparisons.AreNotEqual(vector1.Y ,vector2.Y )||
+ExactComparisons.AreNotEqual(                 vector1.Z ,vector2.Z )|| ExactComparisons.AreNotEqual(vector1.W ,vector2.W);
     }
 
     /// <summary>
@@ -508,7 +508,7 @@ public struct Vector4
     /// 
     public bool Equals(Vector4 vector)
     {
-        return vector.X == X && vector.Y == Y && vector.Z == Z && vector.W == W;
+        return ExactComparisons.AreEqual(vector.X ,X )&& ExactComparisons.AreEqual(vector.Y ,Y )&& ExactComparisons.AreEqual(vector.Z ,Z )&& ExactComparisons.AreEqual(vector.W ,W);
     }
 
     /// <summary>

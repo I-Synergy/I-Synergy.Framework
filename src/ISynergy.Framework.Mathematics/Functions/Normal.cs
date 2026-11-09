@@ -211,7 +211,7 @@ public static class Normal
 
         if (y0 >= 1.0)
         {
-            if (y0 == 1)
+            if (ExactComparisons.AreEqual(y0 ,1))
                 return double.PositiveInfinity;
             throw new ArgumentOutOfRangeException(nameof(y0));
         }
@@ -283,7 +283,7 @@ public static class Normal
         // Iterate until adding next terms doesn't produce
         // any change within the current numerical accuracy.
 
-        while (sum != term)
+        while (ExactComparisons.AreNotEqual(sum ,term))
         {
             term = sum;
 
@@ -342,7 +342,7 @@ public static class Normal
         double sum = a + h * b;
         double term = a;
         var i = 2;
-        while (sum != term)
+        while (ExactComparisons.AreNotEqual(sum ,term))
         {
             term = sum;
 

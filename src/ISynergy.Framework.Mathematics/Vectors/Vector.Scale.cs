@@ -12,7 +12,7 @@ public static partial class Vector
     /// </summary>
     public static double Scale(this double value, double fromMin, double fromMax, double toMin, double toMax)
     {
-        if (fromMin == fromMax && fromMin == toMin && fromMin == toMax)
+        if (ExactComparisons.AreEqual(fromMin ,fromMax )&& ExactComparisons.AreEqual(fromMin ,toMin )&& ExactComparisons.AreEqual(fromMin ,toMax))
             return value;
 
         return ((toMax - toMin) * (value - fromMin) / (fromMax - fromMin) + toMin);
@@ -50,7 +50,7 @@ public static partial class Vector
     /// </summary>
     public static double[] Scale(this double[] values, double fromMin, double fromMax, double toMin, double toMax, double[] result)
     {
-        if (fromMin == fromMax && fromMin == toMin && fromMin == toMax)
+        if (ExactComparisons.AreEqual(fromMin ,fromMax )&& ExactComparisons.AreEqual(fromMin ,toMin )&& ExactComparisons.AreEqual(fromMin ,toMax))
         {
             for (var i = 0; i < values.Length; i++)
                 result[i] = values[i];
@@ -119,7 +119,7 @@ public static partial class Vector
     /// </summary>
     public static double[] Scale(this double[] values, double fromMin, double fromMax, int toMin, int toMax, double[] result)
     {
-        if (fromMin == fromMax && fromMin == toMin && fromMin == toMax)
+        if (ExactComparisons.AreEqual(fromMin ,fromMax )&& ExactComparisons.AreEqual(fromMin ,toMin )&& ExactComparisons.AreEqual(fromMin ,toMax))
         {
             for (var i = 0; i < values.Length; i++)
                 result[i] = values[i];

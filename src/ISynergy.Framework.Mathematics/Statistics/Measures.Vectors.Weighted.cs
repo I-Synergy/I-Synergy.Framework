@@ -69,7 +69,7 @@ static partial class Measures
         Validate(values, window, alpha);
 
         // Handle the trivial case
-        if (alpha == 1)
+        if (ExactComparisons.AreEqual(alpha ,1))
             return values.Get(-1);
 
         double[] truncatedSeries = window == values.Length
@@ -149,7 +149,7 @@ static partial class Measures
         Validate(values, window, alpha);
 
         // Handle the trivial case
-        if (alpha == 1)
+        if (ExactComparisons.AreEqual(alpha ,1))
             return 0;
 
         double[] truncatedSeries = window == values.Length

@@ -230,13 +230,13 @@ internal static class Svd
                     // test for splitting
                     nm = l - 1;
 
-                    if (Math.Abs(rv1[l]) + anorm == anorm)
+                    if (ExactComparisons.AreEqual(Math.Abs(rv1[l]) + anorm ,anorm))
                     {
                         flag = 0;
                         break;
                     }
 
-                    if (Math.Abs(w[nm]) + anorm == anorm)
+                    if (ExactComparisons.AreEqual(Math.Abs(w[nm]) + anorm ,anorm))
                         break;
                 }
 
@@ -247,7 +247,7 @@ internal static class Svd
                     {
                         f = s * rv1[i];
 
-                        if (Math.Abs(f) + anorm != anorm)
+                        if (ExactComparisons.AreNotEqual(Math.Abs(f) + anorm ,anorm))
                         {
                             g = w[i];
                             h = Pythag(f, g);

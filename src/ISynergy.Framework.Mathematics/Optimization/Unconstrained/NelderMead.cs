@@ -694,6 +694,6 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
 
         return Math.Abs(n - old) < abstol
                || Math.Abs(n - old) < reltol * (Math.Abs(n) + Math.Abs(old)) * 0.5
-               || reltol > 0 && n == old; /* catch new == old == 0 case */
+               || reltol > 0 && ExactComparisons.AreEqual(n ,old); /* catch new == old == 0 case */
     }
 }

@@ -470,12 +470,12 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
                         lowerBound = t__r1;
                     else upperBound = t__r1;
 
-                    if (ft__r2 <= fw || w == x)
+                    if (ft__r2 <= fw || ExactComparisons.AreEqual(w ,x))
                     {
                         v = w; fv = fw;
                         w = t__r1; fw = ft__r2;
                     }
-                    else if (ft__r2 <= fv || v == x || v == w)
+                    else if (ft__r2 <= fv || ExactComparisons.AreEqual(v ,x )|| ExactComparisons.AreEqual(v ,w))
                     {
                         v = t__r1; fv = ft__r2;
                     }
@@ -542,7 +542,7 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
                 double t1, cb, t2;
                 double p, q;
                 cb = c - upperBound;
-                if (lowerBound == c)
+                if (ExactComparisons.AreEqual(lowerBound ,c))
                 {
                     // If we have only two distinct points, then
                     // only linear interpolation can be applied

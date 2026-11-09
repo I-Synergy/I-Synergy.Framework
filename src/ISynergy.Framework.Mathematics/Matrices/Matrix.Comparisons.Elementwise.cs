@@ -20,7 +20,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -68,7 +68,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -122,7 +122,7 @@ public static partial class Elementwise
                 }
                 else
                 {
-                    r[i] = (A == B);
+                    r[i] = (ExactComparisons.AreEqual(A ,B));
                 }
             }
         }
@@ -151,7 +151,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = spanB[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true;
                 }
@@ -199,7 +199,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = spanB[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true; continue;
                 }
@@ -247,7 +247,7 @@ public static partial class Elementwise
                 {
                     spanR[i] = false; continue;
                 }
-                spanR[i] = (A == B);
+                spanR[i] = (ExactComparisons.AreEqual(A ,B));
             }
         }
 
@@ -270,7 +270,7 @@ public static partial class Elementwise
                     var A = a[i, j];
                     var B = b[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -319,7 +319,7 @@ public static partial class Elementwise
                     var A = a[i, j];
                     var B = b[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -373,7 +373,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }
@@ -397,7 +397,7 @@ public static partial class Elementwise
                     var A = a[i][j];
                     var B = b[i, j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -446,7 +446,7 @@ public static partial class Elementwise
                     var A = a[i][j];
                     var B = b[i, j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -501,7 +501,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }
@@ -525,7 +525,7 @@ public static partial class Elementwise
                     var A = a[i][j];
                     var B = b[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -574,7 +574,7 @@ public static partial class Elementwise
                     var A = a[i][j];
                     var B = b[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -629,7 +629,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }
@@ -652,7 +652,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -700,7 +700,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -754,7 +754,7 @@ public static partial class Elementwise
                 }
                 else
                 {
-                    r[i] = (A == B);
+                    r[i] = (ExactComparisons.AreEqual(A ,B));
                 }
             }
         }
@@ -782,7 +782,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true;
                 }
@@ -830,7 +830,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true;
                 }
@@ -885,7 +885,7 @@ public static partial class Elementwise
                 }
                 else
                 {
-                    spanR[i] = (A == B);
+                    spanR[i] = (ExactComparisons.AreEqual(A ,B));
                 }
             }
         }
@@ -909,7 +909,7 @@ public static partial class Elementwise
                     var A = a[i][j];
                     var B = b;
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -959,7 +959,7 @@ public static partial class Elementwise
                     var A = a[i][j];
                     var B = b;
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -1014,7 +1014,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }

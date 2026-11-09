@@ -852,10 +852,10 @@ internal static class Lbfgs
             if (brackt > 0 && (stp <= stmin || stmax <= stp || uinfo != 0))
                 /* Rounding errors prevent further progress. */
                 return Code.LBFGSERR_ROUNDING_ERROR;
-            if (stp == param.max_step && f <= ftest1 && dg <= dgtest)
+            if (ExactComparisons.AreEqual(stp ,param.max_step )&& f <= ftest1 && dg <= dgtest)
                 /* The step is the maximum value. */
                 return Code.LBFGSERR_MAXIMUMSTEP;
-            if (stp == param.min_step && (ftest1 < f || dgtest <= dg))
+            if (ExactComparisons.AreEqual(stp ,param.min_step )&& (ftest1 < f || dgtest <= dg))
                 /* The step is the minimum value. */
                 return Code.LBFGSERR_MINIMUMSTEP;
             if (brackt > 0 && stmax - stmin <= param.xtol * stmax)

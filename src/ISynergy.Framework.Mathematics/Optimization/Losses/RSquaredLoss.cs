@@ -128,10 +128,10 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
             // Return ordinary R-Squared
             return r2;
 
-        if (r2 == 1)
+        if (ExactComparisons.AreEqual(r2 ,1))
             return 1;
 
-        if (n - p == 1.0)
+        if (ExactComparisons.AreEqual(n - p ,1.0))
             return double.NaN;
 
         // Return adjusted R-Squared
@@ -181,7 +181,7 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
             // Return adjusted R-Squared
             for (var c = 0; c < M; c++)
             {
-                if (r2[c] == 1.0)
+                if (ExactComparisons.AreEqual(r2[c] ,1.0))
                     continue;
 
                 if (N == P + 1)
