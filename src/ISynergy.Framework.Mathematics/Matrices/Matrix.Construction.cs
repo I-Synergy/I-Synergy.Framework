@@ -2,6 +2,7 @@ using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Vectors;
 
 
@@ -272,7 +273,7 @@ public static partial class Matrix
     /// <param name="rows">The row vectors in the matrix.</param>
     public static T[,] Create<T>(params T[][] rows)
     {
-        return rows.ToMatrix();
+        return new Jagged<T>(rows).ToMatrix();
     }
 
     /// <summary>
@@ -352,7 +353,7 @@ public static partial class Matrix
     /// </returns>
     public static double[,] OneHot(int[] indices, int columns)
     {
-        return OneHot(indices, new double[indices.Length, columns]);
+        return OneHot(indices, new Matrix<double>(new double[indices.Length, columns]));
     }
 
     /// <summary>
@@ -384,11 +385,12 @@ public static partial class Matrix
     ///     A matrix containing one-hot vectors where only a single position
     ///     is one and the others are zero.
     /// </returns>
-    public static double[,] OneHot(int[] indices, double[,] result)
+    public static double[,] OneHot(int[] indices, Matrix<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < indices.Length; i++)
-            result[i, indices[i]] = 1;
-        return result;
+            resultArray[i, indices[i]] = 1;
+        return resultArray;
     }
     /// <summary>
     ///     Creates a matrix of k-hot vectors, where all values at each row are
@@ -416,9 +418,9 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
-    public static double[,] KHot(int[][] indices, int columns)
+    public static double[,] KHot(Jagged<int> indices, int columns)
     {
-        return KHot(indices, new double[indices.Length, columns]);
+        return KHot(indices, new Matrix<double>(new double[indices.Rows, columns]));
     }
 
     /// <summary>
@@ -451,12 +453,14 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
-    public static double[,] KHot(int[][] indices, double[,] result)
+    public static double[,] KHot(Jagged<int> indices, Matrix<double> result)
     {
-        for (var i = 0; i < indices.Length; i++)
-            for (var j = 0; j < indices[i].Length; j++)
-                result[i, indices[i][j]] = 1;
-        return result;
+        var indicesArray = indices.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < indicesArray.Length; i++)
+            for (var j = 0; j < indicesArray[i].Length; j++)
+                resultArray[i, indicesArray[i][j]] = 1;
+        return resultArray;
     }
 
     /// <summary>
@@ -1368,7 +1372,7 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Stack<T>(params T[][] vectors)
     {
-        return vectors.ToMatrix();
+        return new Jagged<T>(vectors).ToMatrix();
     }
 
     /// <summary>
@@ -1499,7 +1503,7 @@ public static partial class Matrix
             for (var j = 0; j < count[i]; j++)
                 expansion.Add(matrix.GetRow(i));
 
-        return expansion.ToArray().ToMatrix();
+        return new Jagged<T>(expansion.ToArray()).ToMatrix();
     }
 
     #endregion

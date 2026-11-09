@@ -1,5 +1,6 @@
 namespace ISynergy.Framework.Mathematics.Formats.Base;
 
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using System;
 using System.Collections.Generic;
@@ -310,7 +311,7 @@ public class MatrixFormatter : ICustomFormatter
     public static double[,] ParseMultidimensional(string str, IMatrixFormatProvider provider)
     {
         var jagged = ParseJagged(str, provider);
-        return Matrix.ToMatrix(jagged);
+        return Matrix.ToMatrix(new Jagged<double>(jagged));
     }
 
     #endregion

@@ -25,8 +25,8 @@ public class LuDecompositionTest
                 LuDecomposition target = new(value);
                 Assert.IsTrue(Matrix.IsEqual(target.Solve(I), target.Inverse()));
 
-                JaggedLuDecomposition target2 = new(value.ToJagged());
-                Assert.IsTrue(Matrix.IsEqual(target2.Solve(I.ToJagged()), target2.Inverse()));
+                JaggedLuDecomposition target2 = new(new Matrix<double>(value).ToJagged());
+                Assert.IsTrue(Matrix.IsEqual(target2.Solve(new Matrix<double>(I).ToJagged()), target2.Inverse()));
             }
         }
     }
@@ -56,7 +56,7 @@ public class LuDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(value, target.Reverse()));
 
-        JaggedLuDecomposition target2 = new(value.ToJagged());
+        JaggedLuDecomposition target2 = new(new Matrix<double>(value).ToJagged());
         actual = target2.Solve(rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse()));
@@ -84,8 +84,8 @@ public class LuDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(expectedInverse, actualInverse, 0.001));
         Assert.IsTrue(Matrix.IsEqual(value, target.Reverse()));
 
-        JaggedLuDecomposition target2 = new(value.ToJagged());
-        actualInverse = target2.Inverse().ToMatrix();
+        JaggedLuDecomposition target2 = new(new Matrix<double>(value).ToJagged());
+        actualInverse = new Jagged<double>(target2.Inverse()).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expectedInverse, actualInverse, 0.001));
         Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse()));
     }
@@ -115,7 +115,7 @@ public class LuDecompositionTest
         };
 
         Assert.IsTrue(Matrix.IsEqual(expected, new LuDecomposition(value).Solve(rhs), 1e-3));
-        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(value.ToJagged()).Solve(rhs.ToJagged()), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(new Matrix<double>(value).ToJagged()).Solve(new Matrix<double>(rhs).ToJagged()), 1e-3));
     }
 
     [TestMethod]
@@ -162,7 +162,7 @@ public class LuDecompositionTest
         double[] expected = [3.1839, -0.1891];
 
         LuDecomposition target1 = new(value);
-        JaggedLuDecomposition target2 = new(value.ToJagged());
+        JaggedLuDecomposition target2 = new(new Matrix<double>(value).ToJagged());
 
         Assert.IsTrue(Matrix.IsEqual(expected, target1.Solve(rhs), 1e-3));
         Assert.IsTrue(Matrix.IsEqual(expected, target2.Solve(rhs), 1e-3));
@@ -222,7 +222,7 @@ public class LuDecompositionTest
         };
 
         Assert.IsTrue(Matrix.IsEqual(expected, new LuDecomposition(b, true).SolveTranspose(a), 1e-3));
-        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(b.ToJagged(), true).SolveTranspose(a.ToJagged()), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(new Matrix<double>(b).ToJagged(), true).SolveTranspose(new Matrix<double>(a).ToJagged()), 1e-3));
 
         LuDecomposition target = new(b, true);
         int[] p = target.PivotPermutationVector;
@@ -234,7 +234,7 @@ public class LuDecompositionTest
 
         Assert.IsTrue(Matrix.IsEqual(b, r, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(b.Transpose(), target.Reverse(), 1e-3));
-        Assert.IsTrue(Matrix.IsEqual(b.Transpose(), new JaggedLuDecomposition(b.ToJagged(), true).Reverse(), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(b.Transpose(), new JaggedLuDecomposition(new Matrix<double>(b).ToJagged(), true).Reverse(), 1e-3));
     }
 
     [TestMethod]
@@ -339,7 +339,7 @@ public class LuDecompositionTest
            {  0, -1,  3 }
         };
 
-        JaggedLuDecomposition lu = new(value.ToJagged());
+        JaggedLuDecomposition lu = new(new Matrix<double>(value).ToJagged());
         Assert.AreEqual(23, lu.Determinant);
         Assert.IsTrue(lu.Nonsingular);
     }

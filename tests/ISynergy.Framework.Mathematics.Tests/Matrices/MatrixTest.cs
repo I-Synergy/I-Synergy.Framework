@@ -1093,7 +1093,7 @@ public partial class MatrixTest
             { 4, 5, 6 }
         };
 
-        double[][] actual2 = A.ToJagged().CumulativeSum(1);
+        double[][] actual2 = new Matrix<double>(A).ToJagged().CumulativeSum(1);
         double[][] expected2 =
         [
             [1, 2, 3],
@@ -1102,7 +1102,7 @@ public partial class MatrixTest
 
         Assert.IsTrue(actual2.IsEqual(expected2));
 
-        double[][] actual3 = A.ToJagged().CumulativeSum(0);
+        double[][] actual3 = new Matrix<double>(A).ToJagged().CumulativeSum(0);
         double[][] expected3 =
         [
             [1,  4],
@@ -1288,7 +1288,7 @@ public partial class MatrixTest
         };
 
         double[,] actual2 = Matrix.Random(a.Length, b.Length);
-        double[][] actual3 = actual2.ToJagged();
+        double[][] actual3 = new Matrix<double>(actual2).ToJagged();
 
         double[,] actual1 = a.Outer(b);
         double[][] actual3a = a.Outer(b, new Jagged<double>(actual3));
@@ -1548,10 +1548,10 @@ public partial class MatrixTest
         actual = Matrix.PseudoInverse(value.Transpose());
         Assert.IsTrue(Matrix.IsEqual(expected.Transpose(), actual, 0.001));
 
-        actual = Matrix.PseudoInverse(value.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.PseudoInverse(new Matrix<double>(value).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.001));
 
-        actual = Matrix.PseudoInverse(value.ToJagged().Transpose()).ToMatrix();
+        actual = new Jagged<double>(Matrix.PseudoInverse(new Matrix<double>(value).ToJagged().Transpose())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected.Transpose(), actual, 0.001));
     }
 
@@ -1637,7 +1637,7 @@ public partial class MatrixTest
         double[] actual = Matrix.Solve(value, rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
 
-        actual = Matrix.Solve(value.ToJagged(), rhs);
+        actual = Matrix.Solve(new Matrix<double>(value).ToJagged(), rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
     }
 
@@ -1658,7 +1658,7 @@ public partial class MatrixTest
         double[] actual = Matrix.Solve(value, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
 
-        actual = Matrix.Solve(value.ToJagged(), b);
+        actual = Matrix.Solve(new Matrix<double>(value).ToJagged(), b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
     }
 
@@ -1740,7 +1740,7 @@ public partial class MatrixTest
         double[,] actual = Matrix.Divide(a, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
 
-        actual = Matrix.Divide(a.ToJagged(), b.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), new Matrix<double>(b).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
     }
 
@@ -1775,7 +1775,7 @@ public partial class MatrixTest
         double[,] actual = Matrix.Divide(a, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
 
-        actual = Matrix.Divide(a.ToJagged(), b.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), new Matrix<double>(b).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
     }
 
@@ -1806,7 +1806,7 @@ public partial class MatrixTest
         double[,] actual = Matrix.Divide(a, b);
         Assert.IsTrue(Matrix.IsEqual(a, actual, 1e-3));
 
-        actual = Matrix.Divide(a.ToJagged(), b.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), new Matrix<double>(b).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(a, actual, 1e-3));
     }
 
@@ -1830,8 +1830,8 @@ public partial class MatrixTest
         double[,] expected = Matrix.Divide(a, Matrix.Diagonal(b));
         Assert.IsTrue(expected.IsEqual(result, 1e-6));
 
-        result = Matrix.DivideByDiagonal(new Jagged<double>(a.ToJagged()), b).ToMatrix();
-        expected = Matrix.Divide(a.ToJagged(), Jagged.Diagonal(b)).ToMatrix();
+        result = new Jagged<double>(Matrix.DivideByDiagonal(new Jagged<double>(new Matrix<double>(a).ToJagged()), b)).ToMatrix();
+        expected = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), Jagged.Diagonal(b))).ToMatrix();
         Assert.IsTrue(expected.IsEqual(result, 1e-6));
     }
     #endregion
@@ -2310,18 +2310,18 @@ public partial class MatrixTest
     [TestMethod]
     public void TransposeTest3()
     {
-        double[][] matrix = new double[,]
+        double[][] matrix = new Matrix<double>(new double[,]
         {
             { 1, 2 },
             { 3, 4 },
-        }.ToJagged();
+        }).ToJagged();
 
         bool inPlace = true;
-        double[][] expected = new double[,]
+        double[][] expected = new Matrix<double>(new double[,]
         {
             { 1, 3 },
             { 2, 4 },
-        }.ToJagged();
+        }).ToJagged();
 
         double[][] actual = Matrix.Transpose(matrix, inPlace);
 
@@ -2619,7 +2619,7 @@ public partial class MatrixTest
 
         double[][] actual = Matrix.Expand(data, count);
 
-        Assert.IsTrue(Matrix.IsEqual(expected.ToMatrix(), actual.ToMatrix()));
+        Assert.IsTrue(Matrix.IsEqual(new Jagged<double>(expected).ToMatrix(), new Jagged<double>(actual).ToMatrix()));
     }
 
 

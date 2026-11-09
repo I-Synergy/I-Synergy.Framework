@@ -217,7 +217,7 @@ public static partial class Matrix
         if (aArray.Columns() != bArray.Length || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Jagged.CreateAs(resultArray).To<double[,]>();
-        C = Dot(new Matrix<double>(aArray.ToMatrix().To<double[,]>()), new Matrix<double>(bArray.ToMatrix().To<double[,]>()), new Matrix<double>(C));
+        C = Dot(new Matrix<double>(new Jagged<double>(aArray).ToMatrix().To<double[,]>()), new Matrix<double>(new Jagged<double>(bArray).ToMatrix().To<double[,]>()), new Matrix<double>(C));
 #endif
         int K = aArray.Columns();
         int M = resultArray.Columns();
@@ -238,7 +238,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.ToMatrix().To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Jagged<double>(resultArray).ToMatrix().To<double[,]>(), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -262,7 +262,7 @@ public static partial class Matrix
         if (aArray.Columns() != bArray.Rows() || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(resultArray).To<double[,]>();
-        C = Dot(new Matrix<double>(aArray.ToMatrix().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()), new Matrix<double>(C));
+        C = Dot(new Matrix<double>(new Jagged<double>(aArray).ToMatrix().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()), new Matrix<double>(C));
 #endif
         int K = aArray.Columns();
         int M = resultArray.Columns();
@@ -282,7 +282,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.ToMatrix().To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Jagged<double>(resultArray).ToMatrix().To<double[,]>(), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;
@@ -306,7 +306,7 @@ public static partial class Matrix
         if (aArray.Columns() != bArray.Length || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(resultArray).To<double[,]>();
-        C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.ToMatrix().To<double[,]>()), new Matrix<double>(C));
+        C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(new Jagged<double>(bArray).ToMatrix().To<double[,]>()), new Matrix<double>(C));
 #endif
         int N = resultArray.Length;
         int K = aArray.Columns();
@@ -328,7 +328,7 @@ public static partial class Matrix
             }
         }
 #if DEBUG
-        if (!Matrix.IsEqual(C, resultArray.ToMatrix().To<double[,]>(), 1e-4))
+        if (!Matrix.IsEqual(C, new Jagged<double>(resultArray).ToMatrix().To<double[,]>(), 1e-4))
             throw new InvalidOperationException("Matrix computation result mismatch in debug validation.");
 #endif
         return resultArray;

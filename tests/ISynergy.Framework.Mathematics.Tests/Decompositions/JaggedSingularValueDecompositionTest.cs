@@ -12,13 +12,13 @@ public class JaggedSingularValueDecompositionTest
     {
         int n = 5;
 
-        double[][] I = Matrix.Identity(n).ToJagged();
+        double[][] I = new Matrix<double>(Matrix.Identity(n)).ToJagged();
 
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
             {
-                double[][] value = Matrix.Magic(n).ToJagged();
+                double[][] value = new Matrix<double>(Matrix.Magic(n)).ToJagged();
 
                 value[i][j] = double.NaN;
 

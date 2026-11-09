@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
@@ -210,7 +211,7 @@ public static partial class Jagged
     {
         if (values.Length == 0)
             return Zeros<T>(rows, columns);
-        return values.Reshape(rows, columns).ToJagged();
+        return new Matrix<T>(values.Reshape(rows, columns)).ToJagged();
     }
 
     /// <summary>
@@ -250,7 +251,7 @@ public static partial class Jagged
     /// 
     public static T[][] Create<T>(T[,] values)
     {
-        return values.ToJagged();
+        return new Matrix<T>(values).ToJagged();
     }
 
     private static Array create(Type elementType, int[] shape, int dimension, object value)
@@ -695,7 +696,7 @@ public static partial class Jagged
     /// 
     public static double[][] Magic(int size)
     {
-        return Matrix.Magic(size).ToJagged();
+        return new Matrix<double>(Matrix.Magic(size)).ToJagged();
     }
 
     #region Diagonal matrices

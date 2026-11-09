@@ -33,7 +33,7 @@ public partial class MatrixTest
         // B = (repmat(A, [6 1])' .^ repmat([0 1 2 3 4 5], [176 1])')';
 
         double[][] jagged = sPoly.PseudoInverse();
-        double[,] multi = sPoly.ToMatrix().PseudoInverse();
+        double[,] multi = new Jagged<double>(sPoly).ToMatrix().PseudoInverse();
         Assert.IsTrue(jagged.IsEqual(multi, rtol: 1e-15));
 
                 double[][] R = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(sPoly), new Jagged<double>(sPoly.PseudoInverse()))), new Jagged<double>(sPoly));

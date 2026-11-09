@@ -38,7 +38,7 @@ public static partial class Matrix
     /// 
     public static double[,] Exp(this double[,] value)
     {
-        return Exp(value, MatrixCreateAs<double, double>(value));
+        return Exp(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public static partial class Matrix
     /// 
     public static double[][] Exp(this double[][] value)
     {
-        return Exp(value, JaggedCreateAs<double, double>(value));
+        return Exp(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -77,19 +77,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Exp(this double[,] value, double[,] result)
+    public static double[,] Exp(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Exp(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -100,17 +102,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Exp(this double[][] value, double[][] result)
+    public static double[][] Exp(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Exp(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Exp(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -128,7 +132,7 @@ public static partial class Matrix
     /// 
     public static double[,] Log(this double[,] value)
     {
-        return Log(value, MatrixCreateAs<double, double>(value));
+        return Log(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -137,7 +141,7 @@ public static partial class Matrix
     /// 
     public static double[][] Log(this double[][] value)
     {
-        return Log(value, JaggedCreateAs<double, double>(value));
+        return Log(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -167,19 +171,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Log(this double[,] value, double[,] result)
+    public static double[,] Log(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Log(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -190,17 +196,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Log(this double[][] value, double[][] result)
+    public static double[][] Log(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Log(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Log(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -218,7 +226,7 @@ public static partial class Matrix
     /// 
     public static double[,] Sign(this double[,] value)
     {
-        return Sign(value, MatrixCreateAs<double, double>(value));
+        return Sign(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -227,7 +235,7 @@ public static partial class Matrix
     /// 
     public static double[][] Sign(this double[][] value)
     {
-        return Sign(value, JaggedCreateAs<double, double>(value));
+        return Sign(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -257,19 +265,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Sign(this double[,] value, double[,] result)
+    public static double[,] Sign(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (double)(Math.Sign(v));
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -280,17 +290,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Sign(this double[][] value, double[][] result)
+    public static double[][] Sign(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = (double)(Math.Sign(v));
+                var v = valueArray[i][j];
+                resultArray[i][j] = (double)(Math.Sign(v));
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -308,7 +320,7 @@ public static partial class Matrix
     /// 
     public static double[,] Abs(this double[,] value)
     {
-        return Abs(value, MatrixCreateAs<double, double>(value));
+        return Abs(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -317,7 +329,7 @@ public static partial class Matrix
     /// 
     public static double[][] Abs(this double[][] value)
     {
-        return Abs(value, JaggedCreateAs<double, double>(value));
+        return Abs(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -347,19 +359,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Abs(this double[,] value, double[,] result)
+    public static double[,] Abs(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Abs(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -370,17 +384,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Abs(this double[][] value, double[][] result)
+    public static double[][] Abs(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Abs(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Abs(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -389,7 +405,7 @@ public static partial class Matrix
     /// 
     public static double[,] Sqrt(this double[,] value)
     {
-        return Sqrt(value, MatrixCreateAs<double, double>(value));
+        return Sqrt(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -398,7 +414,7 @@ public static partial class Matrix
     /// 
     public static double[][] Sqrt(this double[][] value)
     {
-        return Sqrt(value, JaggedCreateAs<double, double>(value));
+        return Sqrt(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -428,19 +444,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Sqrt(this double[,] value, double[,] result)
+    public static double[,] Sqrt(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Sqrt(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -451,17 +469,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Sqrt(this double[][] value, double[][] result)
+    public static double[][] Sqrt(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Sqrt(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Sqrt(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -479,7 +499,7 @@ public static partial class Matrix
     /// 
     public static double[,] SignSqrt(this double[,] value)
     {
-        return SignSqrt(value, MatrixCreateAs<double, double>(value));
+        return SignSqrt(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -488,7 +508,7 @@ public static partial class Matrix
     /// 
     public static double[][] SignSqrt(this double[][] value)
     {
-        return SignSqrt(value, JaggedCreateAs<double, double>(value));
+        return SignSqrt(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -518,19 +538,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] SignSqrt(this double[,] value, double[,] result)
+    public static double[,] SignSqrt(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Sign(v) * Math.Sqrt(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -541,17 +563,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] SignSqrt(this double[][] value, double[][] result)
+    public static double[][] SignSqrt(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Sign(v) * Math.Sqrt(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Sign(v) * Math.Sqrt(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -569,7 +593,7 @@ public static partial class Matrix
     /// 
     public static double[,] Floor(this double[,] value)
     {
-        return Floor(value, MatrixCreateAs<double, double>(value));
+        return Floor(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -578,7 +602,7 @@ public static partial class Matrix
     /// 
     public static double[][] Floor(this double[][] value)
     {
-        return Floor(value, JaggedCreateAs<double, double>(value));
+        return Floor(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -608,19 +632,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Floor(this double[,] value, double[,] result)
+    public static double[,] Floor(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Floor(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -631,17 +657,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Floor(this double[][] value, double[][] result)
+    public static double[][] Floor(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Floor(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Floor(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -659,7 +687,7 @@ public static partial class Matrix
     /// 
     public static double[,] Ceiling(this double[,] value)
     {
-        return Ceiling(value, MatrixCreateAs<double, double>(value));
+        return Ceiling(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -668,7 +696,7 @@ public static partial class Matrix
     /// 
     public static double[][] Ceiling(this double[][] value)
     {
-        return Ceiling(value, JaggedCreateAs<double, double>(value));
+        return Ceiling(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -698,19 +726,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Ceiling(this double[,] value, double[,] result)
+    public static double[,] Ceiling(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Ceiling(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -721,17 +751,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Ceiling(this double[][] value, double[][] result)
+    public static double[][] Ceiling(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Ceiling(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Ceiling(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -749,7 +781,7 @@ public static partial class Matrix
     /// 
     public static double[,] Round(this double[,] value)
     {
-        return Round(value, MatrixCreateAs<double, double>(value));
+        return Round(new Matrix<double>(value), new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -758,7 +790,7 @@ public static partial class Matrix
     /// 
     public static double[][] Round(this double[][] value)
     {
-        return Round(value, JaggedCreateAs<double, double>(value));
+        return Round(new Jagged<double>(value), new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -788,19 +820,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Round(this double[,] value, double[,] result)
+    public static double[,] Round(this Matrix<double> value, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = Math.Round(v);
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -811,17 +845,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Round(this double[][] value, double[][] result)
+    public static double[][] Round(this Jagged<double> value, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = Math.Round(v);
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Round(v);
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -833,7 +869,7 @@ public static partial class Matrix
     /// 
     public static double[,] SignedPow(this double[,] value, double y) // NOSONAR
     {
-        return SignedPow(value, y, MatrixCreateAs<double, double>(value));
+        return SignedPow(new Matrix<double>(value), y, new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -857,7 +893,7 @@ public static partial class Matrix
     /// 
     public static double[][] SignedPow(this double[][] value, double y)
     {
-        return SignedPow(value, y, JaggedCreateAs<double, double>(value));
+        return SignedPow(new Jagged<double>(value), y, new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -889,19 +925,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] SignedPow(this double[,] value, double y, double[,] result)
+    public static double[,] SignedPow(this Matrix<double> value, double y, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -913,17 +951,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] SignedPow(this double[][] value, double y, double[][] result)
+    public static double[][] SignedPow(this Jagged<double> value, double y, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
+                var v = valueArray[i][j];
+                resultArray[i][j] = (Math.Sign(v) * Math.Pow(Math.Abs(v), y));
             }
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -947,7 +987,7 @@ public static partial class Matrix
     /// 
     public static double[,] Pow(this double[,] value, double y)
     {
-        return Pow(value, y, MatrixCreateAs<double, double>(value));
+        return Pow(new Matrix<double>(value), y, new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -959,7 +999,7 @@ public static partial class Matrix
     /// 
     public static double[][] Pow(this double[][] value, double y)
     {
-        return Pow(value, y, JaggedCreateAs<double, double>(value));
+        return Pow(new Jagged<double>(value), y, new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -991,19 +1031,21 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Pow(this double[,] value, double y, double[,] result)
+    public static double[,] Pow(this Matrix<double> value, double y, Matrix<double> result)
     {
-        if (value.Length == 0)
-            return result;
-        var spanV = MemoryMarshal.CreateSpan(ref value[0, 0], value.Length);
-        var spanR = MemoryMarshal.CreateSpan(ref result[0, 0], result.Length);
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        if (valueArray.Length == 0)
+            return resultArray;
+        var spanV = MemoryMarshal.CreateSpan(ref valueArray[0, 0], valueArray.Length);
+        var spanR = MemoryMarshal.CreateSpan(ref resultArray[0, 0], resultArray.Length);
         for (var j = 0; j < spanV.Length; j++)
         {
             var v = spanV[j];
             spanR[j] = (Math.Pow(Math.Abs(v), y));
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -1015,17 +1057,19 @@ public static partial class Matrix
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     ///
-    public static double[][] Pow(this double[][] value, double y, double[][] result)
+    public static double[][] Pow(this Jagged<double> value, double y, Jagged<double> result)
     {
-        for (var i = 0; i < value.Length; i++)
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < valueArray.Length; i++)
         {
-            for (var j = 0; j < value[i].Length; j++)
+            for (var j = 0; j < valueArray[i].Length; j++)
             {
-                var v = value[i][j];
-                result[i][j] = (Math.Pow(Math.Abs(v), y));
+                var v = valueArray[i][j];
+                resultArray[i][j] = (Math.Pow(Math.Abs(v), y));
             }
         }
-        return result;
+        return resultArray;
     }
 
 

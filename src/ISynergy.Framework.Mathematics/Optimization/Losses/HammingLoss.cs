@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 
@@ -22,7 +23,7 @@ public class HammingLoss : LossBase<int[][]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HammingLoss(double[][] expected)
     {
-        Expected = expected.ToInt32();
+        Expected = new Jagged<double>(expected).ToInt32();
         for (var i = 0; i < expected.Length; i++)
             total += expected[i].Length;
     }
@@ -53,7 +54,7 @@ public class HammingLoss : LossBase<int[][]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HammingLoss(bool[][] expected)
     {
-        Expected = expected.ToInt32();
+        Expected = new Jagged<bool>(expected).ToInt32();
         for (var i = 0; i < expected.Length; i++)
             total += expected[i].Length;
     }

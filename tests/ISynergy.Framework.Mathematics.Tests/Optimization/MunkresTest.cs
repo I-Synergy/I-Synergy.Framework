@@ -180,7 +180,7 @@ public class MunkresTest
             new double[] { 4.55555555555556, 33.8888888888889, 39.2222222222222, 36.5555555555556, 42.8888888888889, 56.5555555555556, 272.555555555556, 427.222222222222, 272.222222222222 }
         };
 
-        MunkresProgram.Init(costMatrix.ToMatrix());
+        MunkresProgram.Init(new Jagged<double>(costMatrix).ToMatrix());
 
         var m = new Munkres(costMatrix);
         m.C = costMatrix.Copy();
@@ -351,7 +351,7 @@ public class MunkresTest
             { 4.6656e+002, 4.6656e+002, 1.8662e+003, 3.2659e+003, 3.2659e+003, 1.8662e+003, 1.3997e+003, 4.6656e+002, 6.5358e-012, 4.6656e+002, 1.3997e+003, 3.2659e+003, 4.1990e+003, 6.0653e+003, 5.5987e+003, 6.0653e+003, 4.1990e+003, 3.2659e+003 }
         };
 
-        Munkres m = new(costMatrix.ToJagged());
+        Munkres m = new(new Matrix<double>(costMatrix).ToJagged());
 
         Assert.AreEqual(18, m.NumberOfTasks);
         Assert.AreEqual(18, m.NumberOfWorkers);

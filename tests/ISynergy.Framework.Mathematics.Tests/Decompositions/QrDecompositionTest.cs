@@ -197,8 +197,8 @@ public class QrDecompositionTest
             Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-6));
 
 
-            JaggedQrDecomposition target2 = new(value.ToJagged());
-            double[][] actual2 = target2.Solve(b.ToJagged());
+            JaggedQrDecomposition target2 = new(new Matrix<double>(value).ToJagged());
+            double[][] actual2 = target2.Solve(new Matrix<double>(b).ToJagged());
 
             Assert.IsTrue(Matrix.IsEqual(expected, actual2, atol: 1e-4));
             Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse(), 1e-6));

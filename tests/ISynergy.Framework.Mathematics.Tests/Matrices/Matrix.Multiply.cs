@@ -54,27 +54,27 @@ partial class MatrixTest
     [TestMethod]
     public void MultiplyTwoMatrices3()
     {
-        double[][] a = new double[,]
+        double[][] a = new Matrix<double>(new double[,]
         {
           { 3.000, 1.000, 0.000 },
           { 5.000, 2.000, 1.000 }
-        }.ToJagged();
+        }).ToJagged();
 
-        double[][] b = new double[,]
+        double[][] b = new Matrix<double>(new double[,]
         {
           { 2.000, 4.000 },
           { 4.000, 6.000 },
           { 1.000, 9.000 }
-        }.ToJagged();
+        }).ToJagged();
 
-        double[][] expected = new double[,]
+        double[][] expected = new Matrix<double>(new double[,]
         {
           { 10.000, 18.000 },
           { 19.000, 41.000 }
-        }.ToJagged();
+        }).ToJagged();
 
         double[][] actual = Matrix.Dot(new Jagged<double>(a), new Jagged<double>(b));
-        double[][] actual2 = Matrix.Dot(new Matrix<double>(a.ToMatrix()), new Jagged<double>(b));
+        double[][] actual2 = Matrix.Dot(new Matrix<double>(new Jagged<double>(a).ToMatrix()), new Jagged<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual, 0.0001));
         Assert.IsTrue(expected.IsEqual(actual2, 0.0001));
@@ -403,8 +403,8 @@ partial class MatrixTest
                     double result2 = A.DotAndDot(new Matrix<double>(C), B);
                     Assert.AreEqual(result1, result2, 1e-10);
 
-                    double result3 = A.Dot(new Jagged<double>(C.ToJagged())).Dot(B);
-                    double result4 = A.DotAndDot(new Jagged<double>(C.ToJagged()), B);
+                    double result3 = A.Dot(new Jagged<double>(new Matrix<double>(C).ToJagged())).Dot(B);
+                    double result4 = A.DotAndDot(new Jagged<double>(new Matrix<double>(C).ToJagged()), B);
                     Assert.AreEqual(result1, result3, 1e-10);
                     Assert.AreEqual(result3, result4, 1e-10);
                 }
@@ -436,9 +436,9 @@ partial class MatrixTest
         };
 
         double[,] actual1 = Matrix.Kronecker(new Matrix<double>(a), new Matrix<double>(b));
-        double[,] actual2 = Matrix.Kronecker(new Matrix<double>(a), new Jagged<double>(b.ToJagged())).ToMatrix();
-        double[,] actual3 = Matrix.Kronecker(new Jagged<double>(a.ToJagged()), new Matrix<double>(b)).ToMatrix();
-        double[,] actual4 = Matrix.Kronecker(new Jagged<double>(a.ToJagged()), new Jagged<double>(b.ToJagged())).ToMatrix();
+        double[,] actual2 = new Jagged<double>(Matrix.Kronecker(new Matrix<double>(a), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
+        double[,] actual3 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Matrix<double>(b))).ToMatrix();
+        double[,] actual4 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
 
         Assert.IsTrue(expected.IsEqual(actual1));
         Assert.IsTrue(expected.IsEqual(actual2));
@@ -497,9 +497,9 @@ partial class MatrixTest
                         double[,] b = Matrix.Random(k, l);
 
                         double[,] result1 = Matrix.Kronecker(new Matrix<double>(a), new Matrix<double>(b));
-                        double[,] result2 = Matrix.Kronecker(new Matrix<double>(a), new Jagged<double>(b.ToJagged())).ToMatrix();
-                        double[,] result3 = Matrix.Kronecker(new Jagged<double>(a.ToJagged()), new Matrix<double>(b)).ToMatrix();
-                        double[,] result4 = Matrix.Kronecker(new Jagged<double>(a.ToJagged()), new Jagged<double>(b.ToJagged())).ToMatrix();
+                        double[,] result2 = new Jagged<double>(Matrix.Kronecker(new Matrix<double>(a), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
+                        double[,] result3 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Matrix<double>(b))).ToMatrix();
+                        double[,] result4 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
 
                         Assert.IsTrue(result1.IsEqual(result1, Tolerance));
                         Assert.IsTrue(result1.IsEqual(result2, Tolerance));

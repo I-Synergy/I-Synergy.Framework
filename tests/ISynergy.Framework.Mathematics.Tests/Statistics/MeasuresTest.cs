@@ -1,6 +1,7 @@
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Statistics;
 [TestClass]
 public class MeasuresTest
@@ -17,7 +18,7 @@ public class MeasuresTest
             { 5, 3, 8, 6, 4, 4, 3, 8, 9, 0, 9, 9, 1, 9, 2 },
         };
 
-        series = data.ToJagged(transpose: true);
+        series = new Matrix<double>(data).ToJagged(transpose: true);
     }
 
     [TestMethod]
@@ -37,7 +38,7 @@ public class MeasuresTest
         };
 
         // Transpose our raw data to get it into the required format.
-        double[][] timeSeries = rawData.ToJagged(transpose: true);
+        double[][] timeSeries = new Matrix<double>(rawData).ToJagged(transpose: true);
 
         // The window size determines how many observations to include in the 
         // calculation. If no window is specified, the entire dataset is used. 
@@ -71,7 +72,7 @@ public class MeasuresTest
         };
 
         // Transpose our raw data to get it into the required format.
-        double[][] timeSeries = rawData.ToJagged(transpose: true);
+        double[][] timeSeries = new Matrix<double>(rawData).ToJagged(transpose: true);
 
         // The window size determines how many observations to include in the 
         // calculation. If no window is specified, the entire dataset is used. 
