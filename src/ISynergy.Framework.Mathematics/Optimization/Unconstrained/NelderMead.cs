@@ -423,11 +423,14 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
                 return ret;
         }
 
-    restart:
-        for (var i = 0; i < n + 1; i++) t.Add(new KeyValuePair<double, double[]>(val[i], pts[i]));
-
         while (true)
         {
+            for (var i = 0; i < n + 1; i++) t.Add(new KeyValuePair<double, double[]>(val[i], pts[i]));
+
+            var restart = false;
+
+            while (true)
+            {
             var low = t.Min();
             var high = t.Max();
             double fl = low.Value.Key;
@@ -572,12 +575,16 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
                         }
                     }
 
-                    goto restart;
+                    restart = true;
+                    break;
                 }
             }
 
             high.Value = new KeyValuePair<double, double[]>(fh, high.Value.Value);
             t.Resort(high);
+            }
+
+            if (!restart) return NelderMeadStatus.Failure;
         }
     }
     /// <summary>

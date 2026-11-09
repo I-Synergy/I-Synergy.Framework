@@ -231,7 +231,8 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
     // 
     // c        ------- the beginning of the loop ----------
     // 
-    L111:
+        while (true)
+        {
         if (Token.IsCancellationRequested)
             return false;
 
@@ -286,7 +287,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
                     isave, dsave, lsave, csave, work)
             });
 
-        goto L111;
+        }
     }
 
     private void exit(string csave, bool[] lsave, int[] isave, double[] x, double[] dsave, out double newF,

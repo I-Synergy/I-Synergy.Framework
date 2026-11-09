@@ -703,11 +703,11 @@ public static class Gamma
         for (var i = 0; i < 10; i++)
         {
             if (x > x0 || x < x1)
-                goto ihalve;
+                break;
 
             yy = UpperIncomplete(a, x);
             if (yy < yl || yy > yh)
-                goto ihalve;
+                break;
 
             if (yy < y)
             {
@@ -723,7 +723,7 @@ public static class Gamma
             // compute the derivative of the function at this point
             d = (a - 1.0) * Math.Log(x) - x - lgm;
             if (d < -Constants.LogMax)
-                goto ihalve;
+                break;
             d = -Math.Exp(d);
 
             // compute the step to the next approximation of x
@@ -734,7 +734,6 @@ public static class Gamma
         }
 
     // Resort to interval halving if Newton iteration did not converge. 
-    ihalve:
 
         d = 0.0625;
         if (ExactComparisons.AreEqual(x0 ,double.MaxValue))

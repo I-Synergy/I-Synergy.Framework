@@ -388,7 +388,7 @@ public static class Beta
     /// 
     public static double IncompleteInverse(double aa, double bb, double yy0)
     {
-        double a, b, y0, d, y, x, x0, x1, lgm, yp, di, dithresh, yl, yh;
+        double a, b, y0, d, y, x, x0 = 0, x1, lgm, yp, di, dithresh, yl, yh;
         int i, dir;
 
         bool nflg;
@@ -397,6 +397,9 @@ public static class Beta
             return 0.0;
         if (yy0 >= 1.0)
             return 1.0;
+
+        bool runIhalve;
+        bool gotoDone = false;
 
         if (aa <= 1.0 || bb <= 1.0)
         {
@@ -408,181 +411,198 @@ public static class Beta
             y0 = yy0;
             x = a / (a + b);
             y = Incomplete(a, b, x);
-            goto ihalve;
-        }
-
-        nflg = false;
-        dithresh = 1.0e-4;
-
-        /* approximation to inverse function */
-
-        yp = -Normal.Inverse(yy0);
-
-        if (yy0 > 0.5)
-        {
-            rflg = true;
-            a = bb;
-            b = aa;
-            y0 = 1.0 - yy0;
-            yp = -yp;
+            runIhalve = true;
         }
         else
         {
-            rflg = false;
-            a = aa;
-            b = bb;
-            y0 = yy0;
-        }
+            nflg = false;
+            dithresh = 1.0e-4;
 
-        lgm = (yp * yp - 3.0) / 6.0;
-        x0 = 2.0 / (1.0 / (2.0 * a - 1.0) + 1.0 / (2.0 * b - 1.0));
-        y = yp * Math.Sqrt(x0 + lgm) / x0
-            - (1.0 / (2.0 * b - 1.0) - 1.0 / (2.0 * a - 1.0))
-            * (lgm + 5.0 / 6.0 - 2.0 / (3.0 * x0));
-        y = 2.0 * y;
+            /* approximation to inverse function */
 
-        if (y < Constants.LogMin)
-            throw new ArithmeticException("underflow");
+            yp = -Normal.Inverse(yy0);
 
-        x = a / (a + b * Math.Exp(y));
-        y = Incomplete(a, b, x);
-        yp = (y - y0) / y0;
-
-        if (Math.Abs(yp) < 1.0e-2)
-            goto newt;
-
-        ihalve:
-
-        /* Resort to interval halving if not close enough */
-        x0 = 0.0;
-        yl = 0.0;
-        x1 = 1.0;
-        yh = 1.0;
-        di = 0.5;
-        dir = 0;
-
-        for (i = 0; i < 400; i++)
-        {
-            if (i != 0)
+            if (yy0 > 0.5)
             {
-                x = x0 + di * (x1 - x0);
-                if (ExactComparisons.AreEqual(x ,1.0))
-                    x = 1.0 - Constants.DoubleEpsilon;
-                y = Incomplete(a, b, x);
-                yp = (x1 - x0) / (x1 + x0);
-                if (Math.Abs(yp) < dithresh)
-                {
-                    x0 = x;
-                    goto newt;
-                }
-            }
-
-            if (y < y0)
-            {
-                x0 = x;
-                yl = y;
-                if (dir < 0)
-                {
-                    dir = 0;
-                    di = 0.5;
-                }
-                else if (dir > 1)
-                    di = 0.5 * di + 0.5;
-                else
-                    di = (y0 - y) / (yh - yl);
-                dir += 1;
-                if (x0 > 0.75)
-                {
-                    if (rflg)
-                    {
-                        rflg = false;
-                        a = aa;
-                        b = bb;
-                        y0 = yy0;
-                    }
-                    else
-                    {
-                        rflg = true;
-                        a = bb;
-                        b = aa;
-                        y0 = 1.0 - yy0;
-                    }
-                    x = 1.0 - x;
-                    y = Incomplete(a, b, x);
-                    goto ihalve;
-                }
+                rflg = true;
+                a = bb;
+                b = aa;
+                y0 = 1.0 - yy0;
+                yp = -yp;
             }
             else
             {
-                x1 = x;
-                if (rflg && x1 < Constants.DoubleEpsilon)
-                {
-                    x0 = 0.0;
-                    goto done;
-                }
-                yh = y;
-                if (dir > 0)
-                {
-                    dir = 0;
-                    di = 0.5;
-                }
-                else if (dir < -1)
-                    di = 0.5 * di;
-                else
-                    di = (y - y0) / (yh - yl);
-                dir -= 1;
+                rflg = false;
+                a = aa;
+                b = bb;
+                y0 = yy0;
             }
-        }
 
-        if (x0 >= 1.0)
-        {
-            x0 = 1.0 - Constants.DoubleEpsilon;
-            goto done;
-        }
+            lgm = (yp * yp - 3.0) / 6.0;
+            x0 = 2.0 / (1.0 / (2.0 * a - 1.0) + 1.0 / (2.0 * b - 1.0));
+            y = yp * Math.Sqrt(x0 + lgm) / x0
+                - (1.0 / (2.0 * b - 1.0) - 1.0 / (2.0 * a - 1.0))
+                * (lgm + 5.0 / 6.0 - 2.0 / (3.0 * x0));
+            y = 2.0 * y;
 
-        if (x == 0.0)
-            throw new ArithmeticException("underflow");
-
-        newt:
-
-        if (nflg)
-            goto done;
-
-        x0 = x;
-        lgm = Gamma.Log(a + b) - Gamma.Log(a) - Gamma.Log(b);
-
-        for (i = 0; i < 10; i++)
-        {
-            /* Compute the function at this point. */
-            if (i != 0)
-                y = Incomplete(a, b, x0);
-
-            /* Compute the derivative of the function at this point. */
-            d = (a - 1.0) * Math.Log(x0) + (b - 1.0) * Math.Log(1.0 - x0) + lgm;
-
-            if (d < Constants.LogMin)
+            if (y < Constants.LogMin)
                 throw new ArithmeticException("underflow");
 
-            d = Math.Exp(d);
+            x = a / (a + b * Math.Exp(y));
+            y = Incomplete(a, b, x);
+            yp = (y - y0) / y0;
 
-            /* compute the step to the next approximation of x */
-            d = (y - y0) / d;
-            x0 = x0 - d;
+            // When the approximation is already close, skip the interval-halving
+            // phase and proceed directly to Newton's method.
+            runIhalve = !(Math.Abs(yp) < 1.0e-2);
+        }
 
-            if (x0 <= 0.0)
-                throw new ArithmeticException("underflow");
-
-            if (x0 >= 1.0)
+        if (runIhalve)
+        {
+            /* Resort to interval halving if not close enough. */
+            bool restart;
+            bool broke;
+            do
             {
-                x0 = 1.0 - Constants.DoubleEpsilon;
-                goto done;
-            }
+                x0 = 0.0;
+                yl = 0.0;
+                x1 = 1.0;
+                yh = 1.0;
+                di = 0.5;
+                dir = 0;
+                restart = false;
+                broke = false;
 
-            if (Math.Abs(d / x0) < 64.0 * Constants.DoubleEpsilon)
-                goto done;
+                for (i = 0; i < 400; i++)
+                {
+                    if (i != 0)
+                    {
+                        x = x0 + di * (x1 - x0);
+                        if (ExactComparisons.AreEqual(x, 1.0))
+                            x = 1.0 - Constants.DoubleEpsilon;
+                        y = Incomplete(a, b, x);
+                        yp = (x1 - x0) / (x1 + x0);
+                        if (Math.Abs(yp) < dithresh)
+                        {
+                            x0 = x;
+                            broke = true; // proceed to Newton's method
+                            break;
+                        }
+                    }
+
+                    if (y < y0)
+                    {
+                        x0 = x;
+                        yl = y;
+                        if (dir < 0)
+                        {
+                            dir = 0;
+                            di = 0.5;
+                        }
+                        else if (dir > 1)
+                            di = 0.5 * di + 0.5;
+                        else
+                            di = (y0 - y) / (yh - yl);
+                        dir += 1;
+                        if (x0 > 0.75)
+                        {
+                            if (rflg)
+                            {
+                                rflg = false;
+                                a = aa;
+                                b = bb;
+                                y0 = yy0;
+                            }
+                            else
+                            {
+                                rflg = true;
+                                a = bb;
+                                b = aa;
+                                y0 = 1.0 - yy0;
+                            }
+                            x = 1.0 - x;
+                            y = Incomplete(a, b, x);
+                            restart = true; // restart the interval-halving loop
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        x1 = x;
+                        if (rflg && x1 < Constants.DoubleEpsilon)
+                        {
+                            x0 = 0.0;
+                            gotoDone = true;
+                            broke = true;
+                            break;
+                        }
+                        yh = y;
+                        if (dir > 0)
+                        {
+                            dir = 0;
+                            di = 0.5;
+                        }
+                        else if (dir < -1)
+                            di = 0.5 * di;
+                        else
+                            di = (y - y0) / (yh - yl);
+                        dir -= 1;
+                    }
+                }
+            } while (restart);
+
+            if (!broke)
+            {
+                if (x0 >= 1.0)
+                {
+                    x0 = 1.0 - Constants.DoubleEpsilon;
+                    gotoDone = true;
+                }
+                else if (x == 0.0)
+                {
+                    throw new ArithmeticException("underflow");
+                }
+            }
         }
 
-    done:
+        if (!gotoDone && !nflg)
+        {
+            /* Newton's method refinement. */
+                x0 = x;
+                lgm = Gamma.Log(a + b) - Gamma.Log(a) - Gamma.Log(b);
+
+                for (i = 0; i < 10; i++)
+                {
+                    /* Compute the function at this point. */
+                    if (i != 0)
+                        y = Incomplete(a, b, x0);
+
+                    /* Compute the derivative of the function at this point. */
+                    d = (a - 1.0) * Math.Log(x0) + (b - 1.0) * Math.Log(1.0 - x0) + lgm;
+
+                    if (d < Constants.LogMin)
+                        throw new ArithmeticException("underflow");
+
+                    d = Math.Exp(d);
+
+                    /* compute the step to the next approximation of x */
+                    d = (y - y0) / d;
+                    x0 = x0 - d;
+
+                    if (x0 <= 0.0)
+                        throw new ArithmeticException("underflow");
+
+                    if (x0 >= 1.0)
+                    {
+                        x0 = 1.0 - Constants.DoubleEpsilon;
+                        break;
+                    }
+
+                    if (Math.Abs(d / x0) < 64.0 * Constants.DoubleEpsilon)
+                        break;
+                }
+        }
+
         if (rflg)
         {
             if (x0 <= double.Epsilon)

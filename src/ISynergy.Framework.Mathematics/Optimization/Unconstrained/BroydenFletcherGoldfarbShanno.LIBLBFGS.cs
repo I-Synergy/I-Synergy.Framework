@@ -309,7 +309,8 @@ internal static class Lbfgs
         if (xp is null || g is null || gp is null || d is null || w is null)
         {
             ret = Code.LBFGSERR_OUTOFMEMORY;
-            goto lbfgs_exit;
+            ptr_fx = fx;
+            return ret;
         }
 
         if (param.orthantwise_c != 0.0)
@@ -319,7 +320,8 @@ internal static class Lbfgs
             if (pg is null)
             {
                 ret = Code.LBFGSERR_OUTOFMEMORY;
-                goto lbfgs_exit;
+                ptr_fx = fx;
+                return ret;
             }
         }
 
@@ -329,7 +331,8 @@ internal static class Lbfgs
         if (lm is null)
         {
             ret = Code.LBFGSERR_OUTOFMEMORY;
-            goto lbfgs_exit;
+            ptr_fx = fx;
+            return ret;
         }
 
         /* Initialize the limited memory. */
@@ -343,7 +346,8 @@ internal static class Lbfgs
             if (it.s is null || it.y is null)
             {
                 ret = Code.LBFGSERR_OUTOFMEMORY;
-                goto lbfgs_exit;
+                ptr_fx = fx;
+                return ret;
             }
         }
 
@@ -387,7 +391,8 @@ internal static class Lbfgs
         if (gnorm / xnorm <= param.epsilon)
         {
             ret = Code.LBFGS_ALREADY_MINIMIZED;
-            goto lbfgs_exit;
+            ptr_fx = fx;
+            return ret;
         }
 
         /* Compute the initial step:
@@ -455,7 +460,8 @@ internal static class Lbfgs
                 veccpy(x, xp, n);
                 veccpy(g, gp, n);
                 ret = ls;
-                goto lbfgs_exit;
+                ptr_fx = fx;
+                return ret;
             }
 
             /* Compute x and g norms. */
@@ -469,7 +475,10 @@ internal static class Lbfgs
             if (cd.proc_progress is not null
                 && (ret = cd.proc_progress(new LbfgsProgressInfo(cd.instance, x, g, fx, xnorm,
                     gnorm, step, cd.n, k, ls))) != 0)
-                goto lbfgs_exit;
+            {
+                ptr_fx = fx;
+                return ret;
+            }
 
             /*
                 Convergence test.
@@ -601,7 +610,6 @@ internal static class Lbfgs
             step = 1.0;
         }
 
-    lbfgs_exit:
         /* Return the final value of the objective function. */
         ptr_fx = fx;
 

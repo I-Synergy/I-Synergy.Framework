@@ -489,13 +489,13 @@ public static class Special
 
         a = 1.3333333333333333;
 
-    L10:
-        b = a - 1.0;
-        c = b + b + b;
-        eps = Math.Abs(c - 1.0);
-
-        if (eps == 0.0)
-            goto L10;
+        do
+        {
+            b = a - 1.0;
+            c = b + b + b;
+            eps = Math.Abs(c - 1.0);
+        }
+        while (ExactComparisons.AreEqual(eps, 0.0));
 
         return eps * Math.Abs(x);
     }

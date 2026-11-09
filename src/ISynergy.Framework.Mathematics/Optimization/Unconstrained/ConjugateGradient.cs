@@ -346,45 +346,52 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
             var ides = 0;
             bnew = false;
 
-        L72:
-
-            // Call to the line search subroutine
-            Status = cvsmod(ref f, state, ref stp, ref info, ref nfev, ref dg, ref dgout);
-
-            if (Status != ConjugateGradientCode.Success)
-                return false;
-
-            // Test if descent direction is obtained for methods 2 and 3
-            double gg = Matrix.Dot(state.g, state.g);
-            double gg0 = Matrix.Dot(state.g, gold);
-            var betapr = (gg - gg0) / (gnorm * gnorm);
-
-            // When nrst > n and irest == 1 then restart.
-            if (irest == 1 && nrst > n)
+            double gg = 0;
+            double gg0 = 0;
+            double betapr = 0;
+            bool descentRetry;
+            do
             {
-                nrst = 0;
-                bnew = true;
-            }
-            else
-            {
-                if (method != 1)
+                descentRetry = false;
+
+                // Call to the line search subroutine
+                Status = cvsmod(ref f, state, ref stp, ref info, ref nfev, ref dg, ref dgout);
+
+                if (Status != ConjugateGradientCode.Success)
+                    return false;
+
+                // Test if descent direction is obtained for methods 2 and 3
+                gg = Matrix.Dot(state.g, state.g);
+                gg0 = Matrix.Dot(state.g, gold);
+                betapr = (gg - gg0) / (gnorm * gnorm);
+
+                // When nrst > n and irest == 1 then restart.
+                if (irest == 1 && nrst > n)
                 {
-                    var dg1 = -gg + betapr * dgout;
-
-                    if (dg1 >= 0.0)
+                    nrst = 0;
+                    bnew = true;
+                }
+                else
+                {
+                    if (method != 1)
                     {
-                        ides++;
+                        var dg1 = -gg + betapr * dgout;
 
-                        if (ides > 5)
+                        if (dg1 >= 0.0)
                         {
-                            Status = ConjugateGradientCode.DescentNotObtained;
-                            return false;
-                        }
+                            ides++;
 
-                        goto L72; // retry
+                            if (ides > 5)
+                            {
+                                Status = ConjugateGradientCode.DescentNotObtained;
+                                return false;
+                            }
+
+                            descentRetry = true; // retry
+                        }
                     }
                 }
-            }
+            } while (descentRetry);
 
             Evaluations += nfev;
             Searches += ides;
@@ -495,173 +502,180 @@ public class ConjugateGradient : BaseGradientOptimizationMethod,
 
         var x = Solution;
 
-        if (info == 1)
-            goto L321;
-
-        state.infoc = 1;
-
-        if (stp <= 0) // Check the input parameters for errors
-            return ConjugateGradientCode.StepSize;
-
-        // Compute the initial gradient in the search direction
-        // and check that S is a descent direction.
-
-        if (dginit >= 0)
-            throw new LineSearchFailedException(0, "The search direction is not a descent direction.");
-
-        // Initialize local variables
-        brackt = false;
-        state.stage1 = true;
-        nfev = 0;
-        state.finit = f;
-        state.dgtest = ftol * dginit;
-        state.width = stpmax - stpmin;
-        state.width1 = state.width / 0.5;
-
-        for (var j = 0; j < x.Length; ++j)
-            wa[j] = x[j];
-
-        // The variables STX, FX, DGX contain the values of the step,
-        //   function, and directional derivative at the best step.
-        // The variables STY, FY, DGY contain the value of the step,
-        //   function, and derivative at the other endpoint of the interval
-        //   of uncertainty.
-        // The variables STP, F, DG contain the values of the step,
-        //   function, and derivative at the current step.
-
-        stx = 0;
-        fx = state.finit;
-        dgx = dginit;
-        sty = 0;
-        fy = state.finit;
-        dgy = dginit;
-    L30: // Start of iteration.
-
-        // Set the minimum and maximum steps to correspond
-        // to the present interval of uncertainty.
-
-        if (brackt)
+        var resume = info == 1;
+        if (!resume)
         {
-            stmin = Math.Min(stx, sty);
-            stmax = Math.Max(stx, sty);
-        }
-        else
-        {
-            stmin = stx;
-            stmax = stp + 4 * (stp - stx);
+            state.infoc = 1;
+
+            if (stp <= 0) // Check the input parameters for errors
+                return ConjugateGradientCode.StepSize;
+
+            // Compute the initial gradient in the search direction
+            // and check that S is a descent direction.
+
+            if (dginit >= 0)
+                throw new LineSearchFailedException(0, "The search direction is not a descent direction.");
+
+            // Initialize local variables
+            brackt = false;
+            state.stage1 = true;
+            nfev = 0;
+            state.finit = f;
+            state.dgtest = ftol * dginit;
+            state.width = stpmax - stpmin;
+            state.width1 = state.width / 0.5;
+
+            for (var j = 0; j < x.Length; ++j)
+                wa[j] = x[j];
+
+            // The variables STX, FX, DGX contain the values of the step,
+            //   function, and directional derivative at the best step.
+            // The variables STY, FY, DGY contain the value of the step,
+            //   function, and derivative at the other endpoint of the interval
+            //   of uncertainty.
+            // The variables STP, F, DG contain the values of the step,
+            //   function, and derivative at the current step.
+
+            stx = 0;
+            fx = state.finit;
+            dgx = dginit;
+            sty = 0;
+            fy = state.finit;
+            dgy = dginit;
         }
 
-        // Force the step to be within
-        // the bounds STPMAX and STPMIN.
-
-        stp = Math.Max(stp, stpmin);
-        stp = Math.Min(stp, stpmax);
-
-        // If an unusual termination is to occur then 
-        // let STP be the lowest point obtained so far.
-
-        if (brackt && (stp <= stmin || stp >= stmax) || nfev >= maxfev - 1 ||
-            state.infoc == 0 || brackt && stmax - stmin <= xtol * stmax)
-            stp = stx;
-
-        // Evaluate the function and gradient at STP
-        // and compute the directional derivative.
-
-        for (var j = 0; j < s.Length; ++j)
-            x[j] = wa[j] + stp * s[j];
-
-        // Fetch function and gradient
-        f = Function(x);
-        state.g = Gradient(x);
-
-        info = 0;
-        nfev++;
-        dg2 = 0;
-
-        for (var j = 0; j < state.g.Length; ++j)
-            dg2 += state.g[j] * s[j];
-
-        state.ftest1 = state.finit + stp * state.dgtest;
-
-        if (brackt && (stp <= stmin || stp >= stmax) || state.infoc == 0)
-            return ConjugateGradientCode.RoundingErrors;
-
-        if (ExactComparisons.AreEqual(stp ,stpmax )&& f <= state.ftest1 && dg2 <= state.dgtest)
-            return ConjugateGradientCode.StepHigh;
-
-        if (ExactComparisons.AreEqual(stp ,stpmin )&& (f > state.ftest1 || dg2 >= state.dgtest))
-            return ConjugateGradientCode.StepLow;
-
-        if (nfev >= maxfev)
-            return ConjugateGradientCode.MaximumEvaluations;
-
-        if (brackt && stmax - stmin <= xtol * stmax)
-            return ConjugateGradientCode.Precision;
-        // More's code has been modified so that at least one new 
-        //  function value is computed during the line search (enforcing 
-        //  at least one interpolation is not easy, since the code may 
-        //  override an interpolation) 
-
-        if (f <= state.ftest1 && Math.Abs(dg2) <= gtol * -dginit && nfev > 1)
+        // Start of iteration.
+        var runIteration = !resume;
+        while (true)
         {
-            info = 1;
-            dgout = dg2;
-            return ConjugateGradientCode.Success;
+            if (runIteration)
+            {
+                // Set the minimum and maximum steps to correspond
+                // to the present interval of uncertainty.
+
+                if (brackt)
+                {
+                    stmin = Math.Min(stx, sty);
+                    stmax = Math.Max(stx, sty);
+                }
+                else
+                {
+                    stmin = stx;
+                    stmax = stp + 4 * (stp - stx);
+                }
+
+                // Force the step to be within
+                // the bounds STPMAX and STPMIN.
+
+                stp = Math.Max(stp, stpmin);
+                stp = Math.Min(stp, stpmax);
+
+                // If an unusual termination is to occur then 
+                // let STP be the lowest point obtained so far.
+
+                if (brackt && (stp <= stmin || stp >= stmax) || nfev >= maxfev - 1 ||
+                    state.infoc == 0 || brackt && stmax - stmin <= xtol * stmax)
+                    stp = stx;
+
+                // Evaluate the function and gradient at STP
+                // and compute the directional derivative.
+
+                for (var j = 0; j < s.Length; ++j)
+                    x[j] = wa[j] + stp * s[j];
+
+                // Fetch function and gradient
+                f = Function(x);
+                state.g = Gradient(x);
+
+                info = 0;
+                nfev++;
+                dg2 = 0;
+
+                for (var j = 0; j < state.g.Length; ++j)
+                    dg2 += state.g[j] * s[j];
+
+                state.ftest1 = state.finit + stp * state.dgtest;
+
+                if (brackt && (stp <= stmin || stp >= stmax) || state.infoc == 0)
+                    return ConjugateGradientCode.RoundingErrors;
+
+                if (ExactComparisons.AreEqual(stp, stpmax) && f <= state.ftest1 && dg2 <= state.dgtest)
+                    return ConjugateGradientCode.StepHigh;
+
+                if (ExactComparisons.AreEqual(stp, stpmin) && (f > state.ftest1 || dg2 >= state.dgtest))
+                    return ConjugateGradientCode.StepLow;
+
+                if (nfev >= maxfev)
+                    return ConjugateGradientCode.MaximumEvaluations;
+
+                if (brackt && stmax - stmin <= xtol * stmax)
+                    return ConjugateGradientCode.Precision;
+                // More's code has been modified so that at least one new 
+                //  function value is computed during the line search (enforcing 
+                //  at least one interpolation is not easy, since the code may 
+                //  override an interpolation) 
+
+                if (f <= state.ftest1 && Math.Abs(dg2) <= gtol * -dginit && nfev > 1)
+                {
+                    info = 1;
+                    dgout = dg2;
+                    return ConjugateGradientCode.Success;
+                }
+            }
+
+            runIteration = true;
+
+            // In the first stage we seek a step for which the modified
+            // function has a nonpositive value and nonnegative derivative.
+            if (state.stage1 && f <= state.ftest1 && dg2 >= Math.Min(ftol, gtol) * dginit) state.stage1 = false;
+
+            // A modified function is used to predict the step only if
+            // we have not obtained a step for which the modified function
+            // has a nonpositive function value and nonnegative derivative,
+            // and if a lower function value has been obtained but the 
+            // decrease is not sufficient.
+
+            if (state.stage1 && f <= fx && f > state.ftest1)
+            {
+                // Define the modified function and derivative values
+                var fm = f - stp * state.dgtest;
+                var fxm = fx - stx * state.dgtest;
+                var fym = fy - sty * state.dgtest;
+                var dgm = dg2 - state.dgtest;
+                var dgxm = dgx - state.dgtest;
+                var dgym = dgy - state.dgtest;
+
+                // Call CSTEPM to update the interval of
+                // uncertainty and to compute the new step.
+
+                BoundedBroydenFletcherGoldfarbShanno.dcstep(ref stx, ref fxm, ref dgxm,
+                    ref sty, ref fym, ref dgym, ref stp, fm, dgm, ref brackt, stpmin, stpmax);
+
+                // Reset the function and gradient values for f.
+                fx = fxm + stx * state.dgtest;
+                fy = fym + sty * state.dgtest;
+                dgx = dgxm + state.dgtest;
+                dgy = dgym + state.dgtest;
+            }
+            else
+            {
+                // Call CSTEPM to update the interval of
+                // uncertainty and to compute the new step.
+                BoundedBroydenFletcherGoldfarbShanno.dcstep(ref stx, ref fx, ref dgx,
+                    ref sty, ref fy, ref dgy, ref stp, f, dg2, ref brackt, stpmin, stpmax);
+            }
+
+            // Force a sufficient decrease in the 
+            // size of the interval of uncertainty.
+
+            if (brackt)
+            {
+                if (Math.Abs(sty - stx) >= 0.66 * state.width1)
+                    stp = stx + 0.5 * (sty - stx);
+
+                state.width1 = state.width;
+                state.width = Math.Abs(sty - stx);
+            }
         }
-    L321:
-
-        // In the first stage we seek a step for which the modified
-        // function has a nonpositive value and nonnegative derivative.
-        if (state.stage1 && f <= state.ftest1 && dg2 >= Math.Min(ftol, gtol) * dginit) state.stage1 = false;
-
-        // A modified function is used to predict the step only if
-        // we have not obtained a step for which the modified function
-        // has a nonpositive function value and nonnegative derivative,
-        // and if a lower function value has been obtained but the 
-        // decrease is not sufficient.
-
-        if (state.stage1 && f <= fx && f > state.ftest1)
-        {
-            // Define the modified function and derivative values
-            var fm = f - stp * state.dgtest;
-            var fxm = fx - stx * state.dgtest;
-            var fym = fy - sty * state.dgtest;
-            var dgm = dg2 - state.dgtest;
-            var dgxm = dgx - state.dgtest;
-            var dgym = dgy - state.dgtest;
-
-            // Call CSTEPM to update the interval of
-            // uncertainty and to compute the new step.
-
-            BoundedBroydenFletcherGoldfarbShanno.dcstep(ref stx, ref fxm, ref dgxm,
-                ref sty, ref fym, ref dgym, ref stp, fm, dgm, ref brackt, stpmin, stpmax);
-
-            // Reset the function and gradient values for f.
-            fx = fxm + stx * state.dgtest;
-            fy = fym + sty * state.dgtest;
-            dgx = dgxm + state.dgtest;
-            dgy = dgym + state.dgtest;
-        }
-        else
-        {
-            // Call CSTEPM to update the interval of
-            // uncertainty and to compute the new step.
-            BoundedBroydenFletcherGoldfarbShanno.dcstep(ref stx, ref fx, ref dgx,
-                ref sty, ref fy, ref dgy, ref stp, f, dg2, ref brackt, stpmin, stpmax);
-        }
-
-        // Force a sufficient decrease in the 
-        // size of the interval of uncertainty.
-
-        if (brackt)
-        {
-            if (Math.Abs(sty - stx) >= 0.66 * state.width1)
-                stp = stx + 0.5 * (sty - stx);
-
-            state.width1 = state.width;
-            state.width = Math.Abs(sty - stx);
-        }
-
-        goto L30;
     }
 }
