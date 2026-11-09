@@ -69,3 +69,15 @@ User asked to remove the pre-existing blanket `#pragma warning disable` blocks t
   These are structural: public array-based API, goto-based Fortran ports, exact float
   semantics and nested scoping blocks.
 - Verification: Release build 0 errors; Mathematics 954 passed / 1 skipped; full test suite green.
+
+## Structural waves outcome (2026-11-09)
+
+After the mechanical wave, the structural rules were reduced as follows:
+- S1199 (103) fixed: nested scoping blocks flattened with collision-free local renames.
+- S1244 (218) fixed: ExactComparisons preserves `==`/`!=` semantics (NaN unequal, +/-0 equal).
+- Residual 52 fixed: S1871, S1905, S2234, S1481, S2681, S125, S4663, S2245, S1751,
+  SYSLIB0051/S3925.
+- Remaining: **S2368 (582)** public multidimensional/jagged array parameters and
+  **S907 (275)** goto-based Fortran ports. Both require a structural redesign/rewrite,
+  not a mechanical pass.
+- Every wave was verified: Mathematics 954 passed / 1 skipped; full solution build 0 errors.
