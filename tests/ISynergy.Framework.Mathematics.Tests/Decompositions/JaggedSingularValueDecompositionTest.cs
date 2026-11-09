@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -97,9 +98,7 @@ public class JaggedSingularValueDecompositionTest
 
         JaggedSingularValueDecomposition target = new(value, true, true, false);
 
-        double[][] actual = Matrix.Dot(Matrix.Dot(
-            target.LeftSingularVectors, target.DiagonalMatrix),
-            target.RightSingularVectors.Transpose());
+        double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
         // Checking the decomposition
         Assert.IsTrue(Matrix.IsEqual(actual, value, 1e-2));
@@ -154,9 +153,7 @@ public class JaggedSingularValueDecompositionTest
 
         JaggedSingularValueDecomposition target = new(value, true, true, true);
 
-        double[][] actual = Matrix.Dot(
-            Matrix.Dot(target.LeftSingularVectors, target.DiagonalMatrix),
-            target.RightSingularVectors.Transpose());
+        double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
         // Checking the decomposition
         Assert.IsTrue(Matrix.IsEqual(actual, value, 1e-2));
@@ -209,9 +206,7 @@ public class JaggedSingularValueDecompositionTest
 
         JaggedSingularValueDecomposition target = new(value, true, true, false);
 
-        double[][] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
-                            target.DiagonalMatrix),
-                            target.RightSingularVectors.Transpose());
+        double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
         // Checking the decomposition
         Assert.IsTrue(Matrix.IsEqual(actual, value, 1e-2));
@@ -418,9 +413,7 @@ public class JaggedSingularValueDecompositionTest
 
         {
             double[][] expected = value;
-            double[][] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
-                target.DiagonalMatrix),
-                target.RightSingularVectors.Transpose());
+            double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
             // Checking the decomposition
             Assert.IsTrue(Matrix.IsEqual(actual, expected, 1e-8));
@@ -430,7 +423,7 @@ public class JaggedSingularValueDecompositionTest
             double[] solution = target.Solve(output);
 
             double[] expected = output;
-            double[] actual = value.Dot(solution);
+            double[] actual = Matrix.Dot(new Jagged<double>(value), solution);
 
             Assert.IsTrue(Matrix.IsEqual(actual, expected, 1e-8));
         }
@@ -464,9 +457,7 @@ public class JaggedSingularValueDecompositionTest
 
         {
             double[][] expected = value;
-            double[][] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
-                target.DiagonalMatrix),
-                target.RightSingularVectors.Transpose());
+            double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.LeftSingularVectors), new Jagged<double>(target.DiagonalMatrix))), new Jagged<double>(target.RightSingularVectors.Transpose()));
 
             // Checking the decomposition
             Assert.IsTrue(Matrix.IsEqual(actual, expected, 1e-8));
@@ -474,11 +465,7 @@ public class JaggedSingularValueDecompositionTest
 
         {
             double[][] expected = value.Inverse();
-            double[][] actual = Matrix.Dot(Matrix.Dot(
-                target.RightSingularVectors.Transpose().Inverse(),
-                target.DiagonalMatrix.Inverse()),
-                target.LeftSingularVectors.Inverse()
-                );
+            double[][] actual = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(target.RightSingularVectors.Transpose().Inverse()), new Jagged<double>(target.DiagonalMatrix.Inverse()))), new Jagged<double>(target.LeftSingularVectors.Inverse()));
 
             // Checking the invers decomposition
             Assert.IsTrue(Matrix.IsEqual(actual, expected, 1e-8));
@@ -489,7 +476,7 @@ public class JaggedSingularValueDecompositionTest
             double[][] solution = target.SolveForDiagonal(output);
 
             double[][] expected = Jagged.Diagonal(output);
-            double[][] actual = value.Dot(solution);
+            double[][] actual = Matrix.Dot(new Jagged<double>(value), new Jagged<double>(solution));
 
             Assert.IsTrue(Matrix.IsEqual(actual, expected, 1e-8));
         }

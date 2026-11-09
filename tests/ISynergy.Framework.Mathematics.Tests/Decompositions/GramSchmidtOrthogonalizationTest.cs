@@ -1,4 +1,4 @@
-using ISynergy.Framework.Mathematics.Abstractions;
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,7 +44,7 @@ public class GramSchmidtTest
 
         double[,] inv = Q.Inverse();
         double[,] transpose = Q.Transpose();
-        double[,] m = Matrix.Dot(Q, transpose);
+        double[,] m = Matrix.Dot(new Matrix<double>(Q), new Matrix<double>(transpose));
 
         Assert.IsTrue(Matrix.IsEqual(m, Matrix.Identity(2), 1e-10));
         Assert.IsTrue(Matrix.IsEqual(inv, transpose, 1e-10));

@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -104,8 +105,7 @@ public class SingularValueDecompositionTest
 
         SingularValueDecomposition target = new(value, true, true, false);
 
-        double[,] actual = target.LeftSingularVectors.Dot(
-            target.DiagonalMatrix).Dot(target.RightSingularVectors.Transpose());
+        double[,] actual = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(target.LeftSingularVectors), new Matrix<double>(target.DiagonalMatrix))), new Matrix<double>(target.RightSingularVectors.Transpose()));
 
         // Checking the decomposition
         Assert.IsTrue(Matrix.IsEqual(actual, value, 1e-2));
@@ -168,8 +168,7 @@ public class SingularValueDecompositionTest
 
         SingularValueDecomposition target = new(value, true, true, true);
 
-        double[,] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
-            Matrix.Diagonal(target.Diagonal)), target.RightSingularVectors.Transpose());
+        double[,] actual = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(target.LeftSingularVectors), new Matrix<double>(Matrix.Diagonal(target.Diagonal)))), new Matrix<double>(target.RightSingularVectors.Transpose()));
 
         // Checking the decomposition
         Assert.IsTrue(Matrix.IsEqual(actual, value, 0.01));
@@ -225,8 +224,7 @@ public class SingularValueDecompositionTest
 
         SingularValueDecomposition target = new(value, true, true, false);
 
-        double[,] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
-            Matrix.Diagonal(target.Diagonal)), target.RightSingularVectors.Transpose());
+        double[,] actual = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(target.LeftSingularVectors), new Matrix<double>(Matrix.Diagonal(target.Diagonal)))), new Matrix<double>(target.RightSingularVectors.Transpose()));
 
         // Checking the decomposition
         Assert.IsTrue(Matrix.IsEqual(actual, value, 0.01));
@@ -438,8 +436,7 @@ public class SingularValueDecompositionTest
 
         {
             double[,] expected = value;
-            double[,] actual = Matrix.Dot(Matrix.Dot(target.LeftSingularVectors,
-                Matrix.Diagonal(target.Diagonal)), target.RightSingularVectors.Transpose());
+            double[,] actual = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(target.LeftSingularVectors), new Matrix<double>(Matrix.Diagonal(target.Diagonal)))), new Matrix<double>(target.RightSingularVectors.Transpose()));
 
             // Checking the decomposition
             Assert.IsTrue(Matrix.IsEqual(actual, expected, 1e-8));
@@ -450,7 +447,7 @@ public class SingularValueDecompositionTest
             double[] solution = target.Solve(output);
 
             double[] expected = output;
-            double[] actual = value.Dot(solution);
+            double[] actual = Matrix.Dot(new Matrix<double>(value), solution);
 
             Assert.IsTrue(Matrix.IsEqual(actual, expected, 1e-8));
         }

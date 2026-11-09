@@ -1,4 +1,4 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -390,8 +390,8 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
             throw new InvalidOperationException(UndefinedMessage);
 
         if (robust)
-            return LeftTriangularFactor.Dot(DiagonalMatrix).DotWithTransposed(LeftTriangularFactor);
-        return LeftTriangularFactor.DotWithTransposed(LeftTriangularFactor);
+            return Matrix.DotWithTransposed(new Matrix<double>(Matrix.Dot(new Matrix<double>(LeftTriangularFactor), new Matrix<double>(DiagonalMatrix))), new Matrix<double>(LeftTriangularFactor));
+        return Matrix.DotWithTransposed(new Matrix<double>(LeftTriangularFactor), new Matrix<double>(LeftTriangularFactor));
     }
 
     /// <summary>
@@ -403,7 +403,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     public double[,] GetInformationMatrix()
     {
         var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
+        return Matrix.TransposeAndDot(new Matrix<double>(X), new Matrix<double>(X)).Inverse();
     }
 
     private void LLt()

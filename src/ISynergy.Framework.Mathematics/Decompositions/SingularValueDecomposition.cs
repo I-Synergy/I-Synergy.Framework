@@ -1,8 +1,9 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -842,7 +843,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -859,7 +860,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             }
 
         //(V x L* x Ut x Y)
-        return Matrix.Dot(VLU, Y);
+        return Matrix.Dot(new Matrix<double>(VLU), new Matrix<double>(Y));
     }
 
     /// <summary>
@@ -900,7 +901,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var urows = LeftSingularVectors.Rows();
@@ -916,7 +917,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             }
 
         //(V x L* x Ut x Y)
-        return Matrix.Dot(VLU, Y);
+        return Matrix.Dot(new Matrix<double>(VLU), Y);
     }
 
     /// <summary>
@@ -956,7 +957,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     /// </summary>
     public double[,] Reverse()
     {
-        return LeftSingularVectors.Dot(DiagonalMatrix).DotWithTransposed(RightSingularVectors);
+        return Matrix.DotWithTransposed(new Matrix<double>(Matrix.Dot(new Matrix<double>(LeftSingularVectors), new Matrix<double>(DiagonalMatrix))), new Matrix<double>(RightSingularVectors));
     }
 
     /// <summary>
@@ -1029,7 +1030,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -1044,7 +1045,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 VLU[i, j] = sum;
             }
 
-        return Matrix.Dot(Y, VLU);
+        return Matrix.Dot(new Matrix<double>(Y), new Matrix<double>(VLU));
     }
 
     /// <summary>
@@ -1084,7 +1085,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        double[,] VL = Matrix.Dot(RightSingularVectors, Ls);
+        double[,] VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -1099,7 +1100,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 VLU[i, j] = sum;
             }
 
-        return Y.Dot(VLU);
+        return Matrix.Dot(Y, new Matrix<double>(VLU));
     }
 
     /// <summary>
@@ -1139,7 +1140,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        double[,] VL = Matrix.Dot(RightSingularVectors, Ls);
+        double[,] VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -1155,7 +1156,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             }
 
         //(V x L* x Ut x Y)
-        return VLU.DotWithDiagonal(Y);
+        return Matrix.DotWithDiagonal(new Matrix<double>(VLU), Y);
     }
 
     #region ICloneable Members

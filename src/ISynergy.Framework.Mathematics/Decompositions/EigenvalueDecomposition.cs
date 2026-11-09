@@ -1,6 +1,7 @@
-using ISynergy.Framework.Mathematics.Common;
+﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -192,7 +193,7 @@ public sealed class EigenvalueDecomposition : ICloneable
     /// </summary>
     public double[,] Reverse()
     {
-        return Eigenvectors.DotWithDiagonal(RealEigenvalues).Divide(Eigenvectors);
+        return Matrix.DotWithDiagonal(new Matrix<double>(Eigenvectors), RealEigenvalues).Divide(Eigenvectors);
     }
     #region Private methods
 

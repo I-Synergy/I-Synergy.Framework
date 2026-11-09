@@ -1,7 +1,8 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Differentiation;
 [TestClass]
@@ -153,7 +154,7 @@ public class FiniteDifferencesTest
         for (int i = 0; i < 10; i++)
         {
             double[,] mat = Matrix.Random(Size);
-            double[,] Q = mat.DotWithTransposed(mat);
+            double[,] Q = Matrix.DotWithTransposed(new Matrix<double>(mat), new Matrix<double>(mat));
             double[] d = Vector.Random(Size);
 
             QuadraticObjectiveFunction qof = new(Q, d);

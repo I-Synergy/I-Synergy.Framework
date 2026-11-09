@@ -1,4 +1,4 @@
-
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -33,7 +33,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(int[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(double[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(double[] a, int[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(double[] a, float[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(float[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(long[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -241,7 +241,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(decimal[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -305,7 +305,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(byte[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -369,7 +369,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(short[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -433,7 +433,7 @@ public static partial class Jagged
     /// 
     public static double[][] Outer(sbyte[] a, double[] b)
     {
-        return Outer(a, b, Jagged.Zeros<double>(a.Length, b.Length));
+        return Outer(a, b, new Jagged<double>(Jagged.Zeros<double>(a.Length, b.Length)));
     }
 
     /// <summary>
@@ -497,12 +497,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(int[] a, int[] b, double[][] result)
+    public static double[][] Outer(int[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -533,12 +534,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(int[] a, double[] b, double[][] result)
+    public static double[][] Outer(int[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -587,12 +589,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(int[] a, float[] b, double[][] result)
+    public static double[][] Outer(int[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -605,12 +608,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(double[] a, double[] b, double[][] result)
+    public static double[][] Outer(double[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = a[i] * b[j];
-        return result;
+                resultArray[i][j] = a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -641,12 +645,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(double[] a, int[] b, double[][] result)
+    public static double[][] Outer(double[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = a[i] * b[j];
-        return result;
+                resultArray[i][j] = a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -677,12 +682,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(double[] a, float[] b, double[][] result)
+    public static double[][] Outer(double[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = a[i] * b[j];
-        return result;
+                resultArray[i][j] = a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -749,12 +755,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(float[] a, float[] b, double[][] result)
+    public static double[][] Outer(float[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -803,12 +810,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(float[] a, double[] b, double[][] result)
+    public static double[][] Outer(float[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = a[i] * b[j];
-        return result;
+                resultArray[i][j] = a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -875,12 +883,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(float[] a, int[] b, double[][] result)
+    public static double[][] Outer(float[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -911,12 +920,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(long[] a, long[] b, double[][] result)
+    public static double[][] Outer(long[] a, long[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -965,12 +975,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(long[] a, double[] b, double[][] result)
+    public static double[][] Outer(long[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = a[i] * b[j];
-        return result;
+                resultArray[i][j] = a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1037,12 +1048,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(long[] a, int[] b, double[][] result)
+    public static double[][] Outer(long[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1091,12 +1103,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(long[] a, float[] b, double[][] result)
+    public static double[][] Outer(long[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1145,12 +1158,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(decimal[] a, decimal[] b, double[][] result)
+    public static double[][] Outer(decimal[] a, decimal[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)(a[i] * b[j]);
-        return result;
+                resultArray[i][j] = (double)(a[i] * b[j]);
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1199,12 +1213,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(decimal[] a, double[] b, double[][] result)
+    public static double[][] Outer(decimal[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1271,12 +1286,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(decimal[] a, int[] b, double[][] result)
+    public static double[][] Outer(decimal[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1325,12 +1341,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(decimal[] a, float[] b, double[][] result)
+    public static double[][] Outer(decimal[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1379,12 +1396,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(byte[] a, byte[] b, double[][] result)
+    public static double[][] Outer(byte[] a, byte[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1433,12 +1451,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(byte[] a, double[] b, double[][] result)
+    public static double[][] Outer(byte[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1505,12 +1524,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(byte[] a, int[] b, double[][] result)
+    public static double[][] Outer(byte[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1559,12 +1579,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(byte[] a, float[] b, double[][] result)
+    public static double[][] Outer(byte[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1613,12 +1634,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(short[] a, short[] b, double[][] result)
+    public static double[][] Outer(short[] a, short[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1667,12 +1689,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(short[] a, double[] b, double[][] result)
+    public static double[][] Outer(short[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1739,12 +1762,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(short[] a, int[] b, double[][] result)
+    public static double[][] Outer(short[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1793,12 +1817,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(short[] a, float[] b, double[][] result)
+    public static double[][] Outer(short[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1847,12 +1872,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(sbyte[] a, sbyte[] b, double[][] result)
+    public static double[][] Outer(sbyte[] a, sbyte[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1901,12 +1927,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(sbyte[] a, double[] b, double[][] result)
+    public static double[][] Outer(sbyte[] a, double[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -1973,12 +2000,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(sbyte[] a, int[] b, double[][] result)
+    public static double[][] Outer(sbyte[] a, int[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).
@@ -2027,12 +2055,13 @@ public static partial class Jagged
     ///   which takes as input a pair of vectors and produces a scalar.
     /// </remarks>
     /// 
-    public static double[][] Outer(sbyte[] a, float[] b, double[][] result)
+    public static double[][] Outer(sbyte[] a, float[] b, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < a.Length; i++)
             for (var j = 0; j < b.Length; j++)
-                result[i][j] = (double)a[i] * b[j];
-        return result;
+                resultArray[i][j] = (double)a[i] * b[j];
+        return resultArray;
     }
     /// <summary>
     ///   Gets the outer product (matrix product) between two vectors (a*bT).

@@ -1,6 +1,7 @@
-using ISynergy.Framework.Mathematics.Decompositions.Base;
+﻿using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -396,7 +397,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// </summary>
     public double[,] Reverse()
     {
-        return LowerTriangularFactor.Dot(UpperTriangularFactor)
+        return Matrix.Dot(new Matrix<double>(LowerTriangularFactor), new Matrix<double>(UpperTriangularFactor))
             .Get(PivotPermutationVector.ArgSort(), null);
     }
 
@@ -409,7 +410,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     public double[,] GetInformationMatrix()
     {
         var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
+        return Matrix.TransposeAndDot(new Matrix<double>(X), new Matrix<double>(X)).Inverse();
     }
 
     /// <summary>

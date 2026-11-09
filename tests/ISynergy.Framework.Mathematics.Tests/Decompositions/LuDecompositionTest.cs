@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -228,7 +229,7 @@ public class LuDecompositionTest
         int[] idx = p.ArgSort();
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[,] r = target.LowerTriangularFactor.Dot(target.UpperTriangularFactor).Get(idx, null).Transpose();
+        double[,] r = Matrix.Dot(new Matrix<double>(target.LowerTriangularFactor), new Matrix<double>(target.UpperTriangularFactor)).Get(idx, null).Transpose();
 #pragma warning restore CS0618 // Type or member is obsolete
 
         Assert.IsTrue(Matrix.IsEqual(b, r, 1e-3));
@@ -279,7 +280,7 @@ public class LuDecompositionTest
 
         // Certify that the decomposition has worked as expected by
         // trying to reconstruct the original matrix with R = L * U:
-        double[,] reconstruction = L.Dot(U);
+        double[,] reconstruction = Matrix.Dot(new Matrix<double>(L), new Matrix<double>(U));
 
         // reconstruction should be equal to
         // {

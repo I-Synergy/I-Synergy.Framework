@@ -1,4 +1,4 @@
-using ISynergy.Framework.Mathematics.Abstractions;
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -161,10 +161,10 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
                 grad => { }
             );
         // Compute error gradient using Jacobian
-        Jacobian.Dot(Residuals, gradient);
+        Matrix.Dot(new Jagged<double>(Jacobian), Residuals, gradient);
 
         // Compute Quasi-Hessian Matrix approximation
-        Jacobian.DotWithTransposed(Jacobian, Hessian);
+        Matrix.DotWithTransposed(new Jagged<double>(Jacobian), new Jagged<double>(Jacobian), new Jagged<double>(Hessian));
 
         decomposition = new JaggedSingularValueDecomposition(Hessian,
             true, true, true);

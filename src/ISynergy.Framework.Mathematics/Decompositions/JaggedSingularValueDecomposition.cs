@@ -1,8 +1,9 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -853,7 +854,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         }
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Jagged<double>(RightSingularVectors), new Jagged<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -870,7 +871,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
             }
 
         //(V x L* x Ut x Y)
-        return Matrix.Dot(VLU, Y);
+        return Matrix.Dot(new Jagged<double>(VLU), new Jagged<double>(Y));
     }
 
     /// <summary>
@@ -914,7 +915,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         }
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Jagged<double>(RightSingularVectors), new Jagged<double>(Ls));
 
         //(V x L* x Ut) x Y
         var urows = LeftSingularVectors.Length;
@@ -932,8 +933,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
             }
         }
 
-        //(V x L* x Ut x Y)
-        return Matrix.Dot(VLU, Y);
+        return Matrix.Dot(new Jagged<double>(VLU), Y);
     }
 
     /// <summary>
@@ -991,7 +991,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
     /// </summary>
     public double[][] Reverse()
     {
-        return LeftSingularVectors.Dot(DiagonalMatrix).DotWithTransposed(RightSingularVectors);
+        return Matrix.DotWithTransposed(new Jagged<double>(Matrix.Dot(new Jagged<double>(LeftSingularVectors), new Jagged<double>(DiagonalMatrix))), new Jagged<double>(RightSingularVectors));
     }
 
     /// <summary>
@@ -1073,7 +1073,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         }
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Jagged<double>(RightSingularVectors), new Jagged<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Length;
@@ -1092,7 +1092,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
             }
         }
 
-        return Matrix.Dot(Y, VLU);
+        return Matrix.Dot(new Jagged<double>(Y), new Jagged<double>(VLU));
     }
 
     /// <summary>
@@ -1135,7 +1135,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
         }
 
         //(V x L*) x Ut x Y
-        double[][] VL = Matrix.Dot(RightSingularVectors, Ls);
+        double[][] VL = Matrix.Dot(new Jagged<double>(RightSingularVectors), new Jagged<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Length;
@@ -1153,7 +1153,7 @@ public sealed class JaggedSingularValueDecomposition : ICloneable, ISolverArrayD
             }
         }
 
-        return Y.Dot(VLU);
+        return Matrix.Dot(Y, new Jagged<double>(VLU));
     }
 
     #region ICloneable Members

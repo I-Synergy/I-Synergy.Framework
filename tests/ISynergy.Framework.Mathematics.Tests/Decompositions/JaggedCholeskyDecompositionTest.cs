@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -20,7 +21,7 @@ public class JaggedCholeskyDecompositionTest
                 double[][] value = Jagged.Magic(n);
 
                 // Make symmetric
-                value = Matrix.Dot(value, value.Transpose());
+                value = Matrix.Dot(new Jagged<double>(value), new Jagged<double>(value.Transpose()));
 
                 value[i][j] = double.NaN;
                 value[j][i] = double.NaN;
@@ -71,7 +72,7 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.0001));
 
         // Decomposition Identity
-        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(L, L.Transpose()), value, 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Jagged<double>(L), new Jagged<double>(L.Transpose())), value, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-3));
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
@@ -240,7 +241,7 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(D, diagonal, 0.001));
 
         // Decomposition Identity
-        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(Matrix.Dot(L, D), L.Transpose()), value, 0.001));
+        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(L), new Jagged<double>(D))), new Jagged<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
@@ -281,7 +282,7 @@ public class JaggedCholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(D, diagonal, 0.001));
 
         // Decomposition Identity
-        Assert.IsTrue(Matrix.IsEqual(L.Dot(D).Dot(L.Transpose()), value, 0.001));
+        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(L), new Jagged<double>(D))), new Jagged<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);

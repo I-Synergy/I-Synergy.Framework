@@ -73,8 +73,8 @@ public class DistanceTest
         {
             double[] bla = cov.Solve(x);
             double[] blo = svd.Solve(x);
-            double[] ble = inv.Dot(x);
-            double[] bli = pinv.Dot(x);
+            double[] ble = Matrix.Dot(new Matrix<double>(inv), x);
+            double[] bli = Matrix.Dot(new Matrix<double>(pinv), x);
 
             Assert.IsTrue(bla.IsEqual(blo, 1e-6));
             Assert.IsTrue(bla.IsEqual(ble, 1e-6));

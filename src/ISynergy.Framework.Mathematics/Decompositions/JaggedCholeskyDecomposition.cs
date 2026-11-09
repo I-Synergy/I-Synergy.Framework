@@ -399,8 +399,8 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
             throw new InvalidOperationException(UndefinedMessage);
 
         if (robust)
-            return LeftTriangularFactor.Dot(DiagonalMatrix).DotWithTransposed(LeftTriangularFactor);
-        return LeftTriangularFactor.DotWithTransposed(LeftTriangularFactor);
+            return Matrix.DotWithTransposed(new Jagged<double>(Matrix.Dot(new Jagged<double>(LeftTriangularFactor), new Jagged<double>(DiagonalMatrix))), new Jagged<double>(LeftTriangularFactor));
+        return Matrix.DotWithTransposed(new Jagged<double>(LeftTriangularFactor), new Jagged<double>(LeftTriangularFactor));
     }
 
     /// <summary>
@@ -412,7 +412,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     public double[][] GetInformationMatrix()
     {
         var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
+        return Matrix.TransposeAndDot(new Jagged<double>(X), new Jagged<double>(X)).Inverse();
     }
 
     private void LLt()

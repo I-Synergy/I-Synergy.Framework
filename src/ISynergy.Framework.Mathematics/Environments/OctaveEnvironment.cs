@@ -1,7 +1,8 @@
-using ISynergy.Framework.Mathematics.Common;
+﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Reflection;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -380,7 +381,7 @@ public abstract class OctaveEnvironment
         /// 
         public static Mat operator *(Mat a, Mat b)
         {
-            return Matrix.Dot(a.matrix, b.matrix);
+            return Matrix.Dot(new Matrix<double>(a.matrix), new Matrix<double>(b.matrix));
         }
 
         /// <summary>

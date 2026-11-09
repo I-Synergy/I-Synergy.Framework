@@ -1,9 +1,10 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Optimization;
 [TestClass]
@@ -1249,7 +1250,7 @@ public class GoldfarbIdnaniTest
         Assert.IsTrue(success);
 
         double[] soln = gfI.Solution;
-        double value = Math.Sqrt(Matrix.Dot(Matrix.Dot(soln, Q), soln.Transpose())[0]);
+                double value = Math.Sqrt(Matrix.Dot(Matrix.Dot(soln, new Matrix<double>(Q)), new Matrix<double>(soln.Transpose()))[0]);
 
         double expectedSol = 0.049316494677822;
         double actualSol = value;
@@ -1295,7 +1296,7 @@ public class GoldfarbIdnaniTest
         Assert.IsTrue(success);
 
         double[] soln = gfI.Solution;
-        double value = Math.Sqrt(Matrix.Dot(Matrix.Dot(soln, Q), soln.Transpose())[0]);
+                double value = Math.Sqrt(Matrix.Dot(Matrix.Dot(soln, new Matrix<double>(Q)), new Matrix<double>(soln.Transpose()))[0]);
 
         double expectedSol = 0.048224950997808;
         double actualSol = value;
@@ -1342,7 +1343,7 @@ public class GoldfarbIdnaniTest
         Assert.IsTrue(success);
 
         double[] soln = gfI.Solution;
-        double value = Math.Sqrt(Matrix.Dot(Matrix.Dot(soln, Q), soln.Transpose())[0]);
+                double value = Math.Sqrt(Matrix.Dot(Matrix.Dot(soln, new Matrix<double>(Q)), new Matrix<double>(soln.Transpose()))[0]);
 
         double expectedSol = 0.052870914138455;
         double actualSol = value;

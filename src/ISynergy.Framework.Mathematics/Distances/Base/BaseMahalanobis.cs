@@ -1,4 +1,4 @@
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
 
 
@@ -89,7 +89,7 @@ public abstract class BaseMahalanobis : IMetric<double[]>, ICloneable
         else if (_chol is not null)
             z = _chol.Solve(d);
         else
-            z = _precision.Dot(d);
+            z = Matrix.Dot(new Matrix<double>(_precision), d);
 
         double sum = 0.0;
         for (var i = 0; i < d.Length; i++)

@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -69,7 +70,7 @@ public class QrDecompositionTest
 
         // Decomposition Identity
         double[,] Q = target.OrthogonalFactor;
-        double[,] QQt = Q.DotWithTransposed(Q);
+        double[,] QQt = Matrix.DotWithTransposed(new Matrix<double>(Q), new Matrix<double>(Q));
         Assert.IsTrue(Matrix.IsEqual(QQt, Matrix.Identity(3), 1e-6));
         Assert.IsTrue(Matrix.IsEqual(value, target.Reverse(), 1e-6));
 

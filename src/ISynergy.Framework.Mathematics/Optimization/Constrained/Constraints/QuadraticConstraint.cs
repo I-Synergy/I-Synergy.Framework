@@ -1,4 +1,4 @@
-using ISynergy.Framework.Mathematics.Abstractions;
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 
@@ -73,7 +73,7 @@ public class QuadraticConstraint : NonlinearConstraint
     public double[] LinearTerms { get; }
     private double function(double[] x)
     {
-        return x.DotAndDot(QuadraticTerms, x) + LinearTerms.Dot(x);
+        return x.DotAndDot(new Matrix<double>(QuadraticTerms), x) + LinearTerms.Dot(x);
     }
 
     private double[] gradient(double[] x)

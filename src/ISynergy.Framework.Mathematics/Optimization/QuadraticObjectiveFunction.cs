@@ -1,9 +1,10 @@
-using ISynergy.Framework.Mathematics.Exceptions;
+﻿using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -318,14 +319,14 @@ public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEq
 
     private double function(double[] input)
     {
-        var a = 0.5 * input.DotAndDot(QuadraticTerms, input);
+        var a = 0.5 * input.DotAndDot(new Matrix<double>(QuadraticTerms), input);
         var b = input.Dot(LinearTerms);
         return a + b + ConstantTerm;
     }
 
     private double[] gradient(double[] input)
     {
-        var g = QuadraticTerms.Dot(input);
+        var g = Matrix.Dot(new Matrix<double>(QuadraticTerms), input);
         g.Add(LinearTerms, g);
 
         return g;

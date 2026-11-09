@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -60,7 +61,7 @@ public class JaggedEigenvalueDecompositionTest
 
 
         // Decomposition identity
-        double[][] actualA = Matrix.Dot(Matrix.Dot(Q, D), Q.Inverse());
+        double[][] actualA = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(Q), new Jagged<double>(D))), new Jagged<double>(Q.Inverse()));
 
         Assert.IsTrue(Matrix.IsEqual(expectedD, D, 0.00001));
         Assert.IsTrue(Matrix.IsEqual(A, actualA, 0.0001));
@@ -96,7 +97,7 @@ public class JaggedEigenvalueDecompositionTest
         ];
 
         // Decomposition identity
-        double[][] actualA = Matrix.Dot(Matrix.Dot(Q, D), Q.Inverse());
+        double[][] actualA = Matrix.Dot(new Jagged<double>(Matrix.Dot(new Jagged<double>(Q), new Jagged<double>(D))), new Jagged<double>(Q.Inverse()));
 
         Assert.IsTrue(Matrix.IsEqual(expectedD, D, 1e-5));
         Assert.IsTrue(Matrix.IsEqual(A, actualA, 1e-5));

@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -96,8 +97,8 @@ public class GeneralizedEigenvalueDecompositionTest
                 double[,] D = gevd.DiagonalMatrix;
 
                 // A*V = B*V*D
-                double[,] AV = Matrix.Dot(A, V);
-                double[,] BVD = Matrix.Dot(Matrix.Dot(B, V), D);
+                double[,] AV = Matrix.Dot(new Matrix<double>(A), new Matrix<double>(V));
+                double[,] BVD = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(B), new Matrix<double>(V))), new Matrix<double>(D));
 
                 Assert.IsTrue(Matrix.IsEqual(AV, BVD, 0.0000001));
             }
@@ -115,8 +116,8 @@ public class GeneralizedEigenvalueDecompositionTest
             double[,] D = gevd.DiagonalMatrix;
 
             // A*V = B*V*D
-            double[,] AV = Matrix.Dot(A, V);
-            double[,] BVD = Matrix.Dot(Matrix.Dot(B, V), D);
+                double[,] AV = Matrix.Dot(new Matrix<double>(A), new Matrix<double>(V));
+                double[,] BVD = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(B), new Matrix<double>(V))), new Matrix<double>(D));
 
             Assert.IsTrue(Matrix.IsEqual(AV, BVD, 0.0000001));
         }
@@ -155,8 +156,8 @@ public class GeneralizedEigenvalueDecompositionTest
         double[,] D = gevd.DiagonalMatrix;
 
         // A*V = B*V*D
-        double[,] AV = Matrix.Dot(A, V);
-        double[,] BVD = Matrix.Dot(Matrix.Dot(B, V), D);
+                double[,] AV = Matrix.Dot(new Matrix<double>(A), new Matrix<double>(V));
+                double[,] BVD = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(B), new Matrix<double>(V))), new Matrix<double>(D));
         Assert.IsTrue(Matrix.IsEqual(AV, BVD, 0.000001));
 
         double[,] expectedVectors =

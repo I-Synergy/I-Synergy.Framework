@@ -968,10 +968,10 @@ public partial class MatrixTest
 #pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(new double[] { 9, 4 }.IsEqual(vcut));
 
-        double[] mv = m.Dot(v); // { 24, 32 }
-        double[] vm = vcut.Dot(m); // { 8, 49, 38 }
-        double[,] md = m.DotWithDiagonal(v); // { { 0, 20, 4 }, { 18, 4, 10 } }
-        double[,] mmt = m.DotWithTransposed(m); // { { 29, 15 }, { 15, 30 } }
+        double[] mv = Matrix.Dot(new Matrix<double>(m), v);
+        double[] vm = Matrix.Dot(vcut, new Matrix<double>(m));
+        double[,] md = Matrix.DotWithDiagonal(new Matrix<double>(m), v);
+        double[,] mmt = Matrix.DotWithTransposed(new Matrix<double>(m), new Matrix<double>(m));
 
         Assert.IsTrue(new double[] { 24, 32 }.IsEqual(mv));
         Assert.IsTrue(new double[] { 8, 49, 38 }.IsEqual(vm));
@@ -1291,7 +1291,7 @@ public partial class MatrixTest
         double[][] actual3 = actual2.ToJagged();
 
         double[,] actual1 = a.Outer(b);
-        double[][] actual3a = a.Outer(b, actual3);
+        double[][] actual3a = a.Outer(b, new Jagged<double>(actual3));
 
         Assert.AreSame(actual3, actual3a);
 
@@ -1440,8 +1440,8 @@ public partial class MatrixTest
         // We can confirm this is indeed the inverse by
         // checking whether "inv(matrix) * matrix" and
         // "matrix * inv(matrix)" equals I (identity):
-        double[,] a = inv.Dot(matrix);
-        double[,] b = matrix.Dot(inv);
+        double[,] a = Matrix.Dot(new Matrix<double>(inv), new Matrix<double>(matrix));
+        double[,] b = Matrix.Dot(new Matrix<double>(matrix), new Matrix<double>(inv));
 
         // Again we write the result:
         string strA = a.ToCSharp();
@@ -1492,7 +1492,7 @@ public partial class MatrixTest
         // We can confirm this is indeed the pseudo-inverse 
         // by checking whether "matrix * pinv(matrix) * matrix"
         // equals the original matrix:
-        double[,] r = matrix.Dot(pinv.Dot(matrix));
+        double[,] r = Matrix.Dot(new Matrix<double>(matrix), new Matrix<double>(Matrix.Dot(new Matrix<double>(pinv), new Matrix<double>(matrix))));
 
         // Again we write the result:
         string strA = r.ToCSharp();
@@ -1691,8 +1691,8 @@ public partial class MatrixTest
 
         double[][] actual = Matrix.Null(value);
 
-        double[] a = Jagged.RowVector(value).Dot(expected.GetColumn(0));
-        double[] b = Jagged.RowVector(value).Dot(expected.GetColumn(1));
+        double[] a = Matrix.Dot(new Jagged<double>(Jagged.RowVector(value)), expected.GetColumn(0));
+        double[] b = Matrix.Dot(new Jagged<double>(Jagged.RowVector(value)), expected.GetColumn(1));
         Assert.IsTrue(Matrix.IsEqual(a, new[] { 0 }, 1e-6));
         Assert.IsTrue(Matrix.IsEqual(b, new[] { 0 }, 1e-6));
 
@@ -1825,12 +1825,12 @@ public partial class MatrixTest
 
         double[] b = [2, 6, 1];
         double[,] result = new double[6, 3];
-        Matrix.DivideByDiagonal(a, b, result);
+        Matrix.DivideByDiagonal(new Matrix<double>(a), b, new Matrix<double>(result));
 
         double[,] expected = Matrix.Divide(a, Matrix.Diagonal(b));
         Assert.IsTrue(expected.IsEqual(result, 1e-6));
 
-        result = Matrix.DivideByDiagonal(a.ToJagged(), b).ToMatrix();
+        result = Matrix.DivideByDiagonal(new Jagged<double>(a.ToJagged()), b).ToMatrix();
         expected = Matrix.Divide(a.ToJagged(), Jagged.Diagonal(b)).ToMatrix();
         Assert.IsTrue(expected.IsEqual(result, 1e-6));
     }
@@ -2992,7 +2992,7 @@ public partial class MatrixTest
             { 18, 21, 24, 28 },
         };
 
-        double[,] actual = Matrix.Kronecker(a, b);
+        double[,] actual = Matrix.Kronecker(new Matrix<double>(a), new Matrix<double>(b));
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 

@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Common;
+﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Formats;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -300,10 +301,10 @@ public static partial class Matrix
         var bin = System.Convert.ToString(n, 2);
         for (var i = 1; i < bin.Length; i++)
         {
-            result = Matrix.Dot(result, result);
+            result = Matrix.Dot(new Matrix<double>(result), new Matrix<double>(result));
 
             if (bin[i] == '1')
-                result = Matrix.Dot(result, matrix);
+                result = Matrix.Dot(new Matrix<double>(result), new Matrix<double>(matrix));
         }
 
         return result;

@@ -1,7 +1,8 @@
-using ISynergy.Framework.Mathematics.Common;
+﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 
 
@@ -324,7 +325,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     /// </summary>
     public double[][] Reverse()
     {
-        return OrthogonalFactor.Dot(UpperTriangularFactor);
+        return Matrix.Dot(new Jagged<double>(OrthogonalFactor), new Jagged<double>(UpperTriangularFactor));
     }
 
     /// <summary>
@@ -336,7 +337,7 @@ public sealed class JaggedQrDecomposition : ICloneable, ISolverArrayDecompositio
     public double[][] GetInformationMatrix()
     {
         var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
+        return Matrix.TransposeAndDot(new Jagged<double>(X), new Jagged<double>(X)).Inverse();
     }
 
     /// <summary>Least squares solution of <c>X * A = B</c></summary>

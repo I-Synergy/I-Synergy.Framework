@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -20,7 +21,7 @@ public class CholeskyDecompositionTest
                 double[,] value = Matrix.Magic(n);
 
                 // Make symmetric
-                value = Matrix.Dot(value, value.Transpose());
+                value = Matrix.Dot(new Matrix<double>(value), new Matrix<double>(value.Transpose()));
 
                 value[i, j] = double.NaN;
                 value[j, i] = double.NaN;
@@ -71,7 +72,7 @@ public class CholeskyDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(L, expected, 0.0001));
 
         // Decomposition Identity
-        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(L, L.Transpose()), value, 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Matrix<double>(L), new Matrix<double>(L.Transpose())), value, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-3));
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
@@ -280,7 +281,7 @@ public class CholeskyDecompositionTest
         Assert.IsTrue(chol.IsPositiveDefinite);
 
         // Decomposition Identity
-        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(Matrix.Dot(L, D), L.Transpose()), value, 0.001));
+        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(L), new Matrix<double>(D))), new Matrix<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
@@ -321,7 +322,7 @@ public class CholeskyDecompositionTest
         Assert.IsFalse(chol.IsPositiveDefinite);
 
         // Decomposition Identity
-        Assert.IsTrue(Matrix.IsEqual(L.Dot(D).Dot(L.Transpose()), value, 0.001));
+        Assert.IsTrue(Matrix.IsEqual(Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(L), new Matrix<double>(D))), new Matrix<double>(L.Transpose())), value, 0.001));
         Assert.IsTrue(Matrix.IsEqual(chol.Reverse(), value, 1e-6));
 
         Assert.AreEqual(new LuDecomposition(value).Determinant, chol.Determinant, 1e-10);
