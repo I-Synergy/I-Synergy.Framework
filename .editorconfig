@@ -283,6 +283,13 @@ dotnet_diagnostic.IL2026.severity = none
 dotnet_diagnostic.IL2067.severity = none
 dotnet_diagnostic.IL2075.severity = none
 
+# Razor/EF/WPF source generators emit partial declarations into obj/ that repeat the
+# analyzer findings of the hand-written partial (for example S3881 on a generated
+# Dispose declaration). The sources are not editable, so no analyzer should report on
+# build output at all.
+[**/obj/**]
+dotnet_analyzer_diagnostic.severity = none
+
 # CA1873 flags the implicit `params object?[]` array that every ILogger.LogX call
 # creates (143 of 172 sites) and simple property reads. Guarding each log site with
 # IsEnabled would add hundreds of branches for no measurable benefit; the logger

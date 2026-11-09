@@ -11,7 +11,9 @@ namespace ISynergy.Framework.Core.Base;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <seealso cref="IProperty{T}" />
-public class Property<T> : IProperty<T>, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+// S3881: no finalizer on this type, so GC.SuppressFinalize() is omitted (Sonar S3971 forbids it).
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
+public class Property<T> : IProperty<T>, IDisposable
 {
     /// <summary>
     /// Occurs when [value changed].
@@ -170,3 +172,4 @@ public class Property<T> : IProperty<T>, IDisposable // NOSONAR - finalizer-free
             ValueChanged = null;
     }
 }
+#pragma warning restore S3881

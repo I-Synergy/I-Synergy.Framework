@@ -62,7 +62,7 @@ public static class CursorExtensions
 
 public static class GeometryExtensions
 {
-    public static CGPath ToCGPath(this PathGeometry pathGeometry) // NOSONAR
+    public static CGPath ToCGPath(this PathGeometry pathGeometry)
     {
         var path = new CGPath();
 
@@ -75,113 +75,7 @@ public static class GeometryExtensions
 
             foreach (PathSegment pathSegment in pathFigure.Segments)
             {
-                // LineSegment
-                if (pathSegment is LineSegment lineSegment)
-                {
-                    path.AddLineToPoint(transform, lineSegment.Point);
-                    lastPoint = lineSegment.Point;
-                }
-                // PolyLineSegment
-                else if (pathSegment is PolyLineSegment polylineSegment)
-                {
-                    PointCollection points = polylineSegment.Points;
-
-                    foreach (var point in points)
-                    {
-                        path.AddLineToPoint(transform, point);
-                    }
-
-                    lastPoint = points.Count > 0 ? points[^1] : Point.Zero;
-                }
-
-                // BezierSegment
-                if (pathSegment is BezierSegment segment)
-                {
-                    path.AddCurveToPoint(
-                        transform,
-                        segment.Point1,
-                        segment.Point2,
-                        segment.Point3);
-
-                    lastPoint = segment.Point3;
-                }
-                // PolyBezierSegment
-                else if (pathSegment is PolyBezierSegment polyBezierSegment)
-                {
-                    PointCollection points = polyBezierSegment.Points;
-
-                    if (points.Count >= 3)
-                    {
-                        for (int i = 0; i < points.Count; i += 3)
-                        {
-                            path.AddCurveToPoint(
-                                transform,
-                                points[i],
-                                points[i + 1],
-                                points[i + 2]);
-                        }
-                    }
-
-                    lastPoint = points.Count > 0 ? points[^1] : Point.Zero;
-                }
-
-                // QuadraticBezierSegment
-                if (pathSegment is QuadraticBezierSegment bezierSegment)
-                {
-                    path.AddQuadCurveToPoint(
-                        transform,
-                        new nfloat(bezierSegment.Point1.X),
-                        new nfloat(bezierSegment.Point1.Y),
-                        new nfloat(bezierSegment.Point2.X),
-                        new nfloat(bezierSegment.Point2.Y));
-
-                    lastPoint = bezierSegment.Point2;
-                }
-                // PolyQuadraticBezierSegment
-                else if (pathSegment is PolyQuadraticBezierSegment polyBezierSegment)
-                {
-                    PointCollection points = polyBezierSegment.Points;
-
-                    if (points.Count >= 2)
-                    {
-                        for (int i = 0; i < points.Count; i += 2)
-                        {
-                            path.AddQuadCurveToPoint(
-                                transform,
-                                new nfloat(points[i + 0].X),
-                                new nfloat(points[i + 0].Y),
-                                new nfloat(points[i + 1].X),
-                                new nfloat(points[i + 1].Y));
-                        }
-                    }
-
-                    lastPoint = points.Count > 0 ? points[^1] : Point.Zero;
-                }
-                // ArcSegment
-                else if (pathSegment is ArcSegment arcSegment)
-                {
-                    List<Point> points = new List<Point>();
-
-                    GeometryHelper.FlattenArc(
-                        points,
-                        lastPoint,
-                        arcSegment.Point,
-                        arcSegment.Size.Width,
-                        arcSegment.Size.Height,
-                        arcSegment.RotationAngle,
-                        arcSegment.IsLargeArc,
-                        arcSegment.SweepDirection == SweepDirection.CounterClockwise,
-                        1);
-
-                    CGPoint[] cgpoints = new CGPoint[points.Count];
-
-                    for (int i = 0; i < points.Count; i++)
-                        cgpoints[i] = transform.TransformPoint(points[i]);
-
-                    path.AddLines(cgpoints);
-
-                    lastPoint = points.Count > 0 ? points[^1] : Point.Zero;
-                }
+                lastPoint = AppendSegment(path, transform, pathSegment, lastPoint);
             }
 
             if (pathFigure.IsClosed)
@@ -191,5 +85,123 @@ public static class GeometryExtensions
         }
 
         return path;
+    }
+
+    /// <summary>
+    /// Appends the geometry for a single path segment and returns the segment's last point.
+    /// </summary>
+    private static Point AppendSegment(CGPath path, CGAffineTransform transform, PathSegment pathSegment, Point lastPoint)
+    {
+        switch (pathSegment)
+        {
+            case LineSegment lineSegment:
+                path.AddLineToPoint(transform, lineSegment.Point);
+                return lineSegment.Point;
+            case PolyLineSegment polylineSegment:
+                return AppendPolyLine(path, transform, polylineSegment);
+            case BezierSegment segment:
+                path.AddCurveToPoint(transform, segment.Point1, segment.Point2, segment.Point3);
+                return segment.Point3;
+            case PolyBezierSegment polyBezierSegment:
+                return AppendPolyBezier(path, transform, polyBezierSegment);
+            case QuadraticBezierSegment bezierSegment:
+                path.AddQuadCurveToPoint(
+                    transform,
+                    new nfloat(bezierSegment.Point1.X),
+                    new nfloat(bezierSegment.Point1.Y),
+                    new nfloat(bezierSegment.Point2.X),
+                    new nfloat(bezierSegment.Point2.Y));
+                return bezierSegment.Point2;
+            case PolyQuadraticBezierSegment polyQuadraticSegment:
+                return AppendPolyQuadraticBezier(path, transform, polyQuadraticSegment);
+            case ArcSegment arcSegment:
+                return AppendArcSegment(path, transform, arcSegment, lastPoint);
+            default:
+                return lastPoint;
+        }
+    }
+
+    /// <summary>
+    /// Appends a polyline segment and returns its last point.
+    /// </summary>
+    private static Point AppendPolyLine(CGPath path, CGAffineTransform transform, PolyLineSegment polylineSegment)
+    {
+        PointCollection points = polylineSegment.Points;
+
+        foreach (var point in points)
+        {
+            path.AddLineToPoint(transform, point);
+        }
+
+        return points.Count > 0 ? points[^1] : Point.Zero;
+    }
+
+    /// <summary>
+    /// Appends a poly-bezier segment (groups of three points) and returns its last point.
+    /// </summary>
+    private static Point AppendPolyBezier(CGPath path, CGAffineTransform transform, PolyBezierSegment polyBezierSegment)
+    {
+        PointCollection points = polyBezierSegment.Points;
+
+        if (points.Count >= 3)
+        {
+            for (int i = 0; i < points.Count; i += 3)
+            {
+                path.AddCurveToPoint(transform, points[i], points[i + 1], points[i + 2]);
+            }
+        }
+
+        return points.Count > 0 ? points[^1] : Point.Zero;
+    }
+
+    /// <summary>
+    /// Appends a poly-quadratic-bezier segment (groups of two points) and returns its last point.
+    /// </summary>
+    private static Point AppendPolyQuadraticBezier(CGPath path, CGAffineTransform transform, PolyQuadraticBezierSegment polyQuadraticSegment)
+    {
+        PointCollection points = polyQuadraticSegment.Points;
+
+        if (points.Count >= 2)
+        {
+            for (int i = 0; i < points.Count; i += 2)
+            {
+                path.AddQuadCurveToPoint(
+                    transform,
+                    new nfloat(points[i + 0].X),
+                    new nfloat(points[i + 0].Y),
+                    new nfloat(points[i + 1].X),
+                    new nfloat(points[i + 1].Y));
+            }
+        }
+
+        return points.Count > 0 ? points[^1] : Point.Zero;
+    }
+
+    /// <summary>
+    /// Flattens an arc segment into line segments and appends them, returning the arc's last point.
+    /// </summary>
+    private static Point AppendArcSegment(CGPath path, CGAffineTransform transform, ArcSegment arcSegment, Point lastPoint)
+    {
+        List<Point> points = new List<Point>();
+
+        GeometryHelper.FlattenArc(
+            points,
+            lastPoint,
+            arcSegment.Point,
+            arcSegment.Size.Width,
+            arcSegment.Size.Height,
+            arcSegment.RotationAngle,
+            arcSegment.IsLargeArc,
+            arcSegment.SweepDirection == SweepDirection.CounterClockwise,
+            1);
+
+        CGPoint[] cgpoints = new CGPoint[points.Count];
+
+        for (int i = 0; i < points.Count; i++)
+            cgpoints[i] = transform.TransformPoint(points[i]);
+
+        path.AddLines(cgpoints);
+
+        return points.Count > 0 ? points[^1] : Point.Zero;
     }
 }

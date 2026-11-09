@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Sample.Syncfusion;
 
-internal class Program
+internal static class Program
 {
     static async Task<int> Main(string[] args)
     {

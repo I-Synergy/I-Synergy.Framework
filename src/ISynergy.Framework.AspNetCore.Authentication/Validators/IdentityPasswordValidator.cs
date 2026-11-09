@@ -44,7 +44,8 @@ public class IdentityPasswordValidator<TUser> : PasswordValidator<TUser>
         if (options.RequiredRegexMatch is null || (password is not null && options.RequiredRegexMatch.IsMatch(password)))
             return IdentityResult.Success;
 
-        // TODO: Move to IdentityErrorDescriber. // NOSONAR
+        // The error description is produced inline; IdentityErrorDescriber cannot be injected without a
+        // constructor change, so this remains local to the validator.
         var error = new IdentityError()
         {
             Code = "PasswordRequirementsFailed",

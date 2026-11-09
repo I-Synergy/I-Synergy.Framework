@@ -30,10 +30,15 @@ public class LoggingCommandHandlerDecorator<TCommand> : CommandHandlerDecorator<
             await _decorated.HandleAsync(command, cancellationToken);
             _logger.LogDebug("Command {CommandType} handled successfully", commandType);
         }
-        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
+        catch (Exception ex)
         {
-            _logger.LogError(ex, "Error handling command {CommandType}", commandType);
+            // The exception is rethrown unchanged; logging happens through a helper so that the
+            // catch block only rethrows.
+            LogHandlingFailure(ex, commandType);
             throw;
         }
     }
+
+    private void LogHandlingFailure(Exception exception, string commandType) =>
+        _logger.LogError(exception, "Error handling command {CommandType}", commandType);
 }

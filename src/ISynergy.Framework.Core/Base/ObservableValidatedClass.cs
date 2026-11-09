@@ -99,37 +99,6 @@ public abstract class ObservableValidatedClass : ObservableClass, IObservableVal
         RaisePropertyChanged(nameof(Errors));
     }
 
-    private void SetValueCore<T>(T value, string? propertyName, bool shouldRaiseEvents) // NOSONAR - used via base class SetValue which calls into this override path
-    {
-        if (propertyName is null)
-            return;
-
-        if (Properties.GetOrAdd(propertyName, key => new Property<T>(key)) is not IProperty<T> property) return;
-
-        // During cleanup or when events are suppressed, just set the value
-        if (!shouldRaiseEvents || IsInCleanup)
-        {
-            property.Value = value;
-            return;
-        }
-
-        ThrowIfDisposed();
-
-        var previous = property.Value;
-        bool shouldUpdate = !property.IsOriginalSet ||
-                           !Equals(value, previous) ||
-                           (typeof(T).IsNullableType() && value is null);
-
-        if (shouldUpdate)
-        {
-            property.Value = value;
-            RaisePropertyChanged(propertyName);
-
-            if (AutomaticValidationTrigger)
-                Validate();
-        }
-    }
-
     /// <summary>
     /// Clears all validation errors.
     /// </summary>

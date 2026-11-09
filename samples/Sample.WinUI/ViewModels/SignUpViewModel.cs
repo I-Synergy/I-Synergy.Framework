@@ -38,7 +38,7 @@ public partial class SignUpViewModel : ViewModel
     /// <value>The registration mail.</value>
     public string Mail
     {
-        get { return GetValue<string>()!.ToLowerInvariant(); }
+        get { return GetValue<string>().ToLowerInvariant(); }
         set { SetValue(value?.ToLowerInvariant()); }
     }
 
@@ -133,7 +133,7 @@ public partial class SignUpViewModel : ViewModel
     public AsyncRelayCommand SignInCommand { get; private set; }
     public AsyncRelayCommand SelectModulesCommand { get; private set; }
 
-    public SignUpViewModel( // NOSONAR - high complexity is inherent in registration validation setup
+    public SignUpViewModel(
         ICommonServices commonServices,
         IDialogService dialogService,
         INavigationService navigationService,
@@ -143,52 +143,7 @@ public partial class SignUpViewModel : ViewModel
         _dialogService = dialogService;
         _navigationService = navigationService;
 
-        this.Validator = new Action<IObservableValidatedClass>(_ =>
-        {
-            if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
-            {
-                AddValidationError(nameof(Name), _commonServices.LanguageService.GetString("WarningLicenseNameSize"));
-            }
-
-            if (string.IsNullOrEmpty(Mail) || !NetworkUtility.IsValidEMail(Mail))
-            {
-                AddValidationError(nameof(Mail), _commonServices.LanguageService.GetString("WarningInvalidEmail"));
-            }
-
-            if (string.IsNullOrEmpty(SelectedTimeZone))
-            {
-                AddValidationError(nameof(SelectedTimeZone), _commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
-            }
-
-            if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
-            {
-                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
-            }
-
-            if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
-            {
-                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
-            }
-
-            if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
-            {
-                AddValidationError(nameof(PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordSize"));
-            }
-
-            if (!string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(PasswordCheck) && !Password.Equals(PasswordCheck))
-            {
-                AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
-                AddValidationError(nameof(PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
-            }
-
-            if (SelectedModules.Count < 1)
-            {
-                AddValidationError(nameof(SelectedModules), _commonServices.LanguageService.GetString("WarningNoModulesSelected"));
-            }
-
-            if (SelectedCountry is null)
-                AddValidationError(nameof(SelectedCountry), _commonServices.LanguageService.GetString("WarningNoCountrySelected"));
-        });
+        this.Validator = new Action<IObservableValidatedClass>(_ => ValidateRegistration());
 
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
         ValidateMailCommand = new AsyncRelayCommand(ValidateMailAsync);
@@ -196,6 +151,78 @@ public partial class SignUpViewModel : ViewModel
         SelectModulesCommand = new AsyncRelayCommand(SelectModulesAsync);
 
         ArePickersAvailable = false;
+    }
+
+    /// <summary>
+    /// Validates the registration form.
+    /// </summary>
+    private void ValidateRegistration()
+    {
+        ValidateAccountDetails();
+        ValidatePasswords();
+        ValidateSelections();
+    }
+
+    /// <summary>
+    /// Validates the account name, mail address and time zone.
+    /// </summary>
+    private void ValidateAccountDetails()
+    {
+        if (string.IsNullOrEmpty(Name) || (Name.Length <= 3))
+        {
+            AddValidationError(nameof(Name), _commonServices.LanguageService.GetString("WarningLicenseNameSize"));
+        }
+
+        if (string.IsNullOrEmpty(Mail) || !NetworkUtility.IsValidEMail(Mail))
+        {
+            AddValidationError(nameof(Mail), _commonServices.LanguageService.GetString("WarningInvalidEmail"));
+        }
+
+        if (string.IsNullOrEmpty(SelectedTimeZone))
+        {
+            AddValidationError(nameof(SelectedTimeZone), _commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+        }
+    }
+
+    /// <summary>
+    /// Validates the password and its confirmation.
+    /// </summary>
+    private void ValidatePasswords()
+    {
+        if (string.IsNullOrEmpty(Password) || (Password.Length <= 6))
+        {
+            AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+        }
+
+        if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+        {
+            AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+        }
+
+        if (string.IsNullOrEmpty(PasswordCheck) || (PasswordCheck.Length <= 6))
+        {
+            AddValidationError(nameof(PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordSize"));
+        }
+
+        if (!string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(PasswordCheck) && !Password.Equals(PasswordCheck))
+        {
+            AddValidationError(nameof(Password), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
+            AddValidationError(nameof(PasswordCheck), _commonServices.LanguageService.GetString("WarningPasswordMatch"));
+        }
+    }
+
+    /// <summary>
+    /// Validates the module and country selections.
+    /// </summary>
+    private void ValidateSelections()
+    {
+        if (SelectedModules.Count < 1)
+        {
+            AddValidationError(nameof(SelectedModules), _commonServices.LanguageService.GetString("WarningNoModulesSelected"));
+        }
+
+        if (SelectedCountry is null)
+            AddValidationError(nameof(SelectedCountry), _commonServices.LanguageService.GetString("WarningNoCountrySelected"));
     }
 
     private Task SelectModulesAsync()
@@ -256,28 +283,26 @@ public partial class SignUpViewModel : ViewModel
 
     private async Task SignUpAsync()
     {
-        if (Validate())
+        if (Validate() &&
+            !HasErrors &&
+            PasswordCheck is not null && Password is not null &&
+            PasswordCheck.Equals(Password) &&
+            Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
         {
-            if (!HasErrors &&
-                PasswordCheck is not null && Password is not null &&
-                PasswordCheck.Equals(Password) &&
-                Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+            _ = new RegistrationData()
             {
-                _ = new RegistrationData()
-                {
-                    ApplicationId = 1,
-                    LicenseName = Name,
-                    Email = Mail,
-                    Password = Password,
-                    Modules = Modules,
-                    UsersAllowed = 1,
-                    CountryCode = SelectedCountry.ISO2Code!,
-                    TimeZoneId = SelectedTimeZone
-                };
+                ApplicationId = 1,
+                LicenseName = Name,
+                Email = Mail,
+                Password = Password,
+                Modules = Modules,
+                UsersAllowed = 1,
+                CountryCode = SelectedCountry.ISO2Code!,
+                TimeZoneId = SelectedTimeZone
+            };
 
-                await _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
-                await SignInAsync();
-            }
+            await _dialogService.ShowInformationAsync(_commonServices.LanguageService.GetString("WarningRegistrationConfirmEmail"));
+            await SignInAsync();
         }
     }
 

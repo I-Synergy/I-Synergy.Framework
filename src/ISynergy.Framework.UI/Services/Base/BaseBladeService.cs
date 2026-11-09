@@ -185,37 +185,48 @@ public abstract class BaseBladeService : IBladeService
     protected abstract Task MonitorViewLoadAsync(IView view, int timeoutMs = 500);
 
     /// <inheritdoc />
-    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel) // NOSONAR - removal orchestration
+    public void RemoveBlade(IViewModelBladeView owner, IViewModel viewmodel)
     {
         if (viewmodel is not IViewModelBlade bladeVm)
             return;
 
         SafeOnNavigatedFrom(viewmodel);
 
-        if (owner.Blades is not null)
+        if (owner.Blades is null)
+            return;
+
+        var bladeToRemove = owner.Blades
+            .FirstOrDefault(q => q.ViewModel == bladeVm && ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
+
+        if (bladeToRemove is not null)
         {
-            var bladeToRemove = owner.Blades
-                .FirstOrDefault(q => q.ViewModel == bladeVm && ((IViewModelBlade)q.ViewModel).Owner == bladeVm.Owner);
+            // Detach the (possibly singleton) view from the view model before the owner drops it:
+            // the blade's DI scope disposes that view model right after, and a queued binding
+            // update must not land on a disposed instance.
+            DetachBladeView(bladeToRemove);
+        }
 
-            if (bladeToRemove is not null)
-            {
-                // Detach the (possibly singleton) view from the view model before the owner drops it:
-                // the blade's DI scope disposes that view model right after, and a queued binding
-                // update must not land on a disposed instance.
-                DetachBladeView(bladeToRemove);
-            }
+        if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
+            UpdateOwnerAfterBladeRemoved(owner);
+    }
 
-            if (bladeToRemove is not null && owner.Blades.Remove(bladeToRemove))
-            {
-                if (owner.Blades.Count < 1)
-                    owner.IsPaneVisible = false;
-                else if (owner.Blades[^1] is { } blade)
-                {
-                    blade.IsEnabled = true;
-                    if (blade.ViewModel is IViewModel activeVm)
-                        SafeOnNavigatedTo(activeVm);
-                }
-            }
+    /// <summary>
+    /// Restores the owner's pane state after a blade has been removed, activating the now-topmost
+    /// blade or hiding the pane when none remain.
+    /// </summary>
+    private void UpdateOwnerAfterBladeRemoved(IViewModelBladeView owner)
+    {
+        if (owner.Blades is null || owner.Blades.Count < 1)
+        {
+            owner.IsPaneVisible = false;
+            return;
+        }
+
+        if (owner.Blades[^1] is { } blade)
+        {
+            blade.IsEnabled = true;
+            if (blade.ViewModel is IViewModel activeVm)
+                SafeOnNavigatedTo(activeVm);
         }
     }
 

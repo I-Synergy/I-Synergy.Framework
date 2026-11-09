@@ -34,7 +34,7 @@ public class Startup(ISubscriberServiceBus<TestDataModel> messageBus)
             ).ContinueWith(async (t) =>
             {
                 await messageBus.UnSubscribeFromMessageBusAsync();
-                cancellationTokenSource.Cancel();
+                await cancellationTokenSource.CancelAsync();
             }),
             allReceives);
     }

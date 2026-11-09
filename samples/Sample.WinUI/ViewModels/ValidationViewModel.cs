@@ -15,7 +15,6 @@ namespace Sample.ViewModels;
 public partial class ValidationViewModel : ViewModelNavigation<object>
 {
     private readonly IDialogService _dialogService;
-    private readonly INavigationService _navigationService;
 
     /// <summary>
     /// Gets the title.
@@ -80,13 +79,11 @@ public partial class ValidationViewModel : ViewModelNavigation<object>
     /// </summary>
     /// <param name="commonServices"></param>
     /// <param name="dialogService"></param>
-    /// <param name="navigationService"></param>
     /// <param name="logger"></param>
-    public ValidationViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<ValidationViewModel> logger)
+    public ValidationViewModel(ICommonServices commonServices, IDialogService dialogService, ILogger<ValidationViewModel> logger)
         : base(commonServices, logger)
     {
         _dialogService = dialogService;
-        _navigationService = navigationService;
 
         IsNullCheck = true;
         Regex = @"\d\d\d\d[A-Z]";

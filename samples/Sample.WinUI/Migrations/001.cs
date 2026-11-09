@@ -2,7 +2,7 @@ using ISynergy.Framework.Core.Abstractions;
 
 namespace Sample.Migrations;
 
-public class _001 : IMigration
+public class Migration001 : IMigration
 {
     public int MigrationVersion => 1;
 

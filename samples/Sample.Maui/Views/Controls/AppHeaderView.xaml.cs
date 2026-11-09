@@ -23,8 +23,7 @@ public partial class AppHeaderView
 
         HeaderBar.Padding = isRtl ? new Thickness(16, 0, 0, 0) : new Thickness(0, 0, 16, 0);
 
-        MenuButton.Margin = DeviceInfo.Idiom == DeviceIdiom.Phone
-            ? (isRtl ? new Thickness(0, 0, -6, 0) : new Thickness(-6, 0, 0, 0))
-            : new Thickness(0);
+        var phoneMargin = isRtl ? new Thickness(0, 0, -6, 0) : new Thickness(-6, 0, 0, 0);
+        MenuButton.Margin = DeviceInfo.Idiom == DeviceIdiom.Phone ? phoneMargin : new Thickness(0);
     }
 }

@@ -40,7 +40,7 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
     /// <summary>
     /// Get/set global coordinates.
     /// </summary>
-    public GlobalCoordinates Coordinates; // NOSONAR - must remain a field (not property) as it is a mutable struct set via sub-property assignment
+    public GlobalCoordinates Coordinates { get; set; }
 
     /// <summary>
     /// Get/set latitude.
@@ -49,7 +49,12 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
     public Angle Latitude
     {
         get { return Coordinates.Latitude; }
-        set { Coordinates.Latitude = value; }
+        set
+        {
+            var coordinates = Coordinates;
+            coordinates.Latitude = value;
+            Coordinates = coordinates;
+        }
     }
 
     /// <summary>
@@ -59,7 +64,12 @@ public struct GlobalPosition : IComparable<GlobalPosition>, IEquatable<GlobalPos
     public Angle Longitude
     {
         get { return Coordinates.Longitude; }
-        set { Coordinates.Longitude = value; }
+        set
+        {
+            var coordinates = Coordinates;
+            coordinates.Longitude = value;
+            Coordinates = coordinates;
+        }
     }
 
     /// <summary>

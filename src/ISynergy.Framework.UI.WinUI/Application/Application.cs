@@ -191,9 +191,8 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
                 // Initialize environment variables from configuration and command-line parameters
                 InitializeEnvironmentVariables();
             }
-            catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
+            catch (Exception ex) when (LogInitializationFailure(ex))
             {
-                _logger?.LogCritical(ex, "Critical error during application initialization");
                 throw;
             }
         }
@@ -203,6 +202,16 @@ public abstract class Application : Microsoft.UI.Xaml.Application, IDisposable
             Debug.WriteLine($"Fatal error in Application constructor: {ex}");
             throw;
         }
+    }
+
+    /// <summary>
+    /// Logs an initialization failure and returns <c>false</c> so the original exception keeps
+    /// propagating unchanged (exception-filter logging pattern that satisfies S2139).
+    /// </summary>
+    private bool LogInitializationFailure(Exception ex)
+    {
+        _logger?.LogCritical(ex, "Critical error during application initialization");
+        return false;
     }
 
     /// <summary>

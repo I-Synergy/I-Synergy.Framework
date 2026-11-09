@@ -9,7 +9,10 @@ namespace ISynergy.Framework.Core.Collections;
 /// <typeparam name="TNode">The class type for the nodes of the tree.</typeparam>
 /// 
 [Serializable]
-public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // NOSONAR - base class not meant to be sealed; IEquatable reviewed for removal
+// S4035: this is a public base class that cannot be sealed without breaking derived node types such as
+// RedBlackTreeNode<T>; the equality members are inherited by those extensible node types by design.
+#pragma warning disable S4035 // public base class designed for inheritance
+public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode>
     where TNode : BinaryNode<TNode>
 {
     /// <summary>
@@ -64,3 +67,4 @@ public class BinaryNode<TNode> : IEquatable<TNode>, IBinaryTreeNode<TNode> // NO
     }
 
 }
+#pragma warning restore S4035

@@ -67,11 +67,8 @@ public static class Program
             .ConfigureSingleInstance()
             .ConfigureActivationHandlers(e =>
             {
-                foreach (var arg in e.EnsureNotNull())
-                {
-                    if (!string.IsNullOrEmpty(arg))
-                        Debug.WriteLine(string.Format("Environment: {0}", arg));
-                }
+                foreach (var arg in e.EnsureNotNull().Where(arg => !string.IsNullOrEmpty(arg)))
+                    Debug.WriteLine(string.Format("Environment: {0}", arg));
             }, async p =>
             {
                 if (!string.IsNullOrEmpty(p.Uri?.Query))
@@ -81,10 +78,6 @@ public static class Program
                 if (!string.IsNullOrEmpty(l.Arguments))
                     Debug.WriteLine(string.Format("Launch: {0}", l.Arguments));
             });
-        //.ConfigureOfflineSynchronization(builder =>
-        //{
-        //    Debug.WriteLine("Configuring offline synchronization");
-        //});
 
         var app = builder.Build();
 

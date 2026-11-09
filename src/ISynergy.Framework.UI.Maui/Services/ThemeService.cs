@@ -117,33 +117,42 @@ public partial class ThemeService : BaseThemeService
     {
         if (Application.AccentColor is not null)
         {
-            // Each head implements this in Platforms/<head>/Services/ThemeService.<head>.cs.
+#if ANDROID || IOS || WINDOWS
+            // Each implementing head provides this in Platforms/<head>/Services/ThemeService.<head>.cs.
             ApplyPlatformColors(application);
+#else
+            _ = application;
+#endif
 
             Logger.LogTrace("Platform-specific colors updated");
         }
     }
 
+#if ANDROID || IOS || WINDOWS
     /// <summary>
     /// Applies the accent colour to the native resources of the current head.
     /// </summary>
     /// <param name="application">The MAUI application whose resources are updated.</param>
     partial void ApplyPlatformColors(Application application);
+#endif
 
 
+#if ANDROID || WINDOWS
     /// <summary>
     /// Updates an existing resource or adds it to the application resources when absent.
+    /// Used by the Android and Windows platform heads.
     /// </summary>
     /// <param name="application">An application instance whose resource dictionary is modified.</param>
     /// <param name="key">A resource key.</param>
     /// <param name="value">A resource value.</param>
-    private static void UpdateOrAddResource(Application application, string key, object value) // NOSONAR
+    private static void UpdateOrAddResource(Application application, string key, object value)
     {
         if (application.Resources.ContainsKey(key))
             application.Resources[key] = value;
         else
             application.Resources.Add(key, value);
     }
+#endif
 
     /// <summary>
     /// Updates a resource value in the dictionary that owns the key, ensuring live updates

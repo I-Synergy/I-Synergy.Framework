@@ -9,7 +9,10 @@ namespace ISynergy.Framework.Geography.Projection;
 /// Base class for Mercator projections tranlating longitude/longitude values on the globe
 /// into X/Y coordinates on a flat map.
 /// </summary>
-public abstract class MercatorProjection : IEquatable<MercatorProjection> // NOSONAR - abstract base type
+// S4035: abstract base type - it cannot be sealed, projections are extended by design
+// (GlobalMercatorProjection and UtmProjection derive from it).
+#pragma warning disable S4035 // public type designed for inheritance
+public abstract class MercatorProjection : IEquatable<MercatorProjection>
 {
     /// <summary>
     /// The typical reference Meridian
@@ -229,3 +232,4 @@ public abstract class MercatorProjection : IEquatable<MercatorProjection> // NOS
     }
     #endregion
 }
+#pragma warning restore S4035

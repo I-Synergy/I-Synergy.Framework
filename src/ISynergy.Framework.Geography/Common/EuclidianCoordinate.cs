@@ -7,7 +7,10 @@ namespace ISynergy.Framework.Geography.Common;
 /// <summary>
 /// This class specifically models two-dimensional points in a flat plane
 /// </summary>
-public class EuclidianCoordinate : IEquatable<EuclidianCoordinate> // NOSONAR - public base type; sealing would break consumers
+// S4035: this is a public base type (UtmCoordinate derives from it); sealing it would break
+// consumers that extend these coordinate types.
+#pragma warning disable S4035 // public type designed for inheritance
+public class EuclidianCoordinate : IEquatable<EuclidianCoordinate>
 {
     /// <summary>
     /// The default precision
@@ -146,3 +149,4 @@ public class EuclidianCoordinate : IEquatable<EuclidianCoordinate> // NOSONAR - 
         return xy.GetHashCode();
     }
 }
+#pragma warning restore S4035

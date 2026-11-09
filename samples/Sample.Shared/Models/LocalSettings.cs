@@ -8,7 +8,7 @@ namespace Sample.Models;
 
 public class LocalSettings : ObservableValidatedClass, ILocalSettings
 {
-    public string Language { get; set; } = GlobalizationConstants.DefaultCultureInfoName;
+    public string Language { get; set; }
     public bool IsFullscreen { get; set; }
     public List<string> Users { get; set; } = [];
     public string DefaultUser { get; set; } = string.Empty;

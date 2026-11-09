@@ -1,4 +1,3 @@
-using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Controls;
@@ -19,20 +18,16 @@ namespace Sample.Views;
 /// </summary>
 public sealed partial class ShellView : View, IShellView
 {
-    private readonly ICommonServices _commonServices;
-    private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
     private bool _isLoaded = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellView"/> class.
     /// </summary>
-    public ShellView(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService)
+    public ShellView(INavigationService navigationService)
     {
         InitializeComponent();
 
-        _commonServices = commonServices;
-        _dialogService = dialogService;
         _navigationService = navigationService;
 
         Loaded += OnViewLoaded;

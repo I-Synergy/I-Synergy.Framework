@@ -16,7 +16,9 @@ namespace ISynergy.Framework.Core.Collections;
 /// <typeparam name="TModel">The type of the t model.</typeparam>
 /// <seealso cref="ObservableValidatedClass" />
 /// <seealso cref="IDisposable" />
-public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel> : ObservableValidatedClass // NOSONAR - inherited finalizer-free dispose pattern
+// S3881: the base type is finalizer-free and deliberately omits GC.SuppressFinalize() (Sonar S3971 forbids it).
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
+public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TModel> : ObservableValidatedClass
     where TKey : struct
     where TModel : class
 {
@@ -236,21 +238,19 @@ public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMembe
     /// </summary>
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     /// The bulk of the clean-up code is implemented in Dispose(bool)
-    protected override void Dispose(bool disposing) // NOSONAR
+    protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
             if (Data is IDisposable disposable)
             {
                 if (DisposeTraversal == UpDownTraversalTypes.BottomUp)
-                    foreach (var node in Children.EnsureNotNull())
-                        node.Dispose();
+                    DisposeChildren();
 
                 disposable.Dispose();
 
                 if (DisposeTraversal == UpDownTraversalTypes.TopDown)
-                    foreach (var node in Children.EnsureNotNull())
-                        node.Dispose();
+                    DisposeChildren();
             }
 
             PropertyChanged -= TreeNode_PropertyChanged;
@@ -258,5 +258,15 @@ public class TreeNode<TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMembe
 
         // free native resources if there are any.
     }
+
+    /// <summary>
+    /// Disposes all child nodes.
+    /// </summary>
+    private void DisposeChildren()
+    {
+        foreach (var node in Children.EnsureNotNull())
+            node.Dispose();
+    }
     #endregion
 }
+#pragma warning restore S3881

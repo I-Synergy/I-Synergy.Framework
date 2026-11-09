@@ -20,7 +20,7 @@ public static class CursorExtensions
             }
         }
 
-        view.AddGestureRecognizer(new PointerUIHoverGestureRecognizer(visualElement, cursor, r =>
+        view.AddGestureRecognizer(new PointerUIHoverGestureRecognizer(cursor, r =>
         {
             switch (r.State)
             {
@@ -68,12 +68,9 @@ public static class CursorExtensions
 
     class PointerUIHoverGestureRecognizer : UIHoverGestureRecognizer
     {
-        private readonly VisualElement _visualElement; // NOSONAR - used in platform-specific branches
-
-        public PointerUIHoverGestureRecognizer(VisualElement visualElement, CursorIcons cursor, Action<UIHoverGestureRecognizer> action) // NOSONAR
+        public PointerUIHoverGestureRecognizer(CursorIcons cursor, Action<UIHoverGestureRecognizer> action)
             : base(action)
         {
-            _visualElement = visualElement;
             _ = cursor;
         }
     }

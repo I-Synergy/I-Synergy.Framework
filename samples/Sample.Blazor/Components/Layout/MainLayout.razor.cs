@@ -17,6 +17,10 @@ using System.Globalization;
 
 namespace Sample.Components.Layout;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Major Code Smell",
+    "S3881:IDisposable should be implemented correctly",
+    Justification = "Finalizer-free type: GC.SuppressFinalize is omitted per S3971. A #pragma cannot cover the Razor-generated partial declaration, so a type-level suppression is used.")]
 public partial class MainLayout : IDisposable
 {
     /// <summary>
@@ -44,8 +48,6 @@ public partial class MainLayout : IDisposable
     private readonly ICommonServices _commonServices;
     private readonly ISettingsService _settingsService;
     private readonly ISupportedCulturesService _supportedCulturesService;
-    private readonly IContext _context;
-    private readonly RequestCancellationService _requestCancellationService;
     private readonly IJSRuntime _jsRuntime;
     private readonly ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService _themeService;
 
@@ -54,15 +56,12 @@ public partial class MainLayout : IDisposable
         Microsoft.FluentUI.AspNetCore.Components.IDialogService dialogService,
         INotificationService notificationService,
         NavigationManager navigationManager,
-        RequestCancellationService requestCancellationService,
-        IContext context,
         ISettingsService settingsService,
         ISupportedCulturesService supportedCulturesService,
         IJSRuntime jsRuntime,
         ISynergy.Framework.Mvvm.Abstractions.Services.IThemeService themeService)
     {
         _commonServices = commonServices;
-        _context = context;
         _settingsService = settingsService;
         _supportedCulturesService = supportedCulturesService;
         _themeService = themeService;
@@ -70,7 +69,6 @@ public partial class MainLayout : IDisposable
         _dialogService = dialogService;
         _notificationService = notificationService;
         _navigationManager = navigationManager;
-        _requestCancellationService = requestCancellationService;
         _jsRuntime = jsRuntime;
     }
 
@@ -90,14 +88,6 @@ public partial class MainLayout : IDisposable
             };
         }
     }
-
-    private string ContentClass => _localSettings?.ShowConsole == true && _navigationManager!.Uri != _navigationManager!.BaseUri
-       ? "content with-console"
-       : "content full-width";
-
-    private string ArticleClass => _localSettings?.ShowConsole == true && _navigationManager!.Uri != _navigationManager!.BaseUri
-        ? "with-console"
-        : "full-width";
 
     protected override void OnInitialized()
     {
@@ -181,7 +171,7 @@ public partial class MainLayout : IDisposable
 
             try
             {
-                await module.InvokeVoidAsync("applyInitialBreakpointFix");
+                await module.InvokeVoidAsync("applyInitialBreakpointFix", _cts.Token);
             }
             finally
             {

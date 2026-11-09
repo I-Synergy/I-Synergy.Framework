@@ -56,7 +56,31 @@ public sealed partial class DynamicThemeResourceDictionary : ResourceDictionary,
     private static (float Red, float Green, float Blue) ToFloats(Color color) =>
         (color.R / 255f, color.G / 255f, color.B / 255f);
 
-    private static ResourceDictionary BuildDefaultTheme( // NOSONAR - palette construction is data-heavy
+    private static ResourceDictionary BuildDefaultTheme(
+        Color accent,
+        Color variant1, Color variant2, Color variant3,
+        Color altVariant1, Color altVariant2, Color altVariant3,
+        IReadOnlyDictionary<string, (float Red, float Green, float Blue)> grays,
+        bool isDark)
+    {
+        // ColorPaletteResources for WinUI native controls
+        var palette = isDark
+            ? CreateDarkPalette(accent)
+            : CreateLightPalette(accent);
+
+        // Inner ResourceDictionary with system accent color overrides and semantic brushes
+        var inner = BuildInnerThemeDictionary(accent, variant1, variant2, variant3, altVariant1, altVariant2, altVariant3, grays, isDark);
+
+        var theme = new ResourceDictionary();
+        theme.MergedDictionaries.Add(palette);
+        theme.MergedDictionaries.Add(inner);
+        return theme;
+    }
+
+    /// <summary>
+    /// Populates the inner theme dictionary with accent overrides and the semantic/tinted brush palette.
+    /// </summary>
+    private static ResourceDictionary BuildInnerThemeDictionary(
         Color accent,
         Color variant1, Color variant2, Color variant3,
         Color altVariant1, Color altVariant2, Color altVariant3,
@@ -65,12 +89,6 @@ public sealed partial class DynamicThemeResourceDictionary : ResourceDictionary,
     {
         Color GrayColor(string key) { var (red, green, blue) = grays[key]; return FromFloats(red, green, blue); }
 
-        // ColorPaletteResources for WinUI native controls
-        var palette = isDark
-            ? CreateDarkPalette(accent)
-            : CreateLightPalette(accent);
-
-        // Inner ResourceDictionary with system accent color overrides and semantic brushes
         var inner = new ResourceDictionary();
         inner["SystemAccentColor"] = accent;
         inner["SystemAccentColorDark1"] = isDark ? variant1 : altVariant1;
@@ -81,16 +99,32 @@ public sealed partial class DynamicThemeResourceDictionary : ResourceDictionary,
         inner["SystemAccentColorLight3"] = isDark ? altVariant3 : variant3;
         inner["RegionColor"] = isDark ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 255, 255, 255);
         inner["RegionBrush"] = new SolidColorBrush(isDark ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 255, 255, 255));
-        // Semantic tinted brushes (dark: uses dark grays, light: uses light grays)
-        inner["TintedBackgroundBrush"] = new SolidColorBrush(isDark ? GrayColor("950") : GrayColor("000"));
-        inner["TintedSurfaceBrush"] = new SolidColorBrush(isDark ? GrayColor("900") : GrayColor("100"));
-        inner["TintedControlBrush"] = new SolidColorBrush(isDark ? GrayColor("900") : GrayColor("100"));
-        inner["TintedHoverBrush"] = new SolidColorBrush(isDark ? GrayColor("850") : GrayColor("150"));
-        inner["TintedDisabledBrush"] = new SolidColorBrush(isDark ? GrayColor("600") : GrayColor("200"));
-        inner["TintedBorderBrush"] = new SolidColorBrush(isDark ? GrayColor("600") : GrayColor("200"));
-        inner["TintedSecondaryBrush"] = new SolidColorBrush(isDark ? GrayColor("500") : GrayColor("300"));
+        AddTintedBrushes(inner, isDark, GrayColor);
+        AddAppDesignTokens(inner, accent, isDark);
 
-        // Shared sample design tokens (match Sample.Maui).
+        return inner;
+    }
+
+    /// <summary>
+    /// Adds the semantically tinted brushes derived from the gray palette.
+    /// </summary>
+    private static void AddTintedBrushes(ResourceDictionary inner, bool isDark, Func<string, Color> grayColor)
+    {
+        // Semantic tinted brushes (dark: uses dark grays, light: uses light grays)
+        inner["TintedBackgroundBrush"] = new SolidColorBrush(isDark ? grayColor("950") : grayColor("000"));
+        inner["TintedSurfaceBrush"] = new SolidColorBrush(isDark ? grayColor("900") : grayColor("100"));
+        inner["TintedControlBrush"] = new SolidColorBrush(isDark ? grayColor("900") : grayColor("100"));
+        inner["TintedHoverBrush"] = new SolidColorBrush(isDark ? grayColor("850") : grayColor("150"));
+        inner["TintedDisabledBrush"] = new SolidColorBrush(isDark ? grayColor("600") : grayColor("200"));
+        inner["TintedBorderBrush"] = new SolidColorBrush(isDark ? grayColor("600") : grayColor("200"));
+        inner["TintedSecondaryBrush"] = new SolidColorBrush(isDark ? grayColor("500") : grayColor("300"));
+    }
+
+    /// <summary>
+    /// Adds the shared sample design tokens (matching Sample.Maui).
+    /// </summary>
+    private static void AddAppDesignTokens(ResourceDictionary inner, Color accent, bool isDark)
+    {
         inner["AppBackgroundBrush"] = inner["TintedBackgroundBrush"];
         inner["AppSurfaceBrush"] = inner["TintedSurfaceBrush"];
         inner["AppSurface2Brush"] = new SolidColorBrush(isDark
@@ -108,11 +142,6 @@ public sealed partial class DynamicThemeResourceDictionary : ResourceDictionary,
         inner["AppInkBrush"] = new SolidColorBrush(isDark
             ? Color.FromArgb(255, 0x04, 0x23, 0x1A)
             : Color.FromArgb(255, 0xFF, 0xFF, 0xFF));
-
-        var theme = new ResourceDictionary();
-        theme.MergedDictionaries.Add(palette);
-        theme.MergedDictionaries.Add(inner);
-        return theme;
     }
 
     private static ColorPaletteResources CreateDarkPalette(Color accent) => new()

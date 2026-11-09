@@ -72,18 +72,10 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// <param name="round"></param>
     /// <param name="decimals"></param>
     /// 
-    public NumericRange(double min, double max, bool round = false, int decimals = 0) // NOSONAR
+    public NumericRange(double min, double max, bool round = false, int decimals = 0)
     {
-        if (round)
-        {
-            Min = Math.Round(min, decimals);
-            Max = Math.Round(max, decimals);
-        }
-        else
-        {
-            Min = min;
-            Max = max;
-        }
+        Min = NormalizeLimit(min, round, decimals);
+        Max = NormalizeLimit(max, round, decimals);
     }
 
     /// <summary>
@@ -155,6 +147,18 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
         : this(Convert.ToDouble(min), Convert.ToDouble(max), round, decimals)
     {
     }
+
+    /// <summary>
+    ///   Returns the range limit, optionally rounded to the requested number of decimals.
+    /// </summary>
+    /// 
+    /// <param name="value">The limit value.</param>
+    /// <param name="round">Whether the value should be rounded.</param>
+    /// <param name="decimals">The number of decimals to round to.</param>
+    /// 
+    /// <returns>The (optionally rounded) limit.</returns>
+    private static double NormalizeLimit(double value, bool round, int decimals) =>
+        round ? Math.Round(value, decimals) : value;
 
     /// <summary>
     ///   Gets the length of the range, defined as (max - min).
@@ -231,7 +235,11 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// 
     public static bool operator ==(NumericRange range1, NumericRange range2)
     {
-        return ((range1.Min == range2.Min) && (range1.Max == range2.Max)); // NOSONAR
+        // S1244: exact comparison is intentional - ranges are only equal when their stored limits
+        // are exactly equal.
+        #pragma warning disable S1244 // identity check on stored limits: exact comparison is intended
+        return ((range1.Min == range2.Min) && (range1.Max == range2.Max));
+        #pragma warning restore S1244
     }
 
     /// <summary>
@@ -240,7 +248,10 @@ public struct NumericRange : IEquatable<NumericRange>, IEnumerable<double>
     /// 
     public static bool operator !=(NumericRange range1, NumericRange range2)
     {
-        return ((range1.Min != range2.Min) || (range1.Max != range2.Max)); // NOSONAR
+        // S1244: exact comparison is intentional - see the equality operator above.
+        #pragma warning disable S1244 // identity check on stored limits: exact comparison is intended
+        return ((range1.Min != range2.Min) || (range1.Max != range2.Max));
+        #pragma warning restore S1244
     }
 
     /// <summary>

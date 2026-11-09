@@ -66,10 +66,8 @@ public static class ServiceCollectionExtensions
                  descriptor.ServiceType.GetGenericTypeDefinition() == typeof(ICommandHandler<,>)))
             .ToList();
 
-        foreach (var descriptor in serviceDescriptors) // NOSONAR
+        foreach (var serviceType in serviceDescriptors.Select(descriptor => descriptor.ServiceType))
         {
-            var serviceType = descriptor.ServiceType;
-
             if (serviceType.IsGenericType)
             {
                 var genericArgs = serviceType.GetGenericArguments();
@@ -115,9 +113,8 @@ public static class ServiceCollectionExtensions
                 descriptor.ServiceType.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
             .ToList();
 
-        foreach (var descriptor in commandHandlerDescriptors) // NOSONAR
+        foreach (var serviceType in commandHandlerDescriptors.Select(descriptor => descriptor.ServiceType))
         {
-            var serviceType = descriptor.ServiceType;
             var genericArgs = serviceType.GetGenericArguments();
             var decoratorType = typeof(LoggingCommandHandlerDecorator<>).MakeGenericType(genericArgs);
             services.Decorate(serviceType, decoratorType);

@@ -54,9 +54,8 @@ internal sealed partial class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
         get;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken = default) // NOSONAR - host startup orchestration // NOSONAR - host startup orchestration
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-
         using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _applicationLifetime.ApplicationStopping);
         var combinedCancellationToken = combinedCancellationTokenSource.Token;
 
@@ -80,53 +79,74 @@ internal sealed partial class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
 
         ComWrappersSupport.InitializeComWrappers();
 
-        // ── Single-instance enforcement (opt-in) ────────────────
-        // Only enforced when ConfigureSingleInstance() was called on the builder.
-        if (AppActivationExtensions.IsSingleInstanceEnabled)
+        if (EnforceSingleInstance())
+            return;
+
+        StartApplication(combinedCancellationTokenSource, combinedCancellationToken);
+
+        try
         {
-            // Check for existing instances BEFORE creating the Application.
-            // No SynchronizationContext exists yet, so .Wait() is safe.
-            var instances = AppInstance.GetInstances();
-            Debug.WriteLine($"[SingleInstance] GetInstances returned {instances.Count} instance(s).");
-
-            AppInstance? existing = null;
-            foreach (var instance in instances)
-            {
-                if (!instance.IsCurrent)
-                {
-                    existing = instance;
-                    break;
-                }
-            }
-
-            if (existing is not null)
-            {
-                // Second instance — redirect activation and exit
-                Debug.WriteLine("[SingleInstance] Existing instance found. Redirecting...");
-                var activationArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
-                Debug.WriteLine($"[SingleInstance] Activation kind: {activationArgs.Kind}");
-
-                try
-                {
-                    existing.RedirectActivationToAsync(activationArgs).AsTask(CancellationToken.None).GetAwaiter().GetResult();
-                    Debug.WriteLine("[SingleInstance] Redirect completed.");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"[SingleInstance] Redirect failed: {ex}");
-                }
-
-                Debug.WriteLine("[SingleInstance] Exiting second instance.");
-                return;
-            }
-
-            // First instance — subscribe to future redirected activations
-            Debug.WriteLine("[SingleInstance] First instance. Subscribing to Activated event.");
-            AppInstance.GetCurrent().Activated += OnAppInstanceActivated;
-            Debug.WriteLine("[SingleInstance] Ready to receive redirected activations.");
+            _logger.LogInformation("Application is exiting.");
+            await RequestExit(combinedCancellationTokenSource);
         }
-        // ── End single-instance enforcement ─────────────────────
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while exiting.");
+        }
+    }
 
+    /// <summary>
+    /// Enforces single-instance behaviour when enabled. Returns <c>true</c> when the current process
+    /// is a secondary instance that has redirected activation and must exit.
+    /// </summary>
+    private static bool EnforceSingleInstance()
+    {
+        if (!AppActivationExtensions.IsSingleInstanceEnabled)
+            return false;
+
+        // Check for existing instances BEFORE creating the Application.
+        // No SynchronizationContext exists yet, so .Wait() is safe.
+        var instances = AppInstance.GetInstances();
+        Debug.WriteLine($"[SingleInstance] GetInstances returned {instances.Count} instance(s).");
+
+        var existing = instances.FirstOrDefault(instance => !instance.IsCurrent);
+
+        if (existing is not null)
+        {
+            // Second instance — redirect activation and exit
+            Debug.WriteLine("[SingleInstance] Existing instance found. Redirecting...");
+            var activationArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+            Debug.WriteLine($"[SingleInstance] Activation kind: {activationArgs.Kind}");
+
+            try
+            {
+                existing.RedirectActivationToAsync(activationArgs).AsTask(CancellationToken.None).GetAwaiter().GetResult();
+                Debug.WriteLine("[SingleInstance] Redirect completed.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[SingleInstance] Redirect failed: {ex}");
+            }
+
+            Debug.WriteLine("[SingleInstance] Exiting second instance.");
+            return true;
+        }
+
+        // First instance — subscribe to future redirected activations
+        Debug.WriteLine("[SingleInstance] First instance. Subscribing to Activated event.");
+        AppInstance.GetCurrent().Activated += OnAppInstanceActivated;
+        Debug.WriteLine("[SingleInstance] Ready to receive redirected activations.");
+        return false;
+    }
+
+    /// <summary>
+    /// Wires the platform Application startup, including the local unhandled-exception handler and
+    /// initial single-instance activation dispatch.
+    /// </summary>
+    private void StartApplication(
+        CancellationTokenSource combinedCancellationTokenSource,
+        CancellationToken combinedCancellationToken)
+    {
         async void OnAppOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             _logger.LogCritical(args.Exception, "Unhandled exception.  Terminating.");
@@ -171,16 +191,6 @@ internal sealed partial class WindowsAppSdkHost<TApp> : IHost, IAsyncDisposable
                 }
             }
         );
-
-        try
-        {
-            _logger.LogInformation("Application is exiting.");
-            await RequestExit(combinedCancellationTokenSource);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error while exiting.");
-        }
     }
 
     private async Task RequestExit(CancellationTokenSource source)

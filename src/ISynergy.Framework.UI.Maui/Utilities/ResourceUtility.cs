@@ -7,7 +7,7 @@ namespace ISynergy.Framework.UI.Utilities;
 
 public static class ResourceUtility
 {
-    private static T? GetResource<T>(ResourceDictionary resources, object? resource) // NOSONAR
+    private static T? GetResource<T>(ResourceDictionary resources, object? resource)
     {
         //Check resource type
         switch (resource)
@@ -17,51 +17,19 @@ public static class ResourceUtility
                 return GetResource<T>(resources, value.Platforms?.FirstOrDefault(p => p.Platform.Contains($"{DeviceInfo.Platform}"))?.Value);
 
             case OnIdiomExtension value:
-                {
-                    //Get idiom specific resource
-                    var idiomValue = value.Default;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Desktop) idiomValue = value.Desktop;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Phone) idiomValue = value.Phone;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Tablet) idiomValue = value.Tablet;
-                    if (DeviceInfo.Idiom == DeviceIdiom.TV) idiomValue = value.TV;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Watch) idiomValue = value.Watch;
-                    return GetResource<T>(resources, idiomValue);
-                }
+                //Get idiom specific resource
+                return GetResource<T>(resources, ResolveOnIdiom(value.Default, value.Desktop, value.Phone, value.Tablet, value.TV, value.Watch));
 
             case OnIdiom<T> value:
-                {
-                    //Get return type idiom specific resource
-                    var idiomValue = value.Default;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Desktop) idiomValue = value.Desktop;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Phone) idiomValue = value.Phone;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Tablet) idiomValue = value.Tablet;
-                    if (DeviceInfo.Idiom == DeviceIdiom.TV) idiomValue = value.TV;
-                    if (DeviceInfo.Idiom == DeviceIdiom.Watch) idiomValue = value.Watch;
-                    return idiomValue;
-                }
+                //Get return type idiom specific resource
+                return ResolveOnIdiom(value.Default, value.Desktop, value.Phone, value.Tablet, value.TV, value.Watch);
 
             case DynamicResource value:
                 //Get dynamic resource
                 return resources.FindResource<T>(value.Key);
 
             case string value:
-                {
-                    //Attempt to cast to resource type or return default
-                    try
-                    {
-                        var converter = TypeDescriptor.GetConverter(typeof(T));
-                        if (converter?.CanConvertFrom(typeof(string)) ?? false)
-                        {
-                            // Cast ConvertFromString(string text) : object to (T)
-                            return (T?)converter.ConvertFromString(value);
-                        }
-                        return default;
-                    }
-                    catch
-                    {
-                        return default;
-                    }
-                }
+                return ConvertFromString<T>(value);
 
             case T value:
                 //Return found resource value
@@ -70,6 +38,43 @@ public static class ResourceUtility
             default:
                 //Return default resource value
                 return default;
+        }
+    }
+
+    /// <summary>
+    /// Selects the value matching the current device idiom, defaulting to <paramref name="defaultValue"/>.
+    /// </summary>
+    private static T ResolveOnIdiom<T>(T defaultValue, T desktop, T phone, T tablet, T tv, T watch)
+    {
+        var idiom = DeviceInfo.Idiom;
+
+        if (idiom == DeviceIdiom.Desktop) return desktop;
+        if (idiom == DeviceIdiom.Phone) return phone;
+        if (idiom == DeviceIdiom.Tablet) return tablet;
+        if (idiom == DeviceIdiom.TV) return tv;
+        if (idiom == DeviceIdiom.Watch) return watch;
+
+        return defaultValue;
+    }
+
+    /// <summary>
+    /// Attempts to convert a string resource value to <typeparamref name="T"/>, returning default on failure.
+    /// </summary>
+    private static T? ConvertFromString<T>(string value)
+    {
+        try
+        {
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            if (converter?.CanConvertFrom(typeof(string)) ?? false)
+            {
+                // Cast ConvertFromString(string text) : object to (T)
+                return (T?)converter.ConvertFromString(value);
+            }
+            return default;
+        }
+        catch
+        {
+            return default;
         }
     }
 

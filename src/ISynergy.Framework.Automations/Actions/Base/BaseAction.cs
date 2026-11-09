@@ -32,7 +32,6 @@ public abstract class BaseAction : AutomationModel, IAction
     public bool Executed
     {
         get { return GetValue<bool>(); }
-        private set { SetValue(value); } // NOSONAR - reserved for future internal use
     }
 
     /// <summary>
@@ -41,7 +40,6 @@ public abstract class BaseAction : AutomationModel, IAction
     public DateTimeOffset ExecutedDateTime
     {
         get { return GetValue<DateTimeOffset>(); }
-        private set { SetValue(value); } // NOSONAR - reserved for future internal use
     }
 
     /// <summary>

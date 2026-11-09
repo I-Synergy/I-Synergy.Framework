@@ -52,7 +52,8 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
         await _service.RefreshTasksAsync(cancellationToken);
         _backgroundTimer = new Timer(_ =>
         {
-            _ = RefreshQueueAsync(_stoppingCts.Token); // NOSONAR - fire-and-forget timer callback
+            // Fire-and-forget timer callback: RefreshQueueAsync handles and logs its own exceptions.
+            RunInBackground(RefreshQueueAsync);
         }, null, TimeSpan.Zero, _options.DefaultQueueRefreshRate);
     }
 
@@ -86,7 +87,8 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
             if (result.HasValue && result.Value.Expiration != TimeSpan.Zero)
                 ReplaceExecutionTimer(new Timer(state =>
                 {
-                    _ = ExecuteTaskAsync(state as IAction, _stoppingCts.Token); // NOSONAR - fire-and-forget timer callback
+                    // Fire-and-forget timer callback: ExecuteTaskAsync handles and logs its own exceptions.
+                    RunInBackground(token => ExecuteTaskAsync(state as IAction, token));
                 }, result.Value.UpcomingTask, TimeSpan.Zero, result.Value.Expiration));
             else
                 ReplaceExecutionTimer(null);
@@ -113,6 +115,20 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
         {
             _logger.LogError(ex, "Error executing automation action");
         }
+    }
+
+    /// <summary>
+    /// Starts an operation that must not be awaited by a timer callback.
+    /// Any exception is handled (and logged) inside <paramref name="operation"/>.
+    /// </summary>
+    /// <param name="operation">The operation to run.</param>
+    private void RunInBackground(Func<CancellationToken, Task> operation)
+    {
+        operation(_stoppingCts.Token).ContinueWith(
+            task => _logger.LogError(task.Exception, "Unhandled error in background automation task"),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.Default);
     }
 
     /// <summary>

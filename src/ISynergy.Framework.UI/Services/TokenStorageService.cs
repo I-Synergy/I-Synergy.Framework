@@ -19,7 +19,9 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public class TokenStorageService : ITokenStorageService
 {
-    private readonly IInfoService _infoService; // NOSONAR - used in platform-specific branches
+#if WINDOWS || ANDROID || IOS || MACCATALYST
+    private readonly IInfoService _infoService;
+#endif
     private readonly ILogger<TokenStorageService> _logger;
 
     private const string AccessTokenKey = "access_token";
@@ -28,9 +30,15 @@ public class TokenStorageService : ITokenStorageService
     private const string TokenExpiryKey = "token_expiry";
     private const string EnvironmentKey = "environment";
 
-    public TokenStorageService(IInfoService infoService, ILogger<TokenStorageService> logger)
+    public TokenStorageService(
+#if WINDOWS || ANDROID || IOS || MACCATALYST
+        IInfoService infoService,
+#endif
+        ILogger<TokenStorageService> logger)
     {
+#if WINDOWS || ANDROID || IOS || MACCATALYST
         _infoService = infoService;
+#endif
         _logger = logger;
     }
 
@@ -87,9 +95,8 @@ public class TokenStorageService : ITokenStorageService
 
             _logger.LogDebug("Tokens saved successfully");
         }
-        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
+        catch (Exception ex) when (LogSaveTokensFailure(ex))
         {
-            _logger.LogError(ex, "Failed to save tokens");
             throw;
         }
     }
@@ -106,11 +113,30 @@ public class TokenStorageService : ITokenStorageService
 
             _logger.LogDebug("Tokens cleared successfully");
         }
-        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
+        catch (Exception ex) when (LogClearTokensFailure(ex))
         {
-            _logger.LogError(ex, "Failed to clear tokens");
             throw;
         }
+    }
+
+    /// <summary>
+    /// Logs a save-tokens failure and returns <c>false</c> so the original exception keeps
+    /// propagating unchanged (exception-filter logging pattern that satisfies S2139).
+    /// </summary>
+    private bool LogSaveTokensFailure(Exception ex)
+    {
+        _logger.LogError(ex, "Failed to save tokens");
+        return false;
+    }
+
+    /// <summary>
+    /// Logs a clear-tokens failure and returns <c>false</c> so the original exception keeps
+    /// propagating unchanged (exception-filter logging pattern that satisfies S2139).
+    /// </summary>
+    private bool LogClearTokensFailure(Exception ex)
+    {
+        _logger.LogError(ex, "Failed to clear tokens");
+        return false;
     }
 
     private static Task<string?> GetSecureValueAsync(string key) // NOSONAR - uses platform-specific instance state

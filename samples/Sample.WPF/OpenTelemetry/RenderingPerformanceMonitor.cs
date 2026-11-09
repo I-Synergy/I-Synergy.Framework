@@ -7,6 +7,7 @@ namespace Sample.OpenTelemetry;
 /// <summary>
 /// Monitors WPF rendering performance and reports metrics.
 /// </summary>
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
 public class RenderingPerformanceMonitor : IDisposable
 {
     private readonly ILogger<RenderingPerformanceMonitor> _logger;
@@ -66,7 +67,6 @@ public class RenderingPerformanceMonitor : IDisposable
 
         CompositionTarget.Rendering -= OnRendering;
         _disposed = true;
-        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -99,3 +99,4 @@ public class RenderingPerformanceMonitor : IDisposable
         };
     }
 }
+#pragma warning restore S3881

@@ -654,17 +654,29 @@ public static class StringExtensions
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var parts = arguments.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
+        // The loop counter is advanced only by the loop itself; when a flag is paired with a value the
+        // value part is consumed by skipping it on the next iteration.
+        var skipPairedValue = false;
         for (int i = 0; i < parts.Length; i++)
         {
-            if (parts[i].StartsWith("--") && parts[i].Length > 2 && i + 1 < parts.Length && !parts[i + 1].StartsWith('-'))
+            if (skipPairedValue)
             {
-                result[parts[i][2..]] = parts[i + 1];
-                i++; // NOSONAR - consume the value paired with the flag
+                skipPairedValue = false;
+                continue;
             }
-            else if (parts[i].StartsWith('-') && parts[i].Length == 2 && i + 1 < parts.Length && !parts[i + 1].StartsWith('-'))
+
+            var part = parts[i];
+            var hasPairedValue = i + 1 < parts.Length && !parts[i + 1].StartsWith('-');
+
+            if (part.StartsWith("--") && part.Length > 2 && hasPairedValue)
             {
-                result[parts[i][1..]] = parts[i + 1];
-                i++; // NOSONAR - consume the value paired with the flag
+                result[part[2..]] = parts[i + 1];
+                skipPairedValue = true;
+            }
+            else if (part.StartsWith('-') && part.Length == 2 && hasPairedValue)
+            {
+                result[part[1..]] = parts[i + 1];
+                skipPairedValue = true;
             }
         }
 

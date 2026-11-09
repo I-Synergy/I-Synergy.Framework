@@ -17,8 +17,6 @@ namespace Sample.ViewModels;
 /// </summary>
 public partial class TestItemsListViewModel : ViewModelBladeView<TestItem>, IViewModelBladeView
 {
-    private readonly IDialogService _dialogService;
-    private readonly INavigationService _navigationService;
     private readonly IBladeService _bladeService;
 
     /// <summary>
@@ -97,15 +95,11 @@ public partial class TestItemsListViewModel : ViewModelBladeView<TestItem>, IVie
     /// Initializes a new instance of the <see cref="ViewModelBladeView{TEntity}" /> class.
     /// </summary>
     /// <param name="commonServices">The common service.</param>
-    /// <param name="dialogService"></param>
-    /// <param name="navigationService"></param>
     /// <param name="bladeService"></param>
     /// <param name="logger"></param>
-    public TestItemsListViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<TestItemsListViewModel> logger)
+    public TestItemsListViewModel(ICommonServices commonServices, IBladeService bladeService, ILogger<TestItemsListViewModel> logger)
         : base(commonServices, logger)
     {
-        _dialogService = dialogService;
-        _navigationService = navigationService;
         _bladeService = bladeService;
 
         ClearCommand = new RelayCommand(ClearItems);

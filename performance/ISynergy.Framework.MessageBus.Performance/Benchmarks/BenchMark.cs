@@ -11,10 +11,9 @@ namespace ISynergy.Framework.MessageBus.Performance.Benchmarks;
 public class BenchMark
 {
     /// <summary>
-    /// Gets or sets the model.
+    /// The model under test, created once so the benchmark serializes real data.
     /// </summary>
-    /// <value>The model.</value>
-    private TestModel? _model { get; set; } // NOSONAR - initialized by GlobalSetup in derived usage
+    private readonly TestModel _model = GetTestObject(Array.Empty<byte>());
 
 
     /// <summary>

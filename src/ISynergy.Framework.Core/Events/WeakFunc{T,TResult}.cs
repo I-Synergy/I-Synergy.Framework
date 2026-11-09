@@ -43,23 +43,13 @@ public class WeakFunc<T, TResult> : WeakFunc<TResult>, IExecuteWithObjectAndResu
     {
         get
         {
-            if (_staticFunc is null
-                && Reference is null)
-            {
-                return false;
-            }
+            var reference = Reference;
 
+            // A static function has no target to collect; a non static function is alive while its target is.
             if (_staticFunc is not null)
-            {
-                if (Reference is not null)
-                {
-                    return Reference.IsAlive;
-                }
+                return reference is null || reference.IsAlive;
 
-                return true;
-            }
-
-            return Reference?.IsAlive ?? false; // NOSONAR - Reference may or may not be set for non-static funcs
+            return reference is not null && reference.IsAlive;
         }
     }
 

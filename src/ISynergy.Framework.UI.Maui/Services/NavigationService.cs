@@ -165,7 +165,7 @@ public partial class NavigationService : BaseNavigationService
     // -----------------------------------------------------------------------
     // Override: NavigateModalAsync — native MAUI modal stack
     // -----------------------------------------------------------------------
-    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null) // NOSONAR - native modal-stack orchestration
+    public override async Task NavigateModalAsync<TViewModel>(object? parameter = null)
     {
         if (Application.Current is null)
             return;
@@ -185,50 +185,66 @@ public partial class NavigationService : BaseNavigationService
             // recycled singleton pages.
             page.Handler = null;
 
-            var mainPage = GetMainPage();
+            await PresentModalPageAsync(page, scope);
 
-            if (mainPage is null)
-            {
-                scope.Dispose();
-                throw new InvalidOperationException(DefaultPageNotAvailable);
-            }
-
-            if (mainPage is Shell or NavigationPage || GetNavigationFrame() is not null)
-            {
-                // The root owns a content host (or is a Shell/NavigationPage), so a modal can be
-                // pushed on top of it and the shell stays alive underneath.
-                await mainPage.Navigation.PushModalAsync(page, Animated);
-                _modals.Push(new ModalPage(page, scope));
-            }
-            else
-            {
-                // Initial setup or bare-page root (e.g., LoadingView): replace the window root.
-                var oldPage = Application.Current.Windows[0].Page;
-                Application.Current.Windows[0].Page = page;
-
-                CleanupPageResources(oldPage);
-                scope.Dispose();
-            }
-
-            if (view.ViewModel is not null)
-            {
-                try
-                {
-                    await view.ViewModel.InitializeAsync();
-                }
-                catch (Exception ex)
-                {
-                    try
-                    {
-                        _exceptionHandlerService.HandleException(ex);
-                    }
-                    catch
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
-                    }
-                }
-            }
+            await InitializeModalViewModelAsync(view);
         });
+    }
+
+    /// <summary>
+    /// Presents the modal page by pushing it onto a host root, or by replacing a bare-page root.
+    /// </summary>
+    private async Task PresentModalPageAsync(Page page, IServiceScope scope)
+    {
+        var mainPage = GetMainPage();
+
+        if (mainPage is null)
+        {
+            scope.Dispose();
+            throw new InvalidOperationException(DefaultPageNotAvailable);
+        }
+
+        if (mainPage is Shell or NavigationPage || GetNavigationFrame() is not null)
+        {
+            // The root owns a content host (or is a Shell/NavigationPage), so a modal can be
+            // pushed on top of it and the shell stays alive underneath.
+            await mainPage.Navigation.PushModalAsync(page, Animated);
+            _modals.Push(new ModalPage(page, scope));
+        }
+        else
+        {
+            // Initial setup or bare-page root (e.g., LoadingView): replace the window root.
+            var oldPage = Application.Current!.Windows[0].Page;
+            Application.Current.Windows[0].Page = page;
+
+            CleanupPageResources(oldPage);
+            scope.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Initializes the modal view model, routing any failure through the exception handler.
+    /// </summary>
+    private async Task InitializeModalViewModelAsync(IView view)
+    {
+        if (view.ViewModel is null)
+            return;
+
+        try
+        {
+            await view.ViewModel.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                _exceptionHandlerService.HandleException(ex);
+            }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine($"Error initializing ViewModel: {ex.Message}");
+            }
+        }
     }
 
     // -----------------------------------------------------------------------

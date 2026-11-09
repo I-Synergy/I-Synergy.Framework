@@ -111,15 +111,10 @@ public static class ServiceCollectionExtensions
     /// <typeparam name="TImplementation">The type of the t implementation.</typeparam>
     /// <param name="_self">The self.</param>
     /// <returns>IServiceCollection.</returns>
-    public static IServiceCollection AddPublishingTopicMessageBus<TQueueMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(this IServiceCollection _self) // NOSONAR
+    public static IServiceCollection AddPublishingTopicMessageBus<TQueueMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(this IServiceCollection _self)
         where TQueueMessage : class, IBaseMessage
-        where TImplementation : class, IPublisherServiceBus<TQueueMessage>
-    {
-        _self.TryAddSingleton<TImplementation>();
-        _self.TryAddSingleton<IPublisherServiceBus<TQueueMessage>, TImplementation>();
-
-        return _self;
-    }
+        where TImplementation : class, IPublisherServiceBus<TQueueMessage> =>
+        _self.AddPublishingQueueMessageBus<TQueueMessage, TImplementation>();
 
     /// <summary>
     /// Adds the subscribing topic message bus.

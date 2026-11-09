@@ -16,7 +16,28 @@ namespace ISynergy.Framework.Mvvm.ViewModels.Base;
 /// <typeparam name="TModel">The model type.</typeparam>
 public abstract class BaseMultipleSelectionViewModel<TModel> : BaseSelectionViewModel<TModel, List<TModel>>, IMultipleSelectionViewModel
 {
-    List<object>? IMultipleSelectionViewModel.SelectedItem => SelectedItem?.Cast<object>().ToList(); // NOSONAR - interface property, cannot be a method
+    private List<object>? _selectedItemProjection;
+    private List<TModel>? _selectedItemProjectionSource;
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// Cached per source-list reference so repeated reads do not allocate a new projection each
+    /// time (S2365). The underlying list is only ever replaced, never mutated in place, so keying
+    /// on reference identity is sufficient to keep the cache coherent.
+    /// </remarks>
+    List<object>? IMultipleSelectionViewModel.SelectedItem
+    {
+        get
+        {
+            if (!ReferenceEquals(_selectedItemProjectionSource, SelectedItem))
+            {
+                _selectedItemProjectionSource = SelectedItem;
+                _selectedItemProjection = SelectedItem?.Cast<object>().ToList();
+            }
+
+            return _selectedItemProjection;
+        }
+    }
 
     /// <inheritdoc />
     public virtual void SetSelectedItem(IEnumerable<object>? items)

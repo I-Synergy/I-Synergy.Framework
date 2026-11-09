@@ -217,63 +217,82 @@ public static class RegexValidator
     private static void TextBox_LostFocus(object sender, RoutedEventArgs e) =>
         ValidateTextBox((TextBox)sender);
 
-    private static void ValidateTextBox(TextBox textBox, bool force = true) // NOSONAR
+    private static void ValidateTextBox(TextBox textBox, bool force = true)
     {
-        var validationType = _control is null
-            ? (ValidationType)textBox.GetValue(ValidationTypeProperty)
-            : (ValidationType)_control.GetValue(ValidationTypeProperty);
+        var validationType = GetControlValue<ValidationType>(textBox, ValidationTypeProperty);
 
-        var regex = string.Empty;
-        var regexMatch = false;
+        // A null result means validation could not be performed (custom mode without a regex);
+        // the original behaviour is to leave IsValid untouched in that case.
+        if (TryEvaluate(textBox, validationType, out var regexMatch))
+        {
+            if (!regexMatch && force && !string.IsNullOrEmpty(textBox.Text))
+            {
+                ApplyForcedCorrection(textBox);
+            }
 
+            SetControlValue(textBox, IsValidProperty, regexMatch);
+        }
+    }
+
+    /// <summary>
+    /// Evaluates the text box value against the configured validation type. Returns <c>false</c> when
+    /// validation cannot be performed (custom mode without a regex), leaving nothing to apply.
+    /// </summary>
+    private static bool TryEvaluate(TextBox textBox, ValidationType validationType, out bool regexMatch)
+    {
         switch (validationType)
         {
+            case ValidationType.Decimal:
+                regexMatch = textBox.Text.IsDecimal();
+                return true;
+            case ValidationType.Integer:
+                regexMatch = textBox.Text.IsInteger();
+                return true;
+            case ValidationType.Alphanumeric:
+                regexMatch = textBox.Text.IsAlphaNumeric();
+                return true;
             default:
-                if (_control is null)
-                    regex = textBox.GetValue(RegexProperty) as string;
-                else
-                    regex = _control.GetValue(RegexProperty) as string;
+                var regex = GetControlValue<string>(textBox, RegexProperty);
 
                 if (string.IsNullOrEmpty(regex))
                 {
                     Debug.WriteLine("Regex property can't be null or empty when custom mode is selected");
-                    return;
+                    regexMatch = false;
+                    return false;
                 }
 
                 regexMatch = System.Text.RegularExpressions.Regex.IsMatch(textBox.Text, regex, RegexOptions.None, TimeSpan.FromMilliseconds(100));
-                break;
-            case ValidationType.Decimal:
-                regexMatch = textBox.Text.IsDecimal();
-                break;
-            case ValidationType.Integer:
-                regexMatch = textBox.Text.IsInteger();
-                break;
-            case ValidationType.Alphanumeric:
-                regexMatch = textBox.Text.IsAlphaNumeric();
-                break;
+                return true;
         }
-
-        if (!regexMatch && force && !string.IsNullOrEmpty(textBox.Text))
-        {
-            var validationMode = _control is null
-                ? (ValidationMode)textBox.GetValue(ValidationModeProperty)
-                : (ValidationMode)_control.GetValue(ValidationModeProperty);
-
-            if (validationMode == ValidationMode.Forced)
-            {
-                textBox.Text = string.Empty;
-            }
-            else if (validationMode == ValidationMode.Dynamic)
-            {
-                int selectionStart = textBox.SelectionStart == 0 ? textBox.SelectionStart : textBox.SelectionStart - 1;
-                textBox.Text = textBox.Text.Remove(selectionStart, 1);
-                textBox.SelectionStart = selectionStart;
-            }
-        }
-
-        if (_control is null)
-            textBox.SetValue(IsValidProperty, regexMatch);
-        else
-            _control.SetValue(IsValidProperty, regexMatch);
     }
+
+    /// <summary>
+    /// Corrects invalid input according to the current validation mode (clear for forced, remove last char for dynamic).
+    /// </summary>
+    private static void ApplyForcedCorrection(TextBox textBox)
+    {
+        var validationMode = GetControlValue<ValidationMode>(textBox, ValidationModeProperty);
+
+        if (validationMode == ValidationMode.Forced)
+        {
+            textBox.Text = string.Empty;
+        }
+        else if (validationMode == ValidationMode.Dynamic)
+        {
+            int selectionStart = textBox.SelectionStart == 0 ? textBox.SelectionStart : textBox.SelectionStart - 1;
+            textBox.Text = textBox.Text.Remove(selectionStart, 1);
+            textBox.SelectionStart = selectionStart;
+        }
+    }
+
+    /// <summary>
+    /// Resolves the effective <see cref="DependencyObject"/> carrying the attached validation state.
+    /// </summary>
+    private static DependencyObject ResolveTarget(TextBox textBox) => _control is null ? textBox : _control;
+
+    private static T GetControlValue<T>(TextBox textBox, DependencyProperty property) =>
+        (T)ResolveTarget(textBox).GetValue(property);
+
+    private static void SetControlValue(TextBox textBox, DependencyProperty property, object value) =>
+        ResolveTarget(textBox).SetValue(property, value);
 }

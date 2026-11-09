@@ -6,7 +6,9 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Singleton)]
-public abstract class View : ContentPage, IView // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
+public abstract class View : ContentPage, IView
+#pragma warning restore S3881
 {
     private IServiceScope? _viewModelScope;
 

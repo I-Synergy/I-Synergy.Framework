@@ -111,7 +111,7 @@ using (var scope = app.Services.CreateScope())
     tenantService.SetTenant(Guid.Parse("00000000-0000-0000-0000-000000000001")); // system
 
     var context = scope.ServiceProvider.GetRequiredService<EventSourcingDbContext>();
-    context.Database.EnsureCreated();
+    await context.Database.EnsureCreatedAsync();
 }
 
 // ── Middleware pipeline ───────────────────────────────────────────────────────

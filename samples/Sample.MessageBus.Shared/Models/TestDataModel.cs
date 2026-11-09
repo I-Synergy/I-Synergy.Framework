@@ -12,6 +12,6 @@ namespace Sample.MessageBus.Models;
 /// </remarks>
 /// <param name="action">The action.</param>
 /// <param name="data">The data.</param>
-public class TestDataModel(QueueMessageActions action, string data) : QueueMessage<string>(action, data), IQueueMessage<string>
+public class TestDataModel(QueueMessageActions action, string data) : QueueMessage<string>(action, data)
 {
 }

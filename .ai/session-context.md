@@ -1,3 +1,61 @@
+# Session Handoff - 2026-11-09 (build warnings + SonarCloud)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Created branch `fix/build-warnings-and-sonar` and cleared every warning from CI run 42532046072,
+job 128895030909, plus the SonarCloud analysis error that failed it.
+
+- **SonarCloud error:** step 16 failed with
+  `Invalid regular expression 'src/ISynergy.Framework.Mathematics/**' for setting
+  'sonar.issue.ignore.allfile'`. The value is not in the repository: the SonarCloud settings API
+  returns it with `parentOrigin: INSTANCE`, i.e. an organization-level "ignore all issues on files"
+  entry holding a glob, which scanner 12 now validates as a regex. `ci.yml` overrides the setting
+  per project with `src/ISynergy\.Framework\.Mathematics/.*`. The organization setting should also
+  be corrected in the SonarCloud UI.
+- **Warnings:** 544 distinct locations in the Release build, 272 in the Mathematics port and 272
+  elsewhere. Fixed all 272 non-Mathematics locations; the port is untouched and its diagnostics
+  are suppressed in `ISynergy.Framework.Mathematics.csproj` (documented; mirrors the Sonar
+  exclusions). Generated `obj/` sources are excluded from analyzers in `.editorconfig`.
+- **GitHub Actions:** `checkout`, `setup-dotnet`, `setup-java`, `upload-artifact` and
+  `download-artifact` moved from v4 to v5 (Node 24), removing both job-level deprecation warnings.
+- **Verification:** Release solution build with the Sonar analyzer injected has 0 Sonar/compiler
+  warnings outside `tests/`; the full test suite passes (Sample.Blazor.UI.Tests 36/36).
+
+## Decisions Made
+- **Fix warnings in code, suppress only where a fix breaks a public contract**: S3881 on
+  finalizer-free types is suppressed with a comment because S3971 forbids `GC.SuppressFinalize`;
+  S101/S110/S2436/S4035/S1133 on public API, P/Invoke structs and DNS constants are suppressed;
+  everything else is a real change (S3776 refactored into helpers).
+- **Do not edit the Math.NET port**: it is a port; its analyzer diagnostics are suppressed at the
+  project level, matching the existing SonarCloud organization exclusion.
+- **Do not implement `IDisposable` on the Blazor dialog components**: doing so made Blazor dispose
+  the reused view model on close and broke reopening the dialog. The cleanup method is renamed
+  `DetachViewModel` instead (S2953 fix without a lifetime change).
+
+## Open Questions
+- **OPEN**: correct the organization-level `sonar.issue.ignore.allfile` value in SonarCloud; the
+  repository-side override only covers this project.
+- **OPEN**: `tests/` still emits ~1 500 analyzer warnings locally (not part of the CI run; the
+  scanner excludes test projects). Treat as a separate cleanup.
+- **ASSUMED**: the local `XA0033` warning is environmental (local JDK 25); CI installs JDK 21.
+
+## Files Modified
+- `.github/workflows/ci.yml`, `.github/workflows/validate-template.yml` - Sonar override, action majors
+- `.editorconfig` - no analyzers on `obj/`
+- `src/ISynergy.Framework.Mathematics/ISynergy.Framework.Mathematics.csproj` - documented NoWarn
+- 170 files under `src/`, `samples/`, `performance/`, `tools/` - per-warning fixes
+- `CHANGELOG.md` - Fixed entries
+- `.ai/plans/build-warnings-and-sonar.md`, `.ai/progress/build-warnings-and-sonar.md`
+
+## Next Actions (Priority Order)
+1. Push the branch and let CI run; confirm the SonarCloud end step succeeds.
+2. Correct the SonarCloud organization setting (regex, not glob).
+3. Decide whether to clean the test-project analyzer warnings.
+
+---
+
 # Session Handoff - 2026-11-08 (phone layouts: iOS and Android)
 
 **Written By:** Reasonix Code

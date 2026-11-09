@@ -42,23 +42,13 @@ public class WeakAction<T> : WeakAction, IExecuteWithObject
     {
         get
         {
-            if (_staticAction is null
-                && Reference is null)
-            {
-                return false;
-            }
+            var reference = Reference;
 
+            // A static action has no target to collect; a non static action is alive while its target is.
             if (_staticAction is not null)
-            {
-                if (Reference is not null)
-                {
-                    return Reference.IsAlive;
-                }
+                return reference is null || reference.IsAlive;
 
-                return true;
-            }
-
-            return Reference?.IsAlive ?? false; // NOSONAR - Reference may or may not be set for non-static actions
+            return reference is not null && reference.IsAlive;
         }
     }
 

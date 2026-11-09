@@ -70,5 +70,10 @@ public sealed class Profile : IProfile
     /// </summary>
     public List<Organization> Organizations { get; set; } = new();
 
+    // S2365: explicit interface implementation must return IReadOnlyList<IOrganization> while the
+    // backing store is List<Organization>; the covariant cast requires a copy and the member cannot
+    // be turned into a method because it implements an interface property.
+#pragma warning disable S2365 // interface-required collection copy
     IReadOnlyList<IOrganization> IProfile.Organizations => Organizations.Cast<IOrganization>().ToList();
+#pragma warning restore S2365
 }

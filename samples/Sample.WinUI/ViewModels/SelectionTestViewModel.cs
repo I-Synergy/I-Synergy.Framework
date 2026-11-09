@@ -21,7 +21,6 @@ namespace Sample.ViewModels;
 public partial class SelectionTestViewModel : ViewModelBladeView<TestItem>
 {
     private readonly IDialogService _dialogService;
-    private readonly INavigationService _navigationService;
     private readonly IBladeService _bladeService;
 
     /// <summary>
@@ -57,13 +56,11 @@ public partial class SelectionTestViewModel : ViewModelBladeView<TestItem>
     /// </summary>
     /// <param name="commonServices">The common services.</param>
     /// <param name="dialogService"></param>
-    /// <param name="navigationService"></param>
     /// <param name="bladeService"></param>
     /// <param name="logger"></param>
-    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, IBladeService bladeService, ILogger<SelectionTestViewModel> logger)        : base(commonServices, logger)
+    public SelectionTestViewModel(ICommonServices commonServices, IDialogService dialogService, IBladeService bladeService, ILogger<SelectionTestViewModel> logger)        : base(commonServices, logger)
     {
         _dialogService = dialogService;
-        _navigationService = navigationService;
         _bladeService = bladeService;
 
         SelectSingleCommand = new AsyncRelayCommand(SelectSingleAsync);

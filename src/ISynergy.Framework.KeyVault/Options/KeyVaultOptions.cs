@@ -22,6 +22,9 @@ public class KeyVaultOptions
     /// (e.g. AppRole auth). Never place a production Vault token in <c>appsettings.json</c> or
     /// any plain-text configuration file that may be committed to source control.
     /// </remarks>
-    [Obsolete("Source the Vault token from the VAULT_TOKEN environment variable or an IVaultTokenProvider. Storing tokens in configuration is a security risk.")] // NOSONAR
+    // S1133: kept for backward compatibility; applications still bind existing configuration files.
+    #pragma warning disable S1133 // obsolete public API kept for backward compatibility
+    [Obsolete("Source the Vault token from the VAULT_TOKEN environment variable or an IVaultTokenProvider. Storing tokens in configuration is a security risk.")]
     public string Token { get; set; } = string.Empty;
+    #pragma warning restore S1133
 }

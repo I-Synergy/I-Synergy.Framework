@@ -67,9 +67,9 @@ public class QueryDispatcher : IQueryDispatcher
             // Reflection fallback — not AOT-safe. Triggers trimmer warnings when table is absent.
             return await DispatchViaReflection<TResult>(query, cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex) when (ex is not OperationCanceledException) // NOSONAR - log-and-rethrow at the application boundary
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            _logger?.LogError(ex, "Error dispatching query of type {QueryType}", query.GetType().Name);
+            LogDispatchFailure(ex, query.GetType().Name);
             throw;
         }
     }
@@ -87,12 +87,21 @@ public class QueryDispatcher : IQueryDispatcher
             var handler = _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
             return await handler.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception ex) when (ex is not OperationCanceledException) // NOSONAR - log-and-rethrow at the application boundary
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            _logger?.LogError(ex, "Error dispatching query of type {QueryType}", typeof(TQuery).Name);
+            LogDispatchFailure(ex, typeof(TQuery).Name);
             throw;
         }
     }
+
+    /// <summary>
+    /// Logs the failure of a query dispatch. Kept out of the catch blocks so that they only rethrow the
+    /// original exception (Sonar S2139); the exception itself is unchanged.
+    /// </summary>
+    /// <param name="exception">The exception that escaped the handler.</param>
+    /// <param name="queryType">The name of the query type.</param>
+    private void LogDispatchFailure(Exception exception, string queryType) =>
+        _logger?.LogError(exception, "Error dispatching query of type {QueryType}", queryType);
 
     [RequiresDynamicCode("Uses MakeGenericType to resolve IQueryHandler<,> for a runtime-only-known query type; not supported under NativeAOT.")]
     [RequiresUnreferencedCode("Not trim-compatible.")]

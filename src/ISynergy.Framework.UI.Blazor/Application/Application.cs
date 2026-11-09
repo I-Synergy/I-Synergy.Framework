@@ -18,7 +18,7 @@ using System.Globalization;
 
 namespace ISynergy.Framework.UI;
 
-public abstract class Application : ComponentBase, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+public abstract class Application : ComponentBase, IDisposable
 {
     private const string ExceptionMessageTemplate = "{ExceptionMessage}";
     private const string ExceptionHandlerErrorMessage = "Error in exception handler";
@@ -351,6 +351,7 @@ public abstract class Application : ComponentBase, IDisposable // NOSONAR - fina
     public new void Dispose()
     {
         Dispose(true);
+        GC.SuppressFinalize(this);
     }
 #else
     /// <summary>
@@ -359,6 +360,7 @@ public abstract class Application : ComponentBase, IDisposable // NOSONAR - fina
     public void Dispose()
     {
         Dispose(true);
+        GC.SuppressFinalize(this);
     }
 #endif
 

@@ -42,18 +42,10 @@ public class Point : IComparable<Point>
     /// <param name="round"></param>
     /// <param name="decimals"></param>
     /// 
-    public Point(double x, double y, bool round = false, int decimals = 0) // NOSONAR
+    public Point(double x, double y, bool round = false, int decimals = 0)
     {
-        if (round)
-        {
-            X = Math.Round(x, decimals);
-            Y = Math.Round(y, decimals);
-        }
-        else
-        {
-            X = x;
-            Y = y;
-        }
+        X = NormalizeCoordinate(x, round, decimals);
+        Y = NormalizeCoordinate(y, round, decimals);
     }
 
     /// <summary>
@@ -111,6 +103,16 @@ public class Point : IComparable<Point>
         : this(Convert.ToDouble(x), Convert.ToDouble(y), round, decimals)
     {
     }
+
+    /// <summary>
+    /// Returns the coordinate, optionally rounded to the requested number of decimals.
+    /// </summary>
+    /// <param name="value">The coordinate value.</param>
+    /// <param name="round">Whether the value should be rounded.</param>
+    /// <param name="decimals">The number of decimals to round to.</param>
+    /// <returns>The (optionally rounded) coordinate.</returns>
+    private static double NormalizeCoordinate(double value, bool round, int decimals) =>
+        round ? Math.Round(value, decimals) : value;
 
     /// <summary>
     /// Calculate Euclidean distance between two points.
@@ -338,7 +340,11 @@ public class Point : IComparable<Point>
     ///
     public static bool operator ==(Point point1, Point point2)
     {
-        return ((point1.X == point2.X) && (point1.Y == point2.Y)); // NOSONAR
+        // S1244: exact comparison is intentional - this is a coordinate identity check, two points
+        // are only equal when their stored coordinates are exactly equal.
+        #pragma warning disable S1244 // coordinate identity check: exact comparison is intended
+        return ((point1.X == point2.X) && (point1.Y == point2.Y));
+        #pragma warning restore S1244
     }
 
     /// <summary>
@@ -353,7 +359,10 @@ public class Point : IComparable<Point>
     ///
     public static bool operator !=(Point point1, Point point2)
     {
-        return ((point1.X != point2.X) || (point1.Y != point2.Y)); // NOSONAR
+        // S1244: exact comparison is intentional - see the equality operator above.
+        #pragma warning disable S1244 // coordinate identity check: exact comparison is intended
+        return ((point1.X != point2.X) || (point1.Y != point2.Y));
+        #pragma warning restore S1244
     }
 
     /// <summary>

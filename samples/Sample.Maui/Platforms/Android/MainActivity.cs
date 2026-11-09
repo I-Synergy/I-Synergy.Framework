@@ -23,6 +23,8 @@ public class MainActivity : MauiAppCompatActivity
             return;
         }
 
+#pragma warning disable CA1422 // OnBackPressed() is obsolete on Android 33+ but remains the correct default fallback for this sample
         base.OnBackPressed();
+#pragma warning restore CA1422
     }
 }

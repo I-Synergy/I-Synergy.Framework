@@ -55,7 +55,7 @@
 			@if (Content?.SubmitCommand is not null)
 			{
 				<FluentButton Appearance="ButtonAppearance.Primary"
-							  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content?.SelectedItem)">
+							  @attributes="@this.CommandBinding(Content.SubmitCommand, parameter: Content.SelectedItem)">
 					@SaveButtonText
 				</FluentButton>
 			}
@@ -234,21 +234,22 @@
 		StateHasChanged();
 	}
 
-	#region IDisposable
+	#region Cleanup
 	/// <summary>
-	/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+	/// Detaches this dialog instance from its view model. The dialog service owns the view-model
+	/// lifetime, so this is not an <see cref="IDisposable"/> implementation and is deliberately
+	/// not called by Blazor when the dialog closes.
 	/// </summary>
-	public void Dispose()
+	public void DetachViewModel()
 	{
-		Dispose(true);
-		GC.SuppressFinalize(this);
+		DetachViewModel(true);
 	}
 
 	/// <summary>
-	/// Releases unmanaged and - optionally - managed resources.
+	/// Releases the dialog's references to its view model.
 	/// </summary>
 	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-	protected virtual void Dispose(bool disposing)
+	protected virtual void DetachViewModel(bool disposing)
 	{
 		if (disposing && Content is not null)
 		{

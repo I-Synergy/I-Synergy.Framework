@@ -53,7 +53,7 @@ internal class UpdateService : IUpdateService
     public async Task<bool> CheckForUpdateAsync()
     {
         if (await NetworkUtility.IsInternetConnectionAvailable())
-            return await CheckVersionAsync(_updateOptions.ApplicationId);
+            return await CheckVersionAsync();
 
         return false;
     }
@@ -93,7 +93,7 @@ internal class UpdateService : IUpdateService
         }
     }
 
-    private async Task<bool> CheckVersionAsync(int applicationId) // NOSONAR - parameter reserved for future use
+    private async Task<bool> CheckVersionAsync()
     {
         var version = string.Empty;
 

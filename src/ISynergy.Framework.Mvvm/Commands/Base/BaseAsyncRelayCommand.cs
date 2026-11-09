@@ -204,11 +204,8 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Monitors a task for completion and updates properties accordingly.
     /// </summary>
     /// <param name="task">The task to monitor.</param>
-    protected void MonitorTask(Task task) // NOSONAR
+    protected void MonitorTask(Task task)
     {
-        // Store a local reference to avoid race conditions
-        var currentTask = task;
-
         // Rent pooled resources (weak reference + continuation token source)
         var weakThis = CommandExecutionResourcePool.RentWeakReference(this);
         var continuationCts = CommandExecutionResourcePool.RentContinuationTokenSource();
@@ -225,132 +222,124 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
             _continuationCancellations.Add(continuationCts);
         }
 
-        _ = currentTask.ContinueWith(t =>
+        _ = task.ContinueWith(
+            t => OnMonitoredTaskCompleted(t, weakThis, continuationCts),
+            continuationCts.Token,
+            TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
+    }
+
+    /// <summary>
+    /// Continuation body executed when a monitored task completes.
+    /// Extracted from <see cref="MonitorTask"/> to keep cognitive complexity low.
+    /// </summary>
+    private static void OnMonitoredTaskCompleted(
+        Task completedTask,
+        WeakReference<BaseAsyncRelayCommand> weakThis,
+        CancellationTokenSource continuationCts)
+    {
+        if (continuationCts.IsCancellationRequested)
         {
-            // Check if continuation was canceled
-            if (continuationCts.IsCancellationRequested)
-            {
-                CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                return;
-            }
+            CommandExecutionResourcePool.Return(weakThis, continuationCts);
+            return;
+        }
 
-            // Use weak reference to avoid keeping the command alive if it's disposed
-            if (!weakThis.TryGetTarget(out var target))
-            {
-                CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                return;
-            }
+        // Use weak reference to avoid keeping the command alive if it's disposed
+        if (!weakThis.TryGetTarget(out var target))
+        {
+            CommandExecutionResourcePool.Return(weakThis, continuationCts);
+            return;
+        }
 
-            bool isCurrentTask;
-            lock (target._syncLock)
-            {
-                if (target._isDisposed)
-                {
-                    CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                    return;
-                }
+        if (!TryPromoteCurrentCompletion(target, completedTask, continuationCts))
+        {
+            CommandExecutionResourcePool.Return(weakThis, continuationCts);
+            return;
+        }
 
-                // Remove this continuation from the tracking list
-                target._continuationCancellations.Remove(continuationCts);
-                isCurrentTask = ReferenceEquals(target._executionTask, t);
-            }
+        // Use UI thread dispatcher for property notifications when available
+        var context = SynchronizationContext.Current;
+        if (context != null)
+        {
+            context.Post(_ => CompleteOnTarget(weakThis, continuationCts, completedTask), null);
+        }
+        else
+        {
+            // No synchronization context, update directly
+            CompleteOnTarget(weakThis, continuationCts, completedTask);
+        }
+    }
 
-            if (isCurrentTask)
-            {
-                // Use UI thread dispatcher for property notifications
-                var context = SynchronizationContext.Current;
-                if (context != null)
-                {
-                    context.Post(_ =>
-                    {
-                        if (!weakThis.TryGetTarget(out var innerTarget))
-                        {
-                            CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                            return;
-                        }
+    /// <summary>
+    /// Verifies the command is still alive and the completed task is still the current one, removing
+    /// the continuation from tracking. Returns <c>false</c> when the continuation must not proceed.
+    /// </summary>
+    private static bool TryPromoteCurrentCompletion(
+        BaseAsyncRelayCommand target,
+        Task completedTask,
+        CancellationTokenSource continuationCts)
+    {
+        lock (target._syncLock)
+        {
+            if (target._isDisposed)
+                return false;
 
-                        lock (innerTarget._syncLock)
-                        {
-                            if (innerTarget._isDisposed)
-                            {
-                                CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                                return;
-                            }
+            // Remove this continuation from the tracking list
+            target._continuationCancellations.Remove(continuationCts);
+            return ReferenceEquals(target._executionTask, completedTask);
+        }
+    }
 
-                            // Only raise property changed events if this is still the current task
-                            if (ReferenceEquals(innerTarget._executionTask, t))
-                            {
-                                var propertyChanges = new List<PropertyChangedEventArgs>
-                                {
-                                    ExecutionTaskChangedEventArgs,
-                                    IsRunningChangedEventArgs
-                                };
+    /// <summary>
+    /// Re-resolves the target through the weak reference and applies the completion notification,
+    /// returning the pooled resources exactly once on every exit path.
+    /// </summary>
+    private static void CompleteOnTarget(
+        WeakReference<BaseAsyncRelayCommand> weakThis,
+        CancellationTokenSource continuationCts,
+        Task completedTask)
+    {
+        if (weakThis.TryGetTarget(out var target))
+            ApplyCompletionNotification(target, completedTask);
 
-                                if (innerTarget._cancellationTokenSource is not null)
-                                {
-                                    propertyChanges.Add(CanBeCanceledChangedEventArgs);
-                                }
+        CommandExecutionResourcePool.Return(weakThis, continuationCts);
+    }
 
-                                innerTarget.RaisePropertyChangedBatch(propertyChanges.ToArray());
+    /// <summary>
+    /// Raises the batched completion notifications if the completed task is still current and the
+    /// command is still alive.
+    /// </summary>
+    private static void ApplyCompletionNotification(BaseAsyncRelayCommand target, Task completedTask)
+    {
+        lock (target._syncLock)
+        {
+            if (!target._isDisposed && ReferenceEquals(target._executionTask, completedTask))
+                target.RaiseTaskCompletedNotifications();
+        }
+    }
 
-                                if ((innerTarget._options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
-                                {
-                                    innerTarget.OnCanExecuteChanged();
-                                }
+    /// <summary>
+    /// Raises the batched property-changed notifications after a monitored task completes and clears
+    /// the current execution-task reference. Caller must hold <see cref="_syncLock"/>.
+    /// </summary>
+    private void RaiseTaskCompletedNotifications()
+    {
+        var propertyChanges = new List<PropertyChangedEventArgs>
+        {
+            ExecutionTaskChangedEventArgs,
+            IsRunningChangedEventArgs
+        };
 
-                                // Clear the task reference immediately
-                                innerTarget._executionTask = null;
-                            }
-                        }
+        if (_cancellationTokenSource is not null)
+            propertyChanges.Add(CanBeCanceledChangedEventArgs);
 
-                        CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                    }, null);
-                }
-                else
-                {
-                    // No synchronization context, update directly
-                    lock (target._syncLock)
-                    {
-                        if (target._isDisposed)
-                        {
-                            CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                            return;
-                        }
+        RaisePropertyChangedBatch(propertyChanges.ToArray());
 
-                        // Only raise property changed events if this is still the current task
-                        if (ReferenceEquals(target._executionTask, t))
-                        {
-                            var propertyChanges = new List<PropertyChangedEventArgs>
-                            {
-                                ExecutionTaskChangedEventArgs,
-                                IsRunningChangedEventArgs
-                            };
+        if ((_options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
+            OnCanExecuteChanged();
 
-                            if (target._cancellationTokenSource is not null)
-                            {
-                                propertyChanges.Add(CanBeCanceledChangedEventArgs);
-                            }
-
-                            target.RaisePropertyChangedBatch(propertyChanges.ToArray());
-
-                            if ((target._options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
-                            {
-                                target.OnCanExecuteChanged();
-                            }
-
-                            // Clear the task reference immediately
-                            target._executionTask = null;
-                        }
-                    }
-
-                    CommandExecutionResourcePool.Return(weakThis, continuationCts);
-                }
-            }
-            else
-            {
-                CommandExecutionResourcePool.Return(weakThis, continuationCts);
-            }
-        }, continuationCts.Token, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+        // Clear the task reference immediately
+        _executionTask = null;
     }
 
     /// <summary>
@@ -627,73 +616,94 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// <summary>
     /// Disposes all cancellation token sources.
     /// </summary>
-    protected void DisposeCancellationTokens() // NOSONAR
+    protected void DisposeCancellationTokens()
     {
         lock (_syncLock)
         {
-            // Cancel and dispose all continuation cancellation tokens
-            foreach (var cts in _continuationCancellations)
+            DisposeContinuationTokens();
+            DisposeCommandTokens();
+            DisposeCurrentToken();
+        }
+    }
+
+    /// <summary>
+    /// Cancels and disposes the continuation cancellation tokens. Caller must hold <see cref="_syncLock"/>.
+    /// </summary>
+    private void DisposeContinuationTokens()
+    {
+        foreach (var cts in _continuationCancellations)
+        {
+            try
             {
-                try
-                {
-                    cts.Cancel();
-                    cts.Dispose();
-                }
-                catch (ObjectDisposedException)
-                {
-                    // Token was already disposed, ignore
-                }
+                cts.Cancel();
+                cts.Dispose();
             }
-            _continuationCancellations.Clear();
-
-            // Cancel and dispose all command cancellation tokens
-            if (_cancellationTokenSources is not null)
+            catch (ObjectDisposedException)
             {
-                foreach (var cts in _cancellationTokenSources.EnsureNotNull())
-                {
-                    try
-                    {
-                        if (!cts.IsCancellationRequested)
-                            cts.Cancel();
-
-                        cts.Dispose();
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // Token was already disposed, ignore
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log any other exceptions but continue cleanup
-                        System.Diagnostics.Debug.WriteLine($"Error disposing cancellation token: {ex.Message}");
-                    }
-                }
-
-                _cancellationTokenSources.Clear();
-            }
-
-            // Cancel and dispose the current cancellation token
-            if (_cancellationTokenSource is not null)
-            {
-                try
-                {
-                    if (!_cancellationTokenSource.IsCancellationRequested)
-                        _cancellationTokenSource.Cancel();
-
-                    _cancellationTokenSource.Dispose();
-                }
-                catch (ObjectDisposedException)
-                {
-                    // Token was already disposed, ignore
-                }
-                catch (Exception ex)
-                {
-                    // Log any other exceptions
-                    System.Diagnostics.Debug.WriteLine($"Error disposing current cancellation token: {ex.Message}");
-                }
-                _cancellationTokenSource = null;
+                // Token was already disposed, ignore
             }
         }
+
+        _continuationCancellations.Clear();
+    }
+
+    /// <summary>
+    /// Cancels and disposes the command cancellation tokens. Caller must hold <see cref="_syncLock"/>.
+    /// </summary>
+    private void DisposeCommandTokens()
+    {
+        if (_cancellationTokenSources is null)
+            return;
+
+        foreach (var cts in _cancellationTokenSources.EnsureNotNull())
+        {
+            try
+            {
+                if (!cts.IsCancellationRequested)
+                    cts.Cancel();
+
+                cts.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Token was already disposed, ignore
+            }
+            catch (Exception ex)
+            {
+                // Log any other exceptions but continue cleanup
+                System.Diagnostics.Debug.WriteLine($"Error disposing cancellation token: {ex.Message}");
+            }
+        }
+
+        _cancellationTokenSources.Clear();
+    }
+
+    /// <summary>
+    /// Cancels and disposes the current cancellation token. Caller must hold <see cref="_syncLock"/>.
+    /// </summary>
+    private void DisposeCurrentToken()
+    {
+        if (_cancellationTokenSource is null)
+            return;
+
+        try
+        {
+            if (!_cancellationTokenSource.IsCancellationRequested)
+                _cancellationTokenSource.Cancel();
+
+            _cancellationTokenSource.Dispose();
+        }
+        catch (ObjectDisposedException)
+        {
+            // Token was already disposed, ignore
+        }
+        catch (Exception ex)
+        {
+            // Log any other exceptions
+            System.Diagnostics.Debug.WriteLine($"Error disposing current cancellation token: {ex.Message}");
+        }
+
+        _cancellationTokenSource = null;
     }
 
     /// <summary>
@@ -709,69 +719,73 @@ public abstract class BaseAsyncRelayCommand : IAsyncRelayCommand, ICancellationA
     /// Disposes the resources used by this command.
     /// </summary>
     /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
-    protected virtual void Dispose(bool disposing) // NOSONAR
+    protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
+        if (!disposing)
+            return;
+
+        bool shouldDispose;
+
+        lock (_syncLock)
         {
-            bool shouldDispose;
+            shouldDispose = !_isDisposed;
+            _isDisposed = true;
+        }
 
-            lock (_syncLock)
-            {
-                shouldDispose = !_isDisposed;
-                _isDisposed = true;
-            }
+        if (!shouldDispose)
+            return;
 
-            if (shouldDispose)
-            {
-                // Cancel all pending task continuations and dispose tokens
-                DisposeCancellationTokens();
+        // Cancel all pending task continuations and dispose tokens
+        DisposeCancellationTokens();
 
-                // Dispose the execution task if it's completed
-                // Note: We only dispose tasks in final states (RanToCompletion, Canceled, Faulted)
-                // because disposing a running task is unsafe and can cause exceptions.
-                // Tasks that are still running will be cleaned up by the GC when they complete,
-                // and the continuation in MonitorTask will clear the reference when the task finishes.
-                Task? taskToDispose = null;
+        DisposeExecutionTask();
 
-                lock (_syncLock)
-                {
-                    // Check all possible final states for a Task
-                    if (_executionTask != null)
-                    {
-                        var status = _executionTask.Status;
-                        if (status == TaskStatus.RanToCompletion ||
-                            status == TaskStatus.Canceled ||
-                            status == TaskStatus.Faulted)
-                        {
-                            taskToDispose = _executionTask;
-                            _executionTask = null;
-                        }
-                        // If task is still running, the continuation in MonitorTask will handle cleanup
-                    }
-                }
-
-                if (taskToDispose != null)
-                {
-                    try
-                    {
-                        taskToDispose.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log any exceptions during task disposal
-                        System.Diagnostics.Debug.WriteLine($"Error disposing task: {ex.Message}");
-                    }
-                }
-
-                // Clear event handlers to prevent memory leaks
-                lock (_syncLock)
-                {
-                    _canExecuteChanged = null;
-                    PropertyChanged = null;
-                }
-            }
+        // Clear event handlers to prevent memory leaks
+        lock (_syncLock)
+        {
+            _canExecuteChanged = null;
+            PropertyChanged = null;
         }
     }
+
+    /// <summary>
+    /// Disposes the execution task when it has reached a final state. A still-running task is left to
+    /// complete on its own (the continuation in <see cref="MonitorTask"/> clears the reference).
+    /// </summary>
+    private void DisposeExecutionTask()
+    {
+        Task? taskToDispose = null;
+
+        lock (_syncLock)
+        {
+            // Only dispose tasks in final states (RanToCompletion, Canceled, Faulted); disposing a
+            // running task is unsafe and can throw.
+            if (_executionTask is not null && IsFinalTaskStatus(_executionTask.Status))
+            {
+                taskToDispose = _executionTask;
+                _executionTask = null;
+            }
+        }
+
+        if (taskToDispose is null)
+            return;
+
+        try
+        {
+            taskToDispose.Dispose();
+        }
+        catch (Exception ex)
+        {
+            // Log any exceptions during task disposal
+            System.Diagnostics.Debug.WriteLine($"Error disposing task: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether a task status represents a final (disposable) state.
+    /// </summary>
+    private static bool IsFinalTaskStatus(TaskStatus status) =>
+        status is TaskStatus.RanToCompletion or TaskStatus.Canceled or TaskStatus.Faulted;
 
     /// <summary>
     /// Cleans up completed token sources to prevent memory leaks.

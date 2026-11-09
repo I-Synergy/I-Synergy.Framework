@@ -3,7 +3,7 @@ using Windows.Foundation;
 
 namespace ISynergy.Framework.UI.Extensions;
 
-// TODO: Check if we can make these static extension methods of the MatrixHelper in C#8 or move to an operator extension. // NOSONAR
+// Static helper methods mirroring WPF's Matrix/MathHelper API for WinUI conversion.
 
 /// <summary>
 /// Static helper methods for <see cref="o:Windows.UI.Xaml.Media.Matrix" />.
@@ -71,7 +71,7 @@ public static class MatrixExtensions
     /// <returns>True if matrix has an inverse.</returns>
     public static bool HasInverse(this Matrix matrix)
     {
-        // TODO: Check if we can make this an extension property in C#8. // NOSONAR
+        // Non-zero determinant means the matrix is invertible.
         return ((matrix.M11 * matrix.M22) - (matrix.M12 * matrix.M21)) != 0; // NOSONAR
     }
 

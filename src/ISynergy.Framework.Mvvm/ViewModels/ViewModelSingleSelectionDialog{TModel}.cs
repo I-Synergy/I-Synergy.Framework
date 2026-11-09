@@ -18,7 +18,9 @@ namespace ISynergy.Framework.Mvvm.ViewModels;
 /// shared item/filter/command logic, and inlining it back into the single/multiple bases would
 /// re-introduce the duplicated code that SonarCloud reports separately (copy-paste detection).
 /// </remarks>
-public class ViewModelSingleSelectionDialog<TModel> : BaseSingleSelectionViewModel<TModel>, IViewModelDialog<TModel>, ISearchableSelectionViewModel // NOSONAR
+#pragma warning disable S110 // Public view-model base class: the six-level inheritance depth is intentional to share selection logic.
+public class ViewModelSingleSelectionDialog<TModel> : BaseSingleSelectionViewModel<TModel>, IViewModelDialog<TModel>, ISearchableSelectionViewModel
+#pragma warning restore S110
 {
     /// <summary>
     /// Gets or sets the CanSubmit property value.

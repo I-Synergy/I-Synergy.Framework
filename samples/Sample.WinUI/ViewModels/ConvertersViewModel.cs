@@ -13,7 +13,6 @@ namespace Sample.ViewModels;
 /// </summary>
 public partial class ConvertersViewModel : ViewModelNavigation<object>
 {
-    private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
 
     /// <summary>
@@ -57,13 +56,11 @@ public partial class ConvertersViewModel : ViewModelNavigation<object>
     /// Initializes a new instance of the <see cref="ConvertersViewModel"/> class.
     /// </summary>
     /// <param name="commonServices">The common services.</param>
-    /// <param name="dialogService"></param>
     /// <param name="navigationService"></param>
     /// <param name="logger"></param>
-    public ConvertersViewModel(ICommonServices commonServices, IDialogService dialogService, INavigationService navigationService, ILogger<ConvertersViewModel> logger)
+    public ConvertersViewModel(ICommonServices commonServices, INavigationService navigationService, ILogger<ConvertersViewModel> logger)
         : base(commonServices, logger)
     {
-        _dialogService = dialogService;
         _navigationService = navigationService;
 
         NavigateToDetailCommand = new AsyncRelayCommand<TestItem>(NavigateToDetailAsync);

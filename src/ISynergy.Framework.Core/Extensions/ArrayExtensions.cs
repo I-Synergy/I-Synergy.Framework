@@ -19,40 +19,6 @@ public static class ArrayExtensions
     }
 
     /// <summary>
-    /// Generic array converter to double array.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="array"></param>
-    /// <returns></returns>
-    private static double[,] ToDoubleArray<T>(this T[,] array) // NOSONAR - available for future multi-dimensional array conversions
-    {
-        var result = new double[array.GetLength(0), array.GetLength(1)];
-
-        for (int i = 0; i < array.GetLength(0); i++)
-            for (int j = 0; j < array.GetLength(1); j++)
-                result[i, j] = Convert.ToDouble(array[i, j]);
-
-        return result;
-    }
-
-    /// <summary>
-    /// Generic array converter to double array.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="array"></param>
-    /// <returns></returns>
-    private static double[][] ToDoubleArray<T>(this T[][] array) // NOSONAR - available for future jagged array conversions
-    {
-        var result = new double[array.GetLength()[0]][];
-
-        for (int i = 0; i < array.GetLength()[0]; i++)
-            for (int j = 0; j < array.GetLength()[1]; j++)
-                result[i][j] = Convert.ToDouble(array[i][j]);
-
-        return result;
-    }
-
-    /// <summary>
     /// Integer array to double array converter.
     /// </summary>
     /// <param name="array"></param>

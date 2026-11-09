@@ -52,9 +52,9 @@ public partial class DateTimeOffsetToTimeSpanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        if (original is DateTimeOffset odt && value is TimeSpan ts) // NOSONAR
+        if (value is TimeSpan ts)
         {
-            var dt = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(odt, ts);
+            var dt = DateTimeOffsetConverter.TimeSpanToDateTimeOffset(original, ts);
             return dt.GetValueOrDefault(DateTimeOffset.MinValue);
         }
 

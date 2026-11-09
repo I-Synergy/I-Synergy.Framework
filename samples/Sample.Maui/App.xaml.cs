@@ -93,77 +93,74 @@ public partial class App : Application
             // anything reads a resource.
             ApplySavedLanguage();
 
-            // Apply the user's saved theme and accent colour via IThemeService before any view can render.
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                var themeService = IPlatformApplication.Current?.Services.GetService<IThemeService>();
-                if (themeService is not null)
-                {
-                    themeService.ApplyTheme();
-
-                    // Initialize dynamic accent tokens after theme is applied
-                    var accentTokens = IPlatformApplication.Current?.Services.GetService<ShellAccentTokens>();
-                    accentTokens?.ApplyAccentTokens();
-                }
-            });
+            await ApplyThemeAndAccentAsync();
 
             // Perform backend initialization, data loading, migrations, etc.
-            if (_commonServices?.BusyService != null)
-            {
-                _commonServices.BusyService.UpdateMessage("Start doing important stuff");
-                await Task.Delay(100);
-                _commonServices.BusyService.UpdateMessage("Done doing important stuff");
-                await Task.Delay(100);
-            }
+            await RunBusyStepAsync("Start doing important stuff", "Done doing important stuff");
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Error in first part of InitializeApplicationAsync");
-
-            if (_dialogService != null)
-            {
-                try
-                {
-                    await _dialogService.ShowErrorAsync("Failed doing important stuff", "Fake error message");
-                }
-                catch (Exception dialogEx)
-                {
-                    _logger?.LogError(dialogEx, "Error showing dialog");
-                }
-            }
+            await ShowInitializationErrorAsync("Failed doing important stuff");
         }
 
         try
         {
-            if (_commonServices?.BusyService != null)
-            {
-                _commonServices.BusyService.UpdateMessage("Applying migrations");
-                await Task.Delay(100);
-                _commonServices.BusyService.UpdateMessage("Done applying migrations");
-                await Task.Delay(100);
-            }
+            await RunBusyStepAsync("Applying migrations", "Done applying migrations");
         }
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Error in second part of InitializeApplicationAsync");
-
-            if (_dialogService != null)
-            {
-                try
-                {
-                    await _dialogService.ShowErrorAsync("Failed to apply migrations", "Fake error message");
-                }
-                catch (Exception dialogEx)
-                {
-                    _logger?.LogError(dialogEx, "Error showing dialog");
-                }
-            }
+            await ShowInitializationErrorAsync("Failed to apply migrations");
         }
 
         // Signal to the framework that initialization is complete.
         // This will trigger ApplicationLoaded event if UI is also ready.
         _logger?.LogTrace("Application initialization complete, signaling framework");
         _lifecycleService?.SignalApplicationInitialized();
+    }
+
+    private static async Task ApplyThemeAndAccentAsync()
+    {
+        // Apply the user's saved theme and accent colour via IThemeService before any view can render.
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            var themeService = IPlatformApplication.Current?.Services.GetService<IThemeService>();
+            if (themeService is not null)
+            {
+                themeService.ApplyTheme();
+
+                // Initialize dynamic accent tokens after theme is applied
+                var accentTokens = IPlatformApplication.Current?.Services.GetService<ShellAccentTokens>();
+                accentTokens?.ApplyAccentTokens();
+            }
+        });
+    }
+
+    private async Task RunBusyStepAsync(string startMessage, string doneMessage)
+    {
+        if (_commonServices?.BusyService != null)
+        {
+            _commonServices.BusyService.UpdateMessage(startMessage);
+            await Task.Delay(100);
+            _commonServices.BusyService.UpdateMessage(doneMessage);
+            await Task.Delay(100);
+        }
+    }
+
+    private async Task ShowInitializationErrorAsync(string message)
+    {
+        if (_dialogService != null)
+        {
+            try
+            {
+                await _dialogService.ShowErrorAsync(message, "Fake error message");
+            }
+            catch (Exception dialogEx)
+            {
+                _logger?.LogError(dialogEx, "Error showing dialog");
+            }
+        }
     }
 
     /// <summary>
@@ -185,7 +182,6 @@ public partial class App : Application
             _logger.LogInformation("Application loaded event: checking for auto-login");
             _logger.LogInformation("Navigate to SignIn page");
 
-            //await _navigationService.NavigateModalAsync<SignInViewModel>();
 
             // The shell is the window root, not a modal page: it stays alive for the lifetime of
             // the window so its blade pane (the last child of the root grid) can cover every
@@ -294,16 +290,6 @@ public partial class App : Application
                 }
             }
         }
-    }
-
-    public override void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
-    {
-        base.CurrentDomain_FirstChanceException(sender, e);
-    }
-
-    public override void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
-    {
-        base.CurrentDomain_UnhandledException(sender, e);
     }
 
     protected override void Dispose(bool disposing)

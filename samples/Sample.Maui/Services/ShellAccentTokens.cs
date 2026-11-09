@@ -12,6 +12,7 @@ namespace Sample.Services;
 /// The service listens to IThemeService.ThemeChanged and recomputes accent tokens on each change.
 /// It must be initialized after the theme is applied via ApplyTheme().
 /// </remarks>
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
 public partial class ShellAccentTokens : IDisposable
 {
     private readonly IThemeService _themeService;
@@ -180,3 +181,4 @@ public partial class ShellAccentTokens : IDisposable
         _logger.LogTrace("ShellAccentTokens disposed");
     }
 }
+#pragma warning restore S3881

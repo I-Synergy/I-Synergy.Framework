@@ -14,7 +14,7 @@ public class MainViewModel : ViewModel
     public RelayCommand NavigateToWeatherCommand { get; private set; }
     public RelayCommand NavigateToCommandDemoCommand { get; private set; }
 
-    public MainViewModel(ICommonServices commonServices, NavigationManager navigationService, ILogger<ViewModel> logger)
+    public MainViewModel(ICommonServices commonServices, NavigationManager navigationService, ILogger<MainViewModel> logger)
         : base(commonServices, logger)
     {
         _navigationService = navigationService;

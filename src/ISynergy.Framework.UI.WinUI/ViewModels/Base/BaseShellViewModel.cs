@@ -10,7 +10,9 @@ using System.Collections.ObjectModel;
 
 namespace ISynergy.Framework.UI.ViewModels.Base
 {
-    public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, IShellViewModel // NOSONAR - the inheritance chain is fixed by the shared ViewModelBladeView contract
+#pragma warning disable S110 // Public view-model: the six-level inheritance depth is fixed by the shared ViewModelBladeView contract.
+    public abstract class BaseShellViewModel : ViewModelBladeView<NavigationItem>, IShellViewModel
+    #pragma warning restore S110
     {
         protected readonly INavigationService _navigationService;
         protected readonly IDialogService _dialogService;

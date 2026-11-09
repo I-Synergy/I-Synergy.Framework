@@ -17,6 +17,18 @@ public partial class SlideShowViewModel : ViewModelNavigation<MediaItem>
 {
     private readonly IDispatcherService _dispatcherService;
 
+    // Demo gallery images for the sample slideshow. Hardcoded public wallpaper URLs on purpose so
+    // the sample runs without any configuration; these are sample data, not service endpoints.
+#pragma warning disable S1075 // hardcoded demo gallery image URLs (sample data, not endpoints)
+    private static readonly string[] SampleImageUris =
+    [
+        "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg",
+        "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg",
+        "https://wallpapercave.com/wp/W4ab0vD.jpg",
+        "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg"
+    ];
+#pragma warning restore S1075
+
     /// <summary>
     /// Gets the title.
     /// </summary>
@@ -75,10 +87,10 @@ public partial class SlideShowViewModel : ViewModelNavigation<MediaItem>
         // Get initial images from source.
         Items = new ObservableCollection<MediaItem>()
         {
-            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
+            new MediaItem { Index = 0, ImageUri = SampleImageUris[0] },
+            new MediaItem { Index = 1, ImageUri = SampleImageUris[1] },
+            new MediaItem { Index = 2, ImageUri = SampleImageUris[2] },
+            new MediaItem { Index = 3, ImageUri = SampleImageUris[3] }
         };
 
         // Set timer if images count is at least 1.
@@ -122,10 +134,10 @@ public partial class SlideShowViewModel : ViewModelNavigation<MediaItem>
 
         Items = new ObservableCollection<MediaItem>()
         {
-            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
+            new MediaItem { Index = 0, ImageUri = SampleImageUris[0] },
+            new MediaItem { Index = 1, ImageUri = SampleImageUris[1] },
+            new MediaItem { Index = 2, ImageUri = SampleImageUris[2] },
+            new MediaItem { Index = 3, ImageUri = SampleImageUris[3] }
         };
 
         UpdateSourceTimer.Enabled = true;

@@ -5,7 +5,9 @@ using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 namespace ISynergy.Framework.UI.Controls;
 
 [Lifetime(Lifetimes.Scoped)]
-public partial class Window : ContentPage, IWindow // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
+public partial class Window : ContentPage, IWindow
+#pragma warning restore S3881
 {
     public IViewModel ViewModel
     {

@@ -8,7 +8,10 @@ namespace ISynergy.Framework.Core.Events;
 /// <typeparam name="TSource">Type of source for the event.</typeparam>
 /// <typeparam name="TEventArgs">Type of event arguments for the event.</typeparam>
 [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public sealed class WeakEventListener<TInstance, TSource, TEventArgs> // NOSONAR - three type parameters are required for the weak event listener pattern
+// S2436: the three type parameters are part of the public API of the weak event listener pattern
+// (instance, source and event arguments); reducing the arity would be a breaking change.
+#pragma warning disable S2436 // public API: generic arity cannot be reduced
+public sealed class WeakEventListener<TInstance, TSource, TEventArgs>
     where TInstance : class
 {
     /// <summary>
@@ -65,3 +68,4 @@ public sealed class WeakEventListener<TInstance, TSource, TEventArgs> // NOSONAR
         OnDetachAction = null;
     }
 }
+#pragma warning restore S2436

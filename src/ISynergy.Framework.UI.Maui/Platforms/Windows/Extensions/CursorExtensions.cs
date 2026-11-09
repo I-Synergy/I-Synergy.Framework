@@ -20,7 +20,7 @@ public static class CursorExtensions
         public PointerEventHandler? ExitedHandler;
     }
 
-    public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext) // NOSONAR
+    public static void SetCustomCursor(this VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext)
     {
         if (mauiContext is null)
         {
@@ -28,100 +28,101 @@ public static class CursorExtensions
             return;
         }
 
-        // Wait for handler to be fully initialized before accessing the platform view
-        void SetupCursor()
-        {
-            try
-            {
-                // Use the element's own handler's MauiContext if available (most reliable)
-                var contextToUse = visualElement.Handler?.MauiContext ?? mauiContext;
-                
-                if (contextToUse is null)
-                {
-                    System.Diagnostics.Debug.WriteLine("No valid MauiContext available for cursor setup");
-                    return;
-                }
-
-                var view = visualElement.ToPlatform(contextToUse);
-                
-                if (view is null)
-                {
-                    System.Diagnostics.Debug.WriteLine("Failed to get platform view for cursor setup");
-                    return;
-                }
-
-                // Remove existing event handlers using stored exact delegates to prevent accumulation
-                if (_cursorStates.TryGetValue(view, out var existingHandlers))
-                {
-                    view.PointerEntered -= existingHandlers.EnteredHandler;
-                    view.PointerExited -= existingHandlers.ExitedHandler;
-                    _cursorStates.Remove(view);
-                }
-
-                void ViewOnPointerExited(object? sender, PointerRoutedEventArgs e)
-                {
-                    try
-                    {
-                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Arrow, 1)));
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Failed to change cursor on pointer exit: {ex.Message}");
-                    }
-                }
-
-                void ViewOnPointerEntered(object? sender, PointerRoutedEventArgs e)
-                {
-                    try
-                    {
-                        // Only apply custom cursor if the element is enabled
-                        var cursorType = visualElement.IsEnabled ? GetCursor(cursor) : CoreCursorType.Arrow;
-                        view.ChangeCursor(InputCursor.CreateFromCoreCursor(new CoreCursor(cursorType, 1)));
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Failed to change cursor on pointer enter: {ex.Message}");
-                    }
-                }
-
-                // Store exact delegate instances for later cleanup
-                var handlers = new CursorHandlers
-                {
-                    EnteredHandler = ViewOnPointerEntered,
-                    ExitedHandler = ViewOnPointerExited
-                };
-                _cursorStates.Add(view, handlers);
-
-                // Attach event handlers using stored instances (guarantees correct -= on next call)
-                view.PointerEntered += handlers.EnteredHandler;
-                view.PointerExited += handlers.ExitedHandler;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to set custom cursor: {ex.Message}");
-            }
-        }
-
         if (visualElement.Handler is not null)
         {
             // Handler is ready, setup cursor immediately
-            SetupCursor();
+            SetupCursor(visualElement, cursor, mauiContext);
+            return;
         }
-        else
+
+        // Handler is not ready yet, defer until HandlerChanged event
+        void HandleHandlerChanged(object? sender, EventArgs e)
         {
-            // Handler is not ready yet, defer until HandlerChanged event
-            void HandleHandlerChanged(object? sender, EventArgs e)
+            visualElement.HandlerChanged -= HandleHandlerChanged;
+
+            // Only setup if handler is now available
+            if (visualElement.Handler is not null)
             {
-                visualElement.HandlerChanged -= HandleHandlerChanged;
-                
-                // Only setup if handler is now available
-                if (visualElement.Handler is not null)
+                SetupCursor(visualElement, cursor, mauiContext);
+            }
+        }
+
+        visualElement.HandlerChanged += HandleHandlerChanged;
+    }
+
+    /// <summary>
+    /// Resolves the platform view and wires the pointer entered/exited handlers that drive the cursor.
+    /// </summary>
+    private static void SetupCursor(VisualElement visualElement, CursorIcons cursor, IMauiContext? mauiContext)
+    {
+        try
+        {
+            // Use the element's own handler's MauiContext if available (most reliable)
+            var contextToUse = visualElement.Handler?.MauiContext ?? mauiContext;
+
+            if (contextToUse is null)
+            {
+                System.Diagnostics.Debug.WriteLine("No valid MauiContext available for cursor setup");
+                return;
+            }
+
+            var view = visualElement.ToPlatform(contextToUse);
+
+            if (view is null)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to get platform view for cursor setup");
+                return;
+            }
+
+            // Remove existing event handlers using stored exact delegates to prevent accumulation
+            if (_cursorStates.TryGetValue(view, out var existingHandlers))
+            {
+                view.PointerEntered -= existingHandlers.EnteredHandler;
+                view.PointerExited -= existingHandlers.ExitedHandler;
+                _cursorStates.Remove(view);
+            }
+
+            void ViewOnPointerExited(object? sender, PointerRoutedEventArgs e)
+            {
+                try
                 {
-                    SetupCursor();
+                    SetProtectedCursor(view, InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Arrow, 1)));
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to change cursor on pointer exit: {ex.Message}");
                 }
             }
-            
-            visualElement.HandlerChanged += HandleHandlerChanged;
+
+            void ViewOnPointerEntered(object? sender, PointerRoutedEventArgs e)
+            {
+                try
+                {
+                    // Only apply custom cursor if the element is enabled
+                    var cursorType = visualElement.IsEnabled ? GetCursor(cursor) : CoreCursorType.Arrow;
+                    SetProtectedCursor(view, InputCursor.CreateFromCoreCursor(new CoreCursor(cursorType, 1)));
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to change cursor on pointer enter: {ex.Message}");
+                }
+            }
+
+            // Store exact delegate instances for later cleanup
+            var handlers = new CursorHandlers
+            {
+                EnteredHandler = ViewOnPointerEntered,
+                ExitedHandler = ViewOnPointerExited
+            };
+            _cursorStates.Add(view, handlers);
+
+            // Attach event handlers using stored instances (guarantees correct -= on next call)
+            view.PointerEntered += handlers.EnteredHandler;
+            view.PointerExited += handlers.ExitedHandler;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to set custom cursor: {ex.Message}");
         }
     }
 
@@ -141,11 +142,10 @@ public static class CursorExtensions
         catch { /* best-effort cleanup */ }
     }
 
-    static void ChangeCursor(this UIElement uiElement, InputCursor cursor) // NOSONAR
-    {
-        Type type = typeof(UIElement);
-        type.InvokeMember("ProtectedCursor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.SetProperty | BindingFlags.Instance, null, uiElement, new object[] { cursor }); // NOSONAR
-    }
+    // UIElement.ProtectedCursor is protected; UnsafeAccessor replaces the former reflection
+    // bypass (S3011) with a compile-time-checked accessor that has no runtime reflection cost.
+    [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "set_ProtectedCursor")]
+    static extern void SetProtectedCursor(UIElement uiElement, InputCursor cursor);
 
     static CoreCursorType GetCursor(CursorIcons cursor)
     {

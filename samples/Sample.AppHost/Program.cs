@@ -11,7 +11,7 @@ var postgres = builder.AddPostgres("postgres")
     .WithPgAdmin(c => c.WithLifetime(ContainerLifetime.Session));
 
 var eventsourcingDb = postgres.AddDatabase("eventsourcing");
-var synchronizationDb = postgres.AddDatabase("synchronization-db");
+postgres.AddDatabase("synchronization-db");
 
 // ── Azure Blob Storage (Azurite emulator for local development) ───────────────
 var storage = builder.AddAzureStorage("storage").RunAsEmulator();

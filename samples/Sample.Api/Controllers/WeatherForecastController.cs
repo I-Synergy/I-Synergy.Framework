@@ -59,12 +59,11 @@ public class WeatherForecastController : ControllerBase
 
             return forecast;
         }
-        catch (Exception ex) // NOSONAR - exception is logged and rethrown intentionally for telemetry
+        catch (Exception ex)
         {
-            // Log the exception
-            _logger.LogError(ex, "Error retrieving weather forecast");
-
-            // Mark the activity as failed with the error
+            // Mark the activity as failed with the error, then let it propagate to the caller.
+            // The exception is not logged here to avoid logging and rethrowing the same exception
+            // (it will be logged by the telemetry pipeline configured in the host).
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
 
             throw;

@@ -31,8 +31,12 @@ public static class NetworkUtility
         {
             using var ping = new Ping();
 
+            // S1313: these are the published, well-known public DNS resolver addresses used to probe
+            // connectivity; they are not configurable endpoints and contain no sensitive data.
             // Try multiple reliable DNS servers in case one fails
-            string[] hosts = { "8.8.8.8", "1.1.1.1", "8.8.4.4" }; // NOSONAR - these are well-known public DNS server addresses, not sensitive data
+            #pragma warning disable S1313 // well-known public DNS resolver addresses
+            string[] hosts = { "8.8.8.8", "1.1.1.1", "8.8.4.4" };
+            #pragma warning restore S1313
 
             foreach (var host in hosts)
             {
@@ -81,11 +85,14 @@ public static class NetworkUtility
     /// Consider using GetInternetIPAddressAsync() instead.
     /// </summary>
     /// <returns>The IP address or "127.0.0.1" if unable to retrieve.</returns>
-    [Obsolete("Use GetInternetIPAddressAsync() instead. This method can cause deadlocks.")] // NOSONAR
+    // S1133: kept for binary compatibility with existing consumers; removal would be a breaking public API change.
+    #pragma warning disable S1133 // obsolete public API kept for backward compatibility
+    [Obsolete("Use GetInternetIPAddressAsync() instead. This method can cause deadlocks.")]
     public static string GetInternetIPAddress()
     {
         return GetInternetIPAddressAsync().GetAwaiter().GetResult();
     }
+    #pragma warning restore S1133
 
     /// <summary>
     /// Determines whether [is valid ip] [the specified test address].

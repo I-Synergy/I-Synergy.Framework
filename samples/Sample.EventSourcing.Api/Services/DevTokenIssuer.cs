@@ -34,7 +34,9 @@ public sealed class DevTokenIssuer
                 "issuing development tokens.");
         }
 
+#pragma warning disable S6781 // The key is read from configuration at runtime (never committed); it must byte-match the API's validation key, so it cannot be transformed without breaking token compatibility.
         _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+#pragma warning restore S6781
     }
 
     /// <summary>
