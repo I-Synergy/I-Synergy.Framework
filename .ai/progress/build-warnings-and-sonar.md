@@ -81,3 +81,15 @@ After the mechanical wave, the structural rules were reduced as follows:
   **S907 (275)** goto-based Fortran ports. Both require a structural redesign/rewrite,
   not a mechanical pass.
 - Every wave was verified: Mathematics 954 passed / 1 skipped; full solution build 0 errors.
+
+## S907 outcome (2026-11-09)
+
+All 275 `goto` statements removed from the Fortran ports (QZ eigensolvers, QUADPACK,
+L-BFGS-B, COBYLA, Goldfarb-Idnani, conjugate gradient, LIBLBFGS, Beta, Gamma,
+NonAdaptiveGaussKronrod). IEEE behaviour preserved; 954 Mathematics tests pass and the full
+repository test suite is green.
+
+Only **S2368 (582)** remains. Analysis: 582 public declarations, 152 method groups, of which
+43 overload sets differ only by array rank/shape. Replacing the parameters with `Array` would
+make those overloads collide; the only compliant alternatives are wrapper types per shape
+(public API redesign) or making the members non-public (removes the library's API).
