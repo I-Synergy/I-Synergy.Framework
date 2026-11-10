@@ -17,6 +17,8 @@ namespace ISynergy.Framework.UI.Services.Base;
 [TestClass]
 public class BaseBladeServiceTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private const string CallbackFailure = "callback failed";
 
     private Mock<IExceptionHandlerService> _exceptionHandler = null!;
@@ -172,7 +174,7 @@ public class BaseBladeServiceTests
 
         // Assert
         _scope.Verify(x => x.Dispose(), Times.Once);
-        Assert.HasCount(0, _owner.Object.Blades!);
+        Assert.IsEmpty(_owner.Object.Blades!);
         Assert.IsFalse(_service.MonitorViewLoadCalled);
     }
 
@@ -236,9 +238,9 @@ public class BaseBladeServiceTests
             hostTarget: BladeHostTargets.Owner);
 
         // Assert
-        CollectionAssert.Contains(_service.HostTargetsSeen, BladeHostTargets.Owner);
+        Assert.Contains(BladeHostTargets.Owner, _service.HostTargetsSeen);
         Assert.HasCount(1, host.Object.Blades!);
-        Assert.HasCount(0, _owner.Object.Blades!);
+        Assert.IsEmpty(_owner.Object.Blades!);
     }
 
     #endregion
@@ -265,7 +267,7 @@ public class BaseBladeServiceTests
         _blade.Raise(x => x.Submitted += null, new SubmitEventArgs<TestEntity>(entity));
 
         // Assert
-        var received = await submitted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        var received = await submitted.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
         Assert.AreSame(entity, received);
     }
 
@@ -286,7 +288,7 @@ public class BaseBladeServiceTests
 
         // Act
         _blade.Raise(x => x.Submitted += null, new SubmitEventArgs<TestEntity>(new TestEntity()));
-        await submitted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await submitted.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
 
         // Assert
         VerifyErrorLogged(CallbackFailure);
@@ -311,7 +313,8 @@ public class BaseBladeServiceTests
         _blade.Raise(x => x.Cancelled += null, EventArgs.Empty);
 
         // Assert
-        await cancelled.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await cancelled.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.IsTrue(cancelled.Task.IsCompletedSuccessfully);
     }
 
     [TestMethod]
@@ -333,7 +336,7 @@ public class BaseBladeServiceTests
         _blade.Raise(x => x.Closed += null, EventArgs.Empty);
 
         // Assert
-        await closed.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await closed.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
         _scope.Verify(x => x.Dispose(), Times.Once);
     }
 
@@ -354,7 +357,7 @@ public class BaseBladeServiceTests
 
         // Act
         _blade.Raise(x => x.Closed += null, EventArgs.Empty);
-        await invoked.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await invoked.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
 
         // Assert
         VerifyErrorLogged(CallbackFailure);
@@ -371,7 +374,7 @@ public class BaseBladeServiceTests
         _blade.Raise(x => x.Closed += null, EventArgs.Empty);
 
         // Assert
-        Assert.HasCount(0, _owner.Object.Blades!);
+        Assert.IsEmpty(_owner.Object.Blades!);
         Assert.IsFalse(_owner.Object.IsPaneVisible);
         Assert.AreSame(_view.Object, _service.DetachedView);
     }
@@ -423,7 +426,7 @@ public class BaseBladeServiceTests
         _service.RemoveBlade(_owner.Object, _blade.Object);
 
         // Assert
-        Assert.HasCount(0, blades);
+        Assert.IsEmpty(blades);
         Assert.IsFalse(_owner.Object.IsPaneVisible);
         Assert.AreSame(_view.Object, _service.DetachedView);
     }

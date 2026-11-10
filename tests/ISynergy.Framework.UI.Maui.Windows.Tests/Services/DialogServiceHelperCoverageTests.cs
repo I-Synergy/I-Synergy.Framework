@@ -32,6 +32,8 @@ namespace ISynergy.Framework.UI.Maui.Services;
 [OSCondition(OperatingSystems.Windows)]
 public class DialogServiceHelperCoverageTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private Mock<IServiceScopeFactory> _scopeFactory = null!;
     private Mock<ILocalSettings> _localSettings = null!;
     private Mock<IExceptionHandlerService> _exceptionHandler = null!;
@@ -81,7 +83,7 @@ public class DialogServiceHelperCoverageTests
     {
         var ex = Catch(() => _ = new DialogService(
             null!, _localSettings.Object, _exceptionHandler.Object, _languageService.Object));
-        Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(ex);
     }
 
     [TestMethod]
@@ -89,7 +91,7 @@ public class DialogServiceHelperCoverageTests
     {
         var ex = Catch(() => _ = new DialogService(
             _scopeFactory.Object, null!, _exceptionHandler.Object, _languageService.Object));
-        Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(ex);
     }
 
     [TestMethod]
@@ -97,7 +99,7 @@ public class DialogServiceHelperCoverageTests
     {
         var ex = Catch(() => _ = new DialogService(
             _scopeFactory.Object, _localSettings.Object, null!, _languageService.Object));
-        Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(ex);
     }
 
     [TestMethod]
@@ -105,7 +107,7 @@ public class DialogServiceHelperCoverageTests
     {
         var ex = Catch(() => _ = new DialogService(
             _scopeFactory.Object, _localSettings.Object, _exceptionHandler.Object, null!));
-        Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+        Assert.IsInstanceOfType<ArgumentNullException>(ex);
     }
 
     // ── ShowMessageAsync input validation ───────────────────────────────────
@@ -277,15 +279,12 @@ public class DialogServiceHelperCoverageTests
         viewModel.Raise(m => m.Cancelled += null, EventArgs.Empty);
         viewModel.Raise(m => m.Closed += null, EventArgs.Empty);
 
-        Assert.AreSame(submittedTcs.Task, await Task.WhenAny(submittedTcs.Task, Task.Delay(2000)),
-            "Submitted handler should fire");
+        await submittedTcs.Task.WaitAsync(TimeSpan.FromSeconds(2), TestContext.CancellationToken);
         Assert.AreEqual("payload", await submittedTcs.Task);
 
-        Assert.AreSame(cancelledTcs.Task, await Task.WhenAny(cancelledTcs.Task, Task.Delay(2000)),
-            "Cancelled handler should fire");
+        await cancelledTcs.Task.WaitAsync(TimeSpan.FromSeconds(2), TestContext.CancellationToken);
 
-        Assert.AreSame(closedTcs.Task, await Task.WhenAny(closedTcs.Task, Task.Delay(2000)),
-            "Closed handler should fire");
+        await closedTcs.Task.WaitAsync(TimeSpan.FromSeconds(2), TestContext.CancellationToken);
 
         scope.Verify(x => x.Dispose(), Times.Once);
     }
@@ -307,7 +306,7 @@ public class DialogServiceHelperCoverageTests
 
         // Give the fire-and-forget Closed handler time to dispose the scope.
         for (int i = 0; i < 40 && !WasDisposed(scope); i++)
-            await Task.Delay(25);
+            await Task.Delay(25, TestContext.CancellationToken);
 
         scope.Verify(x => x.Dispose(), Times.Once);
     }

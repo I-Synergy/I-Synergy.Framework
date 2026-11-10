@@ -14,6 +14,8 @@ namespace ISynergy.Framework.Automations.Tests;
 [TestClass]
 public class ActionQueuingBackgroundServiceTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private Mock<IActionService> _actionService = null!;
     private Mock<ILogger<ActionQueuingBackgroundService>> _logger = null!;
     private AutomationOptions _options = null!;
@@ -97,6 +99,11 @@ public class ActionQueuingBackgroundServiceTests
         await service.StartAsync(CancellationToken.None);
 
         service.Dispose();
+
+        _actionService.Verify(
+            s => s.RefreshTasksAsync(It.IsAny<CancellationToken>()),
+            Times.AtLeastOnce,
+            "Starting the service should have refreshed the task queue before disposal.");
     }
 
     [TestMethod]
@@ -121,7 +128,9 @@ public class ActionQueuingBackgroundServiceTests
 
         await service.StartAsync(CancellationToken.None);
 
-        var completed = await Task.WhenAny(logged.Task, Task.Delay(TimeSpan.FromSeconds(5)));
+        using var delayCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.CancellationToken);
+        var completed = await Task.WhenAny(logged.Task, Task.Delay(TimeSpan.FromSeconds(5), delayCancellation.Token));
+        await delayCancellation.CancelAsync();
         await service.StopAsync(CancellationToken.None);
 
         Assert.AreSame(logged.Task, completed, "The refresh error was not logged.");
@@ -156,7 +165,9 @@ public class ActionQueuingBackgroundServiceTests
 
         await service.StartAsync(CancellationToken.None);
 
-        var completed = await Task.WhenAny(executed.Task, Task.Delay(TimeSpan.FromSeconds(5)));
+        using var delayCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.CancellationToken);
+        var completed = await Task.WhenAny(executed.Task, Task.Delay(TimeSpan.FromSeconds(5), delayCancellation.Token));
+        await delayCancellation.CancelAsync();
         await service.StopAsync(CancellationToken.None);
 
         Assert.AreSame(executed.Task, completed, "The execution timer callback did not run the action.");
@@ -188,7 +199,9 @@ public class ActionQueuingBackgroundServiceTests
 
         await service.StartAsync(CancellationToken.None);
 
-        var completed = await Task.WhenAny(faultLogged.Task, Task.Delay(TimeSpan.FromSeconds(5)));
+        using var delayCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.CancellationToken);
+        var completed = await Task.WhenAny(faultLogged.Task, Task.Delay(TimeSpan.FromSeconds(5), delayCancellation.Token));
+        await delayCancellation.CancelAsync();
         await service.StopAsync(CancellationToken.None);
 
         Assert.AreSame(faultLogged.Task, completed,

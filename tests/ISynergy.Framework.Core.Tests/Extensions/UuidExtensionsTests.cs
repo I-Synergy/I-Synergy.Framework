@@ -88,7 +88,7 @@ public class UuidExtensionsTests
         var report = Uuidv7.CheckTimingPrecision();
 
         Assert.IsFalse(string.IsNullOrWhiteSpace(report));
-        StringAssert.Contains(report, "Precision is");
-        StringAssert.Contains(report, "loops");
+        Assert.Contains("Precision is", report);
+        Assert.Contains("loops", report);
     }
 }

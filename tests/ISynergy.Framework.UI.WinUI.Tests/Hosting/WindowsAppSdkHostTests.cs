@@ -115,7 +115,7 @@ public class WindowsAppSdkHostTests
         });
 
         // The content-root/default providers are disposed before the Application.Current access fails.
-        Assert.IsTrue(exception is not null, "DisposeAsync should surface the unavailable-Application failure");
+        Assert.IsNotNull(exception, "DisposeAsync should surface the unavailable-Application failure");
     }
 
     [TestMethod]
@@ -223,7 +223,7 @@ public class WindowsAppSdkHostTests
     #region Test doubles
 
     /// <summary>Minimal <see cref="ISynergy.Framework.UI.Application"/> used only to close the host's generic.</summary>
-    public sealed class ProbeApp : ISynergy.Framework.UI.Application
+    public sealed partial class ProbeApp : ISynergy.Framework.UI.Application
     {
         public ProbeApp()
         {
@@ -232,7 +232,7 @@ public class WindowsAppSdkHostTests
         protected override Task InitializeApplicationAsync() => Task.CompletedTask;
     }
 
-    private sealed class FaultingBackgroundService : BackgroundService
+    private sealed partial class FaultingBackgroundService : BackgroundService
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {

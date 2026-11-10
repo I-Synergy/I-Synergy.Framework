@@ -25,7 +25,7 @@ public class DateOffsetCollectionToDateTimeCollectionConverterTests
 
         var dates = result as ObservableCollection<DateTime>;
         Assert.IsNotNull(dates);
-        CollectionAssert.AreEqual(
+        Assert.AreSequenceEqual(
             source.Select(item => item.ToLocalTime().DateTime).ToList(),
             dates);
     }

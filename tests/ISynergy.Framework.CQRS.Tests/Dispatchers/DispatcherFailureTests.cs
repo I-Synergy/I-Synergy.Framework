@@ -16,6 +16,8 @@ namespace ISynergy.Framework.CQRS.Dispatchers;
 [TestClass]
 public class DispatcherFailureTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private const string CommandFailure = "command handler failed";
     private const string QueryFailure = "query handler failed";
 
@@ -31,7 +33,7 @@ public class DispatcherFailureTests
 
         // Act
         var actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => dispatcher.DispatchAsync(new FailingCommand()));
+            () => dispatcher.DispatchAsync(new FailingCommand(), TestContext.CancellationToken));
 
         // Assert
         Assert.AreSame(expected, actual);
@@ -51,7 +53,7 @@ public class DispatcherFailureTests
 
         // Act
         var actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => dispatcher.DispatchAsync<FailingResultCommand, string>(new FailingResultCommand()));
+            () => dispatcher.DispatchAsync<FailingResultCommand, string>(new FailingResultCommand(), TestContext.CancellationToken));
 
         // Assert
         Assert.AreSame(expected, actual);
@@ -93,7 +95,7 @@ public class DispatcherFailureTests
 
         // Act
         var actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => dispatcher.DispatchAsync<FailingQuery, string>(new FailingQuery()));
+            () => dispatcher.DispatchAsync<FailingQuery, string>(new FailingQuery(), TestContext.CancellationToken));
 
         // Assert
         Assert.AreSame(expected, actual);
@@ -112,7 +114,7 @@ public class DispatcherFailureTests
 
         // Act - the reflection wrapper (TargetInvocationException) must be unwrapped
         var actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => dispatcher.DispatchAsync<string>(new FailingQuery()));
+            () => dispatcher.DispatchAsync<string>(new FailingQuery(), TestContext.CancellationToken));
 
         // Assert
         Assert.AreSame(expected, actual);

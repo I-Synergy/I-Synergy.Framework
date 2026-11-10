@@ -60,6 +60,7 @@ public class ShellChromeStylerTests
         var flagField = s_type.GetField("_isRegistered", BindingFlags.NonPublic | BindingFlags.Static);
         Assert.IsNotNull(flagField, "_isRegistered flag should exist");
 
+        Exception? hostException = null;
         try
         {
             ShellChromeStyler.Register();
@@ -68,10 +69,14 @@ public class ShellChromeStylerTests
         }
         catch (TypeInitializationException ex)
         {
+            hostException = ex;
+        }
+
+        if (hostException is not null)
+        {
             Assert.Inconclusive(
                 "WinUI handler mappers require a running WinUI process; Register() cannot be " +
-                $"exercised headless: {ex.InnerException?.GetType().Name}.");
-            return;
+                $"exercised headless: {hostException.InnerException?.GetType().Name}.");
         }
 
         Assert.IsTrue((bool)flagField!.GetValue(null)!, "_isRegistered should be set after Register()");

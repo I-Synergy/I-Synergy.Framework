@@ -228,10 +228,10 @@ public class BaseAsyncRelayCommandTests
         command.SetExecutionTask(tcs.Task);
 
         // Assert
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.ExecutionTask));
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.IsRunning));
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.CanBeCanceled));
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.IsCancellationRequested));
+        Assert.Contains(nameof(IAsyncRelayCommand.ExecutionTask), propertyChanges);
+        Assert.Contains(nameof(IAsyncRelayCommand.IsRunning), propertyChanges);
+        Assert.Contains(nameof(IAsyncRelayCommand.CanBeCanceled), propertyChanges);
+        Assert.Contains(nameof(IAsyncRelayCommand.IsCancellationRequested), propertyChanges);
         Assert.IsTrue(command.IsRunning);
         Assert.AreEqual(1, command.ContinuationCount);
 
@@ -252,7 +252,7 @@ public class BaseAsyncRelayCommandTests
         command.SetExecutionTask(tcs.Task);
 
         // Assert
-        Assert.AreEqual(0, propertyChanges.Count);
+        Assert.IsEmpty(propertyChanges);
         Assert.AreEqual(1, command.ContinuationCount);
 
         tcs.SetResult();
@@ -270,7 +270,7 @@ public class BaseAsyncRelayCommandTests
         command.SetExecutionTask(null);
 
         // Assert
-        Assert.AreEqual(0, propertyChanges.Count);
+        Assert.IsEmpty(propertyChanges);
         Assert.IsNull(command.CurrentExecutionTask);
     }
 
@@ -289,8 +289,8 @@ public class BaseAsyncRelayCommandTests
         command.SetExecutionTask(second.Task);
 
         // Assert
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.ExecutionTask));
-        CollectionAssert.DoesNotContain(propertyChanges, nameof(IAsyncRelayCommand.IsRunning));
+        Assert.Contains(nameof(IAsyncRelayCommand.ExecutionTask), propertyChanges);
+        Assert.DoesNotContain(nameof(IAsyncRelayCommand.IsRunning), propertyChanges);
         Assert.AreEqual(2, command.ContinuationCount);
 
         first.SetResult();
@@ -314,8 +314,8 @@ public class BaseAsyncRelayCommandTests
         // Assert
         Assert.IsNull(command.CurrentExecutionTask);
         Assert.IsFalse(command.IsRunning);
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.ExecutionTask));
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.IsRunning));
+        Assert.Contains(nameof(IAsyncRelayCommand.ExecutionTask), propertyChanges);
+        Assert.Contains(nameof(IAsyncRelayCommand.IsRunning), propertyChanges);
         Assert.AreEqual(0, command.ContinuationCount);
     }
 
@@ -490,8 +490,8 @@ public class BaseAsyncRelayCommandTests
         // Assert
         Assert.IsTrue(cancellationTokenSource.IsCancellationRequested);
         Assert.IsTrue(command.IsCancellationRequested);
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.CanBeCanceled));
-        CollectionAssert.Contains(propertyChanges, nameof(IAsyncRelayCommand.IsCancellationRequested));
+        Assert.Contains(nameof(IAsyncRelayCommand.CanBeCanceled), propertyChanges);
+        Assert.Contains(nameof(IAsyncRelayCommand.IsCancellationRequested), propertyChanges);
     }
 
     [TestMethod]

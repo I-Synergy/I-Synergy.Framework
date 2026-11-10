@@ -56,7 +56,7 @@ public class BaseMultipleSelectionViewModelTests
 
         // Assert
         Assert.IsNotNull(projection);
-        Assert.AreEqual(2, projection.Count);
+        Assert.HasCount(2, projection);
         Assert.AreSame(first, projection[0]);
         Assert.AreSame(second, projection[1]);
         Assert.AreSame(projection, projectionAgain, "The projection should be cached while the source list is unchanged");
@@ -81,7 +81,7 @@ public class BaseMultipleSelectionViewModelTests
         Assert.IsNotNull(initialProjection);
         Assert.IsNotNull(updatedProjection);
         Assert.AreNotSame(initialProjection, updatedProjection);
-        Assert.AreEqual(1, updatedProjection.Count);
+        Assert.HasCount(1, updatedProjection);
         Assert.AreSame(second, updatedProjection[0]);
     }
 
@@ -129,7 +129,7 @@ public class BaseMultipleSelectionViewModelTests
         // Assert
         Assert.IsFalse(isValid);
         Assert.IsNotNull(viewModel.Errors);
-        Assert.IsTrue(viewModel.Errors.Any(e => e.Key == nameof(viewModel.SelectedItem) && e.Value == "Please select an item"));
+        Assert.Contains(e => e.Key == nameof(viewModel.SelectedItem) && e.Value == "Please select an item", viewModel.Errors);
     }
 
     [TestMethod]

@@ -7,6 +7,8 @@ namespace ISynergy.Framework.Core.Ranges;
 [TestClass]
 public class RangeTest
 {
+    private static readonly double[] EnumeratedValues = [0.0, 1.0, 2.0];
+
     [TestMethod]
     [DataRow(0, 1, 1, 2, true)]
     [DataRow(0, 1, 2, 3, false)]
@@ -156,12 +158,12 @@ public class RangeTest
         var generic = new List<double>();
         foreach (var value in range)
             generic.Add(value);
-        CollectionAssert.AreEqual(new[] { 0.0, 1.0, 2.0 }, generic);
+        Assert.AreSequenceEqual(EnumeratedValues, generic);
 
         var nonGeneric = new List<double>();
         System.Collections.IEnumerable enumerable = range;
         foreach (double value in enumerable)
             nonGeneric.Add(value);
-        CollectionAssert.AreEqual(new[] { 0.0, 1.0, 2.0 }, nonGeneric);
+        Assert.AreSequenceEqual(EnumeratedValues, nonGeneric);
     }
 }

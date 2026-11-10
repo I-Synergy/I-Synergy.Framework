@@ -10,6 +10,12 @@ namespace ISynergy.Framework.Core.Collections;
 [TestClass]
 public class TreeNodeDisposeTests
 {
+    private static readonly string[] ChildBeforeRoot = ["child", "root"];
+    private static readonly string[] RootBeforeChild = ["root", "child"];
+    private static readonly string[] ChildrenBeforeRoot = ["child1", "child2", "root"];
+    private static readonly string[] LeafOnly = ["leaf"];
+    private static readonly string[] DeepestFirst = ["grandchild", "child", "root"];
+
     /// <summary>
     /// Model that records the order in which nodes are disposed.
     /// </summary>
@@ -39,7 +45,7 @@ public class TreeNodeDisposeTests
 
         root.Dispose();
 
-        CollectionAssert.AreEqual(new[] { "child", "root" }, log);
+        Assert.AreSequenceEqual(ChildBeforeRoot, log);
     }
 
     [TestMethod]
@@ -54,7 +60,7 @@ public class TreeNodeDisposeTests
 
         root.Dispose();
 
-        CollectionAssert.AreEqual(new[] { "root", "child" }, log);
+        Assert.AreSequenceEqual(RootBeforeChild, log);
     }
 
     [TestMethod]
@@ -69,7 +75,7 @@ public class TreeNodeDisposeTests
 
         root.Dispose();
 
-        CollectionAssert.AreEqual(new[] { "child1", "child2", "root" }, log);
+        Assert.AreSequenceEqual(ChildrenBeforeRoot, log);
     }
 
     [TestMethod]
@@ -81,7 +87,7 @@ public class TreeNodeDisposeTests
 
         leaf.Dispose();
 
-        CollectionAssert.AreEqual(new[] { "leaf" }, log);
+        Assert.AreSequenceEqual(LeafOnly, log);
     }
 
     [TestMethod]
@@ -98,7 +104,7 @@ public class TreeNodeDisposeTests
 
         root.Dispose();
 
-        CollectionAssert.AreEqual(new[] { "grandchild", "child", "root" }, log);
+        Assert.AreSequenceEqual(DeepestFirst, log);
     }
 
     [TestMethod]

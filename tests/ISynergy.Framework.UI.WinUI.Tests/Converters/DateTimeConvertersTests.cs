@@ -158,7 +158,7 @@ public class DateTimeConvertersTests
 
         Assert.IsInstanceOfType<DateTime>(result);
         Assert.AreEqual(DateTimeKind.Local, ((DateTime)result).Kind);
-        Assert.IsTrue((DateTime.Now - (DateTime)result).Duration() < Tolerance);
+        Assert.IsLessThan(Tolerance, (DateTime.Now - (DateTime)result).Duration());
     }
 
     #endregion
@@ -279,7 +279,7 @@ public class DateTimeConvertersTests
         Assert.IsInstanceOfType<DateTimeOffset>(result);
         Assert.AreEqual(DateTimeOffset.Now.Offset, ((DateTimeOffset)result).Offset,
             "The fallback must be a local DateTimeOffset");
-        Assert.IsTrue((DateTimeOffset.Now - (DateTimeOffset)result).Duration() < Tolerance);
+        Assert.IsLessThan(Tolerance, (DateTimeOffset.Now - (DateTimeOffset)result).Duration());
     }
 
     [TestMethod]
@@ -303,7 +303,7 @@ public class DateTimeConvertersTests
 
         Assert.IsInstanceOfType<DateTimeOffset>(result);
         Assert.AreEqual(TimeSpan.Zero, ((DateTimeOffset)result).Offset);
-        Assert.IsTrue(((DateTimeOffset)result - before).Duration() < Tolerance);
+        Assert.IsLessThan(Tolerance, ((DateTimeOffset)result - before).Duration());
     }
 
     #endregion

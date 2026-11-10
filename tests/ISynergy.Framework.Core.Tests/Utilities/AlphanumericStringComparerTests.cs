@@ -9,6 +9,8 @@ namespace ISynergy.Framework.Core.Utilities;
 [TestClass]
 public class AlphanumericStringComparerTests
 {
+    private static readonly string[] NaturalOrder = ["file1", "file2", "file10"];
+
     private readonly AlphanumericStringComparer _comparer = new();
 
     // --- Compare: non-string arguments short-circuit to 0 (refactored combined guard) ---
@@ -157,7 +159,7 @@ public class AlphanumericStringComparerTests
 
         var sorted = values.OrderBy(v => v, Comparer<object>.Create(_comparer.Compare)).ToArray();
 
-        CollectionAssert.AreEqual(new[] { "file1", "file2", "file10" }, sorted);
+        Assert.AreSequenceEqual(NaturalOrder, sorted);
     }
 
     [TestMethod]

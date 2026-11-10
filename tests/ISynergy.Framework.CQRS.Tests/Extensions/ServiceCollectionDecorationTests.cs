@@ -22,6 +22,8 @@ namespace ISynergy.Framework.CQRS.Extensions;
 [TestClass]
 public class ServiceCollectionDecorationTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     [TestMethod]
     public void AddCQRS_RegistersScopedDispatchers()
     {
@@ -73,7 +75,7 @@ public class ServiceCollectionDecorationTests
 
         // The decorator still delegates to the wrapped handler
         var dispatcher = provider.GetRequiredService<ICommandDispatcher>();
-        await dispatcher.DispatchAsync(new TestCommand());
+        await dispatcher.DispatchAsync(new TestCommand(), TestContext.CancellationToken);
     }
 
     [TestMethod]
@@ -94,9 +96,9 @@ public class ServiceCollectionDecorationTests
 
         // Decorators forward to the inner handler and publish the notifications
         var dispatcher = provider.GetRequiredService<ICommandDispatcher>();
-        await dispatcher.DispatchAsync(new TestCommand());
+        await dispatcher.DispatchAsync(new TestCommand(), TestContext.CancellationToken);
         var result = await dispatcher.DispatchAsync<TestCommandWithResult, string>(
-            new TestCommandWithResult { Input = "notified" });
+            new TestCommandWithResult { Input = "notified" }, TestContext.CancellationToken);
 
         Assert.AreEqual("Result: notified", result);
         messenger.Verify(
@@ -134,12 +136,8 @@ public class ServiceCollectionDecorationTests
         services.AddCQRS();
 
         // Assert
-        Assert.AreEqual(
-            1,
-            services.Count(descriptor => descriptor.ServiceType == typeof(ICommandDispatcher)));
-        Assert.AreEqual(
-            1,
-            services.Count(descriptor => descriptor.ServiceType == typeof(IQueryDispatcher)));
+        Assert.ContainsSingle(services.Where(descriptor => descriptor.ServiceType == typeof(ICommandDispatcher)));
+        Assert.ContainsSingle(services.Where(descriptor => descriptor.ServiceType == typeof(IQueryDispatcher)));
     }
 
     #region Helpers

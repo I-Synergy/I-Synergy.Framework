@@ -11,6 +11,11 @@ namespace ISynergy.Framework.Core.Extensions;
 [TestClass]
 public class StringExtensionsTests
 {
+    private static readonly string[] SplitAtParts = ["ab", "cd", "ef"];
+    private static readonly string[] WholeString = ["abc"];
+    private static readonly byte[] HexPairs = [0x00, 0x11];
+    private static readonly char[] RemoveChars = ['b'];
+
     // Sample enum used by ToEnum tests.
     private enum SampleEnum
     {
@@ -173,9 +178,9 @@ public class StringExtensionsTests
         // (hard break branch).
         var wrapped = "ab cdefghijklmnop".WordWrap(5);
 
-        Assert.IsTrue(wrapped.Contains("ab"));
-        Assert.IsTrue(wrapped.Contains("cdefg"));
-        Assert.IsTrue(wrapped.Contains(Environment.NewLine));
+        Assert.Contains("ab", wrapped);
+        Assert.Contains("cdefg", wrapped);
+        Assert.Contains(Environment.NewLine, wrapped);
     }
 
     // --- ExtractHexDigits ---
@@ -259,17 +264,17 @@ public class StringExtensionsTests
     public void SplitAt_SplitsAtPositions()
     {
         var parts = "abcdef".SplitAt(2, 4).ToArray();
-        CollectionAssert.AreEqual(new[] { "ab", "cd", "ef" }, parts);
+        Assert.AreSequenceEqual(SplitAtParts, parts);
     }
 
     [TestMethod]
     public void SplitAt_NoValidPositions_YieldsWholeString()
     {
         var none = "abc".SplitAt().ToArray();
-        CollectionAssert.AreEqual(new[] { "abc" }, none);
+        Assert.AreSequenceEqual(WholeString, none);
 
         var invalid = "abc".SplitAt(0, 5, 99).ToArray();
-        CollectionAssert.AreEqual(new[] { "abc" }, invalid);
+        Assert.AreSequenceEqual(WholeString, invalid);
     }
 
     // --- TrimEnd(int) ---
@@ -323,9 +328,9 @@ public class StringExtensionsTests
     {
         var wrapped = "aaaa bbbb cccc".Wrap(6);
 
-        Assert.IsTrue(wrapped.Contains(Environment.NewLine));
-        Assert.IsTrue(wrapped.Contains("aaaa"));
-        Assert.IsTrue(wrapped.Contains("cccc"));
+        Assert.Contains(Environment.NewLine, wrapped);
+        Assert.Contains("aaaa", wrapped);
+        Assert.Contains("cccc", wrapped);
     }
 
     [TestMethod]
@@ -334,8 +339,8 @@ public class StringExtensionsTests
         var text = "short" + Environment.NewLine + "alsoshort";
         var wrapped = text.Wrap(50);
 
-        StringAssert.Contains(wrapped, "short");
-        StringAssert.Contains(wrapped, "alsoshort");
+        Assert.Contains("short", wrapped);
+        Assert.Contains("alsoshort", wrapped);
     }
 
     // --- Remove ---
@@ -343,7 +348,7 @@ public class StringExtensionsTests
     [TestMethod]
     public void Remove_RemovesSpecifiedCharacters()
     {
-        Assert.AreEqual("acac", "abcabc".Remove(new[] { 'b' }));
+        Assert.AreEqual("acac", "abcabc".Remove(RemoveChars));
     }
 
     // --- GetBytes ---
@@ -352,7 +357,7 @@ public class StringExtensionsTests
     public void GetBytes_ParsesHexPairs()
     {
         var bytes = "0011AABB".GetBytes(0, 2);
-        CollectionAssert.AreEqual(new byte[] { 0x00, 0x11 }, bytes);
+        Assert.AreSequenceEqual(HexPairs, bytes);
     }
 
     // --- ToEnum ---
@@ -397,7 +402,7 @@ public class StringExtensionsTests
     [TestMethod]
     public void SplitAndKeep_EmptyInput_ReturnsEmptyList()
     {
-        Assert.HasCount(0, "".SplitAndKeep('.'));
+        Assert.IsEmpty("".SplitAndKeep('.'));
     }
 
     // --- ToEndingWithDirectorySeparator ---
@@ -456,7 +461,7 @@ public class StringExtensionsTests
     public void ParseQueryString_EmptyOrNull_ReturnsEmpty()
     {
         string? nul = null;
-        Assert.HasCount(0, nul.ParseQueryString());
-        Assert.HasCount(0, "".ParseQueryString());
+        Assert.IsEmpty(nul.ParseQueryString());
+        Assert.IsEmpty("".ParseQueryString());
     }
 }

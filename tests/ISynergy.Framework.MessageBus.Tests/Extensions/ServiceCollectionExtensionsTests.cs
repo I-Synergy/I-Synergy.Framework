@@ -26,14 +26,17 @@ public class ServiceCollectionExtensionsTests
         var returned = services.AddPublishingTopicMessageBus<TestMessage, TestPublisher>();
 
         Assert.AreSame(services, returned, "The extension must return the same collection for chaining");
-        Assert.IsTrue(
-            services.Any(d => d.ServiceType == typeof(TestPublisher)),
+        Assert.Contains(
+            d => d.ServiceType == typeof(TestPublisher),
+            services,
             "The concrete implementation should be registered.");
-        Assert.IsTrue(
-            services.Any(d => d.ServiceType == typeof(IPublisherServiceBus<TestMessage>)),
+        Assert.Contains(
+            d => d.ServiceType == typeof(IPublisherServiceBus<TestMessage>),
+            services,
             "The abstraction should be registered.");
-        Assert.IsTrue(
-            services.Single(d => d.ServiceType == typeof(TestPublisher)).Lifetime == ServiceLifetime.Singleton,
+        Assert.AreEqual(
+            ServiceLifetime.Singleton,
+            services.Single(d => d.ServiceType == typeof(TestPublisher)).Lifetime,
             "The registration should be a singleton.");
     }
 

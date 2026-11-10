@@ -15,6 +15,8 @@ namespace ISynergy.Framework.UI.WPF.Controls.Validators;
 [OSCondition(OperatingSystems.Windows)]
 public class MaskValidatorTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
 
     // ── Mask rendering ───────────────────────────────────────────────────────
@@ -409,7 +411,7 @@ public class MaskValidatorTests
         try
         {
             window.Show();
-            Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Loaded);
+            Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Loaded, TestContext.CancellationToken);
             Assert.IsTrue(textBox.IsLoaded);
 
             // The mask is applied through the already-loaded branch of MaskPropertyOnChange.

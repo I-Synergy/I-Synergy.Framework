@@ -25,6 +25,8 @@ public class BaseWatcherTests
         NotifyFilters.Size
     ];
 
+    public TestContext TestContext { get; set; } = null!;
+
     private string _tempDirectory = string.Empty;
 
     [TestInitialize]
@@ -51,7 +53,7 @@ public class BaseWatcherTests
         {
         }
 
-        public IReadOnlyList<FileSystemWatcher> Watchers => _watchers;
+        public List<FileSystemWatcher> Watchers => _watchers;
 
         public bool HandleNotify(NotifyFilters filter) => HandleNotifyFilter(filter);
 
@@ -246,7 +248,7 @@ public class BaseWatcherTests
         var filePath = Path.Combine(_tempDirectory, "created.txt");
         File.WriteAllText(filePath, "content");
 
-        Assert.IsTrue(raised.Wait(TimeSpan.FromSeconds(5)), "EventCreated was not raised.");
+        Assert.IsTrue(raised.Wait(TimeSpan.FromSeconds(5), TestContext.CancellationToken), "EventCreated was not raised.");
         Assert.IsNotNull(captured);
         Assert.AreEqual(FileWatcherArgumentTypes.FileSystem, captured!.ArgumentType);
     }
@@ -266,7 +268,7 @@ public class BaseWatcherTests
 
         File.Delete(filePath);
 
-        Assert.IsTrue(raised.Wait(TimeSpan.FromSeconds(5)), "EventDeleted was not raised.");
+        Assert.IsTrue(raised.Wait(TimeSpan.FromSeconds(5), TestContext.CancellationToken), "EventDeleted was not raised.");
     }
 
     [TestMethod]
@@ -288,7 +290,7 @@ public class BaseWatcherTests
 
         File.Move(sourcePath, Path.Combine(_tempDirectory, "renamed.txt"));
 
-        Assert.IsTrue(raised.Wait(TimeSpan.FromSeconds(5)), "EventRenamed was not raised.");
+        Assert.IsTrue(raised.Wait(TimeSpan.FromSeconds(5), TestContext.CancellationToken), "EventRenamed was not raised.");
     }
 
     [TestMethod]
@@ -315,7 +317,7 @@ public class BaseWatcherTests
         while (!raised.IsSet && stopwatch.Elapsed < TimeSpan.FromSeconds(5))
         {
             File.AppendAllText(filePath, $"edit-{attempt++}");
-            raised.Wait(TimeSpan.FromMilliseconds(200));
+            raised.Wait(TimeSpan.FromMilliseconds(200), TestContext.CancellationToken);
         }
 
         Assert.IsTrue(raised.IsSet, "EventChangedLastWrite was not raised.");

@@ -820,12 +820,12 @@ public partial class DialogService : IDialogService, IDisposable
         }
         catch (Exception handlerEx)
         {
-            _logger?.LogError(handlerEx, handlerFailedMessage);
+            _logger?.LogError(handlerEx, "{Message}", handlerFailedMessage);
         }
 
         if (!handled)
         {
-            _logger?.LogWarning(handlerNotAvailableMessage);
+            _logger?.LogWarning("{Message}", handlerNotAvailableMessage);
         }
     }
 

@@ -15,6 +15,8 @@ namespace ISynergy.Framework.UI.WPF.Controls.Validators;
 [OSCondition(OperatingSystems.Windows)]
 public class RegexValidatorTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
     private const string DigitsOnly = "^[0-9]+$";
 
@@ -236,7 +238,7 @@ public class RegexValidatorTests
         try
         {
             window.Show();
-            Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Loaded);
+            Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Loaded, TestContext.CancellationToken);
             Assert.IsTrue(textBox.IsLoaded);
 
             // Assigned while the control is loaded: validation runs immediately.

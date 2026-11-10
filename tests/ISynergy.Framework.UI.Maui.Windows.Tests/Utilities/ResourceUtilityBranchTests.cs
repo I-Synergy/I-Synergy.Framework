@@ -26,6 +26,8 @@ public class ResourceUtilityBranchTests
         public int Value { get; set; }
     }
 
+    private static readonly int[] s_idiomValues = { 1, 2, 3, 4, 5, 7 };
+
     // ── default switch branch ────────────────────────────────────────────────
 
     [TestMethod]
@@ -78,6 +80,7 @@ public class ResourceUtilityBranchTests
             { "Platform", new OnPlatform<int> { Default = 9 } }
         };
 
+        Exception? hostException = null;
         int result;
         try
         {
@@ -85,8 +88,13 @@ public class ResourceUtilityBranchTests
         }
         catch (Exception ex)
         {
-            Assert.Inconclusive($"DeviceInfo.Platform unavailable in this host: {ex.GetType().Name}.");
-            return;
+            hostException = ex;
+            result = -1;
+        }
+
+        if (hostException is not null)
+        {
+            Assert.Inconclusive($"DeviceInfo.Platform unavailable in this host: {hostException.GetType().Name}.");
         }
 
         // No platform-specific match, so the recursive lookup yields the default of int.
@@ -114,6 +122,7 @@ public class ResourceUtilityBranchTests
             }
         };
 
+        Exception? hostException = null;
         int result;
         try
         {
@@ -121,11 +130,16 @@ public class ResourceUtilityBranchTests
         }
         catch (Exception ex)
         {
-            Assert.Inconclusive($"DeviceInfo.Idiom unavailable in this host: {ex.GetType().Name}.");
-            return;
+            hostException = ex;
+            result = -1;
+        }
+
+        if (hostException is not null)
+        {
+            Assert.Inconclusive($"DeviceInfo.Idiom unavailable in this host: {hostException.GetType().Name}.");
         }
 
         // Regardless of the current idiom the resolved value must be one of the configured ones.
-        CollectionAssert.Contains(new[] { 1, 2, 3, 4, 5, 7 }, result);
+        Assert.Contains(result, s_idiomValues);
     }
 }

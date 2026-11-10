@@ -29,6 +29,8 @@ namespace ISynergy.Framework.UI.WinUI.Services;
 [OSCondition(OperatingSystems.Windows)]
 public class DialogServiceTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private const string ButtonStyleFailure = "Failed to set button styles";
     private const string DialogErrorMessage = "Error showing dialog";
 
@@ -149,7 +151,7 @@ public class DialogServiceTests
         // construction throws; the guarded catch block must swallow it and report None.
         var result = await _service
             .ShowMessageAsync("message", "title", MessageBoxButtons.OKCancel)
-            .WaitAsync(TimeSpan.FromSeconds(30));
+            .WaitAsync(TimeSpan.FromSeconds(30), TestContext.CancellationToken);
 
         Assert.AreEqual(MessageBoxResults.None, result);
         VerifyLog(LogLevel.Error, "dialog", Times.Once());
@@ -387,7 +389,7 @@ public class DialogServiceTests
 
         viewmodel.Raise(x => x.Submitted += null, new SubmitEventArgs<TestEntity>(entity));
 
-        var actual = await submitted.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        var actual = await submitted.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.CancellationToken);
         Assert.AreSame(entity, actual);
     }
 
@@ -410,7 +412,7 @@ public class DialogServiceTests
 
         viewmodel.Raise(x => x.Submitted += null, new SubmitEventArgs<TestEntity>(new TestEntity()));
 
-        await submitted.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        await submitted.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.CancellationToken);
         await VerifyLogEventuallyAsync(LogLevel.Error, "Submit callback failed");
     }
 
@@ -429,7 +431,7 @@ public class DialogServiceTests
 
         viewmodel.Raise(x => x.Cancelled += null, EventArgs.Empty);
 
-        Assert.IsTrue(await cancelled.Task.WaitAsync(TimeSpan.FromSeconds(10)));
+        Assert.IsTrue(await cancelled.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.CancellationToken));
     }
 
     [TestMethod]
@@ -446,7 +448,7 @@ public class DialogServiceTests
 
         viewmodel.Raise(x => x.Cancelled += null, EventArgs.Empty);
 
-        await Task.Delay(50);
+        await Task.Delay(50, TestContext.CancellationToken);
         VerifyLog(LogLevel.Error, "Cancel callback failed", Times.Never());
     }
 
@@ -466,7 +468,7 @@ public class DialogServiceTests
 
         viewmodel.Raise(x => x.Closed += null, EventArgs.Empty);
 
-        Assert.IsTrue(await closed.Task.WaitAsync(TimeSpan.FromSeconds(10)));
+        Assert.IsTrue(await closed.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.CancellationToken));
         scope.Verify(x => x.Dispose(), Times.Once);
     }
 
@@ -490,7 +492,7 @@ public class DialogServiceTests
         viewmodel.Raise(x => x.Submitted += null, new SubmitEventArgs<TestEntity>(new TestEntity()));
         viewmodel.Raise(x => x.Cancelled += null, EventArgs.Empty);
 
-        await Task.Delay(50);
+        await Task.Delay(50, TestContext.CancellationToken);
 
         Assert.AreEqual(0, submittedCount);
         Assert.AreEqual(0, cancelledCount);
@@ -515,7 +517,7 @@ public class DialogServiceTests
 
         viewmodel.Raise(x => x.Cancelled += null, EventArgs.Empty);
 
-        Assert.IsTrue(await cancelled.Task.WaitAsync(TimeSpan.FromSeconds(10)));
+        Assert.IsTrue(await cancelled.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.CancellationToken));
         await VerifyLogEventuallyAsync(LogLevel.Error, "Cancel callback failed");
     }
 
@@ -569,8 +571,18 @@ public class DialogServiceTests
     [TestMethod]
     public void Dispose_CalledTwice_DoesNotThrow()
     {
-        _service.Dispose();
-        _service.Dispose();
+        Exception? exception = null;
+        try
+        {
+            _service.Dispose();
+            _service.Dispose();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+
+        Assert.IsNull(exception);
     }
 
     #endregion
@@ -678,7 +690,7 @@ public class DialogServiceTests
         public string Name { get; init; } = "entity";
     }
 
-    public sealed class StubWindow : IWindow
+    public sealed partial class StubWindow : IWindow
     {
         public IViewModel ViewModel { get; set; } = null!;
 

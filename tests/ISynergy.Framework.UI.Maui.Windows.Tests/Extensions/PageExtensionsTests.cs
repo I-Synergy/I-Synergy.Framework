@@ -51,20 +51,25 @@ public class PageExtensionsTests
     [TestMethod]
     public void ApplyWindowFlowDirection_ReturnsSamePageInstance()
     {
-        ContentPage page;
+        ContentPage? page = null;
+        Exception? hostException = null;
         try
         {
             page = new ContentPage();
         }
         catch (Exception ex)
         {
-            Assert.Inconclusive(
-                "ContentPage cannot be constructed in this host without MAUI platform " +
-                $"initialization: {ex.GetType().Name}.");
-            return;
+            hostException = ex;
         }
 
-        var result = page.ApplyWindowFlowDirection("ar");
+        if (hostException is not null)
+        {
+            Assert.Inconclusive(
+                "ContentPage cannot be constructed in this host without MAUI platform " +
+                $"initialization: {hostException.GetType().Name}.");
+        }
+
+        var result = page!.ApplyWindowFlowDirection("ar");
 
         Assert.AreSame(page, result, "The helper is documented to return the page for chaining");
     }

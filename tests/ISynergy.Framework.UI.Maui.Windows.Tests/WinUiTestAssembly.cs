@@ -5,6 +5,7 @@ namespace ISynergy.Framework.UI.Maui;
 /// controls (pages, shells, …) can be constructed by any test of this assembly.
 /// </summary>
 [TestClass]
+[OSCondition(OperatingSystems.Windows)]
 public static class WinUiTestAssembly
 {
     [AssemblyInitialize]

@@ -92,7 +92,7 @@ public class NavigationServiceGuardCoverageTests
             observed = ex;
         }
 
-        Assert.IsInstanceOfType(observed, typeof(InvalidOperationException));
+        Assert.IsInstanceOfType<InvalidOperationException>(observed);
         scope.Verify(x => x.Dispose(), Times.Once,
             "The orphaned scope must be disposed before the guard throws.");
     }

@@ -48,7 +48,7 @@ public class WrapperTests
 
         vector[1] = 5;
         Assert.AreEqual(5.0, source[1]);
-        Assert.AreEqual(3, vector.AsSpan().Length);
+        Assert.HasCount(3, vector.AsSpan());
 
         double[] unwrapped = vector;
         Assert.AreSame(source, unwrapped);

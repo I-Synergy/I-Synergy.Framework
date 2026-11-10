@@ -26,7 +26,7 @@ public class ConverterTests
 
         var result = converter.Convert("2", s_bool, "2", s_invariant);
 
-        Assert.AreEqual(true, result);
+        Assert.IsTrue((bool)result);
     }
 
     [TestMethod]
@@ -36,7 +36,7 @@ public class ConverterTests
 
         var result = converter.Convert("2", s_bool, "3", s_invariant);
 
-        Assert.AreEqual(false, result);
+        Assert.IsFalse((bool)result);
     }
 
     [TestMethod]
@@ -46,7 +46,7 @@ public class ConverterTests
 
         var result = converter.Convert("not-a-number", s_bool, "2", s_invariant);
 
-        Assert.AreEqual(false, result);
+        Assert.IsFalse((bool)result);
     }
 
     // ── SelectionModeConverter ──────────────────────────────────────────────
@@ -87,28 +87,28 @@ public class ConverterTests
     public void NullToVisibility_Null_ReturnsFalse()
     {
         var converter = new NullToVisibilityConverter();
-        Assert.AreEqual(false, converter.Convert(null, s_bool, null, s_invariant));
+        Assert.IsFalse((bool)converter.Convert(null, s_bool, null, s_invariant));
     }
 
     [TestMethod]
     public void NullToVisibility_NonNull_ReturnsTrue()
     {
         var converter = new NullToVisibilityConverter();
-        Assert.AreEqual(true, converter.Convert("value", s_bool, null, s_invariant));
+        Assert.IsTrue((bool)converter.Convert("value", s_bool, null, s_invariant));
     }
 
     [TestMethod]
     public void NullToInversedVisibility_Null_ReturnsTrue()
     {
         var converter = new NullToInversedVisibilityConverter();
-        Assert.AreEqual(true, converter.Convert(null, s_bool, null, s_invariant));
+        Assert.IsTrue((bool)converter.Convert(null, s_bool, null, s_invariant));
     }
 
     [TestMethod]
     public void NullToInversedVisibility_NonNull_ReturnsFalse()
     {
         var converter = new NullToInversedVisibilityConverter();
-        Assert.AreEqual(false, converter.Convert("value", s_bool, null, s_invariant));
+        Assert.IsFalse((bool)converter.Convert("value", s_bool, null, s_invariant));
     }
 
     // ── NullToBooleanConverter ───────────────────────────────────────────────
@@ -117,14 +117,14 @@ public class ConverterTests
     public void NullToBoolean_Null_ReturnsFalse()
     {
         var converter = new NullToBooleanConverter();
-        Assert.AreEqual(false, converter.Convert(null, s_bool, null, s_invariant));
+        Assert.IsFalse((bool)converter.Convert(null, s_bool, null, s_invariant));
     }
 
     [TestMethod]
     public void NullToBoolean_NonNull_ReturnsTrue()
     {
         var converter = new NullToBooleanConverter();
-        Assert.AreEqual(true, converter.Convert(42, s_bool, null, s_invariant));
+        Assert.IsTrue((bool)converter.Convert(42, s_bool, null, s_invariant));
     }
 
     // ── BooleanNegationConverter ─────────────────────────────────────────────
@@ -143,7 +143,7 @@ public class ConverterTests
     {
         // !(value is bool x && x) short-circuits to true for non-bool input.
         var converter = new BooleanNegationConverter();
-        Assert.AreEqual(true, converter.Convert("not-a-bool", s_bool, null, s_invariant));
+        Assert.IsTrue((bool)converter.Convert("not-a-bool", s_bool, null, s_invariant));
     }
 
     // ── InverseBooleanConverter ──────────────────────────────────────────────
