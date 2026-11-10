@@ -37,19 +37,19 @@ public enum QuantileMethod
     ///   The default quantile method in the framework (6).
     /// </summary>
     /// 
-    Default = Type6,
+    Default = 6,
 
     /// <summary>
     ///   The default method in R (7).
     /// </summary>
     /// 
-    R = Type7,
+    R = 7,
 
     /// <summary>
     ///   The dafault method in Maple (8).
     /// </summary>
     /// 
-    Maple = Type8,
+    Maple = 8,
 
     /// <summary>
     ///   Inverse of empirical distribution function. 
@@ -84,29 +84,6 @@ public enum QuantileMethod
     /// </summary>
     /// 
     Type5 = 5,
-
-    /// <summary>
-    ///   Linear interpolation of the expectations for the order statistics for the uniform distribution on [0,1]. 
-    ///   That is, it is the linear interpolation between points (ph, xh), where ph = h / (N + 1) is the probability 
-    ///   that the last of (N+1) randomly drawn values will not exceed the h-th smallest of the first N randomly drawn
-    ///   values. Equivalence to other packages: R-6, Excel, SAS-4, SciPy-(0,0), Maple-5.
-    /// </summary>
-    /// 
-    Type6 = 6,
-
-    /// <summary>
-    ///   Linear interpolation of the modes for the order statistics for the uniform distribution on [0,1]. 
-    ///   Equivalence to other packages: R: 7, Excel, SciPy: (1,1), Maple: 6.
-    /// </summary>
-    /// 
-    Type7 = 7,
-
-    /// <summary>
-    ///   Linear interpolation of the approximate medians for order statistics. Equivalence to other packages:
-    ///   R: 8, SciPy: (1/3,1/3), Maple: 7.
-    /// </summary>
-    /// 
-    Type8 = 8,
 
     /// <summary>
     ///   The resulting quantile estimates are approximately unbiased for the expected order statistics if x is normally 
@@ -287,9 +264,9 @@ public static partial class Measures
             case QuantileMethod.Type3: return Q3(values, probabilities, alreadySorted, result);
             case QuantileMethod.Type4: return Q4(values, probabilities, alreadySorted, result);
             case QuantileMethod.Type5: return Q5(values, probabilities, alreadySorted, result);
-            case QuantileMethod.Type6: return Q6(values, probabilities, alreadySorted, result);
-            case QuantileMethod.Type7: return Q7(values, probabilities, alreadySorted, result);
-            case QuantileMethod.Type8: return Q8(values, probabilities, alreadySorted, result);
+            case QuantileMethod.Default: return Q6(values, probabilities, alreadySorted, result);
+            case QuantileMethod.R: return Q7(values, probabilities, alreadySorted, result);
+            case QuantileMethod.Maple: return Q8(values, probabilities, alreadySorted, result);
             case QuantileMethod.Type9: return Q9(values, probabilities, alreadySorted, result);
             default:
                 throw new ArgumentException("Invalid quantile type, must be between 1 and 9 (inclusive)", nameof(type));

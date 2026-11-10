@@ -110,9 +110,6 @@ jobs:
           )
 
           $ids = 1..$rules.Count | ForEach-Object { 'e' + $_ }
-          # CA1069 (duplicate enum values) is an external Roslyn rule, so it needs the
-          # external_roslyn prefix and a non-numeric id.
-          $ids += 'eRoslyn'
           $multicriteria = '/d:sonar.issue.ignore.multicriteria=' + ($ids -join ',')
 
           $scannerArgs = @(
@@ -139,8 +136,6 @@ jobs:
             $scannerArgs += "/d:sonar.issue.ignore.multicriteria.$id.ruleKey=csharpsquid:$($rules[$i])"
             $scannerArgs += "/d:sonar.issue.ignore.multicriteria.$id.resourceKey=src/ISynergy.Framework.Mathematics/**"
           }
-          $scannerArgs += '/d:sonar.issue.ignore.multicriteria.eRoslyn.ruleKey=external_roslyn:CA1069'
-          $scannerArgs += '/d:sonar.issue.ignore.multicriteria.eRoslyn.resourceKey=src/ISynergy.Framework.Mathematics/**'
 
           dotnet sonarscanner @scannerArgs
 

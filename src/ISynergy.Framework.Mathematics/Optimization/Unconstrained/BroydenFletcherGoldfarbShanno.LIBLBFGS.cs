@@ -1376,7 +1376,6 @@ internal static class Lbfgs
          * L-BFGS reaches convergence.
          */
         LBFGS_SUCCESS = 0,
-        LBFGS_CONVERGENCE = 0,
         LBFGS_STOP,
 
         /**

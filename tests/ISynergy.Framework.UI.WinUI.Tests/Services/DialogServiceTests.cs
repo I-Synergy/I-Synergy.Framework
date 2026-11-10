@@ -27,7 +27,7 @@ namespace ISynergy.Framework.UI.WinUI.Services;
 /// </summary>
 [TestClass]
 [OSCondition(OperatingSystems.Windows)]
-public class DialogServiceTests
+public partial class DialogServiceTests
 {
     public TestContext TestContext { get; set; } = null!;
 
@@ -674,7 +674,7 @@ public class DialogServiceTests
             }
             catch (MockException)
             {
-                await Task.Delay(20);
+                await Task.Delay(20, TestContext.CancellationToken);
             }
         }
 

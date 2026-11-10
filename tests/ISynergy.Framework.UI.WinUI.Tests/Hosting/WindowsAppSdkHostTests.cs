@@ -22,7 +22,7 @@ namespace ISynergy.Framework.UI.WinUI.Hosting;
 /// </summary>
 [TestClass]
 [OSCondition(OperatingSystems.Windows)]
-public class WindowsAppSdkHostTests
+public partial class WindowsAppSdkHostTests
 {
     private static readonly Type OpenType =
         typeof(DialogService).Assembly.GetType("ISynergy.Framework.UI.Hosting.WindowsAppSdkHost`1")!;
