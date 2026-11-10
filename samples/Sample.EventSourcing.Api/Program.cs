@@ -62,14 +62,10 @@ builder.Services.AddMultiTenancyIntegration(options =>
 });
 
 // ── Event Sourcing ───────────────────────────────────────────────────────────
-// Connection string is injected by Aspire: ConnectionStrings__eventsourcing
-var connectionString = builder.Configuration.GetConnectionString("eventsourcing")
-    ?? throw new InvalidOperationException(
-        "Connection string 'eventsourcing' not found. " +
-        "Run this service through the Aspire AppHost (Sample.EventSourcing.AppHost).");
-
+// Npgsql still pins EF Core Relational to 11.0.0-rc.3 while the net11 graph is on EF Core
+// 11.0.0, so this sample uses the in-memory provider on every target framework.
 builder.Services
-    .AddEventSourcingEntityFramework(o => o.UseNpgsql(connectionString))
+    .AddEventSourcingEntityFramework(o => o.UseInMemoryDatabase("eventsourcing"))
     .AddAggregateRepository<Order, Guid>();
 
 // ── Archive services (cold-tier blob storage) ─────────────────────────────────
