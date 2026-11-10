@@ -105,9 +105,10 @@ public static class Generator
             // No possibility of race condition here since its thread static
             if (threadRandom is null || threadLastUpdateTicks < sourceLastUpdateTicks)
             {
-                threadSeed = GetRandomSeed();
+                var seed = GetRandomSeed();
+                threadSeed = seed;
                 threadLastUpdateTicks = sourceLastUpdateTicks;
-                threadRandom = threadSeed.HasValue ? new(threadSeed.Value) : new();
+                threadRandom = new(seed);
             }
 
             return threadRandom;

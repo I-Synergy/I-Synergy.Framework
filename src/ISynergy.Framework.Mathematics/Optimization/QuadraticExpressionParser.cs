@@ -108,7 +108,7 @@ internal static class QuadraticExpressionParser
                     if (lb is not null || rb is not null || lu is not null)
                     {
                         double n;
-                        var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb ?? ru, out n);
+                        var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb, out n);
                         if (!dontAdd) terms[term] = scalar;
                         return term;
                     }

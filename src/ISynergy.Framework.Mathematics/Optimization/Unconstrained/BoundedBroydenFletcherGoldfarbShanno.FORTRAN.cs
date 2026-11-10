@@ -4924,8 +4924,7 @@ partial class BoundedBroydenFletcherGoldfarbShanno
             // *        code for increment not equal to 1
             // *
             nincx = (n * incx);
-            int _i_inc__r2 = incx;
-            for (i = 1; (_i_inc__r2 < 0) ? i >= nincx : i <= nincx; i += _i_inc__r2)
+            for (i = 1; i <= nincx; i += incx)
             {
                 dx[(i - (1)) + _dx_offset] = (da * dx[(i - (1)) + _dx_offset]);
             }
