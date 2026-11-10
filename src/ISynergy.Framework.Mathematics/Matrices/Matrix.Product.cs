@@ -169,7 +169,7 @@ public static partial class Matrix
         int M = resultArray.Columns();
 #if DEBUG
         if (aArray.Columns() != bArray.Rows() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
 
         var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         for (var i = 0; i < N; i++)
@@ -215,7 +215,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Columns() != bArray.Length || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Jagged.CreateAs(new Jagged<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(new Jagged<double>(aArray).ToMatrix().To<double[,]>()), new Matrix<double>(new Jagged<double>(bArray).ToMatrix().To<double[,]>()), new Matrix<double>(C));
 #endif
@@ -260,7 +260,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Columns() != bArray.Rows() || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(new Jagged<double>(aArray).ToMatrix().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()), new Matrix<double>(C));
 #endif
@@ -304,7 +304,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Columns() != bArray.Length || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(new Jagged<double>(bArray).ToMatrix().To<double[,]>()), new Matrix<double>(C));
 #endif
@@ -375,7 +375,7 @@ public static partial class Matrix
         var matrixArray = matrix.Array;
 #if DEBUG
         if (matrixArray.Columns() != columnVector.Length || result.Length > matrixArray.Length)
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
 #endif
 
         for (var i = 0; i < matrixArray.Length; i++)
@@ -405,7 +405,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (cols != columnVector.Length || result.Length > rows)
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
 #endif
         // Process rows two at a time
         for (var i = 0; i < rows / 2; i++)
@@ -569,7 +569,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
@@ -637,7 +637,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
@@ -677,7 +677,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
@@ -717,7 +717,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
@@ -865,7 +865,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (n != bArray.Rows() || resultArray.Rows() > m || resultArray.Columns() > p)
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Dot(new Matrix<double>(aArray.Transpose().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()));
 #endif
         var ptemp = new double[p];
@@ -914,7 +914,7 @@ public static partial class Matrix
 
 #if DEBUG
         if (n != bArray.Rows() || resultArray.Rows() > m || resultArray.Columns() > p)
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Dot(new Matrix<double>(aArray.Transpose().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()));
 #endif
         var ptemp = new double[p];
@@ -959,7 +959,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Length != bArray.Length || resultArray.Length > aArray.Columns() || resultArray.Columns() > bArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Dot(new Matrix<double>(aArray.Transpose().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()));
 #endif
         int n = aArray.Length;
@@ -1000,7 +1000,7 @@ public static partial class Matrix
         var matrixArray = matrix.Array;
 #if DEBUG
         if (matrixArray.Rows() != columnVector.Length || result.Length > matrixArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Dot(new Matrix<double>(matrixArray.Transpose().To<double[,]>()), columnVector.To<double[]>());
 #endif
         int cols = matrixArray.Columns();
@@ -1032,7 +1032,7 @@ public static partial class Matrix
         var matrixArray = matrix.Array;
 #if DEBUG
         if (matrixArray.Length != columnVector.Length || result.Length > matrixArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Dot(new Matrix<double>(matrixArray.Transpose().To<double[,]>()), columnVector.To<double[]>());
 #endif
         int cols = matrixArray.Columns();
@@ -1094,7 +1094,7 @@ public static partial class Matrix
         var resultArray = result.Array;
 #if DEBUG
         if (aArray.Length != bArray.Length || resultArray.Length > aArray.Columns() || resultArray.Columns() > bArray.Columns())
-            throw new DimensionMismatchException(nameof(rowVector), "Matrices must have compatible dimensions.");
+            throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
         var C = Dot(new Matrix<double>(aArray.Transpose().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()));
 #endif
         int n = aArray.Length;
