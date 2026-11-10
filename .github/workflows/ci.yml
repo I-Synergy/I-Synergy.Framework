@@ -121,11 +121,6 @@ jobs:
             "/d:sonar.token=$env:SONAR_TOKEN",
             '/d:sonar.cs.opencover.reportsPaths=TestResults/**/coverage.opencover.xml',
             '/d:sonar.cpd.exclusions=src/ISynergy.Framework.Mathematics/**',
-            # The organization-level "Ignore All Issues on Files" setting holds a glob
-            # (src/ISynergy.Framework.Mathematics/**). Scanner 12 validates that value as a
-            # regular expression and aborts the analysis, so override it per project with
-            # the equivalent regex. Fix the organization setting in SonarCloud as well.
-            '/d:sonar.issue.ignore.allfile=src/ISynergy\.Framework\.Mathematics/.*',
             $multicriteria
           )
 
