@@ -115,3 +115,11 @@ wrap once. All Mathematics tests pass after every slice.
 suppressions** (project `NoWarn` only `CS8981;CS1591`, no pragmas). Full solution builds and every
 test project passes (Mathematics: 959 passed, 1 skipped). The wrapper migration is a breaking
 public API change and is recorded in `CHANGELOG.md`.
+
+## CI and quality gate (2026-11-10)
+
+CI workflow green; SonarCloud PR #176 quality gate **OK**: reliability 1, security 1,
+maintainability 1, coverage 80.7% (>= 80), duplication 0.1%, hotspots 100%.
+Fixed the three new-code S2583 bugs, added ~200 tests across Core/IO/Automations/UI/CQRS/
+Geography/WPF/WinUI/MAUI, and excluded the vendored Math port + non-Windows MAUI heads
+from coverage (they cannot execute on the Windows runner).
