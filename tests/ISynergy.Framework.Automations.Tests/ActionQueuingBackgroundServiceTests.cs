@@ -126,6 +126,75 @@ public class ActionQueuingBackgroundServiceTests
 
         Assert.AreSame(logged.Task, completed, "The refresh error was not logged.");
     }
+
+    [TestMethod]
+    public async Task RefreshQueue_WhenUpcomingTaskExists_ExecutesActionFromExecutionTimer()
+    {
+        // A timespan with a non-zero expiration and an upcoming task makes RefreshQueueAsync arm
+        // the execution timer; its callback runs the action in the background (no deadlock on the
+        // refresh timer thread and no unobserved exception).
+        var action = new Mock<IAction>().Object;
+
+        _actionService
+            .Setup(s => s.CalculateTimespanAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(((TimeSpan Expiration, IAction? UpcomingTask)?)
+                (TimeSpan.FromMilliseconds(10), action));
+
+        var executed = new TaskCompletionSource();
+        _actionService
+            .Setup(s => s.ExcecuteActionAsync(It.IsAny<IAction>(), It.IsAny<CancellationToken>()))
+            .Callback(() => executed.TrySetResult())
+            .Returns(Task.CompletedTask);
+
+        var errors = new TaskCompletionSource();
+        var logger = new CapturingLogger(errors);
+
+        using var service = new ActionQueuingBackgroundService(
+            _actionService.Object,
+            Microsoft.Extensions.Options.Options.Create(_options),
+            logger);
+
+        await service.StartAsync(CancellationToken.None);
+
+        var completed = await Task.WhenAny(executed.Task, Task.Delay(TimeSpan.FromSeconds(5)));
+        await service.StopAsync(CancellationToken.None);
+
+        Assert.AreSame(executed.Task, completed, "The execution timer callback did not run the action.");
+        _actionService.Verify(
+            s => s.ExcecuteActionAsync(action, It.IsAny<CancellationToken>()),
+            Times.AtLeastOnce);
+    }
+
+    [TestMethod]
+    public async Task RunInBackground_WhenBackgroundOperationFaults_LogsUnhandledError()
+    {
+        // RefreshQueueAsync swallows service errors, so the only way the fire-and-forget task can
+        // fault is a failure inside its own catch handler (here: a throwing logger). The fault
+        // continuation must still log instead of leaving the exception unobserved.
+        _options.DefaultQueueRefreshRate = TimeSpan.FromHours(1);
+
+        _actionService
+            .SetupSequence(s => s.RefreshTasksAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask)                          // StartAsync
+            .ThrowsAsync(new InvalidOperationException("boom")); // timer callback (and repeats)
+
+        var faultLogged = new TaskCompletionSource();
+        var logger = new ThrowingOnFirstErrorLogger(faultLogged);
+
+        using var service = new ActionQueuingBackgroundService(
+            _actionService.Object,
+            Microsoft.Extensions.Options.Options.Create(_options),
+            logger);
+
+        await service.StartAsync(CancellationToken.None);
+
+        var completed = await Task.WhenAny(faultLogged.Task, Task.Delay(TimeSpan.FromSeconds(5)));
+        await service.StopAsync(CancellationToken.None);
+
+        Assert.AreSame(faultLogged.Task, completed,
+            "The faulted background task was not reported through the continuation logger.");
+        Assert.AreEqual(1, logger.UnhandledErrorCount, "Expected exactly one 'unhandled error' entry.");
+    }
 }
 
 /// <summary>
@@ -150,5 +219,48 @@ internal sealed class CapturingLogger : ILogger<ActionQueuingBackgroundService>
     {
         if (logLevel == LogLevel.Error)
             _signal.TrySetResult();
+    }
+}
+
+/// <summary>
+/// <see cref="ILogger{T}"/> that throws on the first error write (simulating a failing logger) and
+/// signals (then counts) every subsequent error write.
+/// </summary>
+internal sealed class ThrowingOnFirstErrorLogger : ILogger<ActionQueuingBackgroundService>
+{
+    private readonly TaskCompletionSource _signal;
+    private int _errorCount;
+    private bool _failed;
+
+    public ThrowingOnFirstErrorLogger(TaskCompletionSource signal) => _signal = signal;
+
+    public int UnhandledErrorCount => Volatile.Read(ref _errorCount);
+
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+    public bool IsEnabled(LogLevel logLevel) => true;
+
+    public void Log<TState>(
+        LogLevel logLevel,
+        EventId eventId,
+        TState state,
+        Exception? exception,
+        Func<TState, Exception?, string> formatter)
+    {
+        if (logLevel != LogLevel.Error)
+            return;
+
+        if (!_failed)
+        {
+            _failed = true;
+            throw new InvalidOperationException("logger failure");
+        }
+
+        // Only the fault continuation writes this entry; the refresh catch handler does not.
+        if (formatter(state, exception).Contains("Unhandled error", StringComparison.Ordinal))
+        {
+            Interlocked.Increment(ref _errorCount);
+            _signal.TrySetResult();
+        }
     }
 }

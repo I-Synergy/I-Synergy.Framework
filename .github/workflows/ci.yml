@@ -123,8 +123,10 @@ jobs:
             '/d:sonar.cpd.exclusions=src/ISynergy.Framework.Mathematics/**',
             # Mathematics is a vendored Math.NET port. This branch refactors it wholesale, so
             # new-code coverage on the port would require tests for hundreds of ported routines;
-            # its behaviour is covered by its own 954-test suite. Exclude it from the coverage gate.
-            '/d:sonar.coverage.exclusions=src/ISynergy.Framework.Mathematics/**',
+            # its behaviour is covered by its own 954-test suite. The iOS, Mac Catalyst, Android
+            # and Tizen heads cannot execute on the Windows CI runner at all. Exclude both from
+            # the coverage gate.
+            '/d:sonar.coverage.exclusions=src/ISynergy.Framework.Mathematics/**,src/ISynergy.Framework.UI.Maui/Platforms/iOS/**,src/ISynergy.Framework.UI.Maui/Platforms/MacCatalyst/**,src/ISynergy.Framework.UI.Maui/Platforms/Android/**,src/ISynergy.Framework.UI.Maui/Platforms/Tizen/**',
             $multicriteria
           )
 

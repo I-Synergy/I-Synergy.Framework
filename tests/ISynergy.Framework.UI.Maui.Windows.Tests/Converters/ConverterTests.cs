@@ -165,4 +165,150 @@ public class ConverterTests
         Assert.ThrowsExactly<InvalidOperationException>(() =>
             converter.Convert("not-a-bool", s_bool, null, s_invariant));
     }
+
+    // ── DateTimeToTimeSpanConverter.ConvertBack ───────────────────────────────
+
+    [TestMethod]
+    public void DateTimeToTimeSpan_ConvertBack_TimeSpanInput_ReappliesTimeOfDayToOriginalDate()
+    {
+        var converter = new DateTimeToTimeSpanConverter();
+        var date = new DateTime(2024, 3, 4, 13, 45, 30, DateTimeKind.Unspecified);
+
+        // Convert remembers the original date used by ConvertBack.
+        var timeOfDay = (TimeSpan)converter.Convert(date, typeof(TimeSpan), null, s_invariant);
+        var result = converter.ConvertBack(new TimeSpan(8, 15, 0), typeof(DateTime), null, s_invariant);
+
+        Assert.AreEqual(new DateTime(2024, 3, 4, 8, 15, 0, DateTimeKind.Unspecified), result);
+        Assert.AreEqual(new TimeSpan(13, 45, 30), timeOfDay);
+    }
+
+    [TestMethod]
+    public void DateTimeToTimeSpan_ConvertBack_WithoutPriorConvert_UsesDefaultOriginalDate()
+    {
+        var converter = new DateTimeToTimeSpanConverter();
+
+        var result = converter.ConvertBack(new TimeSpan(6, 30, 0), typeof(DateTime), null, s_invariant);
+
+        Assert.AreEqual(DateTime.MinValue.Date.AddHours(6).AddMinutes(30), result);
+    }
+
+    [TestMethod]
+    public void DateTimeToTimeSpan_ConvertBack_InvalidInput_ReturnsDateTimeMinValue()
+    {
+        var converter = new DateTimeToTimeSpanConverter();
+
+        var result = converter.ConvertBack("not-a-timespan", typeof(DateTime), null, s_invariant);
+
+        Assert.AreEqual(DateTime.MinValue, result);
+    }
+
+    [TestMethod]
+    public void DateTimeToTimeSpan_ConvertBack_NullInput_ReturnsDateTimeMinValue()
+    {
+        var converter = new DateTimeToTimeSpanConverter();
+
+        Assert.AreEqual(DateTime.MinValue, converter.ConvertBack(null, typeof(DateTime), null, s_invariant));
+    }
+
+    // ── DateTimeOffsetToTimeSpanConverter.ConvertBack ─────────────────────────
+
+    [TestMethod]
+    public void DateTimeOffsetToTimeSpan_ConvertBack_TimeSpanInput_ReappliesTimeOfDayAndOffset()
+    {
+        var converter = new DateTimeOffsetToTimeSpanConverter();
+        var date = new DateTimeOffset(2024, 3, 4, 13, 45, 30, TimeSpan.FromHours(2));
+
+        var timeOfDay = (TimeSpan)converter.Convert(date, typeof(TimeSpan), null, s_invariant);
+        var result = converter.ConvertBack(new TimeSpan(8, 15, 0), typeof(DateTimeOffset), null, s_invariant);
+
+        Assert.AreEqual(
+            new DateTimeOffset(2024, 3, 4, 8, 15, 0, TimeSpan.FromHours(2)),
+            result);
+        Assert.AreEqual(new TimeSpan(13, 45, 30), timeOfDay);
+    }
+
+    [TestMethod]
+    public void DateTimeOffsetToTimeSpan_ConvertBack_WithoutPriorConvert_UsesDefaultOriginal()
+    {
+        var converter = new DateTimeOffsetToTimeSpanConverter();
+
+        var result = converter.ConvertBack(new TimeSpan(6, 30, 0), typeof(DateTimeOffset), null, s_invariant);
+
+        Assert.AreEqual(new DateTimeOffset(1, 1, 1, 6, 30, 0, TimeSpan.Zero), result);
+    }
+
+    [TestMethod]
+    public void DateTimeOffsetToTimeSpan_ConvertBack_InvalidInput_ReturnsDateTimeOffsetMinValue()
+    {
+        var converter = new DateTimeOffsetToTimeSpanConverter();
+
+        var result = converter.ConvertBack("not-a-timespan", typeof(DateTimeOffset), null, s_invariant);
+
+        Assert.AreEqual(DateTimeOffset.MinValue, result);
+    }
+
+    // ── DecimalNumberFormatter.ConvertBack ────────────────────────────────────
+
+    [TestMethod]
+    [DataRow("42.5", 42.5)]
+    [DataRow("42", 42)]
+    [DataRow("-13.75", -13.75)]
+    public void DecimalNumberFormatter_ConvertBack_NumericString_ParsesValue(string input, double expected)
+    {
+        var converter = new DecimalNumberFormatter();
+
+        var result = converter.ConvertBack(input, typeof(decimal), null, s_invariant);
+
+        Assert.AreEqual((decimal)expected, result);
+    }
+
+    [TestMethod]
+    [DataRow("")]
+    [DataRow("not-a-number")]
+    public void DecimalNumberFormatter_ConvertBack_NonNumericInput_ReturnsZero(string input)
+    {
+        var converter = new DecimalNumberFormatter();
+
+        Assert.AreEqual(0m, converter.ConvertBack(input, typeof(decimal), null, s_invariant));
+    }
+
+    [TestMethod]
+    public void DecimalNumberFormatter_ConvertBack_NullInput_ReturnsZero()
+    {
+        var converter = new DecimalNumberFormatter();
+
+        Assert.AreEqual(0m, converter.ConvertBack(null, typeof(decimal), null, s_invariant));
+    }
+
+    // ── IntegerNumberFormatter.ConvertBack ────────────────────────────────────
+
+    [TestMethod]
+    [DataRow("7", 7)]
+    [DataRow("-21", -21)]
+    public void IntegerNumberFormatter_ConvertBack_NumericString_ParsesValue(string input, int expected)
+    {
+        var converter = new IntegerNumberFormatter();
+
+        var result = converter.ConvertBack(input, typeof(int), null, s_invariant);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    [DataRow("")]
+    [DataRow("not-a-number")]
+    public void IntegerNumberFormatter_ConvertBack_NonNumericInput_ReturnsZero(string input)
+    {
+        var converter = new IntegerNumberFormatter();
+
+        Assert.AreEqual(0, converter.ConvertBack(input, typeof(int), null, s_invariant));
+    }
+
+    [TestMethod]
+    public void IntegerNumberFormatter_ConvertBack_NullInput_ReturnsZero()
+    {
+        var converter = new IntegerNumberFormatter();
+
+        Assert.AreEqual(0, converter.ConvertBack(null, typeof(int), null, s_invariant));
+    }
 }
