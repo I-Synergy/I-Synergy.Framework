@@ -114,7 +114,14 @@ public class DateTimeConvertersTests
     {
         var converter = new DateTimeToDateTimeOffsetConverter();
         var clockTime = new DateTime(2024, 5, 17, 12, 0, 0, DateTimeKind.Unspecified);
-        var value = new DateTimeOffset(clockTime, TimeZoneInfo.Local.GetUtcOffset(clockTime));
+        var localOffset = TimeZoneInfo.Local.GetUtcOffset(clockTime);
+
+        // On a UTC runner the local offset is zero, which is indistinguishable from the
+        // converter's explicit-UTC branch; the local branch cannot be exercised there.
+        if (localOffset == TimeSpan.Zero)
+            Assert.Inconclusive("The local time zone is UTC; the Local branch equals the UTC branch.");
+
+        var value = new DateTimeOffset(clockTime, localOffset);
 
         var result = converter.ConvertBack(value, typeof(DateTime), null!, null!);
 
@@ -127,7 +134,13 @@ public class DateTimeConvertersTests
     public void DateTimeToDateTimeOffsetConverter_ConvertBack_WithForeignOffset_ReturnsUnspecifiedDateTime()
     {
         var converter = new DateTimeToDateTimeOffsetConverter();
-        var value = new DateTimeOffset(2024, 5, 17, 12, 0, 0, TimeSpan.FromHours(5));
+
+        // Pick an offset that is definitely not the runner's local offset.
+        var foreignOffset = TimeZoneInfo.Local.GetUtcOffset(new DateTime(2024, 5, 17, 12, 0, 0))
+            == TimeSpan.FromHours(5)
+                ? TimeSpan.FromHours(6)
+                : TimeSpan.FromHours(5);
+        var value = new DateTimeOffset(2024, 5, 17, 12, 0, 0, foreignOffset);
 
         var result = converter.ConvertBack(value, typeof(DateTime), null!, null!);
 
