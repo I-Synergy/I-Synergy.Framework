@@ -295,12 +295,14 @@ jobs:
       contents: write   # push the release tag
       id-token: write   # OIDC to Azure Key Vault and nuget.org
     steps:
-      # GITHUB_TOKEN is an installation token of the GitHub Actions App, and an App token may only
-      # create a ref whose commit touches .github/workflows/ when it holds the `workflows`
-      # permission — which GITHUB_TOKEN can never be granted. Checkout therefore authenticates
-      # with RELEASE_TOKEN (fine-grained PAT: Contents and Workflows read/write), and its persisted
-      # credential is what New-GitTag.ps1 pushes with. GITHUB_TOKEN stays the fallback so a
-      # repository without the secret still releases commits that do not change a workflow file.
+      # GITHUB_TOKEN is an installation token of the GitHub Actions App, and GitHub can refuse a
+      # ref creation from an App token when the tagged commit changes .github/workflows/
+      # ("refusing to allow a GitHub App to create or update workflow ... without `workflows`
+      # permission", first seen on 2026-10-27). That permission cannot be granted to GITHUB_TOKEN -
+      # a workflow's `permissions:` has no `workflows` key - so the tag is pushed with
+      # RELEASE_TOKEN (fine-grained PAT: Contents and Workflows read/write) when the secret exists,
+      # and GITHUB_TOKEN otherwise: GitHub accepted the tag for an already-merged `main` commit on
+      # 2026-11-11, so the secret is a guarantee rather than a prerequisite.
       - name: Checkout
         uses: actions/checkout@v5
         with:

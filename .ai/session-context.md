@@ -50,15 +50,18 @@ Diagnosed the production release failure and fixed both CI problems it exposed.
   global.json resolution.
 
 ## Open Questions
-- **OPEN (user):** create the `RELEASE_TOKEN` secret before the next `production` release.
-- **NOT RUN:** the workflow change is only exercised by the next CI run; nothing was pushed.
-- The release for `v2026.11027.11355` still needs its tag and GitHub release created by hand with a
-  token that has `workflows` write (the failed run cannot pick up the fix by re-running, because a
-  re-run uses the workflow file from its own commit).
+- **Updated 2026-11-11:** the `production` run on `main` (`42943664544`, pre-fix workflow) completed
+  successfully at ~13:5x and created `v2026.11111.10206` **with `GITHUB_TOKEN`**, so the App
+  `workflows` refusal seen on 2026-10-27 did not recur. `RELEASE_TOKEN` is therefore a guarantee
+  for the tag step, not a prerequisite; add it if the refusal comes back.
+- **NOT RUN:** the workflow changes are exercised only by CI runs; the PR is #177.
+- `v2026.11027.11355` (2026-10-27) is still the one release whose tag step failed; its packages are
+  on nuget.org but no tag/release exists.
 
 ## Files Modified
 - `.github/workflows/ci.yml` - `RELEASE_TOKEN` for checkout/tag/release; read → install → verify
-  SDK steps in `build` and `release`; `AzureSignTool.Cli` pinned to `2026.11111.11200`; both
+  SDK steps in `build` only (the `release` job installs no SDK); `AzureSignTool.Cli` pinned to
+  `2026.11111.11200` and installed into `RUNNER_TEMP/signing-tool` with a version assertion; both
   .NET 10 install steps removed
 - `scripts/New-GitTag.ps1` - actionable push failure for the `workflows`-permission refusal
 - `docs/MIGRATION_GUIDE.md` - `RELEASE_TOKEN` documented in Step 11.1; self-contained tool in 11.2
