@@ -145,7 +145,11 @@ jobs:
             # its behaviour is covered by its own 954-test suite. The iOS, Mac Catalyst, Android
             # and Tizen heads cannot execute on the Windows CI runner at all. Exclude both from
             # the coverage gate.
-            '/d:sonar.coverage.exclusions=src/ISynergy.Framework.Mathematics/**,src/ISynergy.Framework.UI.Maui/Platforms/iOS/**,src/ISynergy.Framework.UI.Maui/Platforms/MacCatalyst/**,src/ISynergy.Framework.UI.Maui/Platforms/Android/**,src/ISynergy.Framework.UI.Maui/Platforms/Tizen/**',
+            #
+            # scripts/** is pipeline tooling (versioning, tagging): it is exercised by running CI,
+            # not by a test project, so no coverage report can ever cover it. Without the
+            # exclusion any edit to a script reports 0% new-code coverage and fails the PR gate.
+            '/d:sonar.coverage.exclusions=src/ISynergy.Framework.Mathematics/**,src/ISynergy.Framework.UI.Maui/Platforms/iOS/**,src/ISynergy.Framework.UI.Maui/Platforms/MacCatalyst/**,src/ISynergy.Framework.UI.Maui/Platforms/Android/**,src/ISynergy.Framework.UI.Maui/Platforms/Tizen/**,scripts/**',
             $multicriteria
           )
 
