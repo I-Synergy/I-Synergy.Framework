@@ -30,10 +30,14 @@ package beside the pointer, and the pin uses the latest, `2026.11111.11200`.
 
 ## Decisions
 
-- **`dotnet tool install --global` stays**: the tool still needs a .NET 10+ CLI to install, but no
-  SDK is installed for it — the `windows-2025` image provides one, and both
-  `dotnet tool install` and `dotnet nuget push` run from `RUNNER_TEMP` so the repository's
-  `global.json` pin (which exists for building) is not consulted.
+- **`dotnet tool install` stays**: the tool still needs a .NET 10+ CLI to install, but no SDK is
+  installed for it — the `windows-2025` image provides one, and both `dotnet tool install` and
+  `dotnet nuget push` run from `RUNNER_TEMP` so the repository's `global.json` pin (which exists for
+  building) is not consulted.
+- **Install into `RUNNER_TEMP/signing-tool`, never `--global`**: a persistent runner profile can
+  already carry an earlier version (the framework-dependent `2026.11027.11159`), and
+  `dotnet tool install --global` would leave it in place. The step clears the path, installs the
+  pin and asserts the version from `dotnet tool list --tool-path`.
 - **The `release` job installs no .NET at all**: it builds nothing, signs with the self-contained
   tool and tags/releases with `git` and `gh`.
 - **`build` loses the step too**: that job never installs or runs AzureSignTool (`git grep` finds it

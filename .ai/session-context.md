@@ -34,7 +34,9 @@ Diagnosed the production release failure and fixed both CI problems it exposed.
   `rollForward: disable` meant SDK 10 was never selected. Signing now needs no runtime beyond the
   bundled one. The `release` job installs no .NET at all: `dotnet tool install` and
   `dotnet nuget push` run from `RUNNER_TEMP` against the CLI the `windows-2025` image already
-  provides, so `global.json` (which exists for building) is never consulted there.
+  provides, so `global.json` (which exists for building) is never consulted there. The tool is
+  installed into `RUNNER_TEMP/signing-tool` and the step asserts the version, so an older copy on a
+  persistent runner (`2026.11027.11159`) cannot sign a release.
 
 ## Decisions Made
 - **Fine-grained PAT (`RELEASE_TOKEN`, Contents + Workflows read/write)** rather than a GitHub App

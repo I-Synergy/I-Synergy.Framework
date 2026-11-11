@@ -320,6 +320,13 @@ jobs:
       - name: Install Azure SignTool
         shell: pwsh
         run: |
+          $version = '2026.11111.11200'
+          # A per-job tool path, not --global: a persistent runner profile may already carry an
+          # earlier version (e.g. 2026.11027.11159, which is framework-dependent), and the signing
+          # step must run the pinned one.
+          $toolPath = Join-Path $env:RUNNER_TEMP 'signing-tool'
+          if (Test-Path $toolPath) { Remove-Item -Path $toolPath -Recurse -Force }
+
           Push-Location $env:RUNNER_TEMP
           try {
             $cli = [version]((dotnet --version).Trim())
@@ -329,13 +336,21 @@ jobs:
             }
             # Package renamed from I-Synergy.Tools.Azure.SignTool to AzureSignTool.Cli; the command
             # is still `AzureSignTool`.
-            dotnet tool install --global AzureSignTool.Cli --version 2026.11111.11200
+            dotnet tool install AzureSignTool.Cli --version $version --tool-path $toolPath
             if ($LASTEXITCODE -ne 0) { throw 'AzureSignTool.Cli install failed.' }
+
+            $listed = (dotnet tool list --tool-path $toolPath |
+              Select-String -SimpleMatch 'azuresigntool.cli' |
+              ForEach-Object { $_.ToString().Trim() }) -join ' '
+            if ($listed -notmatch [regex]::Escape($version)) {
+              throw "The installed tool is not AzureSignTool.Cli $version ('$listed')."
+            }
+            Write-Host "Installed $listed"
           }
           finally {
             Pop-Location
           }
-          Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools"
+          Add-Content -Path $env:GITHUB_PATH -Value $toolPath
 
       - name: Download packages
         uses: actions/download-artifact@v5

@@ -466,8 +466,11 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    is installed anywhere in the pipeline. The release job installs no SDK at all: it builds
    nothing, needs only the `win-x64` self-contained tool plus the CLI the `windows-2025` image
    already provides, and runs `dotnet tool install` / `dotnet nuget push` from `RUNNER_TEMP` so
-   the `global.json` pin (which exists for building) is not consulted. Do not move back to an
-   older version: those packages are framework-dependent and need a matching .NET runtime.
+   the `global.json` pin (which exists for building) is not consulted. The tool is installed into
+   a per-job tool path (`RUNNER_TEMP/signing-tool`) and the step asserts the installed version, so
+   an earlier version left behind on a persistent runner (e.g. the framework-dependent
+   `2026.11027.11159`) can never sign a release. Do not move back to an older version: those
+   packages are framework-dependent and need a matching .NET runtime.
 
 ### Step 11.3: NuGet.org trusted publishing
 1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository
