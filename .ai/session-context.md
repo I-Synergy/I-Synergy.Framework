@@ -32,7 +32,9 @@ Diagnosed the production release failure and fixed both CI problems it exposed.
   and both jobs dropped their `Install .NET 10 SDK and runtime for AzureSignTool` step — `build`
   never installed the tool at all, every test project targets `net11.0`, and `global.json`'s
   `rollForward: disable` meant SDK 10 was never selected. Signing now needs no runtime beyond the
-  bundled one; only `dotnet tool install` / `dotnet nuget push` need the pinned CLI.
+  bundled one. The `release` job installs no .NET at all: `dotnet tool install` and
+  `dotnet nuget push` run from `RUNNER_TEMP` against the CLI the `windows-2025` image already
+  provides, so `global.json` (which exists for building) is never consulted there.
 
 ## Decisions Made
 - **Fine-grained PAT (`RELEASE_TOKEN`, Contents + Workflows read/write)** rather than a GitHub App

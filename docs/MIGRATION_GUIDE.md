@@ -462,10 +462,12 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
 4. The tool is the `AzureSignTool.Cli` global tool (command `AzureSignTool`), installed at a pinned
    version in the workflow — it was previously published as `I-Synergy.Tools.Azure.SignTool`.
    Since `2026.11111.11200` it ships **self-contained per RID**: NuGet picks
-   `AzureSignTool.Cli.<rid>`, which bundles the .NET runtime, so the release job installs no
-   .NET 10 SDK or runtime next to the pinned .NET 11 SDK. Only `dotnet tool install` and
-   `dotnet nuget push` need a CLI, which the pinned SDK provides. Do not move back to an older
-   version: those packages are framework-dependent and need a matching .NET runtime.
+   `AzureSignTool.Cli.<rid>`, which bundles the .NET runtime, so no .NET runtime or .NET 10 SDK
+   is installed anywhere in the pipeline. The release job installs no SDK at all: it builds
+   nothing, needs only the `win-x64` self-contained tool plus the CLI the `windows-2025` image
+   already provides, and runs `dotnet tool install` / `dotnet nuget push` from `RUNNER_TEMP` so
+   the `global.json` pin (which exists for building) is not consulted. Do not move back to an
+   older version: those packages are framework-dependent and need a matching .NET runtime.
 
 ### Step 11.3: NuGet.org trusted publishing
 1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository

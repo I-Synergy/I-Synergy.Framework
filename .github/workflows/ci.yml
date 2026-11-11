@@ -307,44 +307,34 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.RELEASE_TOKEN || github.token }}
 
-      # See the matching steps in `build`: global.json is read directly, installed explicitly and
-      # then verified, so the release job never runs on a different SDK than the pin.
-      - name: Read .NET SDK version from global.json
-        id: sdk
-        shell: pwsh
-        run: |
-          $sdkVersion = (Get-Content global.json -Raw | ConvertFrom-Json).sdk.version
-          Write-Host "global.json pins .NET SDK $sdkVersion"
-          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$sdkVersion"
-
-      - name: Install .NET SDK from global.json
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: ${{ steps.sdk.outputs.version }}
-
-      - name: Verify the installed SDK matches global.json
-        shell: pwsh
-        env:
-          EXPECTED_SDK: ${{ steps.sdk.outputs.version }}
-        run: |
-          dotnet --list-sdks
-          $actual = (dotnet --version).Trim()
-          if ($actual -ne $env:EXPECTED_SDK) {
-            throw "global.json pins .NET SDK $($env:EXPECTED_SDK), but dotnet resolves $actual. Refusing to sign and publish with an SDK the repository does not pin."
-          }
-          Write-Host "Using the SDK pinned by global.json: $actual"
-
-      # The tool ships self-contained per RID (AzureSignTool.Cli.<rid> packages plus a pointer
-      # package), so the signed executable bundles its own runtime and no .NET 10 SDK or runtime
-      # has to be installed next to the pinned .NET 11 SDK. `dotnet tool install` still needs a
-      # CLI, which the pinned SDK provides; the number stays pinned deliberately, so a tool
-      # release cannot silently change what signs a published package.
+      # No .NET SDK is installed in this job. It builds nothing: the packages come from the
+      # `build` job's artifact, the signing tool ships self-contained, and tagging/releasing use
+      # git and gh. `dotnet tool install` / `dotnet nuget push` only need a CLI, which the
+      # windows image already provides; they run from RUNNER_TEMP because global.json pins
+      # 11.0.100 for building and the pin is irrelevant here.
+      #
+      # The tool is packed self-contained per RID (AzureSignTool.Cli.<rid> plus a pointer
+      # package), so it bundles its own runtime and no .NET runtime has to be installed. The
+      # version stays pinned deliberately: a tool release cannot silently change what signs a
+      # published package.
       - name: Install Azure SignTool
         shell: pwsh
         run: |
-          # Package renamed from I-Synergy.Tools.Azure.SignTool to AzureSignTool.Cli; the command is
-          # still `AzureSignTool`.
-          dotnet tool install --global AzureSignTool.Cli --version 2026.11111.11200
+          Push-Location $env:RUNNER_TEMP
+          try {
+            $cli = [version]((dotnet --version).Trim())
+            Write-Host "Installing with the image's .NET CLI $cli"
+            if ($cli.Major -lt 10) {
+              throw "AzureSignTool.Cli needs a .NET 10 or later CLI to install; the image provides $cli."
+            }
+            # Package renamed from I-Synergy.Tools.Azure.SignTool to AzureSignTool.Cli; the command
+            # is still `AzureSignTool`.
+            dotnet tool install --global AzureSignTool.Cli --version 2026.11111.11200
+            if ($LASTEXITCODE -ne 0) { throw 'AzureSignTool.Cli install failed.' }
+          }
+          finally {
+            Pop-Location
+          }
           Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools"
 
       - name: Download packages
@@ -400,12 +390,23 @@ jobs:
       - name: Push packages to NuGet.org
         shell: pwsh
         run: |
-          Get-ChildItem -Path 'packages' -Filter *.nupkg | ForEach-Object {
-            dotnet nuget push $_.FullName `
-              --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} `
-              --source https://api.nuget.org/v3/index.json `
-              --skip-duplicate
-            if ($LASTEXITCODE -ne 0) { throw "NuGet push failed for $($_.Name)" }
+          # `dotnet nuget push` uses the image's CLI, so it runs from RUNNER_TEMP: inside the
+          # repository global.json would demand the pinned 11.0.100 SDK, which this job does not
+          # install because it builds nothing.
+          $packages = @(Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE 'packages') -Filter *.nupkg)
+          Push-Location $env:RUNNER_TEMP
+          try {
+            Write-Host "Pushing $($packages.Count) package(s) with .NET CLI $(& dotnet --version)"
+            foreach ($package in $packages) {
+              dotnet nuget push $package.FullName `
+                --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} `
+                --source https://api.nuget.org/v3/index.json `
+                --skip-duplicate
+              if ($LASTEXITCODE -ne 0) { throw "NuGet push failed for $($package.Name)" }
+            }
+          }
+          finally {
+            Pop-Location
           }
 
       - name: Create git tag
