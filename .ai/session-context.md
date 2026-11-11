@@ -1,3 +1,84 @@
+# Session Handoff - 2026-11-11 (release tag permission + SDK pin)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Diagnosed the production release failure and fixed both CI problems it exposed.
+
+- **Tag push rejected:** CI run on `main` (2026-10-27, build `v2026.11027.11355`) failed at
+  `Create git tag` with `refusing to allow a GitHub App to create or update workflow
+  .github/workflows/ci.yml without 'workflows' permission`. The push authenticated with
+  `GITHUB_TOKEN`, which is a GitHub Actions App installation token; an App token may only create a
+  ref whose commit touches `.github/workflows/` when it holds the `workflows` permission, and no
+  `permissions:` key can grant that to `GITHUB_TOKEN`. Packages were already on nuget.org when the
+  step failed.
+- **SDK pin ignored:** `global.json` pins `11.0.100` (GA, `rollForward: disable`), but the build and
+  release jobs reported installing `11.0.100-rc.3.26522.148` — `setup-dotnet`'s `global-json-file`
+  input was trusted without ever checking what `dotnet` resolved.
+- **Fixes:** the release job checks out with `RELEASE_TOKEN` (fallback `GITHUB_TOKEN`) and passes it
+  to `gh release create`; both jobs read `sdk.version` from `global.json`, install it as an explicit
+  `dotnet-version`, and fail when `dotnet --version` disagrees; `New-GitTag.ps1` turns the
+  App/`workflows` refusal into an actionable error naming `RELEASE_TOKEN`.
+- **Verification:** `python .ai/tests/validate-release.py` passes; the workflow parses with both
+  jobs carrying read → install → verify; `New-GitTag.ps1` was exercised in throwaway repos against a
+  remote that refuses with the GitHub message (actionable error) and against an accepting remote
+  (tag created and pushed).
+- **Follow-up — self-contained sign tool:** `AzureSignTool.Cli` `2026.11111.11200` (like
+  `2026.11111.11120`, and unlike `2026.11030.*` and older) is a self-contained-per-RID release
+  (pointer package + `AzureSignTool.Cli.<rid>`, each RID package bundling
+  `System.Private.CoreLib.dll`, verified in the tool repo's `ci.yml` and in the published package).
+  The pin moved to it
+  and both jobs dropped their `Install .NET 10 SDK and runtime for AzureSignTool` step — `build`
+  never installed the tool at all, every test project targets `net11.0`, and `global.json`'s
+  `rollForward: disable` meant SDK 10 was never selected. Signing now needs no runtime beyond the
+  bundled one. The `release` job installs no .NET at all: `dotnet tool install` and
+  `dotnet nuget push` run from `RUNNER_TEMP` against the CLI the `windows-2025` image already
+  provides, so `global.json` (which exists for building) is never consulted there. The tool is
+  installed into `RUNNER_TEMP/signing-tool` and the step asserts the version, so an older copy on a
+  persistent runner (`2026.11027.11159`) cannot sign a release.
+
+## Decisions Made
+- **Fine-grained PAT (`RELEASE_TOKEN`, Contents + Workflows read/write)** rather than a GitHub App
+  installation token: least privilege, one repository, nothing extra to maintain. Classic
+  `repo` + `workflow` PAT also works. Recorded in `docs/MIGRATION_GUIDE.md` Step 11.1 item 6.
+- **Keep `GITHUB_TOKEN` as the fallback**: PR/acceptance runs never tag, and a repository without
+  the secret still releases commits that do not change a workflow file.
+- **Keep tag creation after the NuGet push**: a re-run replays the same build number and
+  `dotnet nuget push --skip-duplicate` makes it recoverable.
+- **Install the SDK version explicitly and verify it** instead of relying on `setup-dotnet`'s
+  global.json resolution.
+
+## Open Questions
+- **Updated 2026-11-11:** the `production` run on `main` (`42943664544`, pre-fix workflow) completed
+  successfully at ~13:5x and created `v2026.11111.10206` **with `GITHUB_TOKEN`**, so the App
+  `workflows` refusal seen on 2026-10-27 did not recur. `RELEASE_TOKEN` is therefore a guarantee
+  for the tag step, not a prerequisite; add it if the refusal comes back.
+- **NOT RUN:** the workflow changes are exercised only by CI runs; the PR is #177.
+- `v2026.11027.11355` (2026-10-27) is still the one release whose tag step failed; its packages are
+  on nuget.org but no tag/release exists.
+
+## Files Modified
+- `.github/workflows/ci.yml` - `RELEASE_TOKEN` for checkout/tag/release; read → install → verify
+  SDK steps in `build` only (the `release` job installs no SDK); `AzureSignTool.Cli` pinned to
+  `2026.11111.11200` and installed into `RUNNER_TEMP/signing-tool` with a version assertion; both
+  .NET 10 install steps removed
+- `scripts/New-GitTag.ps1` - actionable push failure for the `workflows`-permission refusal
+- `docs/MIGRATION_GUIDE.md` - `RELEASE_TOKEN` documented in Step 11.1; self-contained tool in 11.2
+- `.ai/project/tech-stack.md` - SDK line moved to `11.0.100` GA
+- `.ai/plans/{release-tag-token-and-sdk-pin,self-contained-sign-tool}.md` and their
+  `.ai/completed/` counterparts
+
+## Next Actions (Priority Order)
+1. Add the `RELEASE_TOKEN` secret (fine-grained PAT: Contents + Workflows read/write).
+2. Cancel the waiting `CI` run on `main` (its workflow file predates the fix) and let the next push
+   release with the fixed workflow.
+3. Backfill the missing `v2026.11027.11355` tag and GitHub release.
+4. Watch the first run after these changes: the build no longer installs a .NET 10 SDK, and signing
+   now relies on the self-contained `AzureSignTool.Cli` package.
+
+---
+
 # Session Handoff - 2026-11-09 (build warnings + SonarCloud)
 
 **Written By:** Reasonix Code

@@ -436,6 +436,18 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    vault's access policy grants to the identity directly.
    Use environment-scoped variables only if acceptance and production must sign with different
    identities; environment values override repository values.
+6. Settings → Secrets and variables → Actions → secret `RELEASE_TOKEN` (optional, but recommended):
+   a fine-grained personal access token for this repository with **Contents: Read and write** and
+   **Workflows: Read and write**. The release job pushes the `v<build>` tag, and GitHub can refuse
+   a ref creation from an App installation token when the commit it points at changes
+   `.github/workflows/`: on 2026-10-27 the tag step failed with `refusing to allow a GitHub App to
+   create or update workflow … without 'workflows' permission`. `GITHUB_TOKEN` is such a token and
+   can never be granted `workflows` — no `permissions:` key grants it — so when that refusal
+   appears, this secret is the only way through. The refusal did not recur on 2026-11-11 (a tag
+   pointing at an already-merged `main` commit succeeded with `GITHUB_TOKEN`), so the workflow
+   falls back to `GITHUB_TOKEN` when the secret is absent; the secret makes the tag step
+   independent of when GitHub applies the rule. A classic PAT with `repo` and `workflow` scopes
+   also works.
 
 ### Step 11.2: Azure Key Vault (OIDC, no client secret)
 1. On the signing app registration add **two** federated credentials, issuer
@@ -451,6 +463,16 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    signing does not use. A subscription ID is therefore not needed at all.
 4. The tool is the `AzureSignTool.Cli` global tool (command `AzureSignTool`), installed at a pinned
    version in the workflow — it was previously published as `I-Synergy.Tools.Azure.SignTool`.
+   Since `2026.11111.11200` it ships **self-contained per RID**: NuGet picks
+   `AzureSignTool.Cli.<rid>`, which bundles the .NET runtime, so no .NET runtime or .NET 10 SDK
+   is installed anywhere in the pipeline. The release job installs no SDK at all: it builds
+   nothing, needs only the `win-x64` self-contained tool plus the CLI the `windows-2025` image
+   already provides, and runs `dotnet tool install` / `dotnet nuget push` from `RUNNER_TEMP` so
+   the `global.json` pin (which exists for building) is not consulted. The tool is installed into
+   a per-job tool path (`RUNNER_TEMP/signing-tool`) and the step asserts the installed version, so
+   an earlier version left behind on a persistent runner (e.g. the framework-dependent
+   `2026.11027.11159`) can never sign a release. Do not move back to an older version: those
+   packages are framework-dependent and need a matching .NET runtime.
 
 ### Step 11.3: NuGet.org trusted publishing
 1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository

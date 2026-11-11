@@ -57,18 +57,36 @@ jobs:
           ./scripts/Set-VersionVariables.ps1 -BuildNumber $buildNumber -BuildReason $env:BUILD_REASON
           Add-Content -Path $env:GITHUB_OUTPUT -Value "buildNumber=$buildNumber"
 
+      # global.json is the single source of truth. The version is read here and installed
+      # explicitly: setup-dotnet's own global-json resolution installed a different SDK than the
+      # pin, and the verification step below makes any such drift a failed build instead of a
+      # silently different toolchain.
+      - name: Read .NET SDK version from global.json
+        id: sdk
+        shell: pwsh
+        run: |
+          $sdkVersion = (Get-Content global.json -Raw | ConvertFrom-Json).sdk.version
+          Write-Host "global.json pins .NET SDK $sdkVersion"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$sdkVersion"
+
       - name: Install .NET SDK from global.json
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: global.json
+          dotnet-version: ${{ steps.sdk.outputs.version }}
           cache: true
           cache-dependency-path: Directory.Packages.props
 
-      # AzureSignTool targets .NET 10; keep a 10.x runtime next to the pinned .NET 11 RC SDK.
-      - name: Install .NET 10 SDK and runtime for AzureSignTool
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
+      - name: Verify the installed SDK matches global.json
+        shell: pwsh
+        env:
+          EXPECTED_SDK: ${{ steps.sdk.outputs.version }}
+        run: |
+          dotnet --list-sdks
+          $actual = (dotnet --version).Trim()
+          if ($actual -ne $env:EXPECTED_SDK) {
+            throw "global.json pins .NET SDK $($env:EXPECTED_SDK), but dotnet resolves $actual. Refusing to build with an SDK the repository does not pin."
+          }
+          Write-Host "Using the SDK pinned by global.json: $actual"
 
       - name: Install MAUI workloads
         run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
@@ -127,7 +145,11 @@ jobs:
             # its behaviour is covered by its own 954-test suite. The iOS, Mac Catalyst, Android
             # and Tizen heads cannot execute on the Windows CI runner at all. Exclude both from
             # the coverage gate.
-            '/d:sonar.coverage.exclusions=src/ISynergy.Framework.Mathematics/**,src/ISynergy.Framework.UI.Maui/Platforms/iOS/**,src/ISynergy.Framework.UI.Maui/Platforms/MacCatalyst/**,src/ISynergy.Framework.UI.Maui/Platforms/Android/**,src/ISynergy.Framework.UI.Maui/Platforms/Tizen/**',
+            #
+            # scripts/** is pipeline tooling (versioning, tagging): it is exercised by running CI,
+            # not by a test project, so no coverage report can ever cover it. Without the
+            # exclusion any edit to a script reports 0% new-code coverage and fails the PR gate.
+            '/d:sonar.coverage.exclusions=src/ISynergy.Framework.Mathematics/**,src/ISynergy.Framework.UI.Maui/Platforms/iOS/**,src/ISynergy.Framework.UI.Maui/Platforms/MacCatalyst/**,src/ISynergy.Framework.UI.Maui/Platforms/Android/**,src/ISynergy.Framework.UI.Maui/Platforms/Tizen/**,scripts/**',
             $multicriteria
           )
 
@@ -277,29 +299,64 @@ jobs:
       contents: write   # push the release tag
       id-token: write   # OIDC to Azure Key Vault and nuget.org
     steps:
+      # GITHUB_TOKEN is an installation token of the GitHub Actions App, and GitHub can refuse a
+      # ref creation from an App token when the tagged commit changes .github/workflows/
+      # ("refusing to allow a GitHub App to create or update workflow ... without `workflows`
+      # permission", first seen on 2026-10-27). That permission cannot be granted to GITHUB_TOKEN -
+      # a workflow's `permissions:` has no `workflows` key - so the tag is pushed with
+      # RELEASE_TOKEN (fine-grained PAT: Contents and Workflows read/write) when the secret exists,
+      # and GITHUB_TOKEN otherwise: GitHub accepted the tag for an already-merged `main` commit on
+      # 2026-11-11, so the secret is a guarantee rather than a prerequisite.
       - name: Checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
 
-      - name: Install .NET SDK from global.json
-        uses: actions/setup-dotnet@v5
-        with:
-          global-json-file: global.json
-
-      - name: Install .NET 10 SDK and runtime for AzureSignTool
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
+      # No .NET SDK is installed in this job. It builds nothing: the packages come from the
+      # `build` job's artifact, the signing tool ships self-contained, and tagging/releasing use
+      # git and gh. `dotnet tool install` / `dotnet nuget push` only need a CLI, which the
+      # windows image already provides; they run from RUNNER_TEMP because global.json pins
+      # 11.0.100 for building and the pin is irrelevant here.
+      #
+      # The tool is packed self-contained per RID (AzureSignTool.Cli.<rid> plus a pointer
+      # package), so it bundles its own runtime and no .NET runtime has to be installed. The
+      # version stays pinned deliberately: a tool release cannot silently change what signs a
+      # published package.
       - name: Install Azure SignTool
         shell: pwsh
         run: |
-          # Package renamed from I-Synergy.Tools.Azure.SignTool to AzureSignTool.Cli; the command is
-          # still `AzureSignTool`. Pinned, so a tool release cannot silently change what signs a
-          # published package — bump this line deliberately.
-          dotnet tool install --global AzureSignTool.Cli --version 2026.11027.11159
-          Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools"
+          $version = '2026.11111.11200'
+          # A per-job tool path, not --global: a persistent runner profile may already carry an
+          # earlier version (e.g. 2026.11027.11159, which is framework-dependent), and the signing
+          # step must run the pinned one.
+          $toolPath = Join-Path $env:RUNNER_TEMP 'signing-tool'
+          if (Test-Path $toolPath) { Remove-Item -Path $toolPath -Recurse -Force }
+
+          Push-Location $env:RUNNER_TEMP
+          try {
+            $cli = [version]((dotnet --version).Trim())
+            Write-Host "Installing with the image's .NET CLI $cli"
+            if ($cli.Major -lt 10) {
+              throw "AzureSignTool.Cli needs a .NET 10 or later CLI to install; the image provides $cli."
+            }
+            # Package renamed from I-Synergy.Tools.Azure.SignTool to AzureSignTool.Cli; the command
+            # is still `AzureSignTool`.
+            dotnet tool install AzureSignTool.Cli --version $version --tool-path $toolPath
+            if ($LASTEXITCODE -ne 0) { throw 'AzureSignTool.Cli install failed.' }
+
+            $listed = (dotnet tool list --tool-path $toolPath |
+              Select-String -SimpleMatch 'azuresigntool.cli' |
+              ForEach-Object { $_.ToString().Trim() }) -join ' '
+            if ($listed -notmatch [regex]::Escape($version)) {
+              throw "The installed tool is not AzureSignTool.Cli $version ('$listed')."
+            }
+            Write-Host "Installed $listed"
+          }
+          finally {
+            Pop-Location
+          }
+          Add-Content -Path $env:GITHUB_PATH -Value $toolPath
 
       - name: Download packages
         uses: actions/download-artifact@v5
@@ -354,12 +411,23 @@ jobs:
       - name: Push packages to NuGet.org
         shell: pwsh
         run: |
-          Get-ChildItem -Path 'packages' -Filter *.nupkg | ForEach-Object {
-            dotnet nuget push $_.FullName `
-              --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} `
-              --source https://api.nuget.org/v3/index.json `
-              --skip-duplicate
-            if ($LASTEXITCODE -ne 0) { throw "NuGet push failed for $($_.Name)" }
+          # `dotnet nuget push` uses the image's CLI, so it runs from RUNNER_TEMP: inside the
+          # repository global.json would demand the pinned 11.0.100 SDK, which this job does not
+          # install because it builds nothing.
+          $packages = @(Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE 'packages') -Filter *.nupkg)
+          Push-Location $env:RUNNER_TEMP
+          try {
+            Write-Host "Pushing $($packages.Count) package(s) with .NET CLI $(& dotnet --version)"
+            foreach ($package in $packages) {
+              dotnet nuget push $package.FullName `
+                --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} `
+                --source https://api.nuget.org/v3/index.json `
+                --skip-duplicate
+              if ($LASTEXITCODE -ne 0) { throw "NuGet push failed for $($package.Name)" }
+            }
+          }
+          finally {
+            Pop-Location
           }
 
       - name: Create git tag
@@ -379,7 +447,7 @@ jobs:
         if: github.event_name != 'pull_request'
         shell: pwsh
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
           BUILD_NUMBER: ${{ needs.build.outputs.buildNumber }}
           VERSION_PACKAGE: ${{ needs.build.outputs.versionPackage }}
         run: |

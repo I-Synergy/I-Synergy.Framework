@@ -2,9 +2,11 @@
 
 ## Runtime & Language
 
-- **.NET SDK:** 11.0.100-rc.2.26504.105, prerelease (`global.json`, `allowPrerelease: true`)
+- **.NET SDK:** 11.0.100, GA (`global.json`, `rollForward: disable`, `allowPrerelease: true`).
+  `ci.yml` reads `sdk.version` from `global.json`, installs exactly that version and fails the build
+  when `dotnet --version` disagrees with it.
 - **Target Frameworks:** `net10.0` (LTS) + `net11.0` (preview). Every `src/` library ships both in one package; platform projects twin their variants (`net11.0-windows*`, `net11.0-android` / `-ios` / `-maccatalyst`). `net11.0` is only added when the SDK's `BundledNETCoreAppPackageVersion` is ≥ 11, so SDK 10 builds still work.
-- **Framework-aligned packages:** split into per-TFM groups in `Directory.Packages.props` — `10.0.13` for `net10.0`, `11.0.0-rc.2.26504.105` for `net11.0`. Third-party packages stay unconditional.
+- **Framework-aligned packages:** split into per-TFM groups in `Directory.Packages.props` — `10.0.x` for `net10.0`, `11.0.0` for `net11.0`. Third-party packages stay unconditional.
 - **Language:** C# 14
 - **Nullable Reference Types:** Enabled (global in `Directory.Build.props`)
 - **Implicit Usings:** Enabled (global in `Directory.Build.props`)
