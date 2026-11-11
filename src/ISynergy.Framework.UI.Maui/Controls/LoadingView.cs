@@ -192,11 +192,8 @@ public partial class LoadingView : ContentPage
         // Create main grid
         var mainGrid = new Grid();
 
-        // Always add the background image (default splash or custom image)
-        if (_backgroundImage is not null) // NOSONAR
-        {
-            mainGrid.Add(_backgroundImage);
-        }
+        // Always add the background image (default splash or custom image); it was created above.
+        mainGrid.Add(_backgroundImage);
 
         // Add media element on top if present (video overlays the default splash background)
         if (_backgroundMediaElement is not null)

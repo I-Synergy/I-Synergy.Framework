@@ -34,18 +34,23 @@ public partial class SelectAllOnFocusBehavior : Behavior<Entry>
     protected override void OnAttachedTo(Entry bindable)
     {
         bindable.Focused += Bindable_Focused;
+#if ANDROID
         OnAttachedPlatform(bindable);
+#endif
     }
 
     protected override void OnDetachingFrom(Entry bindable)
     {
         bindable.Focused -= Bindable_Focused;
+#if ANDROID
         OnDetachedPlatform(bindable);
+#endif
     }
 
+#if ANDROID
     /// <summary>
-    /// Extra attachment work for the current head. Android adds the native select-on-focus flag to
-    /// the EditText; other heads rely on the Focused handler above.
+    /// Extra attachment work for the Android head: adds the native select-on-focus flag to
+    /// the EditText. Other heads rely on the Focused handler above.
     /// </summary>
     /// <param name="bindable">The entry the behaviour is attached to.</param>
     partial void OnAttachedPlatform(Entry bindable);
@@ -55,6 +60,7 @@ public partial class SelectAllOnFocusBehavior : Behavior<Entry>
     /// </summary>
     /// <param name="bindable">The entry the behaviour is detached from.</param>
     partial void OnDetachedPlatform(Entry bindable);
+#endif
 
     private static void Bindable_Focused(object? sender, FocusEventArgs e)
     {

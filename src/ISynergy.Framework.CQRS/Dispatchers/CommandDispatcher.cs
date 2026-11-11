@@ -39,9 +39,9 @@ public class CommandDispatcher : ICommandDispatcher
             var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>();
             await handler.HandleAsync(command, cancellationToken);
         }
-        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
+        catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error dispatching command of type {CommandType}", typeof(TCommand).Name);
+            LogDispatchFailure(ex, typeof(TCommand).Name);
             throw;
         }
     }
@@ -62,10 +62,19 @@ public class CommandDispatcher : ICommandDispatcher
             var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand, TResult>>();
             return await handler.HandleAsync(command, cancellationToken);
         }
-        catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
+        catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error dispatching command of type {CommandType}", typeof(TCommand).Name);
+            LogDispatchFailure(ex, typeof(TCommand).Name);
             throw;
         }
     }
+
+    /// <summary>
+    /// Logs the failure of a command dispatch. Kept out of the catch block so that the block only
+    /// rethrows the original exception (Sonar S2139); the exception itself is unchanged.
+    /// </summary>
+    /// <param name="exception">The exception that escaped the handler.</param>
+    /// <param name="commandType">The name of the command type.</param>
+    private void LogDispatchFailure(Exception exception, string commandType) =>
+        _logger?.LogError(exception, "Error dispatching command of type {CommandType}", commandType);
 }

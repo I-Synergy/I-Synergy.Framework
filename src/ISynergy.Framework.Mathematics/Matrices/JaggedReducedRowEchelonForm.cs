@@ -1,9 +1,4 @@
-
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -31,11 +26,12 @@ public class JaggedReducedRowEchelonForm
     ///   <paramref name="value"/> will be destroyed in the process, resulting in less
     ///   memory consumption.</param>
     ///   
-    public JaggedReducedRowEchelonForm(double[][] value, bool inPlace = false)
+    public JaggedReducedRowEchelonForm(Jagged<double> value, bool inPlace = false)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        rref = inPlace ? value : value.MemberwiseClone();
+        rref = inPlace ? valueArray : valueArray.MemberwiseClone();
 
         int lead = 0;
         rows = rref.Length;
@@ -74,13 +70,9 @@ public class JaggedReducedRowEchelonForm
                     rref[r][j] = rref[i][j];
                     rref[i][j] = temp;
                 }
-
-                // Update indices
-                {
-                    var temp = pivot[r];
+                    var temp__r1 = pivot[r];
                     pivot[r] = pivot[i];
-                    pivot[i] = temp;
-                }
+                    pivot[i] = temp__r1;
             }
 
             // Set to reduced row echelon form

@@ -1,11 +1,7 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
@@ -25,10 +21,10 @@ public class HammingLoss : LossBase<int[][]>,
     ///     Initializes a new instance of the <see cref="HammingLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HammingLoss(double[][] expected)
+    public HammingLoss(Jagged<double> expected)
     {
         Expected = expected.ToInt32();
-        for (var i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Rows; i++)
             total += expected[i].Length;
     }
 
@@ -36,10 +32,10 @@ public class HammingLoss : LossBase<int[][]>,
     ///     Initializes a new instance of the <see cref="HammingLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HammingLoss(int[][] expected)
+    public HammingLoss(Jagged<int> expected)
     {
-        Expected = expected;
-        for (var i = 0; i < expected.Length; i++)
+        Expected = expected.Array;
+        for (var i = 0; i < expected.Rows; i++)
             total += expected[i].Length;
     }
 
@@ -48,7 +44,7 @@ public class HammingLoss : LossBase<int[][]>,
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HammingLoss(int[] expected)
-        : this(Jagged.OneHot(expected))
+        : this(new Jagged<double>(Jagged.OneHot(expected)))
     {
     }
 
@@ -56,10 +52,10 @@ public class HammingLoss : LossBase<int[][]>,
     ///     Initializes a new instance of the <see cref="HammingLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HammingLoss(bool[][] expected)
+    public HammingLoss(Jagged<bool> expected)
     {
         Expected = expected.ToInt32();
-        for (var i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Rows; i++)
             total += expected[i].Length;
     }
 

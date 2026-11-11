@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Transforms;
@@ -46,7 +47,7 @@ public class FourierTransformTest
         };
 
         // We can forward it to the time domain using the Fourier transform
-        FourierTransform2.DFT2(input, FourierTransform.Direction.Forward);
+        FourierTransform2.DFT2(new Jagged<Complex>(input), FourierTransform.Direction.Forward);
 
         // We can also get the real and imaginary parts of the matrix using
         double[][] re = input.Re(); // The real part of the output will be:
@@ -63,7 +64,7 @@ public class FourierTransformTest
         };
 
         // We can recover the initial matrix using the backward transform:
-        FourierTransform2.DFT2(input, FourierTransform.Direction.Backward);
+        FourierTransform2.DFT2(new Jagged<Complex>(input), FourierTransform.Direction.Backward);
         #endregion
 
         string a = re.ToCSharp();
@@ -117,7 +118,7 @@ public class FourierTransformTest
         };
 
         // We can forward it to the time domain using the Fourier transform
-        FourierTransform2.FFT2(input, FourierTransform.Direction.Forward);
+        FourierTransform2.FFT2(new Jagged<Complex>(input), FourierTransform.Direction.Forward);
 
         // We can also get the real and imaginary parts of the matrix using
         double[][] re = input.Re(); // The real part of the output will be:
@@ -133,7 +134,7 @@ public class FourierTransformTest
         };
 
         // We can recover the initial matrix using the backward transform:
-        FourierTransform2.FFT2(input, FourierTransform.Direction.Backward);
+        FourierTransform2.FFT2(new Jagged<Complex>(input), FourierTransform.Direction.Backward);
         #endregion
 
         string a = re.ToCSharp();
@@ -164,7 +165,7 @@ public class FourierTransformTest
             [Complex.Zero, Complex.Zero]
         ];
 
-        FourierTransform2.DFT2(input, FourierTransform.Direction.Forward);
+        FourierTransform2.DFT2(new Jagged<Complex>(input), FourierTransform.Direction.Forward);
 
         Assert.AreEqual(3, input.Rows());
         Assert.AreEqual(2, input.Columns());
@@ -176,7 +177,7 @@ public class FourierTransformTest
             [Complex.Zero, Complex.Zero, Complex.Zero]
         ];
 
-        FourierTransform2.DFT2(input2, FourierTransform.Direction.Forward);
+        FourierTransform2.DFT2(new Jagged<Complex>(input2), FourierTransform.Direction.Forward);
 
         Assert.AreEqual(3, input.Rows());
         Assert.AreEqual(2, input.Columns());

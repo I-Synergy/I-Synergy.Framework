@@ -1,11 +1,6 @@
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Distances;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Common;
@@ -41,7 +36,7 @@ public static partial class Distance
                 var dbz = value(b, zero);
                 var dba = value(b, a);
 
-                if (daz != dza || dbz != dzb || dab != dba)
+                if (ExactComparisons.AreNotEqual(daz ,dza )|| ExactComparisons.AreNotEqual(dbz ,dzb )|| ExactComparisons.AreNotEqual(dab ,dba))
                     return false;
             }
 

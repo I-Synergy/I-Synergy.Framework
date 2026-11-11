@@ -57,16 +57,11 @@
 //
 
 using ISynergy.Framework.Mathematics.Enumerations;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S1450 // private fields are read in algorithm methods
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization;
@@ -144,7 +139,6 @@ public class Munkres : IOptimizationMethod
     private int path_row_0;
     internal int[] primeZ;
     private bool[] rowCover;
-    private bool[][] stars;
     internal int[] starZ;
 
     internal bool[] validCol;
@@ -171,9 +165,9 @@ public class Munkres : IOptimizationMethod
     ///     represents how much it costs for a particular worker to receive (be
     ///     assigned) a particular task.
     /// </param>
-    public Munkres(double[][] costMatrix)
+    public Munkres(Jagged<double> costMatrix)
     {
-        init(costMatrix);
+        init(costMatrix.Array);
     }
 
     /// <summary>
@@ -275,7 +269,7 @@ public class Munkres : IOptimizationMethod
     /// </returns>
     public bool Maximize()
     {
-        return run(CostMatrix.Multiply(-1));
+        return run(new Jagged<double>(CostMatrix).Multiply(-1));
     }
 
     private void init(double[][] costMatrix)
@@ -358,11 +352,10 @@ public class Munkres : IOptimizationMethod
         if (n == 0)
             throw new InvalidOperationException("There are no valid values in the cost matrix.");
 
-        validCost = costMatrix.Get(validRow, validCol, result: Jagged.Create(n, n, 10.0 * max));
+        validCost = costMatrix.Get(validRow, validCol, result: new Jagged<double>(Jagged.Create(n, n, 10.0 * max)));
 
         rowCover = new bool[n];
         colCover = new bool[n];
-        stars = Jagged.Create(n, n, false);
 
         return 1;
     }
@@ -375,7 +368,7 @@ public class Munkres : IOptimizationMethod
     private int step_one()
     {
         MinRow = Matrix.Min(validCost, dimension: 1);
-        MinCol = Matrix.Min(validCost.Subtract(MinRow, dimension: (VectorType)1), dimension: 0);
+        MinCol = Matrix.Min(new Jagged<double>(validCost).Subtract(MinRow, dimension: (VectorType)1), dimension: 0);
 
         return 2;
     }
@@ -389,7 +382,7 @@ public class Munkres : IOptimizationMethod
     private int step_two()
     {
         double[][] min;
-        stars = findZeros(validCost, MinRow, MinCol, out min);
+        var stars = findZeros(validCost, MinRow, MinCol, out min);
 
         starZ = Vector.Create(n, -1);
         primeZ = Vector.Create(n, -1);
@@ -408,12 +401,12 @@ public class Munkres : IOptimizationMethod
 
     internal static bool[][] findZeros(double[][] C, double[] minRow, double[] minCol, out double[][] min)
     {
-        min = Jagged.CreateAs(C);
+        min = Jagged.CreateAs(new Jagged<double>(C));
         for (var r = 0; r < minRow.Length; r++)
             for (var c = 0; c < minCol.Length; c++)
                 min[r][c] = minRow[r] + minCol[c];
 
-        return Elementwise.Equals(C, min);
+        return Elementwise.Equals(new Jagged<double>(C), new Jagged<double>(min));
     }
 
     /// <summary>

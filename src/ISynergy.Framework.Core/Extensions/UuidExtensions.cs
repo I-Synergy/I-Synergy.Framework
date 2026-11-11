@@ -74,14 +74,8 @@ public static class Uuidv7
         int uuidVariant = 0b10;
         int maxSeqValue = 0x3FFF;
 
-        long ns;
-        if (asOfCurrentTime == null)
-            ns = CurrentTime();
-        else if (asOfCurrentTime == 0)
-            // No randomness. In case one is needed for "earlier than everything else"
+        if (!TryResolveTimestamp(asOfCurrentTime, out var ns))
             return Guid.Empty;
-        else
-            ns = (long)asOfCurrentTime;
 
         // Get timestamp components of length 32, 16, 12 bits,
         // with the first 36 bits being whole seconds and
@@ -90,44 +84,11 @@ public static class Uuidv7
         long y = Math.DivRem(rest1 << 16, 16_000_000_000L, out long rest2);
         long z = Math.DivRem(rest2 << 12, 16_000_000_000L, out long _);
 
-        int seq;
-        if (asOfCurrentTime is not null)
-        {
-            if (x == _x && y == _y && z == _z)
-            {
-                // Shouldn't be possible to call often enough that seq overflows
-                // before the next time tick. If that does happen
-                // subsequent uuids with that time tick will be unique
-                // (because of the random bytes) but no longer ordered.
-                if (_seq < maxSeqValue)
-                    _seq += 1;
-            }
-            else
-            {
-                _seq = 0;
-                _x = x;
-                _y = y;
-                _z = z;
-            }
-            seq = _seq;
-        }
-        else
-        {
-            // Check other counters if using asOfNs
-            if (x == _x_asOf && y == _y_asOf && z == _z_asOf)
-            {
-                if (_seq_asOf < maxSeqValue)
-                    _seq_asOf += 1;
-            }
-            else
-            {
-                _seq_asOf = 0;
-                _x_asOf = x;
-                _y_asOf = y;
-                _z_asOf = z;
-            }
-            seq = _seq_asOf;
-        }
+        // Timestamp tick and 14-bit sequence counter: consecutive calls that land on the same tick
+        // increment the counter, timestamp changes reset it.
+        var seq = asOfCurrentTime is not null
+            ? NextSequence(x, y, z, maxSeqValue, ref _x, ref _y, ref _z, ref _seq)
+            : NextSequence(x, y, z, maxSeqValue, ref _x_asOf, ref _y_asOf, ref _z_asOf, ref _seq_asOf);
 
         // Last 8 bytes of uuid have variant and sequence in first two bytes,
         // then six bytes of randomness.
@@ -146,6 +107,66 @@ public static class Uuidv7
             (short)((uuidVersion << 12) + z & 0xFFFF),
             last8Bytes
         );
+    }
+
+    /// <summary>
+    /// Resolves the timestamp (in integer nanoseconds) to encode in the UUID.
+    /// </summary>
+    /// <param name="asOfCurrentTime">Optional time to use, in integer nanoseconds since the Unix epoch.</param>
+    /// <param name="nanoseconds">The resolved timestamp.</param>
+    /// <returns><c>false</c> when the all-zero UUID was requested (a timestamp of 0).</returns>
+    private static bool TryResolveTimestamp(long? asOfCurrentTime, out long nanoseconds)
+    {
+        if (asOfCurrentTime is null)
+        {
+            nanoseconds = CurrentTime();
+            return true;
+        }
+
+        // No randomness. In case one is needed for "earlier than everything else"
+        nanoseconds = asOfCurrentTime.Value;
+        return nanoseconds != 0;
+    }
+
+    /// <summary>
+    /// Returns the 14-bit sequence counter for this timestamp tick, keeping consecutive UUIDs ordered.
+    /// </summary>
+    /// <param name="x">Whole-seconds part of the timestamp.</param>
+    /// <param name="y">First fractional part of the timestamp.</param>
+    /// <param name="z">Second fractional part of the timestamp.</param>
+    /// <param name="maxSeqValue">The maximum value the sequence counter may reach.</param>
+    /// <param name="lastX">The whole-seconds part of the previous call.</param>
+    /// <param name="lastY">The first fractional part of the previous call.</param>
+    /// <param name="lastZ">The second fractional part of the previous call.</param>
+    /// <param name="sequence">The sequence counter of the previous call.</param>
+    /// <returns>The sequence value to encode.</returns>
+    private static int NextSequence(
+        long x,
+        long y,
+        long z,
+        int maxSeqValue,
+        ref long lastX,
+        ref long lastY,
+        ref long lastZ,
+        ref int sequence)
+    {
+        if (x == lastX && y == lastY && z == lastZ)
+        {
+            // Shouldn't be possible to call often enough that seq overflows before the next time tick.
+            // If that does happen, subsequent uuids with that time tick will be unique (because of the
+            // random bytes) but no longer ordered.
+            if (sequence < maxSeqValue)
+                sequence += 1;
+        }
+        else
+        {
+            sequence = 0;
+            lastX = x;
+            lastY = y;
+            lastZ = z;
+        }
+
+        return sequence;
     }
 
     /// <summary>

@@ -1,11 +1,5 @@
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S2245, S2583, S2589 // weak PRNG and always-true/false checks are intentional in deterministic simulation
 
 
 namespace ISynergy.Framework.Mathematics.Random;
@@ -83,7 +77,7 @@ public static class Generator
             {
                 threadOverriden = true;
                 threadLastUpdateTicks = Environment.TickCount;
-                threadRandom = new System.Random(threadSeed.Value);
+                threadRandom = new(threadSeed.Value);
             }
             else
             {
@@ -111,9 +105,10 @@ public static class Generator
             // No possibility of race condition here since its thread static
             if (threadRandom is null || threadLastUpdateTicks < sourceLastUpdateTicks)
             {
-                threadSeed = GetRandomSeed();
+                var seed = GetRandomSeed();
+                threadSeed = seed;
                 threadLastUpdateTicks = sourceLastUpdateTicks;
-                threadRandom = threadSeed.HasValue ? new System.Random(threadSeed.Value) : new System.Random();
+                threadRandom = new(seed);
             }
 
             return threadRandom;
@@ -169,14 +164,14 @@ public static class Generator
                         else // value.Value > 0
                         {
                             Trace.WriteLine("All threads will be initialized with predictable, but random seeds.");
-                            sourceRandom = new System.Random(value.Value);
+                            sourceRandom = new(value.Value);
                         }
                     }
                     else // value is null
                     {
                         Trace.WriteLine("All threads will be initialized with unpredictable random seeds.");
                         var s = unchecked((13 * Environment.CurrentManagedThreadId) ^ sourceLastUpdateTicks);
-                        sourceRandom = new System.Random(s);
+                        sourceRandom = new(s);
                     }
 
                     threadRandom = null;

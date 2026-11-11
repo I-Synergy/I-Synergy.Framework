@@ -76,7 +76,9 @@ public sealed class FileResult : IDisposable
     /// Gets or sets the file.
     /// </summary>
     /// <value>The file.</value>
-    [Obsolete("Use GetFileAsync() instead. Synchronous access to a file supplied through an async getter blocks the calling thread and can deadlock.")] // NOSONAR - deprecated public API kept for binary compatibility
+    // S1133: kept for binary compatibility with existing consumers; removal would be a breaking public API change.
+    #pragma warning disable S1133 // obsolete public API kept for backward compatibility
+    [Obsolete("Use GetFileAsync() instead. Synchronous access to a file supplied through an async getter blocks the calling thread and can deadlock.")]
     public byte[] File
     {
         get
@@ -85,6 +87,7 @@ public sealed class FileResult : IDisposable
             return stream.ToByteArray();
         }
     }
+    #pragma warning restore S1133
 
     /// <summary>
     /// Gets the picked file's contents asynchronously. This is the preferred accessor and
@@ -105,13 +108,16 @@ public sealed class FileResult : IDisposable
     /// </summary>
     /// <returns>stream object</returns>
     /// <exception cref="ObjectDisposedException">null</exception>
-    [Obsolete("Use GetStreamAsync() instead. This method can block the calling thread and deadlock when the file was supplied through an async getter.")] // NOSONAR - deprecated public API kept for binary compatibility
+    // S1133: kept for binary compatibility with existing consumers; removal would be a breaking public API change.
+    #pragma warning disable S1133 // obsolete public API kept for backward compatibility
+    [Obsolete("Use GetStreamAsync() instead. This method can block the calling thread and deadlock when the file was supplied through an async getter.")]
     public Stream GetStream()
     {
         ObjectDisposedException.ThrowIf(_isDisposed, this);
 
         return GetStreamCore();
     }
+    #pragma warning restore S1133
 
     /// <summary>
     /// Backing implementation for the synchronous accessors. When the file was supplied

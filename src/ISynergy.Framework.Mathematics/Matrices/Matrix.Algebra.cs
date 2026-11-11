@@ -1,11 +1,7 @@
-using ISynergy.Framework.Mathematics.Common;
+﻿using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Formats;
+using ISynergy.Framework.Mathematics.Abstractions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -298,17 +294,17 @@ public static partial class Matrix
         if (n == 0)
             return Matrix.Identity(matrix.GetLength(0));
 
-        // TODO: Reduce the number of memory allocations // NOSONAR
-        // TODO: Use bitwise operations instead of strings // NOSONAR
+        // Math.NET parity: as in the upstream implementation the exponent is walked
+        // through its binary string form and every squaring allocates a new matrix.
 
         var result = matrix;
         var bin = System.Convert.ToString(n, 2);
         for (var i = 1; i < bin.Length; i++)
         {
-            result = Matrix.Dot(result, result);
+            result = Matrix.Dot(new Matrix<double>(result), new Matrix<double>(result));
 
             if (bin[i] == '1')
-                result = Matrix.Dot(result, matrix);
+                result = Matrix.Dot(new Matrix<double>(result), new Matrix<double>(matrix));
         }
 
         return result;
@@ -350,6 +346,6 @@ public static partial class Matrix
     /// </summary>
     public static T[][] Cartesian<T>(this T[] sequence1, T[] sequence2)
     {
-        return Cartesian([sequence1, sequence2]);
+        return Cartesian<T>(sequences: new[] { sequence1, sequence2 });
     }
 }

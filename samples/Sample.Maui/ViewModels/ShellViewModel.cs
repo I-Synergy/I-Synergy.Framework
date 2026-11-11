@@ -12,6 +12,8 @@ namespace Sample.ViewModels;
 
 public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 {
+    private const string DashboardRoute = "dashboard";
+
     private readonly IBladeService _bladeService;
 
     /// <summary>
@@ -138,7 +140,7 @@ public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         // Initialize breadcrumb, route, and footer text. The first navigation happens on shell load,
         // when the navigation host exists; a navigation attempt here would find no host yet.
-        SelectRoute("dashboard");
+        SelectRoute(DashboardRoute);
         VersionText = $"v{commonServices.InfoService.ProductVersion}";
         CopyrightText = $"© {DateTime.Now.Year} I-Synergy. All rights reserved.";
 
@@ -174,12 +176,12 @@ public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 
     private void SelectRoute(string? route)
     {
-        CurrentRoute = route ?? "dashboard";
+        CurrentRoute = route ?? DashboardRoute;
 
         // Update breadcrumb based on the route
         CrumbCurrent = route switch
         {
-            "dashboard" => ShellViewModel.LocalizedString("Dashboard"),
+            DashboardRoute => ShellViewModel.LocalizedString("Dashboard"),
             "customcontrols" => ShellViewModel.LocalizedString("CustomControls"),
             "mauicontrols" => ShellViewModel.LocalizedString("MauiControls"),
             "slideshow" => ShellViewModel.LocalizedString("SlideShow"),
@@ -204,7 +206,7 @@ public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         var route = _navigationService.CurrentViewModelType switch
         {
-            var type when type == typeof(InfoViewModel) => "dashboard",
+            var type when type == typeof(InfoViewModel) => DashboardRoute,
             var type when type == typeof(CustomControlsViewModel) => "customcontrols",
             var type when type == typeof(MauiControlsViewModel) => "mauicontrols",
             var type when type == typeof(SlideShowViewModel) => "slideshow",
@@ -227,7 +229,7 @@ public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
         {
             await (route switch
             {
-                "dashboard" => _navigationService.NavigateAsync<InfoViewModel>(),
+                DashboardRoute => _navigationService.NavigateAsync<InfoViewModel>(),
                 "customcontrols" => _navigationService.NavigateAsync<CustomControlsViewModel>(),
                 "mauicontrols" => _navigationService.NavigateAsync<MauiControlsViewModel>(),
                 "slideshow" => _navigationService.NavigateAsync<SlideShowViewModel>(),

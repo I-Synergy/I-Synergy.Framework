@@ -25,7 +25,7 @@ public abstract class ViewModelSelectable<TModel> : ViewModel, IDialogViewModel
     /// <summary>
     /// Occurs when [submitted].
     /// </summary>
-    public event EventHandler<SubmitEventArgs<TModel>>? Submitted; // NOSONAR - raised via OnSubmitted by derived view models
+    public event EventHandler<SubmitEventArgs<TModel>>? Submitted;
 
     /// <summary>
     /// Called when [submitted].
@@ -33,11 +33,14 @@ public abstract class ViewModelSelectable<TModel> : ViewModel, IDialogViewModel
     /// <param name="e">The e.</param>
     protected virtual void OnSubmitted(SubmitEventArgs<TModel> e)
     {
-        if (Submitted != null)
+        // Snapshot the event to a local so the invocation is visible to the analyzer (S3264) and
+        // the handler list is stable if a subscriber mutates the event while it is being raised.
+        var submitted = Submitted;
+        if (submitted != null)
         {
             Exception? capturedException = null;
 
-            foreach (var handler in Submitted.GetInvocationList().Cast<EventHandler<SubmitEventArgs<TModel>>>())
+            foreach (var handler in submitted.GetInvocationList().Cast<EventHandler<SubmitEventArgs<TModel>>>())
             {
                 try
                 {

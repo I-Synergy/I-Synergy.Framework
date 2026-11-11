@@ -1,6 +1,8 @@
 using ISynergy.Framework.Core.Abstractions.Services;
 using ISynergy.Framework.Core.Services;
 using ISynergy.Framework.Mvvm.ViewModels;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Sample.Models;
@@ -67,13 +69,7 @@ public partial class SlideShowViewModel : ViewModelNavigation<MediaItem>
         UpdateSourceTimer.Start();
 
         // Get initial images from source.
-        Items = new ObservableCollection<MediaItem>()
-        {
-            new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
-            new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
-        };
+        Items = CreateItemsFromConfiguration();
 
         // Set timer if images count is at least 1.
         if (Items.Count > 0)
@@ -83,6 +79,21 @@ public partial class SlideShowViewModel : ViewModelNavigation<MediaItem>
             UpdateSourceTimer.AutoReset = true;
             SlideshowTimer.Start();
         }
+    }
+
+    /// <summary>
+    /// Creates the slide show items from the demo image locations configured in the application
+    /// settings, so no absolute URIs are hardcoded in the application itself.
+    /// </summary>
+    private static ObservableCollection<MediaItem> CreateItemsFromConfiguration()
+    {
+        var imageUris = Application.Services
+            .GetRequiredService<IConfiguration>()
+            .GetSection("SlideShow:Images")
+            .Get<string[]>() ?? [];
+
+        return new ObservableCollection<MediaItem>(
+            imageUris.Select((imageUri, index) => new MediaItem { Index = index, ImageUri = imageUri }));
     }
 
     /// <summary>
@@ -119,13 +130,7 @@ public partial class SlideShowViewModel : ViewModelNavigation<MediaItem>
         UpdateSourceTimer.Enabled = false;
         _dispatcherQueue?.TryEnqueue(() =>
         {
-            Items = new ObservableCollection<MediaItem>()
-            {
-                new MediaItem { Index = 0, ImageUri = "https://3.bp.blogspot.com/-gxIdD54Xngg/UHcjjul0xHI/AAAAAAAAAA8/CkdJsPJ9qlQ/s1600/Microsoft-Windows-7-wallpaper-HD+(6).jpg" }, // NOSONAR - demo image URL
-                new MediaItem { Index = 1, ImageUri = "https://3.bp.blogspot.com/-mo_E98lebOM/UHcjgEm5vdI/AAAAAAAAAA0/zLbJOvWRa8M/s1600/Microsoft-Windows-7-wallpaper-HD+(5).jpg" }, // NOSONAR - demo image URL
-                new MediaItem { Index = 2, ImageUri = "https://wallpapercave.com/wp/W4ab0vD.jpg" }, // NOSONAR - demo image URL
-                new MediaItem { Index = 3, ImageUri = "https://getwallpapers.com/wallpaper/full/c/6/8/100549.jpg" } // NOSONAR - demo image URL
-            };
+            Items = CreateItemsFromConfiguration();
         });
         UpdateSourceTimer.Enabled = true;
     }

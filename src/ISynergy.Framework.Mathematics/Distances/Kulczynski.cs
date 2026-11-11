@@ -3,11 +3,6 @@ namespace ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 /// <summary>
@@ -65,8 +60,7 @@ public struct Kulczynski : IDistance<double[]>, IDistance<int[]>, ICloneable
     /// 
     public double Distance(double[] x, double[] y)
     {
-        // TODO: Rewrite the integer dissimilarities (Yule, Russel-Rao,...) // NOSONAR
-        // using generics
+        // Math.NET parity: the integer dissimilarities (Yule, Russel-Rao, ...) are implemented per-type rather than through a shared generic helper.
         int tf = 0;
         int ft = 0;
         int tt = 0;

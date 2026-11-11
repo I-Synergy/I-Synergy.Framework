@@ -1,13 +1,8 @@
-using ISynergy.Framework.Mathematics.Decompositions.Base;
+﻿using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1192 // algorithm comments and repeated strings are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -50,7 +45,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     ///     Constructs a new LU decomposition.
     /// </summary>
     /// <param name="value">The matrix A to be decomposed.</param>
-    public LuDecomposition(double[,] value)
+    public LuDecomposition(Matrix<double> value)
         : this(value, false)
     {
     }
@@ -63,7 +58,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     ///     True if the decomposition should be performed on
     ///     the transpose of A rather than A itself, false otherwise. Default is false.
     /// </param>
-    public LuDecomposition(double[,] value, bool transpose)
+    public LuDecomposition(Matrix<double> value, bool transpose)
         : this(value, transpose, false)
     {
     }
@@ -81,14 +76,15 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     ///     <paramref name="value" /> matrix rather than on a copy of it. If true, the
     ///     matrix will be destroyed during the decomposition. Default is false.
     /// </param>
-    public LuDecomposition(double[,] value, bool transpose, bool inPlace)
+    public LuDecomposition(Matrix<double> value, bool transpose, bool inPlace)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
+        var matrix = value.Array;
+        if (matrix is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (transpose)
-            lu = value.Transpose(inPlace);
+            lu = matrix.Transpose(inPlace);
         else
-            lu = inPlace ? value : (double[,])value.Clone();
+            lu = inPlace ? matrix : (double[,])matrix.Clone();
 
         rows = lu.GetLength(0);
         cols = lu.GetLength(1);
@@ -99,63 +95,53 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
             PivotPermutationVector[i] = i;
 
         var LUcolj = new double[rows];
-        unsafe
+        // Outer loop.
+        for (var j = 0; j < cols; j++)
         {
-            fixed (double* LU = lu)
+            // Make a copy of the j-th column to localize references.
+            for (var i = 0; i < rows; i++)
+                LUcolj[i] = lu[i, j];
+
+            // Apply previous transformations.
+            for (var i = 0; i < rows; i++)
             {
-                // Outer loop.
-                for (var j = 0; j < cols; j++)
-                {
-                    // Make a copy of the j-th column to localize references.
-                    for (var i = 0; i < rows; i++)
-                        LUcolj[i] = lu[i, j];
+                double s = 0;
 
-                    // Apply previous transformations.
-                    for (var i = 0; i < rows; i++)
-                    {
-                        double s = 0;
+                // Most of the time is spent in the following dot product.
+                var kmax = Math.Min(i, j);
+                for (var k = 0; k < kmax; k++)
+                    s += lu[i, k] * LUcolj[k];
 
-                        // Most of the time is spent in the following dot product.
-                        // Pointer safety invariants:
-                        //   - i ∈ [0, rows) and cols is fixed, so i*cols+k < rows*cols = lu.Length
-                        //   - kmax = min(i,j) ≤ min(i, cols-1) < cols, so LUrowi[k] never exceeds the row boundary
-                        //   - LUcolj has length rows and k < kmax ≤ i < rows, so LUcolj[k] is always in bounds
-                        var kmax = Math.Min(i, j);
-                        var LUrowi = &LU[i * cols];
-                        for (var k = 0; k < kmax; k++)
-                            s += LUrowi[k] * LUcolj[k];
-
-                        LUrowi[j] = LUcolj[i] -= s;
-                    }
-
-                    // Find pivot and exchange if necessary.
-                    var p = j;
-                    for (var i = j + 1; i < rows; i++)
-                        if (Math.Abs(LUcolj[i]) > Math.Abs(LUcolj[p]))
-                            p = i;
-
-                    if (p != j)
-                    {
-                        for (var k = 0; k < cols; k++)
-                        {
-                            var t = lu[p, k];
-                            lu[p, k] = lu[j, k];
-                            lu[j, k] = t;
-                        }
-
-                        var v = PivotPermutationVector[p];
-                        PivotPermutationVector[p] = PivotPermutationVector[j];
-                        PivotPermutationVector[j] = v;
-
-                        pivotSign = -pivotSign;
-                    }
-
-                    // Compute multipliers.
-                    if (j < rows && lu[j, j] != 0)
-                        for (var i = j + 1; i < rows; i++)
-                            lu[i, j] /= lu[j, j];
-                }
+                LUcolj[i] -= s;
+                lu[i, j] = LUcolj[i];
             }
+
+            // Find pivot and exchange if necessary.
+            var p = j;
+            for (var i = j + 1; i < rows; i++)
+                if (Math.Abs(LUcolj[i]) > Math.Abs(LUcolj[p]))
+                    p = i;
+
+            if (p != j)
+            {
+                for (var k = 0; k < cols; k++)
+                {
+                    var t = lu[p, k];
+                    lu[p, k] = lu[j, k];
+                    lu[j, k] = t;
+                }
+
+                var v = PivotPermutationVector[p];
+                PivotPermutationVector[p] = PivotPermutationVector[j];
+                PivotPermutationVector[j] = v;
+
+                pivotSign = -pivotSign;
+            }
+
+            // Compute multipliers.
+            if (j < rows && lu[j, j] != 0)
+                for (var i = j + 1; i < rows; i++)
+                    lu[i, j] /= lu[j, j];
         }
     }
 
@@ -315,7 +301,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
                 for (var j = 0; j < count; j++)
                     X[i, j] -= X[k, j] * lu[i, k];
 
-        // Solve U*X = I;
+        // Solve the upper triangular system against the identity matrix.
         for (var k = rows - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)
@@ -334,26 +320,27 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// </summary>
     /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[,] Solve(double[,] value)
+    public double[,] Solve(Matrix<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.GetLength(0) != rows)
+        if (valueArray.GetLength(0) != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new InvalidOperationException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var count = value.GetLength(1);
-        var X = value.Get(PivotPermutationVector, null);
+        var count = valueArray.GetLength(1);
+        var X = valueArray.Get(PivotPermutationVector, null);
         // Solve L*Y = B(piv,:)
         for (var k = 0; k < cols; k++)
             for (var i = k + 1; i < cols; i++)
                 for (var j = 0; j < count; j++)
                     X[i, j] -= X[k, j] * lu[i, k];
 
-        // Solve U*X = Y;
+        // Solve the upper triangular system against the intermediate matrix.
         for (var k = cols - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)
@@ -396,7 +383,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
                 X[i] -= lu[i, j] * X[j];
         }
 
-        // Solve U*X = Y;
+        // Solve the upper triangular system against the intermediate vector.
         for (var i = rows - 1; i >= 0; i--)
         {
             for (var j = rows - 1; j > i; j--)
@@ -412,20 +399,20 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// </summary>
     public double[,] Reverse()
     {
-        return LowerTriangularFactor.Dot(UpperTriangularFactor)
+        return Matrix.Dot(new Matrix<double>(LowerTriangularFactor), new Matrix<double>(UpperTriangularFactor))
             .Get(PivotPermutationVector.ArgSort(), null);
     }
 
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[,])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Matrix{Double})" />
     ///     methods.
     /// </summary>
     public double[,] GetInformationMatrix()
     {
         var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
+        return Matrix.TransposeAndDot(new Matrix<double>(X), new Matrix<double>(X)).Inverse();
     }
 
     /// <summary>
@@ -433,18 +420,19 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
     /// </summary>
     /// <param name="value">Right hand side matrix with as many columns as <c>A</c> and any number of rows.</param>
     /// <returns>Matrix <c>X</c> so that <c>X * L * U = A</c>.</returns>
-    public double[,] SolveTranspose(double[,] value)
+    public double[,] SolveTranspose(Matrix<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.GetLength(0) != rows)
+        if (valueArray.GetLength(0) != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new SingularMatrixException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var X = value.Get(null, PivotPermutationVector);
+        var X = valueArray.Get(null, PivotPermutationVector);
 
         var count = X.GetLength(1);
 
@@ -454,7 +442,7 @@ public sealed class LuDecomposition : ICloneable, ISolverMatrixDecomposition<dou
                 for (var j = 0; j < count; j++)
                     X[j, i] -= X[j, k] * lu[i, k];
 
-        // Solve U*X = Y;
+        // Solve the upper triangular system against the intermediate matrix.
         for (var k = rows - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)

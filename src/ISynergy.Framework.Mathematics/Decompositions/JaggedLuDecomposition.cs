@@ -1,13 +1,8 @@
-using ISynergy.Framework.Mathematics.Decompositions.Base;
+﻿using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1192 // algorithm comments and repeated strings are intentional in numerical code
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -67,14 +62,15 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     ///     True if the decomposition should be performed on
     ///     the transpose of A rather than A itself, false otherwise. Default is false.
     /// </param>
-    public JaggedLuDecomposition(double[][] value, bool transpose = false, bool inPlace = false)
+    public JaggedLuDecomposition(Jagged<double> value, bool transpose = false, bool inPlace = false)
     {
-        if (value is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
+        var matrix = value.Array;
+        if (matrix is null) throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         if (transpose)
-            lu = value.Transpose(inPlace);
+            lu = matrix.Transpose(inPlace);
         else
-            lu = inPlace ? value : value.MemberwiseClone();
+            lu = inPlace ? matrix : matrix.MemberwiseClone();
 
         rows = lu.Length;
         cols = lu[0].Length;
@@ -291,7 +287,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
                 for (var j = 0; j < rows; j++)
                     X[i][j] -= X[k][j] * lu[i][k];
 
-        // Solve U*X = I;
+        // Back-substitute through U to solve for the inverse X.
         for (var k = rows - 1; k >= 0; k--)
         {
             for (var j = 0; j < rows; j++)
@@ -310,20 +306,20 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     /// </summary>
     public double[][] Reverse()
     {
-        return LowerTriangularFactor.Dot(UpperTriangularFactor)
+        return Matrix.Dot(new Jagged<double>(LowerTriangularFactor), new Jagged<double>(UpperTriangularFactor))
             .Get(PivotPermutationVector.ArgSort(), null);
     }
 
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[][])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Jagged{Double})" />
     ///     methods.
     /// </summary>
     public double[][] GetInformationMatrix()
     {
         var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
+        return Matrix.TransposeAndDot(new Jagged<double>(X), new Jagged<double>(X)).Inverse();
     }
 
     /// <summary>
@@ -331,26 +327,27 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     /// </summary>
     /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
     /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[][] Solve(double[][] value)
+    public double[][] Solve(Jagged<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Length != rows)
+        if (valueArray.Length != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new InvalidOperationException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var count = value[0].Length;
-        var X = value.Get(PivotPermutationVector, null);
+        var count = valueArray[0].Length;
+        var X = valueArray.Get(PivotPermutationVector, null);
         // Solve L*Y = B(piv,:)
         for (var k = 0; k < cols; k++)
             for (var i = k + 1; i < cols; i++)
                 for (var j = 0; j < count; j++)
                     X[i][j] -= X[k][j] * lu[i][k];
 
-        // Solve U*X = Y;
+        // Back-substitute through U to solve for X.
         for (var k = cols - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)
@@ -362,18 +359,6 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
         }
 
         return X;
-    }
-
-    /// <summary>
-    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
-    /// </summary>
-    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
-    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[][] SolveForDiagonal(double[] diagonal)
-    {
-        ArgumentNullException.ThrowIfNull(diagonal);
-
-        return Solve(Jagged.Diagonal(diagonal));
     }
 
     /// <summary>
@@ -405,7 +390,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
                 X[i] -= lu[i][j] * X[j];
         }
 
-        // Solve U*X = Y;
+        // Back-substitute through U to solve for X.
         for (var i = rows - 1; i >= 0; i--)
         {
             for (var j = rows - 1; j > i; j--)
@@ -417,22 +402,35 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
     }
 
     /// <summary>
+    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
+    /// </summary>
+    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
+    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
+    public double[][] SolveForDiagonal(double[] diagonal)
+    {
+        ArgumentNullException.ThrowIfNull(diagonal);
+
+        return Solve(new Jagged<double>(Jagged.Diagonal(diagonal)));
+    }
+
+    /// <summary>
     ///     Solves a set of equation systems of type <c>X * A = B</c>.
     /// </summary>
     /// <param name="value">Right hand side matrix with as many columns as <c>A</c> and any number of rows.</param>
     /// <returns>Matrix <c>X</c> so that <c>X * L * U = A</c>.</returns>
-    public double[][] SolveTranspose(double[][] value)
+    public double[][] SolveTranspose(Jagged<double> value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Length != rows)
+        if (valueArray.Length != rows)
             throw new DimensionMismatchException(nameof(value),
                 "The matrix should have the same number of rows as the decomposition.");
 
         if (!Nonsingular)
             throw new SingularMatrixException("Matrix is singular.");
         // Copy right hand side with pivoting
-        var X = value.Get(null, PivotPermutationVector);
+        var X = valueArray.Get(null, PivotPermutationVector);
 
         var count = X[0].Length;
 
@@ -442,7 +440,7 @@ public sealed class JaggedLuDecomposition : ICloneable, ISolverArrayDecompositio
                 for (var j = 0; j < count; j++)
                     X[j][i] -= X[j][k] * lu[i][k];
 
-        // Solve U*X = Y;
+        // Back-substitute through U to solve for X.
         for (var k = rows - 1; k >= 0; k--)
         {
             for (var j = 0; j < count; j++)

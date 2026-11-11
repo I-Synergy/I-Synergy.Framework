@@ -3,13 +3,6 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Integration.Base;
 using System.Diagnostics;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S2245 // weak PRNG is intentional in numerical integration
 
 
 namespace ISynergy.Framework.Mathematics.Integration;
@@ -240,12 +233,13 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
     /// </returns>
     public bool Compute()
     {
-        int errorCode;
-
         qng_(Function, Range.Min, Range.Max, ToleranceAbsolute, ToleranceRelative,
-            out result, out error, out evaluations, out errorCode);
+            out var quadpack);
 
-        Status = (NonAdaptiveGaussKronrodStatus)errorCode;
+        result = quadpack.Result;
+        error = quadpack.Abserr;
+        evaluations = quadpack.Neval;
+        Status = (NonAdaptiveGaussKronrodStatus)quadpack.Ier;
 
         return Status == NonAdaptiveGaussKronrodStatus.Success;
     }
@@ -293,20 +287,30 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
     /// <returns>The integral's value in the current interval.</returns>
     public static double Integrate(Func<double, double> f, double a, double b, double tolerance)
     {
-        double result;
-        double error;
-        int evaluations;
-        int errorCode;
+        qng_(f, a, b, 0, tolerance, out var quadpack);
 
-        qng_(f, a, b, 0, tolerance, out result, out error, out evaluations, out errorCode);
-
-        return result;
+        return quadpack.Result;
     }
+    internal readonly struct QuadpackResult
+    {
+        public readonly double Result;
+        public readonly double Abserr;
+        public readonly int Neval;
+        public readonly int Ier;
+
+        public QuadpackResult(double result, double abserr, int neval, int ier)
+        {
+            Result = result;
+            Abserr = abserr;
+            Neval = neval;
+            Ier = ier;
+        }
+    }
+
     #region Quadpack
 
     internal static int qng_(Func<double, double> f, double a, double b,
-        double epsabs, double epsrel, out double result, out double abserr,
-        out int neval, out int ier)
+        double epsabs, double epsrel, out QuadpackResult quadpack)
     {
         /* Local variables */
         int k, l;
@@ -335,134 +339,134 @@ public class NonAdaptiveGaussKronrod : IUnivariateIntegration,
         /*           test on validity of parameters */
         /*           ------------------------------ */
 
-        result = 0.0f;
-        abserr = 0.0f;
-        neval = 0;
-        ier = 6;
+        double result = 0.0;
+        double abserr = 0.0;
+        int neval = 0;
+        int ier = 6;
 
-        if (epsabs <= 0.0f && epsrel < Math.Max(5e-15, epmach * 50f)) goto L80;
+        // The parameters are invalid when this flag is false; in that case the
+        // calculation is skipped and only the abnormal-return trace is produced.
+        var validParameters = !(epsabs <= 0.0f && epsrel < Math.Max(5e-15, epmach * 50f));
 
-        hlgth = (b - a) * .5f;
-        dhlgth = Math.Abs(hlgth);
-
-        centr = (b + a) * .5f;
-        fcentr = f(centr);
-        neval = 21;
-        ier = 1;
-
-        /*          compute the integral using the 10- and 21-point formula. */
-
-        for (l = 1; l <= 3; ++l)
+        if (validParameters)
         {
-            switch (l)
+            hlgth = (b - a) * .5f;
+            dhlgth = Math.Abs(hlgth);
+
+            centr = (b + a) * .5f;
+            fcentr = f(centr);
+            neval = 21;
+            ier = 1;
+
+            /*          compute the integral using the 10- and 21-point formula. */
+
+            for (l = 1; l <= 3; ++l)
             {
-                case 1: goto L5;
-                case 2: goto L25;
-                case 3: goto L45;
+                if (l == 1)
+                {
+                    res10 = 0.0f;
+                    res21 = w21b[5] * fcentr;
+                    resabs = w21b[5] * Math.Abs(fcentr);
+                    for (k = 1; k <= 5; ++k)
+                    {
+                        absc = hlgth * x1[k - 1];
+                        fval1 = f(centr + absc);
+                        fval2 = f(centr - absc);
+                        fval = fval1 + fval2;
+                        res10 += w10[k - 1] * fval;
+                        res21 += w21a[k - 1] * fval;
+                        resabs += w21a[k - 1] * (Math.Abs(fval1) + Math.Abs(fval2));
+                        savfun[k - 1] = fval;
+                        fv1[k - 1] = fval1;
+                        fv2[k - 1] = fval2;
+                    }
+
+                    ipx = 5;
+                    for (k = 1; k <= 5; ++k)
+                    {
+                        ++ipx;
+                        absc = hlgth * x2[k - 1];
+                        fval1 = f(centr + absc);
+                        fval2 = f(centr - absc);
+                        fval = fval1 + fval2;
+                        res21 += w21b[k - 1] * fval;
+                        resabs += w21b[k - 1] * (Math.Abs(fval1) + Math.Abs(fval2));
+                        savfun[ipx - 1] = fval;
+                        fv3[k - 1] = fval1;
+                        fv4[k - 1] = fval2;
+                    }
+
+                    /*          test for convergence. */
+
+                    result = res21 * hlgth;
+                    resabs *= dhlgth;
+                    reskh = res21 * .5f;
+                    resasc = w21b[5] * Math.Abs(fcentr - reskh);
+
+                    for (k = 1; k <= 5; ++k)
+                        resasc = resasc
+                                 + w21a[k - 1] * (Math.Abs(fv1[k - 1] - reskh) + Math.Abs(fv2[k - 1] - reskh))
+                                 + w21b[k - 1] * (Math.Abs(fv3[k - 1] - reskh) + Math.Abs(fv4[k - 1] - reskh));
+                    abserr = Math.Abs((res21 - res10) * hlgth);
+                    resasc *= dhlgth;
+                }
+                else if (l == 2)
+                {
+                    /*          compute the integral using the 43-point formula. */
+
+                    res43 = w43b[11] * fcentr;
+                    neval = 43;
+
+                    for (k = 1; k <= 10; ++k) res43 += savfun[k - 1] * w43a[k - 1];
+
+                    for (k = 1; k <= 11; ++k)
+                    {
+                        ++ipx;
+                        absc = hlgth * x3[k - 1];
+                        fval = f(absc + centr) + f(centr - absc);
+                        res43 += fval * w43b[k - 1];
+                        savfun[ipx - 1] = fval;
+                    }
+
+                    /*          test for convergence. */
+
+                    result = res43 * hlgth;
+                    abserr = Math.Abs((res43 - res21) * hlgth);
+                }
+                else
+                {
+                    /*          compute the integral using the 87-point formula. */
+
+                    res87 = w87b[22] * fcentr;
+                    neval = 87;
+
+                    for (k = 1; k <= 21; ++k) res87 += savfun[k - 1] * w87a[k - 1];
+                    for (k = 1; k <= 22; ++k)
+                    {
+                        absc = hlgth * x4[k - 1];
+                        res87 += w87b[k - 1] * (f(absc + centr) + f(centr - absc));
+                    }
+
+                    result = res87 * hlgth;
+                    abserr = Math.Abs(res87 - res43) * hlgth;
+                }
+
+                /* L65: test for convergence. */
+                if (resasc != 0.0f && abserr != 0.0f)
+                    abserr = resasc * Math.Min(1.0f, Math.Pow(abserr * 200.0f / resasc, 1.5));
+                if (resabs > uflow / (epmach * 50.0f)) abserr = Math.Max(epmach * 50.0f * resabs, abserr);
+
+                if (abserr <= Math.Max(epsabs, epsrel * Math.Abs(result))) ier = 0;
+
+                /* ***jump out of do-loop */
+                if (ier == 0) break;
             }
-
-        L5:
-            res10 = 0.0f;
-            res21 = w21b[5] * fcentr;
-            resabs = w21b[5] * Math.Abs(fcentr);
-            for (k = 1; k <= 5; ++k)
-            {
-                absc = hlgth * x1[k - 1];
-                fval1 = f(centr + absc);
-                fval2 = f(centr - absc);
-                fval = fval1 + fval2;
-                res10 += w10[k - 1] * fval;
-                res21 += w21a[k - 1] * fval;
-                resabs += w21a[k - 1] * (Math.Abs(fval1) + Math.Abs(fval2));
-                savfun[k - 1] = fval;
-                fv1[k - 1] = fval1;
-                fv2[k - 1] = fval2;
-            }
-
-            ipx = 5;
-            for (k = 1; k <= 5; ++k)
-            {
-                ++ipx;
-                absc = hlgth * x2[k - 1];
-                fval1 = f(centr + absc);
-                fval2 = f(centr - absc);
-                fval = fval1 + fval2;
-                res21 += w21b[k - 1] * fval;
-                resabs += w21b[k - 1] * (Math.Abs(fval1) + Math.Abs(fval2));
-                savfun[ipx - 1] = fval;
-                fv3[k - 1] = fval1;
-                fv4[k - 1] = fval2;
-            }
-
-            /*          test for convergence. */
-
-            result = res21 * hlgth;
-            resabs *= dhlgth;
-            reskh = res21 * .5f;
-            resasc = w21b[5] * Math.Abs(fcentr - reskh);
-
-            for (k = 1; k <= 5; ++k)
-                resasc = resasc
-                         + w21a[k - 1] * (Math.Abs(fv1[k - 1] - reskh) + Math.Abs(fv2[k - 1] - reskh))
-                         + w21b[k - 1] * (Math.Abs(fv3[k - 1] - reskh) + Math.Abs(fv4[k - 1] - reskh));
-            abserr = Math.Abs((res21 - res10) * hlgth);
-            resasc *= dhlgth;
-            goto L65;
-
-        /*          compute the integral using the 43-point formula. */
-
-        L25:
-            res43 = w43b[11] * fcentr;
-            neval = 43;
-
-            for (k = 1; k <= 10; ++k) res43 += savfun[k - 1] * w43a[k - 1];
-
-            for (k = 1; k <= 11; ++k)
-            {
-                ++ipx;
-                absc = hlgth * x3[k - 1];
-                fval = f(absc + centr) + f(centr - absc);
-                res43 += fval * w43b[k - 1];
-                savfun[ipx - 1] = fval;
-            }
-
-            /*          test for convergence. */
-
-            result = res43 * hlgth;
-            abserr = Math.Abs((res43 - res21) * hlgth);
-            goto L65;
-
-        /*          compute the integral using the 87-point formula. */
-
-        L45:
-            res87 = w87b[22] * fcentr;
-            neval = 87;
-
-            for (k = 1; k <= 21; ++k) res87 += savfun[k - 1] * w87a[k - 1];
-            for (k = 1; k <= 22; ++k)
-            {
-                absc = hlgth * x4[k - 1];
-                res87 += w87b[k - 1] * (f(absc + centr) + f(centr - absc));
-            }
-
-            result = res87 * hlgth;
-            abserr = Math.Abs(res87 - res43) * hlgth;
-
-        L65:
-            if (resasc != 0.0f && abserr != 0.0f)
-                abserr = resasc * Math.Min(1.0f, Math.Pow(abserr * 200.0f / resasc, 1.5));
-            if (resabs > uflow / (epmach * 50.0f)) abserr = Math.Max(epmach * 50.0f * resabs, abserr);
-
-            if (abserr <= Math.Max(epsabs, epsrel * Math.Abs(result))) ier = 0;
-
-            /* ***jump out of do-loop */
-            if (ier == 0) goto L999;
         }
 
-    L80:
-        Trace.Write("abnormal return from  qng");
+        if (ier != 0)
+            Trace.Write("abnormal return from  qng");
 
-    L999:
+        quadpack = new QuadpackResult(result, abserr, neval, ier);
         return 0;
     } /* qng_ */
 

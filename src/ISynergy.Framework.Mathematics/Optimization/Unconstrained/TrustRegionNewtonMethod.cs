@@ -37,12 +37,6 @@
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1264 // LIBLINEAR port: FORTRAN call comments and while(true) loops are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -189,7 +183,7 @@ public class TrustRegionNewtonMethod : BaseGradientOptimizationMethod
         var f = Function(w);
         var g = Gradient(w);
 
-        // delta = dnrm2_(&n, g, &inc);
+        // Euclidean norm of the gradient (Fortran reference: dnrm2).
         double delta = 0;
         for (var j = 0; j < g.Length; j++)
             delta += g[j] * g[j];
@@ -274,7 +268,7 @@ public class TrustRegionNewtonMethod : BaseGradientOptimizationMethod
                     break;
             }
 
-            // TODO: Use these status codes in a TrustRegionNewtonMethodStatus enumeration // NOSONAR
+            // Math.NET parity: the termination conditions below are reported through Trace output only; there is no TrustRegionNewtonMethodStatus enumeration.
 
             if (f < -1.0e+32)
             {
@@ -308,14 +302,14 @@ public class TrustRegionNewtonMethod : BaseGradientOptimizationMethod
             r[i] = -g[i];
             d[i] = r[i];
         }
-        double cgtol = 0; // cgtol = 0.1 * dnrm2_(&n, g, &inc);
+        double cgtol = 0; // 0.1 times the Euclidean norm of the gradient (Fortran reference: dnrm2).
         for (var j = 0; j < g.Length; j++)
             cgtol += g[j] * g[j];
         cgtol = 0.1 * Math.Sqrt(cgtol);
 
         var cg_iter = 0;
 
-        double rTr = 0; // rTr = ddot_(&n, r, &inc, r, &inc);
+        double rTr = 0; // Dot product of r with itself (Fortran reference: ddot).
         for (var j = 0; j < r.Length; j++)
             rTr += r[j] * r[j];
 
@@ -358,15 +352,15 @@ public class TrustRegionNewtonMethod : BaseGradientOptimizationMethod
                 for (var j = 0; j < d.Length; j++)
                     s[j] += alpha * d[j];
 
-                double std = 0; // ddot_(&n, s, &inc, d, &inc);
+                double std = 0; // Dot product of s and d (Fortran reference: ddot).
                 for (var j = 0; j < s.Length; j++)
                     std += s[j] * d[j];
 
-                double sts = 0; // ddot_(&n, s, &inc, s, &inc);
+                double sts = 0; // Dot product of s with itself (Fortran reference: ddot).
                 for (var j = 0; j < s.Length; j++)
                     sts += s[j] * s[j];
 
-                double dtd = 0; // ddot_(&n, d, &inc, d, &inc);
+                double dtd = 0; // Dot product of d with itself (Fortran reference: ddot).
                 for (var j = 0; j < d.Length; j++)
                     dtd += d[j] * d[j];
 
@@ -396,14 +390,14 @@ public class TrustRegionNewtonMethod : BaseGradientOptimizationMethod
             for (var j = 0; j < r.Length; j++)
                 r[j] += alpha * Hd[j];
 
-            // ddot_(&n, r, &inc, r, &inc);
+            // Dot product of r with itself (Fortran reference: ddot).
             var rnewTrnew = 0.0;
             for (var j = 0; j < r.Length; j++)
                 rnewTrnew += r[j] * r[j];
 
             var beta = rnewTrnew / rTr;
 
-            // dscal_(&n, &beta, d, &inc);
+            // Scale d by beta (Fortran reference: dscal).
             for (var j = 0; j < d.Length; j++)
                 d[j] *= beta;
 

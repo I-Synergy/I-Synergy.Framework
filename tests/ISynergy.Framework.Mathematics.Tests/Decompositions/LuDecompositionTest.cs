@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -21,11 +22,11 @@ public class LuDecompositionTest
 
                 value[i, j] = double.NaN;
 
-                LuDecomposition target = new(value);
-                Assert.IsTrue(Matrix.IsEqual(target.Solve(I), target.Inverse()));
+                LuDecomposition target = new(new Matrix<double>(value));
+                Assert.IsTrue(Matrix.IsEqual(target.Solve(new Matrix<double>(I)), target.Inverse()));
 
-                JaggedLuDecomposition target2 = new(value.ToJagged());
-                Assert.IsTrue(Matrix.IsEqual(target2.Solve(I.ToJagged()), target2.Inverse()));
+                JaggedLuDecomposition target2 = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
+                Assert.IsTrue(Matrix.IsEqual(target2.Solve(new Jagged<double>(new Matrix<double>(I).ToJagged())), target2.Inverse()));
             }
         }
     }
@@ -50,12 +51,12 @@ public class LuDecompositionTest
             0.5217
         ];
 
-        LuDecomposition target = new(value);
+        LuDecomposition target = new(new Matrix<double>(value));
         double[] actual = target.Solve(rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(value, target.Reverse()));
 
-        JaggedLuDecomposition target2 = new(value.ToJagged());
+        JaggedLuDecomposition target2 = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
         actual = target2.Solve(rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse()));
@@ -78,13 +79,13 @@ public class LuDecompositionTest
             { 0.0435,    0.0870,    0.3043 },
         };
 
-        LuDecomposition target = new(value);
+        LuDecomposition target = new(new Matrix<double>(value));
         double[,] actualInverse = target.Inverse();
         Assert.IsTrue(Matrix.IsEqual(expectedInverse, actualInverse, 0.001));
         Assert.IsTrue(Matrix.IsEqual(value, target.Reverse()));
 
-        JaggedLuDecomposition target2 = new(value.ToJagged());
-        actualInverse = target2.Inverse().ToMatrix();
+        JaggedLuDecomposition target2 = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
+        actualInverse = new Jagged<double>(target2.Inverse()).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expectedInverse, actualInverse, 0.001));
         Assert.IsTrue(Matrix.IsEqual(value, target2.Reverse()));
     }
@@ -113,8 +114,8 @@ public class LuDecompositionTest
             {  1.8261,    0.2609,    0.5217 },
         };
 
-        Assert.IsTrue(Matrix.IsEqual(expected, new LuDecomposition(value).Solve(rhs), 1e-3));
-        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(value.ToJagged()).Solve(rhs.ToJagged()), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(expected, new LuDecomposition(new Matrix<double>(value)).Solve(new Matrix<double>(rhs)), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(new Jagged<double>(new Matrix<double>(value).ToJagged())).Solve(new Jagged<double>(new Matrix<double>(rhs).ToJagged())), 1e-3));
     }
 
     [TestMethod]
@@ -126,7 +127,7 @@ public class LuDecompositionTest
            { -1.000,  2.000,  1.000 },
         };
 
-        LuDecomposition target = new(value);
+        LuDecomposition target = new(new Matrix<double>(value));
 
         double[,] L = target.LowerTriangularFactor;
         double[,] U = target.UpperTriangularFactor;
@@ -160,8 +161,8 @@ public class LuDecompositionTest
 
         double[] expected = [3.1839, -0.1891];
 
-        LuDecomposition target1 = new(value);
-        JaggedLuDecomposition target2 = new(value.ToJagged());
+        LuDecomposition target1 = new(new Matrix<double>(value));
+        JaggedLuDecomposition target2 = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
 
         Assert.IsTrue(Matrix.IsEqual(expected, target1.Solve(rhs), 1e-3));
         Assert.IsTrue(Matrix.IsEqual(expected, target2.Solve(rhs), 1e-3));
@@ -181,7 +182,7 @@ public class LuDecompositionTest
 
         double[] expected = [3.1839, -0.1891];
 
-        LuDecomposition target = new(value);
+        LuDecomposition target = new(new Matrix<double>(value));
 
         bool thrown = false;
         try
@@ -220,20 +221,20 @@ public class LuDecompositionTest
              { 0.8063,   -0.2188,    0.2875 },
         };
 
-        Assert.IsTrue(Matrix.IsEqual(expected, new LuDecomposition(b, true).SolveTranspose(a), 1e-3));
-        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(b.ToJagged(), true).SolveTranspose(a.ToJagged()), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(expected, new LuDecomposition(new Matrix<double>(b), true).SolveTranspose(new Matrix<double>(a)), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(expected, new JaggedLuDecomposition(new Jagged<double>(new Matrix<double>(b).ToJagged()), true).SolveTranspose(new Jagged<double>(new Matrix<double>(a).ToJagged())), 1e-3));
 
-        LuDecomposition target = new(b, true);
+        LuDecomposition target = new(new Matrix<double>(b), true);
         int[] p = target.PivotPermutationVector;
         int[] idx = p.ArgSort();
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[,] r = target.LowerTriangularFactor.Dot(target.UpperTriangularFactor).Submatrix(idx, null).Transpose();
+        double[,] r = Matrix.Dot(new Matrix<double>(target.LowerTriangularFactor), new Matrix<double>(target.UpperTriangularFactor)).Get(idx, null).Transpose();
 #pragma warning restore CS0618 // Type or member is obsolete
 
         Assert.IsTrue(Matrix.IsEqual(b, r, 1e-3));
         Assert.IsTrue(Matrix.IsEqual(b.Transpose(), target.Reverse(), 1e-3));
-        Assert.IsTrue(Matrix.IsEqual(b.Transpose(), new JaggedLuDecomposition(b.ToJagged(), true).Reverse(), 1e-3));
+        Assert.IsTrue(Matrix.IsEqual(b.Transpose(), new JaggedLuDecomposition(new Jagged<double>(new Matrix<double>(b).ToJagged()), true).Reverse(), 1e-3));
     }
 
     [TestMethod]
@@ -250,7 +251,7 @@ public class LuDecompositionTest
         };
 
         // Compute the LU decomposition with:
-        LuDecomposition lu = new(matrix);
+        LuDecomposition lu = new(new Matrix<double>(matrix));
 
 
         // Retrieve the lower triangular factor L:
@@ -279,7 +280,7 @@ public class LuDecompositionTest
 
         // Certify that the decomposition has worked as expected by
         // trying to reconstruct the original matrix with R = L * U:
-        double[,] reconstruction = L.Dot(U);
+        double[,] reconstruction = Matrix.Dot(new Matrix<double>(L), new Matrix<double>(U));
 
         // reconstruction should be equal to
         // {
@@ -295,7 +296,7 @@ public class LuDecompositionTest
         Assert.IsTrue(Matrix.IsEqual(expectedU, U, 1e-4));
 
 
-        lu = new LuDecomposition(matrix.Transpose(), true);
+        lu = new LuDecomposition(new Matrix<double>(matrix.Transpose()), true);
 
         L = lu.LowerTriangularFactor;
         U = lu.UpperTriangularFactor;
@@ -307,7 +308,7 @@ public class LuDecompositionTest
     [TestMethod]
     public void LogDeterminantTest()
     {
-        LuDecomposition lu = new(CholeskyDecompositionTest.bigmatrix);
+        LuDecomposition lu = new(new Matrix<double>(CholeskyDecompositionTest.bigmatrix));
         Assert.AreEqual(0, lu.Determinant);
         Assert.AreEqual(-2224.8931093738875, lu.LogDeterminant, 1e-12);
         Assert.IsTrue(lu.Nonsingular);
@@ -323,7 +324,7 @@ public class LuDecompositionTest
            {  0, -1,  3 }
         };
 
-        LuDecomposition lu = new(value);
+        LuDecomposition lu = new(new Matrix<double>(value));
         Assert.AreEqual(23, lu.Determinant);
         Assert.IsTrue(lu.Nonsingular);
     }
@@ -338,7 +339,7 @@ public class LuDecompositionTest
            {  0, -1,  3 }
         };
 
-        JaggedLuDecomposition lu = new(value.ToJagged());
+        JaggedLuDecomposition lu = new(new Jagged<double>(new Matrix<double>(value).ToJagged()));
         Assert.AreEqual(23, lu.Determinant);
         Assert.IsTrue(lu.Nonsingular);
     }
@@ -353,7 +354,7 @@ public class LuDecompositionTest
            {  0, -1,  3 }
         };
 
-        LuDecomposition lu = new(value);
+        LuDecomposition lu = new(new Matrix<double>(value));
         Assert.AreEqual(23, lu.Determinant);
 
         double expected = Math.Log(23);

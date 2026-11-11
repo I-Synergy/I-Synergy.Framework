@@ -1,12 +1,9 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
+using System.Runtime.Serialization;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
@@ -17,7 +14,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 [Serializable]
 public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     IDifferentiableLoss<bool, double, double>,
-    IDifferentiableLoss<double, double, double>
+    IDifferentiableLoss<double, double, double>, IDeserializationCallback
 {
     /// <summary>
     ///     Gets or sets the expected outputs (the ground truth).
@@ -37,9 +34,9 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
     ///     Initializes a new instance of the <see cref="LogisticLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public LogisticLoss(double[][] expected)
+    public LogisticLoss(Jagged<double> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
     }
 
     /// <summary>
@@ -152,5 +149,11 @@ public struct LogisticLoss : ILoss<double[][]>, ILoss<double[]>,
         if (expected)
             return -1.0 / (1 + Math.Exp(actual));
         return 1.0 / (1 + Math.Exp(-actual));
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (Expected is null)
+            throw new SerializationException("The deserialized logistic loss does not contain expected values.");
     }
 }

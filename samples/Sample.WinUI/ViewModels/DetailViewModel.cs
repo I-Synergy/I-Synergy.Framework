@@ -9,22 +9,16 @@ namespace Sample.ViewModels;
 
 public partial class DetailViewModel : ViewModelBlade<TestItem>
 {
-    private readonly IDialogService _dialogService;
-    private readonly INavigationService _navigationService;
     private readonly IBladeService _bladeService;
 
     public AsyncRelayCommand OpenNewBladeCommand { get; private set; }
 
     public DetailViewModel(
         ICommonServices commonServices,
-        IDialogService dialogService,
-        INavigationService navigationService,
         IBladeService bladeService,
         ILogger<DetailViewModel> logger)
         : base(commonServices, logger)
     {
-        _dialogService = dialogService;
-        _navigationService = navigationService;
         _bladeService = bladeService;
 
         OpenNewBladeCommand = new AsyncRelayCommand(OpenNewBladeAsync);

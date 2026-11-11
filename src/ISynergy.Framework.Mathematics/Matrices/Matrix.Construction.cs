@@ -1,14 +1,10 @@
-using ISynergy.Framework.Core.Extensions;
+﻿using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -126,31 +122,32 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Reshape<T>(this T[] array, int rows, int cols, MatrixOrder order = MatrixOrder.Default)
     {
-        return Reshape(array, rows, cols, new T[rows, cols], order);
+        return Reshape(array, rows, cols, new Matrix<T>(new T[rows, cols]), order);
     }
 
     /// <summary>
     ///     Transforms a vector into a matrix of given dimensions.
     /// </summary>
-    public static T[,] Reshape<T>(this T[] array, int rows, int cols, T[,] result,
+    public static T[,] Reshape<T>(this T[] array, int rows, int cols, Matrix<T> result,
         MatrixOrder order = MatrixOrder.Default)
     {
+        var resultArray = result.Array;
         if (order == MatrixOrder.CRowMajor)
         {
             var k = 0;
             for (var i = 0; i < rows; i++)
                 for (var j = 0; j < cols; j++)
-                    result[i, j] = array[k++];
+                    resultArray[i, j] = array[k++];
         }
         else
         {
             var k = 0;
             for (var j = 0; j < cols; j++)
                 for (var i = 0; i < rows; i++)
-                    result[i, j] = array[k++];
+                    resultArray[i, j] = array[k++];
         }
 
-        return result;
+        return resultArray;
     }
 
     #region Generic matrices
@@ -178,18 +175,6 @@ public static partial class Matrix
     public static T[,,] Zeros<T>(int rows, int columns, int depth)
     {
         return new T[rows, columns, depth];
-    }
-
-    /// <summary>
-    ///     Creates a zero-valued matrix.
-    /// </summary>
-    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
-    /// <param name="rows">The number of rows in the matrix.</param>
-    /// <param name="columns">The number of columns in the matrix.</param>
-    /// <returns>A matrix of the specified size.</returns>
-    public static T[,] Ones<T>(int rows, int columns)
-    {
-        return Create(rows, columns, Constants.One<T>());
     }
 
     /// <summary>
@@ -226,6 +211,18 @@ public static partial class Matrix
     }
 
     /// <summary>
+    ///     Creates a zero-valued matrix.
+    /// </summary>
+    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
+    /// <param name="rows">The number of rows in the matrix.</param>
+    /// <param name="columns">The number of columns in the matrix.</param>
+    /// <returns>A matrix of the specified size.</returns>
+    public static T[,] Ones<T>(int rows, int columns)
+    {
+        return Create(rows, columns, Constants.One<T>());
+    }
+
+    /// <summary>
     ///     Creates a matrix with all values set to a given value.
     /// </summary>
     /// <param name="rows">The number of rows in the matrix.</param>
@@ -250,23 +247,11 @@ public static partial class Matrix
     /// <param name="values">The initial values for the matrix.</param>
     /// <param name="transpose">Whether to transpose the matrix when copying or not. Default is false.</param>
     /// <returns>A matrix of the specified size.</returns>
-    public static T[,] Create<T>(int rows, int columns, T[,] values, bool transpose = false)
+    public static T[,] Create<T>(int rows, int columns, Matrix<T> values, bool transpose = false)
     {
         var result = Zeros<T>(rows, columns);
-        Matrix.CopyTo(values, destination: result, transpose: transpose);
+        Matrix.CopyTo(values.Array, destination: new Matrix<T>(result), transpose: transpose);
         return result;
-    }
-
-    /// <summary>
-    ///     Creates a matrix with all values set to a given value.
-    /// </summary>
-    /// <param name="size">The number of rows and columns in the matrix.</param>
-    /// <param name="value">The initial values for the matrix.</param>
-    /// <returns>A matrix of the specified size.</returns>
-    /// <seealso cref="Jagged.Create{T}(int, int, T)" />
-    public static T[,] Square<T>(int size, T value)
-    {
-        return Create(size, size, value);
     }
 
     /// <summary>
@@ -287,7 +272,7 @@ public static partial class Matrix
     ///     Creates a matrix with the given rows.
     /// </summary>
     /// <param name="rows">The row vectors in the matrix.</param>
-    public static T[,] Create<T>(params T[][] rows)
+    public static T[,] Create<T>(Jagged<T> rows)
     {
         return rows.ToMatrix();
     }
@@ -296,9 +281,21 @@ public static partial class Matrix
     ///     Creates a matrix with the given values.
     /// </summary>
     /// <param name="values">The values in the matrix.</param>
-    public static T[,] Create<T>(T[,] values)
+    public static T[,] Create<T>(Matrix<T> values)
     {
-        return (T[,])values.Clone();
+        return (T[,])values.Array.Clone();
+    }
+
+    /// <summary>
+    ///     Creates a matrix with all values set to a given value.
+    /// </summary>
+    /// <param name="size">The number of rows and columns in the matrix.</param>
+    /// <param name="value">The initial values for the matrix.</param>
+    /// <returns>A matrix of the specified size.</returns>
+    /// <seealso cref="Jagged.Create{T}(int, int, T)" />
+    public static T[,] Square<T>(int size, T value)
+    {
+        return Create(size, size, value);
     }
     /// <summary>
     ///     Creates a matrix of one-hot vectors, where all values at each row are
@@ -342,7 +339,7 @@ public static partial class Matrix
     /// </returns>
     public static T[,] OneHot<T>(int[] indices, int columns)
     {
-        return OneHot(indices, new T[indices.Length, columns]);
+        return OneHot(indices, new Matrix<T>(new T[indices.Length, columns]));
     }
 
     /// <summary>
@@ -357,7 +354,7 @@ public static partial class Matrix
     /// </returns>
     public static double[,] OneHot(int[] indices, int columns)
     {
-        return OneHot(indices, new double[indices.Length, columns]);
+        return OneHot(indices, new Matrix<double>(new double[indices.Length, columns]));
     }
 
     /// <summary>
@@ -371,12 +368,13 @@ public static partial class Matrix
     ///     A matrix containing one-hot vectors where only a single position
     ///     is one and the others are zero.
     /// </returns>
-    public static T[,] OneHot<T>(int[] indices, T[,] result)
+    public static T[,] OneHot<T>(int[] indices, Matrix<T> result)
     {
+        var resultArray = result.Array;
         var one = Constants.One<T>();
         for (var i = 0; i < indices.Length; i++)
-            result[i, indices[i]] = one;
-        return result;
+            resultArray[i, indices[i]] = one;
+        return resultArray;
     }
 
     /// <summary>
@@ -389,11 +387,12 @@ public static partial class Matrix
     ///     A matrix containing one-hot vectors where only a single position
     ///     is one and the others are zero.
     /// </returns>
-    public static double[,] OneHot(int[] indices, double[,] result)
+    public static double[,] OneHot(int[] indices, Matrix<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < indices.Length; i++)
-            result[i, indices[i]] = 1;
-        return result;
+            resultArray[i, indices[i]] = 1;
+        return resultArray;
     }
     /// <summary>
     ///     Creates a matrix of k-hot vectors, where all values at each row are
@@ -406,9 +405,9 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
-    public static T[,] KHot<T>(int[][] indices, int columns)
+    public static T[,] KHot<T>(Jagged<int> indices, int columns)
     {
-        return KHot(indices, new T[indices.Length, columns]);
+        return KHot(indices, new Matrix<T>(new T[indices.Rows, columns]));
     }
 
     /// <summary>
@@ -421,9 +420,9 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
-    public static double[,] KHot(int[][] indices, int columns)
+    public static double[,] KHot(Jagged<int> indices, int columns)
     {
-        return KHot(indices, new double[indices.Length, columns]);
+        return KHot(indices, new Matrix<double>(new double[indices.Rows, columns]));
     }
 
     /// <summary>
@@ -437,13 +436,15 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
-    public static T[,] KHot<T>(int[][] indices, T[,] result)
+    public static T[,] KHot<T>(Jagged<int> indices, Matrix<T> result)
     {
+        var indicesArray = indices.Array;
+        var resultArray = result.Array;
         var one = Constants.One<T>();
-        for (var i = 0; i < indices.Length; i++)
-            for (var j = 0; j < indices[i].Length; j++)
-                result[i, indices[i][j]] = one;
-        return result;
+        for (var i = 0; i < indicesArray.Length; i++)
+            for (var j = 0; j < indicesArray[i].Length; j++)
+                resultArray[i, indicesArray[i][j]] = one;
+        return resultArray;
     }
 
     /// <summary>
@@ -456,12 +457,14 @@ public static partial class Matrix
     ///     A matrix containing k-hot vectors where only elements at the indicated
     ///     <paramref name="indices" /> are set to one and the others are zero.
     /// </returns>
-    public static double[,] KHot(int[][] indices, double[,] result)
+    public static double[,] KHot(Jagged<int> indices, Matrix<double> result)
     {
-        for (var i = 0; i < indices.Length; i++)
-            for (var j = 0; j < indices[i].Length; j++)
-                result[i, indices[i][j]] = 1;
-        return result;
+        var indicesArray = indices.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < indicesArray.Length; i++)
+            for (var j = 0; j < indicesArray[i].Length; j++)
+                resultArray[i, indicesArray[i][j]] = 1;
+        return resultArray;
     }
 
     /// <summary>
@@ -473,6 +476,46 @@ public static partial class Matrix
 
         // multidimensional -> multidimensional
         return Array.CreateInstance(type.GetInnerMostType(), outputShape);
+    }
+
+    /// <summary>
+    ///     Creates a new multidimensional matrix with the same shape as another matrix.
+    /// </summary>
+    public static T[,] CreateAs<T>(Matrix<T> matrix)
+    {
+        return new T[matrix.Array.GetLength(0), matrix.Array.GetLength(1)];
+    }
+
+    /// <summary>
+    ///     Creates a new multidimensional matrix with the same shape as another matrix.
+    /// </summary>
+    public static T[,] CreateAs<T>(Jagged<T> matrix)
+    {
+        return new T[matrix.Rows, matrix.Columns(0)];
+    }
+
+    /// <summary>
+    ///     Creates a new multidimensional matrix with the same shape as another matrix.
+    /// </summary>
+    public static TOutput[,] CreateAs<TInput, TOutput>(Matrix<TInput> matrix)
+    {
+        return new TOutput[matrix.Array.GetLength(0), matrix.Array.GetLength(1)];
+    }
+
+    /// <summary>
+    ///     Creates a new multidimensional matrix with the same shape as another matrix.
+    /// </summary>
+    public static TOutput[,,] CreateAs<TInput, TOutput>(Tensor3<TInput> matrix)
+    {
+        return new TOutput[matrix.Array.GetLength(0), matrix.Array.GetLength(1), matrix.Array.GetLength(2)];
+    }
+
+    /// <summary>
+    ///     Creates a new multidimensional matrix with the same shape as another matrix.
+    /// </summary>
+    public static TOutput[,] CreateAs<TInput, TOutput>(Jagged<TInput> matrix)
+    {
+        return new TOutput[matrix.Rows, matrix.Columns(0)];
     }
 
     internal static int[] GetShape(Array matrix, Type type)
@@ -501,46 +544,6 @@ public static partial class Matrix
         return outputShape;
     }
 
-    /// <summary>
-    ///     Creates a new multidimensional matrix with the same shape as another matrix.
-    /// </summary>
-    public static T[,] CreateAs<T>(T[,] matrix)
-    {
-        return new T[matrix.GetLength(0), matrix.GetLength(1)];
-    }
-
-    /// <summary>
-    ///     Creates a new multidimensional matrix with the same shape as another matrix.
-    /// </summary>
-    public static T[,] CreateAs<T>(T[][] matrix)
-    {
-        return new T[matrix.Length, matrix[0].Length];
-    }
-
-    /// <summary>
-    ///     Creates a new multidimensional matrix with the same shape as another matrix.
-    /// </summary>
-    public static TOutput[,] CreateAs<TInput, TOutput>(TInput[,] matrix)
-    {
-        return new TOutput[matrix.GetLength(0), matrix.GetLength(1)];
-    }
-
-    /// <summary>
-    ///     Creates a new multidimensional matrix with the same shape as another matrix.
-    /// </summary>
-    public static TOutput[,,] CreateAs<TInput, TOutput>(TInput[,,] matrix)
-    {
-        return new TOutput[matrix.GetLength(0), matrix.GetLength(1), matrix.GetLength(2)];
-    }
-
-    /// <summary>
-    ///     Creates a new multidimensional matrix with the same shape as another matrix.
-    /// </summary>
-    public static TOutput[,] CreateAs<TInput, TOutput>(TInput[][] matrix)
-    {
-        return new TOutput[matrix.Length, matrix[0].Length];
-    }
-
     #endregion
     #region Diagonal matrices
 
@@ -549,17 +552,18 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Diagonal<T>(int size, T value)
     {
-        return Diagonal(size, value, new T[size, size]);
+        return Diagonal(size, value, new Matrix<T>(new T[size, size]));
     }
 
     /// <summary>
     ///     Returns a square diagonal matrix of the given size.
     /// </summary>
-    public static T[,] Diagonal<T>(int size, T value, T[,] result)
+    public static T[,] Diagonal<T>(int size, T value, Matrix<T> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < size; i++)
-            result[i, i] = value;
-        return result;
+            resultArray[i, i] = value;
+        return resultArray;
     }
 
     /// <summary>
@@ -567,18 +571,19 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Diagonal<T>(int rows, int cols, T value)
     {
-        return Diagonal(rows, cols, value, new T[rows, cols]);
+        return Diagonal(rows, cols, value, new Matrix<T>(new T[rows, cols]));
     }
 
     /// <summary>
     ///     Returns a matrix of the given size with value on its diagonal.
     /// </summary>
-    public static T[,] Diagonal<T>(int rows, int cols, T value, T[,] result)
+    public static T[,] Diagonal<T>(int rows, int cols, T value, Matrix<T> result)
     {
+        var resultArray = result.Array;
         var min = Math.Min(rows, cols);
         for (var i = 0; i < min; i++)
-            result[i, i] = value;
-        return result;
+            resultArray[i, i] = value;
+        return resultArray;
     }
 
     /// <summary>
@@ -586,17 +591,18 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Diagonal<T>(T[] values)
     {
-        return Diagonal(values, new T[values.Length, values.Length]);
+        return Diagonal(values, new Matrix<T>(new T[values.Length, values.Length]));
     }
 
     /// <summary>
     ///     Return a square matrix with a vector of values on its diagonal.
     /// </summary>
-    public static T[,] Diagonal<T>(T[] values, T[,] result)
+    public static T[,] Diagonal<T>(T[] values, Matrix<T> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < values.Length; i++)
-            result[i, i] = values[i];
-        return result;
+            resultArray[i, i] = values[i];
+        return resultArray;
     }
 
     /// <summary>
@@ -610,7 +616,7 @@ public static partial class Matrix
     /// <summary>
     ///     Return a square matrix with a vector of values on its diagonal.
     /// </summary>
-    public static T[,] Diagonal<T>(int size, T[] values, T[,] result)
+    public static T[,] Diagonal<T>(int size, T[] values, Matrix<T> result)
     {
         return Diagonal(size, size, values, result);
     }
@@ -620,31 +626,32 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Diagonal<T>(int rows, int cols, T[] values)
     {
-        return Diagonal(rows, cols, values, new T[rows, cols]);
+        return Diagonal(rows, cols, values, new Matrix<T>(new T[rows, cols]));
     }
 
     /// <summary>
     ///     Returns a matrix with a vector of values on its diagonal.
     /// </summary>
-    public static T[,] Diagonal<T>(int rows, int cols, T[] values, T[,] result)
+    public static T[,] Diagonal<T>(int rows, int cols, T[] values, Matrix<T> result)
     {
+        var resultArray = result.Array;
         var size = Math.Min(rows, Math.Min(cols, values.Length));
         for (var i = 0; i < size; i++)
-            result[i, i] = values[i];
-        return result;
+            resultArray[i, i] = values[i];
+        return resultArray;
     }
 
     /// <summary>
     ///     Returns a block-diagonal matrix with the given matrices on its diagonal.
     /// </summary>
-    public static T[,] Diagonal<T>(T[][,] blocks)
+    public static T[,] Diagonal<T>(Matrix<T>[] blocks)
     {
         var rows = 0;
         var cols = 0;
         for (var i = 0; i < blocks.Length; i++)
         {
-            rows += blocks[i].Rows();
-            cols += blocks[i].Columns();
+            rows += blocks[i].Rows;
+            cols += blocks[i].Columns;
         }
 
         var result = new T[rows, cols];
@@ -652,12 +659,13 @@ public static partial class Matrix
         var currentCol = 0;
         for (var i = 0; i < blocks.Length; i++)
         {
-            for (var r = 0; r < blocks[i].GetLength(0); r++)
-                for (var c = 0; c < blocks[i].GetLength(1); c++)
-                    result[currentRow + r, currentCol + c] = blocks[i][r, c];
+            var block = blocks[i].Array;
+            for (var r = 0; r < block.GetLength(0); r++)
+                for (var c = 0; c < block.GetLength(1); c++)
+                    result[currentRow + r, currentCol + c] = block[r, c];
 
-            currentRow = blocks[i].GetLength(0);
-            currentCol = blocks[i].GetLength(1);
+            currentRow = block.GetLength(0);
+            currentCol = block.GetLength(1);
         }
 
         return result;
@@ -792,35 +800,37 @@ public static partial class Matrix
     ///     Creates a square matrix matrix with random data.
     /// </summary>
     public static T[,] Random<T>(int size, IRandomNumberGenerator<T> generator, bool symmetric = false,
-        T[,] result = null)
+        Matrix<T> result = default)
     {
-        if (result is null)
-            result = new T[size, size];
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = new T[size, size];
 
         if (!symmetric)
             for (var i = 0; i < size; i++)
                 for (var j = 0; j < size; j++)
-                    result[i, j] = generator.Generate();
+                    resultArray[i, j] = generator.Generate();
         else
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[j, i] = result[i, j] = generator.Generate();
+                    resultArray[j, i] = resultArray[i, j] = generator.Generate();
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///     Creates a rows-by-cols matrix with random data.
     /// </summary>
-    public static T[,] Random<T>(int rows, int cols, IRandomNumberGenerator<T> generator, T[,] result = null)
+    public static T[,] Random<T>(int rows, int cols, IRandomNumberGenerator<T> generator, Matrix<T> result = default)
     {
-        if (result is null)
-            result = new T[rows, cols];
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = new T[rows, cols];
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < cols; j++)
-                result[i, j] = generator.Generate();
-        return result;
+                resultArray[i, j] = generator.Generate();
+        return resultArray;
     }
 
     #endregion
@@ -1110,12 +1120,22 @@ public static partial class Matrix
         double rowMin, double rowMax, double rowStepSize,
         double colMin, double colMax, double colStepSize)
     {
-#pragma warning disable CS0618 // Type or member is obsolete
         double[] x = Vector.Interval(rowMin, rowMax, rowStepSize);
-#pragma warning restore CS0618 // Type or member is obsolete
-#pragma warning disable CS0618 // Type or member is obsolete
         double[] y = Vector.Interval(colMin, colMax, colStepSize);
-#pragma warning restore CS0618 // Type or member is obsolete
+        double[][] mesh = Matrix.Cartesian(x, y);
+        return mesh;
+    }
+
+    /// <summary>
+    ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
+    /// </summary>
+    /// 
+    public static double[][] Mesh(
+        NumericRange rowRange, NumericRange colRange,
+        double rowStepSize, double colStepSize)
+    {
+        double[] x = Vector.Interval(rowRange, rowStepSize);
+        double[] y = Vector.Interval(colRange, colStepSize);
         double[][] mesh = Matrix.Cartesian(x, y);
         return mesh;
     }
@@ -1244,44 +1264,47 @@ public static partial class Matrix
     /// <summary>
     ///     Combines two matrices horizontally.
     /// </summary>
-    public static T[,] Concatenate<T>(this T[,] a, T[,] b)
+    public static T[,] Concatenate<T>(this T[,] a, Matrix<T> b)
     {
-        return Concatenate([a, b]);
+        var matrices = new Matrix<T>[] { new Matrix<T>(a), b };
+        return Concatenate<T>(matrices);
     }
 
     /// <summary>
     ///     Combines two matrices horizontally.
     /// </summary>
-    public static T[][] Concatenate<T>(this T[][] a, T[][] b)
+    public static T[][] Concatenate<T>(this T[][] a, Jagged<T> b)
     {
-        return Concatenate([a, b]);
+        var matrices = new Jagged<T>[] { new Jagged<T>(a), b };
+        return Concatenate<T>(matrices);
     }
 
     /// <summary>
     ///     Combines a matrix and a vector horizontally.
     /// </summary>
-    public static T[,] Concatenate<T>(params T[][,] matrices)
+    public static T[,] Concatenate<T>(params Matrix<T>[] matrices)
     {
         var rows = 0;
         var cols = 0;
 
         for (var i = 0; i < matrices.Length; i++)
         {
-            cols += matrices[i].GetLength(1);
-            if (matrices[i].GetLength(0) > rows)
-                rows = matrices[i].GetLength(0);
+            cols += matrices[i].Columns;
+            if (matrices[i].Rows > rows)
+                rows = matrices[i].Rows;
         }
 
         var r = new T[rows, cols];
         var c = 0;
         for (var k = 0; k < matrices.Length; k++)
         {
-            var currentRows = matrices[k].GetLength(0);
-            var currentCols = matrices[k].GetLength(1);
+            var current = matrices[k].Array;
+            var currentRows = current.GetLength(0);
+            var currentCols = current.GetLength(1);
 
             for (var j = 0; j < currentCols; j++)
             {
-                for (var i = 0; i < currentRows; i++) r[i, c] = matrices[k][i, j];
+                for (var i = 0; i < currentRows; i++) r[i, c] = current[i, j];
                 c++;
             }
         }
@@ -1292,16 +1315,16 @@ public static partial class Matrix
     /// <summary>
     ///     Combines a matrix and a vector horizontally.
     /// </summary>
-    public static T[][] Concatenate<T>(params T[][][] matrices)
+    public static T[][] Concatenate<T>(params Jagged<T>[] matrices)
     {
         var rows = 0;
         var cols = 0;
 
         for (var i = 0; i < matrices.Length; i++)
         {
-            cols += matrices[i][0].Length;
-            if (matrices[i].Length > rows)
-                rows = matrices[i].Length;
+            cols += matrices[i].Array[0].Length;
+            if (matrices[i].Rows > rows)
+                rows = matrices[i].Rows;
         }
 
         var r = new T[rows][];
@@ -1310,12 +1333,13 @@ public static partial class Matrix
         var c = 0;
         for (var k = 0; k < matrices.Length; k++)
         {
-            var currentRows = matrices[k].Length;
-            var currentCols = matrices[k][0].Length;
+            var current = matrices[k].Array;
+            var currentRows = current.Length;
+            var currentCols = current[0].Length;
 
             for (var j = 0; j < currentCols; j++)
             {
-                for (var i = 0; i < currentRows; i++) r[i][c] = matrices[k][i][j];
+                for (var i = 0; i < currentRows; i++) r[i][c] = current[i][j];
                 c++;
             }
         }
@@ -1347,21 +1371,22 @@ public static partial class Matrix
     /// </summary>
     public static T[,] Stack<T>(this T[] a, T[] b)
     {
-        return Stack([a, b]);
+        return new Jagged<T>(new T[][] { a, b }).ToMatrix();
     }
 
     /// <summary>
     ///     Combines vectors vertically.
     /// </summary>
-    public static T[][] Stack<T>(this T[][] a, T[][] b)
+    public static T[][] Stack<T>(this T[][] a, Jagged<T> b)
     {
-        return Stack([a, b]);
+        var matrices = new Jagged<T>[] { new Jagged<T>(a), b };
+        return Stack<T>(matrices);
     }
 
     /// <summary>
     ///     Combines vectors vertically.
     /// </summary>
-    public static T[,] Stack<T>(params T[][] vectors)
+    public static T[,] Stack<T>(Jagged<T> vectors)
     {
         return vectors.ToMatrix();
     }
@@ -1385,28 +1410,31 @@ public static partial class Matrix
     /// <summary>
     ///     Combines matrices vertically.
     /// </summary>
-    public static T[,] Stack<T>(params T[][,] matrices)
+    public static T[,] Stack<T>(params Matrix<T>[] matrices)
     {
         var rows = 0;
         var cols = 0;
 
         for (var i = 0; i < matrices.Length; i++)
         {
-            rows += matrices[i].GetLength(0);
-            if (matrices[i].GetLength(1) > cols)
-                cols = matrices[i].GetLength(1);
+            rows += matrices[i].Rows;
+            if (matrices[i].Columns > cols)
+                cols = matrices[i].Columns;
         }
 
         var r = new T[rows, cols];
 
         var c = 0;
         for (var i = 0; i < matrices.Length; i++)
-            for (var j = 0; j < matrices[i].GetLength(0); j++)
+        {
+            var current = matrices[i].Array;
+            for (var j = 0; j < current.GetLength(0); j++)
             {
-                for (var k = 0; k < matrices[i].GetLength(1); k++)
-                    r[c, k] = matrices[i][j, k];
+                for (var k = 0; k < current.GetLength(1); k++)
+                    r[c, k] = current[j, k];
                 c++;
             }
+        }
 
         return r;
     }
@@ -1432,19 +1460,19 @@ public static partial class Matrix
     /// <summary>
     ///     Combines matrices vertically.
     /// </summary>
-    public static T[][] Stack<T>(params T[][][] matrices)
+    public static T[][] Stack<T>(params Jagged<T>[] matrices)
     {
         var rows = 0;
         var cols = 0;
 
         for (var i = 0; i < matrices.Length; i++)
         {
-            rows += matrices[i].Length;
-            if (matrices[i].Length == 0)
+            rows += matrices[i].Rows;
+            if (matrices[i].Rows == 0)
                 continue;
 
-            if (matrices[i][0].Length > cols)
-                cols = matrices[i][0].Length;
+            if (matrices[i].Columns(0) > cols)
+                cols = matrices[i].Columns(0);
         }
 
         var r = new T[rows][];
@@ -1453,12 +1481,15 @@ public static partial class Matrix
 
         var c = 0;
         for (var i = 0; i < matrices.Length; i++)
-            for (var j = 0; j < matrices[i].Length; j++)
+        {
+            var current = matrices[i].Array;
+            for (var j = 0; j < current.Length; j++)
             {
-                for (var k = 0; k < matrices[i][j].Length; k++)
-                    r[c][k] = matrices[i][j][k];
+                for (var k = 0; k < current[j].Length; k++)
+                    r[c][k] = current[j][k];
                 c++;
             }
+        }
 
         return r;
     }
@@ -1487,14 +1518,14 @@ public static partial class Matrix
     /// </summary>
     /// <param name="matrix">A base matrix.</param>
     /// <param name="count">An array containing by how much each line should be replicated.</param>
-    public static T[,] Expand<T>(T[,] matrix, int[] count)
+    public static T[,] Expand<T>(Matrix<T> matrix, int[] count)
     {
         var expansion = new List<T[]>();
         for (var i = 0; i < count.Length; i++)
             for (var j = 0; j < count[i]; j++)
-                expansion.Add(matrix.GetRow(i));
+                expansion.Add(matrix.Array.GetRow(i));
 
-        return expansion.ToArray().ToMatrix();
+        return new Jagged<T>(expansion.ToArray()).ToMatrix();
     }
 
     #endregion
@@ -1564,18 +1595,4 @@ public static partial class Matrix
     }
 
     #endregion
-
-    /// <summary>
-    ///   Obsolete. Please specify the number of steps instead of the step size for the rows and columns.
-    /// </summary>
-    [Obsolete("Please specify the number of steps instead of the step size for the rows and columns.")] // NOSONAR
-    public static double[][] Mesh(
-        NumericRange rowRange, NumericRange colRange,
-        double rowStepSize, double colStepSize)
-    {
-        double[] x = Vector.Interval(rowRange, rowStepSize);
-        double[] y = Vector.Interval(colRange, colStepSize);
-        double[][] mesh = Matrix.Cartesian(x, y);
-        return mesh;
-    }
 }

@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Enumerations;
 using ISynergy.Framework.Mvvm.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -381,21 +382,26 @@ public partial class DialogService : IDialogService, IDisposable
         return true;
     }
 
-    private static Task<bool> TryEventLogNotificationAsync(string message, string title) // NOSONAR
+    private static Task<bool> TryEventLogNotificationAsync(string message, string title)
     {
         var handled = false;
+#if WINDOWS
         WritePlatformEventLog(message, title, ref handled);
+#else
+        _ = (message, title);
+#endif
         return Task.FromResult(handled);
     }
 
+#if WINDOWS
     /// <summary>
-    /// Writes the notification to a platform log. Windows implements this against the application
-    /// event log; the other heads do not, so the caller falls back to the file log.
+    /// Writes the notification to the Windows application event log; other heads fall back to the file log.
     /// </summary>
     /// <param name="message">Dialog message.</param>
     /// <param name="title">Dialog title.</param>
     /// <param name="handled">Set when the platform log accepted the entry.</param>
     static partial void WritePlatformEventLog(string message, string title, ref bool handled);
+#endif
 
     private static async Task<bool> TryFileNotificationAsync(string message, string title)
     {
@@ -547,7 +553,7 @@ public partial class DialogService : IDialogService, IDisposable
     /// <summary>
     /// Shared implementation for the entity and no-entity dialog overloads.
     /// </summary>
-    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>( // NOSONAR - dialog orchestration
+    private async Task ShowDialogAsyncInternal<TWindow, TViewModel, TEntity>(
         Action<IViewModelDialog<TEntity>>? configure,
         Func<TEntity, Task> submittedEventHandler,
         Func<Task>? cancelledEventHandler,
@@ -566,38 +572,7 @@ public partial class DialogService : IDialogService, IDisposable
                 initialization?.Invoke((TViewModel)viewmodel);
                 configure?.Invoke(viewmodel);
 
-                EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
-                onSubmittedHandler = (_, args) =>
-                {
-                    HandleDialogSubmittedAsync(args.Result, submittedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-                };
-                viewmodel.Submitted += onSubmittedHandler;
-
-                EventHandler? onCancelledHandler = null;
-                if (cancelledEventHandler is not null)
-                {
-                    onCancelledHandler = (_, _) =>
-                    {
-                        HandleDialogCancelledAsync(cancelledEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-                    };
-                    viewmodel.Cancelled += onCancelledHandler;
-                }
-
-                viewmodel.Closed += (_, _) =>
-                {
-                    if (onSubmittedHandler is not null)
-                        viewmodel.Submitted -= onSubmittedHandler;
-
-                    if (onCancelledHandler is not null)
-                        viewmodel.Cancelled -= onCancelledHandler;
-
-                    if (closedEventHandler is not null)
-                    {
-                        HandleDialogClosedAsync(closedEventHandler, typeof(TWindow).Name, typeof(TViewModel).Name).SafeFireAndForget();
-                    }
-
-                    scope.Dispose();
-                };
+                WireDialogHandlers(viewmodel, scope, typeof(TWindow).Name, typeof(TViewModel).Name, submittedEventHandler, cancelledEventHandler, closedEventHandler);
 
                 await CreateDialogAsync(dialog, viewmodel);
             }
@@ -609,20 +584,10 @@ public partial class DialogService : IDialogService, IDisposable
         catch (Exception ex)
         {
             scope.Dispose();
-
-            if (hasEntity)
-                _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
-                    typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name);
-            else
-                _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType}",
-                    typeof(TWindow).Name, typeof(TViewModel).Name);
-
-            bool handled = false;
-            try { _exceptionHandlerService.HandleException(ex); handled = true; }
-            catch (Exception handlerEx) { _logger?.LogError(handlerEx, ExceptionHandlerFailed); }
-            if (!handled) _logger?.LogWarning(ExceptionHandlerNotAvailable);
+            ReportDialogFailure(ex, typeof(TWindow).Name, typeof(TViewModel).Name, typeof(TEntity).Name, hasEntity);
         }
     }
+
 
     private async Task ShowDialogAsyncInternal<TEntity>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type, IViewModelDialog<TEntity> viewmodel)
     {
@@ -672,13 +637,78 @@ public partial class DialogService : IDialogService, IDisposable
     }
 
     /// <summary>
+    /// Subscribes the shared Submitted/Cancelled/Closed handlers (including scope disposal) to a dialog view model.
+    /// </summary>
+    private void WireDialogHandlers<TEntity>(
+        IViewModelDialog<TEntity> viewmodel,
+        IServiceScope scope,
+        string windowTypeName,
+        string viewModelTypeName,
+        Func<TEntity, Task> submittedEventHandler,
+        Func<Task>? cancelledEventHandler,
+        Func<Task>? closedEventHandler)
+    {
+        EventHandler<SubmitEventArgs<TEntity>>? onSubmittedHandler = null;
+        onSubmittedHandler = (_, args) =>
+        {
+            HandleDialogSubmittedAsync(args.Result, submittedEventHandler, windowTypeName, viewModelTypeName).SafeFireAndForget();
+        };
+        viewmodel.Submitted += onSubmittedHandler;
+
+        EventHandler? onCancelledHandler = null;
+        if (cancelledEventHandler is not null)
+        {
+            onCancelledHandler = (_, _) =>
+            {
+                HandleDialogCancelledAsync(cancelledEventHandler, windowTypeName, viewModelTypeName).SafeFireAndForget();
+            };
+            viewmodel.Cancelled += onCancelledHandler;
+        }
+
+        viewmodel.Closed += (_, _) =>
+        {
+            if (onSubmittedHandler is not null)
+                viewmodel.Submitted -= onSubmittedHandler;
+
+            if (onCancelledHandler is not null)
+                viewmodel.Cancelled -= onCancelledHandler;
+
+            if (closedEventHandler is not null)
+            {
+                HandleDialogClosedAsync(closedEventHandler, windowTypeName, viewModelTypeName).SafeFireAndForget();
+            }
+
+            scope.Dispose();
+        };
+    }
+
+    /// <summary>
+    /// Logs a dialog failure and routes it through the exception handler, logging a warning when the
+    /// handler itself is unavailable.
+    /// </summary>
+    private void ReportDialogFailure(Exception ex, string windowTypeName, string viewModelTypeName, string entityTypeName, bool hasEntity)
+    {
+        if (hasEntity)
+            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType} and entity {EntityType}",
+                windowTypeName, viewModelTypeName, entityTypeName);
+        else
+            _logger?.LogError(ex, "Error showing dialog for {WindowType} with {ViewModelType}",
+                windowTypeName, viewModelTypeName);
+
+        bool handled = false;
+        try { _exceptionHandlerService.HandleException(ex); handled = true; }
+        catch (Exception handlerEx) { _logger?.LogError(handlerEx, ExceptionHandlerFailed); }
+        if (!handled) _logger?.LogWarning(ExceptionHandlerNotAvailable);
+    }
+
+    /// <summary>
     /// Shows dialog as an asynchronous operation with enhanced error handling.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <param name="dialog"></param>
     /// <param name="viewmodel"></param>
     /// <returns></returns>
-    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel) // NOSONAR
+    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
     {
         // Note: CreateDialogAsync is protected by semaphore in calling methods (ShowDialogAsync variants)
         // No additional semaphore lock needed here to avoid deadlock
@@ -696,26 +726,7 @@ public partial class DialogService : IDialogService, IDisposable
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "Error initializing viewmodel");
-
-                bool handled = false;
-
-                try
-                {
-                    _exceptionHandlerService.HandleException(ex);
-                    handled = true;
-                }
-                catch (Exception handlerEx)
-                {
-                    // Log failure of exception handler but suppress original exception to prevent app crash
-                    _logger?.LogError(handlerEx, ViewModelInitExceptionHandlerFailed);
-                }
-
-                // Suppress exception if it was successfully handled or if handler is not available
-                // This prevents app crashes while still allowing the handler to show user-friendly messages
-                if (!handled)
-                {
-                    _logger?.LogWarning(ViewModelInitExceptionHandlerNotAvailable);
-                }
+                HandleExceptionSafely(ex, ViewModelInitExceptionHandlerFailed, ViewModelInitExceptionHandlerNotAvailable);
             }
             return;
         }
@@ -749,40 +760,11 @@ public partial class DialogService : IDialogService, IDisposable
             {
                 _logger?.LogError(initEx, "Error initializing viewmodel");
                 viewmodel.Closed -= viewModelClosedHandler;
-
-                // Call the exception handler service
-                bool handled = false;
-
-                try
-                {
-                    _exceptionHandlerService.HandleException(initEx);
-                    handled = true;
-                }
-                catch (Exception handlerEx)
-                {
-                    // Log failure of exception handler but suppress original exception to prevent app crash
-                    _logger?.LogError(handlerEx, ViewModelInitExceptionHandlerFailed);
-                }
-
-                // Suppress exception if it was successfully handled or if handler is not available
-                // This prevents app crashes while still allowing the handler to show user-friendly messages
-                if (!handled)
-                {
-                    _logger?.LogWarning(ViewModelInitExceptionHandlerNotAvailable);
-                }
-
+                HandleExceptionSafely(initEx, ViewModelInitExceptionHandlerFailed, ViewModelInitExceptionHandlerNotAvailable);
                 return;
             }
 
-            if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
-            {
-                await navigation.PushModalAsync(window, true);
-            }
-            else
-            {
-                viewmodel.Closed -= viewModelClosedHandler;
-                throw new InvalidOperationException("Cannot show modal dialog - Navigation is not available");
-            }
+            await PushDialogModalAsync(window);
         }
         catch (Exception ex)
         {
@@ -803,25 +785,47 @@ public partial class DialogService : IDialogService, IDisposable
                 _logger?.LogError(cleanupEx, "Error during dialog cleanup");
             }
 
-            bool handled = false;
+            HandleExceptionSafely(ex, DialogCreationExceptionHandlerFailed, DialogCreationExceptionHandlerNotAvailable);
+        }
+    }
 
-            try
-            {
-                _exceptionHandlerService.HandleException(ex);
-                handled = true;
-            }
-            catch (Exception handlerEx)
-            {
-                // Log failure of exception handler but suppress original exception to prevent app crash
-                _logger?.LogError(handlerEx, DialogCreationExceptionHandlerFailed);
-            }
+    /// <summary>
+    /// Pushes the dialog onto the modal navigation stack, detaching the Closed handler and throwing
+    /// when the navigation stack is unavailable.
+    /// </summary>
+    private static async Task PushDialogModalAsync(Window window)
+    {
+        if (Application.Current?.Windows[0]?.Page?.Navigation is INavigation navigation)
+        {
+            await navigation.PushModalAsync(window, true);
+        }
+        else
+        {
+            throw new InvalidOperationException("Cannot show modal dialog - Navigation is not available");
+        }
+    }
 
-            // Suppress exception if it was successfully handled or if handler is not available
-            // This prevents app crashes while still allowing the handler to show user-friendly messages
-            if (!handled)
-            {
-                _logger?.LogWarning(DialogCreationExceptionHandlerNotAvailable);
-            }
+    /// <summary>
+    /// Routes an exception through the exception handler, logging a warning when the handler itself
+    /// is unavailable or fails, without rethrowing (to avoid crashing the app).
+    /// </summary>
+    private void HandleExceptionSafely(Exception ex, string handlerFailedMessage, string handlerNotAvailableMessage)
+    {
+        bool handled = false;
+
+        try
+        {
+            _exceptionHandlerService.HandleException(ex);
+            handled = true;
+        }
+        catch (Exception handlerEx)
+        {
+            _logger?.LogError(handlerEx, "{Message}", handlerFailedMessage);
+        }
+
+        if (!handled)
+        {
+            _logger?.LogWarning("{Message}", handlerNotAvailableMessage);
         }
     }
 

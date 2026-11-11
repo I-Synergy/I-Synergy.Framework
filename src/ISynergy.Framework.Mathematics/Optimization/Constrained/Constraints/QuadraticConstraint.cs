@@ -1,11 +1,7 @@
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
@@ -31,18 +27,18 @@ public class QuadraticConstraint : NonlinearConstraint
     ///     constraints should set this to a small positive value. Default is 0.
     /// </param>
     public QuadraticConstraint(IObjectiveFunction objective,
-        double[,] quadraticTerms, double[] linearTerms = null,
+        Matrix<double> quadraticTerms, double[] linearTerms = null,
         ConstraintType shouldBe = ConstraintType.LesserThanOrEqualTo,
         double value = 0, double withinTolerance = 0.0)
     {
         var n = objective.NumberOfVariables;
 
-        ArgumentNullException.ThrowIfNull(quadraticTerms);
+        ArgumentNullException.ThrowIfNull(quadraticTerms.Array);
 
-        if (quadraticTerms.GetLength(0) != quadraticTerms.GetLength(1))
+        if (quadraticTerms.Array.GetLength(0) != quadraticTerms.Array.GetLength(1))
             throw new DimensionMismatchException(nameof(quadraticTerms), "Matrix must be square.");
 
-        if (quadraticTerms.GetLength(0) != n)
+        if (quadraticTerms.Array.GetLength(0) != n)
             throw new DimensionMismatchException(nameof(quadraticTerms),
                 "Matrix rows must match the number of variables in the objective function.");
 
@@ -58,7 +54,7 @@ public class QuadraticConstraint : NonlinearConstraint
             linearTerms = new double[n];
         }
 
-        QuadraticTerms = quadraticTerms;
+        QuadraticTerms = quadraticTerms.Array;
         LinearTerms = linearTerms;
 
         Create(n, function, shouldBe, value, gradient, withinTolerance);
@@ -77,7 +73,7 @@ public class QuadraticConstraint : NonlinearConstraint
     public double[] LinearTerms { get; }
     private double function(double[] x)
     {
-        return x.DotAndDot(QuadraticTerms, x) + LinearTerms.Dot(x);
+        return x.DotAndDot(new Matrix<double>(QuadraticTerms), x) + LinearTerms.Dot(x);
     }
 
     private double[] gradient(double[] x)

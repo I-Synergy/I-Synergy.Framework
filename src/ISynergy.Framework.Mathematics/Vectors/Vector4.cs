@@ -1,9 +1,4 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Vectors;
 
@@ -277,9 +272,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector4 operator +(Vector4 vector, float value)
+    public static Vector4 Add(Vector4 vector, float value)
     {
-        return new Vector4(vector.X + value, vector.Y + value, vector.Z + value, vector.W + value);
+        return vector + value;
     }
 
     /// <summary>
@@ -291,9 +286,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector4 Add(Vector4 vector, float value)
+    public static Vector4 operator +(Vector4 vector, float value)
     {
-        return vector + value;
+        return new Vector4(vector.X + value, vector.Y + value, vector.Z + value, vector.W + value);
     }
 
     /// <summary>
@@ -336,9 +331,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector4 operator -(Vector4 vector, float value)
+    public static Vector4 Subtract(Vector4 vector, float value)
     {
-        return new Vector4(vector.X - value, vector.Y - value, vector.Z - value, vector.W - value);
+        return vector - value;
     }
 
     /// <summary>
@@ -350,9 +345,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector4 Subtract(Vector4 vector, float value)
+    public static Vector4 operator -(Vector4 vector, float value)
     {
-        return vector - value;
+        return new Vector4(vector.X - value, vector.Y - value, vector.Z - value, vector.W - value);
     }
 
     /// <summary>
@@ -395,9 +390,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector4 operator *(Vector4 vector, float factor)
+    public static Vector4 Multiply(Vector4 vector, float factor)
     {
-        return new Vector4(vector.X * factor, vector.Y * factor, vector.Z * factor, vector.W * factor);
+        return vector * factor;
     }
 
     /// <summary>
@@ -409,9 +404,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector4 Multiply(Vector4 vector, float factor)
+    public static Vector4 operator *(Vector4 vector, float factor)
     {
-        return vector * factor;
+        return new Vector4(vector.X * factor, vector.Y * factor, vector.Z * factor, vector.W * factor);
     }
 
     /// <summary>
@@ -454,9 +449,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector4 operator /(Vector4 vector, float factor)
+    public static Vector4 Divide(Vector4 vector, float factor)
     {
-        return new Vector4(vector.X / factor, vector.Y / factor, vector.Z / factor, vector.W / factor);
+        return vector / factor;
     }
 
     /// <summary>
@@ -468,9 +463,9 @@ public struct Vector4
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector4 Divide(Vector4 vector, float factor)
+    public static Vector4 operator /(Vector4 vector, float factor)
     {
-        return vector / factor;
+        return new Vector4(vector.X / factor, vector.Y / factor, vector.Z / factor, vector.W / factor);
     }
 
     /// <summary>
@@ -484,8 +479,8 @@ public struct Vector4
     /// 
     public static bool operator ==(Vector4 vector1, Vector4 vector2)
     {
-        return vector1.X == vector2.X && vector1.Y == vector2.Y &&
-                 vector1.Z == vector2.Z && vector1.W == vector2.W;
+        return ExactComparisons.AreEqual(vector1.X ,vector2.X )&& ExactComparisons.AreEqual(vector1.Y ,vector2.Y )&&
+ExactComparisons.AreEqual(                 vector1.Z ,vector2.Z )&& ExactComparisons.AreEqual(vector1.W ,vector2.W);
     }
 
     /// <summary>
@@ -499,8 +494,8 @@ public struct Vector4
     /// 
     public static bool operator !=(Vector4 vector1, Vector4 vector2)
     {
-        return vector1.X != vector2.X || vector1.Y != vector2.Y ||
-                 vector1.Z != vector2.Z || vector1.W != vector2.W;
+        return ExactComparisons.AreNotEqual(vector1.X ,vector2.X )|| ExactComparisons.AreNotEqual(vector1.Y ,vector2.Y )||
+ExactComparisons.AreNotEqual(                 vector1.Z ,vector2.Z )|| ExactComparisons.AreNotEqual(vector1.W ,vector2.W);
     }
 
     /// <summary>
@@ -513,7 +508,7 @@ public struct Vector4
     /// 
     public bool Equals(Vector4 vector)
     {
-        return vector.X == X && vector.Y == Y && vector.Z == Z && vector.W == W;
+        return ExactComparisons.AreEqual(vector.X ,X )&& ExactComparisons.AreEqual(vector.Y ,Y )&& ExactComparisons.AreEqual(vector.Z ,Z )&& ExactComparisons.AreEqual(vector.W ,W);
     }
 
     /// <summary>

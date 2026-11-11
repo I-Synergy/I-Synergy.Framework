@@ -5,12 +5,6 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1192, S1135, S1117 // duplicate strings, TODO comments, and local variable shadowing are acceptable in constraint parsing code
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
@@ -251,7 +245,8 @@ public class LinearConstraint : IConstraint
     public static bool TryParse(string str, CultureInfo culture,
         IObjectiveFunction function, out LinearConstraint constraint)
     {
-        // TODO: implement this method without the try-catch block.
+        // The LinearConstraint constructor throws a FormatException when the text
+        // cannot be parsed; that condition is reported as a failed parse below.
 
         try
         {
@@ -360,10 +355,8 @@ public class LinearConstraint : IConstraint
 
         MatchCollection matches = r.Matches(lhs, 0);
 
-        foreach (Match m in matches)
+        foreach (var term in matches.Select(m => m.Value))
         {
-            string term = m.Value;
-
             double scalar = term[0] == '-' ? -1 : 1;
 
             // Extract value
@@ -388,17 +381,17 @@ public class LinearConstraint : IConstraint
             }
         }
 
-        List<int> indices = new List<int>();
+        List<int> indexList = new List<int>();
         List<double> scalars = new List<double>();
 
         foreach (var term in terms)
         {
-            indices.Add(function.Variables[term.Key]);
+            indexList.Add(function.Variables[term.Key]);
             scalars.Add(term.Value);
         }
 
-        NumberOfVariables = indices.Count;
-        VariablesAtIndices = indices.ToArray();
+        NumberOfVariables = indexList.Count;
+        VariablesAtIndices = indexList.ToArray();
         CombinedAs = scalars.ToArray();
         ShouldBe = type;
         Value = value;
@@ -431,17 +424,17 @@ public class LinearConstraint : IConstraint
         ConstantExpression c = b.Right as ConstantExpression;
         value = (double)c.Value - value;
 
-        List<int> indices = new List<int>();
+        List<int> indexList = new List<int>();
         List<double> scalars = new List<double>();
 
         foreach (var term in terms)
         {
-            indices.Add(function.Variables[term.Key]);
+            indexList.Add(function.Variables[term.Key]);
             scalars.Add(term.Value);
         }
 
-        NumberOfVariables = indices.Count;
-        VariablesAtIndices = indices.ToArray();
+        NumberOfVariables = indexList.Count;
+        VariablesAtIndices = indexList.ToArray();
         CombinedAs = scalars.ToArray();
         ShouldBe = type;
         Value = value;

@@ -1,10 +1,5 @@
 using NumericRange = ISynergy.Framework.Core.Ranges.NumericRange;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Vectors;
@@ -27,9 +22,9 @@ public static partial class Vector
     public static double[] Interval(int a, int b)
     {
         if (a < b)
-            return Interval(a, b, steps: (int)(b - a) + 1);
+            return Interval(a, b, steps: b - a + 1);
 
-        return Interval(a, b, steps: (int)(a - b) + 1);
+        return Interval(a, b, steps: a - b + 1);
     }
 
     /// <summary>
@@ -63,24 +58,24 @@ public static partial class Vector
         double length;
         if (includeLast)
         {
-            length = ((int)(steps - 1));
+            length = steps - 1;
         }
         else
         {
-            length = ((int)(steps));
+            length = steps;
         }
 
         if (a > b)
         {
-            var stepSize = (double)((a - b) / length);
+            var stepSize = (a - b) / length;
             for (uint i = 0; i < r.Length; i++)
-                r[i] = (double)(a - i * stepSize);
+                r[i] = a - i * stepSize;
         }
         else
         {
-            var stepSize = (double)((b - a) / length);
+            var stepSize = (b - a) / length;
             for (uint i = 0; i < r.Length; i++)
-                r[i] = (double)(a + i * stepSize);
+                r[i] = a + i * stepSize;
         }
 
         if (includeLast)
@@ -131,31 +126,31 @@ public static partial class Vector
         if (steps == 1)
             return [a];
 
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return Vector.Create(size: steps, value: a);
 
         double[] r = new double[steps];
         double length;
         if (includeLast)
         {
-            length = ((double)(steps - 1));
+            length = steps - 1;
         }
         else
         {
-            length = ((double)(steps));
+            length = steps;
         }
 
         if (a > b)
         {
-            var stepSize = (double)((a - b) / length);
+            var stepSize = (a - b) / length;
             for (uint i = 0; i < r.Length; i++)
-                r[i] = (double)(a - i * stepSize);
+                r[i] = a - i * stepSize;
         }
         else
         {
-            var stepSize = (double)((b - a) / length);
+            var stepSize = (b - a) / length;
             for (uint i = 0; i < r.Length; i++)
-                r[i] = (double)(a + i * stepSize);
+                r[i] = a + i * stepSize;
         }
 
         if (includeLast)
@@ -182,40 +177,44 @@ public static partial class Vector
     }
 
     /// <summary>
-    ///   Obsolete. Please use Vector.Range(a, b, stepSize) instead.
+    ///   Creates an interval vector using a fixed step size.
     /// </summary>
-    [Obsolete("Please use Vector.Range(a, b, stepSize) instead.")] // NOSONAR
+    ///
+    /// <seealso cref="Vector.Range(double, double, double)"/>
+    ///
     public static double[] Interval(double a, double b, double stepSize)
     {
-        if (a == b)
+        if (ExactComparisons.AreEqual(a ,b))
             return [a];
 
         double[] r;
 
         if (a > b)
         {
-            int steps = (int)System.Math.Ceiling((a - b) / (double)stepSize) + 1;
+            int steps = (int)System.Math.Ceiling((a - b) / stepSize) + 1;
             r = new double[steps];
             for (uint i = 0; i < r.Length; i++)
-                r[i] = (double)(a - i * stepSize);
-            r[steps - 1] = (double)(b);
+                r[i] = a - i * stepSize;
+            r[steps - 1] = b;
         }
         else
         {
-            int steps = (int)System.Math.Ceiling((b - a) / (double)stepSize) + 1;
+            int steps = (int)System.Math.Ceiling((b - a) / stepSize) + 1;
             r = new double[steps];
             for (uint i = 0; i < r.Length; i++)
-                r[i] = (double)(a + i * stepSize);
-            r[steps - 1] = (double)(b);
+                r[i] = a + i * stepSize;
+            r[steps - 1] = b;
         }
 
         return r;
     }
 
     /// <summary>
-    ///   Obsolete. Please use Vector.Range(range, stepSize) instead.
+    ///   Creates an interval vector using a fixed step size.
     /// </summary>
-    [Obsolete("Please use Vector.Range(range, stepSize) instead.")] // NOSONAR
+    ///
+    /// <seealso cref="Vector.Range(NumericRange, double)"/>
+    ///
     public static double[] Interval(this NumericRange range, double stepSize)
     {
         return Interval(range.Min, range.Max, stepSize);

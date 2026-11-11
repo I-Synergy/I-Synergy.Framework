@@ -1,12 +1,8 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Exceptions;
 using System.Numerics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -164,7 +160,7 @@ public static class ComplexMatrix
     /// </summary>
     /// <param name="c">A vector of complex numbers.</param>
     /// <returns>A vector of scalars with the imaginary part of the complex numbers.</returns>
-    // TODO: Rename to Imaginary // NOSONAR
+    // Math.NET parity: the abbreviated name "Im" is kept for API compatibility.
     public static double[] Im(this Complex[] c)
     {
         return c.Apply((x, i) => x.Imaginary);
@@ -267,19 +263,20 @@ public static class ComplexMatrix
     /// <summary>
     ///     Compares two matrices for equality, considering an acceptance threshold.
     /// </summary>
-    public static bool IsEqual(this Complex[][] objA, Complex[][] objB, double threshold)
+    public static bool IsEqual(this Complex[][] objA, Jagged<Complex> objB, double threshold)
     {
-        if (objA is null && objB is null) return true;
+        var objBArray = objB.Array;
+        if (objA is null && objBArray is null) return true;
         ArgumentNullException.ThrowIfNull(objA);
-        ArgumentNullException.ThrowIfNull(objB);
+        ArgumentNullException.ThrowIfNull(objBArray);
 
         for (var i = 0; i < objA.Length; i++)
             for (var j = 0; j < objA[i].Length; j++)
             {
                 var xr = objA[i][j].Real;
-                var yr = objB[i][j].Real;
+                var yr = objBArray[i][j].Real;
                 var xi = objA[i][j].Imaginary;
-                var yi = objB[i][j].Imaginary;
+                var yi = objBArray[i][j].Imaginary;
 
                 if (Math.Abs(xr - yr) > threshold || double.IsNaN(xr) ^ double.IsNaN(yr))
                     return false;

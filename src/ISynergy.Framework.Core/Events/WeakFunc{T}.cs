@@ -121,36 +121,16 @@ public class WeakFunc<TResult>
     {
         get
         {
-            if (_staticFunc is null
-                && Reference is null
-                && LiveReference is null)
-            {
-                return false;
-            }
+            var reference = Reference;
 
             if (_staticFunc is not null)
-            {
-                if (Reference is not null)
-                {
-                    return Reference.IsAlive;
-                }
+                return reference is null || reference.IsAlive;
 
-                return true;
-            }
-
-            // Non static action
-
+            // Non static action: alive while it is kept alive explicitly or its target is still reachable.
             if (LiveReference is not null)
-            {
                 return true;
-            }
 
-            if (Reference is not null) // NOSONAR - Reference may or may not be set for non-static funcs with no live reference
-            {
-                return Reference.IsAlive;
-            }
-
-            return false;
+            return reference is not null && reference.IsAlive;
         }
     }
 

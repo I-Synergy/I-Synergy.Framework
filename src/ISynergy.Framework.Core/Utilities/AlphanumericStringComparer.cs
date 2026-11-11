@@ -49,14 +49,9 @@ public class AlphanumericStringComparer : IComparer
     /// <param name="x">The x.</param>
     /// <param name="y">The y.</param>
     /// <returns>System.Int32.</returns>
-    public int Compare(object? x, object? y) // NOSONAR - S3776, S3878
+    public int Compare(object? x, object? y)
     {
-        if (!(x is string s1))
-        {
-            return 0;
-        }
-
-        if (!(y is string s2))
+        if (x is not string s1 || y is not string s2)
         {
             return 0;
         }
@@ -70,6 +65,26 @@ public class AlphanumericStringComparer : IComparer
         var str1 = GetList(s1);
         var str2 = GetList(s2);
 
+        PadToSameLength(str1, str2);
+
+        for (var i = 0; i < str1.Count && i < str2.Count; i++)
+        {
+            var result = CompareSegments(str1[i], str2[i]);
+
+            if (result != 0)
+                return result;
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Pads both segment lists with empty segments so that they have the same number of segments.
+    /// </summary>
+    /// <param name="str1">The segments of the first string.</param>
+    /// <param name="str2">The segments of the second string.</param>
+    private static void PadToSameLength(List<string> str1, List<string> str2)
+    {
         while (str1.Count != str2.Count)
         {
             if (str1.Count < str2.Count)
@@ -81,68 +96,70 @@ public class AlphanumericStringComparer : IComparer
                 str2.Add("");
             }
         }
+    }
 
-        var intX = 0;
-        var intY = 0;
-        var result = 0;
+    /// <summary>
+    /// Compares a single pair of segments, treating numeric segments as numbers.
+    /// </summary>
+    /// <param name="segment1">The segment of the first string.</param>
+    /// <param name="segment2">The segment of the second string.</param>
+    /// <returns>A signed value indicating the relative order of the two segments.</returns>
+    private static int CompareSegments(string segment1, string segment2)
+    {
+        var is1Integer = int.TryParse(segment1, out var intX);
+        var is2Integer = int.TryParse(segment2, out var intY);
 
-        for (var i = 0; i < str1.Count && i < str2.Count; i++)
+        // Both are strings, or only one of them is a number: compare them as text.
+        if (!is1Integer || !is2Integer)
         {
-            bool is1Integer = false;
-
-            if (int.TryParse(str1[i].ToString(), out int res1))
-            {
-                intX = res1;
-                is1Integer = true;
-            }
-
-            bool is2Integer = false;
-
-            if (int.TryParse(str2[i].ToString(), out int res2))
-            {
-                intY = res2;
-                is2Integer = true;
-            }
-
-            //checking --the data comparision
-            if (!is2Integer && !is1Integer)    //both are strings
-            {
-                result = str1[i].CompareTo(str2[i]);
-            }
-            else if (is2Integer && is1Integer) //both are intergers
-            {
-                if (intX == intY)
-                {
-                    if (str1[i].ToString().Length < str2[i].ToString().Length)
-                        result = 1;
-                    else if (str1[i].ToString().Length > str2[i].ToString().Length)
-                        result = -1;
-                    else
-                        result = 0;
-                }
-                else
-                {
-                    var st1ZeroCount = str1[i].ToString().Trim().Length - str1[i].ToString().TrimStart('0').Length;
-                    var st2ZeroCount = str2[i].ToString().Trim().Length - str2[i].ToString().TrimStart('0').Length;
-
-                    if (st1ZeroCount > st2ZeroCount)
-                        result = -1;
-                    else if (st1ZeroCount < st2ZeroCount)
-                        result = 1;
-                    else
-                        result = intX.CompareTo(intY);
-                }
-            }
-            else
-            {
-                result = str1[i].CompareTo(str2[i]);
-            }
-
-            if (result == 0)
-                continue;
-            break;
+            return segment1.CompareTo(segment2);
         }
 
-        return result;
+        // Both are numbers.
+        if (intX == intY)
+        {
+            return CompareSameValueNumericSegments(segment1, segment2);
+        }
+
+        return CompareLeadingZeros(segment1, segment2, intX, intY);
+    }
+
+    /// <summary>
+    /// Compares two numeric segments that represent the same value (for example "01" and "1").
+    /// </summary>
+    /// <param name="segment1">The segment of the first string.</param>
+    /// <param name="segment2">The segment of the second string.</param>
+    /// <returns>A signed value indicating the relative order of the two segments.</returns>
+    private static int CompareSameValueNumericSegments(string segment1, string segment2)
+    {
+        if (segment1.Length < segment2.Length)
+            return 1;
+
+        if (segment1.Length > segment2.Length)
+            return -1;
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Compares two numeric segments with different values, taking leading zeros into account.
+    /// </summary>
+    /// <param name="segment1">The segment of the first string.</param>
+    /// <param name="segment2">The segment of the second string.</param>
+    /// <param name="intX">The numeric value of the first segment.</param>
+    /// <param name="intY">The numeric value of the second segment.</param>
+    /// <returns>A signed value indicating the relative order of the two segments.</returns>
+    private static int CompareLeadingZeros(string segment1, string segment2, int intX, int intY)
+    {
+        var st1ZeroCount = segment1.Trim().Length - segment1.TrimStart('0').Length;
+        var st2ZeroCount = segment2.Trim().Length - segment2.TrimStart('0').Length;
+
+        if (st1ZeroCount > st2ZeroCount)
+            return -1;
+
+        if (st1ZeroCount < st2ZeroCount)
+            return 1;
+
+        return intX.CompareTo(intY);
     }
 }

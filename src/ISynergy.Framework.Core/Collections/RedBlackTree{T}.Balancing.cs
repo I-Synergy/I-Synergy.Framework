@@ -25,51 +25,62 @@ public partial class RedBlackTree<T>
         /// <param name="tree">The tree being modified.</param>
         /// <param name="item">The freshly inserted node.</param>
         /// <param name="parent">The node under which <paramref name="item"/> was inserted.</param>
-        public static void FixAfterInsert(RedBlackTree<T> tree, RedBlackTreeNode<T> item, RedBlackTreeNode<T> parent) // NOSONAR - red-black balancing algorithm
+        public static void FixAfterInsert(RedBlackTree<T> tree, RedBlackTreeNode<T> item, RedBlackTreeNode<T> parent)
         {
             var p = parent;
 
-        fixtree:
-
-            if (item.Parent!.Color == RedBlackTreeNodeTypes.Red)
+            while (true)
             {
+                if (item.Parent!.Color != RedBlackTreeNodeTypes.Red)
+                    return;
+
                 // red cannot have red child
                 var u = p == p.Parent!.Left ? p.Parent.Right : p.Parent.Left;
 
-                if (u is not null && u.Color == RedBlackTreeNodeTypes.Red)
+                if (u is null || u.Color != RedBlackTreeNodeTypes.Red)
                 {
-                    p.Color = u.Color = RedBlackTreeNodeTypes.Black;
-                    item = p.Parent;
-
-                    if ((p = item.Parent) is not null)
-                    {
-                        item.Color = RedBlackTreeNodeTypes.Red;
-                        goto fixtree;
-                    }
+                    FixInsertRotations(tree, item, p);
+                    return;
                 }
-                else
-                {
-                    if (item == p.Right && p == p.Parent.Left)
-                    {
-                        tree.rotate_left(p);
-                        p = item; item = item.Left!;
-                    }
-                    else if (item == p.Left && p == p.Parent.Right)
-                    {
-                        tree.rotate_right(p);
-                        p = item;
-                        item = item.Right!;
-                    }
 
-                    p.Color = RedBlackTreeNodeTypes.Black;
-                    p.Parent.Color = RedBlackTreeNodeTypes.Red;
+                p.Color = u.Color = RedBlackTreeNodeTypes.Black;
+                item = p.Parent;
+                p = item.Parent;
 
-                    if (item == p.Left && p == p.Parent.Left)
-                        tree.rotate_right(p.Parent);
-                    else if (item == p.Right && p == p.Parent.Right)
-                        tree.rotate_left(p.Parent);
-                }
+                if (p is null)
+                    return;
+
+                item.Color = RedBlackTreeNodeTypes.Red;
             }
+        }
+
+        /// <summary>
+        ///   Applies the rotations and recoloring for the case where the inserted node's uncle is black.
+        /// </summary>
+        /// <param name="tree">The tree being modified.</param>
+        /// <param name="item">The node being fixed up.</param>
+        /// <param name="p">The parent of <paramref name="item"/>.</param>
+        private static void FixInsertRotations(RedBlackTree<T> tree, RedBlackTreeNode<T> item, RedBlackTreeNode<T> p)
+        {
+            if (item == p.Right && p == p.Parent!.Left)
+            {
+                tree.rotate_left(p);
+                p = item; item = item.Left!;
+            }
+            else if (item == p.Left && p == p.Parent!.Right)
+            {
+                tree.rotate_right(p);
+                p = item;
+                item = item.Right!;
+            }
+
+            p.Color = RedBlackTreeNodeTypes.Black;
+            p.Parent!.Color = RedBlackTreeNodeTypes.Red;
+
+            if (item == p.Left && p == p.Parent.Left)
+                tree.rotate_right(p.Parent);
+            else if (item == p.Right && p == p.Parent.Right)
+                tree.rotate_left(p.Parent);
         }
 
         /// <summary>
@@ -78,87 +89,130 @@ public partial class RedBlackTree<T>
         /// <param name="tree">The tree being modified.</param>
         /// <param name="m">The node that replaced the removed node (may be <c>null</c>).</param>
         /// <param name="mp">The parent of <paramref name="m"/> (may be <c>null</c>).</param>
-        public static void FixAfterRemove(RedBlackTree<T> tree, RedBlackTreeNode<T>? m, RedBlackTreeNode<T>? mp) // NOSONAR - red-black balancing algorithm
+        public static void FixAfterRemove(RedBlackTree<T> tree, RedBlackTreeNode<T>? m, RedBlackTreeNode<T>? mp)
         {
-        deleteblack:
-            if (mp is not null)
+            while (mp is not null)
             {
-                var s = m == mp.Left ? mp.Right : mp.Left;
-
-                if (s!.Color == RedBlackTreeNodeTypes.Red)
-                {
-                    mp.Color = RedBlackTreeNodeTypes.Red;
-                    s.Color = RedBlackTreeNodeTypes.Black;
-
-                    if (m == mp.Left)
-                        tree.rotate_left(mp);
-                    else tree.rotate_right(mp);
-
-                    s = m == mp.Left ? mp.Right : mp.Left;
-                }
+                var s = NormalizeRedSibling(tree, m, mp, m == mp.Left ? mp.Right : mp.Left);
 
                 if (mp.Color == RedBlackTreeNodeTypes.Black
                   && s!.Color == RedBlackTreeNodeTypes.Black
-                  && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black)
-                  && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
+                  && IsBlack(s.Left)
+                  && IsBlack(s.Right))
                 {
-                    if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
-                        s.Color = RedBlackTreeNodeTypes.Red;
+                    s.Color = RedBlackTreeNodeTypes.Red;
 
                     m = mp;
                     mp = m.Parent;
 
-                    goto deleteblack;
+                    continue;
                 }
 
                 if (mp.Color == RedBlackTreeNodeTypes.Red
                     && s!.Color == RedBlackTreeNodeTypes.Black
-                    && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black)
-                    && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
+                    && IsBlack(s.Left)
+                    && IsBlack(s.Right))
                 {
-                    if (s is not null) // NOSONAR - defensive check; s may be null depending on tree state after goto
-                        s.Color = RedBlackTreeNodeTypes.Red;
-
+                    s.Color = RedBlackTreeNodeTypes.Red;
                     mp.Color = RedBlackTreeNodeTypes.Black;
                 }
                 else
                 {
-                    if (m == mp.Left && s!.Color == RedBlackTreeNodeTypes.Black
-                                     && (s.Left is not null && s.Left.Color == RedBlackTreeNodeTypes.Red)
-                                     && (s.Right is null || s.Right.Color == RedBlackTreeNodeTypes.Black))
-                    {
-                        s.Color = RedBlackTreeNodeTypes.Red;
-                        s.Left.Color = RedBlackTreeNodeTypes.Black;
-
-                        tree.rotate_right(s);
-
-                        s = m == mp.Left ? mp.Right : mp.Left;
-                    }
-                    else if (m == mp.Right && s!.Color == RedBlackTreeNodeTypes.Black
-                                           && (s.Right is not null && s.Right.Color == RedBlackTreeNodeTypes.Red)
-                                           && (s.Left is null || s.Left.Color == RedBlackTreeNodeTypes.Black))
-                    {
-                        s.Color = RedBlackTreeNodeTypes.Red;
-                        s.Right.Color = RedBlackTreeNodeTypes.Black;
-                        tree.rotate_left(s);
-                        s = m == mp.Left ? mp.Right : mp.Left;
-                    }
-
-                    s!.Color = mp.Color;
-                    mp.Color = RedBlackTreeNodeTypes.Black;
-
-                    if (m == mp.Left)
-                    {
-                        s.Right!.Color = RedBlackTreeNodeTypes.Black;
-                        tree.rotate_left(mp);
-                    }
-                    else
-                    {
-                        s.Left!.Color = RedBlackTreeNodeTypes.Black;
-                        tree.rotate_right(mp);
-                    }
+                    RedistributeAfterRemoval(tree, m, mp);
                 }
+
+                return;
             }
         }
+
+        /// <summary>
+        ///   Recolors and rotates when the sibling of the removed node is red.
+        /// </summary>
+        /// <param name="tree">The tree being modified.</param>
+        /// <param name="m">The node that replaced the removed node.</param>
+        /// <param name="mp">The parent of <paramref name="m"/>.</param>
+        /// <param name="s">The sibling of <paramref name="m"/>.</param>
+        /// <returns>The (possibly new) sibling of <paramref name="m"/>.</returns>
+        private static RedBlackTreeNode<T>? NormalizeRedSibling(
+            RedBlackTree<T> tree,
+            RedBlackTreeNode<T>? m,
+            RedBlackTreeNode<T> mp,
+            RedBlackTreeNode<T>? s)
+        {
+            if (s is null || s.Color != RedBlackTreeNodeTypes.Red)
+                return s;
+
+            mp.Color = RedBlackTreeNodeTypes.Red;
+            s.Color = RedBlackTreeNodeTypes.Black;
+
+            if (m == mp.Left)
+                tree.rotate_left(mp);
+            else
+                tree.rotate_right(mp);
+
+            return m == mp.Left ? mp.Right : mp.Left;
+        }
+
+        /// <summary>
+        ///   Recolors and rotates around the sibling when the sibling (or one of its children) is red.
+        /// </summary>
+        /// <param name="tree">The tree being modified.</param>
+        /// <param name="m">The node that replaced the removed node.</param>
+        /// <param name="mp">The parent of <paramref name="m"/>.</param>
+        private static void RedistributeAfterRemoval(RedBlackTree<T> tree, RedBlackTreeNode<T>? m, RedBlackTreeNode<T> mp)
+        {
+            var s = m == mp.Left ? mp.Right : mp.Left;
+
+            if (s!.Color == RedBlackTreeNodeTypes.Black
+                && m == mp.Left
+                && IsRed(s.Left)
+                && IsBlack(s.Right))
+            {
+                s.Color = RedBlackTreeNodeTypes.Red;
+                s.Left!.Color = RedBlackTreeNodeTypes.Black;
+
+                tree.rotate_right(s);
+
+                s = m == mp.Left ? mp.Right : mp.Left;
+            }
+            else if (s.Color == RedBlackTreeNodeTypes.Black
+                && m == mp.Right
+                && IsRed(s.Right)
+                && IsBlack(s.Left))
+            {
+                s.Color = RedBlackTreeNodeTypes.Red;
+                s.Right!.Color = RedBlackTreeNodeTypes.Black;
+                tree.rotate_left(s);
+                s = m == mp.Left ? mp.Right : mp.Left;
+            }
+
+            s!.Color = mp.Color;
+            mp.Color = RedBlackTreeNodeTypes.Black;
+
+            if (m == mp.Left)
+            {
+                s.Right!.Color = RedBlackTreeNodeTypes.Black;
+                tree.rotate_left(mp);
+            }
+            else
+            {
+                s.Left!.Color = RedBlackTreeNodeTypes.Black;
+                tree.rotate_right(mp);
+            }
+        }
+
+        /// <summary>
+        ///   Determines whether the node is red (a missing node is not red).
+        /// </summary>
+        /// <param name="node">The node to inspect.</param>
+        private static bool IsRed(RedBlackTreeNode<T>? node) =>
+            node is not null && node.Color == RedBlackTreeNodeTypes.Red;
+
+        /// <summary>
+        ///   Determines whether the node is black (a missing node counts as black).
+        /// </summary>
+        /// <param name="node">The node to inspect.</param>
+        private static bool IsBlack(RedBlackTreeNode<T>? node) =>
+            node is null || node.Color == RedBlackTreeNodeTypes.Black;
     }
 }

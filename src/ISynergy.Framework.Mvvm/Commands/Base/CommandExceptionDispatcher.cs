@@ -33,6 +33,12 @@ public static class CommandExceptionDispatcher
     /// </summary>
     /// <param name="sender">The command instance that caught the exception.</param>
     /// <param name="exception">The exception thrown by the command's execute delegate.</param>
-    internal static void Raise(object? sender, Exception exception) =>
-        UnhandledCommandException?.Invoke(sender, new CommandExceptionEventArgs(exception)); // NOSONAR - sender identifies the failing command
+    internal static void Raise(object? sender, Exception exception)
+    {
+        // Copy the event delegate to a local first (thread-safe invocation pattern); invoking through
+        // the local keeps the command instance as the sender that subscribers use to identify the
+        // failing command, without the mutable-field race Sonar S4220 warns about.
+        var handler = UnhandledCommandException;
+        handler?.Invoke(sender, new CommandExceptionEventArgs(exception));
+    }
 }

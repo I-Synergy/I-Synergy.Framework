@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -6,13 +7,6 @@ using ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1450, S1481, S1066, S2234, S1939 // FORTRAN port: write-only fields, unused locals, collapsible ifs, argument order, and redundant interfaces are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained;
@@ -104,7 +98,7 @@ public enum GoldfarbIdnaniStatus
 /// </example>
 /// <seealso cref="AugmentedLagrangian" />
 public class GoldfarbIdnani : BaseGradientOptimizationMethod,
-    IOptimizationMethod, IOptimizationMethod<GoldfarbIdnaniStatus>
+    IOptimizationMethod<GoldfarbIdnaniStatus>
 {
     private readonly double[] constraintTolerances;
     private double[] constraintValues;
@@ -115,7 +109,6 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     private double[] iwuv;
     private double[] iwzv;
 
-    private int r;
     private double[] work;
 
     /// <summary>
@@ -155,16 +148,18 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     /// <param name="constraintMatrix">The constraints matrix <c>A</c>.</param>
     /// <param name="constraintValues">The constraints values <c>b</c>.</param>
     /// <param name="numberOfEqualities">The number of equalities in the constraints.</param>
-    public GoldfarbIdnani(QuadraticObjectiveFunction function, double[,] constraintMatrix,
+    public GoldfarbIdnani(QuadraticObjectiveFunction function, Matrix<double> constraintMatrix,
         double[] constraintValues, int numberOfEqualities = 0)
         : base(function.NumberOfVariables, function.Function, function.Gradient)
     {
-        if (function.NumberOfVariables != constraintMatrix.GetLength(1))
+        var constraintMatrixArray = constraintMatrix.Array;
+
+        if (function.NumberOfVariables != constraintMatrixArray.GetLength(1))
             throw new ArgumentException("The number of columns in the constraint matrix A "
                                         + "should equal the number of variables in the problem.",
                 nameof(constraintMatrix));
 
-        if (constraintValues.Length != constraintMatrix.GetLength(0))
+        if (constraintValues.Length != constraintMatrixArray.GetLength(0))
             throw new DimensionMismatchException(nameof(constraintValues));
 
         if (numberOfEqualities < 0 || numberOfEqualities > constraintValues.Length)
@@ -173,7 +168,7 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         constraintTolerances = Vector.Create(constraintValues.Length, LinearConstraint.DefaultTolerance);
 
         initialize(function.NumberOfVariables, function.QuadraticTerms,
-            function.LinearTerms, constraintMatrix, constraintValues, numberOfEqualities);
+            function.LinearTerms, constraintMatrixArray, constraintValues, numberOfEqualities);
     }
 
     /// <summary>
@@ -184,10 +179,10 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     /// <param name="constraintMatrix">The constraints matrix <c>A</c>.</param>
     /// <param name="constraintValues">The constraints values <c>b</c>.</param>
     /// <param name="numberOfEqualities">The number of equalities in the constraints.</param>
-    public GoldfarbIdnani(double[,] quadratic, double[] linear,
-        double[,] constraintMatrix, double[] constraintValues, int numberOfEqualities = 0)
-        : this(new QuadraticObjectiveFunction(quadratic, linear), constraintMatrix, constraintValues,
-            numberOfEqualities)
+    public GoldfarbIdnani(Matrix<double> quadratic, double[] linear,
+        Matrix<double> constraintMatrix, double[] constraintValues, int numberOfEqualities = 0)
+        : this(new QuadraticObjectiveFunction(quadratic, linear, System.Array.Empty<string>()),
+            constraintMatrix, constraintValues, numberOfEqualities)
     {
     }
     /// <summary>
@@ -336,7 +331,7 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
 
         NumberOfEqualities = numberOfEqualities;
         NumberOfConstraints = constraintMatrix.GetLength(0);
-        r = Math.Min(NumberOfVariables, NumberOfConstraints);
+        var r = Math.Min(NumberOfVariables, NumberOfConstraints);
 
         ActiveConstraints = new int[NumberOfConstraints];
         Lagrangian = new double[NumberOfConstraints];
@@ -455,7 +450,6 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
     private void qpgen2(double[,] dmat, double[] dvec, int[] iact, out int nact, ref int ierr)
     {
         var n = NumberOfVariables;
-        var q = NumberOfConstraints;
         var meq = NumberOfEqualities;
         var amat = (double[,])ConstraintMatrix.Clone();
         var bvec = (double[])constraintValues.Clone();
@@ -556,456 +550,418 @@ public class GoldfarbIdnani : BaseGradientOptimizationMethod,
         nact = 0;
         Iterations = 0;
         Deletions = 0;
-    L50: // start a new iteration 
-
-        if (Token.IsCancellationRequested)
-            return;
-
-        Iterations++;
-
-        if (MaxIterations > 0 && Iterations > MaxIterations)
-            return;
-
-        // calculate all constraints and check which are still violated 
-        // for the equality constraints we have to check whether the normal 
-        // vector has to be negated (as well as bvec in that case) 
-
-        var l = 0;
-
-        for (var i = 0; i < bvec.Length; i++)
+        // Outer iteration loop (originally labelled L50).
+        while (true)
         {
-            sum = -bvec[i];
+            // start a new iteration
+            if (Token.IsCancellationRequested)
+                return;
 
-            for (var j = 0; j < sol.Length; j++)
-                sum += amat[i, j] * sol[j];
+            Iterations++;
 
-            if (Math.Abs(sum) < Constants.DoubleEpsilon)
-                sum = 0.0;
+            if (MaxIterations > 0 && Iterations > MaxIterations)
+                return;
 
-            if (double.IsNaN(sum))
-                sum = 0.0;
+            // calculate all constraints and check which are still violated
+            // for the equality constraints we have to check whether the normal
+            // vector has to be negated (as well as bvec in that case)
 
-            if (i >= meq)
+            var l = 0;
+
+            for (var i = 0; i < bvec.Length; i++)
             {
-                // this is an inequality constraint
-                iwsv[l] = sum;
-            }
-            else
-            {
-                // this is an equality constraint
-                iwsv[l] = -Math.Abs(sum);
+                sum = -bvec[i];
 
-                if (sum > 0.0)
+                for (var j = 0; j < sol.Length; j++)
+                    sum += amat[i, j] * sol[j];
+
+                if (Math.Abs(sum) < Constants.DoubleEpsilon)
+                    sum = 0.0;
+
+                if (double.IsNaN(sum))
+                    sum = 0.0;
+
+                if (i >= meq)
                 {
-                    for (var j = 0; j < n; j++)
-                        amat[i, j] = -amat[i, j];
-                    bvec[i] = -bvec[i];
+                    // this is an inequality constraint
+                    iwsv[l] = sum;
+                }
+                else
+                {
+                    // this is an equality constraint
+                    iwsv[l] = -Math.Abs(sum);
+
+                    if (sum > 0.0)
+                    {
+                        for (var j = 0; j < n; j++)
+                            amat[i, j] = -amat[i, j];
+                        bvec[i] = -bvec[i];
+                    }
+                }
+
+                l++;
+            }
+
+            // as safeguard against rounding errors set
+            // already active constraints explicitly to zero
+
+            for (var i = 0; i < nact; i++)
+                iwsv[iact[i]] = 0.0;
+
+            // We weight each violation by the number of non-zero elements in the
+            // corresponding row of A. then we choose the violated constraint which
+            // has maximal absolute value, i.e., the minimum. By obvious commenting
+            // and uncommenting we can choose the strategy to take always the first
+            // constraint which is violated. ;-)
+
+            var nvl = -1;
+            var temp = 0.0;
+            for (var i = 0; i < iwnbv.Length; i++)
+            {
+                var w = temp * iwnbv[i];
+                var tol = constraintTolerances[i];
+
+                if (iwsv[i] < w - tol)
+                {
+                    nvl = i;
+                    temp = iwsv[i] / iwnbv[i];
                 }
             }
 
-            l++;
-        }
+            if (nvl == -1)
+                return;
 
-        // as safeguard against rounding errors set 
-        // already active constraints explicitly to zero 
+            // Inner loop (originally labelled L55): re-entered after dropping a constraint.
 
-        for (var i = 0; i < nact; i++)
-            iwsv[iact[i]] = 0.0;
-
-        // We weight each violation by the number of non-zero elements in the 
-        // corresponding row of A. then we choose the violated constraint which 
-        // has maximal absolute value, i.e., the minimum. By obvious commenting
-        // and uncommenting we can choose the strategy to take always the first
-        // constraint which is violated. ;-) 
-
-        var nvl = -1;
-        var temp = 0.0;
-        for (var i = 0; i < iwnbv.Length; i++)
-        {
-            var w = temp * iwnbv[i];
-            var tol = constraintTolerances[i];
-
-            if (iwsv[i] < w - tol)
+            while (true)
             {
-                nvl = i;
-                temp = iwsv[i] / iwnbv[i];
-            }
+                // calculate d=J^Tn^+ where n^+ is the normal vector of the violated
+                // constraint. J is stored in dmat in this implementation!!
+                // if we drop a constraint, we have to jump back here.
 
-            // if (work(iwsv+i) .LT. 0.d0) then 
-            //     nvl = i 
-            //     goto 72 
-            // endif 
-        }
-
-        if (nvl == -1)
-            return;
-        L55:
-
-        // calculate d=J^Tn^+ where n^+ is the normal vector of the violated 
-        // constraint. J is stored in dmat in this implementation!! 
-        // if we drop a constraint, we have to jump back here. 
-
-        for (var i = 0; i < work.Length; i++)
-        {
-            sum = 0.0;
-            for (var j = 0; j < n; j++)
-                sum += dmat[i, j] * amat[nvl, j];
-
-            work[i] = sum;
-        }
-
-        // Now calculate z = J_2 d_2 ...
-
-        for (var i = 0; i < iwzv.Length; i++)
-            iwzv[i] = 0.0;
-
-        for (var j = nact; j < work.Length; j++)
-            for (var i = 0; i < iwzv.Length; i++)
-                iwzv[i] += dmat[j, i] * work[j];
-
-        // ... and r = R^{-1} d_1, check also if r has positive elements
-        // (among the entries corresponding to inequalities constraints). 
-
-        l1 = 0;
-        var it1 = 0; // NOSONAR - initialized to default, may be conditionally set in loop
-        double t1 = 0;
-        var t1inf = true;
-
-        for (var i = nact - 1; i >= 0; i--)
-        {
-            sum = work[i];
-            l = (i + 1) * (i + 4) / 2 - 1;
-            l1 = l - i - 1;
-
-            for (var j = i + 1; j < nact; j++)
-            {
-                sum -= iwrm[l] * iwrv[j];
-                l += j + 1;
-            }
-
-            sum /= iwrm[l1];
-
-            iwrv[i] = sum;
-
-            if (iact[i] < meq)
-                continue;
-
-            if (sum <= 0.0)
-                continue;
-
-            if (double.IsNaN(sum))
-                continue;
-
-            t1inf = false;
-            it1 = i + 1;
-        }
-        // if r has positive elements, find the partial step length t1, which is 
-        // the maximum step in dual space without violating dual feasibility. 
-        // it1 stores in which component t1, the min of u/r, occurs. 
-
-        if (!t1inf)
-        {
-            t1 = iwuv[it1 - 1] / iwrv[it1 - 1];
-
-            for (var i = 0; i < nact; i++)
-            {
-                if (iact[i] < meq)
-                    continue;
-
-                if (iwrv[i] <= 0.0)
-                    continue;
-
-                temp = iwuv[i] / iwrv[i];
-
-                if (temp < t1)
+                for (var i = 0; i < work.Length; i++)
                 {
-                    t1 = temp;
+                    sum = 0.0;
+                    for (var j = 0; j < n; j++)
+                        sum += dmat[i, j] * amat[nvl, j];
+
+                    work[i] = sum;
+                }
+
+                // Now calculate z = J_2 d_2 ...
+
+                for (var i = 0; i < iwzv.Length; i++)
+                    iwzv[i] = 0.0;
+
+                for (var j = nact; j < work.Length; j++)
+                    for (var i = 0; i < iwzv.Length; i++)
+                        iwzv[i] += dmat[j, i] * work[j];
+
+                // ... and r = R^{-1} d_1, check also if r has positive elements
+                // (among the entries corresponding to inequalities constraints).
+
+                var it1 = 0;
+                double t1 = 0;
+                var t1inf = true;
+
+                for (var i = nact - 1; i >= 0; i--)
+                {
+                    sum = work[i];
+                    l = (i + 1) * (i + 4) / 2 - 1;
+                    l1 = l - i - 1;
+
+                    for (var j = i + 1; j < nact; j++)
+                    {
+                        sum -= iwrm[l] * iwrv[j];
+                        l += j + 1;
+                    }
+
+                    sum /= iwrm[l1];
+
+                    iwrv[i] = sum;
+
+                    if (iact[i] < meq)
+                        continue;
+
+                    if (sum <= 0.0)
+                        continue;
+
+                    if (double.IsNaN(sum))
+                        continue;
+
+                    t1inf = false;
                     it1 = i + 1;
                 }
-            }
-        }
-        // test if the z vector is equal to zero 
 
-        sum = 0.0;
-        for (var i = 0; i < iwzv.Length; i++)
-            sum += iwzv[i] * iwzv[i];
+                // if r has positive elements, find the partial step length t1, which is
+                // the maximum step in dual space without violating dual feasibility.
 
-        if (Math.Abs(sum) <= Constants.DoubleEpsilon)
-        {
-            // No step in primal space such that the new constraint becomes 
-            // feasible. Take step in dual space and drop a constant. 
-
-            if (t1inf)
-            {
-                // No step in dual space possible 
-                // either, problem is not solvable
-                ierr = 1;
-                return;
-            }
-            // we take a partial step in dual space and drop constraint it1, 
-            // that is, we drop the it1-th active constraint. 
-            // then we continue at step 2(a) (marked by label 55) 
-
-            for (var i = 0; i < nact; i++)
-                iwuv[i] -= t1 * iwrv[i];
-
-            iwuv[nact] += t1;
-            goto L700;
-        }
-        // compute full step length t2, minimum step in primal space such that 
-        // the constraint becomes feasible. 
-        // keep sum (which is z^Tn^+) to update crval below! 
-
-        sum = 0.0;
-        for (var i = 0; i < iwzv.Length; i++)
-            sum += iwzv[i] * amat[nvl, i];
-
-        tt = -iwsv[nvl] / sum;
-        var t2min = true;
-
-        if (!t1inf)
-            if (t1 < tt)
-            {
-                tt = t1;
-                t2min = false;
-            }
-
-        // take step in primal and dual space 
-        for (var i = 0; i < sol.Length; i++)
-            sol[i] += tt * iwzv[i];
-
-        f += tt * sum * (tt / 2.0 + iwuv[nact]);
-
-        for (var i = 0; i < nact; i++)
-            iwuv[i] -= tt * iwrv[i];
-
-        iwuv[nact] += tt;
-
-        // if it was a full step, then we check whether further constraints are 
-        // violated otherwise we can drop the current constraint and iterate once 
-        // more 
-
-        if (t2min)
-        {
-            // we took a full step. Thus add constraint nvl to the list of active 
-            // constraints and update J and R 
-
-            iact[nact++] = nvl;
-            // to update R we have to put the first nact-1 components of the d vector 
-            // into column (nact) of R 
-
-            l = (nact - 1) * nact / 2;
-            for (var i = 0; i < nact - 1; i++, l++)
-                iwrm[l] = work[i];
-
-            // if now nact=n, then we just have to add the last element to the new 
-            // row of R. 
-
-            // Otherwise we use Givens transformations to turn the vector d(nact:n) 
-            // into a multiple of the first unit vector. That multiple goes into the 
-            // last element of the new row of R and J is accordingly updated by the 
-            // Givens transformations. 
-
-            if (nact == n)
-            {
-                iwrm[l] = work[n - 1];
-            }
-            else
-            {
-                for (var i = n - 1; i >= nact; i--)
+                if (!t1inf)
                 {
-                    // We have to find the Givens rotation which will reduce the element 
-                    // (l1) of d to zero. If it is already zero we don't have to do anything,
-                    // except of decreasing l1 
+                    t1 = iwuv[it1 - 1] / iwrv[it1 - 1];
 
-                    if (work[i] == 0.0)
-                        continue;
-
-                    gc = Math.Max(Math.Abs(work[i - 1]), Math.Abs(work[i]));
-                    gs = Math.Min(Math.Abs(work[i - 1]), Math.Abs(work[i]));
-                    temp = Special.Sign(gc * Math.Sqrt(1.0 + gs * gs / (gc * gc)), work[i - 1]);
-                    gc = work[i - 1] / temp;
-                    gs = work[i] / temp;
-
-                    // The Givens rotation is done with the matrix (gc gs, gs -gc). If
-                    // gc is one, then element (i) of d is zero compared with element 
-                    // (l1-1). Hence we don't have to do anything. If gc is zero, then
-                    // we just have to switch column (i) and column (i-1) of J. Since 
-                    // we only switch columns in J, we have to be careful how we update
-                    // d depending on the sign of gs. Otherwise we have to apply the
-                    // Givens rotation to these columns. The i-1 element of d has to be
-                    // updated to temp. 
-
-                    if (gc == 1.0)
-                        continue;
-
-                    if (gc == 0.0)
+                    for (var i = 0; i < nact; i++)
                     {
-                        work[i - 1] = gs * temp;
+                        if (iact[i] < meq)
+                            continue;
 
-                        for (var j = 0; j < n; j++)
+                        if (iwrv[i] <= 0.0)
+                            continue;
+
+                        temp = iwuv[i] / iwrv[i];
+
+                        if (temp < t1)
                         {
-                            temp = dmat[i - 1, j];
-                            dmat[i - 1, j] = dmat[i, j];
-                            dmat[i, j] = temp;
+                            t1 = temp;
+                            it1 = i + 1;
+                        }
+                    }
+                }
+
+                // test if the z vector is equal to zero
+
+                sum = 0.0;
+                for (var i = 0; i < iwzv.Length; i++)
+                    sum += iwzv[i] * iwzv[i];
+
+                var drop = false;
+
+                if (Math.Abs(sum) <= Constants.DoubleEpsilon)
+                {
+                    // No step in primal space such that the new constraint becomes
+                    // feasible. Take step in dual space and drop a constant.
+
+                    if (t1inf)
+                    {
+                        // No step in dual space possible either, problem is not solvable
+                        ierr = 1;
+                        return;
+                    }
+
+                    // we take a partial step in dual space and drop constraint it1,
+                    // that is, we drop the it1-th active constraint.
+
+                    for (var i = 0; i < nact; i++)
+                        iwuv[i] -= t1 * iwrv[i];
+
+                    iwuv[nact] += t1;
+                    drop = true;
+                }
+                else
+                {
+                    // compute full step length t2, minimum step in primal space such that
+                    // the constraint becomes feasible.
+
+                    sum = 0.0;
+                    for (var i = 0; i < iwzv.Length; i++)
+                        sum += iwzv[i] * amat[nvl, i];
+
+                    tt = -iwsv[nvl] / sum;
+                    var t2min = true;
+
+                    if (!t1inf && t1 < tt)
+                    {
+                        tt = t1;
+                        t2min = false;
+                    }
+
+                    // take step in primal and dual space
+                    for (var i = 0; i < sol.Length; i++)
+                        sol[i] += tt * iwzv[i];
+
+                    f += tt * sum * (tt / 2.0 + iwuv[nact]);
+
+                    for (var i = 0; i < nact; i++)
+                        iwuv[i] -= tt * iwrv[i];
+
+                    iwuv[nact] += tt;
+
+                    if (t2min)
+                    {
+                        // we took a full step. Thus add constraint nvl to the list of active
+                        // constraints and update J and R
+
+                        iact[nact++] = nvl;
+
+                        l = (nact - 1) * nact / 2;
+                        for (var i = 0; i < nact - 1; i++, l++)
+                            iwrm[l] = work[i];
+
+                        if (nact == n)
+                        {
+                            iwrm[l] = work[n - 1];
+                        }
+                        else
+                        {
+                            for (var i = n - 1; i >= nact; i--)
+                            {
+                                if (work[i] == 0.0)
+                                    continue;
+
+                                gc = Math.Max(Math.Abs(work[i - 1]), Math.Abs(work[i]));
+                                gs = Math.Min(Math.Abs(work[i - 1]), Math.Abs(work[i]));
+                                temp = Special.Sign(gc * Math.Sqrt(1.0 + gs * gs / (gc * gc)), work[i - 1]);
+                                gc = work[i - 1] / temp;
+                                gs = work[i] / temp;
+
+                                if (ExactComparisons.AreEqual(gc, 1.0))
+                                    continue;
+
+                                if (gc == 0.0)
+                                {
+                                    work[i - 1] = gs * temp;
+
+                                    for (var j = 0; j < n; j++)
+                                    {
+                                        temp = dmat[i - 1, j];
+                                        dmat[i - 1, j] = dmat[i, j];
+                                        dmat[i, j] = temp;
+                                    }
+                                }
+                                else
+                                {
+                                    work[i - 1] = temp;
+                                    var nu = gs / (gc + 1.0);
+
+                                    for (var j = 0; j < n; j++)
+                                    {
+                                        temp = gc * dmat[i - 1, j] + gs * dmat[i, j];
+                                        dmat[i, j] = nu * (dmat[i - 1, j] + temp) - dmat[i, j];
+                                        dmat[i - 1, j] = temp;
+                                    }
+                                }
+                            }
+
+                            iwrm[l] = work[nact - 1];
                         }
                     }
                     else
                     {
-                        work[i - 1] = temp;
-                        var nu = gs / (gc + 1.0);
+                        // We took a partial step in dual space. Thus drop constraint it1.
 
-                        for (var j = 0; j < n; j++)
+                        sum = -bvec[nvl];
+
+                        for (var j = 0; j < sol.Length; j++)
+                            sum += sol[j] * amat[nvl, j];
+
+                        if (nvl + 1 > meq)
                         {
-                            temp = gc * dmat[i - 1, j] + gs * dmat[i, j];
-                            dmat[i, j] = nu * (dmat[i - 1, j] + temp) - dmat[i, j];
-                            dmat[i - 1, j] = temp;
+                            iwsv[nvl] = sum;
                         }
+                        else
+                        {
+                            iwsv[nvl] = -Math.Abs(sum);
+
+                            if (sum > 0.0)
+                            {
+                                for (var j = 0; j < n; j++)
+                                    amat[nvl, j] = -amat[nvl, j];
+
+                                bvec[nvl] = -bvec[nvl];
+                            }
+                        }
+
+                        drop = true;
                     }
                 }
 
-                // l is still pointing to element (nact,nact) of
-                // the matrix R. So store d(nact) in R(nact,nact) 
-                iwrm[l] = work[nact - 1];
-            }
-        }
-        else
-        {
-            // We took a partial step in dual space. Thus drop constraint it1, 
-            // that is, we drop the it1-th active constraint. Then we continue
-            // at step 2(a) (marked by label 55) but since the fit changed, we
-            // have to recalculate now "how much" the fit violates the chosen
-            // constraint now. 
+                if (!drop)
+                    break;   // jump L50 : start a new iteration
 
-            sum = -bvec[nvl];
+                // Drop constraint it1 (originally labelled L700).
 
-            for (var j = 0; j < sol.Length; j++)
-                sum += sol[j] * amat[nvl, j];
-
-            if (nvl + 1 > meq)
-            {
-                iwsv[nvl] = sum;
-            }
-            else
-            {
-                iwsv[nvl] = -Math.Abs(sum);
-
-                if (sum > 0.0)
+                if (it1 != nact)
                 {
-                    for (var j = 0; j < n; j++)
-                        amat[nvl, j] = -amat[nvl, j];
+                    // After updating one row of R (column of J) we will also come back here (L797)
+                    while (true)
+                    {
+                        // We have to find the Givens rotation which will reduce the element
+                        // (it1+1,it1+1) of R to zero. If it is already zero we don't have to
+                        // do anything except of updating u, iact, and shifting column (it1+1)
+                        // of R to column (it1).
 
-                    bvec[nvl] = -bvec[nvl];
+                        l = it1 * (it1 + 1) / 2;
+                        l1 = l + it1;
+
+                        if (iwrm[l1] != 0.0)
+                        {
+                            gc = Math.Max(Math.Abs(iwrm[l1 - 1]), Math.Abs(iwrm[l1]));
+                            gs = Math.Min(Math.Abs(iwrm[l1 - 1]), Math.Abs(iwrm[l1]));
+                            temp = Special.Sign(gc * Math.Sqrt(1.0 + gs * gs / (gc * gc)), iwrm[l1 - 1]);
+                            gc = iwrm[l1 - 1] / temp;
+                            gs = iwrm[l1] / temp;
+
+                            if (!ExactComparisons.AreEqual(gc, 1.0))
+                            {
+                                if (gc == 0.0)
+                                {
+                                    for (var i = it1; i < nact; i++)
+                                    {
+                                        temp = iwrm[l1 - 1];
+                                        iwrm[l1 - 1] = iwrm[l1];
+                                        iwrm[l1] = temp;
+                                        l1 += i + 1;
+                                    }
+
+                                    for (var i = 0; i < n; i++)
+                                    {
+                                        temp = dmat[it1 - 1, i];
+                                        dmat[it1 - 1, i] = dmat[it1, i];
+                                        dmat[it1, i] = temp;
+                                    }
+                                }
+                                else
+                                {
+                                    var nu = gs / (gc + 1.0);
+
+                                    for (var i = it1; i < nact; i++)
+                                    {
+                                        temp = gc * iwrm[l1 - 1] + gs * iwrm[l1];
+                                        iwrm[l1] = nu * (iwrm[l1 - 1] + temp) - iwrm[l1];
+                                        iwrm[l1 - 1] = temp;
+                                        l1 += i + 1;
+                                    }
+
+                                    for (var i = 0; i < n; i++)
+                                    {
+                                        temp = gc * dmat[it1 - 1, i] + gs * dmat[it1, i];
+                                        dmat[it1, i] = nu * (dmat[it1 - 1, i] + temp) - dmat[it1, i];
+                                        dmat[it1 - 1, i] = temp;
+                                    }
+                                }
+                            }
+                        }
+
+                        // shift column (it1+1) of R to column (it1) (L798)
+
+                        l1 = l - it1;
+                        for (var i = 0; i < it1; i++, l++, l1++) iwrm[l1] = iwrm[l];
+
+                        // update vector u and iact as necessary
+
+                        iwuv[it1 - 1] = iwuv[it1];
+                        iact[it1 - 1] = iact[it1];
+                        it1++;
+
+                        if (it1 < nact)
+                            continue;   // jump L797
+
+                        break;
+                    }
                 }
-            }
 
-            goto L700;
-        }
+                // L799: finish dropping the constraint
 
-        goto L50;
-    L700: // Drop constraint it1 
+                iwuv[nact - 1] = iwuv[nact];
+                iwuv[nact] = 0.0;
+                iact[nact - 1] = -1;
 
-        // if it1 = nact it is only necessary
-        // to update the vector u and nact
+                nact--;
+                Deletions++;
 
-        if (it1 == nact)
-            goto L799;
-        L797: // After updating one row of R (column of J) we will also come back here
-
-        // We have to find the Givens rotation which will reduce the element
-        // (it1+1,it1+1) of R to zero. If it is already zero we don't have to
-        // do anything except of updating u, iact, and shifting column (it1+1)
-        // of R to column (it1). Then l  will point to element (1,it1+1) of R 
-        // and l1 will point to element (it1+1,it1+1) of R.
-
-        l = it1 * (it1 + 1) / 2;
-        l1 = l + it1;
-
-        if (iwrm[l1] == 0.0)
-            goto L798;
-
-        gc = Math.Max(Math.Abs(iwrm[l1 - 1]), Math.Abs(iwrm[l1]));
-        gs = Math.Min(Math.Abs(iwrm[l1 - 1]), Math.Abs(iwrm[l1]));
-        temp = Special.Sign(gc * Math.Sqrt(1.0 + gs * gs / (gc * gc)), iwrm[l1 - 1]);
-        gc = iwrm[l1 - 1] / temp;
-        gs = iwrm[l1] / temp;
-        // The Givens rotation is done with the matrix (gc gs, gs -gc). If gc is
-        // one, then element (it1+1,it1+1) of R is zero compared with element 
-        // (it1,it1+1). Hence we don't have to do anything. if gc is zero, then
-        // we just have to switch row (it1) and row (it1+1) of R and column (it1)
-        // and column (it1+1) of J. Since we switch rows in R and columns in J,
-        // we can ignore the sign of gs. Otherwise we have to apply the Givens 
-        // rotation to these rows/columns. 
-
-        if (gc == 1.0)
-            goto L798;
-
-        if (gc == 0.0)
-        {
-            for (var i = it1; i < nact; i++)
-            {
-                temp = iwrm[l1 - 1];
-                iwrm[l1 - 1] = iwrm[l1];
-                iwrm[l1] = temp;
-                l1 += i + 1;
-            }
-
-            for (var i = 0; i < n; i++)
-            {
-                temp = dmat[it1 - 1, i];
-                dmat[it1 - 1, i] = dmat[it1, i];
-                dmat[it1, i] = temp;
+                // jump L55 : recompute the search direction for the currently violated constraint
             }
         }
-        else
-        {
-            var nu = gs / (gc + 1.0);
-
-            for (var i = it1; i < nact; i++)
-            {
-                temp = gc * iwrm[l1 - 1] + gs * iwrm[l1];
-                iwrm[l1] = nu * (iwrm[l1 - 1] + temp) - iwrm[l1];
-                iwrm[l1 - 1] = temp;
-                l1 += i + 1;
-            }
-
-            for (var i = 0; i < n; i++)
-            {
-                temp = gc * dmat[it1 - 1, i] + gs * dmat[it1, i];
-                dmat[it1, i] = nu * (dmat[it1 - 1, i] + temp) - dmat[it1, i];
-                dmat[it1 - 1, i] = temp;
-            }
-        }
-
-    L798:
-
-        // shift column (it1+1) of R to column (it1) (that is, the first it1 
-        // elements). The position of element (1,it1+1) of R was calculated 
-        // above and stored in l. 
-
-        l1 = l - it1;
-        for (var i = 0; i < it1; i++, l++, l1++) iwrm[l1] = iwrm[l];
-
-        // update vector u and iact as necessary 
-        // Continue with updating the matrices J and R 
-
-        iwuv[it1 - 1] = iwuv[it1];
-        iact[it1 - 1] = iact[it1];
-        it1++;
-
-        if (it1 < nact)
-            goto L797;
-
-        L799:
-
-        iwuv[nact - 1] = iwuv[nact];
-        iwuv[nact] = 0.0;
-        iact[nact - 1] = -1;
-
-        nact--;
-        Deletions++;
-
-        goto L55;
     }
 
     private void dpori(double[,] a)

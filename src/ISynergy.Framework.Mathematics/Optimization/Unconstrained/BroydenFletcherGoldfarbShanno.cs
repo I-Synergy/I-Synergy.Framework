@@ -28,12 +28,6 @@
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.ComponentModel;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1192, S1854 // duplicate strings and useless assignments are inherent in ported optimization algorithms
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -168,7 +162,7 @@ public enum LineSearch
     ///         and the curvature condition,
     ///     </para>
     ///     <code>
-    ///   - g(x + a * d)^T d ≥ lbfgs_parameter_t::wolfe * g(x)^T d,
+    ///   - g(x + a * d)^T d ≥ LbfgsParameters::wolfe * g(x)^T d,
     ///  </code>
     ///     where x is the current point, d is the current search direction, and
     ///     a is the step length.
@@ -185,7 +179,7 @@ public enum LineSearch
     ///         and the following condition,
     ///     </para>
     ///     <code>
-    ///     - |g(x + a * d)^T d| ≤ lbfgs_parameter_t::wolfe * |g(x)^T d|,</code>
+    ///     - |g(x + a * d)^T d| ≤ LbfgsParameters::wolfe * |g(x)^T d|,</code>
     ///     <para>
     ///         where x is the current point, d is the current search direction, and
     ///         a is the step length.
@@ -304,7 +298,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
             throw OperationException("Orthant-wise updates are only available with Regular Wolfe line search.",
                 "LBFGSERR_INVALID_LINESEARCH");
 
-        var param = new lbfgs_parameter_t
+        var param = new LbfgsParameters
         {
             m = m,
             epsilon = epsilon,
@@ -324,7 +318,7 @@ public class BroydenFletcherGoldfarbShanno : BaseGradientOptimizationMethod,
             orthantwise_end = orthantwise_end
         };
 
-        var ret = (LBFGS.Code)LBFGS.main(Solution, Function, Gradient, Progress, param);
+        var ret = (Lbfgs.Code)Lbfgs.main(Solution, Function, Gradient, Progress, param);
 
         Status = (BroydenFletcherGoldfarbShannoStatus)ret;
 

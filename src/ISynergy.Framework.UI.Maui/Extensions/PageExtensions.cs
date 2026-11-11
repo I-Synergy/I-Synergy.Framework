@@ -6,13 +6,20 @@ namespace ISynergy.Framework.UI.Extensions;
 public static partial class PageExtensions
 {
     /// <summary>
-    /// Applies the culture to head-specific window chrome. Windows mirrors it onto the native title
-    /// bar once the page is attached to a window; other heads have nothing to do.
+    /// Applies the culture to head-specific window chrome. On Windows this mirrors it onto the native
+    /// title bar once the page is attached to a window; other heads have nothing to do.
     /// </summary>
     /// <typeparam name="T">The page type.</typeparam>
     /// <param name="page">The MAUI page.</param>
     /// <param name="cultureName">The culture name.</param>
-    static partial void ApplyPlatformFlowDirection<T>(T page, string cultureName) where T : Page;
+    static void ApplyPlatformFlowDirection<T>(T page, string cultureName) where T : Page
+    {
+#if WINDOWS
+        ApplyWindowsFlowDirection(page, cultureName);
+#else
+        _ = (page, cultureName);
+#endif
+    }
 
     /// <summary>
     /// Applies flow direction to both the MAUI page and (on Windows) the native title bar.
@@ -55,7 +62,7 @@ public static partial class PageExtensions
         if (page is NavigationPage navPage && navPage.CurrentPage is Page currentPage)
             currentPage.ApplyFlowDirection(cultureName);
 
-        // Head-specific title bar work (Windows only today); unimplemented heads do nothing.
+        // Head-specific title bar work (no-op outside Windows).
         ApplyPlatformFlowDirection(page, cultureName);
 
         return page;

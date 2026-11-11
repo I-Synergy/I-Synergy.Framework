@@ -1,10 +1,5 @@
 using ISynergy.Framework.Core.Ranges;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -24,6 +19,7 @@ public static partial class Matrix
             return values.GetLength(0);
         return values.GetLength(1);
     }
+
     /// <summary>
     ///     Gets the maximum and minimum values in a matrix.
     /// </summary>
@@ -50,6 +46,7 @@ public static partial class Matrix
                     max = values[i][j];
             }
     }
+
     /// <summary>
     ///     Gets the range of the values across the columns of a matrix.
     /// </summary>
@@ -107,6 +104,7 @@ public static partial class Matrix
 
         return ranges;
     }
+
     #region Matrix ArgMin/ArgMax
 
     /// <summary>
@@ -144,6 +142,7 @@ public static partial class Matrix
         Max(matrix, dimension, result, values);
         return result;
     }
+
     /// <summary>
     ///     Gets the index of the minimum element in a matrix.
     /// </summary>
@@ -181,7 +180,6 @@ public static partial class Matrix
     }
 
     #endregion
-    #region Matrix Min/Max
 
     /// <summary>
     ///     Gets the maximum value of a matrix.
@@ -196,27 +194,6 @@ public static partial class Matrix
                     max = matrix[i][j];
 
         return max;
-    }
-
-    /// <summary>
-    ///     Gets the minimum value of a matrix.
-    /// </summary>
-    public static T Min<T>(this T[][] matrix)
-        where T : IComparable<T>
-    {
-        Tuple<int, int> index;
-        return Min(matrix, out index);
-    }
-    /// <summary>
-    ///     Gets the minimum values across one dimension of a matrix.
-    /// </summary>
-    public static T[] Min<T>(this T[][] matrix, int dimension) // NOSONAR
-        where T : IComparable<T>
-    {
-        var s = GetLength(matrix, dimension);
-        var result = new T[s];
-        var indices = new int[s];
-        return Min(matrix, dimension, indices, result);
     }
 
     /// <summary>
@@ -243,28 +220,6 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///     Gets the minimum values across one dimension of a matrix.
-    /// </summary>
-    public static T[] Min<T>(this T[][] matrix, int dimension, T[] result) // NOSONAR
-        where T : IComparable<T>
-    {
-        var s = GetLength(matrix, dimension);
-        var indices = new int[s];
-        return Min(matrix, dimension, indices, result);
-    }
-    /// <summary>
-    ///     Gets the minimum values across one dimension of a matrix.
-    /// </summary>
-    public static T[] Min<T>(this T[][] matrix, int dimension, out int[] indices) // NOSONAR
-        where T : IComparable<T>
-    {
-        var s = GetLength(matrix, dimension);
-        var result = new T[s];
-        indices = new int[s];
-        return Min(matrix, dimension, indices, result);
-    }
-
-    /// <summary>
     ///     Gets the maximum values across one dimension of a matrix.
     /// </summary>
     public static T[] Max<T>(this T[][] matrix, int dimension, out int[] indices)
@@ -288,20 +243,6 @@ public static partial class Matrix
     }
 
     /// <summary>
-    ///     Gets the minimum values across one dimension of a matrix.
-    /// </summary>
-    public static T[] Min<T>(this T[][] matrix, int dimension, out int[] indices, T[] result) // NOSONAR
-        where T : IComparable<T>
-    {
-        var s = GetLength(matrix, dimension);
-        indices = new int[s];
-        return Min(matrix, dimension, indices, result);
-    }
-
-    #endregion
-    #region Core implementations
-
-    /// <summary>
     ///     Gets the maximum value of a matrix.
     /// </summary>
     public static T Max<T>(this T[][] matrix, out Tuple<int, int> imax)
@@ -319,26 +260,6 @@ public static partial class Matrix
                 }
 
         return max;
-    }
-
-    /// <summary>
-    ///     Gets the minimum value of a matrix.
-    /// </summary>
-    public static T Min<T>(this T[][] matrix, out Tuple<int, int> imin)
-        where T : IComparable<T>
-    {
-        var min = matrix[0][0];
-        imin = Tuple.Create(0, 0);
-
-        for (var i = 0; i < matrix.Length; i++)
-            for (var j = 0; j < matrix[i].Length; j++)
-                if (matrix[i][j].CompareTo(min) < 0)
-                {
-                    min = matrix[i][j];
-                    imin = Tuple.Create(i, j);
-                }
-
-        return min;
     }
 
     /// <summary>
@@ -372,6 +293,83 @@ public static partial class Matrix
 
         return result;
     }
+
+    /// <summary>
+    ///     Gets the minimum value of a matrix.
+    /// </summary>
+    public static T Min<T>(this T[][] matrix)
+        where T : IComparable<T>
+    {
+        Tuple<int, int> index;
+        return Min(matrix, out index);
+    }
+
+    /// <summary>
+    ///     Gets the minimum values across one dimension of a matrix.
+    /// </summary>
+    public static T[] Min<T>(this T[][] matrix, int dimension) // NOSONAR
+        where T : IComparable<T>
+    {
+        var s = GetLength(matrix, dimension);
+        var result = new T[s];
+        var indices = new int[s];
+        return Min(matrix, dimension, indices, result);
+    }
+
+    /// <summary>
+    ///     Gets the minimum values across one dimension of a matrix.
+    /// </summary>
+    public static T[] Min<T>(this T[][] matrix, int dimension, T[] result) // NOSONAR
+        where T : IComparable<T>
+    {
+        var s = GetLength(matrix, dimension);
+        var indices = new int[s];
+        return Min(matrix, dimension, indices, result);
+    }
+
+    /// <summary>
+    ///     Gets the minimum values across one dimension of a matrix.
+    /// </summary>
+    public static T[] Min<T>(this T[][] matrix, int dimension, out int[] indices) // NOSONAR
+        where T : IComparable<T>
+    {
+        var s = GetLength(matrix, dimension);
+        var result = new T[s];
+        indices = new int[s];
+        return Min(matrix, dimension, indices, result);
+    }
+
+    /// <summary>
+    ///     Gets the minimum values across one dimension of a matrix.
+    /// </summary>
+    public static T[] Min<T>(this T[][] matrix, int dimension, out int[] indices, T[] result) // NOSONAR
+        where T : IComparable<T>
+    {
+        var s = GetLength(matrix, dimension);
+        indices = new int[s];
+        return Min(matrix, dimension, indices, result);
+    }
+
+    /// <summary>
+    ///     Gets the minimum value of a matrix.
+    /// </summary>
+    public static T Min<T>(this T[][] matrix, out Tuple<int, int> imin)
+        where T : IComparable<T>
+    {
+        var min = matrix[0][0];
+        imin = Tuple.Create(0, 0);
+
+        for (var i = 0; i < matrix.Length; i++)
+            for (var j = 0; j < matrix[i].Length; j++)
+                if (matrix[i][j].CompareTo(min) < 0)
+                {
+                    min = matrix[i][j];
+                    imin = Tuple.Create(i, j);
+                }
+
+        return min;
+    }
+
     /// <summary>
     ///     Gets the minimum values across one dimension of a matrix.
     /// </summary>
@@ -404,5 +402,4 @@ public static partial class Matrix
         return result;
     }
 
-    #endregion
 }

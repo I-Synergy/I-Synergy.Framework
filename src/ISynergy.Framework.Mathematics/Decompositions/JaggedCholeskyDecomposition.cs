@@ -1,13 +1,10 @@
+﻿using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
+using ISynergy.Framework.Mathematics.Abstractions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -37,7 +34,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 ///     </para>
 /// </remarks>
 [Serializable]
-public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomposition<double>
+public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomposition<double>, IDeserializationCallback
 {
     private const string DestroyedMessage = "The decomposition has been destroyed.";
     private const string UndefinedMessage = "The decomposition is undefined (zero in diagonal).";
@@ -76,17 +73,18 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     ///     location (lower part will contain the decomposition's L matrix, upper part will contains
     ///     the original matrix).
     /// </param>
-    public JaggedCholeskyDecomposition(double[][] value, bool robust = false,
+    public JaggedCholeskyDecomposition(Jagged<double> value, bool robust = false,
         bool inPlace = false, MatrixType valueType = MatrixType.UpperTriangular)
     {
-        if (value.Rows() != value.Columns())
+        var matrix = value.Array;
+        if (matrix.Rows() != matrix.Columns())
             throw new DimensionMismatchException(nameof(value), "Matrix is not square.");
 
         if (!inPlace)
-            value = value.Copy();
+            matrix = matrix.Copy();
 
-        n = value.Rows();
-        L = value.ToUpperTriangular(valueType, value);
+        n = matrix.Rows();
+        L = matrix.ToUpperTriangular(valueType, new Jagged<double>(matrix));
         this.robust = robust;
 
         if (robust)
@@ -250,7 +248,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
-    public double[][] Solve(double[][] value)
+    public double[][] Solve(Jagged<double> value)
     {
         return Solve(value, false);
     }
@@ -269,125 +267,6 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     }
 
     /// <summary>
-    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
-    /// </summary>
-    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
-    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
-    public double[][] SolveForDiagonal(double[] diagonal)
-    {
-        ArgumentNullException.ThrowIfNull(diagonal);
-
-        return Solve(Jagged.Diagonal(diagonal));
-    }
-
-    /// <summary>
-    ///     Solves a set of equation systems of type <c>A * X = I</c>.
-    /// </summary>
-    public double[][] Inverse()
-    {
-        return Solve(Jagged.Identity<double>(n));
-    }
-
-    /// <summary>
-    ///     Reverses the decomposition, reconstructing the original matrix <c>X</c>.
-    /// </summary>
-    public double[][] Reverse()
-    {
-        if (destroyed)
-            throw new InvalidOperationException(DestroyedMessage);
-
-        if (IsUndefined)
-            throw new InvalidOperationException(UndefinedMessage);
-
-        if (robust)
-            return LeftTriangularFactor.Dot(DiagonalMatrix).DotWithTransposed(LeftTriangularFactor);
-        return LeftTriangularFactor.DotWithTransposed(LeftTriangularFactor);
-    }
-
-    /// <summary>
-    ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
-    ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[][])" />
-    ///     methods.
-    /// </summary>
-    public double[][] GetInformationMatrix()
-    {
-        var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
-    }
-
-    private void LLt()
-    {
-        Diagonal = Vector.Ones<double>(n);
-
-        positiveDefinite = true;
-
-        for (var j = 0; j < n; j++)
-        {
-            double s = 0;
-            for (var k = 0; k < j; k++)
-            {
-                var t = L[k][j];
-                for (var i = 0; i < k; i++)
-                    t -= L[j][i] * L[k][i];
-                t = t / L[k][k];
-
-                L[j][k] = t;
-                s += t * t;
-            }
-
-            s = L[j][j] - s;
-
-            // Use a tolerance for positive-definiteness
-            positiveDefinite &= s > 1e-14 * Math.Abs(L[j][j]);
-
-            L[j][j] = Math.Sqrt(s);
-        }
-    }
-    private void LDLt()
-    {
-        Diagonal = new double[n];
-
-        positiveDefinite = true;
-
-        var v = new double[n];
-        for (var i = 0; i < L.Length; i++)
-        {
-            for (var j = 0; j < i; j++)
-                v[j] = L[i][j] * Diagonal[j];
-
-            double d = 0;
-            for (var k = 0; k < i; k++)
-                d += L[i][k] * v[k];
-
-            d = Diagonal[i] = v[i] = L[i][i] - d;
-
-            // Use a tolerance for positive-definiteness
-            positiveDefinite &= v[i] > 1e-14 * Math.Abs(L[i][i]);
-
-            // If one of the diagonal elements is zero, the 
-            // decomposition (without pivoting) is undefined.
-            if (v[i] == 0)
-            {
-                IsUndefined = true;
-                return;
-            }
-
-            Parallel.For(i + 1, L.Length, k =>
-            {
-                double s = 0;
-                for (var j = 0; j < i; j++)
-                    s += L[k][j] * v[j];
-
-                L[k][i] = (L[i][k] - s) / d;
-            });
-        }
-
-        for (var i = 0; i < L.Length; i++)
-            L[i][i] = 1;
-    }
-
-    /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = B</c>.
     /// </summary>
     /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
@@ -396,11 +275,12 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
-    public double[][] Solve(double[][] value, bool inPlace)
+    public double[][] Solve(Jagged<double> value, bool inPlace)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Length != n)
+        if (valueArray.Length != n)
             throw new ArgumentException(
                 "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
 
@@ -413,7 +293,7 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
         if (IsUndefined)
             throw new InvalidOperationException(UndefinedMessage);
 
-        var B = inPlace ? value : value.MemberwiseClone();
+        var B = inPlace ? valueArray : valueArray.MemberwiseClone();
 
         for (var k = 0; k < n; k++)
             for (var j = 0; j < B[k].Length; j++)
@@ -487,6 +367,125 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
         }
 
         return B;
+    }
+
+    /// <summary>
+    ///     Solves a set of equation systems of type <c>A * X = B</c> where B is a diagonal matrix.
+    /// </summary>
+    /// <param name="diagonal">Diagonal fo the right hand side matrix with as many rows as <c>A</c>.</param>
+    /// <returns>Matrix <c>X</c> so that <c>L * U * X = B</c>.</returns>
+    public double[][] SolveForDiagonal(double[] diagonal)
+    {
+        ArgumentNullException.ThrowIfNull(diagonal);
+
+        return Solve(new Jagged<double>(Jagged.Diagonal(diagonal)));
+    }
+
+    /// <summary>
+    ///     Solves a set of equation systems of type <c>A * X = I</c>.
+    /// </summary>
+    public double[][] Inverse()
+    {
+        return Solve(new Jagged<double>(Jagged.Identity<double>(n)));
+    }
+
+    /// <summary>
+    ///     Reverses the decomposition, reconstructing the original matrix <c>X</c>.
+    /// </summary>
+    public double[][] Reverse()
+    {
+        if (destroyed)
+            throw new InvalidOperationException(DestroyedMessage);
+
+        if (IsUndefined)
+            throw new InvalidOperationException(UndefinedMessage);
+
+        if (robust)
+            return Matrix.DotWithTransposed(new Jagged<double>(Matrix.Dot(new Jagged<double>(LeftTriangularFactor), new Jagged<double>(DiagonalMatrix))), new Jagged<double>(LeftTriangularFactor));
+        return Matrix.DotWithTransposed(new Jagged<double>(LeftTriangularFactor), new Jagged<double>(LeftTriangularFactor));
+    }
+
+    /// <summary>
+    ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
+    ///     matrix can be used to determine standard errors for the coefficients when
+    ///     solving a linear set of equations through any of the <see cref="Solve(Jagged{Double})" />
+    ///     methods.
+    /// </summary>
+    public double[][] GetInformationMatrix()
+    {
+        var X = Reverse();
+        return Matrix.TransposeAndDot(new Jagged<double>(X), new Jagged<double>(X)).Inverse();
+    }
+
+    private void LLt()
+    {
+        Diagonal = Vector.Ones<double>(n);
+
+        positiveDefinite = true;
+
+        for (var j = 0; j < n; j++)
+        {
+            double s = 0;
+            for (var k = 0; k < j; k++)
+            {
+                var t = L[k][j];
+                for (var i = 0; i < k; i++)
+                    t -= L[j][i] * L[k][i];
+                t = t / L[k][k];
+
+                L[j][k] = t;
+                s += t * t;
+            }
+
+            s = L[j][j] - s;
+
+            // Use a tolerance for positive-definiteness
+            positiveDefinite &= s > 1e-14 * Math.Abs(L[j][j]);
+
+            L[j][j] = Math.Sqrt(s);
+        }
+    }
+    private void LDLt()
+    {
+        Diagonal = new double[n];
+
+        positiveDefinite = true;
+
+        var v = new double[n];
+        for (var i = 0; i < L.Length; i++)
+        {
+            for (var j = 0; j < i; j++)
+                v[j] = L[i][j] * Diagonal[j];
+
+            double d = 0;
+            for (var k = 0; k < i; k++)
+                d += L[i][k] * v[k];
+
+            d = Diagonal[i] = v[i] = L[i][i] - d;
+
+            // Use a tolerance for positive-definiteness
+            positiveDefinite &= v[i] > 1e-14 * Math.Abs(L[i][i]);
+
+            // If one of the diagonal elements is zero, the 
+            // decomposition (without pivoting) is undefined.
+            if (v[i] == 0)
+            {
+                IsUndefined = true;
+                return;
+            }
+
+            Parallel.For(i + 1, L.Length, k =>
+            {
+                double s = 0;
+                for (var j = 0; j < i; j++)
+                    s += L[k][j] * v[j];
+
+                L[k][i] = (L[i][k] - s) / d;
+            });
+        }
+
+        for (var i = 0; i < L.Length; i++)
+            L[i][i] = 1;
     }
 
     /// <summary>
@@ -643,11 +642,11 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
     ///     an already computed left triangular matrix <c>L</c>.
     /// </summary>
     /// <param name="leftTriangular">The left triangular matrix from a Cholesky decomposition.</param>
-    public static JaggedCholeskyDecomposition FromLeftTriangularMatrix(double[][] leftTriangular)
+    public static JaggedCholeskyDecomposition FromLeftTriangularMatrix(Jagged<double> leftTriangular)
     {
         var chol = new JaggedCholeskyDecomposition();
-        chol.n = leftTriangular.Length;
-        chol.L = leftTriangular;
+        chol.n = leftTriangular.Rows;
+        chol.L = leftTriangular.Array;
         chol.positiveDefinite = true;
         chol.robust = false;
         chol.Diagonal = Vector.Ones<double>(chol.n);
@@ -676,6 +675,12 @@ public sealed class JaggedCholeskyDecomposition : ICloneable, ISolverArrayDecomp
         clone.robust = robust;
         clone.positiveDefinite = positiveDefinite;
         return clone;
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (L is null || L.Length != n)
+            throw new SerializationException("The deserialized Cholesky decomposition is invalid.");
     }
 
     #endregion

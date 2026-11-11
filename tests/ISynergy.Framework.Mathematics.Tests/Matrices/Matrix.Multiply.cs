@@ -1,6 +1,7 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Tests;
 partial class MatrixTest
@@ -16,8 +17,8 @@ partial class MatrixTest
 
         double[] b = [5, 8];
 
-        double[,] expected = Matrix.Dot(a.Transpose(), Matrix.Diagonal(b));
-        double[,] actual = Matrix.TransposeAndDotWithDiagonal(a, b);
+        double[,] expected = Matrix.Dot(new Matrix<double>(a.Transpose()), new Matrix<double>(Matrix.Diagonal(b)));
+        double[,] actual = Matrix.TransposeAndDotWithDiagonal(new Matrix<double>(a), b);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
     }
@@ -45,7 +46,7 @@ partial class MatrixTest
         };
 
 
-        double[,] actual = Matrix.Dot(a, b);
+        double[,] actual = Matrix.Dot(new Matrix<double>(a), new Matrix<double>(b));
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0001));
     }
@@ -53,27 +54,27 @@ partial class MatrixTest
     [TestMethod]
     public void MultiplyTwoMatrices3()
     {
-        double[][] a = new double[,]
+        double[][] a = new Matrix<double>(new double[,]
         {
           { 3.000, 1.000, 0.000 },
           { 5.000, 2.000, 1.000 }
-        }.ToJagged();
+        }).ToJagged();
 
-        double[][] b = new double[,]
+        double[][] b = new Matrix<double>(new double[,]
         {
           { 2.000, 4.000 },
           { 4.000, 6.000 },
           { 1.000, 9.000 }
-        }.ToJagged();
+        }).ToJagged();
 
-        double[][] expected = new double[,]
+        double[][] expected = new Matrix<double>(new double[,]
         {
           { 10.000, 18.000 },
           { 19.000, 41.000 }
-        }.ToJagged();
+        }).ToJagged();
 
-        double[][] actual = Matrix.Dot(a, b);
-        double[][] actual2 = a.ToMatrix().Dot(b);
+        double[][] actual = Matrix.Dot(new Jagged<double>(a), new Jagged<double>(b));
+        double[][] actual2 = Matrix.Dot(new Matrix<double>(new Jagged<double>(a).ToMatrix()), new Jagged<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual, 0.0001));
         Assert.IsTrue(expected.IsEqual(actual2, 0.0001));
@@ -91,7 +92,7 @@ partial class MatrixTest
          };
         double[] expected = [9.000, 6.000, 12.000, 9.000];
 
-        double[] actual = Matrix.Dot(a, b);
+        double[] actual = Matrix.Dot(a, new Matrix<double>(b));
         Assert.IsTrue(actual.IsEqual(expected));
 
     }
@@ -111,7 +112,7 @@ partial class MatrixTest
                     double[,] B = Matrix.Random(n, m);
                     double[] c = Vector.Random(m);
 
-                    double[] result1 = a.Dot(B, c);
+                    double[] result1 = Matrix.Dot(a, new Matrix<double>(B), c);
                     double[] result2 = new double[B.Columns()];
 
                     for (int k = 0; k < B.Columns(); k++)
@@ -137,7 +138,7 @@ partial class MatrixTest
         double[] b = [2, 3, 1];
         double[] expected = [24, 30];
         double[] actual;
-        actual = Matrix.Dot(a, b);
+        actual = Matrix.Dot(new Matrix<double>(a), b);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.0000001));
     }
@@ -157,7 +158,7 @@ partial class MatrixTest
                     double[] b = Vector.Random(m);
                     double[] c = Vector.Random(n);
 
-                    double[] result1 = A.Dot(b, c);
+                    double[] result1 = Matrix.Dot(new Matrix<double>(A), b, c);
                     double[] result2 = new double[A.Rows()];
 
                     for (int k = 0; k < A.Rows(); k++)
@@ -190,8 +191,8 @@ partial class MatrixTest
         double[] b = B.Diagonal();
 
 
-        double[,] expected = Matrix.Dot(A, B);
-        double[,] actual = Matrix.DotWithDiagonal(A, b);
+        double[,] expected = Matrix.Dot(new Matrix<double>(A), new Matrix<double>(B));
+        double[,] actual = Matrix.DotWithDiagonal(new Matrix<double>(A), b);
 
 
         Assert.IsTrue(expected.IsEqual(actual));
@@ -202,8 +203,8 @@ partial class MatrixTest
     {
         double[,] a = Matrix.Magic(5);
 
-        double[,] expected = Matrix.Dot(a, a.Transpose());
-        double[,] actual = Matrix.DotWithTransposed(a, a);
+        double[,] expected = Matrix.Dot(new Matrix<double>(a), new Matrix<double>(a.Transpose()));
+        double[,] actual = Matrix.DotWithTransposed(new Matrix<double>(a), new Matrix<double>(a));
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -215,8 +216,8 @@ partial class MatrixTest
         double[,] b = Matrix.Random(4, 3);
 
 
-        double[,] expected = Matrix.Dot(a, b.Transpose());
-        double[,] actual = Matrix.DotWithTransposed(a, b);
+        double[,] expected = Matrix.Dot(new Matrix<double>(a), new Matrix<double>(b.Transpose()));
+        double[,] actual = Matrix.DotWithTransposed(new Matrix<double>(a), new Matrix<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -230,8 +231,8 @@ partial class MatrixTest
         double[,] b = Matrix.Random(2, 4);
         double[,] actual = new double[3, 4];
 
-        double[,] expected = Matrix.Dot(a.Transpose(), b);
-        Matrix.TransposeAndDot(a, b, actual);
+        double[,] expected = Matrix.Dot(new Matrix<double>(a.Transpose()), new Matrix<double>(b));
+        Matrix.TransposeAndDot(new Matrix<double>(a), new Matrix<double>(b), new Matrix<double>(actual));
 
         Assert.IsTrue(expected.IsEqual(actual, Tolerance));
     }
@@ -249,8 +250,8 @@ partial class MatrixTest
                     double[,] b = Matrix.Random(j, k);
                     double[,] actual = Matrix.Random(i, k);
 
-                    double[,] expected = a.Transpose().Dot(b);
-                    a.TransposeAndDot(b, actual);
+                    double[,] expected = Matrix.Dot(new Matrix<double>(a.Transpose()), new Matrix<double>(b));
+                    Matrix.TransposeAndDot(new Matrix<double>(a), new Matrix<double>(b), new Matrix<double>(actual));
 
                     Assert.IsTrue(expected.IsEqual(actual, Tolerance));
                 }
@@ -263,8 +264,8 @@ partial class MatrixTest
         double[,] b = Matrix.Random(2, 3);
         double[,] actual = new double[5, 2];
 
-        double[,] expected = Matrix.Dot(a, b.Transpose());
-        Matrix.DotWithTransposed(a, b, actual);
+        double[,] expected = Matrix.Dot(new Matrix<double>(a), new Matrix<double>(b.Transpose()));
+        Matrix.DotWithTransposed(new Matrix<double>(a), new Matrix<double>(b), new Matrix<double>(actual));
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -282,8 +283,8 @@ partial class MatrixTest
                     double[,] b = Matrix.Random(j, k);
                     double[,] actual = Matrix.Random(i, j);
 
-                    double[,] expected = a.Dot(b.Transpose());
-                    a.DotWithTransposed(b, actual);
+                    double[,] expected = Matrix.Dot(new Matrix<double>(a), new Matrix<double>(b.Transpose()));
+                    Matrix.DotWithTransposed(new Matrix<double>(a), new Matrix<double>(b), new Matrix<double>(actual));
 
                     Assert.IsTrue(expected.IsEqual(actual, Tolerance));
                 }
@@ -295,8 +296,8 @@ partial class MatrixTest
         double[][] a = Jagged.Random(5, 3);
         double[][] b = Jagged.Random(2, 3);
 
-        double[][] expected = a.Dot(b.Transpose());
-        double[][] actual = a.DotWithTransposed(b);
+        double[][] expected = Matrix.Dot(new Jagged<double>(a), new Jagged<double>(b.Transpose()));
+        double[][] actual = Matrix.DotWithTransposed(new Jagged<double>(a), new Jagged<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -314,8 +315,8 @@ partial class MatrixTest
                     double[][] b = Jagged.Random(j, k);
                     double[][] actual = Jagged.Random(i, j);
 
-                    double[][] expected = a.Dot(b.Transpose());
-                    a.DotWithTransposed(b, actual);
+                    double[][] expected = Matrix.Dot(new Jagged<double>(a), new Jagged<double>(b.Transpose()));
+                    Matrix.DotWithTransposed(new Jagged<double>(a), new Jagged<double>(b), new Jagged<double>(actual));
 
                     Assert.IsTrue(expected.IsEqual(actual, Tolerance));
                 }
@@ -327,8 +328,8 @@ partial class MatrixTest
         double[][] a = Jagged.Random(5, 3);
         double[,] b = Matrix.Random(2, 3);
 
-        double[][] expected = a.Dot(b.Transpose());
-        double[][] actual = a.DotWithTransposed(b);
+        double[][] expected = Matrix.Dot(new Jagged<double>(a), new Matrix<double>(b.Transpose()));
+        double[][] actual = Matrix.DotWithTransposed(new Jagged<double>(a), new Matrix<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -346,8 +347,8 @@ partial class MatrixTest
                     double[,] b = Matrix.Random(j, k);
                     double[][] actual = Jagged.Random(i, j);
 
-                    double[][] expected = a.Dot(b.Transpose());
-                    a.DotWithTransposed(b, actual);
+                    double[][] expected = Matrix.Dot(new Jagged<double>(a), new Matrix<double>(b.Transpose()));
+                    Matrix.DotWithTransposed(new Jagged<double>(a), new Matrix<double>(b), new Jagged<double>(actual));
 
                     Assert.IsTrue(expected.IsEqual(actual, Tolerance));
                 }
@@ -359,8 +360,8 @@ partial class MatrixTest
         double[,] a = Matrix.Random(5, 3);
         double[][] b = Jagged.Random(2, 3);
 
-        double[][] expected = a.Dot(b.Transpose());
-        double[][] actual = a.DotWithTransposed(b);
+        double[][] expected = Matrix.Dot(new Matrix<double>(a), new Jagged<double>(b.Transpose()));
+        double[][] actual = Matrix.DotWithTransposed(new Matrix<double>(a), new Jagged<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual));
     }
@@ -378,8 +379,8 @@ partial class MatrixTest
                     double[][] b = Jagged.Random(j, k);
                     double[][] actual = Jagged.Random(i, j);
 
-                    double[][] expected = a.Dot(b.Transpose());
-                    a.DotWithTransposed(b, actual);
+                    double[][] expected = Matrix.Dot(new Matrix<double>(a), new Jagged<double>(b.Transpose()));
+                    Matrix.DotWithTransposed(new Matrix<double>(a), new Jagged<double>(b), new Jagged<double>(actual));
 
                     Assert.IsTrue(expected.IsEqual(actual, Tolerance));
                 }
@@ -398,12 +399,12 @@ partial class MatrixTest
                     double[,] C = Matrix.Random(a, b);
                     double[] B = Vector.Random(b);
 
-                    double result1 = A.Dot(C).Dot(B);
-                    double result2 = A.DotAndDot(C, B);
+                    double result1 = A.Dot(new Matrix<double>(C)).Dot(B);
+                    double result2 = A.DotAndDot(new Matrix<double>(C), B);
                     Assert.AreEqual(result1, result2, 1e-10);
 
-                    double result3 = A.Dot(C.ToJagged()).Dot(B);
-                    double result4 = A.DotAndDot(C.ToJagged(), B);
+                    double result3 = A.Dot(new Jagged<double>(new Matrix<double>(C).ToJagged())).Dot(B);
+                    double result4 = A.DotAndDot(new Jagged<double>(new Matrix<double>(C).ToJagged()), B);
                     Assert.AreEqual(result1, result3, 1e-10);
                     Assert.AreEqual(result3, result4, 1e-10);
                 }
@@ -434,10 +435,10 @@ partial class MatrixTest
           { 35, 30, 14, 12 },
         };
 
-        double[,] actual1 = a.Kronecker(b);
-        double[,] actual2 = a.Kronecker(b.ToJagged()).ToMatrix();
-        double[,] actual3 = a.ToJagged().Kronecker(b).ToMatrix();
-        double[,] actual4 = a.ToJagged().Kronecker(b.ToJagged()).ToMatrix();
+        double[,] actual1 = Matrix.Kronecker(new Matrix<double>(a), new Matrix<double>(b));
+        double[,] actual2 = new Jagged<double>(Matrix.Kronecker(new Matrix<double>(a), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
+        double[,] actual3 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Matrix<double>(b))).ToMatrix();
+        double[,] actual4 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
 
         Assert.IsTrue(expected.IsEqual(actual1));
         Assert.IsTrue(expected.IsEqual(actual2));
@@ -495,10 +496,10 @@ partial class MatrixTest
                         double[,] a = Matrix.Random(i, j);
                         double[,] b = Matrix.Random(k, l);
 
-                        double[,] result1 = a.Kronecker(b);
-                        double[,] result2 = a.Kronecker(b.ToJagged()).ToMatrix();
-                        double[,] result3 = a.ToJagged().Kronecker(b).ToMatrix();
-                        double[,] result4 = a.ToJagged().Kronecker(b.ToJagged()).ToMatrix();
+                        double[,] result1 = Matrix.Kronecker(new Matrix<double>(a), new Matrix<double>(b));
+                        double[,] result2 = new Jagged<double>(Matrix.Kronecker(new Matrix<double>(a), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
+                        double[,] result3 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Matrix<double>(b))).ToMatrix();
+                        double[,] result4 = new Jagged<double>(Matrix.Kronecker(new Jagged<double>(new Matrix<double>(a).ToJagged()), new Jagged<double>(new Matrix<double>(b).ToJagged()))).ToMatrix();
 
                         Assert.IsTrue(result1.IsEqual(result1, Tolerance));
                         Assert.IsTrue(result1.IsEqual(result2, Tolerance));

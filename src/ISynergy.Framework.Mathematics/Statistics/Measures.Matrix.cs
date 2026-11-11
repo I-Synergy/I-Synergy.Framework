@@ -1,12 +1,8 @@
 
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Statistics;
 
@@ -526,7 +522,7 @@ public static partial class Measures
     public static double[] Quartiles(this double[,] matrix, out NumericRange[] range, QuantileMethod type = QuantileMethod.Default)
     {
         double[] q1, q3;
-        double[] median = Quartiles(matrix, out q1, out q3, type: type);
+        double[] median = Quartiles(new Matrix<double>(matrix), out q1, out q3, type: type);
 
         range = new NumericRange[median.Length];
         for (var i = 0; i < range.Length; i++)
@@ -548,7 +544,7 @@ public static partial class Measures
     public static double[] Quartiles(this double[][] matrix, out NumericRange[] range, QuantileMethod type = QuantileMethod.Default)
     {
         double[] q1, q3;
-        double[] median = Quartiles(matrix, out q1, out q3, type: type);
+        double[] median = Quartiles(new Matrix<double>(matrix), out q1, out q3, type: type);
 
         range = new NumericRange[median.Length];
         for (var i = 0; i < range.Length; i++)
@@ -569,12 +565,13 @@ public static partial class Measures
     /// 
     /// <returns>The second quartile, the median of the given data.</returns>
     /// 
-    public static double[] Quartiles(double[][] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
+    public static double[] Quartiles(Jagged<double> matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
     {
-        ArgumentNullException.ThrowIfNull(matrix);
+        ArgumentNullException.ThrowIfNull(matrix.Array);
 
-        int rows = matrix.Rows();
-        int cols = matrix.Columns();
+        var matrixArray = matrix.Array;
+        int rows = matrixArray.Rows();
+        int cols = matrixArray.Columns();
 
         double[] medians = new double[cols];
         q1 = new double[cols];
@@ -582,7 +579,7 @@ public static partial class Measures
 
         double[] data = new double[rows];
         for (var i = 0; i < cols; i++)
-            medians[i] = matrix.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
+            medians[i] = matrixArray.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
 
         return medians;
     }
@@ -598,12 +595,13 @@ public static partial class Measures
     /// 
     /// <returns>The second quartile, the median of the given data.</returns>
     /// 
-    public static double[] Quartiles(double[,] matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
+    public static double[] Quartiles(Matrix<double> matrix, out double[] q1, out double[] q3, QuantileMethod type = QuantileMethod.Default)
     {
-        ArgumentNullException.ThrowIfNull(matrix);
+        ArgumentNullException.ThrowIfNull(matrix.Array);
 
-        int rows = matrix.Rows();
-        int cols = matrix.Columns();
+        var matrixArray = matrix.Array;
+        int rows = matrixArray.Rows();
+        int cols = matrixArray.Columns();
 
         double[] medians = new double[cols];
         q1 = new double[cols];
@@ -611,7 +609,7 @@ public static partial class Measures
 
         double[] data = new double[rows];
         for (var i = 0; i < cols; i++)
-            medians[i] = matrix.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
+            medians[i] = matrixArray.GetColumn(i, result: data).Quartiles(out q1[i], out q3[i], alreadySorted: false, type: type, inPlace: true);
 
         return medians;
     }
@@ -1005,9 +1003,10 @@ public static partial class Measures
     /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
     /// <returns>Returns the standard error vector for the matrix.</returns>
     /// 
-    public static double[] StandardError(double[,] matrix)
+    public static double[] StandardError(Matrix<double> matrix)
     {
-        return StandardError(matrix.GetLength(0), StandardDeviation(matrix));
+        var matrixArray = matrix.Array;
+        return StandardError(matrixArray.GetLength(0), StandardDeviation(matrixArray));
     }
 
     /// <summary>
@@ -1093,6 +1092,72 @@ public static partial class Measures
     {
         return Scatter(matrix, means, matrix.GetLength(0) - 1, 0);
     }
+
+    /// <summary>
+    ///   Calculates the covariance matrix of a sample matrix.
+    /// </summary> 
+    /// 
+    /// <remarks>
+    ///   In statistics and probability theory, the covariance matrix is a matrix of
+    ///   covariances between elements of a vector. It is the natural generalization
+    ///   to higher dimensions of the concept of the variance of a scalar-valued
+    ///   random variable.
+    /// </remarks>
+    /// 
+    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
+    /// <returns>The covariance matrix.</returns>
+    /// 
+    public static double[][] Covariance(this double[][] matrix)
+    {
+        return Covariance(matrix, Mean(matrix, dimension: 0));
+    }
+
+    /// <summary>
+    ///   Calculates the covariance matrix of a sample matrix.
+    /// </summary>
+    /// 
+    /// <remarks>
+    ///   In statistics and probability theory, the covariance matrix is a matrix of
+    ///   covariances between elements of a vector. It is the natural generalization
+    ///   to higher dimensions of the concept of the variance of a scalar-valued
+    ///   random variable.
+    /// </remarks>
+    /// 
+    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
+    /// <param name="dimension">
+    ///   The dimension of the matrix to consider as observations. Pass 0 if the matrix has
+    ///   observations as rows and variables as columns, pass 1 otherwise. Default is 0.
+    /// </param>
+    /// 
+    /// <returns>The covariance matrix.</returns>
+    /// 
+    public static double[][] Covariance(this double[][] matrix, int dimension)
+    {
+        int size = (dimension == 0) ? matrix.Length : matrix[0].Length;
+        return Scatter(new Jagged<double>(matrix), Mean(matrix, dimension), size - 1, dimension);
+    }
+
+    /// <summary>
+    ///   Calculates the covariance matrix of a sample matrix.
+    /// </summary> 
+    /// 
+    /// <remarks>
+    ///   In statistics and probability theory, the covariance matrix is a matrix of
+    ///   covariances between elements of a vector. It is the natural generalization
+    ///   to higher dimensions of the concept of the variance of a scalar-valued
+    ///   random variable.
+    /// </remarks>
+    /// 
+    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
+    /// <param name="means">The mean value of the given values, if already known.</param>
+    /// 
+    /// <returns>The covariance matrix.</returns>
+    /// 
+    public static double[][] Covariance(this double[][] matrix, double[] means)
+    {
+        return Scatter(new Jagged<double>(matrix), means, matrix.Length - 1, 0);
+    }
+
     /// <summary>
     ///   Calculates the scatter matrix of a sample matrix.
     /// </summary>
@@ -1110,7 +1175,7 @@ public static partial class Measures
     /// 
     public static double[,] Scatter(this double[,] matrix, double[] means)
     {
-        return Scatter(matrix, means, 1.0, 0);
+        return Scatter(new Matrix<double>(matrix), means, 1.0, 0);
     }
 
     /// <summary>
@@ -1131,7 +1196,7 @@ public static partial class Measures
     /// 
     public static double[,] Scatter(this double[,] matrix, double[] means, double divisor)
     {
-        return Scatter(matrix, means, divisor, 0);
+        return Scatter(new Matrix<double>(matrix), means, divisor, 0);
     }
 
     /// <summary>
@@ -1154,7 +1219,7 @@ public static partial class Measures
     /// 
     public static double[,] Scatter(this double[,] matrix, double[] means, int dimension)
     {
-        return Scatter(matrix, means, 1.0, dimension);
+        return Scatter(new Matrix<double>(matrix), means, 1.0, dimension);
     }
 
     /// <summary>
@@ -1230,70 +1295,6 @@ public static partial class Measures
     }
 
     /// <summary>
-    ///   Calculates the covariance matrix of a sample matrix.
-    /// </summary> 
-    /// 
-    /// <remarks>
-    ///   In statistics and probability theory, the covariance matrix is a matrix of
-    ///   covariances between elements of a vector. It is the natural generalization
-    ///   to higher dimensions of the concept of the variance of a scalar-valued
-    ///   random variable.
-    /// </remarks>
-    /// 
-    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
-    /// <returns>The covariance matrix.</returns>
-    /// 
-    public static double[][] Covariance(this double[][] matrix)
-    {
-        return Covariance(matrix, Mean(matrix, dimension: 0));
-    }
-
-    /// <summary>
-    ///   Calculates the covariance matrix of a sample matrix.
-    /// </summary>
-    /// 
-    /// <remarks>
-    ///   In statistics and probability theory, the covariance matrix is a matrix of
-    ///   covariances between elements of a vector. It is the natural generalization
-    ///   to higher dimensions of the concept of the variance of a scalar-valued
-    ///   random variable.
-    /// </remarks>
-    /// 
-    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
-    /// <param name="dimension">
-    ///   The dimension of the matrix to consider as observations. Pass 0 if the matrix has
-    ///   observations as rows and variables as columns, pass 1 otherwise. Default is 0.
-    /// </param>
-    /// 
-    /// <returns>The covariance matrix.</returns>
-    /// 
-    public static double[][] Covariance(this double[][] matrix, int dimension)
-    {
-        int size = (dimension == 0) ? matrix.Length : matrix[0].Length;
-        return Scatter(matrix, Mean(matrix, dimension), size - 1, dimension);
-    }
-
-    /// <summary>
-    ///   Calculates the covariance matrix of a sample matrix.
-    /// </summary> 
-    /// 
-    /// <remarks>
-    ///   In statistics and probability theory, the covariance matrix is a matrix of
-    ///   covariances between elements of a vector. It is the natural generalization
-    ///   to higher dimensions of the concept of the variance of a scalar-valued
-    ///   random variable.
-    /// </remarks>
-    /// 
-    /// <param name="matrix">A number multi-dimensional array containing the matrix values.</param>
-    /// <param name="means">The mean value of the given values, if already known.</param>
-    /// 
-    /// <returns>The covariance matrix.</returns>
-    /// 
-    public static double[][] Covariance(this double[][] matrix, double[] means)
-    {
-        return Scatter(matrix, means, matrix.Length - 1, 0);
-    }
-    /// <summary>
     ///   Calculates the scatter matrix of a sample matrix.
     /// </summary>
     /// 
@@ -1310,7 +1311,7 @@ public static partial class Measures
     /// 
     public static double[][] Scatter(this double[][] matrix, double[] means)
     {
-        return Scatter(matrix, means, 1.0, 0);
+        return Scatter(new Jagged<double>(matrix), means, 1.0, 0);
     }
 
     /// <summary>
@@ -1327,7 +1328,7 @@ public static partial class Measures
     /// <returns>The covariance matrix.</returns>
     public static double[][] Scatter(this double[][] matrix, double[] means, double divisor)
     {
-        return Scatter(matrix, means, divisor, 0);
+        return Scatter(new Jagged<double>(matrix), means, divisor, 0);
     }
 
     /// <summary>
@@ -1350,7 +1351,7 @@ public static partial class Measures
     /// 
     public static double[][] Scatter(this double[][] matrix, double divisor, int dimension = 0)
     {
-        return Scatter(matrix, Mean(matrix, dimension: 0), divisor, dimension);
+        return Scatter(new Jagged<double>(matrix), Mean(matrix, dimension: 0), divisor, dimension);
     }
 
     /// <summary>
@@ -1373,7 +1374,7 @@ public static partial class Measures
     /// 
     public static double[][] Scatter(this double[][] matrix, double[] means, int dimension)
     {
-        return Scatter(matrix, means, 1.0, dimension);
+        return Scatter(new Jagged<double>(matrix), means, 1.0, dimension);
     }
 
     /// <summary>
@@ -1391,9 +1392,10 @@ public static partial class Measures
     ///   Pass 0 to if mean vector is a row vector, 1 otherwise. Default value is 0.
     /// </param>
     /// <returns>The covariance matrix.</returns>
-    public static double[][] Scatter(double[][] matrix, double[] means, double divisor, int dimension)
+    public static double[][] Scatter(Jagged<double> matrix, double[] means, double divisor, int dimension)
     {
-        int rows = matrix.Length;
+        var matrixArray = matrix.Array;
+        int rows = matrixArray.Length;
         if (rows == 0)
             return Array.Empty<double[]>();
         int cols = matrix[0].Length;
@@ -1450,7 +1452,7 @@ public static partial class Measures
     ///   Calculates the weighted pooled covariance matrix from a set of covariance matrices.
     /// </summary>
     /// 
-    public static double[,] PooledCovariance(double[][,] covariances, double[] weights)
+    public static double[,] PooledCovariance(Matrix<double>[] covariances, double[] weights)
     {
         double[,] pooledCov = Matrix.CreateAs(covariances[0]);
 
@@ -1462,7 +1464,8 @@ public static partial class Measures
             if (weightSum != 0)
                 w /= weightSum;
 
-            pooledCov.MultiplyAndAdd(w, covariances[k], result: pooledCov);
+            var pooled = new Matrix<double>(pooledCov);
+            pooled.MultiplyAndAdd(w, covariances[k], result: pooled);
         }
 
         return pooledCov;

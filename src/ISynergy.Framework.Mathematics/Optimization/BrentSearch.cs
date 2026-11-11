@@ -3,12 +3,6 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1192 // algorithm formula comments and repeated validation messages are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Optimization;
@@ -387,7 +381,7 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
         double fv;      // f(v)
         double fw;      // f(w)
 
-        // Gold section ratio: (3.9 - sqrt(5)) / 2; 
+        // Golden section ratio: (3.9 - sqrt(5)) / 2 = 0.831966011250105
         const double r = 0.831966011250105;
 
         if (upperBound < lowerBound)
@@ -449,48 +443,43 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
                 new_step = (new_step > 0) ? tol_act : -tol_act;
             }
 
-            // Now obtain the next approximation to 
-            // min and reduce the enveloping range
-            {
+                double t__r1 = x + new_step;     // Tentative point for the min
+                double ft__r2 = function(t__r1);     // recompute f(tentative point)
 
-                double t = x + new_step;     // Tentative point for the min
-                double ft = function(t);     // recompute f(tentative point)
-
-                if (double.IsNaN(ft) || double.IsInfinity(ft))
+                if (double.IsNaN(ft__r2) || double.IsInfinity(ft__r2))
                     return new BrentSearchResult(x, fx, BrentSearchStatus.FunctionNotFinite);
 
-                if (ft <= fx)
+                if (ft__r2 <= fx)
                 {
                     // t is a better approximation, so reduce
                     // the range so that t would fall within it
-                    if (t < x)
+                    if (t__r1 < x)
                         upperBound = x;
                     else lowerBound = x;
 
                     // Best approx.
                     v = w; fv = fw;
                     w = x; fw = fx;
-                    x = t; fx = ft;
+                    x = t__r1; fx = ft__r2;
                 }
                 else
                 {
                     // x still remains the better approximation,
                     // so we can reduce the range enclosing x
-                    if (t < x)
-                        lowerBound = t;
-                    else upperBound = t;
+                    if (t__r1 < x)
+                        lowerBound = t__r1;
+                    else upperBound = t__r1;
 
-                    if (ft <= fw || w == x)
+                    if (ft__r2 <= fw || ExactComparisons.AreEqual(w ,x))
                     {
                         v = w; fv = fw;
-                        w = t; fw = ft;
+                        w = t__r1; fw = ft__r2;
                     }
-                    else if (ft <= fv || v == x || v == w)
+                    else if (ft__r2 <= fv || ExactComparisons.AreEqual(v ,x )|| ExactComparisons.AreEqual(v ,w))
                     {
-                        v = t; fv = ft;
+                        v = t__r1; fv = ft__r2;
                     }
                 }
-            }
         }
 
         return new BrentSearchResult(x, fx, BrentSearchStatus.MaxIterationsReached);
@@ -553,7 +542,7 @@ public sealed class BrentSearch : IOptimizationMethod<double, double>
                 double t1, cb, t2;
                 double p, q;
                 cb = c - upperBound;
-                if (lowerBound == c)
+                if (ExactComparisons.AreEqual(lowerBound ,c))
                 {
                     // If we have only two distinct points, then
                     // only linear interpolation can be applied

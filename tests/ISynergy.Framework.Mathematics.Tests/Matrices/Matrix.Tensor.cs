@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 [TestClass]
 public partial class MatrixTensor
@@ -305,13 +306,13 @@ public partial class MatrixTensor
         Array actual = Jagged.CreateAs(a, typeof(int));
         Assert.AreSequenceEqual(expected, actual.GetLength());
 
-        actual = Jagged.CreateAs(a.ToJagged(), typeof(int));
+        actual = Jagged.CreateAs(new Matrix<double>(a).ToJagged(), typeof(int));
         Assert.AreSequenceEqual(expectedArray, actual.GetLength());
 
         actual = Matrix.CreateAs(a, typeof(int));
         Assert.AreSequenceEqual(expectedArray0, actual.GetLength());
 
-        actual = Matrix.CreateAs(a.ToJagged(), typeof(int));
+        actual = Matrix.CreateAs(new Matrix<double>(a).ToJagged(), typeof(int));
         Assert.AreSequenceEqual(expectedArray1, actual.GetLength());
     }
 

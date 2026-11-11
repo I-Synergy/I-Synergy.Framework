@@ -1,19 +1,15 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 
 using ISynergy.Framework.Mathematics.Formats;
 using ISynergy.Framework.Mathematics.Formats.Base;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
 {
-
     #region ToString
+
     /// <summary>
     ///   Returns a <see cref="System.String"/> representation of a given matrix.
     /// </summary>
@@ -32,46 +28,6 @@ public static partial class Matrix
     public static string ToString<T>(this T[,] matrix)
     {
         return ToString(matrix, DefaultMatrixFormatProvider.CurrentCulture);
-    }
-
-    /// <summary>
-    ///   Returns a <see cref="System.String"/> representation of a given matrix.
-    /// </summary>
-    /// <param name="matrix">The matrix.</param>
-    /// <returns>
-    ///   A <see cref="System.String"/> that represents this instance.
-    /// </returns>
-    /// 
-    /// <example>
-    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
-    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
-    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
-    ///   for more details.
-    /// </example>
-    /// 
-    public static string ToCSharp<T>(this T[,] matrix)
-    {
-        return ToString(matrix, CSharpMatrixFormatProvider.InvariantCulture);
-    }
-
-    /// <summary>
-    ///   Returns a <see cref="System.String"/> representation of a given matrix.
-    /// </summary>
-    /// <param name="matrix">The matrix.</param>
-    /// <returns>
-    ///   A <see cref="System.String"/> that represents this instance.
-    /// </returns>
-    /// 
-    /// <example>
-    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
-    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
-    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
-    ///   for more details.
-    /// </example>
-    /// 
-    public static string ToOctave<T>(this T[,] matrix)
-    {
-        return ToString(matrix, OctaveMatrixFormatProvider.InvariantCulture);
     }
 
     /// <summary>
@@ -218,52 +174,6 @@ public static partial class Matrix
     /// </example>
     /// 
     /// 
-    public static string ToCSharp<T>(this T[][] matrix)
-    {
-        return ToString(matrix, CSharpJaggedMatrixFormatProvider.InvariantCulture);
-    }
-
-    /// <summary>
-    ///   Returns a <see cref="System.String"/> representation of a given matrix.
-    /// </summary>
-    /// 
-    /// <param name="matrix">The matrix.</param>
-    /// 
-    /// <returns>
-    ///   A <see cref="System.String"/> that represents this instance.
-    /// </returns>
-    /// 
-    /// <example>
-    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
-    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
-    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
-    ///   for more details.
-    /// </example>
-    /// 
-    /// 
-    public static string ToOctave<T>(this T[][] matrix)
-    {
-        return ToString(matrix, OctaveMatrixFormatProvider.InvariantCulture);
-    }
-
-    /// <summary>
-    ///   Returns a <see cref="System.String"/> representation of a given matrix.
-    /// </summary>
-    /// 
-    /// <param name="matrix">The matrix.</param>
-    /// 
-    /// <returns>
-    ///   A <see cref="System.String"/> that represents this instance.
-    /// </returns>
-    /// 
-    /// <example>
-    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
-    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
-    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
-    ///   for more details.
-    /// </example>
-    /// 
-    /// 
     public static string ToString<T>(this T[][] matrix)
     {
         return ToString(matrix, DefaultMatrixFormatProvider.CurrentCulture);
@@ -380,48 +290,6 @@ public static partial class Matrix
     /// 
     /// <param name="array">The array.</param>
     /// 
-    /// <returns>
-    ///   A <see cref="System.String"/> that represents this instance.
-    /// </returns>
-    /// 
-    /// <example>
-    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
-    ///   <see cref="OctaveArrayFormatProvider"/> or <see cref="DefaultArrayFormatProvider"/>
-    ///   for examples and more details.
-    /// </example>
-    /// 
-    public static string ToCSharp<T>(this T[] array)
-    {
-        return ToString(array, CSharpArrayFormatProvider.InvariantCulture);
-    }
-
-    /// <summary>
-    ///   Returns a <see cref="System.String"/> representation of a a given array.
-    /// </summary>
-    /// 
-    /// <param name="array">The array.</param>
-    /// 
-    /// <returns>
-    ///   A <see cref="System.String"/> that represents this instance.
-    /// </returns>
-    /// 
-    /// <example>
-    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
-    ///   <see cref="OctaveArrayFormatProvider"/> or <see cref="DefaultArrayFormatProvider"/>
-    ///   for examples and more details.
-    /// </example>
-    /// 
-    public static string ToOctave<T>(this T[] array)
-    {
-        return ToString(array, OctaveArrayFormatProvider.InvariantCulture);
-    }
-
-    /// <summary>
-    ///   Returns a <see cref="System.String"/> representation of a a given array.
-    /// </summary>
-    /// 
-    /// <param name="array">The array.</param>
-    /// 
     /// <param name="provider">
     ///   The <see cref="IMatrixFormatProvider"/> to be used
     ///   when creating the resulting string. Default is to use
@@ -499,8 +367,138 @@ public static partial class Matrix
         return MatrixFormatter.Format(format, array, DefaultArrayFormatProvider.CurrentCulture);
     }
 
+    /// <summary>
+    ///   Returns a <see cref="System.String"/> representation of a given matrix.
+    /// </summary>
+    /// <param name="matrix">The matrix.</param>
+    /// <returns>
+    ///   A <see cref="System.String"/> that represents this instance.
+    /// </returns>
+    /// 
+    /// <example>
+    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
+    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
+    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
+    ///   for more details.
+    /// </example>
+    /// 
+    public static string ToCSharp<T>(this T[,] matrix)
+    {
+        return ToString(matrix, CSharpMatrixFormatProvider.InvariantCulture);
+    }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String"/> representation of a given matrix.
+    /// </summary>
+    /// 
+    /// <param name="matrix">The matrix.</param>
+    /// 
+    /// <returns>
+    ///   A <see cref="System.String"/> that represents this instance.
+    /// </returns>
+    /// 
+    /// <example>
+    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
+    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
+    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
+    ///   for more details.
+    /// </example>
+    /// 
+    /// 
+    public static string ToCSharp<T>(this T[][] matrix)
+    {
+        return ToString(matrix, CSharpJaggedMatrixFormatProvider.InvariantCulture);
+    }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String"/> representation of a a given array.
+    /// </summary>
+    /// 
+    /// <param name="array">The array.</param>
+    /// 
+    /// <returns>
+    ///   A <see cref="System.String"/> that represents this instance.
+    /// </returns>
+    /// 
+    /// <example>
+    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
+    ///   <see cref="OctaveArrayFormatProvider"/> or <see cref="DefaultArrayFormatProvider"/>
+    ///   for examples and more details.
+    /// </example>
+    /// 
+    public static string ToCSharp<T>(this T[] array)
+    {
+        return ToString(array, CSharpArrayFormatProvider.InvariantCulture);
+    }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String"/> representation of a given matrix.
+    /// </summary>
+    /// <param name="matrix">The matrix.</param>
+    /// <returns>
+    ///   A <see cref="System.String"/> that represents this instance.
+    /// </returns>
+    /// 
+    /// <example>
+    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
+    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
+    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
+    ///   for more details.
+    /// </example>
+    /// 
+    public static string ToOctave<T>(this T[,] matrix)
+    {
+        return ToString(matrix, OctaveMatrixFormatProvider.InvariantCulture);
+    }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String"/> representation of a given matrix.
+    /// </summary>
+    /// 
+    /// <param name="matrix">The matrix.</param>
+    /// 
+    /// <returns>
+    ///   A <see cref="System.String"/> that represents this instance.
+    /// </returns>
+    /// 
+    /// <example>
+    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
+    ///   <see cref="CSharpJaggedMatrixFormatProvider"/>, <see cref="CSharpArrayFormatProvider"/>,
+    ///   <see cref="OctaveMatrixFormatProvider"/>, or <see cref="OctaveArrayFormatProvider"/> 
+    ///   for more details.
+    /// </example>
+    /// 
+    /// 
+    public static string ToOctave<T>(this T[][] matrix)
+    {
+        return ToString(matrix, OctaveMatrixFormatProvider.InvariantCulture);
+    }
+
+    /// <summary>
+    ///   Returns a <see cref="System.String"/> representation of a a given array.
+    /// </summary>
+    /// 
+    /// <param name="array">The array.</param>
+    /// 
+    /// <returns>
+    ///   A <see cref="System.String"/> that represents this instance.
+    /// </returns>
+    /// 
+    /// <example>
+    ///   Please see <see cref="CSharpMatrixFormatProvider"/>,
+    ///   <see cref="OctaveArrayFormatProvider"/> or <see cref="DefaultArrayFormatProvider"/>
+    ///   for examples and more details.
+    /// </example>
+    /// 
+    public static string ToOctave<T>(this T[] array)
+    {
+        return ToString(array, OctaveArrayFormatProvider.InvariantCulture);
+    }
+
     #endregion
+
     #region Parse
+
     /// <summary>
     ///   Converts the string representation of a matrix to its
     ///   double-precision floating-point number matrix equivalent.
@@ -550,24 +548,24 @@ public static partial class Matrix
     /// a number less than MinValue or greater than MaxValue. This parameter is passed
     /// uninitialized. </result>
     /// 
-    public static bool TryParse(string s, IMatrixFormatProvider provider, out double[,] matrix)
+    public static bool TryParse(string s, IMatrixFormatProvider provider, out Matrix<double> matrix)
     {
-        // TODO: Create a proper TryParse method without // NOSONAR
-        //       resorting to a underlying try-catch block.
+        // Math.NET parity: the matrix formatter has no non-throwing parse path, so this
+        // wrapper delegates to Parse and maps format/argument errors to a failed conversion.
         try
         {
-            matrix = Parse(s, provider);
+            matrix = new Matrix<double>(Parse(s, provider));
         }
         catch (FormatException)
         {
-            matrix = null;
+            matrix = default;
         }
         catch (ArgumentNullException)
         {
-            matrix = null;
+            matrix = default;
         }
 
-        return matrix is not null;
+        return matrix.Array is not null;
     }
 
     /// <summary>
@@ -589,10 +587,18 @@ public static partial class Matrix
     /// a number less than MinValue or greater than MaxValue. This parameter is passed
     /// uninitialized. </result>
     /// 
-    public static bool TryParse(string s, IMatrixFormatProvider provider, out double[][] matrix)
+    public static bool TryParse(string s, IMatrixFormatProvider provider, out Jagged<double> matrix)
     {
-        return Jagged.TryParse(s, provider, out matrix);
+        if (Jagged.TryParse(s, provider, out var jagged) && jagged.Array is not null)
+        {
+            matrix = jagged;
+            return true;
+        }
+
+        matrix = default;
+        return false;
     }
+
     #endregion
 
 }

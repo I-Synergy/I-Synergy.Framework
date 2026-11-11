@@ -1,11 +1,6 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -396,6 +391,36 @@ public struct Matrix3x3
     }
 
     /// <summary>
+    /// Multiplies specified matrix by the specified vector.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to multiply by vector.</param>
+    /// <param name="vector">Vector to multiply matrix by.</param>
+    /// 
+    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
+    /// by the specified vector.</returns>
+    ///
+    public static Vector3 Multiply(Matrix3x3 matrix, Vector3 vector)
+    {
+        return matrix * vector;
+    }
+
+    /// <summary>
+    /// Multiplies matrix by the specified factor.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to multiply.</param>
+    /// <param name="factor">Factor to multiple the specified matrix by.</param>
+    /// 
+    /// <returns>Returns new matrix with all components equal to corresponding components of the
+    /// specified matrix multiples by the specified factor.</returns>
+    /// 
+    public static Matrix3x3 Multiply(Matrix3x3 matrix, float factor)
+    {
+        return matrix * factor;
+    }
+
+    /// <summary>
     /// Adds corresponding components of two matrices.
     /// </summary>
     /// 
@@ -437,6 +462,21 @@ public struct Matrix3x3
     public static Matrix3x3 Add(Matrix3x3 matrix1, Matrix3x3 matrix2)
     {
         return matrix1 + matrix2;
+    }
+
+    /// <summary>
+    /// Adds specified value to all components of the specified matrix.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to add value to.</param>
+    /// <param name="value">Value to add to all components of the specified matrix.</param>
+    /// 
+    /// <returns>Returns new matrix with all components equal to corresponding components of the
+    /// specified matrix increased by the specified value.</returns>
+    /// 
+    public static Matrix3x3 Add(Matrix3x3 matrix, float value)
+    {
+        return matrix + value;
     }
 
     /// <summary>
@@ -502,21 +542,6 @@ public struct Matrix3x3
     }
 
     /// <summary>
-    /// Multiplies specified matrix by the specified vector.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to multiply by vector.</param>
-    /// <param name="vector">Vector to multiply matrix by.</param>
-    /// 
-    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
-    /// by the specified vector.</returns>
-    ///
-    public static Vector3 Multiply(Matrix3x3 matrix, Vector3 vector)
-    {
-        return matrix * vector;
-    }
-
-    /// <summary>
     /// Multiplies matrix by the specified factor.
     /// </summary>
     /// 
@@ -543,21 +568,6 @@ public struct Matrix3x3
         m.V22 = matrix.V22 * factor;
 
         return m;
-    }
-
-    /// <summary>
-    /// Multiplies matrix by the specified factor.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to multiply.</param>
-    /// <param name="factor">Factor to multiple the specified matrix by.</param>
-    /// 
-    /// <returns>Returns new matrix with all components equal to corresponding components of the
-    /// specified matrix multiples by the specified factor.</returns>
-    /// 
-    public static Matrix3x3 Multiply(Matrix3x3 matrix, float factor)
-    {
-        return matrix * factor;
     }
 
     /// <summary>
@@ -590,21 +600,6 @@ public struct Matrix3x3
     }
 
     /// <summary>
-    /// Adds specified value to all components of the specified matrix.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to add value to.</param>
-    /// <param name="value">Value to add to all components of the specified matrix.</param>
-    /// 
-    /// <returns>Returns new matrix with all components equal to corresponding components of the
-    /// specified matrix increased by the specified value.</returns>
-    /// 
-    public static Matrix3x3 Add(Matrix3x3 matrix, float value)
-    {
-        return matrix + value;
-    }
-
-    /// <summary>
     /// Tests whether two specified matrices are equal.
     /// </summary>
     /// 
@@ -616,18 +611,18 @@ public struct Matrix3x3
     public static bool operator ==(Matrix3x3 matrix1, Matrix3x3 matrix2)
     {
         return
-            matrix1.V00 == matrix2.V00 &&
-            matrix1.V01 == matrix2.V01 &&
-            matrix1.V02 == matrix2.V02 &&
-
-            matrix1.V10 == matrix2.V10 &&
-            matrix1.V11 == matrix2.V11 &&
-            matrix1.V12 == matrix2.V12 &&
-
-            matrix1.V20 == matrix2.V20 &&
-            matrix1.V21 == matrix2.V21 &&
-            matrix1.V22 == matrix2.V22
-        ;
+ExactComparisons.AreEqual(            matrix1.V00 ,matrix2.V00 )&&
+ExactComparisons.AreEqual(            matrix1.V01 ,matrix2.V01 )&&
+ExactComparisons.AreEqual(            matrix1.V02 ,matrix2.V02 )&&
+ExactComparisons.AreEqual(
+            matrix1.V10 ,matrix2.V10 )&&
+ExactComparisons.AreEqual(            matrix1.V11 ,matrix2.V11 )&&
+ExactComparisons.AreEqual(            matrix1.V12 ,matrix2.V12 )&&
+ExactComparisons.AreEqual(
+            matrix1.V20 ,matrix2.V20 )&&
+ExactComparisons.AreEqual(            matrix1.V21 ,matrix2.V21 )&&
+ExactComparisons.AreEqual(            matrix1.V22 ,matrix2.V22
+)        ;
     }
 
     /// <summary>
@@ -642,18 +637,18 @@ public struct Matrix3x3
     public static bool operator !=(Matrix3x3 matrix1, Matrix3x3 matrix2)
     {
         return
-            matrix1.V00 != matrix2.V00 ||
-            matrix1.V01 != matrix2.V01 ||
-            matrix1.V02 != matrix2.V02 ||
-
-            matrix1.V10 != matrix2.V10 ||
-            matrix1.V11 != matrix2.V11 ||
-            matrix1.V12 != matrix2.V12 ||
-
-            matrix1.V20 != matrix2.V20 ||
-            matrix1.V21 != matrix2.V21 ||
-            matrix1.V22 != matrix2.V22
-        ;
+ExactComparisons.AreNotEqual(            matrix1.V00 ,matrix2.V00 )||
+ExactComparisons.AreNotEqual(            matrix1.V01 ,matrix2.V01 )||
+ExactComparisons.AreNotEqual(            matrix1.V02 ,matrix2.V02 )||
+ExactComparisons.AreNotEqual(
+            matrix1.V10 ,matrix2.V10 )||
+ExactComparisons.AreNotEqual(            matrix1.V11 ,matrix2.V11 )||
+ExactComparisons.AreNotEqual(            matrix1.V12 ,matrix2.V12 )||
+ExactComparisons.AreNotEqual(
+            matrix1.V20 ,matrix2.V20 )||
+ExactComparisons.AreNotEqual(            matrix1.V21 ,matrix2.V21 )||
+ExactComparisons.AreNotEqual(            matrix1.V22 ,matrix2.V22
+)        ;
     }
 
     /// <summary>
@@ -857,7 +852,7 @@ public struct Matrix3x3
         double[,] vArray;
         double[] eArray;
 
-        svd.svdcmp(uArray, out eArray, out vArray);
+        Svd.svdcmp(uArray, out eArray, out vArray);
 
         // build U matrix
         u = new Matrix3x3();

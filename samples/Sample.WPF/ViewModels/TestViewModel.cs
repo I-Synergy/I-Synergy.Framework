@@ -16,10 +16,5 @@ public class TestViewModel(
         await dialogService.ShowDialogAsync<Test2Window, Test2ViewModel, object>(
             _ => Task.CompletedTask);
     }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-    }
 }
 

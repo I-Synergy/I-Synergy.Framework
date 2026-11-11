@@ -1,18 +1,12 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Exceptions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1192 // repeated validation messages are intentional for clarity
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Matrix
 {
-
     /// <summary>
     ///   Returns a sub matrix extracted from the current matrix.
     /// </summary>
@@ -40,10 +34,10 @@ public static partial class Matrix
     /// <param name="startColumn">Start column index</param>
     /// <param name="endColumn">End column index</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, T[,] destination,
+    public static T[,] Get<T>(this T[,] source, Matrix<T> destination,
         int startRow, int endRow, int startColumn, int endColumn)
     {
-        ArgumentNullException.ThrowIfNull(destination);
+        var destinationArray = destination.Array ?? throw new ArgumentNullException(nameof(destination));
 
         int rows = source.Rows();
         int cols = source.Columns();
@@ -54,15 +48,15 @@ public static partial class Matrix
         endRow = end(endRow, rows);
         endColumn = end(endColumn, cols);
 
-        if (destination.GetLength(0) < endRow - startRow)
+        if (destinationArray.GetLength(0) < endRow - startRow)
             throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
 
-        if (destination.GetLength(1) < endColumn - startColumn)
+        if (destinationArray.GetLength(1) < endColumn - startColumn)
             throw new DimensionMismatchException(nameof(destination),
                 "The destination matrix must be big enough to accommodate the results.");
 
-        return get(source, destination, startRow, endRow, startColumn, endColumn);
+        return get(source, destinationArray, startRow, endRow, startColumn, endColumn);
     }
 
     /// <summary>
@@ -74,9 +68,9 @@ public static partial class Matrix
     /// <param name="columnIndexes">Array of column indices. Pass null to select all indices.</param>
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, int[] rowIndexes, int[] columnIndexes, T[,] result = null)
+    public static T[,] Get<T>(this T[,] source, int[] rowIndexes, int[] columnIndexes, Matrix<T> result = default)
     {
-        return get(source, result, rowIndexes, columnIndexes);
+        return get(source, result.Array, rowIndexes, columnIndexes);
     }
 
     /// <summary>
@@ -88,9 +82,9 @@ public static partial class Matrix
     /// <param name="columnMask">Array of column indicators. Pass null to select all indices.</param>
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, bool[] rowMask, bool[] columnMask, T[,] result = null)
+    public static T[,] Get<T>(this T[,] source, bool[] rowMask, bool[] columnMask, Matrix<T> result = default)
     {
-        return get(source, result, rowMask.Find(x => x), columnMask.Find(x => x));
+        return get(source, result.Array, rowMask.Find(x => x), columnMask.Find(x => x));
     }
 
     /// <summary>
@@ -102,11 +96,11 @@ public static partial class Matrix
     /// <param name="rowIndexes">Array of row indices. Pass null to select all indices.</param>
     /// <param name="columnIndexes">Array of column indices. Pass null to select all indices.</param>
     /// 
-    public static T[,] Get<T>(this T[,] source, T[,] destination, int[] rowIndexes, int[] columnIndexes)
+    public static T[,] Get<T>(this T[,] source, Matrix<T> destination, int[] rowIndexes, int[] columnIndexes)
     {
-        ArgumentNullException.ThrowIfNull(destination);
+        var destinationArray = destination.Array ?? throw new ArgumentNullException(nameof(destination));
 
-        return get(source, destination, rowIndexes, columnIndexes);
+        return get(source, destinationArray, rowIndexes, columnIndexes);
     }
 
     /// <summary>
@@ -243,20 +237,6 @@ public static partial class Matrix
         return destination;
     }
 
-    private static int end(int end, int length)
-    {
-        if (end <= 0)
-            end = length + end;
-        return end;
-    }
-
-    private static int index(int end, int length)
-    {
-        if (end < 0)
-            end = length + end;
-        return end;
-    }
-
     /// <summary>
     ///   Returns a sub matrix extracted from the current matrix.
     /// </summary>
@@ -277,46 +257,6 @@ public static partial class Matrix
     ///   Returns a sub matrix extracted from the current matrix.
     /// </summary>
     /// 
-    /// <param name="destination">The matrix where the values should be stored.</param>
-    /// <param name="values">The values to be stored.</param>
-    /// <param name="startRow">Start row index in the destination matrix.</param>
-    /// <param name="endRow">End row index in the destination matrix.</param>
-    /// <param name="startColumn">Start column index in the destination matrix.</param>
-    /// <param name="endColumn">End column index in the destination matrix.</param>
-    /// 
-    public static T[][] Set<T>(this T[][] destination,
-        int startRow, int endRow, int startColumn, int endColumn, T[][] values)
-    {
-        return set(destination, values, startRow, endRow, startColumn, endColumn);
-    }
-
-    /// <summary>
-    ///   Sets elements from a matrix to a given value.
-    /// </summary>
-    /// 
-    /// <param name="values">The matrix of values to be changed.</param>
-    /// <param name="match">The function used to determine whether an 
-    ///   element in the matrix should be changed or not.</param>
-    /// <param name="value">The values to set the elements to.</param>
-    /// 
-    public static T[][] Set<T>(this T[][] values, Func<T, bool> match, T value)
-    {
-        for (var i = 0; i < values.Length; i++)
-        {
-            for (var j = 0; j < values[i].Length; j++)
-            {
-                if (match(values[i][j]))
-                    values[i][j] = value;
-            }
-        }
-
-        return values;
-    }
-
-    /// <summary>
-    ///   Returns a sub matrix extracted from the current matrix.
-    /// </summary>
-    /// 
     /// <param name="source">The matrix to return the submatrix from.</param>
     /// <param name="rowIndexes">Array of row indices. Pass null to select all indices.</param>
     /// <param name="columnIndexes">Array of column indices. Pass null to select all indices.</param>
@@ -327,9 +267,9 @@ public static partial class Matrix
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
     public static T[][] Get<T>(this T[][] source,
-        int[] rowIndexes, int[] columnIndexes, bool reuseMemory = false, T[][] result = null)
+        int[] rowIndexes, int[] columnIndexes, bool reuseMemory = false, Jagged<T> result = default)
     {
-        return get(source, result, rowIndexes, columnIndexes, reuseMemory);
+        return get(source, result.Array, rowIndexes, columnIndexes, reuseMemory);
     }
 
     /// <summary>
@@ -346,9 +286,9 @@ public static partial class Matrix
     /// <param name="result">An optional matrix where the results should be stored.</param>
     /// 
     public static T[][] Get<T>(this T[][] source,
-        bool[] rowMask, bool[] columnMask, bool reuseMemory = false, T[][] result = null)
+        bool[] rowMask, bool[] columnMask, bool reuseMemory = false, Jagged<T> result = default)
     {
-        return get(source, result, rowMask.Find(x => x), columnMask.Find(x => x), reuseMemory);
+        return get(source, result.Array, rowMask.Find(x => x), columnMask.Find(x => x), reuseMemory);
     }
 
     /// <summary>
@@ -391,6 +331,7 @@ public static partial class Matrix
 
         return destination;
     }
+
     /// <summary>
     ///   Returns a sub matrix extracted from the current matrix.
     /// </summary>
@@ -542,6 +483,7 @@ public static partial class Matrix
 
         return destination;
     }
+
     /// <summary>
     ///   Returns a subvector extracted from the current vector.
     /// </summary>
@@ -657,6 +599,61 @@ public static partial class Matrix
 
         return destination;
     }
+
+    private static int end(int end, int length)
+    {
+        if (end <= 0)
+            end = length + end;
+        return end;
+    }
+
+    private static int index(int end, int length)
+    {
+        if (end < 0)
+            end = length + end;
+        return end;
+    }
+
+    /// <summary>
+    ///   Returns a sub matrix extracted from the current matrix.
+    /// </summary>
+    /// 
+    /// <param name="destination">The matrix where the values should be stored.</param>
+    /// <param name="values">The values to be stored.</param>
+    /// <param name="startRow">Start row index in the destination matrix.</param>
+    /// <param name="endRow">End row index in the destination matrix.</param>
+    /// <param name="startColumn">Start column index in the destination matrix.</param>
+    /// <param name="endColumn">End column index in the destination matrix.</param>
+    /// 
+    public static T[][] Set<T>(this T[][] destination,
+        int startRow, int endRow, int startColumn, int endColumn, Jagged<T> values)
+    {
+        return set(destination, values.Array, startRow, endRow, startColumn, endColumn);
+    }
+
+    /// <summary>
+    ///   Sets elements from a matrix to a given value.
+    /// </summary>
+    /// 
+    /// <param name="values">The matrix of values to be changed.</param>
+    /// <param name="match">The function used to determine whether an 
+    ///   element in the matrix should be changed or not.</param>
+    /// <param name="value">The values to set the elements to.</param>
+    /// 
+    public static T[][] Set<T>(this T[][] values, Func<T, bool> match, T value)
+    {
+        for (var i = 0; i < values.Length; i++)
+        {
+            for (var j = 0; j < values[i].Length; j++)
+            {
+                if (match(values[i][j]))
+                    values[i][j] = value;
+            }
+        }
+
+        return values;
+    }
+
     /// <summary>
     ///   Extracts a selected area from a matrix.
     /// </summary>

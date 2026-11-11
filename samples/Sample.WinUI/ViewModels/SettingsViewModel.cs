@@ -19,7 +19,6 @@ public partial class SettingsViewModel : ViewModelBlade<object>
 {
     private readonly ISettingsService _settingsService;
     private readonly IThemeService _themeService;
-    private readonly ISupportedCulturesService _supportedCulturesService;
     private bool _isInitializing = true;
 
     /// <summary>
@@ -129,7 +128,6 @@ public partial class SettingsViewModel : ViewModelBlade<object>
     {
         _settingsService = settingsService;
         _themeService = themeService;
-        _supportedCulturesService = supportedCulturesService;
 
         LocalSettings = new LocalSettings();
         GlobalSettings = new GlobalSettings();
@@ -186,8 +184,7 @@ public partial class SettingsViewModel : ViewModelBlade<object>
         {
             _isInitializing = false;
         }
-        {
-            _commonServices.BusyService.StopBusy();
-        }
+
+        _commonServices.BusyService.StopBusy();
     }
 }

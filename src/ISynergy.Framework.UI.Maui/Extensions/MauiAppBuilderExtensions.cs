@@ -71,13 +71,14 @@ public static class MauiAppBuilderExtensions
     /// <returns>The configured <see cref="MauiAppBuilder"/>.</returns>
     [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
         Justification = "View, ViewModel and Window types are rooted by the application XAML compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
-    public static MauiAppBuilder ConfigureServices< // NOSONAR - DI composition root
+#pragma warning disable S2436 // Public DI composition-root extension method: the generic arity is fixed by the public API surface it configures.
+    public static MauiAppBuilder ConfigureServices<
         TApplication,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
-        TResource>( // NOSONAR
+        TResource>(
         this MauiAppBuilder appBuilder,
         Action<MauiAppBuilder> action,
         Assembly assembly,
@@ -88,6 +89,7 @@ public static class MauiAppBuilderExtensions
         where TExceptionHandlerService : class, IExceptionHandlerService
         where TSettingsService : class, ISettingsService
         where TResource : class
+#pragma warning restore S2436
     {
         appBuilder.Services.AddOptions();
 

@@ -2,6 +2,7 @@ using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Tests;
 public partial class MatrixTest
 {
@@ -16,7 +17,7 @@ public partial class MatrixTest
         };
 
         string[] columnNames = ["A", "B"];
-        DataTable actual = Matrix.ToTable(matrix, columnNames);
+        DataTable actual = Matrix.ToTable(new Matrix<double>(matrix), columnNames);
 
         Assert.AreEqual("A", actual.Columns[0].ColumnName);
         Assert.AreEqual("B", actual.Columns[1].ColumnName);
@@ -125,7 +126,7 @@ public partial class MatrixTest
 
         for (int i = 0; i < d.GetLength()[0]; i++)
             for (int j = 0; j < d.GetLength()[1]; j++)
-                Assert.AreEqual(ea.ToSingle()[i][j], d[i][j]);
+                Assert.AreEqual(new Jagged<double>(ea).ToSingle()[i][j], d[i][j]);
 
         for (int i = 0; i < e.GetLength()[0]; i++)
             for (int j = 0; j < e.GetLength()[1]; j++)
@@ -142,7 +143,7 @@ public partial class MatrixTest
             [5, 6]
         ];
 
-        DataTable actual = Matrix.ToTable(matrix);
+        DataTable actual = Matrix.ToTable(new Jagged<double>(matrix));
 
         Assert.AreEqual(1, (double)actual.Rows[0][0]);
         Assert.AreEqual(2, (double)actual.Rows[0][1]);
@@ -270,10 +271,10 @@ public partial class MatrixTest
         };
 
         // Using a convertor:
-        double[,] a = Matrix.Convert(from, Double.Parse);
+        double[,] a = Matrix.Convert(new Matrix<string>(from), Double.Parse);
 
         // Using a default converter for the type:
-        double[,] b = Matrix.Convert<string, double>(from);
+        double[,] b = Matrix.Convert<string, double>(new Matrix<string>(from));
 
         // Without using generics for the input type, will
         // also work for tensors (matrices with rank > 2)
@@ -347,14 +348,14 @@ public partial class MatrixTest
         };
 
         {
-            double[][] expected = a.ToJagged();
+            double[][] expected = new Matrix<double>(a).ToJagged();
             double[][] actual = a.To<double[][]>();
             Assert.IsTrue(expected.IsEqual(actual));
         }
 
         {
-            double[][] c = a.ToJagged();
-            double[,] expected = c.ToMatrix();
+            double[][] c = new Matrix<double>(a).ToJagged();
+            double[,] expected = new Jagged<double>(c).ToMatrix();
             double[,] actual = c.To<double[,]>();
             Assert.IsTrue(expected.IsEqual(actual));
         }
@@ -369,9 +370,9 @@ public partial class MatrixTest
         };
 
         test(from, from);
-        test(from.ToSingle(), from);
-        test(from.ToInt16(), from);
-        test(from.ToInt32(), from);
+        test(new Matrix<double>(from).ToSingle(), from);
+        test(new Matrix<double>(from).ToInt16(), from);
+        test(new Matrix<double>(from).ToInt32(), from);
     }
 
     [TestMethod]
@@ -384,10 +385,10 @@ public partial class MatrixTest
         };
 
         test(from, from.ToDouble());
-        test(from.ToSingle(), from.ToDouble());
+        test(new Matrix<string>(from).ToSingle(), from.ToDouble());
         test(from.ToDouble(), from.ToDouble());
-        test(from.ToInt16(), from.ToDouble());
-        test(from.ToInt32(), from.ToDouble());
+        test(new Matrix<string>(from).ToInt16(), from.ToDouble());
+        test(new Matrix<string>(from).ToInt32(), from.ToDouble());
     }
 
     [TestMethod]
@@ -400,10 +401,10 @@ public partial class MatrixTest
         ];
 
         test(from, from.ToDouble());
-        test(from.ToSingle(), from.ToDouble());
+        test(new Jagged<string>(from).ToSingle(), from.ToDouble());
         test(from.ToDouble(), from.ToDouble());
-        test(from.ToInt16(), from.ToDouble());
-        test(from.ToInt32(), from.ToDouble());
+        test(new Jagged<string>(from).ToInt16(), from.ToDouble());
+        test(new Jagged<string>(from).ToInt32(), from.ToDouble());
     }
 
     [TestMethod]
@@ -420,9 +421,9 @@ public partial class MatrixTest
 
     private static void test<T>(T[,] from, double[,] expected)
     {
-        double[,] z = from.Convert<T, double>();
-        double[,] a = Matrix.Convert<T, double>(from);
-        double[][] b = Jagged.Convert<T, double>(from);
+        double[,] z = new Matrix<T>(from).Convert<T, double>();
+        double[,] a = Matrix.Convert<T, double>(new Matrix<T>(from));
+        double[][] b = Jagged.Convert<T, double>(new Matrix<T>(from));
         double[,] c = (double[,])Matrix.Convert<double>(from);
         double[][] d = (double[][])Jagged.Convert<double>(from);
         double[,] e = Matrix.To<double[,]>(from);
@@ -440,7 +441,7 @@ public partial class MatrixTest
     private static void test<T>(T[][] from, double[][] expected)
     {
         double[][] z = from.Convert<T, double>();
-        double[,] a = Matrix.Convert<T, double>(from);
+        double[,] a = Matrix.Convert<T, double>(new Jagged<T>(from));
         double[][] b = Jagged.Convert<T, double>(from);
         double[,] c = (double[,])Matrix.Convert<double>(from);
         double[][] d = (double[][])Jagged.Convert<double>(from);

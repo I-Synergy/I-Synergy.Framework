@@ -1,10 +1,5 @@
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Geometry;
@@ -14,10 +9,10 @@ namespace ISynergy.Framework.Mathematics.Geometry;
 /// </summary>
 /// 
 [Serializable]
-public class Plane : IEquatable<Plane>, IFormattable
+public sealed class Plane : IEquatable<Plane>, IFormattable
 {
     [NonSerialized]
-    private Vector3 _normal;
+    private readonly Vector3 _normal;
 
     /// <summary>
     ///   Creates a new <see cref="Plane"/> object
@@ -119,7 +114,6 @@ public class Plane : IEquatable<Plane>, IFormattable
     public float A
     {
         get { return _normal.X; }
-        set { _normal.X = value; }
     }
 
     /// <summary>
@@ -130,7 +124,6 @@ public class Plane : IEquatable<Plane>, IFormattable
     public float B
     {
         get { return _normal.Y; }
-        set { _normal.Y = value; }
     }
 
     /// <summary>
@@ -141,7 +134,6 @@ public class Plane : IEquatable<Plane>, IFormattable
     public float C
     {
         get { return _normal.Z; }
-        set { _normal.Z = value; }
     }
 
     /// <summary>
@@ -149,7 +141,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     ///   between the plane and the origin.
     /// </summary>
     ///
-    public float Offset { get; set; }
+    public float Offset { get; }
     /// <summary>
     ///   Computes the distance from point to plane.
     /// </summary>
@@ -175,10 +167,11 @@ public class Plane : IEquatable<Plane>, IFormattable
     ///   by the <see cref="Normal"/> vector's norm.
     /// </summary>
     /// 
-    public void Normalize()
+    public Plane Normalize()
     {
-        float norm = _normal.Normalize();
-        Offset /= norm;
+        var normal = _normal;
+        float norm = normal.Normalize();
+        return new Plane(normal, Offset / norm);
     }
 
     /// <summary>
@@ -192,7 +185,7 @@ public class Plane : IEquatable<Plane>, IFormattable
         if ((object)a is null || (object)b is null)
             return false;
 
-        return a.Offset == b.Offset && a._normal == b._normal;
+        return ExactComparisons.AreEqual(a.Offset ,b.Offset )&& a._normal == b._normal;
     }
 
     /// <summary>
@@ -206,7 +199,7 @@ public class Plane : IEquatable<Plane>, IFormattable
         if ((object)a is null || (object)b is null)
             return true;
 
-        return a.Offset != b.Offset || a._normal != b._normal;
+        return ExactComparisons.AreNotEqual(a.Offset ,b.Offset )|| a._normal != b._normal;
     }
 
     /// <summary>
@@ -240,7 +233,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     /// 
     public bool Equals(Plane other)
     {
-        return Offset == other.Offset && _normal == other._normal;
+        return ExactComparisons.AreEqual(Offset ,other.Offset )&& _normal == other._normal;
     }
 
     /// <summary>
@@ -271,7 +264,7 @@ public class Plane : IEquatable<Plane>, IFormattable
     ///   algorithms and data structures like a hash table. 
     /// </returns>
     /// 
-    public override int GetHashCode() // NOSONAR
+    public override int GetHashCode()
     {
         return Offset.GetHashCode() + 13 * _normal.GetHashCode();
     }

@@ -21,12 +21,6 @@
 
 using ISynergy.Framework.Mathematics.Functions;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Common;
@@ -357,39 +351,6 @@ public static class Special
     }
 
     /// <summary>
-    ///     Returns the log factorial of a number (ln(n!))
-    /// </summary>
-    public static double LogFactorial(double n)
-    {
-        return Gamma.Log(n + 1.0);
-    }
-
-    /// <summary>
-    ///     Returns the log factorial of a number (ln(n!))
-    /// </summary>
-    public static double LogFactorial(int n)
-    {
-        if (lnfcache is null)
-            lnfcache = new double[101];
-
-        if (n < 0)
-            // Factorial is not defined for negative numbers.
-            throw new ArgumentException("Argument cannot be negative.", nameof(n));
-        if (n <= 1)
-            // Factorial for n between 0 and 1 is 1, so log(factorial(n)) is 0.
-            return 0.0;
-        if (n <= 100)
-        {
-            // Compute the factorial using ln(gamma(n)) approximation, using the cache
-            // if the value has been previously computed.
-            if (lnfcache[n] <= 0)
-                lnfcache[n] = Gamma.Log(n + 1.0);
-            return lnfcache[n];
-        }
-        return Gamma.Log(n + 1.0);
-    }
-
-    /// <summary>
     ///     Computes the factorial of a number (n!)
     /// </summary>
     public static double Factorial(int n)
@@ -423,6 +384,39 @@ public static class Special
         }
 
         return fcache[n];
+    }
+
+    /// <summary>
+    ///     Returns the log factorial of a number (ln(n!))
+    /// </summary>
+    public static double LogFactorial(double n)
+    {
+        return Gamma.Log(n + 1.0);
+    }
+
+    /// <summary>
+    ///     Returns the log factorial of a number (ln(n!))
+    /// </summary>
+    public static double LogFactorial(int n)
+    {
+        if (lnfcache is null)
+            lnfcache = new double[101];
+
+        if (n < 0)
+            // Factorial is not defined for negative numbers.
+            throw new ArgumentException("Argument cannot be negative.", nameof(n));
+        if (n <= 1)
+            // Factorial for n between 0 and 1 is 1, so log(factorial(n)) is 0.
+            return 0.0;
+        if (n <= 100)
+        {
+            // Compute the factorial using ln(gamma(n)) approximation, using the cache
+            // if the value has been previously computed.
+            if (lnfcache[n] <= 0)
+                lnfcache[n] = Gamma.Log(n + 1.0);
+            return lnfcache[n];
+        }
+        return Gamma.Log(n + 1.0);
     }
 
     // factorial function caches
@@ -495,13 +489,13 @@ public static class Special
 
         a = 1.3333333333333333;
 
-    L10:
-        b = a - 1.0;
-        c = b + b + b;
-        eps = Math.Abs(c - 1.0);
-
-        if (eps == 0.0)
-            goto L10;
+        do
+        {
+            b = a - 1.0;
+            c = b + b + b;
+            eps = Math.Abs(c - 1.0);
+        }
+        while (ExactComparisons.AreEqual(eps, 0.0));
 
         return eps * Math.Abs(x);
     }
@@ -536,9 +530,9 @@ public static class Special
     /// </summary>
     public static double LogSum(double lnx, double lny)
     {
-        if (lnx == double.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lnx ,double.NegativeInfinity))
             return lny;
-        if (lny == double.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lny ,double.NegativeInfinity))
             return lnx;
 
         if (lnx > lny)
@@ -552,9 +546,9 @@ public static class Special
     /// </summary>
     public static double LogSum(float lnx, float lny)
     {
-        if (lnx == float.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lnx ,float.NegativeInfinity))
             return lny;
-        if (lny == float.NegativeInfinity)
+        if (ExactComparisons.AreEqual(lny ,float.NegativeInfinity))
             return lnx;
 
         if (lnx > lny)

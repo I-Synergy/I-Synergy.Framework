@@ -1,11 +1,7 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Vectors;
@@ -17,7 +13,7 @@ public static partial class Vector
     /// </summary>
     public static double Scale(this double value, double fromMin, double fromMax, double toMin, double toMax)
     {
-        if (fromMin == fromMax && fromMin == toMin && fromMin == toMax)
+        if (ExactComparisons.AreEqual(fromMin ,fromMax )&& ExactComparisons.AreEqual(fromMin ,toMin )&& ExactComparisons.AreEqual(fromMin ,toMax))
             return value;
 
         return ((toMax - toMin) * (value - fromMin) / (fromMax - fromMin) + toMin);
@@ -32,9 +28,10 @@ public static partial class Vector
     /// <param name="toMax"></param>
     /// <param name="x"></param>
     /// <returns></returns>
-    public static double[][] Scale(double[] fromMin, double[] fromMax, double toMin, double toMax, double[][] x)
+    public static double[][] Scale(double[] fromMin, double[] fromMax, double toMin, double toMax, Jagged<double> x)
     {
-        int rows = x.Length;
+        var xArray = x.Array;
+        int rows = xArray.Length;
         int cols = fromMin.Length;
 
         double[][] result = new double[rows][];
@@ -43,7 +40,7 @@ public static partial class Vector
             result[i] = new double[cols];
             for (int j = 0; j < cols; j++)
             {
-                result[i][j] = (toMax - toMin) * (x[i][j] - fromMin[j]) / (fromMax[j] - fromMin[j]) + toMin;
+                result[i][j] = (toMax - toMin) * (xArray[i][j] - fromMin[j]) / (fromMax[j] - fromMin[j]) + toMin;
             }
         }
 
@@ -55,7 +52,7 @@ public static partial class Vector
     /// </summary>
     public static double[] Scale(this double[] values, double fromMin, double fromMax, double toMin, double toMax, double[] result)
     {
-        if (fromMin == fromMax && fromMin == toMin && fromMin == toMax)
+        if (ExactComparisons.AreEqual(fromMin ,fromMax )&& ExactComparisons.AreEqual(fromMin ,toMin )&& ExactComparisons.AreEqual(fromMin ,toMax))
         {
             for (var i = 0; i < values.Length; i++)
                 result[i] = values[i];
@@ -124,7 +121,7 @@ public static partial class Vector
     /// </summary>
     public static double[] Scale(this double[] values, double fromMin, double fromMax, int toMin, int toMax, double[] result)
     {
-        if (fromMin == fromMax && fromMin == toMin && fromMin == toMax)
+        if (ExactComparisons.AreEqual(fromMin ,fromMax )&& ExactComparisons.AreEqual(fromMin ,toMin )&& ExactComparisons.AreEqual(fromMin ,toMax))
         {
             for (var i = 0; i < values.Length; i++)
                 result[i] = values[i];

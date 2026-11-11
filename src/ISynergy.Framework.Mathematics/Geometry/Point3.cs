@@ -1,11 +1,6 @@
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Geometry;
@@ -17,7 +12,8 @@ namespace ISynergy.Framework.Mathematics.Geometry;
 [Serializable]
 public struct Point3
 {
-    [NonSerialized] // TODO: Remove when AForge releases a newer version // NOSONAR
+    // Math.NET parity: the coordinates field is kept non-serialized to match upstream behavior; the serializable surface is the X/Y/Z accessors.
+    [NonSerialized]
     Vector3 coordinates;
 
     /// <summary>

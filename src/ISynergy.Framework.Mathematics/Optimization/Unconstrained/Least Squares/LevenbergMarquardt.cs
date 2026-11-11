@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
@@ -5,12 +6,6 @@ using ISynergy.Framework.Mathematics.Optimization.Base;
 using ISynergy.Framework.Mathematics.Statistics;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1450 // private fields are read in algorithm methods
 
 
 namespace ISynergy.Framework.Mathematics.Optimization;
@@ -31,11 +26,10 @@ namespace ISynergy.Framework.Mathematics.Optimization;
 /// </example>
 /// <seealso cref="GaussNewton" />
 /// <seealso cref="FiniteDifferences" />
-public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, IConvergenceLearning
+public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod
 {
     private const double lambdaMax = 1e25;
     private JaggedCholeskyDecomposition decomposition;
-    private double[] deltas;
 
     private double[] diagonal;
     private double[] errors;
@@ -136,8 +130,9 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, I
     ///     The values associated with each
     ///     vector in the <paramref name="inputs" /> data.
     /// </param>
-    public double Minimize(double[][] inputs, double[] outputs)
+    public double Minimize(Jagged<double> inputs, double[] outputs)
     {
+        var inputsArray = inputs.Array;
         if (NumberOfParameters == 0)
             throw new InvalidOperationException("Please set the NumberOfVariables property first.");
 
@@ -147,8 +142,8 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, I
         // and then sum all blocks into the final Hessian matrix
         // and gradient vector.
 
-        var blockSize = inputs.Length / Blocks;
-        var finalBlock = inputs.Length % Blocks;
+        var blockSize = inputsArray.Length / Blocks;
+        var finalBlock = inputsArray.Length % Blocks;
         var jacobianSize = blockSize * outputCount;
 
         // Re-allocate the partial Jacobian matrix only if needed
@@ -164,7 +159,7 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, I
 
         do
         {
-            Convergence.NewValue = iterate(inputs, outputs, blockSize, finalBlock, jacobianSize);
+            Convergence.NewValue = iterate(inputsArray, outputs, blockSize, finalBlock, jacobianSize);
         } while (!Convergence.HasConverged);
         return Value = Convergence.NewValue;
     }
@@ -277,7 +272,7 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, I
                 Hessian[i][i] = diagonal[i] * (1 + LearningRate);
             // Decompose to solve the linear system. The Cholesky decomposition
             // is done in place, occupying the Hessian's lower-triangular part.
-            decomposition = new JaggedCholeskyDecomposition(Hessian, true, true);
+            decomposition = new JaggedCholeskyDecomposition(new Jagged<double>(Hessian), true, true);
             // Check if the decomposition exists
             if (decomposition.IsUndefined)
                 // The Hessian is singular. Continue to the next
@@ -285,12 +280,12 @@ public class LevenbergMarquardt : BaseLeastSquaresMethod, ILeastSquaresMethod, I
                 // it back to non-singular.
                 continue;
             // Solve using Cholesky decomposition
-            deltas = decomposition.Solve(gradient);
+            var deltas = decomposition.Solve(gradient);
             // Update weights using the calculated deltas
             for (var i = 0; i < Solution.Length; i++)
                 Solution[i] = weights[i] + deltas[i];
             // Calculate the new error
-            sumOfSquaredErrors = ComputeError(inputs, outputs);
+            sumOfSquaredErrors = ComputeError(new Jagged<double>(inputs), outputs);
 
             // Update the objective function
             current = sumOfSquaredErrors;

@@ -1,15 +1,11 @@
 using ISynergy.Framework.Core.Extensions;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Common;
@@ -95,7 +91,7 @@ public static partial class Distance
             {
                 var t = Type.GetType("ISynergy.Framework.Mathematics.Distances." + method.Name);
 
-                // TODO: Remove the following special case, as it is needed only for preserving compatibility. // NOSONAR
+                // Compatibility special case: 'BitwiseHamming' has no type in the Distances namespace, so it is mapped to Hamming directly.
                 if (t is null && methodInfo.Name == "BitwiseHamming")
                     return new Hamming() as IDistance<T>;
 
@@ -335,7 +331,7 @@ public static partial class Distance
     ///   For examples, please see <see cref="ISynergy.Framework.Mathematics.Distances.SquareMahalanobis"/> documentation page.
     /// </example>
     ///
-    public static double SquareMahalanobis(double[] x, double[] y, double[,] precision)
+    public static double SquareMahalanobis(double[] x, double[] y, Matrix<double> precision)
     {
         // Note: this is an auto-generated method stub that forwards the call
         // to the actual implementation, indicated in the next line below:
@@ -761,7 +757,7 @@ public static partial class Distance
     ///   For examples, please see <see cref="ISynergy.Framework.Mathematics.Distances.Mahalanobis"/> documentation page.
     /// </example>
     ///
-    public static double Mahalanobis(double[] x, double[] y, double[,] precision)
+    public static double Mahalanobis(double[] x, double[] y, Matrix<double> precision)
     {
         // Note: this is an auto-generated method stub that forwards the call
         // to the actual implementation, indicated in the next line below:

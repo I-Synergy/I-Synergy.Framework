@@ -1,12 +1,8 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections.ObjectModel;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Constrained.Constraints;
@@ -135,16 +131,17 @@ public class LinearConstraintCollection : Collection<LinearConstraint>
     /// matrix <paramref name="a"/>. Contraints thereafter are taken to be
     /// greater than or equal to the constraint values.</param>
     /// 
-    public static LinearConstraintCollection Create(double[,] a, double[] b, int meq)
+    public static LinearConstraintCollection Create(Matrix<double> a, double[] b, int meq)
     {
-        int numberOfVariables = a.GetLength(1);
-        int numberOfConstraints = a.GetLength(0);
+        var aArray = a.Array;
+        int numberOfVariables = aArray.GetLength(1);
+        int numberOfConstraints = aArray.GetLength(0);
 
         var constraints = new LinearConstraint[numberOfConstraints];
         for (var i = 0; i < constraints.Length; i++)
         {
             constraints[i] = new LinearConstraint(numberOfVariables);
-            a.GetRow(i, result: constraints[i].CombinedAs);
+            aArray.GetRow(i, result: constraints[i].CombinedAs);
             if (i < meq)
                 constraints[i].ShouldBe = ConstraintType.EqualTo;
             else

@@ -191,7 +191,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
     /// <param name="start">starting coordinates</param>
     /// <param name="end">ending coordinates</param>
     /// <returns>The geodetic curve information to get from start to end</returns>
-    public GeodeticCurve CalculateGeodeticCurve( // NOSONAR
+    public GeodeticCurve CalculateGeodeticCurve(
         GlobalCoordinates start,
         GlobalCoordinates end)
     {
@@ -308,18 +308,7 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
         // didn't converge?  must be N/S
         if (!converged)
         {
-            if (phi1 > phi2)
-            {
-                alpha1 = Angle.Angle180;
-            }
-            else if (phi1 < phi2)
-            {
-                alpha1 = Angle.Zero;
-            }
-            else
-            {
-                alpha1 = new Angle(double.NaN);
-            }
+            alpha1 = GetNonConvergedCurveBearing(phi1, phi2);
         }
 
         // else, it converged, so do the math
@@ -336,6 +325,24 @@ public struct GeodeticCalculator : IEquatable<GeodeticCalculator>
         if (alpha1 >= 360.0) alpha1 -= 360.0;
 
         return new GeodeticCurve(this, s, alpha1);
+    }
+
+    /// <summary>
+    /// Returns the initial bearing for a curve that did not converge, which means the two points are
+    /// on the same meridian (north/south of each other).
+    /// </summary>
+    /// <param name="phi1">Latitude of the starting point, in radians.</param>
+    /// <param name="phi2">Latitude of the ending point, in radians.</param>
+    /// <returns>The initial bearing.</returns>
+    private static Angle GetNonConvergedCurveBearing(double phi1, double phi2)
+    {
+        if (phi1 > phi2)
+            return Angle.Angle180;
+
+        if (phi1 < phi2)
+            return Angle.Zero;
+
+        return new Angle(double.NaN);
     }
 
     /// <summary>

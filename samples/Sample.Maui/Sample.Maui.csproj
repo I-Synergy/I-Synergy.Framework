@@ -101,17 +101,14 @@
 	<ItemGroup>
 		<!-- App Icon (Resizetizer). Not used by the macOS/AppKit TFM: its icon target renders the
 		     source with sips, which cannot read SVG, so that target gets the PNG icon instead. -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF"
-		          Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'macos'" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'macos'" />
 		<!-- Splash Screen -->
 		<!-- Splash is a PNG on purpose: the MAUI 11 RC Resizetizer crashes on SVG text (Svg.Skia/Microsoft.Maui.Resizetizer 11.0.0-rc.2 -> MAUIR0005,
 		     MissingMethodException in SKTextBlobBuilder.AddPositionedRun) and the source SVG contains the wordmarks as <text>. splash.svg is kept next to
 		     this file as the editable source; re-rendering it to splash.png is what produces the PNG. -->
-		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#17171a"
-		                  Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'macos'" />
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#17171a" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'macos'" />
 		<!-- macOS app icon: AppKit builds an .icns from a raster source. -->
-		<MauiIcon Include="Resources\Images\icon.png"
-		          Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'" />
+		<MauiIcon Include="Resources\Images\icon.png" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'" />
 		
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -137,8 +134,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
-		<PackageReference Include="Microsoft.Maui.Controls" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 		<PackageReference Include="Microsoft.Maui.DevFlow.Agent" />
 		<PackageReference Include="Syncfusion.Maui.Core" />
 	</ItemGroup>
@@ -153,9 +148,7 @@
 	<!-- The MAUI single-project convention only knows the Android/iOS/MacCatalyst/Windows/Tizen
 	     platform folders, so for the macos TFM it removes Platforms/** without re-adding Platforms/MacOS.
 	     Re-include those sources after that removal (evaluation-time items would be removed again). -->
-	<Target Name="_IncludeMacOSPlatformSources"
-	        BeforeTargets="CoreCompile"
-	        Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+	<Target Name="_IncludeMacOSPlatformSources" BeforeTargets="CoreCompile" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
 		<ItemGroup>
 			<Compile Include="Platforms\MacOS\**\*.cs" />
 		</ItemGroup>

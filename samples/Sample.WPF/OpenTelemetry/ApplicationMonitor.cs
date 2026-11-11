@@ -8,6 +8,7 @@ namespace Sample.OpenTelemetry;
 /// <summary>
 /// Monitors WPF application metrics and performance.
 /// </summary>
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
 public class ApplicationMonitor : IDisposable
 {
     private readonly ILogger<ApplicationMonitor> _logger;
@@ -123,3 +124,4 @@ public class ApplicationMonitor : IDisposable
         }
     }
 }
+#pragma warning restore S3881

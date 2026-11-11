@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Transforms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +24,7 @@ public class CosineTransformTest
             { 0.996078431372549, 0.996078431372549, 0.996078431372549, 0.996078431372549, 0.996078431372549, 0.996078431372549, 0.996078431372549, 0.996078431372549 }
         };
 
-        CosineTransform.DCT(input);
+        CosineTransform.DCT(new Matrix<double>(input));
 
         double[,] actual = input;
 
@@ -57,7 +58,7 @@ public class CosineTransformTest
             { -0.2970, -0.0627,  0.1960,  0.0644, -0.1136, -0.1031 ,   0.1887  ,  0.1444  },
         };
 
-        CosineTransform.IDCT(input);
+        CosineTransform.IDCT(new Matrix<double>(input));
 
         double[,] actual = input;
 

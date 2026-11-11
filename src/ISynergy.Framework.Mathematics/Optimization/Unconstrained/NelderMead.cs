@@ -28,13 +28,6 @@ using ISynergy.Framework.Core.Collections;
 using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S1854 // initial assignment before loop reassignment is intentional in ported algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -369,7 +362,7 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
         var n = NumberOfVariables;
 
         var ninv = 1.0 / n;
-        var ret = NelderMeadStatus.Success;
+        NelderMeadStatus ret;
         double init_diam = 0;
 
         var t = new RedBlackTree<double, double[]>(allowDuplicates: true);
@@ -430,11 +423,14 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
                 return ret;
         }
 
-    restart:
-        for (var i = 0; i < n + 1; i++) t.Add(new KeyValuePair<double, double[]>(val[i], pts[i]));
-
         while (true)
         {
+            for (var i = 0; i < n + 1; i++) t.Add(new KeyValuePair<double, double[]>(val[i], pts[i]));
+
+            var restart = false;
+
+            while (true)
+            {
             var low = t.Min();
             var high = t.Max();
             double fl = low.Value.Key;
@@ -579,12 +575,16 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
                         }
                     }
 
-                    goto restart;
+                    restart = true;
+                    break;
                 }
             }
 
             high.Value = new KeyValuePair<double, double[]>(fh, high.Value.Value);
             t.Resort(high);
+            }
+
+            if (!restart) return NelderMeadStatus.Failure;
         }
     }
     /// <summary>
@@ -692,7 +692,7 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
     {
         var maxtime = stop.MaximumTime;
         var start = stop.StartTime;
-        return maxtime > TimeSpan.Zero && DateTime.Now - start >= maxtime;
+        return maxtime > TimeSpan.Zero && DateTime.Now >= start + maxtime;
     }
     internal static bool relstop(double old, double n, double reltol, double abstol)
     {
@@ -701,6 +701,6 @@ public class NelderMead : BaseOptimizationMethod, IOptimizationMethod<NelderMead
 
         return Math.Abs(n - old) < abstol
                || Math.Abs(n - old) < reltol * (Math.Abs(n) + Math.Abs(old)) * 0.5
-               || reltol > 0 && n == old; /* catch new == old == 0 case */
+               || reltol > 0 && ExactComparisons.AreEqual(n ,old); /* catch new == old == 0 case */
     }
 }

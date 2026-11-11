@@ -2,13 +2,9 @@ using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
+using ISynergy.Framework.Mathematics.Abstractions;
 using System.Diagnostics.CodeAnalysis;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -66,29 +62,29 @@ public static partial class Matrix
 
         if (leastSquares)
         {
-            return new SingularValueDecomposition(matrix,
+            return new SingularValueDecomposition(new Matrix<double>(matrix),
                    computeLeftSingularVectors: true,
                    computeRightSingularVectors: true,
-                   autoTranspose: true).Solve(rightSide);
+                   autoTranspose: true).Solve(new Matrix<double>(rightSide));
         }
         if (rows == cols)
         {
             // Solve by LU Decomposition if matrix is square.
-            return new LuDecomposition(matrix).Solve(rightSide);
+            return new LuDecomposition(new Matrix<double>(matrix)).Solve(new Matrix<double>(rightSide));
         }
         else
         {
             if (cols < rows)
             {
                 // Solve by QR Decomposition if not.
-                return new QrDecomposition(matrix).Solve(rightSide);
+                return new QrDecomposition(new Matrix<double>(matrix)).Solve(new Matrix<double>(rightSide));
             }
             else
             {
-                return new SingularValueDecomposition(matrix,
+                return new SingularValueDecomposition(new Matrix<double>(matrix),
                     computeLeftSingularVectors: true,
                     computeRightSingularVectors: true,
-                    autoTranspose: true).Solve(rightSide);
+                    autoTranspose: true).Solve(new Matrix<double>(rightSide));
             }
         }
     }
@@ -150,7 +146,7 @@ public static partial class Matrix
 
         if (leastSquares)
         {
-            return new SingularValueDecomposition(matrix,
+            return new SingularValueDecomposition(new Matrix<double>(matrix),
                   computeLeftSingularVectors: true,
                   computeRightSingularVectors: true,
                   autoTranspose: true).Solve(rightSide);
@@ -158,18 +154,18 @@ public static partial class Matrix
         if (rows == cols)
         {
             // Solve by LU Decomposition if matrix is square.
-            return new LuDecomposition(matrix).Solve(rightSide);
+            return new LuDecomposition(new Matrix<double>(matrix)).Solve(rightSide);
         }
         else
         {
             if (cols < rows)
             {
                 // Solve by QR Decomposition if not.
-                return new QrDecomposition(matrix).Solve(rightSide);
+                return new QrDecomposition(new Matrix<double>(matrix)).Solve(rightSide);
             }
             else
             {
-                return new SingularValueDecomposition(matrix,
+                return new SingularValueDecomposition(new Matrix<double>(matrix),
                     computeLeftSingularVectors: true,
                     computeRightSingularVectors: true,
                     autoTranspose: true).Solve(rightSide);
@@ -250,7 +246,7 @@ public static partial class Matrix
             return inv;
         }
 
-        return new LuDecomposition(matrix, false, inPlace).Inverse();
+        return new LuDecomposition(new Matrix<double>(matrix), false, inPlace).Inverse();
     }
 
     /// <summary>
@@ -259,7 +255,7 @@ public static partial class Matrix
     ///
     public static Double[,] PseudoInverse(this Double[,] matrix)
     {
-        return new SingularValueDecomposition(matrix,
+        return new SingularValueDecomposition(new Matrix<double>(matrix),
             computeLeftSingularVectors: true,
             computeRightSingularVectors: true,
             autoTranspose: true).Inverse();
@@ -312,7 +308,7 @@ public static partial class Matrix
                 + "equal to the number of rows in the problem matrix.");
         }
 
-        return matrix.Decompose(leastSquares).Solve(rightSide);
+        return matrix.Decompose(leastSquares).Solve(new Jagged<double>(rightSide));
     }
 
     /// <summary>
@@ -405,7 +401,7 @@ public static partial class Matrix
 
         if (leastSquares)
         {
-            return new SingularValueDecomposition(matrix,
+            return new SingularValueDecomposition(new Matrix<double>(matrix),
                    computeLeftSingularVectors: true,
                    computeRightSingularVectors: true,
                    autoTranspose: true);
@@ -414,18 +410,18 @@ public static partial class Matrix
         if (rows == cols)
         {
             // Solve by LU Decomposition if matrix is square.
-            return new LuDecomposition(matrix);
+            return new LuDecomposition(new Matrix<double>(matrix));
         }
         else
         {
             if (cols < rows)
             {
                 // Solve by QR Decomposition if not.
-                return new QrDecomposition(matrix);
+                return new QrDecomposition(new Matrix<double>(matrix));
             }
             else
             {
-                return new SingularValueDecomposition(matrix,
+                return new SingularValueDecomposition(new Matrix<double>(matrix),
                     computeLeftSingularVectors: true,
                     computeRightSingularVectors: true,
                     autoTranspose: true);
@@ -445,7 +441,7 @@ public static partial class Matrix
 
         if (leastSquares)
         {
-            return new JaggedSingularValueDecomposition(matrix,
+            return new JaggedSingularValueDecomposition(new Jagged<double>(matrix),
                   computeLeftSingularVectors: true,
                   computeRightSingularVectors: true,
                   autoTranspose: true);
@@ -454,18 +450,18 @@ public static partial class Matrix
         if (rows == cols)
         {
             // Solve by LU Decomposition if matrix is square.
-            return new JaggedLuDecomposition(matrix);
+            return new JaggedLuDecomposition(new Jagged<double>(matrix));
         }
         else
         {
             if (cols < rows)
             {
                 // Solve by QR Decomposition if not.
-                return new JaggedQrDecomposition(matrix);
+                return new JaggedQrDecomposition(new Jagged<double>(matrix));
             }
             else
             {
-                return new JaggedSingularValueDecomposition(matrix,
+                return new JaggedSingularValueDecomposition(new Jagged<double>(matrix),
                     computeLeftSingularVectors: true,
                     computeRightSingularVectors: true,
                     autoTranspose: true);
@@ -561,7 +557,7 @@ public static partial class Matrix
             return inv;
         }
 
-        return new JaggedLuDecomposition(matrix, false, inPlace).Inverse();
+        return new JaggedLuDecomposition(new Jagged<double>(matrix), false, inPlace).Inverse();
     }
 
     /// <summary>
@@ -570,7 +566,7 @@ public static partial class Matrix
 		///
     public static Double[][] PseudoInverse(this Double[][] matrix)
     {
-        return new JaggedSingularValueDecomposition(matrix,
+        return new JaggedSingularValueDecomposition(new Jagged<double>(matrix),
             computeLeftSingularVectors: true,
             computeRightSingularVectors: true,
             autoTranspose: true).Inverse();
@@ -594,29 +590,29 @@ public static partial class Matrix
 
         if (leastSquares)
         {
-            return new SingularValueDecomposition(b.Transpose(),
+            return new SingularValueDecomposition(new Matrix<double>(b.Transpose()),
                    computeLeftSingularVectors: true,
                    computeRightSingularVectors: true,
-                   autoTranspose: true).Solve(a.Transpose()).Transpose();
+                   autoTranspose: true).Solve(new Matrix<double>(a.Transpose())).Transpose();
         }
         if (rows == cols && cols == a.Rows())
         {
             // Solve by LU Decomposition if matrix is square.
-            return new LuDecomposition(b, true).SolveTranspose(a);
+            return new LuDecomposition(new Matrix<double>(b), true).SolveTranspose(new Matrix<double>(a));
         }
         else
         {
             if (rows <= cols)
             {
                 // Solve by QR Decomposition if not.
-                return new QrDecomposition(b, true).SolveTranspose(a);
+                return new QrDecomposition(new Matrix<double>(b), true).SolveTranspose(new Matrix<double>(a));
             }
             else
             {
-                return new SingularValueDecomposition(b.Transpose(),
+                return new SingularValueDecomposition(new Matrix<double>(b.Transpose()),
                     computeLeftSingularVectors: true,
                     computeRightSingularVectors: true,
-                    autoTranspose: true).Solve(a.Transpose()).Transpose();
+                    autoTranspose: true).Solve(new Matrix<double>(a.Transpose())).Transpose();
             }
         }
     }
@@ -639,29 +635,29 @@ public static partial class Matrix
 
         if (leastSquares)
         {
-            return new JaggedSingularValueDecomposition(b.Transpose(),
+            return new JaggedSingularValueDecomposition(new Jagged<double>(b.Transpose()),
                    computeLeftSingularVectors: true,
                    computeRightSingularVectors: true,
-                   autoTranspose: true).Solve(a.Transpose()).Transpose();
+                   autoTranspose: true).Solve(new Jagged<double>(a.Transpose())).Transpose();
         }
         if (rows == cols && cols == a.Rows())
         {
             // Solve by LU Decomposition if matrix is square.
-            return new JaggedLuDecomposition(b, true).SolveTranspose(a);
+            return new JaggedLuDecomposition(new Jagged<double>(b), true).SolveTranspose(new Jagged<double>(a));
         }
         else
         {
             if (rows <= cols)
             {
                 // Solve by QR Decomposition if not.
-                return new JaggedQrDecomposition(b, true).SolveTranspose(a);
+                return new JaggedQrDecomposition(new Jagged<double>(b), true).SolveTranspose(new Jagged<double>(a));
             }
             else
             {
-                return new JaggedSingularValueDecomposition(b.Transpose(),
+                return new JaggedSingularValueDecomposition(new Jagged<double>(b.Transpose()),
                     computeLeftSingularVectors: true,
                     computeRightSingularVectors: true,
-                    autoTranspose: true).Solve(a.Transpose()).Transpose();
+                    autoTranspose: true).Solve(new Jagged<double>(a.Transpose())).Transpose();
             }
         }
     }
@@ -681,7 +677,7 @@ public static partial class Matrix
     ///
     public static Double[][] Null(this Double[][] matrix)
     {
-        var qr = new JaggedQrDecomposition(matrix, economy: false);
+        var qr = new JaggedQrDecomposition(new Jagged<double>(matrix), economy: false);
         var Q = qr.OrthogonalFactor;
         var threshold = matrix.GetLength().Max() * Constants.DoubleEpsilon;
         int[] idx = qr.Diagonal.Find(x => (Double)Math.Abs(x) < threshold);
@@ -694,7 +690,7 @@ public static partial class Matrix
     ///
     public static Double[,] Null(this Double[,] matrix)
     {
-        var qr = new QrDecomposition(matrix, economy: false);
+        var qr = new QrDecomposition(new Matrix<double>(matrix), economy: false);
         var Q = qr.OrthogonalFactor;
         var threshold = matrix.GetLength().Max() * Constants.DoubleEpsilon;
         int[] idx = qr.Diagonal.Find(x => (Double)Math.Abs(x) < threshold);

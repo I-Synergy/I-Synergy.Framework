@@ -1,13 +1,9 @@
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Distances.Base;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Distances;
 
 /// <summary>
@@ -46,7 +42,7 @@ public class Mahalanobis : BaseMahalanobis
     /// 
     /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
     /// 
-    public Mahalanobis(double[,] precision)
+    public Mahalanobis(Matrix<double> precision)
         : base(precision) { }
 
     /// <summary>
@@ -60,7 +56,7 @@ public class Mahalanobis : BaseMahalanobis
     ///   of the given covariance matrix.
     /// </returns>
     /// 
-    public static Mahalanobis FromCovarianceMatrix(double[,] covariance)
+    public static Mahalanobis FromCovarianceMatrix(Matrix<double> covariance)
     {
         return new Mahalanobis(new CholeskyDecomposition(covariance));
     }
@@ -75,7 +71,7 @@ public class Mahalanobis : BaseMahalanobis
     ///   A Mahalanobis distance using the given precision matrix.
     /// </returns>
     /// 
-    public static Mahalanobis FromPrecisionMatrix(double[,] precision)
+    public static Mahalanobis FromPrecisionMatrix(Matrix<double> precision)
     {
         return new Mahalanobis(precision);
     }

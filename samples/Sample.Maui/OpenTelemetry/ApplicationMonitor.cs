@@ -10,6 +10,7 @@ namespace Sample.OpenTelemetry;
 /// <summary>
 /// Monitors MAUI application metrics and performance.
 /// </summary>
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
 public partial class ApplicationMonitor : IDisposable
 {
     private readonly ILogger<ApplicationMonitor> _logger;
@@ -113,3 +114,4 @@ public partial class ApplicationMonitor : IDisposable
         }
     }
 }
+#pragma warning restore S3881

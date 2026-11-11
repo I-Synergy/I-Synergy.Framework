@@ -3,7 +3,10 @@ namespace ISynergy.Framework.Financial;
 /// <summary>
 /// Calculations regarding Value Added Tax (VAT).
 /// </summary>
-public static class VAT // NOSONAR
+// S101: the type name is acronym casing for Value Added Tax and is public API; renaming it to
+// 'Vat' would break every consumer.
+#pragma warning disable S101 // established public API name (acronym)
+public static class VAT
 {
     /// <summary>
     /// Calculates nett price from amount with VAT included.
@@ -49,3 +52,4 @@ public static class VAT // NOSONAR
         return (amountVatExcluded / 100) * vatPercentage;
     }
 }
+#pragma warning restore S101

@@ -102,12 +102,6 @@ public class WeakEventSource<TEventArgs>
         private delegate void OpenEventHandler(object? target, object? sender, TEventArgs e);
 
         /// <summary>
-        /// The open handler cache
-        /// </summary>
-        private static readonly ConcurrentDictionary<MethodInfo, OpenEventHandler> _openHandlerCache = // NOSONAR - intentional per-type static cache; WeakDelegate is private and non-generic
-            new ConcurrentDictionary<MethodInfo, OpenEventHandler>();
-
-        /// <summary>
         /// Creates the open handler. For instance methods, an open-instance delegate is used
         /// (AOT-safe via <c>Delegate.CreateDelegate</c>). For static methods, a closed delegate
         /// is wrapped to adapt the two-parameter static signature <c>(sender, e)</c> to the
@@ -161,7 +155,7 @@ public class WeakEventSource<TEventArgs>
 
             _weakTarget = handler.Target is not null ? new WeakReference(handler.Target) : null;
             _method = handler.GetMethodInfo();
-            _openHandler = _openHandlerCache.GetOrAdd(_method, CreateOpenHandler);
+            _openHandler = (OpenEventHandler)WeakDelegateCache.OpenHandlers.GetOrAdd(_method, method => (Delegate)CreateOpenHandler(method));
         }
 
         /// <summary>
@@ -194,4 +188,18 @@ public class WeakEventSource<TEventArgs>
                 && handler.GetMethodInfo().Equals(_method);
         }
     }
+}
+
+/// <summary>
+/// Holds the open-handler cache shared by every closed <see cref="WeakEventSource{TEventArgs}"/> type.
+/// It is deliberately declared outside the generic type: a static field inside a generic type would be
+/// duplicated per closed generic type (and flagged by Sonar S2743) even though the cache is keyed by
+/// <see cref="MethodInfo"/>, which already determines the delegate shape.
+/// </summary>
+internal static class WeakDelegateCache
+{
+    /// <summary>
+    /// The open handler cache.
+    /// </summary>
+    internal static readonly ConcurrentDictionary<MethodInfo, Delegate> OpenHandlers = new();
 }

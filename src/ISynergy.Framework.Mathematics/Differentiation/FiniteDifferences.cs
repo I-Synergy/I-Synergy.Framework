@@ -1,13 +1,8 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125 // algorithm comments are intentional
 
 
 namespace ISynergy.Framework.Mathematics.Differentiation;
@@ -248,9 +243,6 @@ public class FiniteDifferences
         if (x.Length < result.Length)
             throw new DimensionMismatchException(nameof(x), "Gradient vector must have at least the same size as x.");
 
-        if (Function is null) // NOSONAR - null check is a valid guard clause
-            throw new InvalidOperationException("The Function has not been defined.");
-
         var pointCache = points.Value[0];
         var centerValue = Function(x);
 
@@ -266,7 +258,7 @@ public class FiniteDifferences
     /// <returns>The Hessian of the function evaluated at point <c>x</c>.</returns>
     public double[][] Hessian(double[] x)
     {
-        return Hessian(x, Jagged.Zeros(x.Length, x.Length));
+        return Hessian(x, new Jagged<double>(Jagged.Zeros(x.Length, x.Length)));
     }
 
     /// <summary>
@@ -275,8 +267,9 @@ public class FiniteDifferences
     /// <param name="x">The point where to compute the gradient.</param>
     /// <param name="result">The matrix where the Hessian should be stored.</param>
     /// <returns>The Hessian of the function evaluated at point <c>x</c>.</returns>
-    public double[][] Hessian(double[] x, double[][] result)
+    public double[][] Hessian(double[] x, Jagged<double> result)
     {
+        var resultArray = result.Array;
         var pointCache1 = points.Value[0];
         var pointCache2 = points.Value[1];
         var centerValue = Function(x);
@@ -286,18 +279,18 @@ public class FiniteDifferences
             Func<double[], double> f = x0 => derivative(Function, x0, i, pointCache2, Function(x0));
 
             // Process elements at the diagonal
-            result[i][i] = derivative(f, x, i, pointCache1, centerValue);
+            resultArray[i][i] = derivative(f, x, i, pointCache1, centerValue);
 
             // Process off-diagonal elements
             for (var j = 0; j < i; j++)
             {
                 var d = derivative(f, x, j, pointCache1, centerValue);
-                result[j][i] = d; // Hessian is symmetric, no need
-                result[i][j] = d; // to compute the derivative twice
+                resultArray[j][i] = d; // Hessian is symmetric, no need
+                resultArray[i][j] = d; // to compute the derivative twice
             }
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -433,7 +426,7 @@ public class FiniteDifferences
     public static double Derivative(Func<double, double> function, double value, int order, double stepSize)
     {
         // This method is specific for univariate functions.
-        // TODO: Separate FiniteDifferences into classes for univariate, multivariate and vector-valued functions // NOSONAR
+        // Math.NET parity: univariate, multivariate and vector-valued differentiation share this single class rather than separate dedicated types.
 
         var output = function(value);
         var original = value;

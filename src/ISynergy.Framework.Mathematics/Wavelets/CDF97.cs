@@ -20,13 +20,8 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Wavelets.Base;
-
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Wavelets;
@@ -34,7 +29,7 @@ namespace ISynergy.Framework.Mathematics.Wavelets;
 /// <summary>
 ///     Cohen-Daubechies-Feauveau Wavelet Transform
 /// </summary>
-public class CDF97 : IWavelet // NOSONAR
+public class Cdf97 : IWavelet
 {
     // Constants as used by Gregoire P.
     private const double alpha = -1.586134342;
@@ -49,7 +44,7 @@ public class CDF97 : IWavelet // NOSONAR
     ///     Constructs a new Cohen-Daubechies-Feauveau Wavelet Transform.
     /// </summary>
     /// <param name="levels">The number of iterations for the 2D transform.</param>
-    public CDF97(int levels)
+    public Cdf97(int levels)
     {
         this.levels = levels;
     }
@@ -65,7 +60,7 @@ public class CDF97 : IWavelet // NOSONAR
     /// <summary>
     ///     2-D Forward Discrete Wavelet Transform.
     /// </summary>
-    public void Forward(double[,] data)
+    public void Forward(Matrix<double> data)
     {
         FWT97(data, levels);
     }
@@ -81,10 +76,11 @@ public class CDF97 : IWavelet // NOSONAR
     /// <summary>
     ///     2-D Backward (Inverse) Discrete Wavelet Transform.
     /// </summary>
-    public void Backward(double[,] data)
+    public void Backward(Matrix<double> data)
     {
         IWT97(data, levels);
     }
+
     /// <summary>
     ///     Forward biorthogonal 9/7 wavelet transform
     /// </summary>
@@ -127,6 +123,26 @@ public class CDF97 : IWavelet // NOSONAR
 
         for (var i = 0; i < n; i++)
             x[i] = tempbank[i];
+    }
+
+    /// <summary>
+    ///     Forward biorthogonal 9/7 2D wavelet transform
+    /// </summary>
+    public static double[,] FWT97(Matrix<double> data, int levels) // NOSONAR
+    {
+        var dataArray = data.Array;
+        var w = dataArray.GetLength(0);
+        var h = dataArray.GetLength(1);
+
+        for (var i = 0; i < levels; i++)
+        {
+            fwt2d(dataArray, w, h);
+            fwt2d(dataArray, w, h);
+            w >>= 1;
+            h >>= 1;
+        }
+
+        return dataArray;
     }
 
     /// <summary>
@@ -175,31 +191,13 @@ public class CDF97 : IWavelet // NOSONAR
     }
 
     /// <summary>
-    ///     Forward biorthogonal 9/7 2D wavelet transform
-    /// </summary>
-    public static double[,] FWT97(double[,] data, int levels) // NOSONAR
-    {
-        var w = data.GetLength(0);
-        var h = data.GetLength(1);
-
-        for (var i = 0; i < levels; i++)
-        {
-            fwt2d(data, w, h);
-            fwt2d(data, w, h);
-            w >>= 1;
-            h >>= 1;
-        }
-
-        return data;
-    }
-
-    /// <summary>
     ///     Inverse biorthogonal 9/7 2D wavelet transform
     /// </summary>
-    public static double[,] IWT97(double[,] data, int levels) // NOSONAR
+    public static double[,] IWT97(Matrix<double> data, int levels) // NOSONAR
     {
-        var w = data.GetLength(0);
-        var h = data.GetLength(1);
+        var dataArray = data.Array;
+        var w = dataArray.GetLength(0);
+        var h = dataArray.GetLength(1);
 
         for (var i = 0; i < levels - 1; i++)
         {
@@ -209,15 +207,15 @@ public class CDF97 : IWavelet // NOSONAR
 
         for (var i = 0; i < levels; i++)
         {
-            data = iwt2d(data, w, h);
-            data = iwt2d(data, w, h);
+            dataArray = iwt2d(dataArray, w, h);
+            dataArray = iwt2d(dataArray, w, h);
             h <<= 1;
             w <<= 1;
         }
 
-        return data;
+        return dataArray;
     }
-    private static double[,] fwt2d(double[,] x, int width, int height)
+    private static void fwt2d(double[,] x, int width, int height)
     {
         for (var j = 0; j < width; j++)
         {
@@ -255,7 +253,6 @@ public class CDF97 : IWavelet // NOSONAR
             for (var j = 0; j < width; j++)
                 x[i, j] = tempbank[i, j];
 
-        return x;
     }
 
     private static double[,] iwt2d(double[,] x, int width, int height)

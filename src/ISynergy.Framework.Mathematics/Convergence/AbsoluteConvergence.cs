@@ -1,10 +1,5 @@
 using ISynergy.Framework.Mathematics.Convergence.Base;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Convergence;
@@ -52,13 +47,6 @@ public class AbsoluteConvergence : ISingleValueConvergence
     /// <summary>
     ///     Initializes a new instance of the <see cref="AbsoluteConvergence" /> class.
     /// </summary>
-    public AbsoluteConvergence()
-    {
-    }
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="AbsoluteConvergence" /> class.
-    /// </summary>
     /// <param name="iterations">
     ///     The maximum number of iterations which should be
     ///     performed by the iterative algorithm. Setting to zero indicates there
@@ -73,7 +61,7 @@ public class AbsoluteConvergence : ISingleValueConvergence
     ///     The initial value for the <see cref="NewValue" /> and
     ///     <see cref="OldValue" /> properties.
     /// </param>
-    public AbsoluteConvergence(int iterations = 100, double tolerance = 0, double startValue = 0) // NOSONAR
+    public AbsoluteConvergence(int iterations = 100, double tolerance = 0, double startValue = 0)
     {
         MaxIterations = iterations;
         this.tolerance = tolerance;

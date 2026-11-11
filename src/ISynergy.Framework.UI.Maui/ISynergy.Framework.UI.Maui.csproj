@@ -64,11 +64,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
-		<PackageReference Include="Microsoft.Maui.Controls" />
 	</ItemGroup>
 
 	<!-- Microsoft.Maui.Controls.Compatibility is only shipped for .NET 10; MAUI 11 no longer needs it. -->

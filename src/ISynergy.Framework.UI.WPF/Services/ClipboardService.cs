@@ -15,7 +15,9 @@ namespace ISynergy.Framework.UI.Services;
 public class ClipboardService : IClipboardService
 {
     [StructLayout(LayoutKind.Sequential)]
-    private struct BITMAPINFOHEADER // NOSONAR - Win32 naming convention
+#pragma warning disable S101 // Win32 P/Invoke interop struct name must match the native type.
+    private struct BITMAPINFOHEADER
+#pragma warning restore S101
     {
         public int biSize;
         public int biWidth;
@@ -31,7 +33,9 @@ public class ClipboardService : IClipboardService
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
-    private struct BITMAPFILEHEADER // NOSONAR - Win32 naming convention
+#pragma warning disable S101 // Win32 P/Invoke interop struct name must match the native type.
+    private struct BITMAPFILEHEADER
+#pragma warning restore S101
     {
         public static readonly short BM = 0x4d42;
 

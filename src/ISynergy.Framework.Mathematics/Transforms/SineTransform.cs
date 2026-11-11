@@ -1,9 +1,5 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Transforms;
 
@@ -42,7 +38,7 @@ public static class SineTransform
     /// <summary>
     ///     Forward Discrete Sine Transform.
     /// </summary>
-    public static void DST(double[] data) // NOSONAR
+    public static void DST(double[] data)
     {
         var result = new double[data.Length];
 
@@ -56,6 +52,41 @@ public static class SineTransform
 
         for (var i = 0; i < data.Length; i++)
             data[i] = result[i];
+    }
+
+    /// <summary>
+    ///     Forward Discrete Sine Transform.
+    /// </summary>
+    public static void DST(Jagged<double> data)
+    {
+        var dataArray = data.Array;
+        var rows = dataArray.Length;
+        var cols = dataArray[0].Length;
+
+        var row = new double[cols];
+        var col = new double[rows];
+
+        for (var i = 0; i < rows; i++)
+        {
+            for (var j = 0; j < row.Length; j++)
+                row[j] = dataArray[i][j];
+
+            DST(row);
+
+            for (var j = 0; j < row.Length; j++)
+                dataArray[i][j] = row[j];
+        }
+
+        for (var j = 0; j < cols; j++)
+        {
+            for (var i = 0; i < col.Length; i++)
+                col[i] = dataArray[i][j];
+
+            DST(col);
+
+            for (var i = 0; i < col.Length; i++)
+                dataArray[i][j] = col[i];
+        }
     }
 
     /// <summary>
@@ -80,46 +111,13 @@ public static class SineTransform
     }
 
     /// <summary>
-    ///     Forward Discrete Sine Transform.
-    /// </summary>
-    public static void DST(double[][] data)
-    {
-        var rows = data.Length;
-        var cols = data[0].Length;
-
-        var row = new double[cols];
-        var col = new double[rows];
-
-        for (var i = 0; i < rows; i++)
-        {
-            for (var j = 0; j < row.Length; j++)
-                row[j] = data[i][j];
-
-            DST(row);
-
-            for (var j = 0; j < row.Length; j++)
-                data[i][j] = row[j];
-        }
-
-        for (var j = 0; j < cols; j++)
-        {
-            for (var i = 0; i < col.Length; i++)
-                col[i] = data[i][j];
-
-            DST(col);
-
-            for (var i = 0; i < col.Length; i++)
-                data[i][j] = col[i];
-        }
-    }
-
-    /// <summary>
     ///     Inverse Discrete Sine Transform.
     /// </summary>
-    public static void IDST(double[][] data)
+    public static void IDST(Jagged<double> data)
     {
-        var rows = data.Length;
-        var cols = data[0].Length;
+        var dataArray = data.Array;
+        var rows = dataArray.Length;
+        var cols = dataArray[0].Length;
 
         var row = new double[cols];
         var col = new double[rows];
@@ -127,23 +125,23 @@ public static class SineTransform
         for (var j = 0; j < cols; j++)
         {
             for (var i = 0; i < row.Length; i++)
-                col[i] = data[i][j];
+                col[i] = dataArray[i][j];
 
             IDST(col);
 
             for (var i = 0; i < col.Length; i++)
-                data[i][j] = col[i];
+                dataArray[i][j] = col[i];
         }
 
         for (var i = 0; i < rows; i++)
         {
             for (var j = 0; j < row.Length; j++)
-                row[j] = data[i][j];
+                row[j] = dataArray[i][j];
 
             IDST(row);
 
             for (var j = 0; j < row.Length; j++)
-                data[i][j] = row[j];
+                dataArray[i][j] = row[j];
         }
     }
 }

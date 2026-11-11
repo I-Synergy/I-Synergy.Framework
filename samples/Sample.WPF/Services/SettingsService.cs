@@ -14,7 +14,6 @@ public class SettingsService : ISettingsService, IReloadable
 {
     private const string _fileName = "settings.json";
     private readonly string _settingsFolder;
-    private readonly IMessengerService _messengerService;
     private readonly ILogger _logger;
 
     private LocalSettings? _localSettings;
@@ -26,7 +25,6 @@ public class SettingsService : ISettingsService, IReloadable
     /// </summary>
     public SettingsService(IMessengerService messengerService, ILogger<SettingsService> logger)
     {
-        _messengerService = messengerService;
         _logger = logger;
         _logger.LogTrace("SettingsService instance created with ID: {InstanceId}", Guid.NewGuid());
 
@@ -50,7 +48,7 @@ public class SettingsService : ISettingsService, IReloadable
 
         LoadLocalSettings();
 
-        _messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+        messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
     }
 
     private async void OnUserSignedIn(UserSignedInMessage message) => await ReloadAsync();

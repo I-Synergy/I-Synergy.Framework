@@ -21,12 +21,6 @@
 
 using ISynergy.Framework.Mathematics.Common;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Functions;
@@ -104,7 +98,8 @@ namespace ISynergy.Framework.Mathematics.Functions;
 public static class Gamma
 {
     /// <summary>Maximum gamma on the machine.</summary>
-    public const double GammaMax = 171.624376956302725; // TODO: Rename to Max // NOSONAR
+    // Math.NET parity: the public constant is named GammaMax for API compatibility; a shorter 'Max' alias is intentionally not exposed.
+    public const double GammaMax = 171.624376956302725;
 
     private static readonly double[] gamma_P =
     [
@@ -182,7 +177,7 @@ public static class Gamma
             {
                 p = Math.Floor(q);
 
-                if (p == q)
+                if (ExactComparisons.AreEqual(p ,q))
                     throw new OverflowException();
 
                 z = q - p;
@@ -232,7 +227,7 @@ public static class Gamma
             x += 1.0;
         }
 
-        if (x == 2.0 || x == 3.0)
+        if (ExactComparisons.AreEqual(x ,2.0 )|| ExactComparisons.AreEqual(x ,3.0))
             return z;
 
         x -= 2.0;
@@ -284,12 +279,12 @@ public static class Gamma
             var q = x;
             double p = (int)Math.Floor(q);
 
-            if (p == q)
+            if (ExactComparisons.AreEqual(p ,q))
                 throw new OverflowException("Function computation resulted in arithmetic overflow.");
 
             nz = q - p;
 
-            if (nz != 0.5)
+            if (ExactComparisons.AreNotEqual(nz ,0.5))
             {
                 if (nz > 0.5)
                 {
@@ -307,7 +302,7 @@ public static class Gamma
             x = 1.0 - x;
         }
 
-        if (x <= 10.0 && x == Math.Floor(x))
+        if (x <= 10.0 && ExactComparisons.AreEqual(x ,Math.Floor(x)))
         {
             y = 0.0;
             var n = (int)Math.Floor(x);
@@ -576,7 +571,7 @@ public static class Gamma
             w = Log(q);
             p = Math.Floor(q);
 
-            if (p == q)
+            if (ExactComparisons.AreEqual(p ,q))
                 throw new OverflowException();
 
             z = q - p;
@@ -616,7 +611,7 @@ public static class Gamma
             if (z < 0.0)
                 z = -z;
 
-            if (x == 2.0)
+            if (ExactComparisons.AreEqual(x ,2.0))
                 return Math.Log(z);
 
             x -= 2.0;
@@ -708,11 +703,11 @@ public static class Gamma
         for (var i = 0; i < 10; i++)
         {
             if (x > x0 || x < x1)
-                goto ihalve;
+                break;
 
             yy = UpperIncomplete(a, x);
             if (yy < yl || yy > yh)
-                goto ihalve;
+                break;
 
             if (yy < y)
             {
@@ -728,7 +723,7 @@ public static class Gamma
             // compute the derivative of the function at this point
             d = (a - 1.0) * Math.Log(x) - x - lgm;
             if (d < -Constants.LogMax)
-                goto ihalve;
+                break;
             d = -Math.Exp(d);
 
             // compute the step to the next approximation of x
@@ -739,15 +734,14 @@ public static class Gamma
         }
 
     // Resort to interval halving if Newton iteration did not converge. 
-    ihalve:
 
         d = 0.0625;
-        if (x0 == double.MaxValue)
+        if (ExactComparisons.AreEqual(x0 ,double.MaxValue))
         {
             if (x <= 0.0)
                 x = 1.0;
 
-            while (x0 == double.MaxValue && !double.IsNaN(x))
+            while (ExactComparisons.AreEqual(x0 ,double.MaxValue )&& !double.IsNaN(x))
             {
                 x = (1.0 + d) * x;
                 yy = UpperIncomplete(a, x);

@@ -108,8 +108,8 @@ public partial class ShellViewModel : BaseShellViewModel, IShellViewModel
 
         if (Application.Services.GetRequiredService<IContext>().IsAuthenticated && PrimaryItems?.Count > 0)
         {
-            if (PrimaryItems[0].Command!.CanExecute(PrimaryItems[0].CommandParameter))
-                PrimaryItems[0].Command!.Execute(PrimaryItems[0].CommandParameter);
+            if (PrimaryItems[0].Command.CanExecute(PrimaryItems[0].CommandParameter))
+                PrimaryItems[0].Command.Execute(PrimaryItems[0].CommandParameter);
 
             SetSelectedItem(PrimaryItems[0]);
         }

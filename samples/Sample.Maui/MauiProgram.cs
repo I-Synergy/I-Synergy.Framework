@@ -68,13 +68,21 @@ public static class MauiProgram
                 })
             .AddOtlpExporter();
 
-        builder
+        var mauiBuilder = builder
             // The framework picks the hosting backend for the current head.
-            .UseMauiAppForCurrentHead<App>()
-#if !MACOS
-            // Package limitation, not platform logic: the AppKit head has no MediaElement handler.
-            .UseMauiCommunityToolkitMediaElement(false)
+            .UseMauiAppForCurrentHead<App>();
+
+#if ANDROID
+        // Package limitation, not platform logic: the AppKit head has no MediaElement handler.
+        // UseMauiCommunityToolkitMediaElement is only supported on Android 26.0+ (CA1416).
+        if (OperatingSystem.IsAndroidVersionAtLeast(26))
+            mauiBuilder = mauiBuilder.UseMauiCommunityToolkitMediaElement(false);
+#elif !MACOS
+        // Every other supported head meets the API's minimum OS version.
+        mauiBuilder = mauiBuilder.UseMauiCommunityToolkitMediaElement(false);
 #endif
+
+        mauiBuilder
             .UseFonts(fonts =>
             {
                 fonts.AddFont("FontAwesomeRegular.otf", "fontawesome");
@@ -84,12 +92,6 @@ public static class MauiProgram
                 fonts.AddFont("Figtree-SemiBold.ttf", "FigtreeSemiBold");
                 fonts.AddFont("Figtree-Bold.ttf", "FigtreeBold");
             })
-            //.UseThemeColors(colors =>
-            //{
-            //    colors.Add("#0078D4");
-            //    colors.Add("#800000");
-            //    colors.Add("#5B92E5");
-            //})
             .ConfigureServices<App, Context, CommonServices, ExceptionHandlerService, SettingsService, Properties.Resources>(appBuilder =>
             {
                 appBuilder.Services.TryAddSingleton<IAuthenticationService, AuthenticationService>();

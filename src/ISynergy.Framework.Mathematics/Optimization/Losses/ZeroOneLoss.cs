@@ -1,11 +1,8 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
+using System.Runtime.Serialization;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
@@ -22,7 +19,7 @@ public class AccuracyLoss : ZeroOneLoss
     ///     Initializes a new instance of the <see cref="AccuracyLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public AccuracyLoss(double[][] expected)
+    public AccuracyLoss(Jagged<double> expected)
         : base(expected)
     {
     }
@@ -60,14 +57,14 @@ public class AccuracyLoss : ZeroOneLoss
 /// </summary>
 [Serializable]
 public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
-    ILoss<double[][]>, ILoss<double[]>
+    ILoss<double[][]>, ILoss<double[]>, IDeserializationCallback
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="ZeroOneLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public ZeroOneLoss(double[][] expected)
-        : this(expected.ArgMax(0))
+    public ZeroOneLoss(Jagged<double> expected)
+        : this(expected.Array.ArgMax(0))
     {
     }
 
@@ -76,8 +73,8 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
     /// </summary>
     /// <param name="classes">The number of classes.</param>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public ZeroOneLoss(int classes, double[][] expected)
-        : this(classes, expected.ArgMax(0))
+    public ZeroOneLoss(int classes, Jagged<double> expected)
+        : this(classes, expected.Array.ArgMax(0))
     {
     }
 
@@ -214,5 +211,11 @@ public class ZeroOneLoss : LossBase<int[]>, ILoss<bool[]>,
         if (Mean)
             return error / (double)Expected.Length;
         return error;
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (Expected is null)
+            throw new SerializationException("The deserialized zero-one loss does not contain expected values.");
     }
 }

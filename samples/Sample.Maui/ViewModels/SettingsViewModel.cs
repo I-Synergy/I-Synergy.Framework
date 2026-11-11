@@ -251,18 +251,16 @@ public partial class SettingsViewModel : ViewModelBlade<object>
         {
             _commonServices.BusyService.StartBusy();
 
-            if (_settingsService.LocalSettings is LocalSettings)
+            if (_settingsService.LocalSettings is LocalSettings &&
+                _settingsService.SaveLocalSettings() &&
+                await _dialogService.ShowMessageAsync(
+                    _commonServices.LanguageService.GetString("WarningSettingsChange") +
+                    Environment.NewLine +
+                    _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
+                    _commonServices.LanguageService.GetString("TitleQuestion"),
+                    MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
             {
-                if (_settingsService.SaveLocalSettings() &&
-                    await _dialogService.ShowMessageAsync(
-                        _commonServices.LanguageService.GetString("WarningSettingsChange") +
-                        Environment.NewLine +
-                        _commonServices.LanguageService.GetString("WarningDoYouWantToDoItNow"),
-                        _commonServices.LanguageService.GetString("TitleQuestion"),
-                        MessageBoxButtons.YesNo) == MessageBoxResults.Yes)
-                {
-                    _commonServices.RestartApplication();
-                }
+                _commonServices.RestartApplication();
             }
 
             if (_settingsService.GlobalSettings is GlobalSettings globalSetting)

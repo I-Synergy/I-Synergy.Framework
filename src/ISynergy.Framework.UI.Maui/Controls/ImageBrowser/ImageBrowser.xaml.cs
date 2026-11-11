@@ -61,8 +61,7 @@ public partial class ImageBrowser : ContentView
         try
         {
             if (IPlatformApplication.Current!.Services.GetRequiredService<IClipboardService>() is { } clipboardService &&
-                await clipboardService.GetImageFromClipboardAsync() is { } imageResult &&
-                imageResult is not null) // NOSONAR
+                await clipboardService.GetImageFromClipboardAsync() is { } imageResult)
             {
                 FileBytes = imageResult.FileBytes ?? Array.Empty<byte>();
                 ContentType = imageResult.ContentType ?? string.Empty;

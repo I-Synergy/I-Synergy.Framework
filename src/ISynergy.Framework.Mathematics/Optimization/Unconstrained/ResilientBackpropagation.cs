@@ -4,12 +4,6 @@ using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.ComponentModel;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1450 // private fields are read in algorithm methods
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -27,8 +21,6 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
 
     private double etaMinus = 0.5;
     private double etaPlus = 1.2;
-
-    private double[] gradient;
 
     private readonly double initialStep = 0.0125;
     private double[] previousGradient;
@@ -141,7 +133,6 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
 
         convergence = new RelativeConvergence();
 
-        gradient = new double[numberOfVariables];
         previousGradient = new double[numberOfVariables];
         weightsUpdates = new double[numberOfVariables];
 
@@ -166,10 +157,10 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
 
         return true;
     }
-    private double runEpoch()
+    private void runEpoch()
     {
         // Compute the true gradient
-        gradient = Gradient(Solution);
+        var gradient = Gradient(Solution);
 
         var parameters = Solution;
 
@@ -207,7 +198,7 @@ public class ResilientBackpropagation : BaseGradientOptimizationMethod, IGradien
 
         var value = Function(parameters);
 
-        return convergence.NewValue = value;
+        convergence.NewValue = value;
     }
 
     /// <summary>

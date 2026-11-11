@@ -1,10 +1,6 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Transforms;
@@ -68,10 +64,11 @@ public static class HartleyTransform
     /// <summary>
     ///     Forward Hartley Transform.
     /// </summary>
-    public static void DHT(double[,] data)
+    public static void DHT(Matrix<double> data)
     {
-        var rows = data.GetLength(0);
-        var cols = data.GetLength(1);
+        var dataArray = data.Array;
+        var rows = dataArray.GetLength(0);
+        var cols = dataArray.GetLength(1);
         var s = 2.0 * Math.PI / rows;
 
         var result = new double[rows, cols];
@@ -83,12 +80,12 @@ public static class HartleyTransform
                 for (var i = 0; i < rows; i++)
                 {
                     for (var k = 0; k < cols; k++)
-                        sum += data[i, k] * cas(s * (i * m + k * n));
+                        sum += dataArray[i, k] * cas(s * (i * m + k * n));
                     result[m, n] = sum / rows;
                 }
             }
 
-        Array.Copy(result, data, result.Length);
+        Array.Copy(result, dataArray, result.Length);
     }
     private static double cas(double theta)
     {

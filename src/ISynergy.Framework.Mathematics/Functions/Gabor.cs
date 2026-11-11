@@ -1,12 +1,8 @@
 using ISynergy.Framework.Mathematics.Matrices;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Functions;
@@ -108,12 +104,35 @@ public static class Gabor
     }
 
     /// <summary>
+    ///     Bundles the shape parameters of a 2-D Gabor kernel.
+    /// </summary>
+    private readonly struct KernelParameters
+    {
+        public readonly double Lambda;
+        public readonly double Theta;
+        public readonly double Psi;
+        public readonly double Sigma;
+        public readonly double Gamma;
+        public readonly bool Normalized;
+
+        public KernelParameters(double lambda, double theta, double psi, double sigma, double gamma, bool normalized)
+        {
+            Lambda = lambda;
+            Theta = theta;
+            Psi = psi;
+            Sigma = sigma;
+            Gamma = gamma;
+            Normalized = normalized;
+        }
+    }
+
+    /// <summary>
     ///     Computes the 2-D Gabor kernel.
     /// </summary>
     public static double[,] Kernel2D(double lambda, double theta, double psi,
         double sigma, double gamma)
     {
-        return Kernel2D(3, lambda, theta, psi, sigma, gamma, false, GaborKernelKind.Real);
+        return Kernel2D(3, new KernelParameters(lambda, theta, psi, sigma, gamma, false), GaborKernelKind.Real);
     }
 
     /// <summary>
@@ -122,7 +141,7 @@ public static class Gabor
     public static double[,] Kernel2D(double lambda, double theta, double psi,
         double sigma, double gamma, bool normalized)
     {
-        return Kernel2D(3, lambda, theta, psi, sigma, gamma, normalized, GaborKernelKind.Imaginary);
+        return Kernel2D(3, new KernelParameters(lambda, theta, psi, sigma, gamma, normalized), GaborKernelKind.Imaginary);
     }
 
     /// <summary>
@@ -131,15 +150,21 @@ public static class Gabor
     public static double[,] Kernel2D(int size, double lambda, double theta, double psi,
         double sigma, double gamma, bool normalized)
     {
-        return Kernel2D(size, lambda, theta, psi, sigma,
-            gamma, normalized, GaborKernelKind.Imaginary);
+        return Kernel2D(size, new KernelParameters(lambda, theta, psi, sigma, gamma, normalized), GaborKernelKind.Imaginary);
     }
+
     /// <summary>
     ///     Computes the 2-D Gabor kernel.
     /// </summary>
-    public static double[,] Kernel2D(int size, double lambda, double theta,
-        double psi, double sigma, double gamma, bool normalized, GaborKernelKind function)
+    private static double[,] Kernel2D(int size, in KernelParameters parameters, GaborKernelKind function)
     {
+        var lambda = parameters.Lambda;
+        var theta = parameters.Theta;
+        var psi = parameters.Psi;
+        var sigma = parameters.Sigma;
+        var gamma = parameters.Gamma;
+        var normalized = parameters.Normalized;
+
         var sigmaX = sigma;
         var sigmaY = sigma / gamma;
 
@@ -204,7 +229,7 @@ public static class Gabor
         }
 
         if (normalized)
-            kernel.Divide(sum, result: kernel);
+            new Matrix<double>(kernel).Divide(sum, result: new Matrix<double>(kernel));
 
         return kernel;
     }

@@ -1,11 +1,6 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using System.Runtime.InteropServices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1751, S3626, S2234 // loop invariant, redundant continue, and argument order are intentional in generated elementwise code
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -26,7 +21,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -74,7 +69,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -128,7 +123,7 @@ public static partial class Elementwise
                 }
                 else
                 {
-                    r[i] = (A == B);
+                    r[i] = (ExactComparisons.AreEqual(A ,B));
                 }
             }
         }
@@ -140,15 +135,17 @@ public static partial class Elementwise
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[,] Equals(Double[,] a, Double[,] b, Double atol = 0, Double rtol = 0)
+    public static bool[,] Equals(Matrix<Double> a, Matrix<Double> b, Double atol = 0, Double rtol = 0)
     {
-        bool[,] r = MatrixCreateAs<Double, bool>(a);
+        var aArray = a.Array;
+        var bArray = b.Array;
+        bool[,] r = MatrixCreateAs<Double, bool>(aArray);
 
-        if (a.Length == 0)
+        if (aArray.Length == 0)
             return r;
 
-        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
-        var spanB = MemoryMarshal.CreateSpan(ref b[0, 0], b.Length);
+        var spanA = MemoryMarshal.CreateSpan(ref aArray[0, 0], aArray.Length);
+        var spanB = MemoryMarshal.CreateSpan(ref bArray[0, 0], bArray.Length);
         var spanR = MemoryMarshal.CreateSpan(ref r[0, 0], r.Length);
         if (rtol > 0)
         {
@@ -157,7 +154,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = spanB[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true;
                 }
@@ -205,7 +202,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = spanB[i];
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true; continue;
                 }
@@ -253,7 +250,7 @@ public static partial class Elementwise
                 {
                     spanR[i] = false; continue;
                 }
-                spanR[i] = (A == B); continue;
+                spanR[i] = (ExactComparisons.AreEqual(A ,B));
             }
         }
 
@@ -264,19 +261,21 @@ public static partial class Elementwise
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[][] Equals(Double[,] a, Double[][] b, Double atol = 0, Double rtol = 0)
+    public static bool[][] Equals(Matrix<Double> a, Jagged<Double> b, Double atol = 0, Double rtol = 0)
     {
-        bool[][] r = JaggedCreateAs<Double, bool>(a);
+        var aArray = a.Array;
+        var bArray = b.Array;
+        bool[][] r = JaggedCreateAs<Double, bool>(aArray);
 
         if (rtol > 0)
         {
-            for (var i = 0; i < b.Length; i++)
-                for (var j = 0; j < b[i].Length; j++)
+            for (var i = 0; i < bArray.Length; i++)
+                for (var j = 0; j < bArray[i].Length; j++)
                 {
-                    var A = a[i, j];
-                    var B = b[i][j];
+                    var A = aArray[i, j];
+                    var B = bArray[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -319,13 +318,13 @@ public static partial class Elementwise
         }
         else if (atol > 0)
         {
-            for (var i = 0; i < b.Length; i++)
-                for (var j = 0; j < b[i].Length; j++)
+            for (var i = 0; i < bArray.Length; i++)
+                for (var j = 0; j < bArray[i].Length; j++)
                 {
-                    var A = a[i, j];
-                    var B = b[i][j];
+                    var A = aArray[i, j];
+                    var B = bArray[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -355,11 +354,11 @@ public static partial class Elementwise
         }
         else
         {
-            for (var i = 0; i < b.Length; i++)
-                for (var j = 0; j < b[i].Length; j++)
+            for (var i = 0; i < bArray.Length; i++)
+                for (var j = 0; j < bArray[i].Length; j++)
                 {
-                    var A = a[i, j];
-                    var B = b[i][j];
+                    var A = aArray[i, j];
+                    var B = bArray[i][j];
 
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                     {
@@ -379,7 +378,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }
@@ -391,19 +390,21 @@ public static partial class Elementwise
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[][] Equals(Double[][] a, Double[,] b, Double atol = 0, Double rtol = 0)
+    public static bool[][] Equals(Jagged<Double> a, Matrix<Double> b, Double atol = 0, Double rtol = 0)
     {
-        bool[][] r = JaggedCreateAs<Double, bool>(a);
+        var aArray = a.Array;
+        var bArray = b.Array;
+        bool[][] r = JaggedCreateAs<Double, bool>(aArray);
 
         if (rtol > 0)
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
-                    var B = b[i, j];
+                    var A = aArray[i][j];
+                    var B = bArray[i, j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -446,13 +447,13 @@ public static partial class Elementwise
         }
         else if (atol > 0)
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
-                    var B = b[i, j];
+                    var A = aArray[i][j];
+                    var B = bArray[i, j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -483,11 +484,11 @@ public static partial class Elementwise
         }
         else
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
-                    var B = b[i, j];
+                    var A = aArray[i][j];
+                    var B = bArray[i, j];
 
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                     {
@@ -507,7 +508,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }
@@ -519,19 +520,21 @@ public static partial class Elementwise
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[][] Equals(Double[][] a, Double[][] b, Double atol = 0, Double rtol = 0)
+    public static bool[][] Equals(Jagged<Double> a, Jagged<Double> b, Double atol = 0, Double rtol = 0)
     {
-        bool[][] r = JaggedCreateAs<Double, bool>(a);
+        var aArray = a.Array;
+        var bArray = b.Array;
+        bool[][] r = JaggedCreateAs<Double, bool>(aArray);
 
         if (rtol > 0)
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
-                    var B = b[i][j];
+                    var A = aArray[i][j];
+                    var B = bArray[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -574,13 +577,13 @@ public static partial class Elementwise
         }
         else if (atol > 0)
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
-                    var B = b[i][j];
+                    var A = aArray[i][j];
+                    var B = bArray[i][j];
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -611,11 +614,11 @@ public static partial class Elementwise
         }
         else
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
-                    var B = b[i][j];
+                    var A = aArray[i][j];
+                    var B = bArray[i][j];
 
                     if (Double.IsNaN(A) && Double.IsNaN(B))
                     {
@@ -635,7 +638,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }
@@ -658,7 +661,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -706,7 +709,7 @@ public static partial class Elementwise
                 var A = a[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     r[i] = true;
                 }
@@ -760,7 +763,7 @@ public static partial class Elementwise
                 }
                 else
                 {
-                    r[i] = (A == B);
+                    r[i] = (ExactComparisons.AreEqual(A ,B));
                 }
             }
         }
@@ -772,14 +775,15 @@ public static partial class Elementwise
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[,] Equals(Double[,] a, Double b, Double atol = 0, Double rtol = 0)
+    public static bool[,] Equals(Matrix<Double> a, Double b, Double atol = 0, Double rtol = 0)
     {
-        bool[,] r = MatrixCreateAs<Double, bool>(a);
+        var aArray = a.Array;
+        bool[,] r = MatrixCreateAs<Double, bool>(aArray);
 
-        if (a.Length == 0)
+        if (aArray.Length == 0)
             return r;
 
-        var spanA = MemoryMarshal.CreateSpan(ref a[0, 0], a.Length);
+        var spanA = MemoryMarshal.CreateSpan(ref aArray[0, 0], aArray.Length);
         var spanR = MemoryMarshal.CreateSpan(ref r[0, 0], r.Length);
         if (rtol > 0)
         {
@@ -788,7 +792,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true;
                 }
@@ -836,7 +840,7 @@ public static partial class Elementwise
                 var A = spanA[i];
                 var B = b;
 
-                if (A == B)
+                if (ExactComparisons.AreEqual(A ,B))
                 {
                     spanR[i] = true;
                 }
@@ -891,7 +895,7 @@ public static partial class Elementwise
                 }
                 else
                 {
-                    spanR[i] = (A == B);
+                    spanR[i] = (ExactComparisons.AreEqual(A ,B));
                 }
             }
         }
@@ -903,19 +907,20 @@ public static partial class Elementwise
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[][] Equals(Double[][] a, Double b, Double atol = 0, Double rtol = 0)
+    public static bool[][] Equals(Jagged<Double> a, Double b, Double atol = 0, Double rtol = 0)
     {
-        bool[][] r = JaggedCreateAs<Double, bool>(a);
+        var aArray = a.Array;
+        bool[][] r = JaggedCreateAs<Double, bool>(aArray);
 
         if (rtol > 0)
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
+                    var A = aArray[i][j];
                     var B = b;
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -959,13 +964,13 @@ public static partial class Elementwise
         }
         else if (atol > 0)
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
+                    var A = aArray[i][j];
                     var B = b;
 
-                    if (A == B)
+                    if (ExactComparisons.AreEqual(A ,B))
                     {
                         r[i][j] = true;
                     }
@@ -996,10 +1001,10 @@ public static partial class Elementwise
         }
         else
         {
-            for (var i = 0; i < a.Length; i++)
-                for (var j = 0; j < a[i].Length; j++)
+            for (var i = 0; i < aArray.Length; i++)
+                for (var j = 0; j < aArray[i].Length; j++)
                 {
-                    var A = a[i][j];
+                    var A = aArray[i][j];
                     var B = b;
 
                     if (Double.IsNaN(A) && Double.IsNaN(B))
@@ -1020,7 +1025,7 @@ public static partial class Elementwise
                     }
                     else
                     {
-                        r[i][j] = (A == B);
+                        r[i][j] = (ExactComparisons.AreEqual(A ,B));
                     }
                 }
         }
@@ -1034,24 +1039,36 @@ public static partial class Elementwise
     /// 
     public static bool[] Equals(Double a, Double[] b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(b, a, rtol, atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return Equals(left, right, absTolerance, relTolerance);
     }
 
     /// <summary>
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[,] Equals(Double a, Double[,] b, Double atol = 0, Double rtol = 0)
+    public static bool[,] Equals(Double a, Matrix<Double> b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(b, a, rtol, atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return Equals(left, right, absTolerance, relTolerance);
     }
 
     /// <summary>
     ///   Determines whether two matrices contain the same values.
     /// </summary>
     ///
-    public static bool[][] Equals(Double a, Double[][] b, Double atol = 0, Double rtol = 0)
+    public static bool[][] Equals(Double a, Jagged<Double> b, Double atol = 0, Double rtol = 0)
     {
-        return Equals(b, a, rtol, atol);
+        var left = b;
+        var right = a;
+        var absTolerance = rtol;
+        var relTolerance = atol;
+        return Equals(left, right, absTolerance, relTolerance);
     }
 }

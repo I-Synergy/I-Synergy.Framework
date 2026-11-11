@@ -265,7 +265,7 @@ public class GlobalMesh
     /// <param name="distance">The distance (0-3 currently supported)</param>
     /// <returns>The list of mesh numbers of the neighbors</returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public List<long> Neighborhood(long meshNumber, int distance) // NOSONAR
+    public List<long> Neighborhood(long meshNumber, int distance)
     {
         const int maxDistance = 3;
 
@@ -285,36 +285,43 @@ public class GlobalMesh
         {
             var bearing = Math.Sign(y) < 0 ? 180.0 : 0.0;
 
-            var vertical = y != 0 ?
-                calc.CalculateEndingGlobalCoordinates(center, bearing, Math.Abs(y) * MeshSize)
+            var vertical = y != 0
+                ? calc.CalculateEndingGlobalCoordinates(center, bearing, Math.Abs(y) * MeshSize)
                 : center;
 
-            for (var x = -distance; x <= distance; x++)
-            {
-                if (x != 0 || y != 0)
-                {
-                    var add = false;
-                    if (Math.Abs(y) == distance)
-                    {
-                        add = true;
-                    }
-                    else
-                    {
-                        if (Math.Abs(x) == distance)
-                            add = true;
-                    }
-                    if (add)
-                    {
-                        bearing = Math.Sign(x) < 0 ? 270.0 : 90.0;
-                        var horizontal = x != 0 ?
-                            calc.CalculateEndingGlobalCoordinates(vertical, bearing, Math.Abs(x) * MeshSize)
-                            : vertical;
-
-                        result.Add(MeshNumber(horizontal));
-                    }
-                }
-            }
+            AddNeighborsInRow(result, calc, vertical, y, distance);
         }
+
         return result;
+    }
+
+    /// <summary>
+    /// Adds the meshes on the border of the square around the center for one row.
+    /// </summary>
+    /// <param name="result">The list of mesh numbers to add to.</param>
+    /// <param name="calc">The calculator used to move over the globe.</param>
+    /// <param name="vertical">The coordinates of the center of this row.</param>
+    /// <param name="y">The row offset, between -distance and distance.</param>
+    /// <param name="distance">The distance of the neighborhood.</param>
+    private void AddNeighborsInRow(
+        List<long> result,
+        GeodeticCalculator calc,
+        GlobalCoordinates vertical,
+        int y,
+        int distance)
+    {
+        for (var x = -distance; x <= distance; x++)
+        {
+            // Only the meshes on the border of the square are neighbors.
+            if ((x == 0 && y == 0) || (Math.Abs(y) != distance && Math.Abs(x) != distance))
+                continue;
+
+            var bearing = Math.Sign(x) < 0 ? 270.0 : 90.0;
+            var horizontal = x != 0
+                ? calc.CalculateEndingGlobalCoordinates(vertical, bearing, Math.Abs(x) * MeshSize)
+                : vertical;
+
+            result.Add(MeshNumber(horizontal));
+        }
     }
 }

@@ -40,7 +40,8 @@ public static class ServiceCollectionExtensions
     /// <param name="assembly">The assembly to scan for ViewModels and Views.</param>
     /// <param name="assemblyFilter">A filter function for assembly names.</param>
     /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>( // NOSONAR
+#pragma warning disable S2436 // Public DI extension method: the generic arity is fixed by the public API surface it configures.
+    public static IServiceCollection ConfigureServices<TContext, TCommonServices, TExceptionHandlerService, TSettingsService, TResource>(
         this IServiceCollection services,
         IConfiguration configuration,
         IInfoService infoService,
@@ -52,6 +53,7 @@ public static class ServiceCollectionExtensions
         where TExceptionHandlerService : class, IExceptionHandlerService
         where TSettingsService : class, ISettingsService
         where TResource : class
+#pragma warning restore S2436
     {
         services.AddOptions();
 

@@ -2,13 +2,8 @@ using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
-
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Statistics;
 
 /// <summary>
@@ -50,6 +45,42 @@ public static class Classes
         for (var i = 0; i < r.Length; i++)
             r[i] = (double)data[i][positiveColumn] / (data[i][positiveColumn] + data[i][negativeColumn]);
         return r;
+    }
+
+    /// <summary>
+    ///   Gets the percentage of positive samples in a set of class labels.
+    /// </summary>
+    /// 
+    /// <param name="y">The class labels.</param>
+    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
+    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
+    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
+    /// 
+    public static double GetRatio(int[] y, out int positives, out int negatives)
+    {
+        return GetRatio(y.ToBoolean(), out positives, out negatives);
+    }
+
+    /// <summary>
+    ///   Gets the percentage of positive samples in a set of class labels.
+    /// </summary>
+    /// 
+    /// <param name="y">The class labels.</param>
+    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
+    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
+    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
+    /// 
+    public static double GetRatio(this bool[] y, out int positives, out int negatives)
+    {
+        positives = 0;
+        for (var i = 0; i < y.Length; i++)
+        {
+            if (y[i])
+                positives++;
+        }
+
+        negatives = y.Length - positives;
+        return positives / (double)(positives + negatives);
     }
 
     /// <summary>
@@ -416,42 +447,6 @@ public static class Classes
     }
 
     /// <summary>
-    ///   Gets the percentage of positive samples in a set of class labels.
-    /// </summary>
-    /// 
-    /// <param name="y">The class labels.</param>
-    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
-    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
-    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
-    /// 
-    public static double GetRatio(int[] y, out int positives, out int negatives)
-    {
-        return GetRatio(y.ToBoolean(), out positives, out negatives);
-    }
-
-    /// <summary>
-    ///   Gets the percentage of positive samples in a set of class labels.
-    /// </summary>
-    /// 
-    /// <param name="y">The class labels.</param>
-    /// <param name="positives">The number of positive samples in <paramref name="y"/>.</param>
-    /// <param name="negatives">The number of negatives samples in <paramref name="y"/>.</param>
-    /// <returns>The percentage of positive samples in <paramref name="y"/>.</returns>
-    /// 
-    public static double GetRatio(this bool[] y, out int positives, out int negatives)
-    {
-        positives = 0;
-        for (var i = 0; i < y.Length; i++)
-        {
-            if (y[i])
-                positives++;
-        }
-
-        negatives = y.Length - positives;
-        return positives / (double)(positives + negatives);
-    }
-
-    /// <summary>
     ///   Converts a boolean variable into a 0-or-1 representation (0 is false, 1 is true).
     /// </summary>
     /// 
@@ -620,7 +615,7 @@ public static class Classes
     /// 
     public static int[] ToMulticlass(this int[] p)
     {
-        return ToMulticlass(p, (int)p.Min());
+        return ToMulticlass(p, p.Min());
     }
 
     /// <summary>
@@ -643,7 +638,7 @@ public static class Classes
     {
         var result = new int[p.Length];
         for (var i = 0; i < p.Length; i++)
-            result[i] = (int)p[i] - min;
+            result[i] = p[i] - min;
         return result;
     }
     /// <summary>
@@ -751,8 +746,9 @@ public static class Classes
     ///   is higher than zero, and false otherwise.
     /// </summary>
     /// 
-    public static bool[][] Decide(double[][] values)
+    public static bool[][] Decide(Jagged<double> valuesWrapper)
     {
+        var values = valuesWrapper.Array;
         bool[][] result = new bool[values.Length][];
         for (var i = 0; i < result.Length; i++)
             result[i] = Decide(values[i]);
@@ -764,8 +760,9 @@ public static class Classes
     ///   is higher than zero, and false otherwise.
     /// </summary>
     /// 
-    public static bool[][] Decide(int[][] values)
+    public static bool[][] Decide(Jagged<int> valuesWrapper)
     {
+        var values = valuesWrapper.Array;
         bool[][] result = new bool[values.Length][];
         for (var i = 0; i < result.Length; i++)
             result[i] = Decide(values[i]);

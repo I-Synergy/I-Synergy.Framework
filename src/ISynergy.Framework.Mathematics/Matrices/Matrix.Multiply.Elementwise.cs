@@ -1,10 +1,5 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Elementwise
@@ -19,12 +14,15 @@ public static partial class Elementwise
     /// <param name="result">The matrix where the result should be stored. Pass the same
     ///   matrix as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[][] MultiplyAndAdd(this double[][] a, double b, double[][] c, double[][] result)
+    public static double[][] MultiplyAndAdd(this Jagged<double> a, double b, Jagged<double> c, Jagged<double> result)
     {
-        check<double, double, double, double>(a: a, b: b, c: c, result: result);
-        for (var i = 0; i < result.Length; i++)
-            for (var j = 0; j < result[i].Length; j++)
-                result[i][j] = (double)((double)(a[i][j]) * b + (double)(c[i][j]));
+        var aArray = a.Array;
+        var cArray = c.Array;
+        var resultArray = result.Array;
+        check<double, double, double, double>(a: aArray, b: b, c: cArray, result: resultArray);
+        for (var i = 0; i < resultArray.Length; i++)
+            for (var j = 0; j < resultArray[i].Length; j++)
+                resultArray[i][j] = aArray[i][j] * b + cArray[i][j];
 
         return result;
     }
@@ -39,12 +37,15 @@ public static partial class Elementwise
     /// <param name="result">The matrix where the result should be stored. Pass the same
     ///   matrix as one of the arguments to perform the operation in place.</param>
     /// 
-    public static double[,] MultiplyAndAdd(this double[,] a, double b, double[,] c, double[,] result)
+    public static double[,] MultiplyAndAdd(this Matrix<double> a, double b, Matrix<double> c, Matrix<double> result)
     {
-        check<double, double, double, double>(a: a, b: b, c: c, result: result);
-        for (var i = 0; i < result.GetLength(0); i++)
-            for (var j = 0; j < result.GetLength(1); j++)
-                result[i, j] = (double)((double)(a[i, j]) * b + (double)(c[i, j]));
+        var aArray = a.Array;
+        var cArray = c.Array;
+        var resultArray = result.Array;
+        check<double, double, double, double>(a: aArray, b: b, c: cArray, result: resultArray);
+        for (var i = 0; i < resultArray.GetLength(0); i++)
+            for (var j = 0; j < resultArray.GetLength(1); j++)
+                resultArray[i, j] = aArray[i, j] * b + cArray[i, j];
 
         return result;
     }

@@ -1,11 +1,7 @@
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Integration.Base;
+using System.Security.Cryptography;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Integration;
@@ -67,7 +63,7 @@ namespace ISynergy.Framework.Mathematics.Integration;
 /// </example>
 /// <seealso cref="NonAdaptiveGaussKronrod" />
 /// <seealso cref="InfiniteAdaptiveGaussKronrod" />
-public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalIntegration // NOSONAR
+public class MonteCarloIntegration : IMultidimensionalIntegration
 {
     private int count;
     private double sum;
@@ -98,7 +94,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
 
         NumberOfParameters = parameters;
         Range = new NumericRange[parameters];
-        Random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next()); // NOSONAR
+        Random = RandomNumberGenerator.Create();
 
         for (var i = 0; i < Range.Length; i++)
             Range[i].Max = 1;
@@ -111,7 +107,7 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
     ///     Gets or sets the random generator algorithm to be used within
     ///     this <see cref="MonteCarloIntegration">Monte Carlo method</see>.
     /// </summary>
-    public System.Random Random { get; set; }
+    public RandomNumberGenerator Random { get; set; }
 
     /// <summary>
     ///     Gets the integration error for the
@@ -163,11 +159,11 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
         for (var j = 0; j < Iterations; j++)
         {
             for (var i = 0; i < sample.Length; i++)
-                sample[i] = Random.NextDouble() * Range[i].Length + Range[i].Min;
+                sample[i] = NextDouble(Random) * Range[i].Length + Range[i].Min;
 
             var f = Function(sample);
 
-            count++; // NOSONAR - intentional: samples pairs of points
+            count++; // intentional: samples pairs of points
             sum += f;
             sum2 += f * f;
         }
@@ -263,20 +259,41 @@ public class MonteCarloIntegration : INumericalIntegration, IMultidimensionalInt
         var count = 0;
         double sum = 0;
 
-        var random = new System.Random(Framework.Mathematics.Random.Generator.Random.Next()); // NOSONAR
+        using var random = RandomNumberGenerator.Create();
 
-        for (count = 0; count < samples; count++) // NOSONAR
+        while (count < samples)
         {
-            var u = random.Next() * (b - a) + a;
+            var u = NextInt32(random) * (b - a) + a;
 
             var f = func(u);
 
-            count++; // NOSONAR - intentional: samples pairs of points
+            count += 2; // intentional: samples pairs of points
             sum += f;
         }
 
         var avg = sum / count;
 
         return volume * avg;
+    }
+
+    // Draws a uniformly distributed double in the [0, 1) interval using a
+    // cryptographically strong random number generator.
+    private static double NextDouble(RandomNumberGenerator generator)
+    {
+        Span<byte> bytes = stackalloc byte[8];
+        generator.GetBytes(bytes);
+
+        var value = BitConverter.ToUInt64(bytes) >> 11;
+        return value * (1.0 / (1UL << 53));
+    }
+
+    // Draws a uniformly distributed non-negative integer in the [0, int.MaxValue)
+    // interval, mirroring System.Random.Next().
+    private static int NextInt32(RandomNumberGenerator generator)
+    {
+        Span<byte> bytes = stackalloc byte[4];
+        generator.GetBytes(bytes);
+
+        return (int)(BitConverter.ToUInt32(bytes) & 0x7FFFFFFF);
     }
 }

@@ -2,11 +2,6 @@ using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Random;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Vectors;
@@ -19,6 +14,40 @@ public static partial class Vector
     public static double[] Random(int size)
     {
         return Random(size, 0.0, 1.0);
+    }
+
+    /// <summary>
+    ///   Creates a vector with uniformly distributed random data.
+    /// </summary>
+    /// 
+    public static double[] Random(int size, double min, double max) // NOSONAR
+    {
+        if (size < 0)
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
+
+        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
+
+        var vector = new double[size];
+        for (var i = 0; i < size; i++)
+            vector[i] = random.NextDouble() * (max - min) + min;
+        return vector;
+    }
+
+    /// <summary>
+    ///   Creates a vector with uniformly distributed random data.
+    /// </summary>
+    /// 
+    public static int[] Random(int size, int min, int max)
+    {
+        if (size < 0)
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
+
+        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
+
+        var vector = new int[size];
+        for (var i = 0; i < size; i++)
+            vector[i] = (int)random.NextDouble() * (max - min) + min;
+        return vector;
     }
 
     /// <summary>
@@ -67,7 +96,7 @@ public static partial class Vector
     /// 
     public static int[] Sample(int sampleSize, int populationSize)
     {
-        if ((int)sampleSize > populationSize)
+        if (sampleSize > populationSize)
         {
             throw new ArgumentOutOfRangeException(nameof(sampleSize), String.Format(
                 "The sample size {0} must be less than the size of the population {1}.",
@@ -145,39 +174,5 @@ public static partial class Vector
         Array.Sort(x, idx);
 
         return idx;
-    }
-
-    /// <summary>
-    ///   Creates a vector with uniformly distributed random data.
-    /// </summary>
-    /// 
-    public static double[] Random(int size, double min, double max) // NOSONAR
-    {
-        if (size < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
-
-        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
-
-        var vector = new double[size];
-        for (var i = 0; i < size; i++)
-            vector[i] = (double)random.NextDouble() * (max - min) + min;
-        return vector;
-    }
-
-    /// <summary>
-    ///   Creates a vector with uniformly distributed random data.
-    /// </summary>
-    /// 
-    public static int[] Random(int size, int min, int max)
-    {
-        if (size < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), size, "Size must be a positive integer.");
-
-        var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
-
-        var vector = new int[size];
-        for (var i = 0; i < size; i++)
-            vector[i] = (int)random.NextDouble() * (max - min) + min;
-        return vector;
     }
 }

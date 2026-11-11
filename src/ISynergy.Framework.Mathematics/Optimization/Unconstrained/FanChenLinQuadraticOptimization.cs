@@ -43,11 +43,6 @@ namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
 
 using QFunc = Func<int, int[], int, double[], double[]>;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 /// <summary>
@@ -236,47 +231,32 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
         var Q_j = new double[l];
 
         unshrink = false;
-        // initialize alpha_status
-        {
-            for (var i = 0; i < l; i++)
-                update_alpha_status(i);
-        }
-
-        // initialize active set (for shrinking)
-        {
-            for (var i = 0; i < l; i++)
-                active_set[i] = i;
+            for (var i__r4 = 0; i__r4 < l; i__r4++)
+                update_alpha_status(i__r4);
+            for (var i__r5 = 0; i__r5 < l; i__r5++)
+                active_set[i__r5] = i__r5;
             active_size = l;
-        }
-
-        // initialize index lookup vector
-        {
-            for (var i = 0; i < indices.Length; i++)
-                indices[i] = i;
-        }
-
-        // initialize gradient
-        {
-            for (var i = 0; i < l; i++)
+            for (var i__r6 = 0; i__r6 < indices.Length; i__r6++)
+                indices[i__r6] = i__r6;
+            for (var i__r7 = 0; i__r7 < l; i__r7++)
             {
-                G[i] = p[i];
-                G_bar[i] = 0;
+                G[i__r7] = p[i__r7];
+                G_bar[i__r7] = 0;
             }
 
-            for (var i = 0; i < l; i++)
-                if (!is_lower_bound(i))
+            for (var i__r7 = 0; i__r7 < l; i__r7++)
+                if (!is_lower_bound(i__r7))
                 {
-                    Q(i, indices, l, Q_i);
+                    Q(i__r7, indices, l, Q_i);
 
-                    var alpha_i = alpha[i];
-                    for (var j = 0; j < l; j++)
-                        G[j] += alpha_i * Q_i[j];
+                    var alpha_i__r8 = alpha[i__r7];
+                    for (var j__r9 = 0; j__r9 < l; j__r9++)
+                        G[j__r9] += alpha_i__r8 * Q_i[j__r9];
 
-                    if (is_upper_bound(i))
-                        for (var j = 0; j < l; j++)
-                            G_bar[j] += C[i] * Q_i[j];
+                    if (is_upper_bound(i__r7))
+                        for (var j__r9 = 0; j__r9 < l; j__r9++)
+                            G_bar[j__r9] += C[i__r7] * Q_i[j__r9];
                 }
-        }
 
         // optimization step
         var iter = 0;
@@ -417,38 +397,37 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
             var delta_alpha_i = alpha[i] - old_alpha_i;
             var delta_alpha_j = alpha[j] - old_alpha_j;
 
-            for (var k = 0; k < active_size; k++) G[k] += Q_i[k] * delta_alpha_i + Q_j[k] * delta_alpha_j;
-
-            // update alpha_status and G_bar
+            for (var k = 0; k < active_size; k++)
             {
-                var ui = is_upper_bound(i);
-                var uj = is_upper_bound(j);
-                update_alpha_status(i);
-                update_alpha_status(j);
+                G[k] += Q_i[k] * delta_alpha_i + Q_j[k] * delta_alpha_j;
+            }
+            var ui__r1 = is_upper_bound(i);
+            var uj__r2 = is_upper_bound(j);
+            update_alpha_status(i);
+            update_alpha_status(j);
 
-                if (ui != is_upper_bound(i))
-                {
-                    Q(i, indices, l, Q_i);
+            if (ui__r1 != is_upper_bound(i))
+            {
+                Q(i, indices, l, Q_i);
 
-                    if (ui)
-                        for (var k = 0; k < l; k++)
-                            G_bar[k] -= C_i * Q_i[k];
-                    else
-                        for (var k = 0; k < l; k++)
-                            G_bar[k] += C_i * Q_i[k];
-                }
+                if (ui__r1)
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] -= C_i * Q_i[k__r3];
+                else
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] += C_i * Q_i[k__r3];
+            }
 
-                if (uj != is_upper_bound(j))
-                {
-                    Q(j, indices, l, Q_j);
+            if (uj__r2 != is_upper_bound(j))
+            {
+                Q(j, indices, l, Q_j);
 
-                    if (uj)
-                        for (var k = 0; k < l; k++)
-                            G_bar[k] -= C_j * Q_j[k];
-                    else
-                        for (var k = 0; k < l; k++)
-                            G_bar[k] += C_j * Q_j[k];
-                }
+                if (uj__r2)
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] -= C_j * Q_j[k__r3];
+                else
+                    for (var k__r3 = 0; k__r3 < l; k__r3++)
+                        G_bar[k__r3] += C_j * Q_j[k__r3];
             }
         }
 
@@ -467,23 +446,15 @@ public class FanChenLinQuadraticOptimization : IOptimizationMethod
 
         // calculate rho
         Rho = calculate_rho();
+            double v__r10 = 0;
+            for (var i__r11 = 0; i__r11 < l; i__r11++)
+                v__r10 += alpha[i__r11] * (G[i__r11] + p[i__r11]);
 
-        // calculate objective value
-        {
-            double v = 0;
-            for (var i = 0; i < l; i++)
-                v += alpha[i] * (G[i] + p[i]);
-
-            Value = v / 2;
-        }
-
-        // put back the solution
-        {
-            var solution = (double[])alpha.Clone();
+            Value = v__r10 / 2;
+            var solution__r12 = (double[])alpha.Clone();
             Array.Clear(alpha, 0, alpha.Length);
-            for (var i = 0; i < l; i++)
-                alpha[active_set[i]] = solution[i];
-        }
+            for (var i__r13 = 0; i__r13 < l; i__r13++)
+                alpha[active_set[i__r13]] = solution__r12[i__r13];
         Trace.WriteLine("optimization finished, #iter = " + iter);
 
         return iter < max_iter;

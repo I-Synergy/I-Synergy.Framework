@@ -1,13 +1,8 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Enumerations;
 using ISynergy.Framework.Mathematics.Exceptions;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S2436 // multiple type parameters are required for the elementwise check helper methods
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -25,14 +20,14 @@ public static partial class Elementwise
         return b.Length;
     }
 
-    private static int cols<U>(U[][] b)
-    {
-        return b[0].Length;
-    }
-
     private static int rows<U>(U[,] b)
     {
         return b.GetLength(0);
+    }
+
+    private static int cols<U>(U[][] b)
+    {
+        return b[0].Length;
     }
 
     private static int cols<U>(U[,] b)
@@ -356,11 +351,6 @@ public static partial class Elementwise
         return r;
     }
 
-    private static TOutput[,] MatrixCreateAs<TInput, TOutput>(TInput[][] matrix)
-    {
-        return new TOutput[matrix.Length, matrix[0].Length];
-    }
-
     private static TOutput[][] JaggedCreateAs<TInput, TOutput>(TInput[,] matrix)
     {
         var r = new TOutput[matrix.GetLength(0)][];
@@ -382,42 +372,18 @@ public static partial class Elementwise
     ///   Elementwise square-root.
     /// </summary>
     /// 
-    public static double[,] Sqrt(this double[,] value)
+    public static double[,] Sqrt(this Matrix<double> value)
     {
-        return Sqrt(value, MatrixCreateAs<double, double>(value));
+        return Sqrt(value, new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
     ///   Elementwise square-root.
     /// </summary>
     /// 
-    public static double[][] Sqrt(this double[][] value)
+    public static double[][] Sqrt(this Jagged<double> value)
     {
-        return Sqrt(value, JaggedCreateAs<double, double>(value));
-    }
-
-    /// <summary>
-    ///   Elementwise square-root.
-    /// </summary>
-    ///
-    /// <param name="value">A matrix.</param>
-    /// <param name="result">The vector where the result should be stored. Pass the same
-    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
-    /// 
-    public static double[][] Sqrt(this double[][] value, double[][] result)
-    {
-        unsafe
-        {
-            for (int i = 0; i < value.Length; i++)
-            {
-                for (int j = 0; j < value[i].Length; j++)
-                {
-                    var v = value[i][j];
-                    result[i][j] = (double)(Math.Sqrt((double)v));
-                }
-            }
-        }
-        return result;
+        return Sqrt(value, new Jagged<double>(JaggedCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -428,24 +394,46 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Sqrt(this double[,] value, double[,] result)
+    public static double[][] Sqrt(this Jagged<double> value, Jagged<double> result)
     {
-        unsafe
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        for (int i = 0; i < valueArray.Length; i++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
+            for (int j = 0; j < valueArray[i].Length; j++)
             {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (int j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Sqrt((double)v));
-                }
+                var v = valueArray[i][j];
+                resultArray[i][j] = Math.Sqrt(v);
+            }
+        }
+        return resultArray;
+    }
+
+    /// <summary>
+    ///   Elementwise square-root.
+    /// </summary>
+    ///
+    /// <param name="value">A matrix.</param>
+    /// <param name="result">The vector where the result should be stored. Pass the same
+    ///   vector as <paramref name="value"/> to perform the operation in place.</param>
+    /// 
+    public static double[,] Sqrt(this Matrix<double> value, Matrix<double> result)
+    {
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        var rows = valueArray.GetLength(0);
+        var cols = valueArray.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                var v = valueArray[i, j];
+                resultArray[i, j] = Math.Sqrt(v);
             }
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -461,7 +449,7 @@ public static partial class Elementwise
         for (int i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Sqrt((double)v));
+            result[i] = Math.Sqrt(v);
         }
 
         return result;
@@ -494,7 +482,7 @@ public static partial class Elementwise
         for (int i = 0; i < value.Length; i++)
         {
             var v = value[i];
-            result[i] = (double)(Math.Pow((double)Math.Abs(v), y));
+            result[i] = Math.Pow(Math.Abs(v), y);
         }
 
         return result;
@@ -504,9 +492,9 @@ public static partial class Elementwise
     ///   Elementwise absolute value.
     /// </summary>
     /// 
-    public static double[,] Abs(this double[,] value)
+    public static double[,] Abs(this Matrix<double> value)
     {
-        return Abs(value, MatrixCreateAs<double, double>(value));
+        return Abs(value, new Matrix<double>(MatrixCreateAs<double, double>(value)));
     }
 
     /// <summary>
@@ -517,23 +505,22 @@ public static partial class Elementwise
     /// <param name="result">The vector where the result should be stored. Pass the same
     ///   vector as <paramref name="value"/> to perform the operation in place.</param>
     /// 
-    public static double[,] Abs(this double[,] value, double[,] result)
+    public static double[,] Abs(this Matrix<double> value, Matrix<double> result)
     {
-        unsafe
+        var valueArray = value.Array;
+        var resultArray = result.Array;
+        var rows = valueArray.GetLength(0);
+        var cols = valueArray.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
         {
-            fixed (double* ptrV = value)
-            fixed (double* ptrR = result)
+            for (int j = 0; j < cols; j++)
             {
-                var pv = ptrV;
-                var pr = ptrR;
-                for (int j = 0; j < result.Length; j++, pv++, pr++)
-                {
-                    var v = *pv;
-                    *pr = (double)(Math.Abs(v));
-                }
+                var v = valueArray[i, j];
+                resultArray[i, j] = Math.Abs(v);
             }
         }
 
-        return result;
+        return resultArray;
     }
 }

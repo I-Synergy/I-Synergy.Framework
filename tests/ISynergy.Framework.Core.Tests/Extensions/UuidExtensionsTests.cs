@@ -73,4 +73,22 @@ public class UuidExtensionsTests
         Assert.AreEqual("0000000000000000000000000", s2);
 
     }
+
+    [TestMethod]
+    public void TestToId25_NonZeroNonV7Guid_Throws()
+    {
+        // A non-zero Guid that is not UUID v7 (version nibble 4 here) must be rejected.
+        var g = new Guid("00000000-0000-4000-8000-000000000000");
+        Assert.ThrowsExactly<ArgumentException>(() => g.ToId25());
+    }
+
+    [TestMethod]
+    public void TestCheckTimingPrecision_ReturnsDescription()
+    {
+        var report = Uuidv7.CheckTimingPrecision();
+
+        Assert.IsFalse(string.IsNullOrWhiteSpace(report));
+        Assert.Contains("Precision is", report);
+        Assert.Contains("loops", report);
+    }
 }

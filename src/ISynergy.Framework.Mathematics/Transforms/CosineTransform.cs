@@ -1,10 +1,6 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Transforms;
@@ -50,7 +46,7 @@ public static class CosineTransform
     /// <summary>
     ///     Forward Discrete Cosine Transform.
     /// </summary>
-    public static void DCT(double[] data) // NOSONAR
+    public static void DCT(double[] data)
     {
         var result = new double[data.Length];
         var c = Math.PI / (2.0 * data.Length);
@@ -69,6 +65,75 @@ public static class CosineTransform
             data[i] = result[i];
     }
 
+    /// <summary>
+    ///     Forward 2D Discrete Cosine Transform.
+    /// </summary>
+    public static void DCT(Matrix<double> data)
+    {
+        var dataArray = data.Array;
+        var rows = dataArray.GetLength(0);
+        var cols = dataArray.GetLength(1);
+
+        var row = new double[cols];
+        var col = new double[rows];
+
+        for (var i = 0; i < rows; i++)
+        {
+            for (var j = 0; j < row.Length; j++)
+                row[j] = dataArray[i, j];
+
+            DCT(row);
+
+            for (var j = 0; j < row.Length; j++)
+                dataArray[i, j] = row[j];
+        }
+
+        for (var j = 0; j < cols; j++)
+        {
+            for (var i = 0; i < col.Length; i++)
+                col[i] = dataArray[i, j];
+
+            DCT(col);
+
+            for (var i = 0; i < col.Length; i++)
+                dataArray[i, j] = col[i];
+        }
+    }
+
+    /// <summary>
+    ///     Inverse 2D Discrete Cosine Transform.
+    /// </summary>
+    public static void IDCT(Matrix<double> data)
+    {
+        var dataArray = data.Array;
+        var rows = dataArray.GetLength(0);
+        var cols = dataArray.GetLength(1);
+
+        var row = new double[cols];
+        var col = new double[rows];
+
+        for (var j = 0; j < cols; j++)
+        {
+            for (var i = 0; i < col.Length; i++)
+                col[i] = dataArray[i, j];
+
+            IDCT(col);
+
+            for (var i = 0; i < col.Length; i++)
+                dataArray[i, j] = col[i];
+        }
+
+        for (var i = 0; i < rows; i++)
+        {
+            for (var j = 0; j < row.Length; j++)
+                row[j] = dataArray[i, j];
+
+            IDCT(row);
+
+            for (var j = 0; j < row.Length; j++)
+                dataArray[i, j] = row[j];
+        }
+    }
     /// <summary>
     ///     Inverse Discrete Cosine Transform.
     /// </summary>
@@ -89,72 +154,5 @@ public static class CosineTransform
 
         for (var i = 0; i < data.Length; i++)
             data[i] = result[i];
-    }
-    /// <summary>
-    ///     Forward 2D Discrete Cosine Transform.
-    /// </summary>
-    public static void DCT(double[,] data)
-    {
-        var rows = data.GetLength(0);
-        var cols = data.GetLength(1);
-
-        var row = new double[cols];
-        var col = new double[rows];
-
-        for (var i = 0; i < rows; i++)
-        {
-            for (var j = 0; j < row.Length; j++)
-                row[j] = data[i, j];
-
-            DCT(row);
-
-            for (var j = 0; j < row.Length; j++)
-                data[i, j] = row[j];
-        }
-
-        for (var j = 0; j < cols; j++)
-        {
-            for (var i = 0; i < col.Length; i++)
-                col[i] = data[i, j];
-
-            DCT(col);
-
-            for (var i = 0; i < col.Length; i++)
-                data[i, j] = col[i];
-        }
-    }
-
-    /// <summary>
-    ///     Inverse 2D Discrete Cosine Transform.
-    /// </summary>
-    public static void IDCT(double[,] data)
-    {
-        var rows = data.GetLength(0);
-        var cols = data.GetLength(1);
-
-        var row = new double[cols];
-        var col = new double[rows];
-
-        for (var j = 0; j < cols; j++)
-        {
-            for (var i = 0; i < col.Length; i++)
-                col[i] = data[i, j];
-
-            IDCT(col);
-
-            for (var i = 0; i < col.Length; i++)
-                data[i, j] = col[i];
-        }
-
-        for (var i = 0; i < rows; i++)
-        {
-            for (var j = 0; j < row.Length; j++)
-                row[j] = data[i, j];
-
-            IDCT(row);
-
-            for (var j = 0; j < row.Length; j++)
-                data[i, j] = row[j];
-        }
     }
 }

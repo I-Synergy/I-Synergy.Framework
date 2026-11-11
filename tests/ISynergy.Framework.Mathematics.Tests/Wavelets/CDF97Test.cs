@@ -1,3 +1,4 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -42,12 +43,12 @@ public class CDF97Test
         Assert.IsTrue(Matrix.IsEqual(x, original, 0.0001));
 
         // Do the forward 9/7 transform
-        CDF97.FWT97(x);
+        Cdf97.FWT97(x);
 
         Assert.IsTrue(Matrix.IsEqual(x, wc, 0.0001));
 
         // Do the inverse 9/7 transform
-        CDF97.IWT97(x);
+        Cdf97.IWT97(x);
 
         Assert.IsTrue(Matrix.IsEqual(x, original, 0.0001));
 
@@ -74,11 +75,11 @@ public class CDF97Test
 
         int levels = 1;
 
-        double[,] actual = CDF97.FWT97(x, levels);
+        double[,] actual = Cdf97.FWT97(new Matrix<double>(x), levels);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-5));
 
-        actual = CDF97.IWT97(x, levels);
+        actual = Cdf97.IWT97(new Matrix<double>(x), levels);
 
         Assert.IsTrue(Matrix.IsEqual(x, actual, 0.001));
 

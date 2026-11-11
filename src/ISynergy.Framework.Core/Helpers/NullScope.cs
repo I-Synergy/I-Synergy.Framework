@@ -3,7 +3,9 @@ namespace ISynergy.Framework.Core.Helpers;
 /// <summary>
 /// An empty scope without any logic
 /// </summary>
-public class NullScope : IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+// S3881: no finalizer on this type, so GC.SuppressFinalize() is omitted (Sonar S3971 forbids it).
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
+public class NullScope : IDisposable
 {
     public static NullScope Instance { get; } = new NullScope();
 
@@ -28,3 +30,4 @@ public class NullScope : IDisposable // NOSONAR - finalizer-free; SuppressFinali
     {
     }
 }
+#pragma warning restore S3881

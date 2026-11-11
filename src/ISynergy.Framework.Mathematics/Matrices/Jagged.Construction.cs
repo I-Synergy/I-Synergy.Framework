@@ -1,14 +1,10 @@
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Random;
 using ISynergy.Framework.Mathematics.Vectors;
 using System.Collections;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -68,21 +64,6 @@ public static partial class Jagged
     ///   Creates a zero-valued matrix.
     /// </summary>
     /// 
-    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
-    /// <param name="rows">The number of rows in the matrix.</param>
-    /// <param name="columns">The number of columns in the matrix.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static T[][] Ones<T>(int rows, int columns)
-    {
-        return Create<T>(rows, columns, Constants.One<T>());
-    }
-
-    /// <summary>
-    ///   Creates a zero-valued matrix.
-    /// </summary>
-    /// 
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// 
@@ -109,6 +90,48 @@ public static partial class Jagged
     }
 
     /// <summary>
+    ///   Creates a jagged matrix with all values set to zero.
+    /// </summary>
+    /// 
+    /// <param name="elementType">The type of the elements to be contained in the matrix.</param>
+    /// <param name="shape">The number of dimensions that the matrix should have.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static Array Zeros(Type elementType, params int[] shape)
+    {
+        return Create(elementType, shape, elementType.GetDefaultValue());
+    }
+
+    /// <summary>
+    ///   Creates a jagged matrix with all values set to zero.
+    /// </summary>
+    /// 
+    /// <param name="shape">The number of dimensions that the matrix should have.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static Array Zeros<T>(params int[] shape)
+    {
+        return Create(typeof(T), shape, 0);
+    }
+
+    /// <summary>
+    ///   Creates a zero-valued matrix.
+    /// </summary>
+    /// 
+    /// <typeparam name="T">The type of the matrix to be created.</typeparam>
+    /// <param name="rows">The number of rows in the matrix.</param>
+    /// <param name="columns">The number of columns in the matrix.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static T[][] Ones<T>(int rows, int columns)
+    {
+        return Create<T>(rows, columns, Constants.One<T>());
+    }
+
+    /// <summary>
     ///   Creates a zero-valued matrix.
     /// </summary>
     /// 
@@ -121,6 +144,7 @@ public static partial class Jagged
     {
         return Ones<double>(rows, columns);
     }
+
     /// <summary>
     ///   Creates a jagged matrix with all values set to a given value.
     /// </summary>
@@ -159,6 +183,77 @@ public static partial class Jagged
         return create(elementType, shape, 0, value);
     }
 
+    /// <summary>
+    ///   Creates a jagged matrix with all values set to a given value.
+    /// </summary>
+    /// 
+    /// <param name="shape">The number of dimensions that the matrix should have.</param>
+    /// <param name="value">The initial values for the vector.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static Array Create<T>(int[] shape, T value)
+    {
+        return Create(typeof(T), shape, value);
+    }
+
+    /// <summary>
+    ///   Creates a matrix with all values set to a given value.
+    /// </summary>
+    /// 
+    /// <param name="rows">The number of rows in the matrix.</param>
+    /// <param name="columns">The number of columns in the matrix.</param>
+    /// <param name="values">The initial values for the matrix.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static T[][] Create<T>(int rows, int columns, params T[] values)
+    {
+        if (values.Length == 0)
+            return Zeros<T>(rows, columns);
+        return new Matrix<T>(values.Reshape(rows, columns)).ToJagged();
+    }
+
+    /// <summary>
+    ///   Creates a matrix with the given rows.
+    /// </summary>
+    /// 
+    /// <param name="rows">The row vectors in the matrix.</param>
+    /// 
+    public static T[][] Create<T>(Jagged<T> rows)
+    {
+        return rows.Array.Copy();
+    }
+
+    /// <summary>
+    ///   Creates a matrix with all values set to a given value.
+    /// </summary>
+    /// 
+    /// <param name="rows">The number of rows in the matrix.</param>
+    /// <param name="columns">The number of columns in the matrix.</param>
+    /// <param name="values">The initial values for the matrix.</param>
+    /// <param name="transpose">Whether to transpose the matrix when copying or not. Default is false.</param>
+    /// 
+    /// <returns>A matrix of the specified size.</returns>
+    /// 
+    public static T[][] Create<T>(int rows, int columns, Jagged<T> values, bool transpose = false)
+    {
+        var result = Zeros<T>(rows, columns);
+        Matrix.CopyTo(values.Array, destination: new Jagged<T>(result), transpose: transpose);
+        return result;
+    }
+
+    /// <summary>
+    ///   Creates a matrix with the given values.
+    /// </summary>
+    /// 
+    /// <param name="values">The values in the matrix.</param>
+    /// 
+    public static T[][] Create<T>(Matrix<T> values)
+    {
+        return values.ToJagged();
+    }
+
     private static Array create(Type elementType, int[] shape, int dimension, object value)
     {
         Type arrayType = elementType.MakeArrayType(shape.Length - dimension - 1, jagged: true);
@@ -182,113 +277,15 @@ public static partial class Jagged
     ///   Creates a jagged matrix with all values set to a given value.
     /// </summary>
     /// 
-    /// <param name="shape">The number of dimensions that the matrix should have.</param>
-    /// <param name="value">The initial values for the vector.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static Array Create<T>(int[] shape, T value)
-    {
-        return Create(typeof(T), shape, value);
-    }
-
-    /// <summary>
-    ///   Creates a jagged matrix with all values set to zero.
-    /// </summary>
-    /// 
-    /// <param name="elementType">The type of the elements to be contained in the matrix.</param>
-    /// <param name="shape">The number of dimensions that the matrix should have.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static Array Zeros(Type elementType, params int[] shape)
-    {
-        return Create(elementType, shape, elementType.GetDefaultValue());
-    }
-    /// <summary>
-    ///   Creates a jagged matrix with all values set to zero.
-    /// </summary>
-    /// 
-    /// <param name="shape">The number of dimensions that the matrix should have.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static Array Zeros<T>(params int[] shape)
-    {
-        return Create(typeof(T), shape, 0);
-    }
-
-    /// <summary>
-    ///   Creates a jagged matrix with all values set to a given value.
-    /// </summary>
-    /// 
     /// <param name="size">The number of rows and columns in the matrix.</param>
     /// <param name="value">The initial values for the matrix.</param>
     /// 
     /// <returns>A matrix of the specified size.</returns>
     /// 
     /// <seealso cref="Matrix.Create{T}(int, int, T)"/>
-    /// 
     public static T[][] Square<T>(int size, T value)
     {
         return Create(size, size, value);
-    }
-
-    /// <summary>
-    ///   Creates a matrix with all values set to a given value.
-    /// </summary>
-    /// 
-    /// <param name="rows">The number of rows in the matrix.</param>
-    /// <param name="columns">The number of columns in the matrix.</param>
-    /// <param name="values">The initial values for the matrix.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static T[][] Create<T>(int rows, int columns, params T[] values)
-    {
-        if (values.Length == 0)
-            return Zeros<T>(rows, columns);
-        return values.Reshape(rows, columns).ToJagged();
-    }
-
-    /// <summary>
-    ///   Creates a matrix with the given rows.
-    /// </summary>
-    /// 
-    /// <param name="rows">The row vectors in the matrix.</param>
-    /// 
-    public static T[][] Create<T>(params T[][] rows)
-    {
-        return rows.Copy();
-    }
-
-    /// <summary>
-    ///   Creates a matrix with all values set to a given value.
-    /// </summary>
-    /// 
-    /// <param name="rows">The number of rows in the matrix.</param>
-    /// <param name="columns">The number of columns in the matrix.</param>
-    /// <param name="values">The initial values for the matrix.</param>
-    /// <param name="transpose">Whether to transpose the matrix when copying or not. Default is false.</param>
-    /// 
-    /// <returns>A matrix of the specified size.</returns>
-    /// 
-    public static T[][] Create<T>(int rows, int columns, T[][] values, bool transpose = false)
-    {
-        var result = Zeros<T>(rows, columns);
-        Matrix.CopyTo(values, destination: result, transpose: transpose);
-        return result;
-    }
-
-    /// <summary>
-    ///   Creates a matrix with the given values.
-    /// </summary>
-    /// 
-    /// <param name="values">The values in the matrix.</param>
-    /// 
-    public static T[][] Create<T>(T[,] values)
-    {
-        return values.ToJagged();
     }
 
     /// <summary>
@@ -306,7 +303,7 @@ public static partial class Jagged
     /// 
     public static T[][] OneHot<T>(bool[] mask)
     {
-        return OneHot<T>(mask, Jagged.Create<T>(mask.Length, 2));
+        return OneHot<T>(mask, new Jagged<T>(Jagged.Create<T>(mask.Length, 2)));
     }
 
     /// <summary>
@@ -356,7 +353,7 @@ public static partial class Jagged
     /// 
     public static T[][] OneHot<T>(int[] indices, int columns)
     {
-        return OneHot<T>(indices, Jagged.Create<T>(indices.Length, columns));
+        return OneHot<T>(indices, new Jagged<T>(Jagged.Create<T>(indices.Length, columns)));
     }
 
     /// <summary>
@@ -372,7 +369,7 @@ public static partial class Jagged
     /// 
     public static double[][] OneHot(int[] indices, int columns)
     {
-        return OneHot(indices, Jagged.Create<double>(indices.Length, columns));
+        return OneHot(indices, new Jagged<double>(Jagged.Create<double>(indices.Length, columns)));
     }
 
     /// <summary>
@@ -389,15 +386,16 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
-    public static T[][] OneHot<T>(bool[] mask, T[][] result)
+    public static T[][] OneHot<T>(bool[] mask, Jagged<T> result)
     {
+        var resultArray = result.Array;
         var one = Constants.One<T>();
         for (var i = 0; i < mask.Length; i++)
             if (mask[i])
-                result[i][0] = one;
+                resultArray[i][0] = one;
             else
-                result[i][1] = one;
-        return result;
+                resultArray[i][1] = one;
+        return resultArray;
     }
 
     /// <summary>
@@ -413,12 +411,13 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     /// is one and the others are zero.</returns>
     /// 
-    public static T[][] OneHot<T>(int[] indices, T[][] result)
+    public static T[][] OneHot<T>(int[] indices, Jagged<T> result)
     {
+        var resultArray = result.Array;
         var one = Constants.One<T>();
         for (var i = 0; i < indices.Length; i++)
-            result[i][indices[i]] = one;
-        return result;
+            resultArray[i][indices[i]] = one;
+        return resultArray;
     }
 
     /// <summary>
@@ -432,12 +431,14 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     /// is one and the others are zero.</returns>
     /// 
-    public static double[][] OneHot(int[] indices, double[][] result)
+    public static double[][] OneHot(int[] indices, Jagged<double> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < indices.Length; i++)
-            result[i][indices[i]] = 1;
-        return result;
+            resultArray[i][indices[i]] = 1;
+        return resultArray;
     }
+
     /// <summary>
     ///   Creates a matrix of k-hot vectors, where all values at each row are 
     ///   zero except for the ones in the positions where <paramref name="mask"/>
@@ -451,9 +452,9 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
-    public static T[][] KHot<T>(bool[][] mask)
+    public static T[][] KHot<T>(Jagged<bool> mask)
     {
-        return KHot<T>(mask, Jagged.CreateAs<bool, T>(mask));
+        return KHot<T>(mask, new Jagged<T>(Jagged.CreateAs<bool, T>(mask)));
     }
 
     /// <summary>
@@ -469,9 +470,9 @@ public static partial class Jagged
     /// <returns>A matrix containing k-hot vectors where only elements at the indicated 
     ///   <paramref name="indices"/> are set to one and the others are zero.</returns>
     /// 
-    public static T[][] KHot<T>(int[][] indices, int columns)
+    public static T[][] KHot<T>(Jagged<int> indices, int columns)
     {
-        return KHot<T>(indices, Jagged.Create<T>(indices.Length, columns));
+        return KHot<T>(indices, new Jagged<T>(Jagged.Create<T>(indices.Rows, columns)));
     }
 
     /// <summary>
@@ -485,9 +486,9 @@ public static partial class Jagged
     /// <returns>A matrix containing k-hot vectors where only elements at the indicated 
     ///   <paramref name="indices"/> are set to one and the others are zero.</returns>
     /// 
-    public static double[][] KHot(int[][] indices, int columns)
+    public static double[][] KHot(Jagged<int> indices, int columns)
     {
-        return KHot(indices, Jagged.Create<double>(indices.Length, columns));
+        return KHot(indices, new Jagged<double>(Jagged.Create<double>(indices.Rows, columns)));
     }
 
     /// <summary>
@@ -502,9 +503,9 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
-    public static double[][] KHot(bool[][] mask, int columns)
+    public static double[][] KHot(Jagged<bool> mask, int columns)
     {
-        return KHot(mask, Jagged.Create<double>(mask.Length, columns));
+        return KHot(mask, new Jagged<double>(Jagged.Create<double>(mask.Rows, columns)));
     }
 
     /// <summary>
@@ -521,14 +522,16 @@ public static partial class Jagged
     /// <returns>A matrix containing one-hot vectors where only a single position
     ///   is one and the others are zero.</returns>
     /// 
-    public static T[][] KHot<T>(bool[][] mask, T[][] result)
+    public static T[][] KHot<T>(Jagged<bool> mask, Jagged<T> result)
     {
+        var maskArray = mask.Array;
+        var resultArray = result.Array;
         var one = Constants.One<T>();
-        for (var i = 0; i < mask.Length; i++)
-            for (var j = 0; j < mask[0].Length; j++)
-                if (mask[i][j])
-                    result[i][j] = one;
-        return result;
+        for (var i = 0; i < maskArray.Length; i++)
+            for (var j = 0; j < maskArray[0].Length; j++)
+                if (maskArray[i][j])
+                    resultArray[i][j] = one;
+        return resultArray;
     }
 
     /// <summary>
@@ -544,13 +547,15 @@ public static partial class Jagged
     /// <returns>A matrix containing k-hot vectors where only elements at the indicated 
     ///   <paramref name="indices"/> are set to one and the others are zero.</returns>
     /// 
-    public static T[][] KHot<T>(int[][] indices, T[][] result)
+    public static T[][] KHot<T>(Jagged<int> indices, Jagged<T> result)
     {
+        var indicesArray = indices.Array;
+        var resultArray = result.Array;
         var one = Constants.One<T>();
-        for (var i = 0; i < indices.Length; i++)
-            for (var j = 0; j < indices[0].Length; j++)
-                result[i][indices[i][j]] = one;
-        return result;
+        for (var i = 0; i < indicesArray.Length; i++)
+            for (var j = 0; j < indicesArray[0].Length; j++)
+                resultArray[i][indicesArray[i][j]] = one;
+        return resultArray;
     }
 
     /// <summary>
@@ -564,12 +569,14 @@ public static partial class Jagged
     /// <returns>A matrix containing k-hot vectors where only elements at the indicated 
     ///   <paramref name="indices"/> are set to one and the others are zero.</returns>
     /// 
-    public static double[][] KHot(int[][] indices, double[][] result)
+    public static double[][] KHot(Jagged<int> indices, Jagged<double> result)
     {
-        for (var i = 0; i < indices.Length; i++)
-            for (var j = 0; j < indices[i].Length; j++)
-                result[i][indices[i][j]] = 1;
-        return result;
+        var indicesArray = indices.Array;
+        var resultArray = result.Array;
+        for (var i = 0; i < indicesArray.Length; i++)
+            for (var j = 0; j < indicesArray[i].Length; j++)
+                resultArray[i][indicesArray[i][j]] = 1;
+        return resultArray;
     }
 
     /// <summary>
@@ -588,10 +595,10 @@ public static partial class Jagged
     ///   Creates a new multidimensional matrix with the same shape as another matrix.
     /// </summary>
     /// 
-    public static T[][] CreateAs<T>(T[,] matrix)
+    public static T[][] CreateAs<T>(Matrix<T> matrix)
     {
-        int rows = matrix.GetLength(0);
-        int cols = matrix.GetLength(1);
+        int rows = matrix.Array.GetLength(0);
+        int cols = matrix.Array.GetLength(1);
         T[][] r = new T[rows][];
         for (var i = 0; i < r.Length; i++)
             r[i] = new T[cols];
@@ -602,11 +609,56 @@ public static partial class Jagged
     ///   Returns a new multidimensional matrix.
     /// </summary>
     /// 
-    public static T[][] CreateAs<T>(T[][] matrix)
+    public static T[][] CreateAs<T>(Jagged<T> matrix)
     {
-        T[][] r = new T[matrix.Length][];
+        var matrixArray = matrix.Array;
+        T[][] r = new T[matrixArray.Length][];
         for (var i = 0; i < r.Length; i++)
-            r[i] = new T[matrix[i].Length];
+            r[i] = new T[matrixArray[i].Length];
+        return r;
+    }
+
+    /// <summary>
+    ///   Returns a new multidimensional matrix.
+    /// </summary>
+    /// 
+    public static TOutput[][] CreateAs<TInput, TOutput>(Matrix<TInput> matrix)
+    {
+        int rows = matrix.Array.GetLength(0);
+        int cols = matrix.Array.GetLength(1);
+        var r = new TOutput[rows][];
+        for (var i = 0; i < r.Length; i++)
+            r[i] = new TOutput[cols];
+        return r;
+    }
+
+    /// <summary>
+    ///   Returns a new multidimensional matrix.
+    /// </summary>
+    /// 
+    public static TOutput[][] CreateAs<TInput, TOutput>(Jagged<TInput> matrix)
+    {
+        var matrixArray = matrix.Array;
+        var r = new TOutput[matrixArray.Length][];
+        for (var i = 0; i < r.Length; i++)
+            r[i] = new TOutput[matrixArray[i].Length];
+        return r;
+    }
+
+    /// <summary>
+    ///   Returns a new multidimensional matrix.
+    /// </summary>
+    /// 
+    public static TOutput[][][] CreateAs<TInput, TOutput>(Jagged<TInput[]> matrix)
+    {
+        var matrixArray = matrix.Array;
+        var r = new TOutput[matrixArray.Length][][];
+        for (var i = 0; i < r.Length; i++)
+        {
+            r[i] = new TOutput[matrixArray[i].Length][];
+            for (var j = 0; j < r[i].Length; j++)
+                r[i][j] = new TOutput[matrixArray[i][j].Length];
+        }
         return r;
     }
 
@@ -656,28 +708,30 @@ public static partial class Jagged
     /// 
     public static double[][] Magic(int size)
     {
-        return Matrix.Magic(size).ToJagged();
+        return new Matrix<double>(Matrix.Magic(size)).ToJagged();
     }
 
     #region Diagonal matrices
+
     /// <summary>
     ///   Returns a square diagonal matrix of the given size.
     /// </summary>
     /// 
     public static T[][] Diagonal<T>(int size, T value)
     {
-        return Diagonal(size, value, Jagged.Create<T>(size, size));
+        return Diagonal(size, value, new Jagged<T>(Jagged.Create<T>(size, size)));
     }
 
     /// <summary>
     ///   Returns a square diagonal matrix of the given size.
     /// </summary>
     /// 
-    public static T[][] Diagonal<T>(int size, T value, T[][] result)
+    public static T[][] Diagonal<T>(int size, T value, Jagged<T> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < size; i++)
-            result[i][i] = value;
-        return result;
+            resultArray[i][i] = value;
+        return resultArray;
     }
 
     /// <summary>
@@ -686,19 +740,20 @@ public static partial class Jagged
     /// 
     public static T[][] Diagonal<T>(int rows, int cols, T value)
     {
-        return Diagonal(rows, cols, value, Jagged.Create<T>(rows, cols));
+        return Diagonal(rows, cols, value, new Jagged<T>(Jagged.Create<T>(rows, cols)));
     }
 
     /// <summary>
     ///   Returns a matrix of the given size with value on its diagonal.
     /// </summary>
     /// 
-    public static T[][] Diagonal<T>(int rows, int cols, T value, T[][] result)
+    public static T[][] Diagonal<T>(int rows, int cols, T value, Jagged<T> result)
     {
+        var resultArray = result.Array;
         int min = Math.Min(rows, cols);
         for (var i = 0; i < min; i++)
-            result[i][i] = value;
-        return result;
+            resultArray[i][i] = value;
+        return resultArray;
     }
 
     /// <summary>
@@ -707,18 +762,19 @@ public static partial class Jagged
     /// 
     public static T[][] Diagonal<T>(T[] values)
     {
-        return Diagonal(values, Jagged.Create<T>(values.Length, values.Length));
+        return Diagonal(values, new Jagged<T>(Jagged.Create<T>(values.Length, values.Length)));
     }
 
     /// <summary>
     ///   Return a square matrix with a vector of values on its diagonal.
     /// </summary>
     /// 
-    public static T[][] Diagonal<T>(T[] values, T[][] result)
+    public static T[][] Diagonal<T>(T[] values, Jagged<T> result)
     {
+        var resultArray = result.Array;
         for (var i = 0; i < values.Length; i++)
-            result[i][i] = values[i];
-        return result;
+            resultArray[i][i] = values[i];
+        return resultArray;
     }
 
     /// <summary>
@@ -734,7 +790,7 @@ public static partial class Jagged
     ///   Return a square matrix with a vector of values on its diagonal.
     /// </summary>
     /// 
-    public static T[][] Diagonal<T>(int size, T[] values, T[][] result)
+    public static T[][] Diagonal<T>(int size, T[] values, Jagged<T> result)
     {
         return Diagonal(size, size, values, result);
     }
@@ -745,109 +801,73 @@ public static partial class Jagged
     /// 
     public static T[][] Diagonal<T>(int rows, int cols, T[] values)
     {
-        return Diagonal(rows, cols, values, Jagged.Create<T>(rows, cols));
+        return Diagonal(rows, cols, values, new Jagged<T>(Jagged.Create<T>(rows, cols)));
     }
 
     /// <summary>
     ///   Returns a matrix with a vector of values on its diagonal.
     /// </summary>
     /// 
-    public static T[][] Diagonal<T>(int rows, int cols, T[] values, T[][] result)
+    public static T[][] Diagonal<T>(int rows, int cols, T[] values, Jagged<T> result)
     {
+        var resultArray = result.Array;
         int size = Math.Min(rows, Math.Min(cols, values.Length));
         for (var i = 0; i < size; i++)
-            result[i][i] = values[i];
-        return result;
+            resultArray[i][i] = values[i];
+        return resultArray;
     }
 
     /// <summary>
     ///   Returns a block-diagonal matrix with the given matrices on its diagonal.
     /// </summary>
     /// 
-    public static T[][] Diagonal<T>(T[][][] blocks)
+    public static T[][] Diagonal<T>(Jagged<T[]> blocks)
     {
+        var blocksArray = blocks.Array;
         int rows = 0;
         int cols = 0;
-        for (var i = 0; i < blocks.Length; i++)
+        for (var i = 0; i < blocksArray.Length; i++)
         {
-            rows += blocks[i].Rows();
-            cols += blocks[i].Columns();
+            rows += blocksArray[i].Rows();
+            cols += blocksArray[i].Columns();
         }
 
         var result = Jagged.Create<T>(rows, cols);
         int currentRow = 0;
         int currentCol = 0;
-        for (var i = 0; i < blocks.Length; i++)
+        for (var i = 0; i < blocksArray.Length; i++)
         {
-            for (var r = 0; r < blocks[i].Length; r++)
+            for (var r = 0; r < blocksArray[i].Length; r++)
             {
-                for (var c = 0; c < blocks[i][r].Length; c++)
-                    result[currentRow + r][currentCol + c] = blocks[i][r][c];
+                for (var c = 0; c < blocksArray[i][r].Length; c++)
+                    result[currentRow + r][currentCol + c] = blocksArray[i][r][c];
             }
 
-            currentRow = blocks[i].Length;
-            currentCol = blocks[i][0].Length;
+            currentRow = blocksArray[i].Length;
+            currentCol = blocksArray[i][0].Length;
         }
 
         return result;
     }
+
     #endregion
-    /// <summary>
-    ///   Returns a new multidimensional matrix.
-    /// </summary>
-    /// 
-    public static TOutput[][] CreateAs<TInput, TOutput>(TInput[,] matrix)
-    {
-        int rows = matrix.GetLength(0);
-        int cols = matrix.GetLength(1);
-        var r = new TOutput[rows][];
-        for (var i = 0; i < r.Length; i++)
-            r[i] = new TOutput[cols];
-        return r;
-    }
 
-    /// <summary>
-    ///   Returns a new multidimensional matrix.
-    /// </summary>
-    /// 
-    public static TOutput[][] CreateAs<TInput, TOutput>(TInput[][] matrix)
-    {
-        var r = new TOutput[matrix.Length][];
-        for (var i = 0; i < r.Length; i++)
-            r[i] = new TOutput[matrix[i].Length];
-        return r;
-    }
-
-    /// <summary>
-    ///   Returns a new multidimensional matrix.
-    /// </summary>
-    /// 
-    public static TOutput[][][] CreateAs<TInput, TOutput>(TInput[][][] matrix)
-    {
-        var r = new TOutput[matrix.Length][][];
-        for (var i = 0; i < r.Length; i++)
-        {
-            r[i] = new TOutput[matrix[i].Length][];
-            for (var j = 0; j < r[i].Length; j++)
-                r[i][j] = new TOutput[matrix[i][j].Length];
-        }
-        return r;
-    }
     /// <summary>
     ///   Transforms a vector into a matrix of given dimensions.
     /// </summary>
     /// 
     public static T[][] Reshape<T>(T[] array, int rows, int cols, MatrixOrder order = MatrixOrder.Default)
     {
-        return Jagged.Reshape(array, rows, cols, Jagged.Create<T>(rows, cols), order);
+        return Jagged.Reshape(array, rows, cols, new Jagged<T>(Jagged.Create<T>(rows, cols)), order);
     }
 
     /// <summary>
     ///   Transforms a vector into a matrix of given dimensions.
     /// </summary>
     /// 
-    public static T[][] Reshape<T>(this T[] array, int rows, int cols, T[][] result, MatrixOrder order = MatrixOrder.Default)
+    public static T[][] Reshape<T>(this T[] array, int rows, int cols, Jagged<T> resultWrapper, MatrixOrder order = MatrixOrder.Default)
     {
+        var result = resultWrapper.Array;
         if (order == MatrixOrder.CRowMajor)
         {
             int k = 0;
@@ -867,32 +887,34 @@ public static partial class Jagged
     }
 
     #region Random matrices
+
     /// <summary>
     ///   Creates a square matrix matrix with random data.
     /// </summary>
     /// 
     public static T[][] Random<T>(int size, IRandomNumberGenerator<T> generator,
-        bool symmetric = false, T[][] result = null)
+        bool symmetric = false, Jagged<T> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<T>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<T>(size, size);
 
         if (!symmetric)
         {
             for (var i = 0; i < size; i++)
-                result[i] = generator.Generate(size);
+                resultArray[i] = generator.Generate(size);
         }
         else
         {
             for (var i = 0; i < size; i++)
             {
-                T[] row = generator.Generate(size / 2, result[i]);
+                T[] row = generator.Generate(size / 2, resultArray[i]);
                 for (int start = 0, end = size - 1; start < size / 2; start++, end--)
                     row[end] = row[start];
             }
         }
 
-        return result;
+        return resultArray;
     }
 
     /// <summary>
@@ -900,17 +922,19 @@ public static partial class Jagged
     /// </summary>
     /// 
     public static T[][] Random<T>(int rows, int cols,
-        IRandomNumberGenerator<T> generator, T[][] result = null)
+        IRandomNumberGenerator<T> generator, Jagged<T> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<T>(rows, cols);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<T>(rows, cols);
 
         for (var i = 0; i < rows; i++)
-            result[i] = generator.Generate(cols);
-        return result;
+            resultArray[i] = generator.Generate(cols);
+        return resultArray;
     }
 
     #endregion
+
     /// <summary>
     ///   Enumerates through all elements in a matrix.
     /// </summary>
@@ -1171,6 +1195,7 @@ public static partial class Jagged
             }
         }
     }
+
     /// <summary>
     ///   Gets the transpose of a matrix.
     /// </summary>
@@ -1179,21 +1204,23 @@ public static partial class Jagged
     /// 
     /// <returns>The transpose of the given matrix.</returns>
     /// 
-    public static T[][] Transpose<T>(T[,] matrix)
+    public static T[][] Transpose<T>(Matrix<T> matrix)
     {
-        int rows = matrix.Rows();
+        var matrixArray = matrix.Array;
+        int rows = matrixArray.Rows();
         if (rows == 0)
             return new T[rows][];
-        int cols = matrix.Columns();
+        int cols = matrixArray.Columns();
 
         T[][] result = new T[cols][];
         for (var j = 0; j < result.Length; j++)
         {
             result[j] = new T[rows];
             for (var i = 0; i < result[j].Length; i++)
-                result[j][i] = matrix[i, j];
+                result[j][i] = matrixArray[i, j];
         }
 
         return result;
     }
+
 }

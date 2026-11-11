@@ -1,13 +1,9 @@
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Differentiation;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization;
@@ -104,13 +100,13 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
     ///     The values associated with each
     ///     vector in the <paramref name="inputs" /> data.
     /// </param>
-    public double Minimize(double[][] inputs, double[] outputs)
+    public double Minimize(Jagged<double> inputs, double[] outputs)
     {
         Convergence.CurrentIteration = 0;
 
         do
         {
-            Convergence.NewValue = iterate(inputs, outputs);
+            Convergence.NewValue = iterate(inputs.Array, outputs);
         } while (!Convergence.HasConverged);
 
         return Value = Convergence.NewValue;
@@ -165,12 +161,12 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
                 grad => { }
             );
         // Compute error gradient using Jacobian
-        Jacobian.Dot(Residuals, gradient);
+        Matrix.Dot(new Jagged<double>(Jacobian), Residuals, gradient);
 
         // Compute Quasi-Hessian Matrix approximation
-        Jacobian.DotWithTransposed(Jacobian, Hessian);
+        Matrix.DotWithTransposed(new Jagged<double>(Jacobian), new Jagged<double>(Jacobian), new Jagged<double>(Hessian));
 
-        decomposition = new JaggedSingularValueDecomposition(Hessian,
+        decomposition = new JaggedSingularValueDecomposition(new Jagged<double>(Hessian),
             true, true, true);
 
         Deltas = decomposition.Solve(gradient);
@@ -178,6 +174,6 @@ public class GaussNewton : BaseLeastSquaresMethod, ILeastSquaresMethod
         for (var i = 0; i < Deltas.Length; i++)
             Solution[i] -= Deltas[i];
 
-        return ComputeError(inputs, outputs);
+        return ComputeError(new Jagged<double>(inputs), outputs);
     }
 }

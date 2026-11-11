@@ -1,10 +1,5 @@
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -595,6 +590,21 @@ public struct Matrix4x4
     }
 
     /// <summary>
+    /// Multiplies specified matrix by the specified vector.
+    /// </summary>
+    /// 
+    /// <param name="matrix">Matrix to multiply by vector.</param>
+    /// <param name="vector">Vector to multiply matrix by.</param>
+    /// 
+    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
+    /// by the specified vector.</returns>
+    ///
+    public static Vector4 Multiply(Matrix4x4 matrix, Vector4 vector)
+    {
+        return matrix * vector;
+    }
+
+    /// <summary>
     /// Adds corresponding components of two matrices.
     /// </summary>
     /// 
@@ -719,21 +729,6 @@ public struct Matrix4x4
     }
 
     /// <summary>
-    /// Multiplies specified matrix by the specified vector.
-    /// </summary>
-    /// 
-    /// <param name="matrix">Matrix to multiply by vector.</param>
-    /// <param name="vector">Vector to multiply matrix by.</param>
-    /// 
-    /// <returns>Returns new vector which is the result of multiplication of the specified matrix
-    /// by the specified vector.</returns>
-    ///
-    public static Vector4 Multiply(Matrix4x4 matrix, Vector4 vector)
-    {
-        return matrix * vector;
-    }
-
-    /// <summary>
     /// Tests whether two specified matrices are equal.
     /// </summary>
     /// 
@@ -745,26 +740,26 @@ public struct Matrix4x4
     public static bool operator ==(Matrix4x4 matrix1, Matrix4x4 matrix2)
     {
         return
-            matrix1.V00 == matrix2.V00 &&
-            matrix1.V01 == matrix2.V01 &&
-            matrix1.V02 == matrix2.V02 &&
-            matrix1.V03 == matrix2.V03 &&
-
-            matrix1.V10 == matrix2.V10 &&
-            matrix1.V11 == matrix2.V11 &&
-            matrix1.V12 == matrix2.V12 &&
-            matrix1.V13 == matrix2.V13 &&
-
-            matrix1.V20 == matrix2.V20 &&
-            matrix1.V21 == matrix2.V21 &&
-            matrix1.V22 == matrix2.V22 &&
-            matrix1.V23 == matrix2.V23 &&
-
-            matrix1.V30 == matrix2.V30 &&
-            matrix1.V31 == matrix2.V31 &&
-            matrix1.V32 == matrix2.V32 &&
-            matrix1.V33 == matrix2.V33
-        ;
+ExactComparisons.AreEqual(            matrix1.V00 ,matrix2.V00 )&&
+ExactComparisons.AreEqual(            matrix1.V01 ,matrix2.V01 )&&
+ExactComparisons.AreEqual(            matrix1.V02 ,matrix2.V02 )&&
+ExactComparisons.AreEqual(            matrix1.V03 ,matrix2.V03 )&&
+ExactComparisons.AreEqual(
+            matrix1.V10 ,matrix2.V10 )&&
+ExactComparisons.AreEqual(            matrix1.V11 ,matrix2.V11 )&&
+ExactComparisons.AreEqual(            matrix1.V12 ,matrix2.V12 )&&
+ExactComparisons.AreEqual(            matrix1.V13 ,matrix2.V13 )&&
+ExactComparisons.AreEqual(
+            matrix1.V20 ,matrix2.V20 )&&
+ExactComparisons.AreEqual(            matrix1.V21 ,matrix2.V21 )&&
+ExactComparisons.AreEqual(            matrix1.V22 ,matrix2.V22 )&&
+ExactComparisons.AreEqual(            matrix1.V23 ,matrix2.V23 )&&
+ExactComparisons.AreEqual(
+            matrix1.V30 ,matrix2.V30 )&&
+ExactComparisons.AreEqual(            matrix1.V31 ,matrix2.V31 )&&
+ExactComparisons.AreEqual(            matrix1.V32 ,matrix2.V32 )&&
+ExactComparisons.AreEqual(            matrix1.V33 ,matrix2.V33
+)        ;
     }
 
     /// <summary>
@@ -779,26 +774,26 @@ public struct Matrix4x4
     public static bool operator !=(Matrix4x4 matrix1, Matrix4x4 matrix2)
     {
         return
-            matrix1.V00 != matrix2.V00 ||
-            matrix1.V01 != matrix2.V01 ||
-            matrix1.V02 != matrix2.V02 ||
-            matrix1.V03 != matrix2.V03 ||
-
-            matrix1.V10 != matrix2.V10 ||
-            matrix1.V11 != matrix2.V11 ||
-            matrix1.V12 != matrix2.V12 ||
-            matrix1.V13 != matrix2.V13 ||
-
-            matrix1.V20 != matrix2.V20 ||
-            matrix1.V21 != matrix2.V21 ||
-            matrix1.V22 != matrix2.V22 ||
-            matrix1.V23 != matrix2.V23 ||
-
-            matrix1.V30 != matrix2.V30 ||
-            matrix1.V31 != matrix2.V31 ||
-            matrix1.V32 != matrix2.V32 ||
-            matrix1.V33 != matrix2.V33
-        ;
+ExactComparisons.AreNotEqual(            matrix1.V00 ,matrix2.V00 )||
+ExactComparisons.AreNotEqual(            matrix1.V01 ,matrix2.V01 )||
+ExactComparisons.AreNotEqual(            matrix1.V02 ,matrix2.V02 )||
+ExactComparisons.AreNotEqual(            matrix1.V03 ,matrix2.V03 )||
+ExactComparisons.AreNotEqual(
+            matrix1.V10 ,matrix2.V10 )||
+ExactComparisons.AreNotEqual(            matrix1.V11 ,matrix2.V11 )||
+ExactComparisons.AreNotEqual(            matrix1.V12 ,matrix2.V12 )||
+ExactComparisons.AreNotEqual(            matrix1.V13 ,matrix2.V13 )||
+ExactComparisons.AreNotEqual(
+            matrix1.V20 ,matrix2.V20 )||
+ExactComparisons.AreNotEqual(            matrix1.V21 ,matrix2.V21 )||
+ExactComparisons.AreNotEqual(            matrix1.V22 ,matrix2.V22 )||
+ExactComparisons.AreNotEqual(            matrix1.V23 ,matrix2.V23 )||
+ExactComparisons.AreNotEqual(
+            matrix1.V30 ,matrix2.V30 )||
+ExactComparisons.AreNotEqual(            matrix1.V31 ,matrix2.V31 )||
+ExactComparisons.AreNotEqual(            matrix1.V32 ,matrix2.V32 )||
+ExactComparisons.AreNotEqual(            matrix1.V33 ,matrix2.V33
+)        ;
     }
 
     /// <summary>

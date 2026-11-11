@@ -1,11 +1,7 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
@@ -22,7 +18,7 @@ public class EuclideanLoss : SquareLoss
     ///     Initializes a new instance of the <see cref="EuclideanLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public EuclideanLoss(double[][] expected)
+    public EuclideanLoss(Jagged<double> expected)
         : base(expected)
     {
     }
@@ -47,9 +43,9 @@ public class SquareLoss : LossBase<double[][]>
     ///     Initializes a new instance of the <see cref="SquareLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public SquareLoss(double[][] expected)
+    public SquareLoss(Jagged<double> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
     }
 
     /// <summary>

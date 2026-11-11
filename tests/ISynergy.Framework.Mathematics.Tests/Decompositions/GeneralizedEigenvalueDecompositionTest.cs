@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Matrices;
+﻿using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
 [TestClass]
@@ -30,7 +31,7 @@ public class GeneralizedEigenvalueDecompositionTest
         // that are solutions for the equation det(A - λB) = 0
 
         // For this, we can use a Generalized Eigendecomposition
-        GeneralizedEigenvalueDecomposition gevd = new(A, B);
+        GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
         // Now, if A and B are Hermitian and B is positive
         // -definite, then the eigenvalues λ will be real:
@@ -40,7 +41,7 @@ public class GeneralizedEigenvalueDecompositionTest
         for (int i = 0; i < lambda.Length; i++)
         {
             // Compute the determinant equation show above
-            double det = Matrix.Determinant(A.Subtract(lambda[i].Multiply(B))); // almost zero
+            double det = Matrix.Determinant(new Matrix<double>(A).Subtract(new Matrix<double>(lambda[i].Multiply(new Matrix<double>(B))))); // almost zero
 
             Assert.IsLessThan(1e-6, det);
         }
@@ -71,7 +72,7 @@ public class GeneralizedEigenvalueDecompositionTest
         double[,] A = Matrix.Identity(100);
         double[,] B = Matrix.Identity(100);
 
-        GeneralizedEigenvalueDecomposition gevd = new(A, B);
+        GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
         double[,] expectedVectors = Matrix.Identity(100);
         double[,] expectedValues = Matrix.Identity(100);
@@ -90,14 +91,14 @@ public class GeneralizedEigenvalueDecompositionTest
                 double[,] A = Matrix.Random(j, j, -1.0, 1.0);
                 double[,] B = Matrix.Random(j, j, -1.0, 1.0);
 
-                GeneralizedEigenvalueDecomposition gevd = new(A, B);
+                GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
                 double[,] V = gevd.Eigenvectors;
                 double[,] D = gevd.DiagonalMatrix;
 
                 // A*V = B*V*D
-                double[,] AV = Matrix.Dot(A, V);
-                double[,] BVD = Matrix.Dot(Matrix.Dot(B, V), D);
+                double[,] AV = Matrix.Dot(new Matrix<double>(A), new Matrix<double>(V));
+                double[,] BVD = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(B), new Matrix<double>(V))), new Matrix<double>(D));
 
                 Assert.IsTrue(Matrix.IsEqual(AV, BVD, 0.0000001));
             }
@@ -109,14 +110,14 @@ public class GeneralizedEigenvalueDecompositionTest
             double[,] A = Matrix.Random(j, j, -1.0, 1.0);
             double[,] B = Matrix.Random(j, j, -1.0, 1.0);
 
-            GeneralizedEigenvalueDecomposition gevd = new(A, B);
+            GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
             double[,] V = gevd.Eigenvectors;
             double[,] D = gevd.DiagonalMatrix;
 
             // A*V = B*V*D
-            double[,] AV = Matrix.Dot(A, V);
-            double[,] BVD = Matrix.Dot(Matrix.Dot(B, V), D);
+                double[,] AV = Matrix.Dot(new Matrix<double>(A), new Matrix<double>(V));
+                double[,] BVD = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(B), new Matrix<double>(V))), new Matrix<double>(D));
 
             Assert.IsTrue(Matrix.IsEqual(AV, BVD, 0.0000001));
         }
@@ -149,14 +150,14 @@ public class GeneralizedEigenvalueDecompositionTest
         B[2, 2] = -1.5640121915210088;
 
 
-        GeneralizedEigenvalueDecomposition gevd = new(A, B);
+        GeneralizedEigenvalueDecomposition gevd = new(new Matrix<double>(A), new Matrix<double>(B));
 
         double[,] V = gevd.Eigenvectors;
         double[,] D = gevd.DiagonalMatrix;
 
         // A*V = B*V*D
-        double[,] AV = Matrix.Dot(A, V);
-        double[,] BVD = Matrix.Dot(Matrix.Dot(B, V), D);
+                double[,] AV = Matrix.Dot(new Matrix<double>(A), new Matrix<double>(V));
+                double[,] BVD = Matrix.Dot(new Matrix<double>(Matrix.Dot(new Matrix<double>(B), new Matrix<double>(V))), new Matrix<double>(D));
         Assert.IsTrue(Matrix.IsEqual(AV, BVD, 0.000001));
 
         double[,] expectedVectors =

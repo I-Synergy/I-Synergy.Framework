@@ -1,12 +1,8 @@
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
 /// <summary>
@@ -79,7 +75,7 @@ public class NonnegativeMatrixFactorization
     /// <param name="value">The input data matrix (must be positive).</param>
     /// <param name="r">The reduced dimension.</param>
     /// 
-    public NonnegativeMatrixFactorization(double[,] value, int r)
+    public NonnegativeMatrixFactorization(Matrix<double> value, int r)
         : this(value, r, 100) { }
 
     /// <summary>
@@ -90,11 +86,11 @@ public class NonnegativeMatrixFactorization
     /// <param name="r">The reduced dimension.</param>
     /// <param name="maxiter">The number of iterations to perform.</param>
     /// 
-    public NonnegativeMatrixFactorization(double[,] value, int r, int maxiter)
+    public NonnegativeMatrixFactorization(Matrix<double> value, int r, int maxiter)
     {
-        this.X = value;
-        this.n = value.GetLength(0);
-        this.m = value.GetLength(1);
+        this.X = value.Array;
+        this.n = value.Rows;
+        this.m = value.Columns;
         this.r = r;
 
         compute(maxiter);

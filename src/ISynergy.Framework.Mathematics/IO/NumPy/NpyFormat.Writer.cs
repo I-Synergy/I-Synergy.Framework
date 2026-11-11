@@ -2,11 +2,6 @@ using ISynergy.Framework.Mathematics.Matrices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
@@ -113,30 +108,24 @@ public static partial class NpyFormat
 
         ulong writtenBytes = 0;
 
-        unsafe
+        foreach (var s in matrix.Enumerate<string>(shape))
         {
-            fixed (byte* b = buffer)
+            if (s is not null)
             {
-                foreach (var s in matrix.Enumerate<string>(shape))
-                {
-                    if (s is not null)
-                    {
-                        var c = 0;
-                        for (var i = 0; i < s.Length; i++)
-                            b[c++] = (byte)s[i];
-                        for (; c < buffer.Length; c++)
-                            b[c] = byte.MinValue;
+                var c = 0;
+                for (var i = 0; i < s.Length; i++)
+                    buffer[c++] = (byte)s[i];
+                for (; c < buffer.Length; c++)
+                    buffer[c] = byte.MinValue;
 
-                        reader.Write(buffer, 0, bytes);
-                    }
-                    else
-                    {
-                        reader.Write(empty, 0, bytes);
-                    }
-
-                    writtenBytes += (ulong)buffer.LongLength;
-                }
+                reader.Write(buffer, 0, bytes);
             }
+            else
+            {
+                reader.Write(empty, 0, bytes);
+            }
+
+            writtenBytes += (ulong)buffer.LongLength;
         }
 
         return writtenBytes;
@@ -182,9 +171,7 @@ public static partial class NpyFormat
 
         if (type == typeof(string))
         {
-            foreach (var s in array.Enumerate<string>())
-                if (s.Length > bytes)
-                    bytes = s.Length;
+            bytes = Math.Max(bytes, array.Enumerate<string>().Select(s => s.Length).DefaultIfEmpty(0).Max());
         }
         else if (type == typeof(bool))
         {

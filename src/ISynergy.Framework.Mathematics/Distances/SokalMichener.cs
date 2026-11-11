@@ -3,11 +3,6 @@ namespace ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 /// <summary>
@@ -73,9 +68,9 @@ public struct SokalMichener : IDistance<double[]>, IDistance<int[]>, ICloneable
 
         for (var i = 0; i < x.Length; i++)
         {
-            if (x[i] == 1 && y[i] == 0) tf++;
-            if (x[i] == 0 && y[i] == 1) ft++;
-            if (x[i] == 1 && y[i] == 1) tt++;
+            if (ExactComparisons.AreEqual(x[i] ,1 )&& y[i] == 0) tf++;
+            if (x[i] == 0 && ExactComparisons.AreEqual(y[i] ,1)) ft++;
+            if (ExactComparisons.AreEqual(x[i] ,1 )&& ExactComparisons.AreEqual(y[i] ,1)) tt++;
             if (x[i] == 0 && y[i] == 0) ff++;
         }
 

@@ -1,9 +1,4 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Distances.Base;
 
@@ -14,7 +9,7 @@ namespace ISynergy.Framework.Mathematics.Distances.Base;
 /// <typeparam name="T">The type of the first element to be compared.</typeparam>
 /// <typeparam name="U">The type of the second element to be compared.</typeparam>
 /// 
-public interface ISimilarity<T, U> // NOSONAR
+public interface ISimilarity<in T, in U>
 {
     /// <summary>
     ///   Gets a similarity measure between two points.
@@ -34,7 +29,7 @@ public interface ISimilarity<T, U> // NOSONAR
 /// 
 /// <typeparam name="T">The type of the elements to be compared.</typeparam>
 /// 
-public interface ISimilarity<T> : ISimilarity<T, T> // NOSONAR
+public interface ISimilarity<in T> : ISimilarity<T, T>
 {
 
 }

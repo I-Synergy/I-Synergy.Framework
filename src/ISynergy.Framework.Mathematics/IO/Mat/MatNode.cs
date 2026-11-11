@@ -4,13 +4,8 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using System.Text;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1450, S1135, S1117 // fields are read in methods; TODO comments are algorithm notes; local reader shadowing is intentional for decompression
 
 namespace ISynergy.Framework.Mathematics.IO.Mat;
 
@@ -25,7 +20,6 @@ public class MatNode : IEnumerable<MatNode>
     private readonly bool compressed;
 
     private readonly int[] dimensions;
-    private readonly int length;
     private readonly MatReader matReader;
     private readonly long matrixOffset;
     private readonly MatDataType matType;
@@ -35,12 +29,11 @@ public class MatNode : IEnumerable<MatNode>
     private readonly BinaryReader reader;
     private readonly long startOffset;
     private readonly Type type;
-    private readonly int typeSize;
     private object value;
 
-    internal unsafe MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
+    internal MatNode(MatReader matReader, BinaryReader reader, long offset, MatDataTag tag, bool lazy)
     {
-        // TODO: Completely refactor this method. // NOSONAR
+        // Reads one MAT data item per storage class inline, which keeps the binary layout in order.
         this.matReader = matReader;
 
         Fields = new Dictionary<string, MatNode>();
@@ -109,11 +102,11 @@ public class MatNode : IEnumerable<MatNode>
 
         if (nameTag.IsSmallFormat)
         {
-            // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+            // SmallData_Value is an inline 4-byte buffer. Guard against malformed MAT data
             // that could cause the string constructor to read past the 4-byte boundary.
             if (nameTag.SmallData_NumberOfBytes < 0 || nameTag.SmallData_NumberOfBytes > 4)
                 throw new InvalidDataException($"Malformed MAT file: name small-data length {nameTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
-            Name = new string((sbyte*)nameTag.SmallData_Value, 0, nameTag.SmallData_NumberOfBytes);
+            Name = Encoding.UTF8.GetString(nameTag.SmallData_Value.AsSpan().Slice(0, nameTag.SmallData_NumberOfBytes));
         }
         else
         {
@@ -155,8 +148,8 @@ public class MatNode : IEnumerable<MatNode>
 
             matType = valuesTag.DataType;
             type = MatReader.Translate(matType);
-            typeSize = Marshal.SizeOf(type);
-            length = valuesTag.NumberOfBytes / typeSize;
+            var typeSize = Marshal.SizeOf(type);
+            var length = valuesTag.NumberOfBytes / typeSize;
             bytes = valuesTag.NumberOfBytes;
 
             var rawData = GetBytes(reader);
@@ -198,7 +191,7 @@ public class MatNode : IEnumerable<MatNode>
                 throw new NotSupportedException(
                     "Small format struct field name length is not supported at position " + readBytes + ".");
 
-            var fieldNameLength = *(int*)fieldNameLengthTag.SmallData_Value;
+            var fieldNameLength = MemoryMarshal.Read<int>(fieldNameLengthTag.SmallData_Value.AsSpan());
 
             if (fieldNameLengthTag.DataType != MatDataType.miINT32)
                 throw new NotSupportedException("Unexpected struct field name length data type at position " +
@@ -256,18 +249,16 @@ public class MatNode : IEnumerable<MatNode>
                 matType = contentsTag.SmallData_Type;
                 if (matType == MatDataType.miUTF8)
                 {
-                    // SmallData_Value is a fixed byte[4] buffer. Guard against malformed MAT data
+                    // SmallData_Value is an inline 4-byte buffer. Guard against malformed MAT data
                     // that could cause the string constructor to read past the 4-byte boundary.
                     if (contentsTag.SmallData_NumberOfBytes < 0 || contentsTag.SmallData_NumberOfBytes > 4)
                         throw new InvalidDataException($"Malformed MAT file: content small-data length {contentsTag.SmallData_NumberOfBytes} exceeds the 4-byte fixed buffer at position {readBytes}.");
-                    value = new string((sbyte*)contentsTag.SmallData_Value, 0,
-                        contentsTag.SmallData_NumberOfBytes);
+                    value = Encoding.UTF8.GetString(contentsTag.SmallData_Value.AsSpan().Slice(0, contentsTag.SmallData_NumberOfBytes));
                 }
                 else
                 {
                     type = MatReader.Translate(matType);
-                    typeSize = Marshal.SizeOf(type);
-                    length = 1;
+                    var length = 1;
                     for (var i = 0; i < dimensions.Length; i++)
                         length *= dimensions[i];
                     var array = Array.CreateInstance(type, dimensions);
@@ -299,8 +290,6 @@ public class MatNode : IEnumerable<MatNode>
                 else
                 {
                     type = MatReader.Translate(matType);
-                    typeSize = Marshal.SizeOf(type);
-                    length = contentsTag.NumberOfBytes / typeSize;
                     bytes = contentsTag.NumberOfBytes;
 
                     if (!lazy)
@@ -410,8 +399,8 @@ public class MatNode : IEnumerable<MatNode>
     /// <returns>The object stored at this node.</returns>
     public T GetValue<T>()
     {
-        if (Value is T value)
-            return value;
+        if (Value is T typedValue)
+            return typedValue;
 
         if (typeof(T).IsArray)
         {
@@ -440,21 +429,21 @@ public class MatNode : IEnumerable<MatNode>
 
     private Array read()
     {
-        var reader = this.reader;
+        var dataReader = this.reader;
 
         if (compressed)
         {
-            reader.BaseStream.Seek(startOffset + 8 + 2, SeekOrigin.Begin);
-            reader = new BinaryReader(new DeflateStream(reader.BaseStream,
+            dataReader.BaseStream.Seek(startOffset + 8 + 2, SeekOrigin.Begin);
+            dataReader = new BinaryReader(new DeflateStream(dataReader.BaseStream,
                 CompressionMode.Decompress, true));
-            reader.ReadBytes(readBytes);
+            dataReader.ReadBytes(readBytes);
         }
         else
         {
-            reader.BaseStream.Seek(matrixOffset, SeekOrigin.Begin);
+            dataReader.BaseStream.Seek(matrixOffset, SeekOrigin.Begin);
         }
 
-        var array = read(reader);
+        var array = read(dataReader);
 
         return array;
     }

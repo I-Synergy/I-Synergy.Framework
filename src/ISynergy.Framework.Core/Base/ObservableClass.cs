@@ -5,14 +5,18 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 namespace ISynergy.Framework.Core.Base;
 
+// S3881: this type has no finalizer, so GC.SuppressFinalize() is deliberately omitted (Sonar S3971 forbids
+// calling it without a finalizer). Adding it would break the repository-wide dispose convention.
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
-public abstract class ObservableClass : IObservableClass // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+public abstract class ObservableClass : IObservableClass
 {
     protected PropertyChangedEventHandler? _propertyChanged;
     protected bool _disposed;
@@ -59,7 +63,7 @@ public abstract class ObservableClass : IObservableClass // NOSONAR - finalizer-
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-    public override bool Equals(object? obj) // NOSONAR
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
             return true;
@@ -76,20 +80,33 @@ public abstract class ObservableClass : IObservableClass // NOSONAR - finalizer-
             if (!propertiesToCheck.Any(a => a.Name.Equals(property.Name)))
                 return false;
 
-            if (propertiesToCheck.SingleOrDefault(q => q.Name.Equals(property.Name)) is { } propertyInfo)
+            if (propertiesToCheck.SingleOrDefault(q => q.Name.Equals(property.Name)) is { } propertyInfo
+                && !HasEqualValue(property, propertyInfo, obj))
             {
-                if ((property.GetValue(this) is null && propertyInfo.GetValue(obj) is not null) ||
-                    (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is null))
-                {
-                    return false;
-                }
-
-                if (property.GetValue(this) is not null && propertyInfo.GetValue(obj) is not null && !property.GetValue(this)!.Equals(propertyInfo.GetValue(obj)))
-                    return false;
+                return false;
             }
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Compares the value this instance holds for <paramref name="property"/> with the value
+    /// <paramref name="other"/> holds for the matching property.
+    /// </summary>
+    /// <param name="property">The property of this instance.</param>
+    /// <param name="otherProperty">The matching property of <paramref name="other"/>.</param>
+    /// <param name="other">The object to compare with.</param>
+    /// <returns><c>true</c> when both values are null or both values are equal.</returns>
+    private bool HasEqualValue(PropertyInfo property, PropertyInfo otherProperty, object other)
+    {
+        var value = property.GetValue(this);
+        var otherValue = otherProperty.GetValue(other);
+
+        if (value is null || otherValue is null)
+            return value is null && otherValue is null;
+
+        return value.Equals(otherValue);
     }
 
 
@@ -322,3 +339,4 @@ public abstract class ObservableClass : IObservableClass // NOSONAR - finalizer-
     }
     #endregion
 }
+#pragma warning restore S3881

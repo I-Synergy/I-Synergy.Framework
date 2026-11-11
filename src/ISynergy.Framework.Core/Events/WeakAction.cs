@@ -118,36 +118,16 @@ public class WeakAction
     {
         get
         {
-            if (_staticAction is null
-                && Reference is null
-                && LiveReference is null)
-            {
-                return false;
-            }
+            var reference = Reference;
 
             if (_staticAction is not null)
-            {
-                if (Reference is not null)
-                {
-                    return Reference.IsAlive;
-                }
+                return reference is null || reference.IsAlive;
 
-                return true;
-            }
-
-            // Non static action
-
+            // Non static action: alive while it is kept alive explicitly or its target is still reachable.
             if (LiveReference is not null)
-            {
                 return true;
-            }
 
-            if (Reference is not null) // NOSONAR
-            {
-                return Reference.IsAlive;
-            }
-
-            return false;
+            return reference is not null && reference.IsAlive;
         }
     }
 

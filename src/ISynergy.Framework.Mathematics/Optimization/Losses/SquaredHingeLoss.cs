@@ -1,9 +1,4 @@
-
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 
@@ -21,7 +16,7 @@ public struct SquaredHingeLoss : ILoss<double[]>,
     ///     Initializes a new instance of the <see cref="SquaredHingeLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public SquaredHingeLoss(double[][] expected)
+    public SquaredHingeLoss(Jagged<double> expected)
     {
         hinge = new HingeLoss(expected);
     }
@@ -134,7 +129,7 @@ public struct SquaredHingeLoss : ILoss<double[]>,
     /// </returns>
     public double Loss(double expected, double actual)
     {
-        // TODO: Use multiplication instead of conditionals // NOSONAR
+        // Math.NET parity: the branching form is kept as in the reference implementation; no multiplication-based rewrite.
         if (expected > 0)
         {
             if (actual > 1)
@@ -163,7 +158,7 @@ public struct SquaredHingeLoss : ILoss<double[]>,
     /// </returns>
     public double Derivative(double expected, double actual)
     {
-        // TODO: Use multiplication instead of conditionals // NOSONAR
+        // Math.NET parity: the branching form is kept as in the reference implementation; no multiplication-based rewrite.
         if (expected > 0)
         {
             if (actual > 1)

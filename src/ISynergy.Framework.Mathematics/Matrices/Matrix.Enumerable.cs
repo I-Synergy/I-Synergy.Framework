@@ -1,9 +1,4 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -34,7 +29,7 @@ public static partial class Matrix
     /// <summary>
     ///     Converts a matrix represented as a nested list of lists into a multi-dimensional matrix.
     /// </summary>
-    public static T[,] ToMatrix<T, U>(this IList<IList<T>> values) // NOSONAR
+    public static T[,] ToMatrix<T>(this IList<IList<T>> values)
     {
         var rows = values.Rows();
         var cols = values.Columns();

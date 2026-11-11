@@ -1,4 +1,5 @@
 using Microsoft.Maui.Handlers;
+using System.Runtime.CompilerServices;
 
 namespace ISynergy.Framework.UI.Maui.Platforms.Windows.Extensions;
 
@@ -65,15 +66,19 @@ public static class ShellChromeStyler
             });
     }
 
+    // UIElement.ProtectedCursor is protected; UnsafeAccessor replaces the former reflection
+    // bypass (S3011) with a compile-time-checked accessor that has no runtime reflection cost.
+    [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "set_ProtectedCursor")]
+    private static extern void SetProtectedCursor(Microsoft.UI.Xaml.UIElement uiElement, Microsoft.UI.Input.InputCursor cursor);
+
     private static void ApplyHandCursor(Microsoft.UI.Xaml.UIElement? element)
     {
+        if (element is null)
+            return;
+
         try
         {
-            var property = typeof(Microsoft.UI.Xaml.UIElement).GetProperty(
-                "ProtectedCursor",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic); // NOSONAR - UIElement.ProtectedCursor is protected; reflection is the only way to set it
-
-            property?.SetValue(
+            SetProtectedCursor(
                 element,
                 Microsoft.UI.Input.InputSystemCursor.Create(Microsoft.UI.Input.InputSystemCursorShape.Hand));
         }

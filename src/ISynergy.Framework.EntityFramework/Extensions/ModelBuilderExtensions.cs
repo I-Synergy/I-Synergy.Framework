@@ -232,7 +232,10 @@ public static class ModelBuilderExtensions
     /// Prefer the <see cref="ApplyModelBuilderConfigurations(ModelBuilder, IReadOnlyList{Type})"/> overload
     /// that accepts an explicit list of configuration types for AOT/trimming compatibility.
     /// </remarks>
-    [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")] // NOSONAR
+    // S1133: this overload is kept for backward compatibility (existing callers and binaries);
+    // removal would be a breaking public API change.
+    #pragma warning disable S1133 // obsolete public API kept for backward compatibility
+    [Obsolete("Prefer the overload accepting IReadOnlyList<Type> for AOT/trimming compatibility. This overload uses assembly scanning which is not AOT-safe.")]
     public static ModelBuilder ApplyModelBuilderConfigurations(this ModelBuilder modelBuilder, Assembly[] assemblies)
     {
         // Get the open generic type for IEntityTypeConfiguration
@@ -257,6 +260,7 @@ public static class ModelBuilderExtensions
 
         return modelBuilder;
     }
+    #pragma warning restore S1133
 
     /// <summary>
     /// Applies the supplied <see cref="IEntityTypeConfiguration{TEntity}"/> implementation types to the

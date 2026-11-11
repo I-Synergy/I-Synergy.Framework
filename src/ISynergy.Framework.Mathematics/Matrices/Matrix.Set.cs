@@ -1,10 +1,6 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Matrices;
@@ -21,7 +17,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[][] destination, T value)
     {
-        Set(destination, Jagged.Create(destination.Rows(), destination.Columns(), value));
+        Set(destination, new Jagged<T>(Jagged.Create(destination.Rows(), destination.Columns(), value)));
     }
 
     /// <summary>
@@ -33,7 +29,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[,] destination, T value)
     {
-        Set(destination, Matrix.Create(destination.Rows(), destination.Columns(), value));
+        Set(destination, new Matrix<T>(Matrix.Create(destination.Rows(), destination.Columns(), value)));
     }
 
     /// <summary>
@@ -43,9 +39,9 @@ public static partial class Matrix
     /// <param name="destination">The matrix where elements will be set.</param>
     /// <param name="value">The matrix of values to which matrix elements will be set.</param>
     /// 
-    public static void Set<T>(this T[][] destination, T[][] value)
+    public static void Set<T>(this T[][] destination, Jagged<T> value)
     {
-        set(destination, null, null, value, null, null);
+        set(destination, null, value.Array, null, null);
     }
 
     /// <summary>
@@ -55,26 +51,9 @@ public static partial class Matrix
     /// <param name="destination">The matrix where elements will be set.</param>
     /// <param name="value">The matrix of values to which matrix elements will be set.</param>
     /// 
-    public static void Set<T>(this T[,] destination, T[,] value)
+    public static void Set<T>(this T[,] destination, Matrix<T> value)
     {
-        set(destination, null, null, value, null, null);
-    }
-
-    /// <summary>
-    ///   Sets a region of a matrix to the given values.
-    /// </summary>
-    /// 
-    /// <param name="destination">The matrix where elements will be set.</param>
-    /// <param name="value">The matrix of values to which matrix elements will be set.</param>
-    /// <param name="rowIndices">Array of row indices</param>
-    /// <param name="startColumn">Start column index</param>
-    /// <param name="endColumn">End column index</param>
-    /// 
-    public static void Set<T>(this T[][] destination, T[][] value, int[] rowIndices, int startColumn, int endColumn)
-    {
-        int endIndex = end(endColumn, destination.Columns());
-        int[] columnIndices = Vector.Range(startColumn, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, null, value.Array, null, null);
     }
 
     /// <summary>
@@ -87,11 +66,28 @@ public static partial class Matrix
     /// <param name="startColumn">Start column index</param>
     /// <param name="endColumn">End column index</param>
     /// 
-    public static void Set<T>(this T[,] destination, T[,] value, int[] rowIndices, int startColumn, int endColumn)
+    public static void Set<T>(this T[][] destination, Jagged<T> value, int[] rowIndices, int startColumn, int endColumn)
     {
         int endIndex = end(endColumn, destination.Columns());
         int[] columnIndices = Vector.Range(startColumn, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value.Array, rowIndices, columnIndices);
+    }
+
+    /// <summary>
+    ///   Sets a region of a matrix to the given values.
+    /// </summary>
+    /// 
+    /// <param name="destination">The matrix where elements will be set.</param>
+    /// <param name="value">The matrix of values to which matrix elements will be set.</param>
+    /// <param name="rowIndices">Array of row indices</param>
+    /// <param name="startColumn">Start column index</param>
+    /// <param name="endColumn">End column index</param>
+    /// 
+    public static void Set<T>(this T[,] destination, Matrix<T> value, int[] rowIndices, int startColumn, int endColumn)
+    {
+        int endIndex = end(endColumn, destination.Columns());
+        int[] columnIndices = Vector.Range(startColumn, endIndex);
+        set(destination, columnIndices, value.Array, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -106,7 +102,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[][] destination, T value, int[] rowIndices, int startColumn, int endColumn)
     {
-        Set(destination, Jagged.Create(destination.Rows(), destination.Columns(), value), rowIndices, startColumn, endColumn);
+        Set(destination, new Jagged<T>(Jagged.Create(destination.Rows(), destination.Columns(), value)), rowIndices, startColumn, endColumn);
     }
 
     /// <summary>
@@ -119,11 +115,11 @@ public static partial class Matrix
     /// <param name="startRow">Start row index</param>
     /// <param name="endRow">End row index</param>
     /// 
-    public static void Set<T>(this T[,] destination, T[,] value, int startRow, int endRow, int[] columnIndices)
+    public static void Set<T>(this T[,] destination, Matrix<T> value, int startRow, int endRow, int[] columnIndices)
     {
         int endIndex = end(endRow, destination.Rows());
         int[] rowIndices = Vector.Range(startRow, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value.Array, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -136,11 +132,11 @@ public static partial class Matrix
     /// <param name="startRow">Start row index</param>
     /// <param name="endRow">End row index</param>
     /// 
-    public static void Set<T>(this T[][] destination, T[][] value, int startRow, int endRow, int[] columnIndices)
+    public static void Set<T>(this T[][] destination, Jagged<T> value, int startRow, int endRow, int[] columnIndices)
     {
         int endIndex = end(endRow, destination.Rows());
         int[] rowIndices = Vector.Range(startRow, endIndex);
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value.Array, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -155,7 +151,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[,] destination, T value, int[] rowIndices, int startColumn, int endColumn)
     {
-        T[,] source = Matrix.Create(destination.Rows(), destination.Columns(), value);
+        Matrix<T> source = new(Matrix.Create(destination.Rows(), destination.Columns(), value));
         Set(destination, source, rowIndices, startColumn, endColumn);
     }
 
@@ -171,7 +167,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[][] destination, T value, int startRow, int endRow, int[] columnIndices)
     {
-        T[][] source = Jagged.Create(destination.Rows(), destination.Columns(), value);
+        Jagged<T> source = new(Jagged.Create(destination.Rows(), destination.Columns(), value));
         Set(destination, source, startRow, endRow, columnIndices);
     }
 
@@ -187,7 +183,7 @@ public static partial class Matrix
     /// 
     public static void Set<T>(this T[,] destination, T value, int startRow, int endRow, int[] columnIndices)
     {
-        T[,] source = Matrix.Create(destination.Rows(), destination.Columns(), value);
+        Matrix<T> source = new(Matrix.Create(destination.Rows(), destination.Columns(), value));
         Set(destination, source, startRow, endRow, columnIndices);
     }
     /// <summary>
@@ -208,7 +204,7 @@ public static partial class Matrix
         int[] rowIndices = Vector.Range(startRow, rowIndex);
         int colIndex = end(endCol, destination.Columns());
         int[] columnIndices = Vector.Range(startCol, colIndex);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -229,7 +225,7 @@ public static partial class Matrix
         int[] rowIndices = Vector.Range(startRow, rowIndex);
         int colIndex = end(endCol, destination.Columns());
         int[] columnIndices = Vector.Range(startCol, colIndex);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -244,7 +240,7 @@ public static partial class Matrix
     public static void Set<T>(this T[][] destination, T value, int[] rowIndices, int[] columnIndices)
     {
         var values = Jagged.Create<T>(destination.Rows(), destination.Columns(), value);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -259,7 +255,7 @@ public static partial class Matrix
     public static void Set<T>(this T[,] destination, T value, int[] rowIndices, int[] columnIndices)
     {
         var values = Matrix.Create<T>(destination.Rows(), destination.Columns(), value);
-        set(destination, rowIndices, columnIndices, values, rowIndices, columnIndices);
+        set(destination, columnIndices, values, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -271,9 +267,9 @@ public static partial class Matrix
     /// <param name="rowIndices">Array of row indices</param>
     /// <param name="columnIndices">Array of column indices</param>
     /// 
-    public static void Set<T>(this T[][] destination, T[][] value, int[] rowIndices, int[] columnIndices)
+    public static void Set<T>(this T[][] destination, Jagged<T> value, int[] rowIndices, int[] columnIndices)
     {
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value.Array, rowIndices, columnIndices);
     }
 
     /// <summary>
@@ -285,9 +281,9 @@ public static partial class Matrix
     /// <param name="rowIndices">Array of row indices</param>
     /// <param name="columnIndices">Array of column indices</param>
     /// 
-    public static void Set<T>(this T[,] destination, T[,] value, int[] rowIndices, int[] columnIndices)
+    public static void Set<T>(this T[,] destination, Matrix<T> value, int[] rowIndices, int[] columnIndices)
     {
-        set(destination, rowIndices, columnIndices, value, rowIndices, columnIndices);
+        set(destination, columnIndices, value.Array, rowIndices, columnIndices);
     }
     /// <summary>
     ///   Sets a region of a matrix to the given values.
@@ -360,8 +356,11 @@ public static partial class Matrix
             destination[indices[i]] = value;
     }
 
+    // The destination row indices are always the same array as the source row indices
+    // at every call site, and the mapping uses the source rows, so no separate
+    // destination row index argument is required.
     private static void set<T>(this
-        T[,] dst, int[] dstRowIndices, int[] dstColumnIndices,
+        T[,] dst, int[] dstColumnIndices,
         T[,] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
         ArgumentNullException.ThrowIfNull(src);
@@ -374,8 +373,6 @@ public static partial class Matrix
         if (srcColumnIndices is null)
             srcColumnIndices = Vector.Range(0, src.Columns());
 
-        if (dstRowIndices is null)
-            dstRowIndices = Vector.Range(0, dst.Rows()); // NOSONAR - null coalescing pattern
         if (dstColumnIndices is null)
             dstColumnIndices = Vector.Range(0, dst.Columns());
 
@@ -394,7 +391,7 @@ public static partial class Matrix
     }
 
     private static void set<T>(this
-        T[][] dst, int[] dstRowIndices, int[] dstColumnIndices,
+        T[][] dst, int[] dstColumnIndices,
         T[][] src, int[] srcRowIndices, int[] srcColumnIndices)
     {
         ArgumentNullException.ThrowIfNull(src);
@@ -406,8 +403,6 @@ public static partial class Matrix
         if (srcColumnIndices is null)
             srcColumnIndices = Vector.Range(0, src.Columns());
 
-        if (dstRowIndices is null)
-            dstRowIndices = Vector.Range(0, dst.Rows()); // NOSONAR - null coalescing pattern
         if (dstColumnIndices is null)
             dstColumnIndices = Vector.Range(0, dst.Columns());
 

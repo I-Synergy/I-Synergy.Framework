@@ -1,17 +1,11 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S101, S1118 // SVD is a standard mathematical naming convention; class is a utility with only static methods
 
 namespace ISynergy.Framework.Mathematics.Common;
 
 // Just a copy-paste of SVD algorithm from Numerical Recipes but updated for C#
 // (as authors state, the code is aimed to be machine readable, so blame them
 // for all those c/f/g/h/s variable)
-internal static class svd
+internal static class Svd
 {
     public static void svdcmp(double[,] a, out double[] w, out double[,] v)
     {
@@ -236,25 +230,24 @@ internal static class svd
                     // test for splitting
                     nm = l - 1;
 
-                    if (Math.Abs(rv1[l]) + anorm == anorm)
+                    if (ExactComparisons.AreEqual(Math.Abs(rv1[l]) + anorm ,anorm))
                     {
                         flag = 0;
                         break;
                     }
 
-                    if (Math.Abs(w[nm]) + anorm == anorm)
+                    if (ExactComparisons.AreEqual(Math.Abs(w[nm]) + anorm ,anorm))
                         break;
                 }
 
                 if (flag != 0)
                 {
-                    c = 0.0; // NOSONAR - SVD algorithm initialization, overwritten conditionally in loop
                     s = 1.0;
                     for (i = l; i <= k; i++)
                     {
                         f = s * rv1[i];
 
-                        if (Math.Abs(f) + anorm != anorm)
+                        if (ExactComparisons.AreNotEqual(Math.Abs(f) + anorm ,anorm))
                         {
                             g = w[i];
                             h = Pythag(f, g);

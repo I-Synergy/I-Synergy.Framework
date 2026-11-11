@@ -28,11 +28,6 @@ namespace ISynergy.Framework.Mathematics.Functions;
 using ISynergy.Framework.Mathematics.Common;
 using System;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 /// <summary>
@@ -216,7 +211,7 @@ public static class Normal
 
         if (y0 >= 1.0)
         {
-            if (y0 == 1)
+            if (ExactComparisons.AreEqual(y0 ,1))
                 return double.PositiveInfinity;
             throw new ArgumentOutOfRangeException(nameof(y0));
         }
@@ -288,7 +283,7 @@ public static class Normal
         // Iterate until adding next terms doesn't produce
         // any change within the current numerical accuracy.
 
-        while (sum != term)
+        while (ExactComparisons.AreNotEqual(sum ,term))
         {
             term = sum;
 
@@ -346,7 +341,8 @@ public static class Normal
 
         double sum = a + h * b;
         double term = a;
-        for (var i = 2; sum != term; i += 2)
+        var i = 2;
+        while (ExactComparisons.AreNotEqual(sum ,term))
         {
             term = sum;
 
@@ -355,6 +351,7 @@ public static class Normal
             pwr *= q;
 
             sum = term + pwr * (a + h * b);
+            i += 2;
         }
 
         sum *= Math.Exp(-0.5 * x * x - 0.91893853320467274178);

@@ -2,12 +2,6 @@ using System.Collections;
 using System.Data;
 using System.IO.Compression;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-
 
 namespace ISynergy.Framework.Mathematics.IO.NumPy;
 
@@ -76,6 +70,22 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
     /// </param>
     /// <param name="arrayIndex">The zero-based index in <paramref name="array" /> at which copying begins.</param>
     public void CopyTo(T[] array, int arrayIndex)
+    {
+        foreach (var v in this)
+            array.SetValue(v, arrayIndex++);
+    }
+
+    /// <summary>
+    ///     Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1" /> to an
+    ///     <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.
+    /// </summary>
+    /// <param name="array">
+    ///     The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied
+    ///     from <see cref="T:System.Collections.Generic.ICollection`1" />. The <see cref="T:System.Array" /> must have
+    ///     zero-based indexing.
+    /// </param>
+    /// <param name="arrayIndex">The zero-based index in <paramref name="array" /> at which copying begins.</param>
+    public void CopyTo(Array array, int arrayIndex)
     {
         foreach (var v in this)
             array.SetValue(v, arrayIndex++);
@@ -217,21 +227,6 @@ public class NpzDictionary<T> : IDisposable, IReadOnlyDictionary<string, T>, ICo
         return NpyFormat.Load<T>(s);
     }
 
-    /// <summary>
-    ///     Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1" /> to an
-    ///     <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.
-    /// </summary>
-    /// <param name="array">
-    ///     The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied
-    ///     from <see cref="T:System.Collections.Generic.ICollection`1" />. The <see cref="T:System.Array" /> must have
-    ///     zero-based indexing.
-    /// </param>
-    /// <param name="arrayIndex">The zero-based index in <paramref name="array" /> at which copying begins.</param>
-    public void CopyTo(Array array, int arrayIndex)
-    {
-        foreach (var v in this)
-            array.SetValue(v, arrayIndex++);
-    }
     /// <summary>
     ///     Releases unmanaged and - optionally - managed resources.
     /// </summary>

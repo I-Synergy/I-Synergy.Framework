@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Sample.ViewModels;
 using System.Globalization;
-using System.Runtime.ExceptionServices;
 
 namespace Sample;
 
@@ -266,12 +265,6 @@ public sealed partial class App : Application
         {
             _commonServices?.BusyService.StopBusy();
         }
-    }
-
-    protected override void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
-    {
-        // Add specific handling for App-level exceptions if needed
-        base.CurrentDomain_FirstChanceException(sender, e);
     }
 
     protected override void Dispose(bool disposing)

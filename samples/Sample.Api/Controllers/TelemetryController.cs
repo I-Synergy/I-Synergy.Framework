@@ -17,11 +17,17 @@ public class TelemetryController : ControllerBase
     {
         _logger.LogInformation("Information: TelemetryController.Get called");
         _logger.LogWarning("Warning: TelemetryController.Get called");
-        _logger.LogError(new NotImplementedException("Get"), "Error: TelemetryController.Get called");
-        _logger.LogCritical(new ArgumentNullException(nameof(Get)), "Critical: TelemetryController.Get called");
+        LogError();
+        LogCritical();
         _logger.LogTrace("Trace: TelemetryController.Get called");
         _logger.LogDebug("Debug: TelemetryController.Get called");
 
         return Results.Ok();
     }
+
+    private void LogError() =>
+        _logger.LogError(new NotImplementedException("Get"), "Error: TelemetryController.Get called");
+
+    private void LogCritical() =>
+        _logger.LogCritical(new InvalidOperationException("Get"), "Critical: TelemetryController.Get called");
 }

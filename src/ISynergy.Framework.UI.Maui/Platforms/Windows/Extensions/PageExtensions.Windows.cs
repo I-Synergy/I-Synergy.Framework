@@ -6,7 +6,7 @@ namespace ISynergy.Framework.UI.Extensions;
 /// </summary>
 public static partial class PageExtensions
 {
-    static partial void ApplyPlatformFlowDirection<T>(T page, string cultureName) where T : Page
+    static void ApplyWindowsFlowDirection<T>(T page, string cultureName) where T : Page
     {
         // In a constructor GetParentWindow() returns null because the page is not in the visual tree
         // yet, so the native work is deferred to Loaded (or applied now when it is already loaded).

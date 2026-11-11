@@ -1,10 +1,5 @@
 using ISynergy.Framework.Core.Points;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Common;
@@ -293,15 +288,12 @@ public static class Tools
     /// </summary>
     public static float InvSqrt(float f)
     {
-        unsafe
-        {
-            var xhalf = 0.5f * f;
-            var i = *(int*)&f;
-            i = 0x5f375a86 - (i >> 1);
-            f = *(float*)&i;
-            f = f * (1.5f - xhalf * f * f);
-            return f;
-        }
+        var xhalf = 0.5f * f;
+        var i = BitConverter.SingleToInt32Bits(f);
+        i = 0x5f375a86 - (i >> 1);
+        f = BitConverter.Int32BitsToSingle(i);
+        f = f * (1.5f - xhalf * f * f);
+        return f;
     }
     /// <summary>
     ///     Interpolates data using a piece-wise linear function.
@@ -582,7 +574,7 @@ public static class Tools
         }
         else if (value is double dblNumber)
         {
-            while (Math.Round(dblNumber, i) != dblNumber)
+            while (ExactComparisons.AreNotEqual(Math.Round(dblNumber, i) ,dblNumber))
                 i++;
         }
         else

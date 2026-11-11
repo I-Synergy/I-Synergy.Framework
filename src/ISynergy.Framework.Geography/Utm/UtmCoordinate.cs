@@ -7,7 +7,10 @@ namespace ISynergy.Framework.Geography.Utm;
 /// UTM Coordinates need additionally the zone and the band info
 /// to identify the grid to which the X/Y values belong
 /// </summary>
-public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate> // NOSONAR - public type kept open for consumers
+// S4035: public coordinate type intentionally left open for consumers, which may derive from it;
+// sealing it would be a breaking public API change.
+#pragma warning disable S4035 // public type designed for inheritance
+public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate>
 {
     /// <summary>
     /// The default precision
@@ -178,3 +181,4 @@ public class UtmCoordinate : EuclidianCoordinate, IEquatable<UtmCoordinate> // N
                + y.ToString(NumberFormatInfo.InvariantInfo);
     }
 }
+#pragma warning restore S4035

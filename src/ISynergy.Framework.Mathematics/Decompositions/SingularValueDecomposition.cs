@@ -1,14 +1,10 @@
+﻿using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Matrices;
 using System.Diagnostics;
+using ISynergy.Framework.Mathematics.Abstractions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S125, S1117 // algorithm code and variable shadowing is intentional
 
 
 namespace ISynergy.Framework.Mathematics.Decompositions;
@@ -35,7 +31,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 ///         and right eigenvectors. If the routine is computed on A directly, the diagonal
 ///         of singular values may contain one or more zeros. The identity A = U * S * V'
 ///         may still hold, however. To overcome this problem, pass true to the
-///         <see cref="SingularValueDecomposition(double[,], bool, bool, bool)">autoTranspose</see>
+///         <see cref="SingularValueDecomposition(Matrix{Double}, bool, bool, bool)">autoTranspose</see>
 ///         argument of the class constructor.
 ///     </para>
 ///     <para>
@@ -43,7 +39,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 ///     </para>
 /// </remarks>
 [Serializable]
-public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomposition<double>
+public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomposition<double>, IDeserializationCallback
 {
     private const double eps = 2 * Constants.DoubleEpsilon;
     private const double tiny = Constants.DoubleSmall;
@@ -65,7 +61,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     /// <param name="value">
     ///     The matrix to be decomposed.
     /// </param>
-    public SingularValueDecomposition(double[,] value)
+    public SingularValueDecomposition(Matrix<double> value)
         : this(value, true, true)
     {
     }
@@ -85,7 +81,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     ///     should be computed. Pass <see langword="false" /> otherwise. Default
     ///     is <see langword="true" />.
     /// </param>
-    public SingularValueDecomposition(double[,] value,
+    public SingularValueDecomposition(Matrix<double> value,
         bool computeLeftSingularVectors, bool computeRightSingularVectors)
         : this(value, computeLeftSingularVectors, computeRightSingularVectors, false)
     {
@@ -112,7 +108,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     ///     case JAMA's assumptions about the dimensionality of the matrix are violated.
     ///     Pass <see langword="false" /> otherwise. Default is <see langword="false" />.
     /// </param>
-    public SingularValueDecomposition(double[,] value,
+    public SingularValueDecomposition(Matrix<double> value,
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose)
         : this(value, computeLeftSingularVectors, computeRightSingularVectors, autoTranspose, false)
     {
@@ -144,19 +140,20 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     ///     <paramref name="value" /> will be destroyed in the process, resulting in less
     ///     memory comsumption.
     /// </param>
-    public SingularValueDecomposition(double[,] value,
+    public SingularValueDecomposition(Matrix<double> value,
         bool computeLeftSingularVectors, bool computeRightSingularVectors, bool autoTranspose, bool inPlace)
     {
-        if (value is null)
+        var matrix = value.Array;
+        if (matrix is null)
             throw new ArgumentNullException(nameof(value), "Matrix cannot be null.");
 
         double[,] a;
-        m = value.Rows(); // rows
+        m = matrix.Rows(); // rows
 
         if (m == 0)
             throw new ArgumentException("Matrix does not have any rows.", nameof(value));
 
-        n = value.Columns(); // cols
+        n = matrix.Columns(); // cols
 
         if (n == 0)
             throw new ArgumentException("Matrix does not have any columns.", nameof(value));
@@ -173,14 +170,14 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 Trace.WriteLine("WARNING: Computing SVD on a matrix with more columns than rows.");
 
                 // Proceed anyway
-                a = inPlace ? value : value.Copy();
+                a = inPlace ? matrix : matrix.Copy();
             }
             else
             {
                 // Transposing and swapping
-                a = value.Transpose(inPlace && m == n);
-                n = value.Rows(); // rows
-                m = value.Columns(); // cols
+                a = matrix.Transpose(inPlace && m == n);
+                n = matrix.Rows(); // rows
+                m = matrix.Columns(); // cols
                 swapped = true;
 
                 var aux = computeLeftSingularVectors;
@@ -191,7 +188,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
         else
         {
             // Input matrix is ok
-            a = inPlace ? value : value.Copy();
+            a = inPlace ? matrix : matrix.Copy();
         }
         var nu = Math.Min(m, n);
         var ni = Math.Min(m + 1, n);
@@ -218,22 +215,22 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             {
                 // Compute the transformation for the k-th column and place the k-th diagonal in s[k].
                 // Compute 2-norm of k-th column without under/overflow.
-                Diagonal[k] = 0;
+                var d = 0.0;
                 for (var i = k; i < a.Rows(); i++)
-                    Diagonal[k] = Tools.Hypotenuse(Diagonal[k], a[i, k]);
+                    d = Tools.Hypotenuse(d, a[i, k]);
 
-                if (Diagonal[k] != 0)
+                if (d != 0)
                 {
                     if (a[k, k] < 0)
-                        Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
+                        d = -d;
 
                     for (var i = k; i < a.Rows(); i++)
-                        a[i, k] /= Diagonal[k];
+                        a[i, k] /= d;
 
                     a[k, k] += 1;
                 }
 
-                Diagonal[k] = -Diagonal[k]; // NOSONAR - self-referential update
+                Diagonal[k] = -d;
             }
 
             for (var j = k + 1; j < n; j++)
@@ -269,22 +266,22 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 // Compute the k-th row transformation and place the
                 // k-th super-diagonal in e[k].
                 // Compute 2-norm without under/overflow.
-                e[k] = 0;
+                var e0 = 0.0;
                 for (var i = k + 1; i < e.Rows(); i++)
-                    e[k] = Tools.Hypotenuse(e[k], e[i]);
+                    e0 = Tools.Hypotenuse(e0, e[i]);
 
-                if (e[k] != 0)
+                if (e0 != 0)
                 {
                     if (e[k + 1] < 0)
-                        e[k] = -e[k]; // NOSONAR - self-referential update
+                        e0 = -e0;
 
                     for (var i = k + 1; i < e.Rows(); i++)
-                        e[i] /= e[k];
+                        e[i] /= e0;
 
                     e[k + 1] += 1;
                 }
 
-                e[k] = -e[k]; // NOSONAR - self-referential update
+                e[k] = -e0;
                 if ((k + 1 < m) && (e[k] != 0))
                 {
                     // Apply the transformation.
@@ -367,8 +364,9 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             for (var k = n - 1; k >= 0; k--)
             {
                 if ((k < nrt) && (e[k] != 0))
-                    // TODO: The following is a pseudo correction to make SVD
-                    //  work on matrices with n > m (less rows than columns).
+                    // Math.NET parity: the following is a pseudo-correction so SVD
+                    //  works on matrices with n > m (fewer rows than columns);
+                    //  no separate transpose-and-swap implementation is provided.
 
                     // For the proper correction, compute the decomposition of the
                     //  transpose of A and swap the left and right eigenvectors
@@ -393,7 +391,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
 
         var pp = p - 1;
         var iter = 0;
-        var eps = Constants.DoubleEpsilon;
+        var epsilon = Constants.DoubleEpsilon;
         while (p > 0)
         {
             int k, kase;
@@ -415,7 +413,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 if (k == -1)
                     break;
 
-                var alpha = tiny + eps * (Math.Abs(Diagonal[k]) + Math.Abs(Diagonal[k + 1]));
+                var alpha = tiny + epsilon * (Math.Abs(Diagonal[k]) + Math.Abs(Diagonal[k + 1]));
                 if (Math.Abs(e[k]) <= alpha || double.IsNaN(e[k]))
                 {
                     e[k] = 0;
@@ -439,7 +437,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                     var t = (ks != p ? Math.Abs(e[ks]) : 0) +
                             (ks != k + 1 ? Math.Abs(e[ks - 1]) : 0);
 
-                    if (Math.Abs(Diagonal[ks]) <= eps * t)
+                    if (Math.Abs(Diagonal[ks]) <= epsilon * t)
                     {
                         Diagonal[ks] = 0;
                         break;
@@ -814,7 +812,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     /// </summary>
     /// <param name="value">Parameter B from the equation AX = B.</param>
     /// <returns>The solution X from equation AX = B.</returns>
-    public double[,] Solve(double[,] value)
+    public double[,] Solve(Matrix<double> value)
     {
         // Additionally an important property is that if there does not exists a solution
         // when the matrix A is singular but replacing 1/Li with 0 will provide a solution
@@ -825,7 +823,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
         // L is a diagonal matrix with non-negative matrix elements having the same
         // dimension as A, Wi ? 0. The diagonal elements of L are the singular values of matrix A.
 
-        var Y = value;
+        var Y = value.Array;
 
         // Create L*, which is a diagonal matrix with elements
         //    L*[i] = 1/L[i]  if L[i] < e, else 0, 
@@ -846,7 +844,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -863,7 +861,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             }
 
         //(V x L* x Ut x Y)
-        return Matrix.Dot(VLU, Y);
+        return Matrix.Dot(new Matrix<double>(VLU), new Matrix<double>(Y));
     }
 
     /// <summary>
@@ -904,7 +902,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var urows = LeftSingularVectors.Rows();
@@ -920,7 +918,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             }
 
         //(V x L* x Ut x Y)
-        return Matrix.Dot(VLU, Y);
+        return Matrix.Dot(new Matrix<double>(VLU), Y);
     }
 
     /// <summary>
@@ -960,13 +958,13 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     /// </summary>
     public double[,] Reverse()
     {
-        return LeftSingularVectors.Dot(DiagonalMatrix).DotWithTransposed(RightSingularVectors);
+        return Matrix.DotWithTransposed(new Matrix<double>(Matrix.Dot(new Matrix<double>(LeftSingularVectors), new Matrix<double>(DiagonalMatrix))), new Matrix<double>(RightSingularVectors));
     }
 
     /// <summary>
     ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
     ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[,])" />
+    ///     solving a linear set of equations through any of the <see cref="Solve(Matrix{Double})" />
     ///     methods.
     /// </summary>
     public double[,] GetInformationMatrix()
@@ -1001,7 +999,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
     /// </summary>
     /// <param name="value">Parameter B from the equation AX = B.</param>
     /// <returns>The solution X from equation AX = B.</returns>
-    public double[,] SolveTranspose(double[,] value)
+    public double[,] SolveTranspose(Matrix<double> value)
     {
         // Additionally an important property is that if there does not exists a solution
         // when the matrix A is singular but replacing 1/Li with 0 will provide a solution
@@ -1012,7 +1010,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
         // L is a diagonal matrix with non-negative matrix elements having the same
         // dimension as A, Wi ? 0. The diagonal elements of L are the singular values of matrix A.
 
-        var Y = value;
+        var Y = value.Array;
 
         // Create L*, which is a diagonal matrix with elements
         //    L*[i] = 1/L[i]  if L[i] < e, else 0, 
@@ -1033,7 +1031,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        var VL = Matrix.Dot(RightSingularVectors, Ls);
+        var VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -1048,63 +1046,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 VLU[i, j] = sum;
             }
 
-        return Matrix.Dot(Y, VLU);
-    }
-
-    /// <summary>
-    ///     Solves a linear equation system of the form AX = B.
-    /// </summary>
-    /// <param name="value">Parameter B from the equation AX = B.</param>
-    /// <returns>The solution X from equation AX = B.</returns>
-    public double[,] SolveForDiagonal(double[] value)
-    {
-        // Additionally an important property is that if there does not exists a solution
-        // when the matrix A is singular but replacing 1/Li with 0 will provide a solution
-        // that minimizes the residue |AX -Y|. SVD finds the least squares best compromise
-        // solution of the linear equation system. Interestingly SVD can be also used in an
-        // over-determined system where the number of equations exceeds that of the parameters.
-
-        // L is a diagonal matrix with non-negative matrix elements having the same
-        // dimension as A, Wi ? 0. The diagonal elements of L are the singular values of matrix A.
-
-        var Y = value;
-
-        // Create L*, which is a diagonal matrix with elements
-        //    L*[i] = 1/L[i]  if L[i] < e, else 0, 
-        // where e is the so-called singularity threshold.
-
-        // In other words, if L[i] is zero or close to zero (smaller than e),
-        // one must replace 1/L[i] with 0. The value of e depends on the precision
-        // of the hardware. This method can be used to solve linear equations
-        // systems even if the matrices are singular or close to singular.
-
-        //singularity threshold
-        var e = Threshold;
-        var scols = Diagonal.Rows();
-        var Ls = new double[scols, scols];
-        for (var i = 0; i < Diagonal.Rows(); i++)
-            if (Math.Abs(Diagonal[i]) <= e)
-                Ls[i, i] = 0;
-            else Ls[i, i] = 1 / Diagonal[i];
-
-        //(V x L*) x Ut x Y
-        double[,] VL = Matrix.Dot(RightSingularVectors, Ls);
-
-        //(V x L* x Ut) x Y
-        var vrows = RightSingularVectors.Rows();
-        var urows = LeftSingularVectors.Rows();
-        var VLU = new double[vrows, scols];
-        for (var i = 0; i < vrows; i++)
-            for (var j = 0; j < urows; j++)
-            {
-                double sum = 0;
-                for (var k = 0; k < urows; k++)
-                    sum += VL[i, k] * LeftSingularVectors[j, k];
-                VLU[i, j] = sum;
-            }
-
-        //(V x L* x Ut x Y)
-        return VLU.DotWithDiagonal(Y);
+        return Matrix.Dot(new Matrix<double>(Y), new Matrix<double>(VLU));
     }
 
     /// <summary>
@@ -1144,7 +1086,7 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
             else Ls[i, i] = 1 / Diagonal[i];
 
         //(V x L*) x Ut x Y
-        double[,] VL = Matrix.Dot(RightSingularVectors, Ls);
+        double[,] VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
 
         //(V x L* x Ut) x Y
         var vrows = RightSingularVectors.Rows();
@@ -1159,7 +1101,63 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
                 VLU[i, j] = sum;
             }
 
-        return Y.Dot(VLU);
+        return Matrix.Dot(Y, new Matrix<double>(VLU));
+    }
+
+    /// <summary>
+    ///     Solves a linear equation system of the form AX = B.
+    /// </summary>
+    /// <param name="value">Parameter B from the equation AX = B.</param>
+    /// <returns>The solution X from equation AX = B.</returns>
+    public double[,] SolveForDiagonal(double[] value)
+    {
+        // Additionally an important property is that if there does not exists a solution
+        // when the matrix A is singular but replacing 1/Li with 0 will provide a solution
+        // that minimizes the residue |AX -Y|. SVD finds the least squares best compromise
+        // solution of the linear equation system. Interestingly SVD can be also used in an
+        // over-determined system where the number of equations exceeds that of the parameters.
+
+        // L is a diagonal matrix with non-negative matrix elements having the same
+        // dimension as A, Wi ? 0. The diagonal elements of L are the singular values of matrix A.
+
+        var Y = value;
+
+        // Create L*, which is a diagonal matrix with elements
+        //    L*[i] = 1/L[i]  if L[i] < e, else 0, 
+        // where e is the so-called singularity threshold.
+
+        // In other words, if L[i] is zero or close to zero (smaller than e),
+        // one must replace 1/L[i] with 0. The value of e depends on the precision
+        // of the hardware. This method can be used to solve linear equations
+        // systems even if the matrices are singular or close to singular.
+
+        //singularity threshold
+        var e = Threshold;
+        var scols = Diagonal.Rows();
+        var Ls = new double[scols, scols];
+        for (var i = 0; i < Diagonal.Rows(); i++)
+            if (Math.Abs(Diagonal[i]) <= e)
+                Ls[i, i] = 0;
+            else Ls[i, i] = 1 / Diagonal[i];
+
+        //(V x L*) x Ut x Y
+        double[,] VL = Matrix.Dot(new Matrix<double>(RightSingularVectors), new Matrix<double>(Ls));
+
+        //(V x L* x Ut) x Y
+        var vrows = RightSingularVectors.Rows();
+        var urows = LeftSingularVectors.Rows();
+        var VLU = new double[vrows, scols];
+        for (var i = 0; i < vrows; i++)
+            for (var j = 0; j < urows; j++)
+            {
+                double sum = 0;
+                for (var k = 0; k < urows; k++)
+                    sum += VL[i, k] * LeftSingularVectors[j, k];
+                VLU[i, j] = sum;
+            }
+
+        //(V x L* x Ut x Y)
+        return Matrix.DotWithDiagonal(new Matrix<double>(VLU), Y);
     }
 
     #region ICloneable Members
@@ -1183,11 +1181,17 @@ public sealed class SingularValueDecomposition : ICloneable, ISolverMatrixDecomp
         svd.Ordering = (int[])Ordering.Clone();
         svd.swapped = swapped;
         if (LeftSingularVectors is not null)
-            svd.LeftSingularVectors = (double[,])LeftSingularVectors.MemberwiseClone();
+            svd.LeftSingularVectors = LeftSingularVectors.MemberwiseClone();
         if (RightSingularVectors is not null)
-            svd.RightSingularVectors = (double[,])RightSingularVectors.MemberwiseClone();
+            svd.RightSingularVectors = RightSingularVectors.MemberwiseClone();
 
         return svd;
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (Diagonal is null || LeftSingularVectors is null || RightSingularVectors is null)
+            throw new SerializationException("The deserialized singular value decomposition is invalid.");
     }
 
     #endregion

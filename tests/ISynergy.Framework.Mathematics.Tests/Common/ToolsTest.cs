@@ -1,5 +1,6 @@
 using ISynergy.Framework.Core.Points;
 using ISynergy.Framework.Core.Ranges;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -75,7 +76,7 @@ public class CommonToolsTest
         double[] min = Matrix.Min(x, 0);
         double[] max = Matrix.Max(x, 0);
 
-        double[][] actual = Vector.Scale(min, max, toMin, toMax, x);
+        double[][] actual = Vector.Scale(min, max, toMin, toMax, new Jagged<double>(x));
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
 

@@ -2,12 +2,6 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1192, S2583 // duplicate strings and null-coalescing always-false patterns are intentional in expression parsing
 
 
 namespace ISynergy.Framework.Mathematics.Optimization;
@@ -40,10 +34,8 @@ internal static class QuadraticExpressionParser
         var symbol = new Regex(@"[a-zA-Z]", RegexOptions.None, TimeSpan.FromMilliseconds(100));
         var matches = r.Matches(f, 0);
 
-        foreach (Match m in matches)
+        foreach (var term in matches.Select(m => m.Value))
         {
-            var term = m.Value;
-
             double scalar = term[0] == '-' ? -1 : 1;
 
             // Extract value
@@ -113,10 +105,10 @@ internal static class QuadraticExpressionParser
                         return term;
                     }
 
-                    if ((lb ?? rb ?? (Expression)lm ?? lu) is not null)
+                    if (lb is not null || rb is not null || lu is not null)
                     {
                         double n;
-                        var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb ?? ru, out n);
+                        var term = ParseExpression(terms, lb ?? lu ?? (Expression)rb, out n);
                         if (!dontAdd) terms[term] = scalar;
                         return term;
                     }

@@ -3,13 +3,6 @@ using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.ComponentModel;
 
-#pragma warning disable S907  // goto is required in ported numerical algorithms
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1192, S108 // duplicate strings and empty blocks are intentional in ported algorithms
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -160,10 +153,6 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
     IGradientOptimizationMethod, IOptimizationMethod<BoundedBroydenFletcherGoldfarbShannoStatus>,
     ISupportsCancellation
 {
-    // those values need not be modified
-    private const double stpmin = 1e-20;
-    private const double stpmax = 1e20;
-
     private int corrections = 5;
 
     private double factr = 1e+5;
@@ -210,32 +199,26 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
             work = new double[totalSize];
 
         var i = 0;
-
-        {
             for (i = 0; i < UpperBounds.Length; i++)
             {
-                var hasUpper = !double.IsInfinity(UpperBounds[i]);
-                var hasLower = !double.IsInfinity(LowerBounds[i]);
+                var hasUpper__r1 = !double.IsInfinity(UpperBounds[i]);
+                var hasLower__r2 = !double.IsInfinity(LowerBounds[i]);
 
-                if (hasUpper && hasLower)
+                if (hasUpper__r1 && hasLower__r2)
                     nbd[i] = 2;
-                else if (hasUpper)
+                else if (hasUpper__r1)
                     nbd[i] = 3;
-                else if (hasLower)
+                else if (hasLower__r2)
                     nbd[i] = 1;
                 else nbd[i] = 0; // unbounded
 
-                if (hasLower)
+                if (hasLower__r2)
                     l[i] = LowerBounds[i];
-                if (hasUpper)
+                if (hasUpper__r1)
                     u[i] = UpperBounds[i];
             }
-        }
-        // We now define the starting point.
-        {
             for (i = 0; i < n; i++)
                 x[i] = Solution[i];
-        }
 
         double newF = 0;
         double[] newG = null;
@@ -248,7 +231,8 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
     // 
     // c        ------- the beginning of the loop ----------
     // 
-    L111:
+        while (true)
+        {
         if (Token.IsCancellationRequested)
             return false;
 
@@ -297,13 +281,13 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
             return true;
         }
         if (Progress is not null)
-            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, newG, 0, null, 0, f, 0, false)
+            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, new OptimizationStep(newG, 0, null, 0, f, 0), false)
             {
                 Tag = new BoundedBroydenFletcherGoldfarbShannoInnerStatus(
                     isave, dsave, lsave, csave, work)
             });
 
-        goto L111;
+        }
     }
 
     private void exit(string csave, bool[] lsave, int[] isave, double[] x, double[] dsave, out double newF,
@@ -317,7 +301,7 @@ public partial class BoundedBroydenFletcherGoldfarbShanno : BaseGradientOptimiza
         Evaluations++;
 
         if (Progress is not null)
-            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, newG, 0, null, 0, newF, 0, true)
+            Progress(this, new OptimizationProgressEventArgs(Iterations, 0, new OptimizationStep(newG, 0, null, 0, newF, 0), true)
             {
                 Tag = new BoundedBroydenFletcherGoldfarbShannoInnerStatus(
                     isave, dsave, lsave, csave, work)

@@ -181,68 +181,76 @@ public class AuthenticationViewModel : ViewModel
         SignUpCommand = new AsyncRelayCommand(SignUpAsync);
         ForgotPasswordCommand = new AsyncRelayCommand(ForgotPasswordAsync);
 
-        Validator = new Action<IObservableValidatedClass>(_ =>
-        {
-            if (LoginVisible)
-            {
-                if (string.IsNullOrEmpty(Username) || (Username.Length <= 3))
-                {
-                    AddValidationError(nameof(Username), _commonServices.LanguageService.GetString("WarningUsernameSize"));
-                }
-
-                if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
-                {
-                    AddValidationError(nameof(Password), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
-                }
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(Registration_Name) || (Registration_Name.Length <= 3))
-                {
-                    AddValidationError(nameof(Registration_Name), _commonServices.LanguageService.GetString("WarningLicenseNameSize"));
-                }
-
-                if (string.IsNullOrEmpty(Registration_Mail) || !NetworkUtility.IsValidEMail(Registration_Mail))
-                {
-                    AddValidationError(nameof(Registration_Mail), _commonServices.LanguageService.GetString("WarningInvalidEmail"));
-                }
-
-                if (string.IsNullOrEmpty(Registration_TimeZone))
-                {
-                    AddValidationError(nameof(Registration_TimeZone), _commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
-                }
-
-                if (string.IsNullOrEmpty(Registration_Password) || (Registration_Password.Length <= 6))
-                {
-                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
-                }
-
-                if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
-                {
-                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
-                }
-
-                if (string.IsNullOrEmpty(Registration_PasswordCheck) || (Registration_PasswordCheck.Length <= 6))
-                {
-                    AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
-                }
-
-                if (!string.IsNullOrEmpty(Registration_Password) && !string.IsNullOrEmpty(Registration_PasswordCheck) && !Registration_Password.Equals(Registration_PasswordCheck))
-                {
-                    AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString(WarningPasswordMatchKey));
-                    AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString(WarningPasswordMatchKey));
-                }
-
-                if (Registration_Modules.Count < 1)
-                {
-                    AddValidationError(nameof(Registration_Modules), _commonServices.LanguageService.GetString("WarningNoModulesSelected"));
-                }
-            }
-        });
+        Validator = ValidateFields;
 
         Registration_TimeZone = null;
         Registration_Modules = [];
         LoginVisible = true;
+    }
+
+    private void ValidateFields(IObservableValidatedClass _)
+    {
+        if (LoginVisible)
+            ValidateLoginFields();
+        else
+            ValidateRegistrationFields();
+    }
+
+    private void ValidateLoginFields()
+    {
+        if (string.IsNullOrEmpty(Username) || (Username.Length <= 3))
+        {
+            AddValidationError(nameof(Username), _commonServices.LanguageService.GetString("WarningUsernameSize"));
+        }
+
+        if (string.IsNullOrEmpty(Password) || !Regex.IsMatch(Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+        {
+            AddValidationError(nameof(Password), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
+        }
+    }
+
+    private void ValidateRegistrationFields()
+    {
+        if (string.IsNullOrEmpty(Registration_Name) || (Registration_Name.Length <= 3))
+        {
+            AddValidationError(nameof(Registration_Name), _commonServices.LanguageService.GetString("WarningLicenseNameSize"));
+        }
+
+        if (string.IsNullOrEmpty(Registration_Mail) || !NetworkUtility.IsValidEMail(Registration_Mail))
+        {
+            AddValidationError(nameof(Registration_Mail), _commonServices.LanguageService.GetString("WarningInvalidEmail"));
+        }
+
+        if (string.IsNullOrEmpty(Registration_TimeZone))
+        {
+            AddValidationError(nameof(Registration_TimeZone), _commonServices.LanguageService.GetString("WarningNoTimeZoneSelected"));
+        }
+
+        if (string.IsNullOrEmpty(Registration_Password) || (Registration_Password.Length <= 6))
+        {
+            AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
+        }
+
+        if (string.IsNullOrEmpty(Registration_Password) || !Regex.IsMatch(Registration_Password, GenericConstants.PasswordRegEx, RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+        {
+            AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
+        }
+
+        if (string.IsNullOrEmpty(Registration_PasswordCheck) || (Registration_PasswordCheck.Length <= 6))
+        {
+            AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString(WarningPasswordSizeKey));
+        }
+
+        if (!string.IsNullOrEmpty(Registration_Password) && !string.IsNullOrEmpty(Registration_PasswordCheck) && !Registration_Password.Equals(Registration_PasswordCheck))
+        {
+            AddValidationError(nameof(Registration_Password), _commonServices.LanguageService.GetString(WarningPasswordMatchKey));
+            AddValidationError(nameof(Registration_PasswordCheck), _commonServices.LanguageService.GetString(WarningPasswordMatchKey));
+        }
+
+        if (Registration_Modules.Count < 1)
+        {
+            AddValidationError(nameof(Registration_Modules), _commonServices.LanguageService.GetString("WarningNoModulesSelected"));
+        }
     }
 
     public override async Task InitializeAsync()

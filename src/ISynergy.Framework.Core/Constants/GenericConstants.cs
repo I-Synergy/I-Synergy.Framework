@@ -54,7 +54,11 @@ public static class GenericConstants
     /// <summary>
     /// The password reg ex
     /// </summary>
-    public const string PasswordRegEx = @"(?=^.{6,}$)(?=[^\d]*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])"; // NOSONAR - not a credential, this is a validation regex pattern
+    // S2068: the literal word "password" appears only in the name of a validation *pattern*; no credential is stored.
+    // The constant is public API and cannot be renamed without breaking consumers.
+    #pragma warning disable S2068 // false positive: a password validation regex, not a hard-coded credential
+    public const string PasswordRegEx = @"(?=^.{6,}$)(?=[^\d]*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])";
+    #pragma warning restore S2068
     /// <summary>
     /// The rfid uid rege ex
     /// </summary>
@@ -138,7 +142,10 @@ public static class GenericConstants
     /// <summary>
     /// The temporary URL
     /// </summary>
-    public const string TemporaryUrl = @"temp:///"; // NOSONAR - well-known internal URI scheme constant, not a hardcoded external URL
+    // S1075: documented, well-known internal URI scheme constant ("temp:///"), not an absolute path or endpoint.
+    #pragma warning disable S1075 // documented well-known URI scheme constant
+    public const string TemporaryUrl = @"temp:///";
+    #pragma warning restore S1075
 
     /// <summary>
     /// The API name

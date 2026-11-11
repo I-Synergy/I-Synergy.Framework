@@ -1,13 +1,9 @@
-using ISynergy.Framework.Mathematics.Decompositions;
+﻿using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Distances.Base;
 
 /// <summary>
@@ -58,11 +54,11 @@ public abstract class BaseMahalanobis : IMetric<double[]>, ICloneable
     /// 
     /// <param name="precision">The precision matrix (the inverse of the covariance matrix).</param>
     /// 
-    protected BaseMahalanobis(double[,] precision)
+    protected BaseMahalanobis(Matrix<double> precision)
     {
         _chol = null;
         _svd = null;
-        _precision = precision;
+        _precision = precision.Array;
     }
 
     /// <summary>
@@ -93,7 +89,7 @@ public abstract class BaseMahalanobis : IMetric<double[]>, ICloneable
         else if (_chol is not null)
             z = _chol.Solve(d);
         else
-            z = _precision.Dot(d);
+            z = Matrix.Dot(new Matrix<double>(_precision), d);
 
         double sum = 0.0;
         for (var i = 0; i < d.Length; i++)

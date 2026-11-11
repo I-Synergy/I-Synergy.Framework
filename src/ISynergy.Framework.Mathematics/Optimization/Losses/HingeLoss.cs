@@ -1,11 +1,8 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
+using System.Runtime.Serialization;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
@@ -16,7 +13,7 @@ namespace ISynergy.Framework.Mathematics.Optimization.Losses;
 [Serializable]
 public struct HingeLoss : ILoss<double[]>,
     IDifferentiableLoss<bool, double, double>,
-    IDifferentiableLoss<double, double, double>
+    IDifferentiableLoss<double, double, double>, IDeserializationCallback
 {
     /// <summary>
     ///     Gets or sets the expected outputs (the ground truth).
@@ -27,7 +24,7 @@ public struct HingeLoss : ILoss<double[]>,
     ///     Initializes a new instance of the <see cref="HingeLoss" /> class.
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
-    public HingeLoss(double[][] expected)
+    public HingeLoss(Jagged<double> expected)
     {
         Expected = Classes.Decide(expected);
     }
@@ -38,7 +35,7 @@ public struct HingeLoss : ILoss<double[]>,
     /// <param name="expected">The expected outputs (ground truth).</param>
     public HingeLoss(double[] expected)
     {
-        Expected = Classes.Decide(Jagged.ColumnVector(expected));
+        Expected = Classes.Decide(new Jagged<double>(Jagged.ColumnVector(expected)));
     }
 
     /// <summary>
@@ -71,12 +68,13 @@ public struct HingeLoss : ILoss<double[]>,
     ///     The loss value between the expected values and
     ///     the actual predicted values.
     /// </returns>
-    public double Loss(double[][] actual)
+    public double Loss(Jagged<double> actual)
     {
+        var actualArray = actual.Array;
         double error = 0;
         for (var i = 0; i < Expected.Length; i++)
             for (var j = 0; j < Expected[i].Length; j++)
-                error += Loss(Expected[i][j], actual[i][j]);
+                error += Loss(Expected[i][j], actualArray[i][j]);
         return error;
     }
 
@@ -172,5 +170,11 @@ public struct HingeLoss : ILoss<double[]>,
     public double Derivative(double expected, double actual)
     {
         return Derivative(Classes.Decide(expected), actual);
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (Expected is null)
+            throw new SerializationException("The deserialized hinge loss does not contain expected values.");
     }
 }

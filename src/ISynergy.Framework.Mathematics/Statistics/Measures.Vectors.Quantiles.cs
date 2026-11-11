@@ -1,15 +1,9 @@
-#pragma warning disable CA1069 // intentional enum aliases
 
 using ISynergy.Framework.Core.Ranges;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Statistics;
@@ -43,19 +37,19 @@ public enum QuantileMethod
     ///   The default quantile method in the framework (6).
     /// </summary>
     /// 
-    Default = Type6,
+    Default = 6,
 
     /// <summary>
     ///   The default method in R (7).
     /// </summary>
     /// 
-    R = Type7,
+    R = 7,
 
     /// <summary>
     ///   The dafault method in Maple (8).
     /// </summary>
     /// 
-    Maple = Type8,
+    Maple = 8,
 
     /// <summary>
     ///   Inverse of empirical distribution function. 
@@ -90,29 +84,6 @@ public enum QuantileMethod
     /// </summary>
     /// 
     Type5 = 5,
-
-    /// <summary>
-    ///   Linear interpolation of the expectations for the order statistics for the uniform distribution on [0,1]. 
-    ///   That is, it is the linear interpolation between points (ph, xh), where ph = h / (N + 1) is the probability 
-    ///   that the last of (N+1) randomly drawn values will not exceed the h-th smallest of the first N randomly drawn
-    ///   values. Equivalence to other packages: R-6, Excel, SAS-4, SciPy-(0,0), Maple-5.
-    /// </summary>
-    /// 
-    Type6 = 6,
-
-    /// <summary>
-    ///   Linear interpolation of the modes for the order statistics for the uniform distribution on [0,1]. 
-    ///   Equivalence to other packages: R: 7, Excel, SciPy: (1,1), Maple: 6.
-    /// </summary>
-    /// 
-    Type7 = 7,
-
-    /// <summary>
-    ///   Linear interpolation of the approximate medians for order statistics. Equivalence to other packages:
-    ///   R: 8, SciPy: (1/3,1/3), Maple: 7.
-    /// </summary>
-    /// 
-    Type8 = 8,
 
     /// <summary>
     ///   The resulting quantile estimates are approximately unbiased for the expected order statistics if x is normally 
@@ -156,7 +127,7 @@ public static partial class Measures
     /// 
     public static double Median(this int[] values, bool alreadySorted = false, QuantileMethod type = QuantileMethod.Default, bool inPlace = false)
     {
-        // TODO: Use T4 templates to generate separate implementations for each data type // NOSONAR
+        // Math.NET parity: this overload delegates to the double-based implementation; there is no per-type generated code.
         return Quantile(values.ToDouble(), type: type, probabilities: 0.5, alreadySorted: alreadySorted, inPlace: inPlace);
     }
 
@@ -293,9 +264,9 @@ public static partial class Measures
             case QuantileMethod.Type3: return Q3(values, probabilities, alreadySorted, result);
             case QuantileMethod.Type4: return Q4(values, probabilities, alreadySorted, result);
             case QuantileMethod.Type5: return Q5(values, probabilities, alreadySorted, result);
-            case QuantileMethod.Type6: return Q6(values, probabilities, alreadySorted, result);
-            case QuantileMethod.Type7: return Q7(values, probabilities, alreadySorted, result);
-            case QuantileMethod.Type8: return Q8(values, probabilities, alreadySorted, result);
+            case QuantileMethod.Default: return Q6(values, probabilities, alreadySorted, result);
+            case QuantileMethod.R: return Q7(values, probabilities, alreadySorted, result);
+            case QuantileMethod.Maple: return Q8(values, probabilities, alreadySorted, result);
             case QuantileMethod.Type9: return Q9(values, probabilities, alreadySorted, result);
             default:
                 throw new ArgumentException("Invalid quantile type, must be between 1 and 9 (inclusive)", nameof(type));
@@ -348,7 +319,7 @@ public static partial class Measures
         if (p == 0.0)
             return x[0];
 
-        if (p == 1.0)
+        if (ExactComparisons.AreEqual(p ,1.0))
             return x[x.Length - 1];
 
         int i = (int)Math.Ceiling(x.Length * p);
@@ -413,7 +384,7 @@ public static partial class Measures
         if (pj < lowThreshold)
             return x[0];
 
-        if (pj == 1.0)
+        if (ExactComparisons.AreEqual(pj ,1.0))
             return x[x.Length - 1];
 
         double h = x.Length * pj;
@@ -528,7 +499,7 @@ public static partial class Measures
 
     private static double Q7(double[] x, double p)
     {
-        if (p == 1.0)
+        if (ExactComparisons.AreEqual(p ,1.0))
             return x[x.Length - 1];
 
         double h = (x.Length - 1) * p + 1;

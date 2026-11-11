@@ -161,30 +161,51 @@ public struct UtmGrid : IEquatable<UtmGrid>
     /// <param name="projection">The projection to use</param>
     /// <param name="coord">Latitude/Longitude of the location</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection) // NOSONAR
+    public UtmGrid(UtmProjection projection, GlobalCoordinates coord) : this(projection)
     {
         if (coord.Latitude < projection.MinLatitude || coord.Latitude > projection.MaxLatitude)
             throw new ArgumentOutOfRangeException(LanguageService.Default.GetString("INVALID_LATITUDE"));
 
         var longitude = MercatorProjection.NormalizeLongitude(coord.Longitude).Degrees + 180.0;
         var latitude = projection.NormalizeLatitude(coord.Latitude);
+        var band = ComputeBand(projection, latitude);
+        var zone = (int)(longitude / Xstep.Degrees) + 1;
+        SetZoneAndBandInConstructor(zone, band, true);
+
+        AdjustZoneForNorwayAndSvalbard(coord);
+    }
+
+    /// <summary>
+    /// Computes the latitude band of the given latitude.
+    /// </summary>
+    /// <param name="projection">The projection to use.</param>
+    /// <param name="latitude">The normalized latitude.</param>
+    /// <returns>The band index.</returns>
+    private static int ComputeBand(UtmProjection projection, Angle latitude)
+    {
         var band = (int)((latitude - projection.MinLatitude).Degrees / Ystep.Degrees);
+
         if (band == NumberOfBands)
         {
             var northernLimit = projection.MinLatitude + NumberOfBands * Ystep;
             if (latitude >= northernLimit && latitude <= projection.MaxLatitude)
                 band--;
         }
-        var zone = (int)(longitude / Xstep.Degrees) + 1;
-        SetZoneAndBandInConstructor(zone, band, true);
 
+        return band;
+    }
+
+    /// <summary>
+    /// Applies the zone exceptions for the Norway and Svalbard grids.
+    /// </summary>
+    /// <param name="coord">The coordinates this grid was created for.</param>
+    private void AdjustZoneForNorwayAndSvalbard(GlobalCoordinates coord)
+    {
         if (_zone == 31 && Band == 'V')
         {
             var delta = coord.Longitude.Degrees - _llCoordinates.Longitude.Degrees - Width.Degrees;
             if (Math.Sign(delta) != -1)
-            {
                 Zone = _zone + 1;
-            }
         }
         else if (Band == 'X' && (_zone == 32 || _zone == 34 || _zone == 36))
         {

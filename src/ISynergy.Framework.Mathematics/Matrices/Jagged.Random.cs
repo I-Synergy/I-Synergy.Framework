@@ -1,9 +1,6 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
+
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 
@@ -30,27 +27,29 @@ public static partial class Jagged
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static int[][] Random(int rows, int columns, int min, int max, int[][] result = null)
+    public static int[][] Random(int rows, int columns, int min, int max, Jagged<int> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<int>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<int>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (int)random.Next((int)min, (int)max);
-        return result;
+                resultArray[i][j] = random.Next(min, max);
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static int[][] Random(int size, int min, int max, bool symmetric = false, int[][] result = null)
+    public static int[][] Random(int size, int min, int max, bool symmetric = false, Jagged<int> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<int>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<int>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -58,42 +57,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (int)random.Next((int)min, (int)max);
+                    resultArray[i][j] = resultArray[j][i] = random.Next(min, max);
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (int)random.Next((int)min, (int)max);
+                    resultArray[i][j] = random.Next(min, max);
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static short[][] Random(int rows, int columns, short min, short max, short[][] result = null)
+    public static short[][] Random(int rows, int columns, short min, short max, Jagged<short> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<short>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<short>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (short)random.Next((int)min, (int)max);
-        return result;
+                resultArray[i][j] = (short)random.Next((int)min, (int)max);
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static short[][] Random(int size, short min, short max, bool symmetric = false, short[][] result = null)
+    public static short[][] Random(int size, short min, short max, bool symmetric = false, Jagged<short> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<short>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<short>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -101,42 +102,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (short)random.Next((int)min, (int)max);
+                    resultArray[i][j] = resultArray[j][i] = (short)random.Next((int)min, (int)max);
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (short)random.Next((int)min, (int)max);
+                    resultArray[i][j] = (short)random.Next((int)min, (int)max);
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static byte[][] Random(int rows, int columns, byte min, byte max, byte[][] result = null)
+    public static byte[][] Random(int rows, int columns, byte min, byte max, Jagged<byte> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<byte>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<byte>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (byte)random.Next((int)min, (int)max);
-        return result;
+                resultArray[i][j] = (byte)random.Next((int)min, (int)max);
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static byte[][] Random(int size, byte min, byte max, bool symmetric = false, byte[][] result = null)
+    public static byte[][] Random(int size, byte min, byte max, bool symmetric = false, Jagged<byte> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<byte>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<byte>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -144,42 +147,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (byte)random.Next((int)min, (int)max);
+                    resultArray[i][j] = resultArray[j][i] = (byte)random.Next((int)min, (int)max);
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (byte)random.Next((int)min, (int)max);
+                    resultArray[i][j] = (byte)random.Next((int)min, (int)max);
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static sbyte[][] Random(int rows, int columns, sbyte min, sbyte max, sbyte[][] result = null)
+    public static sbyte[][] Random(int rows, int columns, sbyte min, sbyte max, Jagged<sbyte> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<sbyte>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<sbyte>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (sbyte)random.Next((int)min, (int)max);
-        return result;
+                resultArray[i][j] = (sbyte)random.Next((int)min, (int)max);
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static sbyte[][] Random(int size, sbyte min, sbyte max, bool symmetric = false, sbyte[][] result = null)
+    public static sbyte[][] Random(int size, sbyte min, sbyte max, bool symmetric = false, Jagged<sbyte> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<sbyte>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<sbyte>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -187,42 +192,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (sbyte)random.Next((int)min, (int)max);
+                    resultArray[i][j] = resultArray[j][i] = (sbyte)random.Next((int)min, (int)max);
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (sbyte)random.Next((int)min, (int)max);
+                    resultArray[i][j] = (sbyte)random.Next((int)min, (int)max);
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static long[][] Random(int rows, int columns, long min, long max, long[][] result = null)
+    public static long[][] Random(int rows, int columns, long min, long max, Jagged<long> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<long>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<long>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (long)random.Next((int)min, (int)max);
-        return result;
+                resultArray[i][j] = (long)random.Next((int)min, (int)max);
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static long[][] Random(int size, long min, long max, bool symmetric = false, long[][] result = null)
+    public static long[][] Random(int size, long min, long max, bool symmetric = false, Jagged<long> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<long>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<long>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -230,42 +237,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (long)random.Next((int)min, (int)max);
+                    resultArray[i][j] = resultArray[j][i] = (long)random.Next((int)min, (int)max);
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (long)random.Next((int)min, (int)max);
+                    resultArray[i][j] = (long)random.Next((int)min, (int)max);
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static ulong[][] Random(int rows, int columns, ulong min, ulong max, ulong[][] result = null)
+    public static ulong[][] Random(int rows, int columns, ulong min, ulong max, Jagged<ulong> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<ulong>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<ulong>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (ulong)random.Next((int)min, (int)max);
-        return result;
+                resultArray[i][j] = (ulong)random.Next((int)min, (int)max);
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static ulong[][] Random(int size, ulong min, ulong max, bool symmetric = false, ulong[][] result = null)
+    public static ulong[][] Random(int size, ulong min, ulong max, bool symmetric = false, Jagged<ulong> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<ulong>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<ulong>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -273,42 +282,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (ulong)random.Next((int)min, (int)max);
+                    resultArray[i][j] = resultArray[j][i] = (ulong)random.Next((int)min, (int)max);
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (ulong)random.Next((int)min, (int)max);
+                    resultArray[i][j] = (ulong)random.Next((int)min, (int)max);
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static ushort[][] Random(int rows, int columns, ushort min, ushort max, ushort[][] result = null)
+    public static ushort[][] Random(int rows, int columns, ushort min, ushort max, Jagged<ushort> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<ushort>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<ushort>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (ushort)random.Next((int)min, (int)max);
-        return result;
+                resultArray[i][j] = (ushort)random.Next((int)min, (int)max);
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static ushort[][] Random(int size, ushort min, ushort max, bool symmetric = false, ushort[][] result = null)
+    public static ushort[][] Random(int size, ushort min, ushort max, bool symmetric = false, Jagged<ushort> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<ushort>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<ushort>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -316,41 +327,43 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (ushort)random.Next((int)min, (int)max);
+                    resultArray[i][j] = resultArray[j][i] = (ushort)random.Next((int)min, (int)max);
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (ushort)random.Next((int)min, (int)max);
+                    resultArray[i][j] = (ushort)random.Next((int)min, (int)max);
         }
-        return result;
+        return resultArray;
     }
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static float[][] Random(int rows, int columns, float min, float max, float[][] result = null)
+    public static float[][] Random(int rows, int columns, float min, float max, Jagged<float> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<float>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<float>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (float)random.NextDouble() * (max - min) + min;
-        return result;
+                resultArray[i][j] = (float)random.NextDouble() * (max - min) + min;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static float[][] Random(int size, float min, float max, bool symmetric = false, float[][] result = null)
+    public static float[][] Random(int size, float min, float max, bool symmetric = false, Jagged<float> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<float>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<float>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -358,42 +371,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (float)random.NextDouble() * (max - min) + min;
+                    resultArray[i][j] = resultArray[j][i] = (float)random.NextDouble() * (max - min) + min;
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (float)random.NextDouble() * (max - min) + min;
+                    resultArray[i][j] = (float)random.NextDouble() * (max - min) + min;
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static double[][] Random(int rows, int columns, double min, double max, double[][] result = null)
+    public static double[][] Random(int rows, int columns, double min, double max, Jagged<double> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<double>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<double>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (double)random.NextDouble() * (max - min) + min;
-        return result;
+                resultArray[i][j] = random.NextDouble() * (max - min) + min;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static double[][] Random(int size, double min, double max, bool symmetric = false, double[][] result = null)
+    public static double[][] Random(int size, double min, double max, bool symmetric = false, Jagged<double> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<double>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<double>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -401,42 +416,44 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (double)random.NextDouble() * (max - min) + min;
+                    resultArray[i][j] = resultArray[j][i] = random.NextDouble() * (max - min) + min;
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (double)random.NextDouble() * (max - min) + min;
+                    resultArray[i][j] = random.NextDouble() * (max - min) + min;
         }
-        return result;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static decimal[][] Random(int rows, int columns, decimal min, decimal max, decimal[][] result = null)
+    public static decimal[][] Random(int rows, int columns, decimal min, decimal max, Jagged<decimal> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<decimal>(rows, columns);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<decimal>(rows, columns);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
         for (var i = 0; i < rows; i++)
             for (var j = 0; j < columns; j++)
-                result[i][j] = (decimal)random.NextDouble() * (max - min) + min;
-        return result;
+                resultArray[i][j] = (decimal)random.NextDouble() * (max - min) + min;
+        return resultArray;
     }
 
     /// <summary>
     ///   Creates a matrix with uniformly distributed random data.
     /// </summary>
     /// 
-    public static decimal[][] Random(int size, decimal min, decimal max, bool symmetric = false, decimal[][] result = null)
+    public static decimal[][] Random(int size, decimal min, decimal max, bool symmetric = false, Jagged<decimal> result = default)
     {
-        if (result is null)
-            result = Jagged.Create<decimal>(size, size);
+        var resultArray = result.Array;
+        if (resultArray is null)
+            resultArray = Jagged.Create<decimal>(size, size);
 
         var random = ISynergy.Framework.Mathematics.Random.Generator.Random;
 
@@ -444,15 +461,15 @@ public static partial class Jagged
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = result[j][i] = (decimal)random.NextDouble() * (max - min) + min;
+                    resultArray[i][j] = resultArray[j][i] = (decimal)random.NextDouble() * (max - min) + min;
         }
         else
         {
             for (var i = 0; i < size; i++)
                 for (var j = i; j < size; j++)
-                    result[i][j] = (decimal)random.NextDouble() * (max - min) + min;
+                    resultArray[i][j] = (decimal)random.NextDouble() * (max - min) + min;
         }
-        return result;
+        return resultArray;
     }
 
 }

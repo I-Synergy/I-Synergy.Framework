@@ -1,5 +1,6 @@
-#pragma warning disable CA1861 // expected values in assertions stay inline
+﻿#pragma warning disable CA1861 // expected values in assertions stay inline
 using ISynergy.Framework.Core.Ranges;
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Common;
 using ISynergy.Framework.Mathematics.Decompositions;
 using ISynergy.Framework.Mathematics.Enumerations;
@@ -30,7 +31,7 @@ public partial class MatrixTest
 
         double threshold = 0.2;
         bool expected = false;
-        bool actual = Matrix.IsEqual(a, b, threshold);
+        bool actual = Matrix.IsEqual(a, new Matrix<double>(b), threshold);
         Assert.AreEqual(expected, actual);
     }
 
@@ -53,7 +54,7 @@ public partial class MatrixTest
 
         double threshold = 0.03;
         bool expected = true;
-        bool actual = Matrix.IsEqual(a, b, atol: threshold);
+        bool actual = Matrix.IsEqual(a, new Matrix<double>(b), atol: threshold);
         Assert.AreEqual(expected, actual);
     }
 
@@ -344,7 +345,7 @@ public partial class MatrixTest
             { 2, 1, 2 },
         };
 
-        double[,] actual = Matrix.ElementwiseDivide(a, b);
+        double[,] actual = Matrix.ElementwiseDivide(new Matrix<double>(a), new Matrix<double>(b));
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 
@@ -366,7 +367,7 @@ public partial class MatrixTest
         };
 
 
-        double[,] actual = Elementwise.Divide(a, b, (VectorType)dimension);
+        double[,] actual = Elementwise.Divide(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
 
         b = [1, 2, 3];
@@ -377,7 +378,7 @@ public partial class MatrixTest
             { 4, 2.5, 2},
         };
 
-        actual = Elementwise.Divide(a, b, (VectorType)dimension);
+        actual = Elementwise.Divide(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 
@@ -396,7 +397,7 @@ public partial class MatrixTest
             { -2/ 1.2, -2/-0.6, -2/ 0.8 },
         };
 
-        double[,] actual = Elementwise.Divide(scalar, matrix);
+        double[,] actual = Elementwise.Divide(scalar, new Matrix<double>(matrix));
 
         Assert.AreSequenceEqual(expected, actual);
     }
@@ -422,7 +423,7 @@ public partial class MatrixTest
             { 8, 25, 18 },
         };
 
-        double[,] actual = Elementwise.Multiply(a, b);
+        double[,] actual = Elementwise.Multiply(new Matrix<double>(a), new Matrix<double>(b));
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 
@@ -467,7 +468,7 @@ public partial class MatrixTest
             {  4,  0 },
         };
 
-        double[,] actual = Elementwise.Multiply(a, b);
+        double[,] actual = Elementwise.Multiply(new Matrix<double>(a), new Matrix<double>(b));
         Assert.AreSequenceEqual(expected, actual);
     }
 
@@ -542,7 +543,7 @@ public partial class MatrixTest
         double[,] actual = Elementwise.AddToDiagonal(a, 1.0);
         Assert.AreSequenceEqual(expected, actual);
 
-        actual = Elementwise.SubtractFromDiagonal(actual, 1.0);
+        actual = Elementwise.SubtractFromDiagonal(new Matrix<double>(actual), 1.0);
         Assert.IsTrue(actual.IsEqual(a));
     }
 
@@ -567,7 +568,7 @@ public partial class MatrixTest
             for (int j = 0; j < actual.GetLength()[1]; j++)
                 Assert.AreEqual(expected[i][j], actual[i][j]);
 
-        actual = Elementwise.SubtractFromDiagonal(actual, 1.0);
+        actual = Elementwise.SubtractFromDiagonal(new Jagged<double>(actual), 1.0);
 
         for (int i = 0; i < actual.GetLength()[0]; i++)
             for (int j = 0; j < actual.GetLength()[1]; j++)
@@ -591,7 +592,7 @@ public partial class MatrixTest
             { 0, -4, 2 },
         };
 
-        double[,] actual = Elementwise.Multiply(a, b, (VectorType)dimension);
+        double[,] actual = Elementwise.Multiply(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.AreSequenceEqual(expected, actual);
 
 
@@ -604,7 +605,7 @@ public partial class MatrixTest
             { 0, -2, 2 },
         };
 
-        actual = Elementwise.Multiply(a, b, (VectorType)dimension);
+        actual = Elementwise.Multiply(new Matrix<double>(a), b, (VectorType)dimension);
         Assert.AreSequenceEqual(expected, actual);
     }
 
@@ -629,7 +630,7 @@ public partial class MatrixTest
             { 10, -2, 0 },
         };
 
-        double[,] actual = Elementwise.Subtract(a, b);
+        double[,] actual = Elementwise.Subtract(new Matrix<double>(a), new Matrix<double>(b));
         Assert.AreSequenceEqual(expected, actual);
     }
 
@@ -697,7 +698,7 @@ public partial class MatrixTest
             { -0.1, -0.6, -0.0 },
         };
 
-        double[,] actual = Elementwise.Subtract(a, b);
+        double[,] actual = Elementwise.Subtract(a, new Matrix<double>(b));
 
         Assert.IsTrue(expected.IsEqual(actual, 1e-6));
     }
@@ -717,7 +718,7 @@ public partial class MatrixTest
             {  0.1,  0.7 }
         };
 
-        double[,] actual = Elementwise.Abs(value);
+        double[,] actual = Elementwise.Abs(new Matrix<double>(value));
         Assert.IsTrue(actual.IsEqual(expected));
 
 
@@ -733,7 +734,7 @@ public partial class MatrixTest
             {  0,  6 }
         };
 
-        double[,] iactual = Elementwise.Abs(ivalue);
+        double[,] iactual = Elementwise.Abs(new Matrix<double>(ivalue));
         Assert.IsTrue(iactual.IsEqual(iexpected));
 
         double[] avalue = [-1, 2];
@@ -758,7 +759,7 @@ public partial class MatrixTest
             { 1.0000, Double.NaN },
         };
 
-        double[,] actual = Elementwise.Sqrt(value);
+        double[,] actual = Elementwise.Sqrt(new Matrix<double>(value));
         Assert.IsTrue(expected.IsEqual(actual, 0.0001));
     }
 
@@ -963,14 +964,14 @@ public partial class MatrixTest
         };
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        double[] vcut = v.Submatrix(0, 1); // { 9, 4 }
+        double[] vcut = v.Get(0, 2); // { 9, 4 }
 #pragma warning restore CS0618 // Type or member is obsolete
         Assert.IsTrue(new double[] { 9, 4 }.IsEqual(vcut));
 
-        double[] mv = m.Dot(v); // { 24, 32 }
-        double[] vm = vcut.Dot(m); // { 8, 49, 38 }
-        double[,] md = m.DotWithDiagonal(v); // { { 0, 20, 4 }, { 18, 4, 10 } }
-        double[,] mmt = m.DotWithTransposed(m); // { { 29, 15 }, { 15, 30 } }
+        double[] mv = Matrix.Dot(new Matrix<double>(m), v);
+        double[] vm = Matrix.Dot(vcut, new Matrix<double>(m));
+        double[,] md = Matrix.DotWithDiagonal(new Matrix<double>(m), v);
+        double[,] mmt = Matrix.DotWithTransposed(new Matrix<double>(m), new Matrix<double>(m));
 
         Assert.IsTrue(new double[] { 24, 32 }.IsEqual(mv));
         Assert.IsTrue(new double[] { 8, 49, 38 }.IsEqual(vm));
@@ -1092,7 +1093,7 @@ public partial class MatrixTest
             { 4, 5, 6 }
         };
 
-        double[][] actual2 = A.ToJagged().CumulativeSum(1);
+        double[][] actual2 = new Matrix<double>(A).ToJagged().CumulativeSum(1);
         double[][] expected2 =
         [
             [1, 2, 3],
@@ -1101,7 +1102,7 @@ public partial class MatrixTest
 
         Assert.IsTrue(actual2.IsEqual(expected2));
 
-        double[][] actual3 = A.ToJagged().CumulativeSum(0);
+        double[][] actual3 = new Matrix<double>(A).ToJagged().CumulativeSum(0);
         double[][] expected3 =
         [
             [1,  4],
@@ -1126,23 +1127,23 @@ public partial class MatrixTest
     [TestMethod]
     public void CombineTest()
     {
-        int[][,] matrices =
+        Matrix<int>[] matrices =
         [
-            new int[,]
+            new Matrix<int>(new int[,]
             {
                   {0, 1}
-            },
+            }),
 
-            new int[,]
+            new Matrix<int>(new int[,]
             {
                   {1, 0},
                   {1, 0}
-            },
+            }),
 
-            new int[,]
+            new Matrix<int>(new int[,]
             {
                   {0, 2}
-            }
+            })
         ];
 
 
@@ -1155,7 +1156,7 @@ public partial class MatrixTest
         };
 
         int[,] actual;
-        actual = Matrix.Stack(matrices);
+        actual = Matrix.Stack<int>(matrices);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -1225,12 +1226,12 @@ public partial class MatrixTest
         ];
 
         {
-            double[][] actual = Matrix.Concatenate(a, b);
+            double[][] actual = Matrix.Concatenate(new Jagged<double>(a), new Jagged<double>(b));
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
         }
 
         {
-            double[][] actual = a.Concatenate(b);
+            double[][] actual = a.Concatenate(new Jagged<double>(b));
             Assert.IsTrue(Matrix.IsEqual(expected, actual));
         }
     }
@@ -1249,7 +1250,7 @@ public partial class MatrixTest
             { 1, 1 }
         };
 
-        double[,] actual = Matrix.Stack([A, B]);
+        double[,] actual = Matrix.Stack<double>([new Matrix<double>(A), new Matrix<double>(B)]);
 
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
@@ -1287,10 +1288,10 @@ public partial class MatrixTest
         };
 
         double[,] actual2 = Matrix.Random(a.Length, b.Length);
-        double[][] actual3 = actual2.ToJagged();
+        double[][] actual3 = new Matrix<double>(actual2).ToJagged();
 
         double[,] actual1 = a.Outer(b);
-        double[][] actual3a = a.Outer(b, actual3);
+        double[][] actual3a = a.Outer(b, new Jagged<double>(actual3));
 
         Assert.AreSame(actual3, actual3a);
 
@@ -1384,7 +1385,7 @@ public partial class MatrixTest
             { 2.0, 2.0 }
         };
 
-        double[,] expected = new SingularValueDecomposition(value).Inverse();
+        double[,] expected = new SingularValueDecomposition(new Matrix<double>(value)).Inverse();
 
         double[,] actual = Matrix.Inverse(value);
 
@@ -1403,7 +1404,7 @@ public partial class MatrixTest
 
         Assert.IsFalse(value.IsSingular());
 
-        double[,] expected = new SingularValueDecomposition(value).Inverse();
+        double[,] expected = new SingularValueDecomposition(new Matrix<double>(value)).Inverse();
 
         double[,] actual = Matrix.Inverse(value);
 
@@ -1439,8 +1440,8 @@ public partial class MatrixTest
         // We can confirm this is indeed the inverse by
         // checking whether "inv(matrix) * matrix" and
         // "matrix * inv(matrix)" equals I (identity):
-        double[,] a = inv.Dot(matrix);
-        double[,] b = matrix.Dot(inv);
+        double[,] a = Matrix.Dot(new Matrix<double>(inv), new Matrix<double>(matrix));
+        double[,] b = Matrix.Dot(new Matrix<double>(matrix), new Matrix<double>(inv));
 
         // Again we write the result:
         string strA = a.ToCSharp();
@@ -1491,7 +1492,7 @@ public partial class MatrixTest
         // We can confirm this is indeed the pseudo-inverse 
         // by checking whether "matrix * pinv(matrix) * matrix"
         // equals the original matrix:
-        double[,] r = matrix.Dot(pinv.Dot(matrix));
+        double[,] r = Matrix.Dot(new Matrix<double>(matrix), new Matrix<double>(Matrix.Dot(new Matrix<double>(pinv), new Matrix<double>(matrix))));
 
         // Again we write the result:
         string strA = r.ToCSharp();
@@ -1547,10 +1548,10 @@ public partial class MatrixTest
         actual = Matrix.PseudoInverse(value.Transpose());
         Assert.IsTrue(Matrix.IsEqual(expected.Transpose(), actual, 0.001));
 
-        actual = Matrix.PseudoInverse(value.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.PseudoInverse(new Matrix<double>(value).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 0.001));
 
-        actual = Matrix.PseudoInverse(value.ToJagged().Transpose()).ToMatrix();
+        actual = new Jagged<double>(Matrix.PseudoInverse(new Matrix<double>(value).ToJagged().Transpose())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected.Transpose(), actual, 0.001));
     }
 
@@ -1636,7 +1637,7 @@ public partial class MatrixTest
         double[] actual = Matrix.Solve(value, rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
 
-        actual = Matrix.Solve(value.ToJagged(), rhs);
+        actual = Matrix.Solve(new Matrix<double>(value).ToJagged(), rhs);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
     }
 
@@ -1657,7 +1658,7 @@ public partial class MatrixTest
         double[] actual = Matrix.Solve(value, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
 
-        actual = Matrix.Solve(value.ToJagged(), b);
+        actual = Matrix.Solve(new Matrix<double>(value).ToJagged(), b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-10));
     }
 
@@ -1690,8 +1691,8 @@ public partial class MatrixTest
 
         double[][] actual = Matrix.Null(value);
 
-        double[] a = Jagged.RowVector(value).Dot(expected.GetColumn(0));
-        double[] b = Jagged.RowVector(value).Dot(expected.GetColumn(1));
+        double[] a = Matrix.Dot(new Jagged<double>(Jagged.RowVector(value)), expected.GetColumn(0));
+        double[] b = Matrix.Dot(new Jagged<double>(Jagged.RowVector(value)), expected.GetColumn(1));
         Assert.IsTrue(Matrix.IsEqual(a, new[] { 0 }, 1e-6));
         Assert.IsTrue(Matrix.IsEqual(b, new[] { 0 }, 1e-6));
 
@@ -1739,7 +1740,7 @@ public partial class MatrixTest
         double[,] actual = Matrix.Divide(a, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
 
-        actual = Matrix.Divide(a.ToJagged(), b.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), new Matrix<double>(b).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
     }
 
@@ -1774,7 +1775,7 @@ public partial class MatrixTest
         double[,] actual = Matrix.Divide(a, b);
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
 
-        actual = Matrix.Divide(a.ToJagged(), b.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), new Matrix<double>(b).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(expected, actual, 1e-3));
     }
 
@@ -1805,7 +1806,7 @@ public partial class MatrixTest
         double[,] actual = Matrix.Divide(a, b);
         Assert.IsTrue(Matrix.IsEqual(a, actual, 1e-3));
 
-        actual = Matrix.Divide(a.ToJagged(), b.ToJagged()).ToMatrix();
+        actual = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), new Matrix<double>(b).ToJagged())).ToMatrix();
         Assert.IsTrue(Matrix.IsEqual(a, actual, 1e-3));
     }
 
@@ -1824,13 +1825,13 @@ public partial class MatrixTest
 
         double[] b = [2, 6, 1];
         double[,] result = new double[6, 3];
-        Matrix.DivideByDiagonal(a, b, result);
+        Matrix.DivideByDiagonal(new Matrix<double>(a), b, new Matrix<double>(result));
 
         double[,] expected = Matrix.Divide(a, Matrix.Diagonal(b));
         Assert.IsTrue(expected.IsEqual(result, 1e-6));
 
-        result = Matrix.DivideByDiagonal(a.ToJagged(), b).ToMatrix();
-        expected = Matrix.Divide(a.ToJagged(), Jagged.Diagonal(b)).ToMatrix();
+        result = new Jagged<double>(Matrix.DivideByDiagonal(new Jagged<double>(new Matrix<double>(a).ToJagged()), b)).ToMatrix();
+        expected = new Jagged<double>(Matrix.Divide(new Matrix<double>(a).ToJagged(), Jagged.Diagonal(b))).ToMatrix();
         Assert.IsTrue(expected.IsEqual(result, 1e-6));
     }
     #endregion
@@ -2309,18 +2310,18 @@ public partial class MatrixTest
     [TestMethod]
     public void TransposeTest3()
     {
-        double[][] matrix = new double[,]
+        double[][] matrix = new Matrix<double>(new double[,]
         {
             { 1, 2 },
             { 3, 4 },
-        }.ToJagged();
+        }).ToJagged();
 
         bool inPlace = true;
-        double[][] expected = new double[,]
+        double[][] expected = new Matrix<double>(new double[,]
         {
             { 1, 3 },
             { 2, 4 },
-        }.ToJagged();
+        }).ToJagged();
 
         double[][] actual = Matrix.Transpose(matrix, inPlace);
 
@@ -2618,7 +2619,7 @@ public partial class MatrixTest
 
         double[][] actual = Matrix.Expand(data, count);
 
-        Assert.IsTrue(Matrix.IsEqual(expected.ToMatrix(), actual.ToMatrix()));
+        Assert.IsTrue(Matrix.IsEqual(new Jagged<double>(expected).ToMatrix(), new Jagged<double>(actual).ToMatrix()));
     }
 
 
@@ -2991,7 +2992,7 @@ public partial class MatrixTest
             { 18, 21, 24, 28 },
         };
 
-        double[,] actual = Matrix.Kronecker(a, b);
+        double[,] actual = Matrix.Kronecker(new Matrix<double>(a), new Matrix<double>(b));
         Assert.IsTrue(Matrix.IsEqual(expected, actual));
     }
 
@@ -3212,19 +3213,19 @@ public partial class MatrixTest
     [TestMethod]
     public void ConcatenateTest1()
     {
-        double[][,] matrices =
+        Matrix<double>[] matrices =
         [
-            new double[,]
+            new Matrix<double>(new double[,]
             {
                 { 0, 1 },
                 { 2, 3 },
-            },
+            }),
 
-            new double[,]
+            new Matrix<double>(new double[,]
             {
                 { 4, 5 },
                 { 6, 7 },
-            }
+            })
         ];
 
 
@@ -3234,7 +3235,7 @@ public partial class MatrixTest
             { 2, 3, 6, 7 },
         };
 
-        double[,] actual = Matrix.Concatenate(matrices);
+        double[,] actual = Matrix.Concatenate<double>(matrices);
 
         Assert.AreSequenceEqual(expected, actual);
     }
@@ -3538,7 +3539,7 @@ public partial class MatrixTest
         {
             int[] idx = values.Top(5);
 #pragma warning disable CS0618 // Type or member is obsolete
-            double[] selected = values.Submatrix(idx);
+            double[] selected = values.Get(idx);
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.HasCount(5, idx);
             Assert.AreEqual(9, selected[0]);
@@ -3551,7 +3552,7 @@ public partial class MatrixTest
         {
             int[] idx = values.Bottom(5);
 #pragma warning disable CS0618 // Type or member is obsolete
-            double[] selected = values.Submatrix(idx);
+            double[] selected = values.Get(idx);
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.HasCount(5, idx);
             Assert.AreEqual(-2, selected[0]);
@@ -3573,10 +3574,10 @@ public partial class MatrixTest
             for (int k = 1; k < 11; k++)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
-                double[] actualTop = values.Submatrix(values.Top(k));
+                double[] actualTop = values.Get(values.Top(k));
 #pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning disable CS0618 // Type or member is obsolete
-                double[] actualBottom = values.Submatrix(values.Bottom(k));
+                double[] actualBottom = values.Get(values.Bottom(k));
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 Array.Sort(values);
@@ -3605,7 +3606,7 @@ public partial class MatrixTest
     {
         double[,] v = Matrix.Ones(2, 3);
         int[][] idx = v.GetIndices().ToArray();
-        Assert.IsTrue(idx.IsEqual(Jagged.Create(new[,]
+        Assert.IsTrue(idx.IsEqual(Jagged.Create(new Matrix<int>(new[,]
             {
                 {0, 0},
                 {0, 1},
@@ -3613,7 +3614,7 @@ public partial class MatrixTest
                 {1, 0},
                 {1, 1},
                 {1, 2},
-            })));
+            }))));
     }
 
     [TestMethod]

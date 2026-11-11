@@ -1,12 +1,8 @@
 using ISynergy.Framework.Core.Extensions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Jagged
@@ -17,9 +13,9 @@ public static partial class Jagged
     /// <typeparam name="TInput">The type of the input.</typeparam>
     /// <typeparam name="TOutput">The type of the output.</typeparam>
     /// <param name="matrix">The matrix to be converted.</param>
-    public static TOutput[][] Convert<TInput, TOutput>(TInput[,] matrix)
+    public static TOutput[][] Convert<TInput, TOutput>(Matrix<TInput> matrix)
     {
-        return Convert(matrix, x => (TOutput)System.Convert.ChangeType(x, typeof(TOutput)));
+        return Convert(matrix.Array, x => (TOutput)System.Convert.ChangeType(x, typeof(TOutput)));
     }
 
     /// <summary>

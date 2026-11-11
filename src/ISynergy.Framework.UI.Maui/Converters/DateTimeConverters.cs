@@ -44,9 +44,9 @@ public class DateTimeToTimeSpanConverter : IValueConverter
     /// <returns>System.Object.</returns>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (original is DateTime odt && value is TimeSpan ts) // NOSONAR
+        if (value is TimeSpan ts)
         {
-            var dt = DateTimeConverter.TimeSpanToDateTime(odt, ts);
+            var dt = DateTimeConverter.TimeSpanToDateTime(original, ts);
             return dt.GetValueOrDefault(DateTime.MinValue);
         }
 

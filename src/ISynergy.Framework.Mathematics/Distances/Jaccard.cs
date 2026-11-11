@@ -3,11 +3,6 @@ namespace ISynergy.Framework.Mathematics.Distances;
 using ISynergy.Framework.Mathematics.Distances.Base;
 using System;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 /// <summary>
@@ -58,7 +53,7 @@ public struct Jaccard : ISimilarity<double[]>, IDistance<double[]>, ICloneable
         {
             if (x[i] != 0 || y[i] != 0)
             {
-                if (x[i] == y[i])
+                if (ExactComparisons.AreEqual(x[i] ,y[i]))
                     inter++;
                 union++;
             }
@@ -85,7 +80,7 @@ public struct Jaccard : ISimilarity<double[]>, IDistance<double[]>, ICloneable
         {
             if (x[i] != 0 || y[i] != 0)
             {
-                if (x[i] == y[i])
+                if (ExactComparisons.AreEqual(x[i] ,y[i]))
                     inter++;
                 union++;
             }

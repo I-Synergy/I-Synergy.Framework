@@ -18,7 +18,7 @@ public class SettingsViewModel : ViewModelBlade<object>
 {
     private readonly ISettingsService _settingsService;
     private readonly IThemeService _themeService;
-    private bool _isInitializing = true;
+    private readonly bool _isInitializing;
 
     /// <summary>
     /// Gets the title.
@@ -109,6 +109,7 @@ public class SettingsViewModel : ViewModelBlade<object>
         ILogger<SettingsViewModel> logger)
         : base(commonServices, logger)
     {
+        _isInitializing = true;
         _settingsService = settingsService;
         _themeService = themeService;
 

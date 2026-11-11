@@ -43,12 +43,13 @@ public static class WpfAppBuilderExtensions
     /// <returns></returns>
     [UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
         Justification = "View, ViewModel and Window types are rooted by the application XAML compilation and direct references; RegisterAssemblies only rediscovers types the application already preserves. typeof(TResource) is statically known, so its ResourceManager is preserved at compile time.")]
-    public static IHostBuilder ConfigureServices< // NOSONAR - DI composition root
+#pragma warning disable S2436 // Public DI composition-root extension method: the generic arity is fixed by the public API surface it configures.
+    public static IHostBuilder ConfigureServices<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TContext,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TCommonServices,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TExceptionHandlerService,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSettingsService,
-        TResource>( // NOSONAR
+        TResource>(
         this IHostBuilder wpfAppBuilder,
         IInfoService infoService,
         Action<IConfiguration, IHostEnvironment, IServiceCollection> action,
@@ -59,6 +60,7 @@ public static class WpfAppBuilderExtensions
         where TExceptionHandlerService : class, IExceptionHandlerService
         where TSettingsService : class, ISettingsService
         where TResource : class
+#pragma warning restore S2436
     {
         wpfAppBuilder.ConfigureServices((context, services) =>
         {

@@ -127,7 +127,7 @@ public abstract class BaseWatcher<
     /// </summary>
     /// <param name="changedWatcher">if set to <c>true</c> [changed watcher].</param>
     /// <param name="filter">The filter.</param>
-    protected void CreateWatcher(bool changedWatcher, NotifyFilters filter) // NOSONAR
+    protected void CreateWatcher(bool changedWatcher, NotifyFilters filter)
     {
         TWatcher? watcher = null;
         int bufferSize = (int)_watcherInfo.BufferKBytes * 1024;
@@ -140,39 +140,8 @@ public abstract class BaseWatcher<
         // Attributes.
         if (changedWatcher && HandleNotifyFilter(filter))
         {
-            watcher = (TWatcher)Activator.CreateInstance(typeof(TWatcher), [_watcherInfo.WatchPath])!;
-            watcher.IncludeSubdirectories = _watcherInfo.IncludeSubFolders;
-            watcher.Filter = _watcherInfo.FileFilter;
-            watcher.NotifyFilter = filter;
-            watcher.InternalBufferSize = bufferSize;
-
-            switch (filter)
-            {
-                case NotifyFilters.Attributes:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedAttribute);
-                    break;
-                case NotifyFilters.CreationTime:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedCreationTime);
-                    break;
-                case NotifyFilters.DirectoryName:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedDirectoryName);
-                    break;
-                case NotifyFilters.FileName:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedFileName);
-                    break;
-                case NotifyFilters.LastAccess:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedLastAccess);
-                    break;
-                case NotifyFilters.LastWrite:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedLastWrite);
-                    break;
-                case NotifyFilters.Security:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedSecurity);
-                    break;
-                case NotifyFilters.Size:
-                    watcher.Changed += new FileSystemEventHandler(watcher_ChangedSize);
-                    break;
-            }
+            watcher = CreateWatcherInstance(filter, bufferSize);
+            AttachChangedHandler(watcher, filter);
         }
 
         // All other FileSystemWatcher events are handled through a single "main" 
@@ -183,19 +152,8 @@ public abstract class BaseWatcher<
                 _watcherInfo.WatchForError ||
                 _watcherInfo.WatchForDisposed)
         {
-            watcher = (TWatcher)Activator.CreateInstance(typeof(TWatcher), [_watcherInfo.WatchPath])!;
-            watcher.IncludeSubdirectories = _watcherInfo.IncludeSubFolders;
-            watcher.Filter = _watcherInfo.FileFilter;
-            watcher.InternalBufferSize = bufferSize;
-
-            if (HandleWatchesFilter(WatcherChangeTypes.Created))
-                watcher.Created += new FileSystemEventHandler(watcher_CreatedDeleted);
-
-            if (HandleWatchesFilter(WatcherChangeTypes.Deleted))
-                watcher.Deleted += new FileSystemEventHandler(watcher_CreatedDeleted);
-
-            if (HandleWatchesFilter(WatcherChangeTypes.Renamed))
-                watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+            watcher = CreateWatcherInstance(null, bufferSize);
+            AttachMainWatcherHandlers(watcher);
         }
 
         if (watcher is not null)
@@ -208,6 +166,65 @@ public abstract class BaseWatcher<
 
             _watchers.Add(watcher);
         }
+    }
+
+    /// <summary>
+    /// Creates a watcher for the configured path, applying the common settings.
+    /// </summary>
+    /// <param name="filter">The notify filter to apply, or <c>null</c> to leave it unset.</param>
+    /// <param name="bufferSize">The internal buffer size.</param>
+    /// <returns>The created watcher.</returns>
+    private TWatcher CreateWatcherInstance(NotifyFilters? filter, int bufferSize)
+    {
+        var watcher = (TWatcher)Activator.CreateInstance(typeof(TWatcher), [_watcherInfo.WatchPath])!;
+        watcher.IncludeSubdirectories = _watcherInfo.IncludeSubFolders;
+        watcher.Filter = _watcherInfo.FileFilter;
+        watcher.InternalBufferSize = bufferSize;
+
+        if (filter.HasValue)
+            watcher.NotifyFilter = filter.Value;
+
+        return watcher;
+    }
+
+    /// <summary>
+    /// Attaches the change handler that matches the notify filter.
+    /// </summary>
+    /// <param name="watcher">The watcher to attach to.</param>
+    /// <param name="filter">The notify filter the watcher was created for.</param>
+    private void AttachChangedHandler(TWatcher watcher, NotifyFilters filter)
+    {
+        FileSystemEventHandler? handler = filter switch
+        {
+            NotifyFilters.Attributes => watcher_ChangedAttribute,
+            NotifyFilters.CreationTime => watcher_ChangedCreationTime,
+            NotifyFilters.DirectoryName => watcher_ChangedDirectoryName,
+            NotifyFilters.FileName => watcher_ChangedFileName,
+            NotifyFilters.LastAccess => watcher_ChangedLastAccess,
+            NotifyFilters.LastWrite => watcher_ChangedLastWrite,
+            NotifyFilters.Security => watcher_ChangedSecurity,
+            NotifyFilters.Size => watcher_ChangedSize,
+            _ => null
+        };
+
+        if (handler is not null)
+            watcher.Changed += new FileSystemEventHandler(handler);
+    }
+
+    /// <summary>
+    /// Attaches the created/deleted/renamed handlers to the main watcher.
+    /// </summary>
+    /// <param name="watcher">The watcher to attach to.</param>
+    private void AttachMainWatcherHandlers(TWatcher watcher)
+    {
+        if (HandleWatchesFilter(WatcherChangeTypes.Created))
+            watcher.Created += new FileSystemEventHandler(watcher_CreatedDeleted);
+
+        if (HandleWatchesFilter(WatcherChangeTypes.Deleted))
+            watcher.Deleted += new FileSystemEventHandler(watcher_CreatedDeleted);
+
+        if (HandleWatchesFilter(WatcherChangeTypes.Renamed))
+            watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
     }
 
     /// <summary>

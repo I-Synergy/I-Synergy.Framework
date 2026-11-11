@@ -9,6 +9,8 @@ namespace Sample.OpenTelemetry;
 /// <summary>
 /// Monitors WinUI application metrics and performance.
 /// </summary>
+// S3881: finalizer-free type - GC.SuppressFinalize is omitted because S3971 forbids it here.
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
 public partial class ApplicationMonitor : IDisposable
 {
     private readonly ILogger<ApplicationMonitor> _logger;
@@ -114,3 +116,4 @@ public partial class ApplicationMonitor : IDisposable
         }
     }
 }
+#pragma warning restore S3881

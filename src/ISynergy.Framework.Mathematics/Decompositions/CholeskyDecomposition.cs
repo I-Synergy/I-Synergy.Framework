@@ -1,15 +1,12 @@
+﻿using System.Runtime.Serialization;
 using ISynergy.Framework.Mathematics.Decompositions.Base;
 using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Decompositions;
 
 /// <summary>
@@ -37,7 +34,7 @@ namespace ISynergy.Framework.Mathematics.Decompositions;
 ///     </para>
 /// </remarks>
 [Serializable]
-public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecomposition<double>
+public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecomposition<double>, IDeserializationCallback
 {
     private const string DestroyedMessage = "The decomposition has been destroyed.";
     private const string UndefinedMessage = "The decomposition is undefined (zero in diagonal).";
@@ -75,17 +72,18 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     ///     location (lower part will contain the decomposition's L matrix, upper part will contains
     ///     the original matrix).
     /// </param>
-    public CholeskyDecomposition(double[,] value, bool robust = false,
+    public CholeskyDecomposition(Matrix<double> value, bool robust = false,
         bool inPlace = false, MatrixType valueType = MatrixType.UpperTriangular)
     {
-        if (value.Rows() != value.Columns())
+        var matrix = value.Array;
+        if (matrix.Rows() != matrix.Columns())
             throw new DimensionMismatchException(nameof(value), "Matrix is not square.");
 
         if (!inPlace)
-            value = value.Copy();
+            matrix = matrix.Copy();
 
-        n = value.Rows();
-        L = value.ToUpperTriangular(valueType, value);
+        n = matrix.Rows();
+        L = matrix.ToUpperTriangular(valueType, new Matrix<double>(matrix));
         this.robust = robust;
 
         if (robust)
@@ -252,7 +250,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <exception cref="T:System.ArgumentException">Matrix dimensions do not match.</exception>
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
-    public double[,] Solve(double[,] value)
+    public double[,] Solve(Matrix<double> value)
     {
         return Solve(value, false);
     }
@@ -271,113 +269,6 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     }
 
     /// <summary>
-    ///     Solves a set of equation systems of type <c>A * X = I</c>.
-    /// </summary>
-    public double[,] Inverse()
-    {
-        return Solve(Matrix.Identity<double>(n));
-    }
-
-    /// <summary>
-    ///     Reverses the decomposition, reconstructing the original matrix <c>X</c>.
-    /// </summary>
-    public double[,] Reverse()
-    {
-        if (destroyed)
-            throw new InvalidOperationException(DestroyedMessage);
-
-        if (IsUndefined)
-            throw new InvalidOperationException(UndefinedMessage);
-
-        if (robust)
-            return LeftTriangularFactor.Dot(DiagonalMatrix).DotWithTransposed(LeftTriangularFactor);
-        return LeftTriangularFactor.DotWithTransposed(LeftTriangularFactor);
-    }
-
-    /// <summary>
-    ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
-    ///     matrix can be used to determine standard errors for the coefficients when
-    ///     solving a linear set of equations through any of the <see cref="Solve(Double[,])" />
-    ///     methods.
-    /// </summary>
-    public double[,] GetInformationMatrix()
-    {
-        var X = Reverse();
-        return X.TransposeAndDot(X).Inverse();
-    }
-
-    private void LLt()
-    {
-        Diagonal = Vector.Ones<double>(n);
-
-        IsPositiveDefinite = true;
-
-        for (var j = 0; j < n; j++)
-        {
-            double s = 0;
-            for (var k = 0; k < j; k++)
-            {
-                var t = L[k, j];
-                for (var i = 0; i < k; i++)
-                    t -= L[j, i] * L[k, i];
-                t = t / L[k, k];
-
-                L[j, k] = t;
-                s += t * t;
-            }
-
-            s = L[j, j] - s;
-
-            // Use a tolerance for positive-definiteness
-            IsPositiveDefinite &= s > 1e-14 * Math.Abs(L[j, j]);
-
-            L[j, j] = Math.Sqrt(s);
-        }
-    }
-    private void LDLt()
-    {
-        Diagonal = new double[n];
-
-        IsPositiveDefinite = true;
-
-        var v = new double[n];
-        for (var i = 0; i < n; i++)
-        {
-            for (var j = 0; j < i; j++)
-                v[j] = L[i, j] * Diagonal[j];
-
-            double d = 0;
-            for (var k = 0; k < i; k++)
-                d += L[i, k] * v[k];
-
-            d = Diagonal[i] = v[i] = L[i, i] - d;
-
-            // Use a tolerance for positive-definiteness
-            IsPositiveDefinite &= v[i] > 1e-14 * Math.Abs(L[i, i]);
-
-            // If one of the diagonal elements is zero, the 
-            // decomposition (without pivoting) is undefined.
-            if (v[i] == 0)
-            {
-                IsUndefined = true;
-                return;
-            }
-
-            Parallel.For(i + 1, n, k =>
-            {
-                double s = 0;
-                for (var j = 0; j < i; j++)
-                    s += L[k, j] * v[j];
-
-                L[k, i] = (L[i, k] - s) / d;
-            });
-        }
-
-        for (var i = 0; i < n; i++)
-            L[i, i] = 1;
-    }
-
-    /// <summary>
     ///     Solves a set of equation systems of type <c>A * X = B</c>.
     /// </summary>
     /// <param name="value">Right hand side matrix with as many rows as <c>A</c> and any number of columns.</param>
@@ -386,11 +277,12 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     /// <exception cref="T:System.NonSymmetricMatrixException">Matrix is not symmetric.</exception>
     /// <exception cref="T:System.NonPositiveDefiniteMatrixException">Matrix is not positive-definite.</exception>
     /// <param name="inPlace">True to compute the solving in place, false otherwise.</param>
-    public double[,] Solve(double[,] value, bool inPlace)
+    public double[,] Solve(Matrix<double> value, bool inPlace)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        var valueArray = value.Array;
+        ArgumentNullException.ThrowIfNull(valueArray);
 
-        if (value.Rows() != n)
+        if (valueArray.Rows() != n)
             throw new ArgumentException(
                 "Argument matrix should have the same number of rows as the decomposed matrix.", nameof(value));
 
@@ -403,7 +295,7 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         if (destroyed)
             throw new InvalidOperationException(DestroyedMessage);
 
-        var B = inPlace ? value : value.MemberwiseClone();
+        var B = inPlace ? valueArray : valueArray.MemberwiseClone();
         int m = B.Columns();
 
         for (var k = 0; k < n; k++)
@@ -478,6 +370,113 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         }
 
         return B;
+    }
+
+    /// <summary>
+    ///     Solves a set of equation systems of type <c>A * X = I</c>.
+    /// </summary>
+    public double[,] Inverse()
+    {
+        return Solve(new Matrix<double>(Matrix.Identity<double>(n)));
+    }
+
+    /// <summary>
+    ///     Reverses the decomposition, reconstructing the original matrix <c>X</c>.
+    /// </summary>
+    public double[,] Reverse()
+    {
+        if (destroyed)
+            throw new InvalidOperationException(DestroyedMessage);
+
+        if (IsUndefined)
+            throw new InvalidOperationException(UndefinedMessage);
+
+        if (robust)
+            return Matrix.DotWithTransposed(new Matrix<double>(Matrix.Dot(new Matrix<double>(LeftTriangularFactor), new Matrix<double>(DiagonalMatrix))), new Matrix<double>(LeftTriangularFactor));
+        return Matrix.DotWithTransposed(new Matrix<double>(LeftTriangularFactor), new Matrix<double>(LeftTriangularFactor));
+    }
+
+    /// <summary>
+    ///     Computes <c>(Xt * X)^1</c> (the inverse of the covariance matrix). This
+    ///     matrix can be used to determine standard errors for the coefficients when
+    ///     solving a linear set of equations through any of the <see cref="Solve(Matrix{Double})" />
+    ///     methods.
+    /// </summary>
+    public double[,] GetInformationMatrix()
+    {
+        var X = Reverse();
+        return Matrix.TransposeAndDot(new Matrix<double>(X), new Matrix<double>(X)).Inverse();
+    }
+
+    private void LLt()
+    {
+        Diagonal = Vector.Ones<double>(n);
+
+        IsPositiveDefinite = true;
+
+        for (var j = 0; j < n; j++)
+        {
+            double s = 0;
+            for (var k = 0; k < j; k++)
+            {
+                var t = L[k, j];
+                for (var i = 0; i < k; i++)
+                    t -= L[j, i] * L[k, i];
+                t = t / L[k, k];
+
+                L[j, k] = t;
+                s += t * t;
+            }
+
+            s = L[j, j] - s;
+
+            // Use a tolerance for positive-definiteness
+            IsPositiveDefinite &= s > 1e-14 * Math.Abs(L[j, j]);
+
+            L[j, j] = Math.Sqrt(s);
+        }
+    }
+    private void LDLt()
+    {
+        Diagonal = new double[n];
+
+        IsPositiveDefinite = true;
+
+        var v = new double[n];
+        for (var i = 0; i < n; i++)
+        {
+            for (var j = 0; j < i; j++)
+                v[j] = L[i, j] * Diagonal[j];
+
+            double d = 0;
+            for (var k = 0; k < i; k++)
+                d += L[i, k] * v[k];
+
+            d = Diagonal[i] = v[i] = L[i, i] - d;
+
+            // Use a tolerance for positive-definiteness
+            IsPositiveDefinite &= v[i] > 1e-14 * Math.Abs(L[i, i]);
+
+            // If one of the diagonal elements is zero, the 
+            // decomposition (without pivoting) is undefined.
+            if (v[i] == 0)
+            {
+                IsUndefined = true;
+                return;
+            }
+
+            Parallel.For(i + 1, n, k =>
+            {
+                double s = 0;
+                for (var j = 0; j < i; j++)
+                    s += L[k, j] * v[j];
+
+                L[k, i] = (L[i, k] - s) / d;
+            });
+        }
+
+        for (var i = 0; i < n; i++)
+            L[i, i] = 1;
     }
 
     /// <summary>
@@ -634,11 +633,11 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
     ///     an already computed left triangular matrix <c>L</c>.
     /// </summary>
     /// <param name="leftTriangular">The left triangular matrix from a Cholesky decomposition.</param>
-    public static CholeskyDecomposition FromLeftTriangularMatrix(double[,] leftTriangular)
+    public static CholeskyDecomposition FromLeftTriangularMatrix(Matrix<double> leftTriangular)
     {
         var chol = new CholeskyDecomposition();
-        chol.n = leftTriangular.Rows();
-        chol.L = leftTriangular;
+        chol.n = leftTriangular.Rows;
+        chol.L = leftTriangular.Array;
         chol.IsPositiveDefinite = true;
         chol.robust = false;
         chol.Diagonal = Vector.Ones<double>(chol.n);
@@ -667,6 +666,12 @@ public sealed class CholeskyDecomposition : ICloneable, ISolverMatrixDecompositi
         clone.robust = robust;
         clone.IsPositiveDefinite = IsPositiveDefinite;
         return clone;
+    }
+
+    void IDeserializationCallback.OnDeserialization(object sender)
+    {
+        if (L is null || L.GetLength(0) != n || L.GetLength(1) != n)
+            throw new SerializationException("The deserialized Cholesky decomposition is invalid.");
     }
 
     #endregion

@@ -18,7 +18,9 @@ namespace ISynergy.Framework.UI.Services.Base;
 /// platform-specific window/frame access, view creation, and UI threading operations.
 /// </summary>
 /// <seealso cref="INavigationService" />
-public abstract class BaseNavigationService : INavigationService, IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+#pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
+public abstract class BaseNavigationService : INavigationService, IDisposable
+#pragma warning restore S3881
 {
     /// <summary>
     /// The exception handler service for handling exceptions during navigation.
@@ -56,7 +58,9 @@ public abstract class BaseNavigationService : INavigationService, IDisposable //
     /// When the frame is evicted, the scope is disposed, which cascades
     /// to the ViewModel and all scoped dependencies resolved within that frame.
     /// </summary>
-    protected class NavigationFrame : IDisposable // NOSONAR - finalizer-free; SuppressFinalize omitted per S3971
+    #pragma warning disable S3881 // finalizer-free: GC.SuppressFinalize is omitted per S3971
+    protected class NavigationFrame : IDisposable
+    #pragma warning restore S3881
     {
         public IServiceScope Scope { get; init; } = null!;
         public Type ViewModelType { get; init; } = null!;

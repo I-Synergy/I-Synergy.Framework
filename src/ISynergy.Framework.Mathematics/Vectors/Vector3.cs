@@ -1,9 +1,4 @@
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 namespace ISynergy.Framework.Mathematics.Vectors;
 
@@ -17,7 +12,8 @@ namespace ISynergy.Framework.Mathematics.Vectors;
 [Serializable]
 public struct Vector3
 {
-    // TODO: Possibly replace with the types in System.Numerics? // NOSONAR
+    // Math.NET parity: this structure mirrors the System.Numerics vector types but is
+    // kept separate to preserve the public API of this framework.
 
     /// <summary>
     /// X coordinate of the vector.
@@ -42,7 +38,12 @@ public struct Vector3
     {
         get
         {
-            return X > Y ? X > Z ? X : Z : Y > Z ? Y : Z; // NOSONAR
+            if (X > Y)
+            {
+                return X > Z ? X : Z;
+            }
+
+            return Y > Z ? Y : Z;
         }
     }
 
@@ -56,7 +57,12 @@ public struct Vector3
     {
         get
         {
-            return X < Y ? X < Z ? X : Z : Y < Z ? Y : Z; // NOSONAR
+            if (X < Y)
+            {
+                return X < Z ? X : Z;
+            }
+
+            return Y < Z ? Y : Z;
         }
     }
 
@@ -75,7 +81,12 @@ public struct Vector3
     {
         get
         {
-            return X >= Y ? X >= Z ? 0 : 2 : Y >= Z ? 1 : 2; // NOSONAR
+            if (X >= Y)
+            {
+                return X >= Z ? 0 : 2;
+            }
+
+            return Y >= Z ? 1 : 2;
         }
     }
 
@@ -94,7 +105,12 @@ public struct Vector3
     {
         get
         {
-            return X <= Y ? X <= Z ? 0 : 2 : Y <= Z ? 1 : 2; // NOSONAR
+            if (X <= Y)
+            {
+                return X <= Z ? 0 : 2;
+            }
+
+            return Y <= Z ? 1 : 2;
         }
     }
 
@@ -212,9 +228,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector3 operator +(Vector3 vector, float value)
+    public static Vector3 Add(Vector3 vector, float value)
     {
-        return new Vector3(vector.X + value, vector.Y + value, vector.Z + value);
+        return vector + value;
     }
 
     /// <summary>
@@ -226,9 +242,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates increased by the specified value.</returns>
     /// 
-    public static Vector3 Add(Vector3 vector, float value)
+    public static Vector3 operator +(Vector3 vector, float value)
     {
-        return vector + value;
+        return new Vector3(vector.X + value, vector.Y + value, vector.Z + value);
     }
 
     /// <summary>
@@ -270,9 +286,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector3 operator -(Vector3 vector, float value)
+    public static Vector3 Subtract(Vector3 vector, float value)
     {
-        return new Vector3(vector.X - value, vector.Y - value, vector.Z - value);
+        return vector - value;
     }
 
     /// <summary>
@@ -284,9 +300,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates decreased by the specified value.</returns>
     /// 
-    public static Vector3 Subtract(Vector3 vector, float value)
+    public static Vector3 operator -(Vector3 vector, float value)
     {
-        return vector - value;
+        return new Vector3(vector.X - value, vector.Y - value, vector.Z - value);
     }
 
     /// <summary>
@@ -328,9 +344,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector3 operator *(Vector3 vector, float factor)
+    public static Vector3 Multiply(Vector3 vector, float factor)
     {
-        return new Vector3(vector.X * factor, vector.Y * factor, vector.Z * factor);
+        return vector * factor;
     }
 
     /// <summary>
@@ -342,9 +358,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates multiplied by the specified factor.</returns>
     ///
-    public static Vector3 Multiply(Vector3 vector, float factor)
+    public static Vector3 operator *(Vector3 vector, float factor)
     {
-        return vector * factor;
+        return new Vector3(vector.X * factor, vector.Y * factor, vector.Z * factor);
     }
 
     /// <summary>
@@ -386,9 +402,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector3 operator /(Vector3 vector, float factor)
+    public static Vector3 Divide(Vector3 vector, float factor)
     {
-        return new Vector3(vector.X / factor, vector.Y / factor, vector.Z / factor);
+        return vector / factor;
     }
 
     /// <summary>
@@ -400,9 +416,9 @@ public struct Vector3
     /// 
     /// <returns>Returns new vector with all coordinates divided by the specified factor.</returns>
     ///
-    public static Vector3 Divide(Vector3 vector, float factor)
+    public static Vector3 operator /(Vector3 vector, float factor)
     {
-        return vector / factor;
+        return new Vector3(vector.X / factor, vector.Y / factor, vector.Z / factor);
     }
 
     /// <summary>
@@ -416,7 +432,7 @@ public struct Vector3
     /// 
     public static bool operator ==(Vector3 vector1, Vector3 vector2)
     {
-        return vector1.X == vector2.X && vector1.Y == vector2.Y && vector1.Z == vector2.Z;
+        return ExactComparisons.AreEqual(vector1.X ,vector2.X )&& ExactComparisons.AreEqual(vector1.Y ,vector2.Y )&& ExactComparisons.AreEqual(vector1.Z ,vector2.Z);
     }
 
     /// <summary>
@@ -430,7 +446,7 @@ public struct Vector3
     /// 
     public static bool operator !=(Vector3 vector1, Vector3 vector2)
     {
-        return vector1.X != vector2.X || vector1.Y != vector2.Y || vector1.Z != vector2.Z;
+        return ExactComparisons.AreNotEqual(vector1.X ,vector2.X )|| ExactComparisons.AreNotEqual(vector1.Y ,vector2.Y )|| ExactComparisons.AreNotEqual(vector1.Z ,vector2.Z);
     }
 
     /// <summary>
@@ -443,7 +459,7 @@ public struct Vector3
     /// 
     public bool Equals(Vector3 vector)
     {
-        return vector.X == X && vector.Y == Y && vector.Z == Z;
+        return ExactComparisons.AreEqual(vector.X ,X )&& ExactComparisons.AreEqual(vector.Y ,Y )&& ExactComparisons.AreEqual(vector.Z ,Z);
     }
 
     /// <summary>

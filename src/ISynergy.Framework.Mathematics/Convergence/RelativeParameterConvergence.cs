@@ -1,10 +1,5 @@
 using ISynergy.Framework.Mathematics.Convergence.Base;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Convergence;
@@ -214,7 +209,7 @@ public class RelativeParameterConvergence : IConvergence<double[]>
 
     double[] IConvergence<double[]>.NewValue
     {
-        // TODO: Remove this explicit implementation. // NOSONAR
+        // The interface member is implemented explicitly to forward to the strongly-typed NewValues property.
         get => NewValues;
         set => NewValues = value;
     }

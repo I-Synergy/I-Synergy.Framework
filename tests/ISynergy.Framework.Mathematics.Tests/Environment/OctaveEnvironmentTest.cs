@@ -1,3 +1,4 @@
+﻿using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Environments;
 using ISynergy.Framework.Mathematics.Matrices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,9 +11,9 @@ public class OctaveEnvironmentTest : OctaveEnvironment
     [TestMethod]
     public void eyeTest()
     {
-        mat I = eye(3);
+        Mat I = eye(3);
 
-        mat A = I * 2;
+        Mat A = I * 2;
 
         Console.WriteLine(A);
         //
@@ -20,7 +21,7 @@ public class OctaveEnvironmentTest : OctaveEnvironment
         //    A = 0 2 0
         //        0 0 2
 
-        mat B = ones(3, 6);
+        Mat B = ones(3, 6);
 
         Console.WriteLine(B);
         //
@@ -35,7 +36,7 @@ public class OctaveEnvironmentTest : OctaveEnvironment
             { 2, 2, 2, 2, 2, 2 },
         };
 
-        mat D = A * B - C;
+        Mat D = A * B - C;
 
         Console.WriteLine(D);
         //
@@ -57,13 +58,13 @@ public class OctaveEnvironmentTest : OctaveEnvironment
     public void svdTest()
     {
         // Declare local matrices
-        mat u = OctaveEnvironment._, s = OctaveEnvironment._, v = OctaveEnvironment._;
+        Mat u = OctaveEnvironment._, s = OctaveEnvironment._, v = OctaveEnvironment._;
 
-        // Compute a new mat
-        mat M = magic(3) * 5;
+        // Compute a new Mat
+        Mat M = magic(3) * 5;
 
         // Compute the SVD
-        ret[u, s, v] = svd(M);
+        ret[u, s, v] = svd(new Matrix<double>((double[,])M));
 
         string str = u;
 
@@ -107,8 +108,8 @@ public class OctaveEnvironmentTest : OctaveEnvironment
 
     public class MyAlgorithm : OctaveEnvironment
     {
-        protected mat I, A, B;
-        protected mat U, S, V;
+        protected Mat I = _, A = _, B = _;
+        protected Mat U = _, S = _, V = _;
 
         public MyAlgorithm()
         {
@@ -123,7 +124,7 @@ public class OctaveEnvironmentTest : OctaveEnvironment
 
             B = A * I;
 
-            ret[U, S, V] = svd(B);
+            ret[U, S, V] = svd(new Matrix<double>((double[,])B));
 
             Console.WriteLine(U);
             Console.WriteLine(S);

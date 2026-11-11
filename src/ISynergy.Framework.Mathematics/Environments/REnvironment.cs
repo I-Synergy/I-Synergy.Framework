@@ -1,10 +1,6 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Environments;
@@ -19,7 +15,7 @@ public abstract class REnvironment
     ///   Creates a new vector.
     /// </summary>
     /// 
-    protected static vec c(params double[] values) // NOSONAR
+    protected static Vec c(params double[] values) // NOSONAR
     {
         return values;
     }
@@ -28,7 +24,7 @@ public abstract class REnvironment
     ///   Creates a new matrix.
     /// </summary>
     /// 
-    protected static mat matrix(double[] values, int rows, int cols) // NOSONAR
+    protected static Mat matrix(double[] values, int rows, int cols) // NOSONAR
     {
         return Matrix.Reshape(values, rows, cols, MatrixOrder.FortranColumnMajor);
     }
@@ -36,15 +32,15 @@ public abstract class REnvironment
     ///   Placeholder vector definition
     /// </summary>
     /// 
-    protected static vec _
+    protected static Vec _
     {
-        get { return new vec(null); }
+        get { return new Vec(null); }
     }
     /// <summary>
     ///   Vector definition operator.
     /// </summary>
     /// 
-    protected class vec
+    protected class Vec
     {
         /// <summary>
         ///   Inner vector object
@@ -53,10 +49,10 @@ public abstract class REnvironment
         public double[] vector { get; set; } // NOSONAR
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="vec"/> class.
+        ///   Initializes a new instance of the <see cref="Vec"/> class.
         /// </summary>
         ///
-        public vec(double[] values)
+        public Vec(double[] values)
         {
             this.vector = values;
         }
@@ -65,7 +61,7 @@ public abstract class REnvironment
         ///   Implements the operator -.
         /// </summary>
         /// 
-        public static vec operator -(vec v)
+        public static Vec operator -(Vec v)
         {
             return v;
         }
@@ -74,7 +70,7 @@ public abstract class REnvironment
         ///   Implements the operator &lt;.
         /// </summary>
         /// 
-        public static vec operator <(vec a, vec v)
+        public static Vec operator <(Vec a, Vec v)
         {
             a.vector = v.vector;
             return a;
@@ -84,27 +80,27 @@ public abstract class REnvironment
         ///   Implements the operator &gt;.
         /// </summary>
         /// 
-        public static vec operator >(vec a, vec v)
+        public static Vec operator >(Vec a, Vec v)
         {
             return a;
         }
 
         /// <summary>
         ///   Performs an implicit conversion from <see cref="T:System.Double[]"/>
-        ///   to <see cref="REnvironment.vec"/>.
+        ///   to <see cref="REnvironment.Vec"/>.
         /// </summary>
         /// 
-        public static implicit operator vec(double[] v)
+        public static implicit operator Vec(double[] v)
         {
-            return new vec(v);
+            return new Vec(v);
         }
         /// <summary>
         ///   Performs an implicit conversion from 
-        ///   <see cref="REnvironment.vec"/> 
+        ///   <see cref="REnvironment.Vec"/> 
         ///   to <see cref="T:System.Double[]"/>.
         /// </summary>
         /// 
-        public static implicit operator double[](vec v)
+        public static implicit operator double[](Vec v)
         {
             return v.vector;
         }
@@ -114,28 +110,28 @@ public abstract class REnvironment
     ///   Matrix definition operator.
     /// </summary>
     /// 
-    protected class mat
+    protected class Mat
     {
         /// <summary>
         ///   Inner matrix object.
         /// </summary>
         ///
-        public double[,] matrix { get; set; } // NOSONAR
+        public double[,] data { get; set; } // NOSONAR
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="mat"/> class.
+        ///   Initializes a new instance of the <see cref="Mat"/> class.
         /// </summary>
         ///
-        public mat(double[,] values)
+        public Mat(Matrix<double> values)
         {
-            this.matrix = values;
+            this.data = values.Array;
         }
 
         /// <summary>
         ///   Implements the operator -.
         /// </summary>
         /// 
-        public static mat operator -(mat v)
+        public static Mat operator -(Mat v)
         {
             return v;
         }
@@ -144,9 +140,9 @@ public abstract class REnvironment
         ///   Implements the operator &lt;.
         /// </summary>
         /// 
-        public static mat operator <(mat a, mat v)
+        public static Mat operator <(Mat a, Mat v)
         {
-            a.matrix = v.matrix;
+            a.data = v.data;
             return a;
         }
 
@@ -154,7 +150,7 @@ public abstract class REnvironment
         ///    Implements the operator &gt;.
         /// </summary>
         /// 
-        public static mat operator >(mat a, mat v)
+        public static Mat operator >(Mat a, Mat v)
         {
             return a;
         }
@@ -162,22 +158,22 @@ public abstract class REnvironment
         /// <summary>
         ///   Performs an implicit conversion from 
         ///   <see cref="T:System.Double[]"/> to 
-        ///   <see cref="REnvironment.mat"/>.
+        ///   <see cref="REnvironment.Mat"/>.
         /// </summary>
         /// 
-        public static implicit operator mat(double[,] v)
+        public static implicit operator Mat(double[,] v)
         {
-            return new mat(v);
+            return new Mat(new Matrix<double>(v));
         }
         /// <summary>
         ///   Performs an implicit conversion from 
-        ///   <see cref="REnvironment.mat"/> 
+        ///   <see cref="REnvironment.Mat"/> 
         ///   to <see cref="T:System.Double[]"/>.
         /// </summary>
         /// 
-        public static implicit operator double[,](mat v)
+        public static implicit operator double[,](Mat v)
         {
-            return v.matrix;
+            return v.data;
         }
     }
 }

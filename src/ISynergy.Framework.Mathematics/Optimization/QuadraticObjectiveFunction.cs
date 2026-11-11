@@ -1,15 +1,11 @@
-using ISynergy.Framework.Mathematics.Exceptions;
+﻿using ISynergy.Framework.Mathematics.Exceptions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Optimization.Constrained;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text;
+using ISynergy.Framework.Mathematics.Abstractions;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization;
@@ -131,7 +127,7 @@ namespace ISynergy.Framework.Mathematics.Optimization;
 ///     </para>
 /// </example>
 /// <seealso cref="GoldfarbIdnani" />
-public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
+public sealed class QuadraticObjectiveFunction : NonlinearObjectiveFunction, IEquatable<QuadraticObjectiveFunction>
 {
     /// <summary>
     ///     Creates a new objective function specified through a string.
@@ -139,15 +135,17 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
     /// <param name="quadraticTerms">A Hessian matrix of quadratic terms defining the quadratic objective function.</param>
     /// <param name="linearTerms">The vector of linear terms associated with <paramref name="quadraticTerms" />.</param>
     /// <param name="variables">The name for each variable in the problem.</param>
-    public QuadraticObjectiveFunction(double[,] quadraticTerms, double[] linearTerms, params string[] variables)
+    public QuadraticObjectiveFunction(Matrix<double> quadraticTerms, double[] linearTerms, params string[] variables)
     {
-        if (!quadraticTerms.IsSquare())
+        var hessian = quadraticTerms.Array;
+
+        if (!hessian.IsSquare())
             throw new DimensionMismatchException(nameof(quadraticTerms), "The matrix must be square.");
 
-        if (!quadraticTerms.IsSymmetric(rtol: 1e-6))
+        if (!hessian.IsSymmetric(rtol: 1e-6))
             throw new NonSymmetricMatrixException("The matrix must be symmetric.");
 
-        if (quadraticTerms.Rows() != linearTerms.Length)
+        if (hessian.Rows() != linearTerms.Length)
             throw new DimensionMismatchException(nameof(linearTerms),
                 "The vector of linear terms must have the same length as the Hessian matrix side.");
 
@@ -170,7 +168,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
             InnerIndices[i] = var;
         }
 
-        QuadraticTerms = quadraticTerms;
+        QuadraticTerms = hessian;
         LinearTerms = linearTerms;
         NumberOfVariables = LinearTerms.Length;
 
@@ -323,14 +321,14 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
 
     private double function(double[] input)
     {
-        var a = 0.5 * input.DotAndDot(QuadraticTerms, input);
+        var a = 0.5 * input.DotAndDot(new Matrix<double>(QuadraticTerms), input);
         var b = input.Dot(LinearTerms);
         return a + b + ConstantTerm;
     }
 
     private double[] gradient(double[] input)
     {
-        var g = QuadraticTerms.Dot(input);
+        var g = Matrix.Dot(new Matrix<double>(QuadraticTerms), input);
         g.Add(LinearTerms, g);
 
         return g;
@@ -429,7 +427,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
     /// </returns>
     public static bool TryParse(string str, CultureInfo culture, out QuadraticObjectiveFunction function)
     {
-        // TODO: implement this method without the try-catch block. // NOSONAR
+        // Math.NET parity: TryParse delegates to the parsing constructor and reports failure via FormatException; there is no separate non-throwing parser.
         try
         {
             function = new QuadraticObjectiveFunction(str, culture);
@@ -457,14 +455,14 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
     public static QuadraticObjectiveFunction operator *(double scalar, QuadraticObjectiveFunction a)
     {
         double[] linearTerms = a.LinearTerms.Multiply(scalar);
-        double[,] quadraticTerms = a.QuadraticTerms.Multiply(scalar);
+        double[,] quadraticTerms = new Matrix<double>(a.QuadraticTerms).Multiply(scalar);
         var constantTerm = a.ConstantTerm * scalar;
 
         var variables = new string[a.NumberOfVariables];
         for (var i = 0; i < variables.Length; i++)
             variables[i] = a.InnerIndices[i];
 
-        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
+        return new QuadraticObjectiveFunction(new Matrix<double>(quadraticTerms), linearTerms, variables)
         {
             ConstantTerm = constantTerm
         };
@@ -545,7 +543,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
             variables = Array.Empty<string>();
         }
 
-        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
+        return new QuadraticObjectiveFunction(new Matrix<double>(quadraticTerms), linearTerms, variables)
         {
             ConstantTerm = constantTerm
         };
@@ -568,7 +566,7 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
                 "The quadratic objective functions must have the same number of variables.");
 
         double[] linearTerms = a.LinearTerms.Subtract(b.LinearTerms);
-        double[,] quadraticTerms = a.QuadraticTerms.Subtract(b.QuadraticTerms);
+        double[,] quadraticTerms = new Matrix<double>(a.QuadraticTerms).Subtract(new Matrix<double>(b.QuadraticTerms));
         var constantTerm = a.ConstantTerm - b.ConstantTerm;
 
         string[] variables;
@@ -583,10 +581,79 @@ public class QuadraticObjectiveFunction : NonlinearObjectiveFunction
             variables = Array.Empty<string>();
         }
 
-        return new QuadraticObjectiveFunction(quadraticTerms, linearTerms, variables)
+        return new QuadraticObjectiveFunction(new Matrix<double>(quadraticTerms), linearTerms, variables)
         {
             ConstantTerm = constantTerm
         };
+    }
+
+    #endregion
+
+    #region Equality
+
+    /// <summary>
+    ///     Determines whether two quadratic objective functions are equal.
+    /// </summary>
+    /// <param name="left">The first objective function.</param>
+    /// <param name="right">The second objective function.</param>
+    /// <returns><c>true</c> if both are equal; otherwise <c>false</c>.</returns>
+    public static bool operator ==(QuadraticObjectiveFunction left, QuadraticObjectiveFunction right)
+    {
+        return Equals(left, right);
+    }
+
+    /// <summary>
+    ///     Determines whether two quadratic objective functions are different.
+    /// </summary>
+    /// <param name="left">The first objective function.</param>
+    /// <param name="right">The second objective function.</param>
+    /// <returns><c>true</c> if both differ; otherwise <c>false</c>.</returns>
+    public static bool operator !=(QuadraticObjectiveFunction left, QuadraticObjectiveFunction right)
+    {
+        return !Equals(left, right);
+    }
+
+    /// <summary>
+    ///     Determines whether the specified <see cref="object" /> is equal to this instance.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current instance.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
+    /// </returns>
+    public override bool Equals(object obj)
+    {
+        return Equals(obj as QuadraticObjectiveFunction);
+    }
+
+    /// <summary>
+    ///     Determines whether the specified objective function is equal to this instance.
+    /// </summary>
+    /// <param name="other">The objective function to compare with the current instance.</param>
+    /// <returns>
+    ///     <c>true</c> if the specified objective function is equal to this instance; otherwise, <c>false</c>.
+    /// </returns>
+    public bool Equals(QuadraticObjectiveFunction other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+
+        return NumberOfVariables == other.NumberOfVariables
+            && ExactComparisons.AreEqual(ConstantTerm ,other.ConstantTerm
+)            && LinearTerms.IsEqual(other.LinearTerms)
+            && QuadraticTerms.IsEqual(other.QuadraticTerms);
+    }
+
+    /// <summary>
+    ///     Returns a hash code for this instance.
+    /// </summary>
+    /// <returns>
+    ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+    /// </returns>
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(NumberOfVariables, ConstantTerm);
     }
 
     #endregion

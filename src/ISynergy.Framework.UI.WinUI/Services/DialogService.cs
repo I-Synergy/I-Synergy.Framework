@@ -137,7 +137,7 @@ public partial class DialogService : BaseDialogService, IDialogService, IDisposa
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResults.</returns>
-    public async Task<MessageBoxResults> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR
+    public async Task<MessageBoxResults> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
     {
         Argument.IsNotNullOrEmpty(message);
 
@@ -165,100 +165,12 @@ public partial class DialogService : BaseDialogService, IDialogService, IDisposa
             if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
                 dialog.FlowDirection = FlowDirection.RightToLeft;
 
-            switch (buttons)
-            {
-                case MessageBoxButtons.OKCancel:
-                    dialog.PrimaryButtonText = _languageService.GetString("Ok");
-                    dialog.CloseButtonText = _languageService.GetString("Cancel");
-
-                    try
-                    {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
-                    }
-                    break;
-                case MessageBoxButtons.YesNoCancel:
-                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
-                    dialog.SecondaryButtonText = _languageService.GetString("No");
-                    dialog.CloseButtonText = _languageService.GetString("Cancel");
-
-                    try
-                    {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                        dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
-                    }
-                    break;
-                case MessageBoxButtons.YesNo:
-                    dialog.PrimaryButtonText = _languageService.GetString("Yes");
-                    dialog.CloseButtonText = _languageService.GetString("No");
-
-                    try
-                    {
-                        dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
-                    }
-                    break;
-                default:
-                    dialog.CloseButtonText = _languageService.GetString("Ok");
-
-                    try
-                    {
-                        dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, ButtonStyleErrorMessage);
-                    }
-                    break;
-            }
+            ConfigureDialogButtons(dialog, buttons);
 
             var result = await OpenDialogAsync(dialog);
             dialog.Dispose();
 
-            switch (buttons)
-            {
-                case MessageBoxButtons.OKCancel:
-                    switch (result)
-                    {
-                        case ContentDialogResult.Primary:
-                            return MessageBoxResults.OK;
-                        default:
-                            return MessageBoxResults.Cancel;
-                    }
-                case MessageBoxButtons.YesNoCancel:
-                    switch (result)
-                    {
-                        case ContentDialogResult.Primary:
-                            return MessageBoxResults.Yes;
-                        case ContentDialogResult.Secondary:
-                            return MessageBoxResults.No;
-                        default:
-                            return MessageBoxResults.Cancel;
-                    }
-                case MessageBoxButtons.YesNo:
-                    switch (result)
-                    {
-                        case ContentDialogResult.Primary:
-                            return MessageBoxResults.Yes;
-                        default:
-                            return MessageBoxResults.No;
-                    }
-                default:
-                    return MessageBoxResults.OK;
-            }
+            return MapDialogResult(buttons, result);
         }
         catch (Exception ex)
         {
@@ -266,6 +178,92 @@ public partial class DialogService : BaseDialogService, IDialogService, IDisposa
             return MessageBoxResults.None;
         }
     }
+
+    /// <summary>
+    /// Sets the content-dialog button texts and styles for the requested button set.
+    /// </summary>
+    private void ConfigureDialogButtons(Window dialog, MessageBoxButtons buttons)
+    {
+        switch (buttons)
+        {
+            case MessageBoxButtons.OKCancel:
+                dialog.PrimaryButtonText = _languageService.GetString("Ok");
+                dialog.CloseButtonText = _languageService.GetString("Cancel");
+                ApplyButtonStyle(() =>
+                {
+                    dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                });
+                break;
+            case MessageBoxButtons.YesNoCancel:
+                dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                dialog.SecondaryButtonText = _languageService.GetString("No");
+                dialog.CloseButtonText = _languageService.GetString("Cancel");
+                ApplyButtonStyle(() =>
+                {
+                    dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    dialog.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                });
+                break;
+            case MessageBoxButtons.YesNo:
+                dialog.PrimaryButtonText = _languageService.GetString("Yes");
+                dialog.CloseButtonText = _languageService.GetString("No");
+                ApplyButtonStyle(() =>
+                {
+                    dialog.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                });
+                break;
+            default:
+                dialog.CloseButtonText = _languageService.GetString("Ok");
+                ApplyButtonStyle(() =>
+                {
+                    dialog.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+                });
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Applies the configured default dialog button style, logging (but not throwing) if unavailable.
+    /// </summary>
+    private void ApplyButtonStyle(Action applyStyles)
+    {
+        try
+        {
+            applyStyles();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, ButtonStyleErrorMessage);
+        }
+    }
+
+    /// <summary>
+    /// Maps a content-dialog result to the framework's message-box result for the given button set.
+    /// </summary>
+    private static MessageBoxResults MapDialogResult(MessageBoxButtons buttons, ContentDialogResult result) =>
+        buttons switch
+        {
+            MessageBoxButtons.OKCancel => result switch
+            {
+                ContentDialogResult.Primary => MessageBoxResults.OK,
+                _ => MessageBoxResults.Cancel
+            },
+            MessageBoxButtons.YesNoCancel => result switch
+            {
+                ContentDialogResult.Primary => MessageBoxResults.Yes,
+                ContentDialogResult.Secondary => MessageBoxResults.No,
+                _ => MessageBoxResults.Cancel
+            },
+            MessageBoxButtons.YesNo => result switch
+            {
+                ContentDialogResult.Primary => MessageBoxResults.Yes,
+                _ => MessageBoxResults.No
+            },
+            _ => MessageBoxResults.OK
+        };
 
     /// <summary>
     /// Shows the dialog asynchronous.
@@ -466,87 +464,126 @@ public partial class DialogService : BaseDialogService, IDialogService, IDisposa
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <param name="dialog">The dialog.</param>
     /// <param name="viewmodel">The viewmodel.</param>
-    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel) // NOSONAR
+    public async Task CreateDialogAsync<TEntity>(IWindow dialog, IViewModelDialog<TEntity> viewmodel)
     {
         Argument.IsNotNull(dialog);
         Argument.IsNotNull(viewmodel);
 
-        if (dialog is Window window)
+        if (dialog is not Window window)
+            return;
+
+        try
         {
-            try
-            {
-                // Safely set XamlRoot
-                if (Application.MainWindow is not null && Application.MainWindow.Content is not null)
-                {
-                    try
-                    {
-                        window.XamlRoot = Application.MainWindow.Content.XamlRoot;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, "Failed to set XamlRoot for dialog");
-                    }
-                }
+            TrySetXamlRoot(window);
 
-                if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
-                    window.FlowDirection = FlowDirection.RightToLeft;
+            if (CultureInfo.GetCultureInfo(_localSettings.Language).TextInfo.IsRightToLeft)
+                window.FlowDirection = FlowDirection.RightToLeft;
 
-                window.ViewModel = viewmodel;
+            window.ViewModel = viewmodel;
 
-                window.PrimaryButtonCommand = viewmodel.SubmitCommand;
-                window.SecondaryButtonCommand = viewmodel.CancelCommand;
-                window.CloseButtonCommand = viewmodel.CancelCommand;
+            window.PrimaryButtonCommand = viewmodel.SubmitCommand;
+            window.SecondaryButtonCommand = viewmodel.CancelCommand;
+            window.CloseButtonCommand = viewmodel.CancelCommand;
 
-                try
-                {
-                    window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                    window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                    window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, ButtonStyleErrorMessage);
-                }
+            ApplyDialogButtonStyles(window);
 
-                EventHandler? viewModelClosedHandler = null;
-                viewModelClosedHandler = (sender, e) =>
-                {
-                    if (sender is IViewModelDialog<TEntity> vm)
-                        vm.Closed -= viewModelClosedHandler;
-
-                    HandleViewModelClosedAsync(window).SafeFireAndForget();
-                };
-
-                viewmodel.Closed += viewModelClosedHandler;
-
-                try
-                {
-                    await viewmodel.InitializeAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error initializing viewmodel");
-                    viewmodel.Closed -= viewModelClosedHandler;
-                    return;
-                }
-
-                try
-                {
-                    await OpenDialogAsync(window);
-                }
-                catch (Exception ex) // NOSONAR - log-and-rethrow at the dialog boundary
-                {
-                    _logger.LogError(ex, "Error opening dialog");
-                    viewmodel.Closed -= viewModelClosedHandler;
-                    throw;
-                }
-            }
-            catch (Exception ex) // NOSONAR - log-and-rethrow at the application boundary
-            {
-                _logger.LogError(ex, "Error creating dialog");
-                throw;
-            }
+            await InitializeAndOpenDialogAsync(window, viewmodel);
         }
+        catch (Exception ex) when (LogDialogCreationFailure(ex))
+        {
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Sets the dialog's XamlRoot from the main window content, logging (without throwing) if unavailable.
+    /// </summary>
+    private void TrySetXamlRoot(Window window)
+    {
+        if (Application.MainWindow is null || Application.MainWindow.Content is null)
+            return;
+
+        try
+        {
+            window.XamlRoot = Application.MainWindow.Content.XamlRoot;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to set XamlRoot for dialog");
+        }
+    }
+
+    /// <summary>
+    /// Applies the configured default button styles, logging (without throwing) if unavailable.
+    /// </summary>
+    private void ApplyDialogButtonStyles(Window window)
+    {
+        try
+        {
+            window.PrimaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+            window.SecondaryButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+            window.CloseButtonStyle = (Microsoft.UI.Xaml.Style)Microsoft.UI.Xaml.Application.Current.Resources[DefaultDialogButtonStyleKey];
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, ButtonStyleErrorMessage);
+        }
+    }
+
+    /// <summary>
+    /// Wires the Closed handler, initializes the view model and opens the dialog, detaching the
+    /// handler and rethrowing if any step fails.
+    /// </summary>
+    private async Task InitializeAndOpenDialogAsync<TEntity>(Window window, IViewModelDialog<TEntity> viewmodel)
+    {
+        EventHandler? viewModelClosedHandler = null;
+        viewModelClosedHandler = (sender, e) =>
+        {
+            if (sender is IViewModelDialog<TEntity> vm)
+                vm.Closed -= viewModelClosedHandler;
+
+            HandleViewModelClosedAsync(window).SafeFireAndForget();
+        };
+
+        viewmodel.Closed += viewModelClosedHandler;
+
+        try
+        {
+            await viewmodel.InitializeAsync();
+        }
+        catch (Exception ex) when (LogViewModelInitializationFailure(ex))
+        {
+            viewmodel.Closed -= viewModelClosedHandler;
+            return;
+        }
+
+        try
+        {
+            await OpenDialogAsync(window);
+        }
+        catch (Exception ex) when (LogDialogOpenFailure(ex))
+        {
+            viewmodel.Closed -= viewModelClosedHandler;
+            throw;
+        }
+    }
+
+    private bool LogDialogCreationFailure(Exception ex)
+    {
+        _logger.LogError(ex, "Error creating dialog");
+        return false;
+    }
+
+    private bool LogViewModelInitializationFailure(Exception ex)
+    {
+        _logger.LogError(ex, "Error initializing viewmodel");
+        return false;
+    }
+
+    private bool LogDialogOpenFailure(Exception ex)
+    {
+        _logger.LogError(ex, "Error opening dialog");
+        return false;
     }
 
     private async Task<ContentDialogResult> OpenDialogAsync(Window dialog)
@@ -554,11 +591,9 @@ public partial class DialogService : BaseDialogService, IDialogService, IDisposa
         Argument.IsNotNull(dialog);
 
         // Use semaphore to prevent multiple dialogs from being opened simultaneously
-        var semaphoreAcquired = false;
         try
         {
             await _dialogSemaphore.WaitAsync();
-            semaphoreAcquired = true;
         }
         catch (Exception ex)
         {
@@ -651,17 +686,15 @@ public partial class DialogService : BaseDialogService, IDialogService, IDisposa
         }
         finally
         {
-            // Only release if we successfully acquired the semaphore
-            if (semaphoreAcquired) // NOSONAR - releasing an unacquired semaphore would throw
+            // The semaphore was always acquired above: if WaitAsync had thrown, this method would
+            // have returned before reaching this point, so it is safe to release unconditionally.
+            try
             {
-                try
-                {
-                    _dialogSemaphore.Release();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error releasing dialog semaphore");
-                }
+                _dialogSemaphore.Release();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error releasing dialog semaphore");
             }
         }
     }

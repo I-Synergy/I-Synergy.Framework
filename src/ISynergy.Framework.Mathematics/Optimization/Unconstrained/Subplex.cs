@@ -29,12 +29,6 @@ using ISynergy.Framework.Mathematics.Convergence;
 using ISynergy.Framework.Mathematics.Optimization.Base;
 using System.Diagnostics;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
-#pragma warning disable S1854 // initial assignments before loop reassignment are intentional in ported algorithms
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Unconstrained;
@@ -202,7 +196,7 @@ public class Subplex : BaseOptimizationMethod, IOptimizationMethod<NelderMeadSta
 
     private NelderMeadStatus sbplx_minimize()
     {
-        var ret = NelderMeadStatus.Success;
+        NelderMeadStatus ret;
 
         var x = Solution;
         Value = Function(x);
@@ -222,7 +216,7 @@ public class Subplex : BaseOptimizationMethod, IOptimizationMethod<NelderMeadSta
             double normi = 0;
             double normdx = 0;
             int ns, nsubs = 0;
-            var nevals = Convergence.Evaluations;
+            int nevals;
             double fdiff, fdiff_max = 0;
 
             Array.Copy(x, xprev, x.Length);
@@ -376,36 +370,35 @@ public class Subplex : BaseOptimizationMethod, IOptimizationMethod<NelderMeadSta
 
             // compute change in optimal point
             for (var i = 0; i < x.Length; i++)
-                dx[i] = x[i] - xprev[i];
-
-            // setting step sizes
             {
-                double scale;
-                if (nsubs == 1)
-                {
-                    scale = psi;
-                }
-                else
-                {
-                    double stepnorm = 0, dxnorm = 0;
-                    for (var i = 0; i < dx.Length; i++)
-                    {
-                        stepnorm += Math.Abs(xstep[i]);
-                        dxnorm += Math.Abs(dx[i]);
-                    }
-
-                    scale = dxnorm / stepnorm;
-
-                    if (scale < omega)
-                        scale = omega;
-
-                    if (scale > 1 / omega)
-                        scale = 1 / omega;
-                }
-                Trace.WriteLine("sbplx: stepsize scale factor = " + scale);
-                for (var i = 0; i < xstep.Length; i++)
-                    xstep[i] = dx[i] == 0 ? -(xstep[i] * scale) : Special.Sign(xstep[i] * scale, dx[i]);
+                dx[i] = x[i] - xprev[i];
             }
+
+            double scale__r1;
+            if (nsubs == 1)
+            {
+                scale__r1 = psi;
+            }
+            else
+            {
+                double stepnorm__r2 = 0, dxnorm__r3 = 0;
+                for (var i__r4 = 0; i__r4 < dx.Length; i__r4++)
+                {
+                    stepnorm__r2 += Math.Abs(xstep[i__r4]);
+                    dxnorm__r3 += Math.Abs(dx[i__r4]);
+                }
+
+                scale__r1 = dxnorm__r3 / stepnorm__r2;
+
+                if (scale__r1 < omega)
+                    scale__r1 = omega;
+
+                if (scale__r1 > 1 / omega)
+                    scale__r1 = 1 / omega;
+            }
+            Trace.WriteLine("sbplx: stepsize scale factor = " + scale__r1);
+            for (var i__r4 = 0; i__r4 < xstep.Length; i__r4++)
+                xstep[i__r4] = dx[i__r4] == 0 ? -(xstep[i__r4] * scale__r1) : Special.Sign(xstep[i__r4] * scale__r1, dx[i__r4]);
         }
     }
     /// <summary>

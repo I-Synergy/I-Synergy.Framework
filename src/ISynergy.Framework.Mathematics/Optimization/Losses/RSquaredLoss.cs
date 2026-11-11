@@ -1,12 +1,8 @@
+using ISynergy.Framework.Mathematics.Abstractions;
 using ISynergy.Framework.Mathematics.Matrices;
 using ISynergy.Framework.Mathematics.Statistics;
 using ISynergy.Framework.Mathematics.Vectors;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
 
 namespace ISynergy.Framework.Mathematics.Optimization.Losses;
@@ -70,11 +66,11 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
     /// </summary>
     /// <param name="expected">The expected outputs (ground truth).</param>
     /// <param name="numberOfInputs">The number if variables being fit.</param>
-    public RSquaredLoss(int numberOfInputs, double[][] expected)
+    public RSquaredLoss(int numberOfInputs, Jagged<double> expected)
     {
-        Expected = expected;
+        Expected = expected.Array;
         NumberOfInputs = numberOfInputs;
-        Weights = Vector.Ones(expected.Length);
+        Weights = Vector.Ones(expected.Array.Length);
     }
 
     /// <summary>
@@ -133,10 +129,10 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
             // Return ordinary R-Squared
             return r2;
 
-        if (r2 == 1)
+        if (ExactComparisons.AreEqual(r2 ,1))
             return 1;
 
-        if (n - p == 1.0)
+        if (ExactComparisons.AreEqual(n - p ,1.0))
             return double.NaN;
 
         // Return adjusted R-Squared
@@ -186,7 +182,7 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
             // Return adjusted R-Squared
             for (var c = 0; c < M; c++)
             {
-                if (r2[c] == 1.0)
+                if (ExactComparisons.AreEqual(r2[c] ,1.0))
                     continue;
 
                 if (N == P + 1)

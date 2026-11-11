@@ -1,5 +1,6 @@
-using ISynergy.Framework.Mathematics.Formats;
+﻿using ISynergy.Framework.Mathematics.Formats;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ISynergy.Framework.Mathematics.Abstractions;
 
 namespace ISynergy.Framework.Mathematics.Matrices;
 [TestClass]
@@ -17,7 +18,7 @@ public class MatrixFormatTest
         double[,] I = Matrix.Identity(size: 2);
 
         // Matrix multiplication
-        double[,] b = a.Dot(I);
+                double[,] b = Matrix.Dot(new Matrix<double>(a), new Matrix<double>(I));
 
         Assert.AreEqual(1, b[0, 0]);
         Assert.AreEqual(2, b[0, 1]);

@@ -2,12 +2,8 @@
 using ISynergy.Framework.Mathematics.Formats;
 using ISynergy.Framework.Mathematics.Formats.Base;
 
-#pragma warning disable S1244 // float equality is intentional in numerical algorithms
-#pragma warning disable S3776 // cognitive complexity is inherent in numerical algorithms
-#pragma warning disable S2368 // object overloads are part of the library API
-#pragma warning disable S1905 // casts may be intentional for type clarity
-#pragma warning disable S1199 // nested blocks required in algorithm implementation
 
+using ISynergy.Framework.Mathematics.Abstractions;
 namespace ISynergy.Framework.Mathematics.Matrices;
 
 public static partial class Jagged
@@ -63,24 +59,24 @@ public static partial class Jagged
     /// a number less than MinValue or greater than MaxValue. This parameter is passed
     /// uninitialized. </result>
     /// 
-    public static bool TryParse(string s, IMatrixFormatProvider provider, out double[][] matrix)
+    public static bool TryParse(string s, IMatrixFormatProvider provider, out Jagged<double> matrix)
     {
-        // TODO: Create a proper TryParse method without // NOSONAR
-        //       resorting to a underlying try-catch block.
+        // Math.NET parity: the matrix formatter has no non-throwing parse path, so this
+        // wrapper delegates to Parse and maps format/argument errors to a failed conversion.
         try
         {
-            matrix = Parse(s, provider);
+            matrix = new Jagged<double>(Parse(s, provider));
         }
         catch (FormatException)
         {
-            matrix = null;
+            matrix = default;
         }
         catch (ArgumentNullException)
         {
-            matrix = null;
+            matrix = default;
         }
 
-        return matrix is not null;
+        return matrix.Array is not null;
     }
 
     #endregion

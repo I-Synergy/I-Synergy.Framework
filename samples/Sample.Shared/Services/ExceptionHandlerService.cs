@@ -9,6 +9,6 @@ public class ExceptionHandlerService(
     IBusyService busyService,
     ILanguageService languageService,
     IMessengerService messengerService,
-    ILogger<BaseExceptionHandlerService> logger) : BaseExceptionHandlerService(busyService, languageService, messengerService, logger)
+    ILogger<ExceptionHandlerService> logger) : BaseExceptionHandlerService(busyService, languageService, messengerService, logger)
 {
 }

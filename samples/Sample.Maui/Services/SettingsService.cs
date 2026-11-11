@@ -12,9 +12,6 @@ public class SettingsService : ISettingsService, IReloadable
 {
     private const string IsFirstRunKey = nameof(GlobalSettings.IsFirstRun);
 
-    private readonly IMessengerService _messengerService;
-    private readonly ILogger _logger;
-
     private LocalSettings? _localSettings;
     private RoamingSettings? _roamingSettings;
     private GlobalSettings? _globalSettings;
@@ -36,9 +33,7 @@ public class SettingsService : ISettingsService, IReloadable
     /// </summary>
     public SettingsService(IMessengerService messengerService, ILogger<SettingsService> logger)
     {
-        _messengerService = messengerService;
-        _logger = logger;
-        _logger.LogTrace("SettingsService instance created with ID: {InstanceId}", Guid.NewGuid());
+        logger.LogTrace("SettingsService instance created with ID: {InstanceId}", Guid.NewGuid());
 
         _localSettings = new LocalSettings();
         _roamingSettings = new RoamingSettings();
@@ -47,7 +42,7 @@ public class SettingsService : ISettingsService, IReloadable
         LoadLocalSettings();
         LoadFirstRun();
 
-        _messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
+        messengerService.Register<UserSignedInMessage>(this, OnUserSignedIn, keepTargetAlive: true);
     }
 
     private async void OnUserSignedIn(UserSignedInMessage message) => await ReloadAsync();
@@ -72,39 +67,12 @@ public class SettingsService : ISettingsService, IReloadable
 
             foreach (var property in properties.EnsureNotNull())
             {
-                var targetType = property.PropertyType;
-                var underlyingType = Nullable.GetUnderlyingType(targetType);
-
-                if (underlyingType != null)
-                    targetType = underlyingType;
+                var targetType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
                 if (!Preferences.Default.ContainsKey(property.Name))
                     continue;
 
-                object? value;
-
-                if (_supportedTypes.Contains(targetType))
-                {
-                    value = targetType switch
-                    {
-                        Type t when t == typeof(string) => Preferences.Default.Get(property.Name, default(string)),
-                        Type t when t == typeof(int) => Preferences.Default.Get(property.Name, default(int)),
-                        Type t when t == typeof(bool) => Preferences.Default.Get(property.Name, default(bool)),
-                        Type t when t == typeof(long) => Preferences.Default.Get(property.Name, default(long)),
-                        Type t when t == typeof(double) => Preferences.Default.Get(property.Name, default(double)),
-                        Type t when t == typeof(float) => Preferences.Default.Get(property.Name, default(float)),
-                        Type t when t == typeof(DateTime) => Preferences.Default.Get(property.Name, default(DateTime)),
-                        Type t when t == typeof(DateTimeOffset) => Preferences.Default.Get(property.Name, default(DateTimeOffset)),
-                        _ => null
-                    };
-                }
-                else
-                {
-                    var json = Preferences.Default.Get(property.Name, default(string));
-                    value = !string.IsNullOrEmpty(json)
-                        ? JsonSerializer.Deserialize(json, targetType)
-                        : null;
-                }
+                var value = ReadPreferenceValue(property.Name, targetType);
 
                 if (value is null)
                     continue;
@@ -116,6 +84,30 @@ public class SettingsService : ISettingsService, IReloadable
         {
             _localSettings = new LocalSettings();
         }
+    }
+
+    private object? ReadPreferenceValue(string name, Type targetType)
+    {
+        if (!_supportedTypes.Contains(targetType))
+        {
+            var json = Preferences.Default.Get(name, default(string));
+            return !string.IsNullOrEmpty(json)
+                ? JsonSerializer.Deserialize(json, targetType)
+                : null;
+        }
+
+        return targetType switch
+        {
+            Type t when t == typeof(string) => Preferences.Default.Get(name, default(string)),
+            Type t when t == typeof(int) => Preferences.Default.Get(name, default(int)),
+            Type t when t == typeof(bool) => Preferences.Default.Get(name, default(bool)),
+            Type t when t == typeof(long) => Preferences.Default.Get(name, default(long)),
+            Type t when t == typeof(double) => Preferences.Default.Get(name, default(double)),
+            Type t when t == typeof(float) => Preferences.Default.Get(name, default(float)),
+            Type t when t == typeof(DateTime) => Preferences.Default.Get(name, default(DateTime)),
+            Type t when t == typeof(DateTimeOffset) => Preferences.Default.Get(name, default(DateTimeOffset)),
+            _ => null
+        };
     }
 
     public bool SaveLocalSettings()

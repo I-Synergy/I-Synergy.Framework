@@ -3,6 +3,12 @@ using Sample.EventSourcing.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// "http+https://eventsourcing-api" is an Aspire service-discovery address resolved at runtime to
+// the API's actual URL; it is a well-known in-cluster service name, not an absolute endpoint.
+#pragma warning disable S1075 // documented Aspire service-discovery endpoint
+const string EventsourcingApiAddress = "http+https://eventsourcing-api";
+#pragma warning restore S1075
+
 // ── Blazor Server ─────────────────────────────────────────────────────────────
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -17,11 +23,11 @@ builder.Services.AddScoped<TenantContext>();
 // ── Typed HTTP client for the Orders API ─────────────────────────────────────
 // "http+https://eventsourcing-api" is resolved by Aspire service discovery to the API's actual URL.
 builder.Services.AddHttpClient<OrdersApiClient>(client =>
-    client.BaseAddress = new Uri("http+https://eventsourcing-api")); // NOSONAR - Aspire service discovery URI resolved at runtime
+    client.BaseAddress = new Uri(EventsourcingApiAddress));
 
 // ── Dev token provider (Development-only POST /dev/token) ─────────────────────
 builder.Services.AddHttpClient<DevTokenProvider>(client =>
-    client.BaseAddress = new Uri("http+https://eventsourcing-api")); // NOSONAR - Aspire service discovery URI resolved at runtime
+    client.BaseAddress = new Uri(EventsourcingApiAddress));
 
 // ── Health checks ─────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
@@ -43,4 +49,4 @@ app.MapHealthChecks("/health");
 app.MapRazorComponents<Sample.EventSourcing.Web.Components.App>()
     .AddInteractiveServerRenderMode();
 
-app.Run();
+await app.RunAsync();

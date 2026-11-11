@@ -82,7 +82,7 @@ internal class DocumentService : IDocumentService
     /// <param name="exportAsPdf">if set to <c>true</c> [export as PDF].</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task.</returns>
-    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default) // NOSONAR S3776
+    public Task<Stream> GenerateDocumentAsync<TDocument, TDetails>(DocumentRequest<TDocument, TDetails> documentRequest, bool exportAsPdf = false, CancellationToken cancellationToken = default)
     {
         Argument.IsNotNull(documentRequest);
 
@@ -95,91 +95,10 @@ internal class DocumentService : IDocumentService
             {
                 using (document = new WordDocument(stream, global::Syncfusion.DocIO.FormatType.Docx))
                 {
-                    if (documentRequest.Stationery is { } imageArray && imageArray.Length > 0)
-                    {
-                        //Adds picture watermark to the document.
-                        var section = document.Sections[0];
-                        var paragraph = section.HeadersFooters.Header.AddParagraph();
-                        var picture = paragraph.AppendPicture(imageArray);
-                        picture.TextWrappingStyle = TextWrappingStyle.Behind;
-                        picture.Width = section.PageSetup.PageSize.Width;
-                        picture.Height = section.PageSetup.PageSize.Height;
-                        picture.HorizontalOrigin = HorizontalOrigin.Page;
-                        picture.VerticalOrigin = VerticalOrigin.Page;
-                    }
-
-                    var dataSet = new MailMergeDataSet();
-                    var commands = new List<DictionaryEntry>();
-
-                    var documentDataTable = new MailMergeDataTable(nameof(documentRequest.Document), documentRequest.Document);
-                    dataSet.Add(documentDataTable);
-                    commands.Add(new DictionaryEntry(documentDataTable.GroupName, string.Empty));
-
-                    var detailsDataTable = new MailMergeDataTable(nameof(documentRequest.DocumentDetails), documentRequest.DocumentDetails);
-                    dataSet.Add(detailsDataTable);
-                    commands.Add(new DictionaryEntry(detailsDataTable.GroupName, string.Empty));
-
-                    var alternativesDataTable = new MailMergeDataTable(nameof(documentRequest.DocumentAlternatives), documentRequest.DocumentAlternatives);
-                    dataSet.Add(alternativesDataTable);
-                    commands.Add(new DictionaryEntry(alternativesDataTable.GroupName, string.Empty));
-
-                    document.MailMerge.MergeImageField += (sender, args) =>
-                    {
-                        // Get the image from disk during Merge.
-                        if (args.FieldName == "Image")
-                            mailMergeImageParagraph.Add(args.CurrentMergeField.OwnerParagraph);
-                    };
-
-                    document.MailMerge.RemoveEmptyParagraphs = true;
-                    document.MailMerge.ExecuteNestedGroup(dataSet, commands);
-
-                    foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull()) // NOSONAR
-                    {
-                        if (paragraph.ChildEntities is not null)
-                        {
-                            foreach (ParagraphItem paraItem in paragraph.ChildEntities.EnsureNotNull()) // NOSONAR
-                            {
-                                if (paraItem is WPicture picture && paragraph.OwnerTextBody is WTableCell cell)
-                                {
-                                    //Get the cell width and reduce the 5 points from total width
-                                    //to avoid the image overlapping on the cell borders.
-                                    var newWidth = cell.Width - 10;
-
-                                    //Check whether the image width exceeds the cell width.
-                                    if (picture.Width > newWidth)
-                                    {
-                                        var originalWidth = picture.Width;
-                                        var originalHeight = picture.Height;
-
-                                        var nPercentH = newWidth / originalWidth;
-
-                                        //Scaling the image to the cell width.
-                                        picture.Height = Math.Max((int)Math.Round(originalHeight * nPercentH), 1) - 10; // Just in case;
-                                        picture.Width = newWidth;
-                                    }
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    if (exportAsPdf)
-                    {
-                        using (var iORenderer = new DocIORenderer())
-                        {
-                            iORenderer.Settings.ChartRenderingOptions.ImageFormat = global::Syncfusion.OfficeChart.ExportImageFormat.Jpeg;
-                            iORenderer.Settings.EmbedFonts = true;
-
-                            var pdfDocument = iORenderer.ConvertToPDF(document);
-                            pdfDocument.Save(result);
-                            pdfDocument.Close();
-                        }
-                    }
-                    else
-                    {
-                        document.Save(result, global::Syncfusion.DocIO.FormatType.Docx);
-                    }
+                    AddStationeryWatermark(document, documentRequest.Stationery);
+                    MergeDocument(document, documentRequest);
+                    ScaleMailMergeImages();
+                    ExportDocument(document, result, exportAsPdf);
                 }
             }
         }
@@ -192,6 +111,121 @@ internal class DocumentService : IDocumentService
         }
 
         return Task.FromResult(result);
+    }
+
+    /// <summary>
+    /// Adds the stationery image as a page watermark, if a stationery image was supplied.
+    /// </summary>
+    /// <param name="document">The document to add the watermark to.</param>
+    /// <param name="imageArray">The stationery image.</param>
+    private static void AddStationeryWatermark(WordDocument document, byte[]? imageArray)
+    {
+        if (imageArray is null || imageArray.Length == 0)
+            return;
+
+        //Adds picture watermark to the document.
+        var section = document.Sections[0];
+        var paragraph = section.HeadersFooters.Header.AddParagraph();
+        var picture = paragraph.AppendPicture(imageArray);
+        picture.TextWrappingStyle = TextWrappingStyle.Behind;
+        picture.Width = section.PageSetup.PageSize.Width;
+        picture.Height = section.PageSetup.PageSize.Height;
+        picture.HorizontalOrigin = HorizontalOrigin.Page;
+        picture.VerticalOrigin = VerticalOrigin.Page;
+    }
+
+    /// <summary>
+    /// Executes the nested mail merge of the document, document details and alternatives.
+    /// </summary>
+    /// <typeparam name="TDocument">The type of the document.</typeparam>
+    /// <typeparam name="TDetails">The type of the document details.</typeparam>
+    /// <param name="document">The document to merge into.</param>
+    /// <param name="documentRequest">The document request containing the merge data.</param>
+    private void MergeDocument<TDocument, TDetails>(WordDocument document, DocumentRequest<TDocument, TDetails> documentRequest)
+    {
+        var dataSet = new MailMergeDataSet();
+        var commands = new List<DictionaryEntry>();
+
+        var documentDataTable = new MailMergeDataTable(nameof(documentRequest.Document), documentRequest.Document);
+        dataSet.Add(documentDataTable);
+        commands.Add(new DictionaryEntry(documentDataTable.GroupName, string.Empty));
+
+        var detailsDataTable = new MailMergeDataTable(nameof(documentRequest.DocumentDetails), documentRequest.DocumentDetails);
+        dataSet.Add(detailsDataTable);
+        commands.Add(new DictionaryEntry(detailsDataTable.GroupName, string.Empty));
+
+        var alternativesDataTable = new MailMergeDataTable(nameof(documentRequest.DocumentAlternatives), documentRequest.DocumentAlternatives);
+        dataSet.Add(alternativesDataTable);
+        commands.Add(new DictionaryEntry(alternativesDataTable.GroupName, string.Empty));
+
+        document.MailMerge.MergeImageField += (sender, args) =>
+        {
+            // Get the image from disk during Merge.
+            if (args.FieldName == "Image")
+                mailMergeImageParagraph.Add(args.CurrentMergeField.OwnerParagraph);
+        };
+
+        document.MailMerge.RemoveEmptyParagraphs = true;
+        document.MailMerge.ExecuteNestedGroup(dataSet, commands);
+    }
+
+    /// <summary>
+    /// Scales the merged images down to the width of the table cell that contains them.
+    /// </summary>
+    private void ScaleMailMergeImages()
+    {
+        foreach (var paragraph in mailMergeImageParagraph.EnsureNotNull())
+        {
+            if (paragraph.OwnerTextBody is not WTableCell cell)
+                continue;
+
+            var picture = paragraph.ChildEntities.EnsureNotNull().OfType<WPicture>().FirstOrDefault();
+            if (picture is null)
+                continue;
+
+            //Get the cell width and reduce the 5 points from total width
+            //to avoid the image overlapping on the cell borders.
+            var newWidth = cell.Width - 10;
+
+            //Check whether the image width exceeds the cell width.
+            if (picture.Width > newWidth)
+            {
+                var originalWidth = picture.Width;
+                var originalHeight = picture.Height;
+
+                var nPercentH = newWidth / originalWidth;
+
+                //Scaling the image to the cell width.
+                picture.Height = Math.Max((int)Math.Round(originalHeight * nPercentH), 1) - 10; // Just in case;
+                picture.Width = newWidth;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Writes the merged document to the result stream, either as PDF or as Docx.
+    /// </summary>
+    /// <param name="document">The merged document.</param>
+    /// <param name="result">The stream to write to.</param>
+    /// <param name="exportAsPdf">if set to <c>true</c> the document is exported as PDF.</param>
+    private static void ExportDocument(WordDocument document, Stream result, bool exportAsPdf)
+    {
+        if (exportAsPdf)
+        {
+            using (var iORenderer = new DocIORenderer())
+            {
+                iORenderer.Settings.ChartRenderingOptions.ImageFormat = global::Syncfusion.OfficeChart.ExportImageFormat.Jpeg;
+                iORenderer.Settings.EmbedFonts = true;
+
+                var pdfDocument = iORenderer.ConvertToPDF(document);
+                pdfDocument.Save(result);
+                pdfDocument.Close();
+            }
+        }
+        else
+        {
+            document.Save(result, global::Syncfusion.DocIO.FormatType.Docx);
+        }
     }
 
     /// <summary>

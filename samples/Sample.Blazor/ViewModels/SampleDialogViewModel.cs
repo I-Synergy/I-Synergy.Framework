@@ -6,7 +6,7 @@ namespace Sample.ViewModels;
 
 public class SampleDialogViewModel : ViewModelDialog<Budget>
 {
-    public SampleDialogViewModel(ICommonServices commonServices, ILogger<ViewModelDialog<Budget>> logger) : base(commonServices, logger)
+    public SampleDialogViewModel(ICommonServices commonServices, ILogger<SampleDialogViewModel> logger) : base(commonServices, logger)
     {
     }
 }

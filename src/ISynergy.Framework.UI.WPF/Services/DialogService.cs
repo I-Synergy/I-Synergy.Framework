@@ -96,7 +96,7 @@ public class DialogService : BaseDialogService, IDialogService
     /// <param name="buttons">The buttons.</param>
     /// <param name="notificationTypes"></param>
     /// <returns>MessageBoxResults.</returns>
-    public Task<MessageBoxResults> ShowMessageAsync(string message, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default) // NOSONAR - default value required by interface
+    public Task<MessageBoxResults> ShowMessageAsync(string message, string title, MessageBoxButtons buttons = MessageBoxButtons.OK, NotificationTypes notificationTypes = NotificationTypes.Default)
     {
         var button = System.Windows.MessageBoxButton.OK;
 
@@ -283,15 +283,24 @@ public class DialogService : BaseDialogService, IDialogService
             {
                 await viewmodel.InitializeAsync();
             }
-            catch (Exception ex) // NOSONAR - log-and-rethrow at the dialog boundary
+            catch (Exception ex) when (LogViewModelInitializationFailure(ex))
             {
-                _logger?.LogError(ex, "Error initializing viewmodel");
                 viewmodel.Closed -= ViewModelClosedHandler;
                 throw;
             }
 
             await window.ShowAsync<TEntity>();
         }
+    }
+
+    /// <summary>
+    /// Logs a ViewModel initialization failure and returns <c>false</c> so the original exception
+    /// keeps propagating unchanged (exception-filter logging pattern that satisfies S2139).
+    /// </summary>
+    private bool LogViewModelInitializationFailure(Exception ex)
+    {
+        _logger?.LogError(ex, "Error initializing viewmodel");
+        return false;
     }
 
     /// <summary>
