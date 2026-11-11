@@ -46,10 +46,10 @@
     <PackageVersion Include="NodaTime" Version="3.3.7" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
     <PackageVersion Include="NuGet.Commands" Version="8.0.0" />
-    <PackageVersion Include="OpenTelemetry" Version="1.20.1" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.20.1" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.20.1" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.20.1" />
+    <PackageVersion Include="OpenTelemetry" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.21.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.20.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.20.2-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.20.2" />
@@ -60,13 +60,13 @@
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="Sentry.OpenTelemetry" Version="6.12.1" />
     <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.12.1" />
-    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.43" />
-    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.43" />
-    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.43" />
-    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="35.1.43" />
-    <PackageVersion Include="Syncfusion.Maui.Core" Version="35.1.43" />
-    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="35.1.43" />
-    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="35.1.43" />
+    <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.46" />
+    <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.46" />
+    <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.46" />
+    <PackageVersion Include="Syncfusion.Gauge.WinUI" Version="35.1.46" />
+    <PackageVersion Include="Syncfusion.Maui.Core" Version="35.1.46" />
+    <PackageVersion Include="Syncfusion.SfInput.WPF" Version="35.1.46" />
+    <PackageVersion Include="Syncfusion.XlsIO.Net.Core" Version="35.1.46" />
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.15" />
     <PackageVersion Include="VaultSharp" Version="1.17.5.1" />
   </ItemGroup>
