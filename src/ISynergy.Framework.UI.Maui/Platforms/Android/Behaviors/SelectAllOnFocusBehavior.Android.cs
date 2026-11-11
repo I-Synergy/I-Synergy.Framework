@@ -7,10 +7,10 @@ namespace ISynergy.Framework.UI.Behaviors;
 public partial class SelectAllOnFocusBehavior
 {
     /// <inheritdoc />
-    partial void OnAttachedPlatform(Entry bindable) => bindable.Loaded += Bindable_Loaded;
+    static partial void OnAttachedPlatform(Entry bindable) => bindable.Loaded += Bindable_Loaded;
 
     /// <inheritdoc />
-    partial void OnDetachedPlatform(Entry bindable) => bindable.Loaded -= Bindable_Loaded;
+    static partial void OnDetachedPlatform(Entry bindable) => bindable.Loaded -= Bindable_Loaded;
 
     private static void Bindable_Loaded(object? sender, EventArgs e)
     {

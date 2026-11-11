@@ -53,13 +53,13 @@ public partial class SelectAllOnFocusBehavior : Behavior<Entry>
     /// the EditText. Other heads rely on the Focused handler above.
     /// </summary>
     /// <param name="bindable">The entry the behaviour is attached to.</param>
-    partial void OnAttachedPlatform(Entry bindable);
+    static partial void OnAttachedPlatform(Entry bindable);
 
     /// <summary>
     /// Undoes <see cref="OnAttachedPlatform"/>.
     /// </summary>
     /// <param name="bindable">The entry the behaviour is detached from.</param>
-    partial void OnDetachedPlatform(Entry bindable);
+    static partial void OnDetachedPlatform(Entry bindable);
 #endif
 
     private static void Bindable_Focused(object? sender, FocusEventArgs e)
