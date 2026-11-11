@@ -436,6 +436,16 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    vault's access policy grants to the identity directly.
    Use environment-scoped variables only if acceptance and production must sign with different
    identities; environment values override repository values.
+6. Settings → Secrets and variables → Actions → secret `RELEASE_TOKEN`: a fine-grained personal
+   access token for this repository with **Contents: Read and write** and **Workflows: Read and
+   write**. The release job pushes the `v<build>` tag, and GitHub refuses a ref creation from an
+   App installation token when the commit it points at changes `.github/workflows/`
+   (`refusing to allow a GitHub App to create or update workflow … without 'workflows'
+   permission`). `GITHUB_TOKEN` is such a token and can never be granted `workflows` — no
+   `permissions:` key grants it — so without `RELEASE_TOKEN` every release whose commit touches a
+   workflow file fails at the tag step, after the packages are already on nuget.org. The workflow
+   falls back to `GITHUB_TOKEN` when the secret is absent, which only works for releases that do
+   not change a workflow file. A classic PAT with `repo` and `workflow` scopes also works.
 
 ### Step 11.2: Azure Key Vault (OIDC, no client secret)
 1. On the signing app registration add **two** federated credentials, issuer
@@ -451,6 +461,11 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    signing does not use. A subscription ID is therefore not needed at all.
 4. The tool is the `AzureSignTool.Cli` global tool (command `AzureSignTool`), installed at a pinned
    version in the workflow — it was previously published as `I-Synergy.Tools.Azure.SignTool`.
+   Since `2026.11111.11200` it ships **self-contained per RID**: NuGet picks
+   `AzureSignTool.Cli.<rid>`, which bundles the .NET runtime, so the release job installs no
+   .NET 10 SDK or runtime next to the pinned .NET 11 SDK. Only `dotnet tool install` and
+   `dotnet nuget push` need a CLI, which the pinned SDK provides. Do not move back to an older
+   version: those packages are framework-dependent and need a matching .NET runtime.
 
 ### Step 11.3: NuGet.org trusted publishing
 1. nuget.org → Account → Trusted Publishing → add **two** policies for owner `I-Synergy`, repository

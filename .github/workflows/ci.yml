@@ -57,18 +57,36 @@ jobs:
           ./scripts/Set-VersionVariables.ps1 -BuildNumber $buildNumber -BuildReason $env:BUILD_REASON
           Add-Content -Path $env:GITHUB_OUTPUT -Value "buildNumber=$buildNumber"
 
+      # global.json is the single source of truth. The version is read here and installed
+      # explicitly: setup-dotnet's own global-json resolution installed a different SDK than the
+      # pin, and the verification step below makes any such drift a failed build instead of a
+      # silently different toolchain.
+      - name: Read .NET SDK version from global.json
+        id: sdk
+        shell: pwsh
+        run: |
+          $sdkVersion = (Get-Content global.json -Raw | ConvertFrom-Json).sdk.version
+          Write-Host "global.json pins .NET SDK $sdkVersion"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$sdkVersion"
+
       - name: Install .NET SDK from global.json
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: global.json
+          dotnet-version: ${{ steps.sdk.outputs.version }}
           cache: true
           cache-dependency-path: Directory.Packages.props
 
-      # AzureSignTool targets .NET 10; keep a 10.x runtime next to the pinned .NET 11 RC SDK.
-      - name: Install .NET 10 SDK and runtime for AzureSignTool
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
+      - name: Verify the installed SDK matches global.json
+        shell: pwsh
+        env:
+          EXPECTED_SDK: ${{ steps.sdk.outputs.version }}
+        run: |
+          dotnet --list-sdks
+          $actual = (dotnet --version).Trim()
+          if ($actual -ne $env:EXPECTED_SDK) {
+            throw "global.json pins .NET SDK $($env:EXPECTED_SDK), but dotnet resolves $actual. Refusing to build with an SDK the repository does not pin."
+          }
+          Write-Host "Using the SDK pinned by global.json: $actual"
 
       - name: Install MAUI workloads
         run: dotnet workload install maui --source https://api.nuget.org/v3/index.json
@@ -277,28 +295,56 @@ jobs:
       contents: write   # push the release tag
       id-token: write   # OIDC to Azure Key Vault and nuget.org
     steps:
+      # GITHUB_TOKEN is an installation token of the GitHub Actions App, and an App token may only
+      # create a ref whose commit touches .github/workflows/ when it holds the `workflows`
+      # permission — which GITHUB_TOKEN can never be granted. Checkout therefore authenticates
+      # with RELEASE_TOKEN (fine-grained PAT: Contents and Workflows read/write), and its persisted
+      # credential is what New-GitTag.ps1 pushes with. GITHUB_TOKEN stays the fallback so a
+      # repository without the secret still releases commits that do not change a workflow file.
       - name: Checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
+
+      # See the matching steps in `build`: global.json is read directly, installed explicitly and
+      # then verified, so the release job never runs on a different SDK than the pin.
+      - name: Read .NET SDK version from global.json
+        id: sdk
+        shell: pwsh
+        run: |
+          $sdkVersion = (Get-Content global.json -Raw | ConvertFrom-Json).sdk.version
+          Write-Host "global.json pins .NET SDK $sdkVersion"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$sdkVersion"
 
       - name: Install .NET SDK from global.json
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: global.json
+          dotnet-version: ${{ steps.sdk.outputs.version }}
 
-      - name: Install .NET 10 SDK and runtime for AzureSignTool
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
+      - name: Verify the installed SDK matches global.json
+        shell: pwsh
+        env:
+          EXPECTED_SDK: ${{ steps.sdk.outputs.version }}
+        run: |
+          dotnet --list-sdks
+          $actual = (dotnet --version).Trim()
+          if ($actual -ne $env:EXPECTED_SDK) {
+            throw "global.json pins .NET SDK $($env:EXPECTED_SDK), but dotnet resolves $actual. Refusing to sign and publish with an SDK the repository does not pin."
+          }
+          Write-Host "Using the SDK pinned by global.json: $actual"
 
+      # The tool ships self-contained per RID (AzureSignTool.Cli.<rid> packages plus a pointer
+      # package), so the signed executable bundles its own runtime and no .NET 10 SDK or runtime
+      # has to be installed next to the pinned .NET 11 SDK. `dotnet tool install` still needs a
+      # CLI, which the pinned SDK provides; the number stays pinned deliberately, so a tool
+      # release cannot silently change what signs a published package.
       - name: Install Azure SignTool
         shell: pwsh
         run: |
           # Package renamed from I-Synergy.Tools.Azure.SignTool to AzureSignTool.Cli; the command is
-          # still `AzureSignTool`. Pinned, so a tool release cannot silently change what signs a
-          # published package — bump this line deliberately.
-          dotnet tool install --global AzureSignTool.Cli --version 2026.11027.11159
+          # still `AzureSignTool`.
+          dotnet tool install --global AzureSignTool.Cli --version 2026.11111.11200
           Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.dotnet\tools"
 
       - name: Download packages
@@ -379,7 +425,7 @@ jobs:
         if: github.event_name != 'pull_request'
         shell: pwsh
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
           BUILD_NUMBER: ${{ needs.build.outputs.buildNumber }}
           VERSION_PACKAGE: ${{ needs.build.outputs.versionPackage }}
         run: |
