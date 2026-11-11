@@ -10,8 +10,6 @@
     <PackageReference Include="Aspire.Azure.Storage.Blobs" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" />
-    <!-- Npgsql still pins EF Core Relational to 11.0.0-rc.3 while the net11 graph is on EF 11.0.0,
-         so this sample uses the in-memory provider on every target framework. -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="NSwag.AspNetCore" />
   </ItemGroup>
