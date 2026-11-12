@@ -11,7 +11,7 @@ namespace ISynergy.Framework.Core.Services;
 [Bindable(BindableSupport.Yes)]
 public sealed class InfoService : ObservableClass, IInfoService
 {
-    private static readonly object _creationLock = new object();
+    private static readonly Lock _creationLock = new();
     private static IInfoService? _defaultInstance;
 
     /// <summary>

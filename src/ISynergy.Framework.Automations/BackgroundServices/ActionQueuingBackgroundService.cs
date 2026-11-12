@@ -22,7 +22,7 @@ public class ActionQueuingBackgroundService : IHostedService, IDisposable
 
     private Timer? _backgroundTimer;
     private Timer? _executionTimer;
-    private readonly object _timerLock = new();
+    private readonly Lock _timerLock = new();
     private readonly CancellationTokenSource _stoppingCts = new();
 
     /// <summary>

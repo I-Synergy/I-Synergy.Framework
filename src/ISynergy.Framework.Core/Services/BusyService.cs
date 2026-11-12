@@ -13,8 +13,8 @@ namespace ISynergy.Framework.Core.Services;
 public sealed class BusyService : ObservableClass, IBusyService
 {
     private readonly ILanguageService _languageService;
-    private readonly object _syncRoot = new();
-    private static readonly object _creationLock = new object();
+    private readonly Lock _syncRoot = new();
+    private static readonly Lock _creationLock = new();
     private static IBusyService? _defaultInstance;
 
     /// <summary>

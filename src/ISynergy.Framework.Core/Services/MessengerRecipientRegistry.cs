@@ -12,8 +12,8 @@ namespace ISynergy.Framework.Core.Services;
 /// </remarks>
 internal sealed class MessengerRecipientRegistry
 {
-    private readonly object _recipientsLock = new();
-    private readonly object _cleanupLock = new();
+    private readonly Lock _recipientsLock = new();
+    private readonly Lock _cleanupLock = new();
 
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsOfSubclassesAction;
     private Dictionary<Type, List<WeakActionAndToken>>? _recipientsStrictAction;

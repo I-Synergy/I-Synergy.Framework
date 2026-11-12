@@ -9,7 +9,7 @@ namespace ISynergy.Framework.Globalization.Services;
 /// </summary>
 public sealed class LocalizedStrings : INotifyPropertyChanged
 {
-    private static readonly object _creationLock = new object();
+    private static readonly Lock _creationLock = new();
     private static LocalizedStrings? _defaultInstance;
 
     /// <summary>
