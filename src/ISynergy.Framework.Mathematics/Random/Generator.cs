@@ -27,11 +27,11 @@ public static class Generator
     // Random generator used to seed other generators. It is used to prevent generators 
     // that have been created in short time spans to be initialized with the same seed.
     private static System.Random sourceRandom = new();
-    private static readonly object sourceRandomLock = new();
+    private static readonly Lock sourceRandomLock = new();
 
     private static int? sourceSeed;
     private static int sourceLastUpdateTicks;
-    private static readonly object sourceSeedLock = new();
+    private static readonly Lock sourceSeedLock = new();
     [ThreadStatic] private static int threadLastUpdateTicks;
 
     [ThreadStatic] private static bool threadOverriden;

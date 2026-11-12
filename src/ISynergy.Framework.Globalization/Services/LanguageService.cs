@@ -10,7 +10,7 @@ namespace ISynergy.Framework.Globalization.Services;
 /// </summary>
 public sealed class LanguageService : ILanguageService
 {
-    private static readonly object _creationLock = new object();
+    private static readonly Lock _creationLock = new();
     private readonly List<ResourceManager> _managers;
     private static ILanguageService? _defaultInstance;
 

@@ -10,7 +10,7 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public sealed class NavigationHostRegistry : INavigationHostRegistry
 {
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
     private WeakReference? _host;
 
     /// <inheritdoc />

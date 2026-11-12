@@ -8,7 +8,7 @@ namespace ISynergy.Framework.UI.Services;
 /// </summary>
 public sealed class BladeViewHostRegistry : IBladeViewHost
 {
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
     private readonly List<WeakReference> _hosts = [];
 
     /// <inheritdoc />

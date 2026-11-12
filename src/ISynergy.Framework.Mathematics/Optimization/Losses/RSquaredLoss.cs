@@ -166,8 +166,7 @@ public class RSquaredLoss : LossBase<double[][], double[][], double[]>, ILoss<do
             {
                 var w = Weights[i];
 
-                double d;
-                d = Expected[i][c] - actual[i][c];
+                var d = Expected[i][c] - actual[i][c];
                 SSe[c] += w * d * d;
 
                 d = Expected[i][c] - avg[c];

@@ -191,8 +191,7 @@ public static class Uuidv7
         // e.g. Guid  00010203-0405-0607-0809-0A0B0C0D0E0F becomes
         // byte array 030201000504070608090A0B0C0D0E0F.
         // So do endian conversion for first 8 bytes as long-short-short.
-        byte b;
-        b = arr[3];
+        byte b = arr[3];
         arr[3] = arr[0];
         arr[0] = b;
         b = arr[2];

@@ -1,12 +1,12 @@
 # 🚀 I-Synergy Framework
 
-> **Comprehensive .NET framework for building enterprise-grade backend and frontend applications — targets .NET 10 (LTS) and .NET 11 (preview)**
+> **Comprehensive .NET framework for building enterprise-grade backend and frontend applications — targets .NET 10 (LTS) and .NET 11 (STS)**
 
 <div align="center">
 
 [![CI](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/I-Synergy/I-Synergy.Framework/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-![.NET](https://img.shields.io/badge/.NET-10%20LTS%20%7C%2011%20preview-512BD4?logo=.net)
+![.NET](https://img.shields.io/badge/.NET-10%20LTS%20%7C%2011%20STS-512BD4?logo=.net)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=alert_status)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=I-Synergy_I-Synergy.Framework&metric=bugs)](https://sonarcloud.io/dashboard?id=I-Synergy_I-Synergy.Framework)
@@ -178,7 +178,7 @@ All UI packages share a common accent color palette (`ThemeColors.Colors`) — 4
 
 ## 🌟 Supported Platforms
 
-- ✅ **ASP.NET Core 10** - Web APIs and backend services
+- ✅ **ASP.NET Core 10 and 11** - Web APIs and backend services
 - ✅ **Blazor** - Interactive web components
 - ✅ **.NET MAUI** - Cross-platform mobile & desktop (iOS, Android, Windows, macOS)
 - ✅ **WPF** - Desktop applications

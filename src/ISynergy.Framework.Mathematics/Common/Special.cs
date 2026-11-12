@@ -257,9 +257,7 @@ public static class Special
     /// </summary>
     public static double Polevl(double x, double[] coef, int n)
     {
-        double ans;
-
-        ans = coef[0];
+        var ans = coef[0];
 
         for (var i = 1; i <= n; i++)
             ans = ans * x + coef[i];
@@ -272,9 +270,7 @@ public static class Special
     /// </summary>
     public static double P1evl(double x, double[] coef, int n)
     {
-        double ans;
-
-        ans = x + coef[0];
+        var ans = x + coef[0];
 
         for (var i = 1; i < n; i++)
             ans = ans * x + coef[i];
