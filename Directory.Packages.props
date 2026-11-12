@@ -11,7 +11,7 @@
     <PackageVersion Include="Aspire.Hosting.Dotnet" Version="13.6.5-preview.1.26559.7" />
     <PackageVersion Include="Aspire.Hosting.Maui" Version="13.6.5-preview.1.26559.7" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.5" />
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.104.12" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.1.0" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.10.0" />
@@ -44,7 +44,7 @@
     <PackageVersion Include="Moq" Version="4.21.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="4.5.3" />
     <PackageVersion Include="NodaTime" Version="3.3.7" />
-    <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.8.0" />
     <PackageVersion Include="NuGet.Commands" Version="8.0.0" />
     <PackageVersion Include="OpenTelemetry" Version="1.21.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.21.0" />
@@ -58,8 +58,8 @@
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.2" />
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.4" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.12.1" />
-    <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.12.1" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.13.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.13.0" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.46" />
     <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.46" />
     <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.46" />
