@@ -1,3 +1,5 @@
+using Azure.Core;
+using Azure.Identity;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.OpenTelemetry.Constants;
@@ -13,12 +15,34 @@ public static class ApplicationInsightsTelemetryExtensions
     /// <summary>
     /// Adds the Application Insights exporter to the telemetry pipeline.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Identity-based authentication is preferred. A credential is used when one is supplied to this
+    /// method or when <c>Telemetry:UseManagedIdentity</c> is <c>true</c> (optionally with
+    /// <c>Telemetry:ManagedIdentityClientId</c> for user-assigned identities). The
+    /// <c>Telemetry:ConnectionString</c> is still required as the resource locator, including the
+    /// ingestion endpoint; identity replaces the connection string's instrumentation key as the
+    /// authentication mechanism rather than the connection string itself.
+    /// </para>
+    /// <para>
+    /// <strong>AOT/Trimming notice:</strong> <see cref="DefaultAzureCredential"/> probes multiple
+    /// credential providers at runtime using reflection and carries
+    /// <c>[RequiresUnreferencedCode]</c>. Applications targeting
+    /// <c>&lt;PublishAot&gt;true&lt;/PublishAot&gt;</c> should pass an explicit credential such as
+    /// <see cref="ManagedIdentityCredential"/> or set <c>Telemetry:ManagedIdentityClientId</c>.
+    /// </para>
+    /// </remarks>
     /// <param name="telemetryBuilder">The telemetry builder.</param>
-    /// <param name="telemetryExporterOptions"></param>
+    /// <param name="telemetryExporterOptions">Optional callback to further configure the exporter.</param>
+    /// <param name="credential">
+    /// Optional credential used for identity-based authentication. Takes precedence over
+    /// <c>Telemetry:UseManagedIdentity</c>.
+    /// </param>
     /// <returns>The telemetry builder for chaining.</returns>
     public static TelemetryBuilder AddApplicationInsightsExporter(
         this TelemetryBuilder telemetryBuilder,
-        Action<AzureMonitorExporterOptions>? telemetryExporterOptions = null)
+        Action<AzureMonitorExporterOptions>? telemetryExporterOptions = null,
+        TokenCredential? credential = null)
     {
         Argument.IsNotNull(telemetryBuilder);
 
@@ -26,8 +50,8 @@ public static class ApplicationInsightsTelemetryExtensions
         // NativeAOT trimming silently breaks (properties are left at their defaults instead of
         // throwing) -- most importantly ConnectionString, which then reads as null/empty below
         // and disables this exporter entirely with no error anywhere. Read each value explicitly
-        // instead. Credential/Transport/Diagnostics/Retry/RetryPolicy are complex Azure SDK types
-        // that IConfiguration.Bind could never populate from flat JSON config either way, so they
+        // instead. Transport/Diagnostics/Retry/RetryPolicy are complex Azure SDK types that
+        // IConfiguration.Bind could never populate from flat JSON config either way, so they
         // aren't included here -- they keep whatever AzureMonitorExporterOptions defaults to.
         var options = new AzureMonitorExporterOptions();
         var telemetrySection = telemetryBuilder.Configuration.GetSection(TelemetryConstants.TelemetrySection);
@@ -41,10 +65,12 @@ public static class ApplicationInsightsTelemetryExtensions
         options.EnableTraceBasedLogsSampler = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnableTraceBasedLogsSampler), options.EnableTraceBasedLogsSampler);
         options.EnableStandardMetrics = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnableStandardMetrics), options.EnableStandardMetrics);
         options.EnablePerformanceCounters = telemetrySection.GetValue(nameof(AzureMonitorExporterOptions.EnablePerformanceCounters), options.EnablePerformanceCounters);
-
+        options.Credential = credential ?? CreateConfiguredCredential(telemetrySection);
 
         telemetryExporterOptions?.Invoke(options);
 
+        // The connection string is the resource locator (ingestion endpoint and, historically, the
+        // instrumentation key); identity changes the authentication mechanism, not the locator.
         if (string.IsNullOrWhiteSpace(options.ConnectionString))
             return telemetryBuilder;
 
@@ -59,6 +85,25 @@ public static class ApplicationInsightsTelemetryExtensions
                     .AddAzureMonitorLogExporter(target => options.Map(target)));
 
         return telemetryBuilder;
+    }
+
+    /// <summary>
+    /// Creates an identity credential when <c>Telemetry:UseManagedIdentity</c> is enabled.
+    /// </summary>
+    /// <param name="telemetrySection">The telemetry configuration section.</param>
+    /// <returns>
+    /// The configured credential, or <c>null</c> when identity-based authentication is not enabled.
+    /// </returns>
+    private static TokenCredential? CreateConfiguredCredential(IConfigurationSection telemetrySection)
+    {
+        if (!telemetrySection.GetValue("UseManagedIdentity", false))
+            return null;
+
+        var managedIdentityClientId = telemetrySection.GetValue<string?>("ManagedIdentityClientId", null);
+
+        return string.IsNullOrWhiteSpace(managedIdentityClientId)
+            ? new DefaultAzureCredential()
+            : new ManagedIdentityCredential(ManagedIdentityId.FromUserAssignedClientId(managedIdentityClientId));
     }
 
     /// <summary>

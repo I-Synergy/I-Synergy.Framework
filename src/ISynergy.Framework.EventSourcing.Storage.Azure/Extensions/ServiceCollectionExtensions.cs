@@ -16,9 +16,12 @@ public static class ServiceCollectionExtensions
     /// implementation using the provided <see cref="BlobServiceClient"/>.
     /// </summary>
     /// <remarks>
-    /// Prerequisite: <see cref="BlobServiceClient"/> must already be registered in DI
-    /// (e.g. via <c>builder.AddAzureBlobServiceClient("blobs")</c> in Aspire, or
-    /// <c>services.AddSingleton(new BlobServiceClient(connectionString))</c> directly).
+    /// Prerequisite: <see cref="BlobServiceClient"/> must already be registered in DI.
+    /// Identity-based authentication is preferred: Aspire's
+    /// <c>builder.AddAzureBlobServiceClient("blobs")</c> registers an identity-backed client in
+    /// published environments and falls back to the emulator connection string locally. A manually
+    /// constructed <c>new BlobServiceClient(new Uri(serviceUri), credential)</c> or a
+    /// connection-string client are also supported.
     /// Each tenant's events are isolated in a separate container named after the tenant GUID.
     /// </remarks>
     /// <param name="services">The service collection.</param>

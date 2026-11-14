@@ -9,6 +9,7 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
 	<ItemGroup>
+	  <PackageReference Include="Azure.Identity" />
 	  <PackageReference Include="Microsoft.ApplicationInsights" />
 	</ItemGroup>
 	<ItemGroup>

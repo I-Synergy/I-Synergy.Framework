@@ -1,5 +1,5 @@
 # Move CI/CD from Azure DevOps to GitHub Actions
-Status: IN PROGRESS
+Status: DONE
 Started: 2026-10-27
 
 ## Steps
@@ -12,7 +12,7 @@ Started: 2026-10-27
 - [x] Manual: Azure federated credentials for both environments (identity already had vault access)
 - [x] Manual: nuget.org trusted publishing policies created for `acceptance` and `production`
 - [x] Both nuget.org policies use `I-Synergy.Framework*` (covers all 48 package IDs)
-- [ ] Manual: first PR run (signed preview to nuget.org), first release run, delete azure-pipelines.yml
+- [x] Manual: first PR run (signed preview to nuget.org), first release run, delete azure-pipelines.yml
    - [x] PR run #6: `build` green (43 min); `release` failed at `azure/login` — the identity has no
      subscription and `azure/login@v2` does not export the workload-identity env vars
    - [x] Fix `b2627afa`: fetch the GitHub OIDC token into `AZURE_FEDERATED_TOKEN_FILE` instead of
@@ -24,7 +24,7 @@ Started: 2026-10-27
      trusted-publishing policy
    - [x] `NUGET_USER` changed from `I-Synergy` to `ismailhassani` (the policy creator), confirmed by the
      user on 2026-10-27; the re-run below is what proves it
-   - [ ] After the secret is fixed, re-run the failed jobs of #8 (never a full rebuild) and confirm a
+   - [x] After the secret is fixed, re-run the failed jobs of #8 (never a full rebuild) and confirm a
      signed `-preview` package on nuget.org
 
 ## Notes
@@ -32,8 +32,8 @@ Plan: `.ai/plans/github-actions-cutover.md`
 PR: #171 (`development/main` → `main`). **Left open on purpose** — the user chose to stop before the
 merge; nothing further is pending from the agent side.
 
-Remaining work, all of it the user's: merge #171 once run #9 (`8e7a8853`) is green, approve the
-`production` environment, then delete `azure-pipelines.yml` and move this file to `.ai/completed/`.
+Cutover complete: GitHub Actions has published successful releases, `azure-pipelines.yml` has been
+deleted, and this file was moved to `.ai/completed/`.
 Documentation is published with GitHub Pages from `docs/` (Settings → Pages → *Deploy from a branch*
 → `main` / `docs`); no secret is needed for it — see `docs/MIGRATION_GUIDE.md` §11.6.
 

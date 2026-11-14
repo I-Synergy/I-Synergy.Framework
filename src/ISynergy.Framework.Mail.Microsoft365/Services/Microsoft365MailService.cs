@@ -1,3 +1,4 @@
+using Azure.Core;
 using Azure.Identity;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Core.Validation;
@@ -32,25 +33,44 @@ internal class Microsoft365MailService : IMailService
     /// The mail options
     /// </summary>
     private readonly Microsoft365MailOptions _mailOptions;
-    /// <summary>
-    /// The logger
-    /// </summary>
+
+    private readonly TokenCredential? _credential;
+    private TokenCredential? _resolvedCredential;
 
     /// <summary>
     /// Constructor of Email Service.
     /// </summary>
     /// <param name="mailOptions">The configuration.</param>
+    /// <param name="credential">
+    /// Optional credential for identity-based authentication. When omitted, identity is used when
+    /// <see cref="Microsoft365MailOptions.UseManagedIdentity"/> is set or no client secret is
+    /// configured; otherwise the client secret is used.
+    /// </param>
     public Microsoft365MailService(
-        IOptions<Microsoft365MailOptions> mailOptions)
+        IOptions<Microsoft365MailOptions> mailOptions,
+        TokenCredential? credential = null)
     {
         _mailOptions = mailOptions.Value;
+        _credential = credential;
 
         Argument.IsNotNullOrEmpty(_mailOptions.EmailAddress);
         Argument.IsNotNullOrEmpty(_mailOptions.Sender);
-        Argument.IsNotNullOrEmpty(_mailOptions.ClientId);
-        Argument.IsNotNullOrEmpty(_mailOptions.TenantId);
-        Argument.IsNotNullOrEmpty(_mailOptions.ClientSecret);
+
+        if (!UseIdentity)
+        {
+            Argument.IsNotNullOrEmpty(_mailOptions.ClientId);
+            Argument.IsNotNullOrEmpty(_mailOptions.TenantId);
+            Argument.IsNotNullOrEmpty(_mailOptions.ClientSecret);
+        }
     }
+
+    /// <summary>
+    /// Gets a value indicating whether identity-based authentication should be used.
+    /// </summary>
+    private bool UseIdentity
+        => _credential is not null
+           || _mailOptions.UseManagedIdentity
+           || string.IsNullOrWhiteSpace(_mailOptions.ClientSecret);
 
     /// <summary>
     /// Send email as an asynchronous operation.
@@ -108,18 +128,7 @@ internal class Microsoft365MailService : IMailService
             Content = emailMessage.Message
         };
 
-        var options = new TokenCredentialOptions
-        {
-            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
-        };
-
-        var credentials = new ClientSecretCredential(
-            _mailOptions.TenantId,
-            _mailOptions.ClientId,
-            _mailOptions.ClientSecret,
-            options);
-
-        var client = new GraphServiceClient(credentials, _mailOptions.Scopes);
+        var client = new GraphServiceClient(GetOrCreateCredential(), _mailOptions.Scopes);
         var body = new SendMailPostRequestBody
         {
             Message = message,
@@ -131,5 +140,45 @@ internal class Microsoft365MailService : IMailService
             .PostAsync(body, cancellationToken: cancellationToken);
 
         return true;
+    }
+
+    /// <summary>
+    /// Resolves the credential used to authenticate with Microsoft Graph.
+    /// Identity-based authentication takes precedence; the client secret is the fallback.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="DefaultAzureCredential"/> probes several credential sources and is not fully
+    /// trim/AOT safe. Applications publishing with <c>PublishAot</c> should pass an explicit
+    /// <see cref="TokenCredential"/> or set
+    /// <see cref="Microsoft365MailOptions.ManagedIdentityClientId"/> to use
+    /// <see cref="ManagedIdentityCredential"/>.
+    /// </remarks>
+    internal TokenCredential GetOrCreateCredential()
+    {
+        if (_credential is not null)
+            return _credential;
+
+        if (_resolvedCredential is not null)
+            return _resolvedCredential;
+
+        if (UseIdentity)
+        {
+            _resolvedCredential = string.IsNullOrWhiteSpace(_mailOptions.ManagedIdentityClientId)
+                ? new DefaultAzureCredential()
+                : new ManagedIdentityCredential(ManagedIdentityId.FromUserAssignedClientId(_mailOptions.ManagedIdentityClientId));
+        }
+        else
+        {
+            _resolvedCredential = new ClientSecretCredential(
+                _mailOptions.TenantId,
+                _mailOptions.ClientId,
+                _mailOptions.ClientSecret,
+                new TokenCredentialOptions
+                {
+                    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+                });
+        }
+
+        return _resolvedCredential;
     }
 }

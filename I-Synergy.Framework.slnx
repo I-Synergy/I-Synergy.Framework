@@ -152,6 +152,7 @@
     <Project Path="tests/ISynergy.Framework.Mail.Microsoft365.Tests/ISynergy.Framework.Mail.Microsoft365.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mathematics.Tests/ISynergy.Framework.Mathematics.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.MessageBus.RabbitMQ.Tests/ISynergy.Framework.MessageBus.RabbitMQ.Tests.csproj" />
+    <Project Path="tests/ISynergy.Framework.MessageBus.Azure.Tests/ISynergy.Framework.MessageBus.Azure.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.MessageBus.Tests/ISynergy.Framework.MessageBus.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.Mvvm.Tests/ISynergy.Framework.Mvvm.Tests.csproj" />
     <Project Path="tests/ISynergy.Framework.OpenTelemetry.Tests/ISynergy.Framework.OpenTelemetry.Tests.csproj" />

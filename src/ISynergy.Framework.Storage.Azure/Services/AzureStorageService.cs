@@ -1,4 +1,6 @@
 using Azure;
+using Azure.Core;
+using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ISynergy.Framework.Core.Validation;
@@ -13,21 +15,43 @@ namespace ISynergy.Framework.Storage.Azure.Services;
 /// Class StorageService.
 /// Implements the <see cref="IStorageService" />
 /// </summary>
+/// <remarks>
+/// Authentication precedence:
+/// an injected <see cref="BlobServiceClient"/> (for example from Aspire) is used first,
+/// then identity-based authentication when a service URI is configured, and finally the
+/// configured connection string.
+/// </remarks>
 /// <seealso cref="IStorageService" />
 internal class AzureStorageService : IStorageService
 {
     private readonly AzureStorageOptions _options;
+    private readonly TokenCredential? _credential;
+    private readonly BlobServiceClient? _blobServiceClient;
+
+    private TokenCredential? _resolvedCredential;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AzureStorageService"/> class.
     /// </summary>
     /// <param name="options">The Azure storage options.</param>
+    /// <param name="credential">
+    /// Optional credential used for identity-based authentication. When omitted, a credential is
+    /// created from <see cref="AzureStorageOptions.ManagedIdentityClientId"/>.
+    /// </param>
+    /// <param name="blobServiceClient">
+    /// Optional pre-configured client (for example registered by Aspire). When supplied, it takes
+    /// precedence over both identity configuration and the connection string.
+    /// </param>
     public AzureStorageService(
-        IOptions<AzureStorageOptions> options)
+        IOptions<AzureStorageOptions> options,
+        TokenCredential? credential = null,
+        BlobServiceClient? blobServiceClient = null)
     {
         Argument.IsNotNull(options);
 
         _options = options.Value;
+        _credential = credential;
+        _blobServiceClient = blobServiceClient;
     }
 
     /// <summary>
@@ -49,8 +73,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _options.GetEffectiveConnectionString();
-        var blobContainer = new BlobContainerClient(connectionString, containerName);
+        var blobContainer = CreateBlobContainerClient(containerName);
 
         _ = await blobContainer
             .CreateIfNotExistsAsync(
@@ -90,8 +113,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _options.GetEffectiveConnectionString();
-        var blobContainer = new BlobContainerClient(connectionString, containerName);
+        var blobContainer = CreateBlobContainerClient(containerName);
 
         _ = await blobContainer
             .CreateIfNotExistsAsync(
@@ -130,8 +152,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _options.GetEffectiveConnectionString();
-        var blobContainer = new BlobContainerClient(connectionString, containerName);
+        var blobContainer = CreateBlobContainerClient(containerName);
 
         _ = await blobContainer
             .CreateIfNotExistsAsync(
@@ -174,8 +195,7 @@ internal class AzureStorageService : IStorageService
         Argument.IsNotNullOrEmpty(connectionStringName);
         Argument.IsNotNullOrEmpty(containerName);
 
-        var connectionString = _options.GetEffectiveConnectionString();
-        var blobContainer = new BlobContainerClient(connectionString, containerName);
+        var blobContainer = CreateBlobContainerClient(containerName);
 
         _ = await blobContainer
             .CreateIfNotExistsAsync(
@@ -190,5 +210,56 @@ internal class AzureStorageService : IStorageService
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Creates a container client using the first available authentication mechanism:
+    /// injected client, identity endpoint, then connection string.
+    /// </summary>
+    internal BlobContainerClient CreateBlobContainerClient(string containerName)
+    {
+        if (_blobServiceClient is not null)
+            return _blobServiceClient.GetBlobContainerClient(containerName);
+
+        if (_options.TryGetServiceUri(out var serviceUri))
+        {
+            var containerUri = new Uri($"{serviceUri.AbsoluteUri.TrimEnd('/')}/{containerName}");
+            return new BlobContainerClient(containerUri, GetOrCreateCredential());
+        }
+
+        var connectionString = _options.GetEffectiveConnectionString();
+
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new InvalidOperationException(
+                $"{nameof(AzureStorageOptions)} is not configured. Set " +
+                $"{nameof(AzureStorageOptions)}:{nameof(AzureStorageOptions.ServiceEndpoint)} " +
+                $"or {nameof(AzureStorageOptions)}:{nameof(AzureStorageOptions.AccountName)} for " +
+                $"identity-based authentication, or " +
+                $"{nameof(AzureStorageOptions)}:{nameof(AzureStorageOptions.ConnectionString)} as a fallback.");
+        }
+
+        return new BlobContainerClient(connectionString, containerName);
+    }
+
+    /// <summary>
+    /// Returns the configured credential, creating it lazily so the service can be resolved
+    /// without acquiring tokens until a storage operation actually runs.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="DefaultAzureCredential"/> probes several credential sources and is not fully
+    /// trim/AOT safe. Applications publishing with <c>PublishAot</c> should inject an explicit
+    /// <see cref="TokenCredential"/> (for example <see cref="ManagedIdentityCredential"/>) or set
+    /// <see cref="AzureStorageOptions.ManagedIdentityClientId"/> to use
+    /// <see cref="ManagedIdentityCredential"/>.
+    /// </remarks>
+    private TokenCredential GetOrCreateCredential()
+    {
+        if (_credential is not null)
+            return _credential;
+
+        return _resolvedCredential ??= string.IsNullOrWhiteSpace(_options.ManagedIdentityClientId)
+            ? new DefaultAzureCredential()
+            : new ManagedIdentityCredential(ManagedIdentityId.FromUserAssignedClientId(_options.ManagedIdentityClientId));
     }
 }
