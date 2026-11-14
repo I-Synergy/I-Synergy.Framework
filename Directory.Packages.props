@@ -32,10 +32,6 @@
     <PackageVersion Include="Microsoft.Identity.Client" Version="4.92.0" />
     <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.6" />
     <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.14.26531.2" />
-    <!-- Experimental AppKit backend for the native macOS (net10.0-macos) target. Same preview train
-         as the DevFlow agent; the package ships a net10.0-macos26.0 asset built against MAUI 10.0.41. -->
-    <PackageVersion Include="Microsoft.Maui.Platforms.MacOS" Version="0.1.0-preview.14.26531.2" />
-    <PackageVersion Include="Microsoft.Maui.Platforms.MacOS.Essentials" Version="0.1.0-preview.14.26531.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
     <PackageVersion Include="Microsoft.Playwright.MSTest" Version="1.64.1" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
@@ -58,8 +54,8 @@
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.2" />
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.4" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.13.0" />
-    <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.13.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="7.0.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="7.0.0" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.46" />
     <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.46" />
     <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.46" />

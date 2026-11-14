@@ -19,31 +19,9 @@ package (`ISynergy.Framework.UI.Maui`) still multi-targets .NET 10 for its consu
 | Android | `net11.0-android` | API 24 minimum |
 | iOS | `net11.0-ios` | iOS 15 minimum |
 | Mac Catalyst | `net11.0-maccatalyst` | macOS 17 minimum; the store-distributed macOS target |
-| macOS (AppKit) | `net11.0-macos` | macOS 14 minimum; **macOS hosts only** |
 | Windows | `net11.0-windows10.0.26100.0` | **Windows hosts only** |
 
-### Native macOS (AppKit)
-
-`net11.0-macos` runs the sample on AppKit controls (`NSWindow`, `NSButton`, …) instead of Mac
-Catalyst, through the experimental [`Microsoft.Maui.Platforms.MacOS`](https://github.com/dotnet/maui-labs/tree/main/platforms/MacOS)
-backend (`0.1.0-preview.*`). Two consequences apply:
-
-- The TFM is only added on macOS hosts — the Apple SDK does not cross-compile from Windows.
-- The backend has no AppKit asset for `CommunityToolkit.Maui.MediaElement` or `Syncfusion.Maui.Core`.
-  `UseMauiCommunityToolkitMediaElement` and `ConfigureSyncfusionCore` are therefore compiled out of
-  the macOS target (`#if !MACOS`), and views that host those controls — `DetailsView`'s `SfAvatarView`,
-  and `LoadingView`'s animated splash — are not exercised there. Treat macOS/AppKit as an
-  experimental head with known parity gaps, not as a replacement for Mac Catalyst.
-
-The AppKit entry point lives in `Platforms/MacOS` (`Main.cs` starts `NSApplication`,
-`MauiMacOSApp.cs` is the delegate). The MAUI single-project convention does not know the `MacOS`
-folder for the `macos` TFM, so `Sample.Maui.csproj` re-includes it in an `_IncludeMacOSPlatformSources`
-target that runs before `CoreCompile`.
-
 ```bash
-# macOS (AppKit)
-dotnet build -f net11.0-macos -c Debug
-
 # Mac Catalyst
 dotnet build -f net11.0-maccatalyst -c Debug
 
@@ -53,7 +31,7 @@ dotnet build -f net11.0-android -c Debug -p:EmbedAssembliesIntoApk=true
 
 ### Debugging from VS Code
 
-`.vscode/launch.json` ships one configuration per platform (`Sample.Maui (Android|Mac Catalyst|macOS/AppKit|Windows), .NET 11`)
+`.vscode/launch.json` ships one configuration per platform (`Sample.Maui (Android|Mac Catalyst|Windows), .NET 11`)
 for the **.NET MAUI** extension (`ms-dotnettools.dotnet-maui`), each wired to its own
 `maui: Build (…)` pre-launch task in `.vscode/tasks.json`.
 
@@ -71,15 +49,12 @@ once — Solution Explorer → right-click **Sample.Maui** → *Set as Startup P
   Debug builds use `Platforms/MacCatalyst/Entitlements.Debug.plist` (no App Sandbox,
   `get-task-allow`) so a debugger or terminal that is itself sandboxed can start the bundle
   directly; Release keeps the App Sandbox in `Platforms/MacCatalyst/Entitlements.plist`.
-- **macOS/AppKit** — declared with `targetFramework: net11.0-macos`. Native macOS support in the
-  extension is still marked in-progress: if the launch fails, run the `maui: Build (macOS …)` task
-  and start `bin/Debug/<tfm>/osx-arm64/Sample.app` from the terminal (it must stay code-signed).
 
 Troubleshooting `Debugging canceled: startup project not found.` after the MAUI workloads were
 installed or upgraded: the extension derives its project list (and therefore the startup project)
 from C# Dev Kit's in-memory project model, which is only rebuilt on evaluation. If the window was
 open while the workloads were missing, `Sample.Maui` carries none of the `Maui` /
-`AndroidApplication` / `MacCatalystApplication` / `MacOSApplication` capabilities yet, the list of
+`AndroidApplication` / `MacCatalystApplication` capabilities yet, the list of
 application projects is empty, and no picker appears. Reload the window (`Developer: Reload Window`)
 or restart VS Code, then select the startup project. Verify the capabilities with:
 
@@ -105,9 +80,6 @@ The WPF/WinUI configurations do not show this error because they use the plain `
 they build with a task and start the produced `.exe` directly, without the MAUI CLI, project
 system or target-framework resolution.
 
-
-
-`dotnet build` for `net11.0-macos` requires the `macos` workload (`dotnet workload install maui macos`).
 When the installed Xcode is newer than the Apple SDK pack expects, pass `-p:ValidateXcodeVersion=false`
 (the Mac Catalyst test host does the same): the .NET 11 packs pin Xcode 27.0, so a newer Xcode needs
 the override.

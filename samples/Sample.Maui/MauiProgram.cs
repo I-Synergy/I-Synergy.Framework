@@ -73,11 +73,10 @@ public static class MauiProgram
             .UseMauiAppForCurrentHead<App>();
 
 #if ANDROID
-        // Package limitation, not platform logic: the AppKit head has no MediaElement handler.
         // UseMauiCommunityToolkitMediaElement is only supported on Android 26.0+ (CA1416).
         if (OperatingSystem.IsAndroidVersionAtLeast(26))
             mauiBuilder = mauiBuilder.UseMauiCommunityToolkitMediaElement(false);
-#elif !MACOS
+#else
         // Every other supported head meets the API's minimum OS version.
         mauiBuilder = mauiBuilder.UseMauiCommunityToolkitMediaElement(false);
 #endif
@@ -111,10 +110,7 @@ public static class MauiProgram
                 cultures.AddCulture("fr");
                 cultures.AddCulture("ar");
             })
-#if !MACOS
-            // Syncfusion.Maui.Core ships no AppKit asset, so the AppKit head runs without its handlers.
             .ConfigureSyncfusionCore()
-#endif
             ;
 
 

@@ -4,11 +4,6 @@
 		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0'))">$(TargetFrameworks);net11.0-android;net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100.0</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0')) And $([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.26100.0</TargetFrameworks>
-		<!-- Native macOS (AppKit) head. Built with Microsoft.Maui.Platforms.MacOS, which ships a
-		     net10.0-macos asset only (consumable from net11.0-macos), and is built from macOS hosts
-		     exclusively — the Apple SDK does not cross-compile from Windows. -->
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net10.0-macos</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(BundledNETCoreAppPackageVersion)', '11.0')) And $([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net11.0-macos</TargetFrameworks>
 
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
@@ -40,7 +35,6 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' And $(TargetFramework.StartsWith('net11.0'))">24.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">14.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
 	
@@ -53,13 +47,6 @@
 		<None Include="Resources\Fonts\*" Pack="true" PackagePath="contentFiles\any\any\Resources\Fonts\%(Filename)%(Extension)" />
 		<!-- Ship MSBuild targets so fonts are added as MauiFont items in consuming apps -->
 		<None Include="I-Synergy.Framework.UI.Maui.targets" Pack="true" PackagePath="buildTransitive\%(Filename)%(Extension)" />
-	</ItemGroup>
-	
-	<!-- Native macOS (AppKit) hosting and Essentials: UseMauiAppForCurrentHead calls
-	     UseMauiAppMacOS/AddMacOSEssentials for the macos TFM. -->
-	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
-		<PackageReference Include="Microsoft.Maui.Platforms.MacOS" />
-		<PackageReference Include="Microsoft.Maui.Platforms.MacOS.Essentials" />
 	</ItemGroup>
 
 	<ItemGroup>

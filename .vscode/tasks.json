@@ -72,7 +72,7 @@
         },
 
         // ------------------------------------------------------------------
-        // Pre-launch builds for the MAUI Android / Mac Catalyst / macOS
+        // Pre-launch builds for the MAUI Android / Mac Catalyst / Windows
         // configurations in launch.json. They are plain `dotnet build` calls
         // (not the `maui` task type) so the Apple targets can pass
         // ValidateXcodeVersion=false: the .NET 10 Apple packs pin Xcode 26.0
@@ -106,31 +106,6 @@
             "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
             "problemMatcher": "$msCompile",
             "group": "build"
-        },
-        {
-            "label": "maui: Build (macOS .NET 11)",
-            "type": "process",
-            "command": "dotnet",
-            "args": ["build", "${workspaceFolder}/samples/Sample.Maui/Sample.Maui.csproj", "-f", "net11.0-macos", "-c", "Debug", "-p:ValidateXcodeVersion=false", "-nodeReuse:false", "--nologo"],
-            "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
-            "problemMatcher": "$msCompile",
-            "group": "build"
-        },
-        {
-            // C# Dev Kit's status-bar TFM selector only keeps frameworks its project system can load,
-            // and net11.0-macos (the AppKit backend) is not one of the MAUI platforms it knows, so a
-            // macOS selection snaps back to maccatalyst. This task is the reliable local run for the
-            // AppKit head: build it, then open the signed bundle (no debugger attached).
-            "label": "run: Sample.Maui (macOS/AppKit, .NET 11)",
-            "type": "process",
-            "command": "bash",
-            "args": [
-                "-c",
-                "dotnet build samples/Sample.Maui/Sample.Maui.csproj -f net11.0-macos -c Debug -p:ValidateXcodeVersion=false -nodeReuse:false --nologo && open samples/Sample.Maui/bin/Debug/net11.0-macos/osx-arm64/Sample.app"
-            ],
-            "options": { "cwd": "${workspaceFolder}", "env": { "MSBUILDDISABLENODEREUSE": "1" } },
-            "problemMatcher": "$msCompile",
-            "presentation": { "reveal": "always", "panel": "dedicated" }
         },
         {
             "label": "maui: Build (Windows .NET 11)",

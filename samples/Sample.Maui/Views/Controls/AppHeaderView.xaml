@@ -9,9 +9,7 @@
     HeightRequest="48">
 
     <!--
-        The bar is 48 high on every head. AppKit otherwise gives this ContentView a 112px slot
-        (the 48px bar plus a 64px inset) and centres the bar, which pushed the header below the
-        sidebar and the content down by 64px. The control owns its height so the shell layouts do
+        The bar is 48 high on every head. The control owns its height so the shell layouts do
         not need a per-head workaround.
     -->
 

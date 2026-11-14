@@ -11,12 +11,10 @@ breadcrumb header, theme/settings buttons, surfaces and settings surface.
 | WinUI | [`winui/04-shell.png`](winui/04-shell.png) | WinUI shell with the shared header, brand tile, Help/version footer and the selected item shown in the breadcrumb. |
 | WinUI | [`winui/03-settings.png`](winui/03-settings.png) | Settings blade over the new shell. |
 | MAUI | [`maui/03-shell-light.png`](maui/03-shell-light.png) | MAUI dashboard (reference shell) in light theme, with Help/version footer. |
-| MAUI | [`maui/04-shell-macos.png`](maui/04-shell-macos.png) | MAUI dashboard on the native macOS (AppKit) head, .NET 11, dark theme (follows the system appearance). |
 | MAUI | [`maui/05-shell-maccatalyst.png`](maui/05-shell-maccatalyst.png) | MAUI dashboard on Mac Catalyst, .NET 11, light theme. |
 | MAUI | [`maui/06-shell-android.png`](maui/06-shell-android.png) | MAUI dashboard on Android (API 37 emulator, 1280×800), .NET 11, light theme. |
 | MAUI | [`maui/01-settings-dark.png`](maui/01-settings-dark.png) | MAUI settings blade in dark theme. |
 | MAUI | [`maui/02-settings-light.png`](maui/02-settings-light.png) | MAUI settings blade in light theme. |
-| MAUI | [`maui/07-settings-macos.png`](maui/07-settings-macos.png) | MAUI settings blade on the native macOS (AppKit) head, .NET 11, dark theme. |
 | MAUI | [`maui/08-settings-maccatalyst.png`](maui/08-settings-maccatalyst.png) | MAUI settings blade on Mac Catalyst, .NET 11, light theme; the shell behind is dimmed by the scrim. |
 | MAUI | [`maui/09-settings-android.png`](maui/09-settings-android.png) | MAUI settings blade on Android (API 37 emulator, 1280×800), .NET 11, light theme. |
 | MAUI | [`maui/10-shell-ios.png`](maui/10-shell-ios.png) | MAUI dashboard on the iPhone 17 simulator (402×874 pt, 1206×2622), .NET 11, dark system theme. |
@@ -41,12 +39,11 @@ Notes:
   theme changes (reparented blade content keeps its native control theme otherwise), so the blade shots
   show a blade opened after the theme switch. The MAUI blade width was set to 480 after these captures;
   the 01/02 Windows shots still show the earlier 520px blade.
-- The 04–09 shots were captured on macOS on 2026-11-08 from the **.NET 11** heads (the sample is
-  .NET 11 only): macOS/AppKit and Mac Catalyst windows were rendered in-app (`NSView.CacheDisplay` /
-  `UIGraphicsImageRenderer`; macOS 2560×1440, Mac Catalyst 2660×1996), Android came from
-  `adb exec-out screencap` on an API 37 arm64 emulator set to 1280×800 at density 160. The macOS
-  pair runs the dark theme (the app follows the system appearance); Mac Catalyst and Android run
-  the light theme. The desktop/tablet sidebar is flush with the page top, outer edge and bottom,
+- The 05, 08 and 09 shots were captured on macOS and Android on 2026-11-08 from the **.NET 11**
+  heads (the sample is .NET 11 only): Mac Catalyst windows were rendered in-app
+  (`UIGraphicsImageRenderer`, 2660×1996), Android came from
+  `adb exec-out screencap` on an API 37 arm64 emulator set to 1280×800 at density 160. Mac Catalyst
+  runs the light theme. The desktop/tablet sidebar is flush with the page top, outer edge and bottom,
   with the rounding only on the inner edge (right in LTR, left in RTL). The settings blade has the
   same 480px width on every head, so all four accent swatches fit. The Android blade scrim is a
   layout background, so the shell behind the settings blade is dimmed rather than black.

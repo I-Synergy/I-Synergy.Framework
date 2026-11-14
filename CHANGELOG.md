@@ -230,6 +230,10 @@ type names they reference (XAML `clr-namespace` type names included). Plan:
 
 ### Removed
 
+- **[BREAKING] ISynergy.Framework.UI.Maui / Sample.Maui**: Removed the native macOS (AppKit) head — the `net10.0-macos` / `net11.0-macos` target frameworks, the `Microsoft.Maui.Platforms.MacOS` / `.Essentials` package references, the `#if MACOS` code (`CursorExtensions.MacOS.cs`, the `UseMauiAppMacOS`/`AddMacOSEssentials` branch of `UseMauiAppForCurrentHead<TApplication>()`, the `LoadingView` MediaElement guards), the sample's `Platforms/MacOS` entry point and `_IncludeMacOSPlatformSources` target, and the corresponding VS Code tasks/launch configurations. The backend it depended on (`Microsoft.Maui.Platforms.MacOS`, `0.1.0-preview.*` from `dotnet/maui-labs`) is **experimental and not officially supported by Microsoft**, and the head could not be produced in the published package either (it was macOS-host only, while packaging runs on Windows).
+  - The supported MAUI heads are now **Windows, Android, iOS and Mac Catalyst** — macOS remains covered through **Mac Catalyst** (`net10.0-maccatalyst` / `net11.0-maccatalyst`), which is MAUI's officially supported macOS target.
+  - `UseMauiAppForCurrentHead<TApplication>()` is unchanged as public API and now always calls `UseMauiApp<T>()`; call sites need no change.
+
 - **[BREAKING] ISynergy.Framework.UI / UI.WPF / UI.WinUI / UI.Maui**: Removed the dialog-based theme and language selection — `ThemeViewModel`, `LanguageViewModel`, `IThemeWindow`, `ILanguageWindow`, `ILanguageViewModel`, the WPF/WinUI/MAUI `ThemeWindow` and `LanguageWindow` views, and the MAUI `RadioButtonToThemeConverter`. `IShellViewModel.LanguageCommand` / `BaseShellViewModel.LanguageCommand` and the `OpenLanguageAsync`/`OpenThemesAsync` hooks are gone from all heads.
   - The shell's `ThemeCommand` now toggles between `Themes.Light` and `Themes.Dark` through `IThemeService`; accent-color and language selection belong in the application's settings surface.
   - `BaseShellViewModel` constructors in WPF, WinUI and MAUI now take an `IThemeService`.

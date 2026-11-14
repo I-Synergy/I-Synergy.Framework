@@ -12,11 +12,11 @@ not a Roslyn symbol diff.
 |---|---|---|---|---|
 | Project | `ISynergy.Framework.UI.WPF` | `ISynergy.Framework.UI.WinUI` | `ISynergy.Framework.UI.Maui` | `ISynergy.Framework.UI.Blazor` |
 | Platform switch | `<UseWPF>true</UseWPF>` | `<UseWinUI>true</UseWinUI>` | `<UseMaui>true</UseMaui>` | Razor class library |
-| TFMs | `net10.0/11.0-windows7.0`, `-windows8.0`, `-windows10.0.26100.0` | `net10.0/11.0-windows10.0.26100.0` | `net10.0/11.0-android`, `-ios`, `-maccatalyst`, `+ -macos`/`-windows` per host | `net10.0`, `net11.0` |
+| TFMs | `net10.0/11.0-windows7.0`, `-windows8.0`, `-windows10.0.26100.0` | `net10.0/11.0-windows10.0.26100.0` | `net10.0/11.0-android`, `-ios`, `-maccatalyst`, `-windows10.0.26100.0` per host | `net10.0`, `net11.0` |
 | UI dependency | PresentationFramework, WindowsBase | Microsoft.WindowsAppSDK | Microsoft.Maui.Controls | none (browser) |
 | `.cs` files | 55 | 93 | 88 | 27 |
 | Public types | 62 | 144 | 147 | 27 |
-| Folders | `Controls`, `Controls/BladeView`, `Converters`, `Extensions`, `Services`, `Styles`, `ViewModels`, `Views`, `Windows` | same shape + `Controls/Buttons`, `Controls/Menu`, `Controls/Tiles`, `Controls/TextBox`, `Controls/RadioButton` | same shape + `Platforms/*` (Android/iOS/MacCatalyst/Windows/macOS), `Controls`, `Converters`, `Helpers` | `Abstractions`, `Components`, `Constants`, `Extensions`, `Interfaces`, `Services`, `wwwroot` |
+| Folders | `Controls`, `Controls/BladeView`, `Converters`, `Extensions`, `Services`, `Styles`, `ViewModels`, `Views`, `Windows` | same shape + `Controls/Buttons`, `Controls/Menu`, `Controls/Tiles`, `Controls/TextBox`, `Controls/RadioButton` | same shape + `Platforms/*` (Android/iOS/MacCatalyst/Windows), `Controls`, `Converters`, `Helpers` | `Abstractions`, `Components`, `Constants`, `Extensions`, `Interfaces`, `Services`, `wwwroot` |
 
 The three native heads share the same skeleton: **`Application`, `View`, `Window`, one `*Service` per
 contract, `Converters/`, `ViewModels/Base`, `Controls/BladeView`**. Blazor is a different animal: a

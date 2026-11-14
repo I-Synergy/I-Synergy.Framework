@@ -93,22 +93,6 @@
             }
         },
         {
-            // macOS/AppKit: .NET 11 runs CoreCLR on Apple, so the plain coreclr debugger can start the
-            // app bundle directly — no MAUI extension, no "startup project", no TFM selector. The
-            // pre-launch task builds exactly this TFM (and keeps the bundle code-signed: an unsigned
-            // bundle is killed at exec with "Code Signature Invalid").
-            // There is no Sample.Maui.exe here — the macOS build output is the .app bundle.
-            "name": "Sample.Maui (MacOS, .NET 11)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "maui: Build (macOS .NET 11)",
-            "program": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-macos/osx-arm64/Sample.app/Contents/MacOS/Sample.Maui",
-            "cwd": "${workspaceFolder}/samples/Sample.Maui/bin/Debug/net11.0-macos/osx-arm64",
-            "env": {
-                "Environment": "Staging"
-            }
-        },
-        {
             // Same approach for Mac Catalyst (also CoreCLR on .NET 11).
             "name": "Sample.Maui (Mac Catalyst, .NET 11)",
             "type": "coreclr",

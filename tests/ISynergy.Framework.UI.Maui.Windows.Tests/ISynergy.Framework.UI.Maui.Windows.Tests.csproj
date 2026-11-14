@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <!-- ISynergy.Framework.UI.Maui only exposes its windows TFM on a Windows host (its other TFMs are
-         android/ios/maccatalyst/macos), so referencing it from a net*-windows test project cannot
+         android/ios/maccatalyst), so referencing it from a net*-windows test project cannot
          resolve on macOS and fails the whole solution restore with NU1201. The project itself is
          Windows-only; restore it there, where the windows TFM exists. -->
     <ProjectReference Include="..\..\src\ISynergy.Framework.UI.Maui\ISynergy.Framework.UI.Maui.csproj"
