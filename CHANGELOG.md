@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Azure integrations are identity-first**: `ISynergy.Framework.Storage.Azure`, `ISynergy.Framework.MessageBus.Azure`, `ISynergy.Framework.Mail.Microsoft365` and `ISynergy.Framework.OpenTelemetry.ApplicationInsights` now prefer managed identity (`ServiceEndpoint`/`FullyQualifiedNamespace`/`UseManagedIdentity` plus `ManagedIdentityClientId` or `DefaultAzureCredential`), with the existing connection string or client secret kept as the fallback. `Storage.Azure` also consumes an Aspire-registered `BlobServiceClient` when present, so a published account URI works without a connection string. `EventSourcing.Storage.Azure` documents the same identity-first precedence for its injected client.
+- **Tests**: added offline coverage for the identity/fallback resolution in Storage, MessageBus (new `ISynergy.Framework.MessageBus.Azure.Tests` project), Mail and Application Insights; changed-line coverage is 92.7%.
+
+### Removed
+
+- **`azure-pipelines.yml`**: deleted now that GitHub Actions (`.github/workflows/ci.yml`) owns build, test, signing and release. `docs/MIGRATION_GUIDE.md` records the retired Azure DevOps setup as history only.
+- **`ISynergy.Framework.AspNetCore`**: removed the unused `AzureOptions` and `KeyVaultOptions` configuration classes; Key Vault configuration lives in `ISynergy.Framework.KeyVault`.
+
 ### Added
 
 #### Documentation

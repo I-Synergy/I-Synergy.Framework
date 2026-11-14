@@ -28,9 +28,11 @@ public sealed class AzureBlobEventArchiveStorage : IEventArchiveStorage
 
     /// <summary>Initializes a new instance of <see cref="AzureBlobEventArchiveStorage"/>.</summary>
     /// <param name="blobServiceClient">
-    /// Pre-configured <see cref="BlobServiceClient"/>. Register via
-    /// <c>AddAzureBlobServiceClient("blobs")</c> in Aspire or
-    /// <c>services.AddSingleton(new BlobServiceClient(connStr))</c>.
+    /// Pre-configured <see cref="BlobServiceClient"/>. Register it via Aspire's
+    /// <c>AddAzureBlobServiceClient("blobs")</c> (identity-based in published environments,
+    /// connection string/emulator locally), or construct it yourself with
+    /// <c>new BlobServiceClient(new Uri(serviceUri), credential)</c> for identity-based
+    /// authentication. Connection-string clients remain supported as a fallback.
     /// </param>
     /// <param name="logger">Logger.</param>
     public AzureBlobEventArchiveStorage(

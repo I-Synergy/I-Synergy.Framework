@@ -9,9 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Identity" />
     <PackageReference Include="Azure.Messaging.ServiceBus" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ISynergy.Framework.MessageBus\ISynergy.Framework.MessageBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ISynergy.Framework.MessageBus.Azure.Tests" />
   </ItemGroup>
 </Project>

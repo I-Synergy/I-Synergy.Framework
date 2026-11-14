@@ -3,7 +3,7 @@
 ## Overview
 This guide will help you migrate the I-Synergy.Framework repository from Azure DevOps to GitHub as the primary repository and CI/CD owner (build and NuGet publishing run in GitHub Actions).
 
-> **Note:** Parts 3–5 below describe the older Azure Pipelines setup. They are only needed during a rollback; the current CI/CD lives in `.github/workflows/ci.yml` (see Part 11).
+> **Note:** Parts 3–5 below describe the retired Azure Pipelines setup and are retained as migration history. The current — and only — CI/CD lives in `.github/workflows/ci.yml` (see Part 11); `azure-pipelines.yml` has been deleted now that GitHub releases are published.
 
 ## Prerequisites
 - Administrator access to Azure DevOps project
@@ -412,13 +412,13 @@ If you need to rollback:
 **Solution:**
 1. Update SonarCloud project settings to recognize GitHub as source
 2. Re-authenticate SonarCloud with GitHub
-3. Verify project key and organization in `azure-pipelines.yml`
+3. Verify project key and organization in `.github/workflows/ci.yml`
 
 ---
 
 ## Part 11: Move CI/CD to GitHub Actions
 
-The repository is built, tested, signed and published by `.github/workflows/ci.yml`. Azure Pipelines is no longer needed once the first GitHub release succeeds.
+The repository is built, tested, signed and published by `.github/workflows/ci.yml`. Azure Pipelines has been retired: `azure-pipelines.yml` was deleted after the first successful GitHub release, so GitHub Actions is the only build and release path.
 
 ### Step 11.1: One-time GitHub setup
 1. Settings → Environments → `production`: required reviewers, restrict deployment branches to `main`.
@@ -496,7 +496,7 @@ The repository is built, tested, signed and published by `.github/workflows/ci.y
    nuget.org.
 3. Merge to `main`, approve the `production` environment, then verify the release packages are on
    nuget.org and the `v<version>` tag exists on GitHub.
-4. Disable the Azure DevOps pipeline, then delete `azure-pipelines.yml`.
+4. Retire the Azure DevOps pipeline (done): `azure-pipelines.yml` has been deleted; GitHub Actions is the only CI/CD path.
 
 ### Step 11.5: What does not move
 Build history/logs, Azure DevOps variable groups, service connections and approval history stay in
@@ -536,7 +536,7 @@ For issues or questions, contact your Azure DevOps and GitHub administrators.
 ## Summary of Changes Made
 
 ### Modified Files
-- **azure-pipelines.yml**
+- **azure-pipelines.yml** — deleted; replaced by `.github/workflows/ci.yml`. The historical changes below applied while it existed:
   - Removed the bash task that pushed to GitHub
   - Updated CI trigger to **only `main`** branch (removed `development/dotnet10`)
   - Added PR trigger configuration (only for PRs targeting `main`)
