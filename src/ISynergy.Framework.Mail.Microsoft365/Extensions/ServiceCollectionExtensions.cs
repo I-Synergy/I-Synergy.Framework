@@ -1,3 +1,4 @@
+using Azure.Core;
 using ISynergy.Framework.Core.Extensions;
 using ISynergy.Framework.Mail.Abstractions.Services;
 using ISynergy.Framework.Mail.Microsoft365.Options;
@@ -19,8 +20,18 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="configuration">The application configuration.</param>
     /// <param name="prefix">Optional configuration section prefix.</param>
+    /// <param name="credential">
+    /// Optional credential for identity-based authentication. When supplied it takes precedence over
+    /// managed identity created from <see cref="Microsoft365MailOptions.ManagedIdentityClientId"/> and
+    /// over the client secret.
+    /// </param>
     /// <returns>The service collection for chaining.</returns>
     /// <remarks>
+    /// <para>
+    /// Identity-based authentication is the primary mechanism: it is used when a credential is
+    /// supplied, when <see cref="Microsoft365MailOptions.UseManagedIdentity"/> is set, or when no
+    /// client secret is configured. The client secret remains the fallback.
+    /// </para>
     /// <para>
     /// <strong>AOT/Trimming notice:</strong> This method registers <see cref="Microsoft365MailService"/>, which depends on
     /// <c>GraphServiceClient</c> from the Microsoft.Graph SDK. That SDK uses reflection-based JSON serialization
@@ -29,10 +40,18 @@ public static class ServiceCollectionExtensions
     /// full AOT annotations.
     /// </para>
     /// </remarks>
-    public static IServiceCollection AddMicrosoft365MailIntegration(this IServiceCollection services, IConfiguration configuration, string prefix = "")
+    public static IServiceCollection AddMicrosoft365MailIntegration(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string prefix = "",
+        TokenCredential? credential = null)
     {
         services.AddOptions();
         services.Configure<Microsoft365MailOptions>(configuration.GetSection($"{prefix}MailOptions").Bind);
+
+        if (credential is not null)
+            services.TryAddSingleton(credential);
+
         services.TryAddSingleton<IMailService, Microsoft365MailService>();
         return services;
     }

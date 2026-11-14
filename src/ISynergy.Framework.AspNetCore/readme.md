@@ -216,8 +216,6 @@ ISynergy.Framework.AspNetCore/
 │
 └── Options/                   # Configuration options
     ├── CORSOptions
-    ├── KeyVaultOptions
-    ├── AzureOptions
     └── TelemetryOptions
 ```
 

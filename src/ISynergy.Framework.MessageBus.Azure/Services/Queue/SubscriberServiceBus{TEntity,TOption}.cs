@@ -1,7 +1,8 @@
+using Azure.Core;
 using Azure.Messaging.ServiceBus;
 using ISynergy.Framework.Core.Validation;
 using ISynergy.Framework.MessageBus.Abstractions;
-using ISynergy.Framework.MessageBus.Abstractions.Options;
+using ISynergy.Framework.MessageBus.Azure.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Text;
@@ -16,7 +17,7 @@ namespace ISynergy.Framework.MessageBus.Azure.Services.Queue;
 /// <typeparam name="TEntity">The type of the t entity.</typeparam>
 /// <typeparam name="TOption">The type of the t option.</typeparam>
 internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServiceBus<TEntity>
-    where TOption : class, IQueueOption, new()
+    where TOption : class, IAzureQueueOption, new()
 {
     /// <summary>
     /// The option
@@ -30,6 +31,8 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// The JSON type info used for AOT-safe deserialization.
     /// </summary>
     protected readonly JsonTypeInfo<TEntity>? _jsonTypeInfo;
+
+    private readonly TokenCredential? _credential;
 
     private static readonly JsonSerializerOptions CachedJsonOptions = new()
     {
@@ -55,18 +58,24 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// The <see cref="JsonTypeInfo{T}"/> for <typeparamref name="TEntity"/>, obtained from a
     /// <c>[JsonSerializable]</c>-attributed <see cref="System.Text.Json.Serialization.JsonSerializerContext"/>. Required for Native AOT publishing.
     /// </param>
+    /// <param name="credential">
+    /// Optional credential for identity-based authentication. When omitted, a credential is created
+    /// from <see cref="IAzureQueueOption.ManagedIdentityClientId"/>.
+    /// </param>
     protected SubscriberServiceBus(
         IOptions<TOption> options,
         ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
-        JsonTypeInfo<TEntity> jsonTypeInfo)
+        JsonTypeInfo<TEntity> jsonTypeInfo,
+        TokenCredential? credential = null)
     {
         _option = options.Value;
 
-        Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
+        ValidateAuthenticationConfiguration();
 
         _logger = logger;
         _jsonTypeInfo = jsonTypeInfo;
+        _credential = credential;
     }
 
     /// <summary>
@@ -74,20 +83,36 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// </summary>
     /// <param name="options">The options.</param>
     /// <param name="logger">The logger.</param>
+    /// <param name="credential">
+    /// Optional credential for identity-based authentication. When omitted, a credential is created
+    /// from <see cref="IAzureQueueOption.ManagedIdentityClientId"/>.
+    /// </param>
     /// <remarks>
     /// This overload uses the reflection-based <see cref="JsonSerializer"/> path and is not compatible with
     /// Native AOT publishing. Use the overload that accepts a <see cref="JsonTypeInfo{T}"/> for AOT scenarios.
     /// </remarks>
     protected SubscriberServiceBus(
         IOptions<TOption> options,
-        ILogger<SubscriberServiceBus<TEntity, TOption>> logger)
+        ILogger<SubscriberServiceBus<TEntity, TOption>> logger,
+        TokenCredential? credential = null)
     {
         _option = options.Value;
 
-        Argument.IsNotNullOrEmpty(_option.ConnectionString);
         Argument.IsNotNullOrEmpty(_option.QueueName);
+        ValidateAuthenticationConfiguration();
 
         _logger = logger;
+        _credential = credential;
+    }
+
+    private void ValidateAuthenticationConfiguration()
+    {
+        if (!AzureServiceBusClientFactory.IsConfigured(_option))
+        {
+            throw new InvalidOperationException(
+                "Azure Service Bus is not configured. Set FullyQualifiedNamespace for identity-based " +
+                "authentication, or ConnectionString as a fallback.");
+        }
     }
 
     /// <summary>
@@ -111,7 +136,7 @@ internal abstract class SubscriberServiceBus<TEntity, TOption> : ISubscriberServ
     /// <returns>Task.</returns>
     public virtual Task SubscribeToMessageBusAsync(CancellationToken cancellationToken = default)
     {
-        _serviceBusClient = new ServiceBusClient(_option.ConnectionString);
+        _serviceBusClient = AzureServiceBusClientFactory.Create(_option, _credential);
 
         // create the options to use for configuring the processor
         var options = new ServiceBusProcessorOptions
