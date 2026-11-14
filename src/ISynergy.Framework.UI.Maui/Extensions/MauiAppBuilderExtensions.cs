@@ -1,7 +1,3 @@
-#if MACOS
-using Microsoft.Maui.Platforms.MacOS.Essentials;
-using Microsoft.Maui.Platforms.MacOS.Hosting;
-#endif
 using ISynergy.Framework.Core.Abstractions;
 using ISynergy.Framework.Core.Abstractions.Base;
 using ISynergy.Framework.Core.Abstractions.Services;
@@ -174,12 +170,12 @@ public static class MauiAppBuilderExtensions
     }
 
     /// <summary>
-    /// Registers the application with the hosting backend of the current head.
+    /// Registers the application with the MAUI hosting backend.
     /// </summary>
     /// <remarks>
-    /// Mac Catalyst and the mobile heads use Microsoft.Maui.Controls' own hosting; the AppKit head ships
-    /// its own (UseMauiAppMacOS + AddMacOSEssentials). Choosing here keeps conditional compilation out
-    /// of the application's startup code.
+    /// Every supported head uses Microsoft.Maui.Controls' own hosting (<c>UseMauiApp</c>); the wrapper
+    /// keeps hosting out of the application's startup code, so consumers do not depend on the MAUI
+    /// hosting entry point directly.
     /// </remarks>
     /// <typeparam name="TApplication">The MAUI application type.</typeparam>
     /// <param name="appBuilder">The MAUI app builder.</param>
@@ -187,16 +183,13 @@ public static class MauiAppBuilderExtensions
     public static MauiAppBuilder UseMauiAppForCurrentHead<TApplication>(this MauiAppBuilder appBuilder)
         where TApplication : class, IApplication
     {
-#if MACOS
-        appBuilder.UseMauiAppMacOS<TApplication>().AddMacOSEssentials();
-#else
         // MCTME001 (CommunityToolkit.Maui) expects UseMauiApp<T>() in the application's own chain; it
         // cannot see through this wrapper, so the diagnostic is suppressed here instead of pushing the
         // hosting call back into every application.
 #pragma warning disable MCTME001
         appBuilder.UseMauiApp<TApplication>();
 #pragma warning restore MCTME001
-#endif
+
         return appBuilder;
     }
 

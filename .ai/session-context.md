@@ -1,3 +1,88 @@
+# Session Handoff - 2026-11-14 (removed the MAUI macOS/AppKit head)
+
+**Written By:** Reasonix Code
+**Next Session May Use:** Any
+
+## Task Summary
+Removed the native macOS (AppKit) head from the MAUI stack. The head depended on
+`Microsoft.Maui.Platforms.MacOS` / `.Essentials` `0.1.0-preview.14.26531.2` from `dotnet/maui-labs`,
+which the official MAUI docs class as **experimental and not officially supported by Microsoft**
+(`docs/developers/platform-backends/macos.md` in `dotnet/docs-maui`). MAUI's supported macOS target is
+**Mac Catalyst**. The head also could never ship: its TFMs were gated on `IsOSPlatform('osx')` while
+the only CI pack job is `windows-2025-vs2026`, which is why the published `2026.11112.10146` carries
+only android/ios/maccatalyst/windows assets.
+
+- Supported heads are now **Windows, Android, iOS, Mac Catalyst** — nothing else.
+- `ISynergy.Framework.UI.Maui` evaluates 8 TFMs (`net10.0`/`net11.0` × android/ios/maccatalyst,
+  plus windows on Windows hosts); `Sample.Maui` evaluates 4 (`net11.0` × android/ios/maccatalyst,
+  plus windows on Windows hosts).
+- Removed: both `-macos` TFMs, the macos `SupportedOSPlatformVersion`, the two AppKit package
+  references and their `Directory.Packages.props` pins, `Extensions/CursorExtensions.MacOS.cs`,
+  the `UseMauiAppMacOS`/`AddMacOSEssentials` branch of `UseMauiAppForCurrentHead<TApplication>()`,
+  the `LoadingView` MediaQuery/MediaElement `#if` guards, the sample's `Platforms/MacOS`
+  (`Main.cs`, `MauiMacOSApp.cs`), its `net11.0-macos` TFM, macos `When` block, macos icon/splash
+  conditions, AppKit package ItemGroup and `_IncludeMacOSPlatformSources` target, the
+  `#if !MACOS` / `#elif !MACOS` guards in `MauiProgram.cs`, the macOS tasks and launch configuration
+  in `.vscode`, the two AppKit screenshots, and the macOS sections of the sample readme, the
+  screenshot index and `docs/developers/ui-heads-comparison.md`.
+- Verified: `dotnet build samples/Sample.Maui -f net11.0-windows10.0.26100.0 -c Debug` →
+  **0 warnings, 0 errors**; `-getProperty:TargetFrameworks` on both projects shows no macos entry;
+  the local `packages/I-Synergy.Framework.UI.Maui.0.0.0.nupkg` has the same 8 assets and no macos.
+
+## Decisions Made
+- **Delete rather than hide behind a condition.** The user's instruction was to remove it because an
+  experimental head "makes no sense to keep here"; a dormant `IsOSPlatform('osx')` block would keep
+  the preview package pins and the unshippable TFM in the graph.
+  - **Alternatives considered**: keep the head but exclude it from packaging; ship a separate
+    `…UI.Maui.MacOS` package from a macOS CI leg. Both keep a dependency Microsoft says will change.
+- **Keep `UseMauiAppForCurrentHead<TApplication>()` public.** It is consumer-facing API; only its
+  AppKit branch is gone, so it now always calls `UseMauiApp<T>()` and no call site changes.
+- **Keep `ISynergy.Framework.UI.Maui.Mac.Tests`.** Despite the name it targets
+  `net11.0-maccatalyst` (Mac Catalyst), not AppKit.
+- **Keep historical records untouched.** `.ai/plans/maui-android-macos-heads.md`, its `.ai/completed/`
+  counterpart, older CHANGELOG entries and `audits/` still describe the removed head as history.
+
+## Open Questions
+- **OPEN**: the next published `I-Synergy.Framework.UI.Maui` package will drop the (never-shipped)
+  macos asset and is otherwise unchanged; confirm the version bump is treated as breaking, since the
+  CHANGELOG marks the removal `[BREAKING]` — no released package contained a macos asset, so no
+  consumer can actually regress.
+- **ASSUMED**: `docs/developers/ui-heads-comparison.md` is still accurate for Mac Catalyst; the
+  macOS row was removed but the file was not re-audited.
+- **NOT RUN**: the Android/iOS/Mac Catalyst heads and the macOS-hosted heads were not rebuilt on this
+  Windows machine (Apple TFMs cannot cross-compile here). Only the Windows TFM was compiled.
+
+## Files Modified
+- `src/ISynergy.Framework.UI.Maui/ISynergy.Framework.UI.Maui.csproj` - dropped osx-gated TFMs, macos
+  `SupportedOSPlatformVersion`, AppKit package ItemGroup
+- `src/ISynergy.Framework.UI.Maui/Extensions/MauiAppBuilderExtensions.cs` - removed MACOS usings and
+  hosting branch; `UseMauiAppForCurrentHead` now always `UseMauiApp<T>()`
+- `src/ISynergy.Framework.UI.Maui/Controls/LoadingView.cs` - removed CS0649 pragma and `#if !MACOS`
+- `src/ISynergy.Framework.UI.Maui/Extensions/CursorExtensions.MacOS.cs` - **deleted**
+- `samples/Sample.Maui/Sample.Maui.csproj` - `net11.0-macos` TFM, macos `When` block, icon/splash
+  conditions, AppKit packages, `_IncludeMacOSPlatformSources` all removed
+- `samples/Sample.Maui/MauiProgram.cs` - `#elif !MACOS` → `#else`; unconditional
+  `ConfigureSyncfusionCore()`
+- `samples/Sample.Maui/Platforms/MacOS/{Main,MauiMacOSApp}.cs` - **deleted**
+- `samples/Sample.Maui/Views/Controls/AppHeaderView.xaml` - AppKit-only comment removed
+- `Directory.Packages.props` - `Microsoft.Maui.Platforms.MacOS{,.Essentials}` pins removed
+- `.vscode/{tasks,launch,settings}.json` - macOS build/run task and launch configuration removed
+- `samples/Sample.Maui/readme.md`, `screenshots/README.md`, `docs/developers/ui-heads-comparison.md`,
+  `tests/ISynergy.Framework.UI.Maui.Windows.Tests/…csproj` - macOS/AppKit references removed
+- `screenshots/maui/{04-shell-macos,07-settings-macos}.png` - **deleted**
+- `CHANGELOG.md` - `[BREAKING]` entry under Unreleased → Removed
+- `.ai/plans/remove-maui-macos-head.md`, `.ai/completed/remove-maui-macos-head.md`
+
+## Next Actions (Priority Order)
+1. Run the Android / Mac Catalyst / iOS heads on a macOS or device host to confirm the removed guards
+   changed nothing (`LoadingView` video splash, Syncfusion handlers, `CursorBehavior`).
+2. Release the package and confirm the published nupkg still carries android/ios/maccatalyst/windows
+   for both `net10.0` and `net11.0`.
+3. If native macOS is ever wanted again, start from `dotnet/maui-labs` `platforms/MacOS` and treat it
+   as a separate experimental package — do not fold it back into the framework package.
+
+---
+
 # Session Handoff - 2026-11-11 (release tag permission + SDK pin)
 
 **Written By:** Reasonix Code
