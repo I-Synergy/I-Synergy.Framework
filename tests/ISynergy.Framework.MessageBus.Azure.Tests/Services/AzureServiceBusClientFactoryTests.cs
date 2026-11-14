@@ -49,8 +49,8 @@ public class AzureServiceBusClientFactoryTests
         var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => AzureServiceBusClientFactory.Create(option));
 
-        StringAssert.Contains(exception.Message, "FullyQualifiedNamespace");
-        StringAssert.Contains(exception.Message, "ConnectionString");
+        Assert.Contains("FullyQualifiedNamespace", exception.Message);
+        Assert.Contains("ConnectionString", exception.Message);
     }
 
     [TestMethod]

@@ -73,8 +73,8 @@ public class AzureStorageServiceClientTests
         var exception = Assert.ThrowsExactly<InvalidOperationException>(
             () => service.CreateBlobContainerClient("mycontainer"));
 
-        StringAssert.Contains(exception.Message, nameof(AzureStorageOptions.ServiceEndpoint));
-        StringAssert.Contains(exception.Message, nameof(AzureStorageOptions.ConnectionString));
+        Assert.Contains(nameof(AzureStorageOptions.ServiceEndpoint), exception.Message);
+        Assert.Contains(nameof(AzureStorageOptions.ConnectionString), exception.Message);
     }
 
     [TestMethod]

@@ -86,9 +86,9 @@ public class AzureStorageOptionsTests
 
         var connectionString = options.GetEffectiveConnectionString();
 
-        StringAssert.Contains(connectionString, "AccountName=myaccount");
-        StringAssert.Contains(connectionString, "AccountKey=a2V5");
-        StringAssert.Contains(connectionString, "BlobEndpoint=https://myaccount.blob.core.windows.net");
+        Assert.Contains("AccountName=myaccount", connectionString);
+        Assert.Contains("AccountKey=a2V5", connectionString);
+        Assert.Contains("BlobEndpoint=https://myaccount.blob.core.windows.net", connectionString);
     }
 
     [TestMethod]
