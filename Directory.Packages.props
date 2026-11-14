@@ -58,8 +58,8 @@
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.2" />
     <PackageVersion Include="Reqnroll.MSTest" Version="3.3.4" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
-    <PackageVersion Include="Sentry.OpenTelemetry" Version="6.13.0" />
-    <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="6.13.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry" Version="7.0.0" />
+    <PackageVersion Include="Sentry.OpenTelemetry.Exporter" Version="7.0.0" />
     <PackageVersion Include="Syncfusion.Chart.WinUI" Version="35.1.46" />
     <PackageVersion Include="Syncfusion.DocIORenderer.Net.Core" Version="35.1.46" />
     <PackageVersion Include="Syncfusion.Editors.WinUI" Version="35.1.46" />
