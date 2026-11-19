@@ -115,19 +115,7 @@
   "hooks": [],
   "materialize": "copy",
   "exclude": [],
-  "prompts": [
-    "create-readme",
-    "create-unittest",
-    "csharp-async",
-    "documentation-writer",
-    "dotnet-best-practices",
-    "dotnet-design-pattern-review",
-    "folder-structure-blueprint-generator",
-    "iso-5055-quality-enforcer",
-    "prompt-builder",
-    "update-markdown-file-index",
-    "usecases-gherkin-specs"
-  ],
+  "prompts": [],
   "clients": [
     "claude",
     "copilot"

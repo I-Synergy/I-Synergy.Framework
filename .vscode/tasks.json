@@ -20,10 +20,6 @@
             "group": "build"
         },
 
-        // ------------------------------------------------------------------
-        // Build tasks for the desktop sample launch configurations. The output
-        // paths are pinned by the properties below; see launch.json.
-        // ------------------------------------------------------------------
         {
             "label": "build: Sample.WPF (.NET 10)",
             "type": "process",
@@ -46,7 +42,6 @@
             "label": "build: Sample.WinUI (.NET 10)",
             "type": "process",
             "command": "dotnet",
-            // WindowsPackageType=None builds unpackaged, which the coreclr debugger can start.
             "args": ["build", "${workspaceFolder}/samples/Sample.WinUI/Sample.WinUI.csproj", "-p:SampleTargetFramework=net10.0", "-p:Platform=arm64", "-p:WindowsPackageType=None", "-nodeReuse:false", "--nologo"],
             "options": { "env": { "MSBUILDDISABLENODEREUSE": "1" } },
             "problemMatcher": "$msCompile",
@@ -71,15 +66,6 @@
             "group": "build"
         },
 
-        // ------------------------------------------------------------------
-        // Pre-launch builds for the MAUI Android / Mac Catalyst / Windows
-        // configurations in launch.json. They are plain `dotnet build` calls
-        // (not the `maui` task type) so the Apple targets can pass
-        // ValidateXcodeVersion=false: the .NET 10 Apple packs pin Xcode 26.0
-        // and the .NET 11 packs pin 27.0, which a newer Xcode fails by default.
-        // The MAUI extension performs its own build-and-deploy for F5; these
-        // tasks give an early, precise compile error instead.
-        // ------------------------------------------------------------------
         {
             "label": "maui: Build",
             "type": "process",
@@ -117,18 +103,6 @@
             "group": "build"
         },
 
-        // ------------------------------------------------------------------
-        // Hot reload. `dotnet watch run` owns the app process, so these are
-        // tasks (Terminal > Run Task), not launch configurations: start one,
-        // then use "Attach: Sample (WPF / WinUI, dotnet watch)" to debug it.
-        // Ctrl+R restarts the app inside the task terminal.
-        //
-        // WPF and WinUI are verified to apply C# edits. Maui is deliberately
-        // absent: for the multi-targeted MAUI project dotnet-watch's delta
-        // build also compiles the iOS/MacCatalyst sources and fails with a
-        // CS0518 avalanche, so edits cannot be applied there (use the normal
-        // Sample.Maui launch configurations instead).
-        // ------------------------------------------------------------------
         {
             "label": "watch: Sample.WPF (.NET 10)",
             "type": "process",
@@ -151,7 +125,6 @@
             "label": "watch: Sample.WinUI (.NET 10)",
             "type": "process",
             "command": "dotnet",
-            // Unpackaged + arm64, matching the launch configurations.
             "args": ["watch", "run", "--project", "${workspaceFolder}/samples/Sample.WinUI/Sample.WinUI.csproj", "--nologo"],
             "options": { "env": { "SampleTargetFramework": "net10.0", "Platform": "arm64", "WindowsPackageType": "None", "MSBUILDDISABLENODEREUSE": "1" } },
             "problemMatcher": "$msCompile",

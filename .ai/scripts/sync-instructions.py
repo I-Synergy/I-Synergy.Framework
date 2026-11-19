@@ -34,6 +34,15 @@ HEADINGS = (
     "Core Operational Rules", "Work-Type Context Mapping",
 )
 
+# AGENTS.md names the Claude adapter paths; the generated Copilot copy must point at the
+# Copilot adapters instead. `.claude/settings.json` is a real Claude-only path and stays
+# as written. Kept in step with catalog._copilot_paths, which generates the same file.
+_CLAUDE_PATH = re.compile(r"\.claude/(?!settings\.json|settings\.local\.json)")
+
+
+def copilot_paths(text: str) -> str:
+    return _CLAUDE_PATH.sub(".github/", text)
+
 
 def section(text: str, title: str) -> str:
     pattern = re.compile(rf"^## {re.escape(title)}\s*$.*?(?=^## |\Z)", re.M | re.S)
@@ -57,16 +66,19 @@ def main() -> int:
     existing = COPILOT.read_text(encoding="utf-8") if COPILOT.is_file() else ""
     # Normalize markers written by earlier releases so the block is found.
     existing = existing.replace("<!-- ai-manager:", "<!-- ai-workspace-manager:")
-    parts = ["# GitHub Copilot Instructions", "", GENERATED, NOTE, "", agents]
+    parts = ["# GitHub Copilot Instructions", "", GENERATED, NOTE, "", copilot_paths(agents)]
+    block = reference(existing)
+    if block:
+        parts += ["", START, block, END]
+    # The runtime section follows the reference block: the generated-body check compares
+    # everything before the reference marker against AGENTS.md, so a runtime block placed
+    # earlier would make every regeneration look stale.
     if RUNTIME.is_file():
         runtime = RUNTIME.read_text(encoding="utf-8").strip()
         parts += ["", RUNTIME_START, runtime, RUNTIME_END]
     else:
         print(f"WARNING: {RUNTIME.relative_to(ROOT).as_posix()} not found; "
               "Copilot runtime section skipped", file=sys.stderr)
-    block = reference(existing)
-    if block:
-        parts += ["", START, block, END]
     document = "\n".join(parts).rstrip() + "\n"
     if COPILOT.is_file() and COPILOT.read_text(encoding="utf-8") == document:
         print("copilot-instructions.md is up to date")
