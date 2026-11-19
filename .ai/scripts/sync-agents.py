@@ -3,7 +3,7 @@
 Ensure folder-level junctions exist for agent targets.
 
 Delegates to sync-platforms.py, which handles skills, agents, instructions and
-prompts for Claude Code, GitHub Copilot and Reasonix.
+prompts for Claude Code and GitHub Copilot.
 
 Usage:
     python sync-agents.py              # ensure junctions exist

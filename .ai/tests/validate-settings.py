@@ -3,7 +3,9 @@
 """
 Validates that .claude/settings.json is correctly configured for the .ai/ layout:
   - plansDirectory points to .ai/plans
+  - hook commands use the shared scripts in .ai/scripts/hooks/ through py.sh
   - additionalDirectories includes .ai/ entries
+  - .claude/ holds only config, skills, agents and generated rules
   - No stale .claude/ content paths remain in tracked files
 """
 
@@ -31,6 +33,8 @@ ALLOWED_CLAUDE_REFS = {
     ".claude/skills/",
     ".claude/agents",
     ".claude/agents/",
+    ".claude/rules",
+    ".claude/rules/",
 }
 
 # Files to check for stale .claude/ content references
@@ -47,20 +51,56 @@ STALE_REF_PATTERN = re.compile(
     r'(?<!~/)\.claude/(?!settings\.json|settings\.local\.json)'
 )
 
+# Commands the template shipped before the shared hook scripts. They must not remain.
+LEGACY_HOOK_COMMANDS = (
+    "python .ai/scripts/sync-platforms.py",
+    "python .ai/scripts/sync-agents.py",
+    "python -c",
+)
+
+HOOK_SCRIPT_PATTERN = re.compile(r"\.ai/scripts/hooks/[\w.-]+\.py")
+
+
+def _hook_commands(hooks: dict, event: str) -> list:
+    """Every hook command configured for one event."""
+    commands = []
+    entries = hooks.get(event, [])
+    if not isinstance(entries, list):
+        return commands
+    for entry in entries:
+        if isinstance(entry, dict):
+            for hook in entry.get("hooks", []) or []:
+                if isinstance(hook, dict) and "command" in hook:
+                    commands.append(str(hook["command"]))
+    return commands
+
+
+def _hook_script_text(command: str):
+    """Text of the shared hook script a command runs, or None when missing."""
+    match = HOOK_SCRIPT_PATTERN.search(command)
+    if not match:
+        return None
+    path = TEMPLATE_ROOT / match.group(0)
+    return path.read_text(encoding="utf-8") if path.is_file() else None
+
+
+def _load_settings():
+    settings_path = TEMPLATE_ROOT / ".claude" / "settings.json"
+    if not settings_path.exists():
+        return None, "settings.json not found (required)"
+    try:
+        return json.loads(settings_path.read_text(encoding="utf-8")), None
+    except json.JSONDecodeError as e:
+        return None, f"settings.json is invalid JSON: {e}"
+
 
 def test_settings_json() -> bool:
-    settings_path = TEMPLATE_ROOT / ".claude" / "settings.json"
     print("TEST 1: .claude/settings.json configuration")
     print("-" * 40)
 
-    if not settings_path.exists():
-        print("  FAIL: settings.json not found (required)")
-        return False
-
-    try:
-        settings = json.loads(settings_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        print(f"  FAIL: settings.json is invalid JSON: {e}")
+    settings, error = _load_settings()
+    if settings is None:
+        print(f"  FAIL: {error}")
         return False
 
     passed = True
@@ -73,65 +113,50 @@ def test_settings_json() -> bool:
         print(f"  FAIL: plansDirectory = {plans_dir!r}  (expected .ai/plans)")
         passed = False
 
-    # Check required hooks
     hooks = settings.get("hooks", {})
 
-    if "SessionStart" in hooks:
-        session_start = hooks.get("SessionStart", {})
-        # Ensure it's a dict with commands or list
-        if isinstance(session_start, dict) and "commands" in session_start:
-            commands = session_start["commands"]
-            if isinstance(commands, list) and any("sync-platforms.py" in str(cmd) for cmd in commands):
-                print("  PASS: SessionStart hook contains sync-platforms.py")
-            else:
-                print("  FAIL: SessionStart command missing sync-platforms.py")
-                passed = False
-        elif isinstance(session_start, list):
-            if any("sync-platforms.py" in str(cmd) for cmd in session_start):
-                print("  PASS: SessionStart hook contains sync-platforms.py")
-            else:
-                print("  FAIL: SessionStart hook missing sync-platforms.py")
-                passed = False
-        else:
-            print("  PASS: SessionStart hook present")
-    else:
-        print("  FAIL: SessionStart hook required (for sync-platforms.py)")
+    # Legacy inline commands must be gone from the template's own settings.
+    all_commands = [c for event in hooks for c in _hook_commands(hooks, event)]
+    legacy = [c for c in all_commands if any(c.startswith(prefix) for prefix in LEGACY_HOOK_COMMANDS)]
+    if legacy:
+        print(f"  FAIL: legacy hook commands still configured: {[c[:60] for c in legacy]}")
         passed = False
-
-    if "PostToolUse" in hooks:
-        post_tool = hooks.get("PostToolUse", {})
-        if isinstance(post_tool, dict) and "commands" in post_tool:
-            commands = post_tool["commands"]
-            has_sync_skills = any("sync-platforms.py" in str(cmd) for cmd in commands) if isinstance(commands, list) else False
-            has_sync_agents = any("sync-agents.py" in str(cmd) for cmd in commands) if isinstance(commands, list) else False
-            if has_sync_skills and has_sync_agents:
-                print("  PASS: PostToolUse hook contains sync-platforms.py and sync-agents.py")
-            elif has_sync_skills or has_sync_agents:
-                print("  PASS: PostToolUse hook present (has sync scripts)")
-            else:
-                print("  PASS: PostToolUse hook present")
-        else:
-            print("  PASS: PostToolUse hooks present")
     else:
-        print("  FAIL: PostToolUse hooks required (for sync-platforms.py and sync-agents.py)")
-        passed = False
+        print("  PASS: no legacy hook commands")
 
-    if "Stop" in hooks:
-        stop = hooks.get("Stop", {})
-        if isinstance(stop, dict) and "commands" in stop:
-            commands = stop["commands"]
-            cmd_str = str(commands)
-            has_build = "dotnet build" in cmd_str
-            has_msbuilddisable = "MSBUILDDISABLENODEREUSE=1" in cmd_str
-            has_nodeReuse = "-nodeReuse:false" in cmd_str
-            if has_build and has_msbuilddisable and has_nodeReuse:
-                print("  PASS: Stop hook contains dotnet build with memory protections")
-            else:
-                print("  PASS: Stop hook present")
+    # Every hook must run through the portable launcher and an existing shared script.
+    for event, script_name, must_contain, label in (
+        ("SessionStart", "session_start.py", "sync-platforms.py", "SessionStart"),
+        ("PostToolUse", "post_edit_sync.py", "sync-platforms.py", "PostToolUse"),
+        ("Stop", "stop_build.py", "dotnet", "Stop"),
+    ):
+        commands = [c for c in _hook_commands(hooks, event) if script_name in c]
+        if not commands:
+            print(f"  FAIL: {label} hook must run .ai/scripts/hooks/{script_name}")
+            passed = False
+            continue
+        if not all("hooks/py.sh" in c for c in commands):
+            print(f"  FAIL: {label} hook must start with the portable launcher (hooks/py.sh)")
+            passed = False
+            continue
+        text = _hook_script_text(commands[0])
+        if text is None:
+            print(f"  FAIL: {label} hook script .ai/scripts/hooks/{script_name} is missing")
+            passed = False
+        elif must_contain not in text:
+            print(f"  FAIL: {script_name} does not contain {must_contain!r}")
+            passed = False
         else:
-            print("  PASS: Stop hook present")
-    else:
-        print("  FAIL: Stop hook required (for build on changes)")
+            print(f"  PASS: {label} hook runs .ai/scripts/hooks/{script_name}")
+
+    # Stop build must keep the memory protections.
+    stop_text = next(
+        (t for t in (_hook_script_text(c) for c in _hook_commands(hooks, "Stop")) if t), ""
+    )
+    if "MSBUILDDISABLENODEREUSE" in stop_text and "-nodeReuse:false" in stop_text:
+        print("  PASS: stop_build.py keeps MSBUILDDISABLENODEREUSE and -nodeReuse:false")
+    elif stop_text:
+        print("  FAIL: stop_build.py must set MSBUILDDISABLENODEREUSE=1 and pass -nodeReuse:false")
         passed = False
 
     # Check additionalDirectories
@@ -152,6 +177,11 @@ def test_settings_json() -> bool:
         passed = False
     else:
         print("  PASS: .ai/commands/ not in additionalDirectories")
+
+    stale_removed = [d for d in additional if re.search(r"\.ai/(prompts|instructions)(/|$)", d)]
+    if stale_removed:
+        print(f"  FAIL: additionalDirectories points at retired paths: {stale_removed}")
+        passed = False
 
     if claude_entries:
         # .claude/ itself is fine (so Claude Code can read settings.json)
@@ -188,7 +218,6 @@ def test_no_stale_references() -> bool:
             continue
 
         content = file_path.read_text(encoding="utf-8")
-        matches = STALE_REF_PATTERN.findall(content)
 
         # Find lines for context
         stale_lines = [
@@ -224,6 +253,7 @@ def test_ai_directory_exists() -> bool:
         ".ai/plans",
         ".ai/progress",
         ".ai/completed",
+        ".ai/scripts/hooks",
     ]
 
     passed = True
@@ -242,84 +272,49 @@ def test_session_context_hook() -> bool:
     print("\nTEST 4b: Session context hook configuration")
     print("-" * 40)
 
-    settings_path = TEMPLATE_ROOT / ".claude" / "settings.json"
-    if not settings_path.exists():
-        print("  FAIL: settings.json not found — cannot verify the session-context hook")
-        return False
-    try:
-        settings = json.loads(settings_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        print("  FAIL: Could not parse settings.json")
+    settings, error = _load_settings()
+    if settings is None:
+        print(f"  FAIL: cannot verify the session-context hook: {error}")
         return False
 
     passed = True
-    hooks = settings.get("hooks", {})
-    session_start = hooks.get("SessionStart", [])
+    session_start = settings.get("hooks", {}).get("SessionStart", [])
 
     if not isinstance(session_start, list):
         print("  FAIL: SessionStart should be a list")
         return False
 
-    # Find sync-platforms.py hook
-    sync_skills_found = False
-    for entry in session_start:
-        if isinstance(entry, dict) and "hooks" in entry:
-            for hook in entry["hooks"]:
-                if isinstance(hook, dict) and "sync-platforms.py" in hook.get("command", ""):
-                    sync_skills_found = True
-                    print("  PASS: sync-platforms.py SessionStart hook still exists")
-                    break
+    entry = next(
+        (e for e in session_start
+         if isinstance(e, dict) and e.get("matcher") == "startup|resume|clear|compact"),
+        None,
+    )
+    if entry is None:
+        print("  FAIL: SessionStart entry with matcher 'startup|resume|clear|compact' not found")
+        return False
 
-    if not sync_skills_found:
-        print("  FAIL: sync-platforms.py SessionStart hook missing or invalid structure")
+    commands = [str(h.get("command", "")) for h in entry.get("hooks", []) if isinstance(h, dict)]
+    session_commands = [c for c in commands if "session_start.py" in c]
+    if not session_commands:
+        print("  FAIL: session-context entry does not run .ai/scripts/hooks/session_start.py")
+        return False
+
+    text = _hook_script_text(session_commands[0]) or ""
+    checks = {
+        "placeholder-skip": "# Session Context Template" in text,
+        "200-line-cap": "MAX_LINES = 200" in text,
+        "context-file-ref": ".ai/session-context.md" in text,
+        "memory-header": "Session memory from .ai/session-context.md" in text,
+        "completed-listing": ".ai/completed" in text,
+    }
+    missing = [name for name, found in checks.items() if not found]
+    if missing:
+        print(f"  FAIL: session_start.py missing features: {missing}")
         passed = False
-
-    # Find session-context hook
-    session_context_found = False
-    session_context_entry = None
-
-    for entry in session_start:
-        if isinstance(entry, dict):
-            # Check if this entry has the matcher
-            if entry.get("matcher") == "startup|resume|clear|compact":
-                session_context_entry = entry
-                # Look for the hook within
-                hooks_list = entry.get("hooks", [])
-                for hook in hooks_list:
-                    if isinstance(hook, dict):
-                        cmd = hook.get("command", "")
-                        if ".ai/session-context.md" in cmd:
-                            session_context_found = True
-                            # Validate key features
-                            checks = []
-
-                            # Check for placeholder skip
-                            if "# Session Context Template" in cmd:
-                                checks.append("placeholder-skip")
-
-                            # Check for 200-line cap
-                            if "200" in cmd or "i<200" in cmd or "i < 200" in cmd:
-                                checks.append("200-line-cap")
-
-                            # Check for .ai/session-context.md reference
-                            if ".ai/session-context.md" in cmd:
-                                checks.append("context-file-ref")
-
-                            if len(checks) == 3:
-                                print("  PASS: session-context hook exists with all required features")
-                                print(f"    - Placeholder skip: YES")
-                                print(f"    - 200-line cap: YES")
-                                print(f"    - File reference: YES")
-                            else:
-                                print(f"  FAIL: session-context hook missing features: {set(['placeholder-skip', '200-line-cap', 'context-file-ref']) - set(checks)}")
-                                passed = False
-
-                            break
-
-    if not session_context_found:
-        print("  FAIL: session-context hook with matcher 'startup|resume|clear|compact' not found")
-        print("        or does not reference .ai/session-context.md")
-        passed = False
+    else:
+        print("  PASS: session_start.py has all required features")
+        for name in checks:
+            print(f"    - {name}: YES")
 
     return passed
 
@@ -376,7 +371,7 @@ def test_claude_dir_is_config_only() -> bool:
         print("  SKIP: .claude/ not found")
         return True
 
-    allowed = {"settings.json", "settings.local.json", "skills", "agents", "commands", "instructions"}
+    allowed = {"settings.json", "settings.local.json", "skills", "agents", "rules"}
     unexpected = [p.name for p in claude_dir.iterdir() if p.name not in allowed]
 
     if unexpected:
@@ -384,7 +379,7 @@ def test_claude_dir_is_config_only() -> bool:
         print("        Run migrate-to-ai.py to clean up")
         return False
 
-    print("  PASS: .claude/ contains only settings files, skills/, agents/, commands/, and instructions/")
+    print("  PASS: .claude/ contains only settings files, skills/, agents/ and rules/")
     return True
 
 

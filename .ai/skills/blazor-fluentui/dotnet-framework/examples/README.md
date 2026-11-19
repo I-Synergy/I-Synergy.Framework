@@ -100,7 +100,7 @@ dotnet add package Marten.AspNetCore
 dotnet add package FluentValidation.AspNetCore
 
 # Testing (optional)
-dotnet add package xunit
+dotnet add package MSTest
 dotnet add package FluentAssertions
 dotnet add package Microsoft.AspNetCore.Mvc.Testing
 ```
@@ -292,12 +292,13 @@ public async Task<ActionResult> CreatePost([FromBody] CreatePostRequest request)
 
 ## Testing Examples
 
-### Unit Testing (xUnit + FluentAssertions)
+### Unit Testing (MSTest + FluentAssertions)
 
 ```csharp
+[TestClass]
 public class CreatePostHandlerTests
 {
-    [Fact]
+    [TestMethod]
     public async Task Handle_WithValidCommand_ShouldCreatePost()
     {
         // Arrange
@@ -316,9 +317,24 @@ public class CreatePostHandlerTests
 ### Integration Testing (WebApplicationFactory)
 
 ```csharp
-public class PostsControllerIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+[TestClass]
+public class PostsControllerIntegrationTests
 {
-    [Fact]
+    private static WebApplicationFactory<Program> _factory = null!;
+
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
+    {
+        _factory = new WebApplicationFactory<Program>();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        _factory.Dispose();
+    }
+
+    [TestMethod]
     public async Task GetPosts_ShouldReturnOk()
     {
         // Arrange
@@ -361,7 +377,7 @@ public class PostsControllerIntegrationTests : IClassFixture<WebApplicationFacto
   - `skills/dotnet-framework/templates/` - Code generation templates
 
 - **Testing**:
-  - [xUnit](https://xunit.net/)
+  - [MSTest](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-mstest-intro)
   - [FluentAssertions](https://fluentassertions.com/)
   - [Testcontainers](https://dotnet.testcontainers.org/)
 

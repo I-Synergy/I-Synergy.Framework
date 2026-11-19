@@ -14,7 +14,7 @@ Applies template improvements to an existing project without overwriting project
 | `ADDED` | New file — does not exist in the project yet. Copied automatically. |
 | `CHANGED` | File exists in both. Shows a diff. You choose: accept (overwrite) or skip (keep yours). |
 | `UNCHANGED` | Identical in both. No action needed. |
-| `MERGED` | `.claude/settings.json` — new hooks/permissions added, project keys preserved. |
+| `MERGED` | `.vscode/settings.json`, `.vscode/tasks.json`, `.claude/settings.json` — template keys added, project values kept (see "Merged Files"). |
 | `SKIPPED (project-owned)` | Never touched — see list below. |
 
 ## Project-Owned Files (Never Touched)
@@ -26,9 +26,15 @@ Applies template improvements to an existing project without overwriting project
 - `.github/copilot-instructions.md` — project-specific Copilot instructions
 - `.claude/settings.local.json` — never touched
 
-## Special-Case Merged File
+## Merged Files
 
-- `.claude/settings.json` — may be merged by the upgrade script (`ADDED`/`MERGED`/`UNCHANGED`); new hooks/permissions are added while existing project-specific config is preserved
+These are never copied or diffed as whole files. The script merges the template's shipped configuration into the project's copy (`ADDED`/`MERGED`/`UNCHANGED`/error):
+
+- `.vscode/settings.json` — the fragment `.ai/reference/templates/vscode/settings.json` is merged. Missing keys are added, objects merge key by key, the pinned Copilot keys (`merge-rules.json`) take the template value, and any other conflict keeps the project's value and is reported.
+- `.vscode/tasks.json` — the fragment `.ai/reference/templates/vscode/tasks.json` is merged. Tasks merge by `label`; an existing label is kept unchanged.
+- `.claude/settings.json` — legacy hook commands listed in `merge-rules.json` are removed, template hook groups are added unless already present, `permissions` lists are unioned, and other keys follow the missing-key / project-wins rule.
+
+Comments and formatting are preserved. Invalid JSON in the project file makes the script write nothing for that file and report an error. A second run changes nothing. If the template ref has no `.vscode` fragments, the `.vscode` merge is skipped and the template's own `.vscode` files are never copied.
 
 ## Template Source
 
@@ -89,7 +95,8 @@ python .ai/scripts/upgrade-template.py \
 | `.ai/checklists/` | New checklists copied; changed diffed |
 | `.ai/tests/` | New test scripts copied; changed diffed |
 | `.ai/scripts/` | New scripts copied (including this one); changed diffed |
-| `.claude/settings.json` | `ADDED` (new file): created from template, `enabledPlugins` excluded. `MERGED` (existing file): new hooks and permissions added, existing config (including `enabledPlugins`) preserved. |
+| `.claude/settings.json` | Merged, never copied over. `ADDED` (new file): created from template, `enabledPlugins` excluded. `MERGED` (existing file): legacy hook commands removed, template hooks and permission entries added, other keys added when missing, project values kept (including `enabledPlugins`). |
+| `.vscode/settings.json`, `.vscode/tasks.json` | Merged from `.ai/reference/templates/vscode/` (see "Merged Files"). Not template-owned, so an accepted diff never overwrites the project's file. |
 
 ## Migrating from CLAUDE.md, REASONIX.md, or DEEPSEEK.md
 
@@ -109,7 +116,8 @@ For help migrating old `.claude/` layouts, `.reasonix/`, or other client-specifi
 ## After Upgrade
 
 The script automatically runs `sync-platforms.py` and `sync-agents.py` in the target project after every upgrade,
-syncing all skills to Claude Code, GitHub Copilot, and Reasonix Code targets.
+syncing all skills to Claude Code and GitHub Copilot targets. Any `.reasonix/` junctions left over from
+earlier template versions are removed.
 
 ## Running This as Claude
 

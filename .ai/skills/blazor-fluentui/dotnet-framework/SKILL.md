@@ -620,14 +620,15 @@ public class OrderService
 
 ---
 
-## 8. Testing with xUnit
+## 8. Testing with MSTest
 
 ### Unit Tests
 
 ```csharp
+[TestClass]
 public class CreateOrderHandlerTests
 {
-    [Fact]
+    [TestMethod]
     public async Task Handle_ValidCommand_CreatesOrder()
     {
         // Arrange
@@ -662,16 +663,37 @@ public class CreateOrderHandlerTests
 ### Integration Tests
 
 ```csharp
-public class OrdersApiTests : IClassFixture<WebApplicationFactory<Program>>
+[TestClass]
+public class OrdersApiTests
 {
-    private readonly HttpClient _client;
+    private static WebApplicationFactory<Program> _factory = null!;
+    private HttpClient _client = null!;
 
-    public OrdersApiTests(WebApplicationFactory<Program> factory)
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
-        _client = factory.CreateClient();
+        _factory = new WebApplicationFactory<Program>();
     }
 
-    [Fact]
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        _factory.Dispose();
+    }
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _client = _factory.CreateClient();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _client.Dispose();
+    }
+
+    [TestMethod]
     public async Task CreateOrder_ValidRequest_ReturnsCreated()
     {
         // Arrange

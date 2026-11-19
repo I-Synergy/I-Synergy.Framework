@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 """Regenerate .github/copilot-instructions.md from AGENTS.md.
 
-AGENTS.md is the single source of truth. The Copilot file is a copy of it plus
-the Copilot-only quick-reference sections, which are kept in a marked block so
-they survive regeneration.
+AGENTS.md is the single source of truth. The generated Copilot file is laid out as:
+
+  1. header and generated marker
+  2. AGENTS.md verbatim
+  3. the Copilot runtime section, copied fresh from .ai/reference/copilot-runtime.md
+     (template-owned) between runtime markers; never preserved from the old file
+  4. the project-owned copilot-reference block, preserved across regeneration
+
+If .ai/reference/copilot-runtime.md is missing, the runtime section is skipped with
+a warning rather than failing the run.
 """
 
 import re
@@ -13,7 +20,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 AGENTS = ROOT / "AGENTS.md"
 COPILOT = ROOT / ".github" / "copilot-instructions.md"
+RUNTIME = ROOT / ".ai" / "reference" / "copilot-runtime.md"
 GENERATED = "<!-- ai-workspace-manager:generated-from-agents -->"
+RUNTIME_START = "<!-- ai-workspace-manager:copilot-runtime:start -->"
+RUNTIME_END = "<!-- ai-workspace-manager:copilot-runtime:end -->"
 START = "<!-- ai-workspace-manager:copilot-reference:start -->"
 END = "<!-- ai-workspace-manager:copilot-reference:end -->"
 NOTE = ("<!-- Generated from AGENTS.md. Edit AGENTS.md, not this file. "
@@ -48,6 +58,12 @@ def main() -> int:
     # Normalize markers written by earlier releases so the block is found.
     existing = existing.replace("<!-- ai-manager:", "<!-- ai-workspace-manager:")
     parts = ["# GitHub Copilot Instructions", "", GENERATED, NOTE, "", agents]
+    if RUNTIME.is_file():
+        runtime = RUNTIME.read_text(encoding="utf-8").strip()
+        parts += ["", RUNTIME_START, runtime, RUNTIME_END]
+    else:
+        print(f"WARNING: {RUNTIME.relative_to(ROOT).as_posix()} not found; "
+              "Copilot runtime section skipped", file=sys.stderr)
     block = reference(existing)
     if block:
         parts += ["", START, block, END]

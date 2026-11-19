@@ -328,16 +328,26 @@ app.MapHub<DataHub>("/datahub");
 ### Automated Testing (bUnit)
 
 ```csharp
-public class TodoAppTests : TestContext
+[TestClass]
+public class TodoAppTests
 {
-    [Fact]
+    // MSTest owns the name TestContext, so bUnit's context is referenced as Bunit.TestContext
+    private Bunit.TestContext _ctx = null!;
+
+    [TestInitialize]
+    public void Setup() => _ctx = new Bunit.TestContext();
+
+    [TestCleanup]
+    public void Cleanup() => _ctx.Dispose();
+
+    [TestMethod]
     public async Task AddTodo_Adds_TodoToList()
     {
         // Arrange
         var mockStorage = new Mock<ILocalStorageService>();
-        Services.AddSingleton(mockStorage.Object);
+        _ctx.Services.AddSingleton(mockStorage.Object);
 
-        var cut = RenderComponent<Todos>();
+        var cut = _ctx.RenderComponent<Todos>();
 
         // Act
         var input = cut.Find("input[type='text']");

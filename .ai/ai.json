@@ -3,7 +3,7 @@
   "sources": {
     "template": {
       "repo": "I-Synergy/AI",
-      "ref": "2026.11102.11236",
+      "ref": "2026.11118.11711",
       "resolve": "remote"
     },
     "awesome-copilot": {
@@ -53,12 +53,83 @@
       }
     }
   },
-  "skills": [],
-  "agents": [],
-  "instructions": [],
+  "skills": [
+    "api-endpoints",
+    "api-security",
+    "architect",
+    "blazor-fluentui",
+    "blazor-specialist",
+    "blazor-theme-generator",
+    "code-reviewer",
+    "council",
+    "css-theme-generator",
+    "database-migration",
+    "devops-engineer",
+    "dotnet-engineer",
+    "gap-review",
+    "integration-specialist",
+    "maui-apple-design",
+    "maui-blazor",
+    "maui-specialist",
+    "mobile-release",
+    "performance-engineer",
+    "playwright-tester",
+    "refactor",
+    "security",
+    "skill-creator",
+    "software-security",
+    "solution-generator",
+    "sync-platforms",
+    "technical-writer",
+    "ubiquitous-language",
+    "ui-blazor",
+    "ui-core",
+    "ui-maui",
+    "ui-uwp",
+    "ui-winui",
+    "ui-wpf",
+    "unit-tester",
+    "upgrade-template",
+    "usecase-specification",
+    "user-story",
+    "verify-config",
+    "vertical-slices",
+    "winui-specialist",
+    "xaml-theme-generator"
+  ],
+  "agents": [
+    "architect",
+    "designer",
+    "developer",
+    "reviewer",
+    "security",
+    "tester",
+    "ui-developer",
+    "ui-tester",
+    "writer"
+  ],
+  "instructions": [
+    "sonarqube_mcp"
+  ],
   "plugins": [],
   "hooks": [],
   "materialize": "copy",
   "exclude": [],
-  "prompts": []
+  "prompts": [
+    "create-readme",
+    "create-unittest",
+    "csharp-async",
+    "documentation-writer",
+    "dotnet-best-practices",
+    "dotnet-design-pattern-review",
+    "folder-structure-blueprint-generator",
+    "iso-5055-quality-enforcer",
+    "prompt-builder",
+    "update-markdown-file-index",
+    "usecases-gherkin-specs"
+  ],
+  "clients": [
+    "claude",
+    "copilot"
+  ]
 }

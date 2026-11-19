@@ -165,6 +165,22 @@
             "options": { "env": { "SampleTargetFramework": "net11.0", "Platform": "arm64", "WindowsPackageType": "None", "MSBUILDDISABLENODEREUSE": "1" } },
             "problemMatcher": "$msCompile",
             "presentation": { "reveal": "always", "panel": "dedicated" }
+        },
+        {
+            "label": "Link .ai into the paths tools read",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                ".ai/scripts/sync-platforms.py"
+            ],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true,
+                "close": true
+            },
+            "problemMatcher": []
         }
     ]
 }

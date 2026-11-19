@@ -12,6 +12,8 @@ Validates the upgrade-template.py script and its supporting infrastructure:
   8. Skip integration: project-owned file is never touched
   9. Three-tier completeness: .claude/skills/ wrappers and .github/skills/ copies exist for all .ai/skills/
  10. Skill pipeline connectivity: design-interrogation dependency skills all exist
+11. Three-tier completeness of skills
+12. .vscode/settings.json and tasks.json are merged from fragments, not template-owned
 """
 
 import importlib.util
@@ -108,7 +110,6 @@ def test_template_owned_completeness() -> bool:
         "requirements-dev.txt",
         "pytest.ini",
         "pip.ini",
-        ".vscode/settings.json",
         ".gitignore",
         ".github/workflows/validate-template.yml",
         ".github/workflows/ci.yml",
@@ -486,6 +487,30 @@ def test_three_tier_completeness() -> bool:
 
 # ─── Main ────────────────────────────────────────────────────────────────────
 
+def test_vscode_files_are_merged_not_owned() -> bool:
+    """.vscode/settings.json and tasks.json are merged from fragments, never overwritten."""
+    print("\nTEST 12: .vscode/*.json are merged, not template-owned")
+    print("-" * 40)
+
+    mod = load_upgrade_module()
+    owned = set(mod.TEMPLATE_OWNED)
+    passed = True
+    for path in (".vscode/settings.json", ".vscode/tasks.json"):
+        if path in owned:
+            print(f"  FAIL: {path} is still in TEMPLATE_OWNED (accepting a diff would overwrite the project)")
+            passed = False
+    for path in (".ai/reference/templates/vscode/settings.json",
+                 ".ai/reference/templates/vscode/tasks.json",
+                 ".ai/reference/templates/merge-rules.json",
+                 ".ai/scripts/jsonc_merge.py"):
+        if not (TEMPLATE_ROOT / path).is_file():
+            print(f"  FAIL: {path} missing")
+            passed = False
+    if passed:
+        print("  PASS: .vscode/settings.json and tasks.json are merged, and the merge inputs exist")
+    return passed
+
+
 def main() -> int:
     print("=" * 60)
     print("  Upgrade Script Validation")
@@ -510,6 +535,7 @@ def main() -> int:
         test_agents_md_not_overwritten_in_non_interactive,
         test_design_interrogation_pipeline,
         test_three_tier_completeness,
+        test_vscode_files_are_merged_not_owned,
     ]
 
     results = []

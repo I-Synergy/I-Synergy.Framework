@@ -39,7 +39,7 @@ skills/blazor-framework/
 │   ├── service.template.cs           # Service/state management
 │   ├── form.template.razor           # Form with validation
 │   ├── layout.template.razor         # Layout component
-│   └── test.template.cs              # bUnit component test
+│   └── test.template.cs              # bUnit component test (MSTest)
 └── examples/
     ├── todo-app.example.razor        # Complete Todo app with Fluent UI
     ├── realtime-dashboard.example.razor  # Real-time dashboard with SignalR
@@ -193,14 +193,14 @@ mission: |
 ### Coverage Targets
 
 - **Components**: ≥80% (bUnit for component logic)
-- **Services**: ≥80% (xUnit for service logic)
+- **Services**: ≥80% (MSTest for service logic)
 - **Integration**: ≥70% (End-to-end with Playwright)
 - **Overall Coverage**: ≥75% (measured via coverlet)
 
 ### Testing Patterns
 
 - **bUnit**: Primary framework for Blazor component testing
-- **xUnit**: Unit tests for services and business logic
+- **MSTest**: Unit tests for services and business logic (xUnit and NUnit are not used)
 - **FluentAssertions**: Readable assertion syntax
 - **Playwright**: E2E testing for full application workflows
 
