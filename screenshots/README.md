@@ -23,6 +23,9 @@ breadcrumb header, theme/settings buttons, surfaces and settings surface.
 | MAUI | [`maui/13-drawer-android-phone.png`](maui/13-drawer-android-phone.png) | LTR phone drawer on Android: flush left, top and bottom, rounded on the right only; the page behind is dimmed by the full-width scrim. |
 | MAUI | [`maui/14-settings-android-phone.png`](maui/14-settings-android-phone.png) | Settings page on an Android phone, full-screen, light theme. |
 | MAUI | [`maui/15-drawer-android-rtl.png`](maui/15-drawer-android-rtl.png) | RTL phone drawer on Android: flush right, top and bottom, rounded on the left only. |
+| MAUI | [`maui/16-shell-root-ios.png`](maui/16-shell-root-ios.png) | Shell presented through the navigation service on the iPhone 17 simulator (1206×2622), .NET 11, dark theme, `SAMPLE_TEST_SHELL_REBUILD=1`. |
+| MAUI | [`maui/17-shell-root-maccatalyst.png`](maui/17-shell-root-maccatalyst.png) | The same run on Mac Catalyst (1440×900), .NET 11, light theme, `SAMPLE_TEST_SHELL_REBUILD=1`. |
+| MAUI | [`maui/18-shell-root-android.png`](maui/18-shell-root-android.png) | The same shell on an Android phone (1080×2400), .NET 11, light theme, after the first-run settings blade is dismissed; the Apple-head rebuild hook is not set on this head. |
 | Blazor | [`blazor/03-shell-light.png`](blazor/03-shell-light.png) | Blazor shell using the custom MAUI-style sidebar/header instead of FluentLayout. |
 | Blazor | [`blazor/01-settings-dark.png`](blazor/01-settings-dark.png) | Blazor settings drawer in dark theme. |
 | Blazor | [`blazor/02-settings-light.png`](blazor/02-settings-light.png) | Blazor settings drawer in light theme. |
@@ -53,6 +56,17 @@ Notes:
   Android drawer scrim dims the page behind it, so the full content width stays visible. The RTL
   shot (15) was taken after switching the app language to Arabic from the settings picker and
   restarting the app.
+- The 16–18 shots were captured on 2026-11-19 while validating the shell-root navigation path:
+  `Sample.Maui` presents its shell through `INavigationService.NavigateModalAsync<ShellViewModel>()`
+  instead of assigning `Window.Page` directly, and `SAMPLE_TEST_SHELL_REBUILD=1` re-presents the
+  shell two seconds after it loads. The two Apple screenshots (16, 17) are taken after that
+  re-presentation, so they show the state the crash path used to destroy; the Android run (18) is
+  the same shell without the hook. iOS came from `xcrun simctl io booted screenshot`
+  (the simulator's Dynamic Type must be at the default `large`; an accessibility size inflates the
+  header until the breadcrumb overlaps the theme button). Mac Catalyst came from the app's DevFlow
+  agent (`GET /api/v1/ui/screenshot?fullscreen=true`), because screen recording is not permitted for
+  the terminal on this machine. Android came from `adb exec-out screencap -p` on the 1080×2400 arm64
+  emulator, after the first-run settings blade was dismissed.
 - The shared tokens live in `Sample.Maui/Resources/Styles/Colors.xaml` and are mirrored in the
   WPF/WinUI resource dictionaries and the Blazor CSS variables.
 - Figtree is bundled in all four samples; the accent palette is teal / blue / green / orange.

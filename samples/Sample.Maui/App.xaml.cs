@@ -187,11 +187,20 @@ public partial class App : Application
             // the window so its blade pane (the last child of the root grid) can cover every
             // section. Navigation happens inside the shell's content host (the MAUI equivalent of
             // the WinUI content frame), so the root itself is a plain page.
-            var shellView = IPlatformApplication.Current!.Services.GetRequiredService<ShellView>();
+            // Present the shell through the framework navigation path, the same path The Quran
+            // uses. The navigation service installs an IShellView as the window root and avoids
+            // MAUI's modal-shell flyout/layout crash.
+            await _navigationService.NavigateModalAsync<ShellViewModel>();
 
-            Microsoft.Maui.Controls.Application.Current!.Windows[0].Page = shellView;
-
-            await shellView.ViewModel.InitializeAsync();
+            // Local regression hook for the framework shell-root navigation path:
+            // SAMPLE_TEST_SHELL_REBUILD=1 re-presents the shell through the navigation service.
+            // Before the NavigationService fix this pushed the IShellView as a modal and crashed
+            // iOS/Mac Catalyst in ShellFlyoutRenderer.LayoutSidebar.
+            if (System.Environment.GetEnvironmentVariable("SAMPLE_TEST_SHELL_REBUILD") == "1")
+            {
+                await Task.Delay(2000);
+                await _navigationService.NavigateModalAsync<ShellViewModel>();
+            }
         }
         catch (Exception ex)
         {
