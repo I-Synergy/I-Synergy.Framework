@@ -9,47 +9,58 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Moq;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using {{Namespace}}.Components;
 using {{Namespace}}.Services;
 
 namespace {{Namespace}}.Tests.Components;
 
-public class {{ComponentName}}Tests : TestContext
+[TestClass]
+public class {{ComponentName}}Tests
 {
-    private readonly Mock<I{{ServiceName}}> _mockService;
+    // MSTest owns the name TestContext, so bUnit's context is referenced as Bunit.TestContext
+    private Bunit.TestContext _ctx = null!;
+    private Mock<I{{ServiceName}}> _mockService = null!;
 
-    public {{ComponentName}}Tests()
+    [TestInitialize]
+    public void Setup()
     {
+        _ctx = new Bunit.TestContext();
         _mockService = new Mock<I{{ServiceName}}>();
 
         // Register services
-        Services.AddSingleton(_mockService.Object);
-        Services.AddFluentUIComponents();
+        _ctx.Services.AddSingleton(_mockService.Object);
+        _ctx.Services.AddFluentUIComponents();
     }
 
-    [Fact]
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _ctx.Dispose();
+    }
+
+    [TestMethod]
     public void Component_Renders_WithRequiredParameters()
     {
         // Arrange
         var {{propertyName}} = "Test {{PropertyName}}";
 
         // Act
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, {{propertyName}}));
 
         // Assert
         cut.Find("h3").TextContent.Should().Be({{propertyName}});
     }
 
-    [Fact]
+    [TestMethod]
     public void Component_Shows_ChildContent_WhenProvided()
     {
         // Arrange
         var childContent = "Custom child content";
 
         // Act
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Title")
             .AddChildContent(childContent));
 
@@ -57,12 +68,12 @@ public class {{ComponentName}}Tests : TestContext
         cut.Markup.Should().Contain(childContent);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task PrimaryButton_Click_InvokesCallback()
     {
         // Arrange
         var callbackInvoked = false;
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Test")
             .Add(p => p.OnPrimaryAction, () => { callbackInvoked = true; }));
 
@@ -74,11 +85,11 @@ public class {{ComponentName}}Tests : TestContext
         callbackInvoked.Should().BeTrue();
     }
 
-    [Fact]
+    [TestMethod]
     public void Component_Shows_LoadingIndicator_WhenProcessing()
     {
         // Arrange
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Test"));
 
         // Act
@@ -89,14 +100,14 @@ public class {{ComponentName}}Tests : TestContext
         cut.FindAll("fluent-progress-ring").Should().NotBeEmpty();
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Component_Handles_ServiceErrors_Gracefully()
     {
         // Arrange
         _mockService.Setup(s => s.GetDataAsync())
             .ThrowsAsync(new Exception("Service error"));
 
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Test"));
 
         // Act & Assert
@@ -104,11 +115,11 @@ public class {{ComponentName}}Tests : TestContext
         cut.Markup.Should().Contain("error");
     }
 
-    [Fact]
+    [TestMethod]
     public void Component_DisablesButtons_WhileLoading()
     {
         // Arrange
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Test"));
 
         // Act
@@ -118,12 +129,12 @@ public class {{ComponentName}}Tests : TestContext
         cut.FindAll("button[disabled]").Should().NotBeEmpty();
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Component_EmitsStateChangedEvent()
     {
         // Arrange
         ComponentState? emittedState = null;
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Test")
             .Add(p => p.OnStateChanged, state => { emittedState = state; }));
 
@@ -134,11 +145,11 @@ public class {{ComponentName}}Tests : TestContext
         emittedState.Should().NotBeNull();
     }
 
-    [Fact]
+    [TestMethod]
     public void Component_Reset_ClearsState()
     {
         // Arrange
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Test"));
 
         // Act
@@ -151,16 +162,31 @@ public class {{ComponentName}}Tests : TestContext
 }
 
 // Integration test example
-public class {{ComponentName}}IntegrationTests : TestContext
+[TestClass]
+public class {{ComponentName}}IntegrationTests
 {
-    [Fact]
+    private Bunit.TestContext _ctx = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _ctx = new Bunit.TestContext();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _ctx.Dispose();
+    }
+
+    [TestMethod]
     public async Task FullWorkflow_CreateToSave_Works()
     {
         // Arrange
         var service = new {{ServiceName}}(Mock.Of<ILogger<{{ServiceName}}>>());
-        Services.AddSingleton<I{{ServiceName}}>(service);
+        _ctx.Services.AddSingleton<I{{ServiceName}}>(service);
 
-        var cut = RenderComponent<{{ComponentName}}>(parameters => parameters
+        var cut = _ctx.RenderComponent<{{ComponentName}}>(parameters => parameters
             .Add(p => p.{{PropertyName}}, "Integration Test"));
 
         // Act

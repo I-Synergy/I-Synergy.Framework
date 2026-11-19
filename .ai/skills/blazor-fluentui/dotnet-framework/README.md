@@ -19,7 +19,7 @@ This skill provides comprehensive .NET backend expertise for the `backend-develo
 - **CQRS & Event Sourcing**: Command/Query separation, event streams, aggregates
 - **Enterprise Patterns**: Repository pattern, unit of work, domain-driven design
 - **API Development**: REST APIs, validation, error handling, versioning
-- **Testing**: xUnit, FluentAssertions, integration testing, test containers
+- **Testing**: MSTest, FluentAssertions, integration testing, test containers
 
 ---
 
@@ -39,7 +39,7 @@ skills/dotnet-framework/
 │   ├── handler.template.cs      # Wolverine command/query handler
 │   ├── event.template.cs        # Event sourcing event template
 │   ├── projection.template.cs   # MartenDB projection template
-│   └── test.template.cs         # xUnit test template
+│   └── test.template.cs         # MSTest test template
 └── examples/
     ├── web-api.example.cs           # Complete ASP.NET Core Web API
     ├── event-sourcing.example.cs    # Event sourcing with MartenDB
@@ -107,7 +107,7 @@ The `backend-developer` agent **automatically loads this skill** when it detects
   - MartenDB document storage & queries
   - Event sourcing patterns
   - Dependency injection & configuration
-  - Testing with xUnit
+  - Testing with MSTest
 
 ### REFERENCE.md (Comprehensive Guide)
 
@@ -153,7 +153,7 @@ The `backend-developer` agent **automatically loads this skill** when it detects
 3. **MartenDB Integration** - Document storage, event sourcing, projections
 4. **CQRS Patterns** - Command/query separation, event streams
 5. **Enterprise Patterns** - Repository, unit of work, DDD
-6. **Testing** - xUnit, FluentAssertions, integration tests
+6. **Testing** - MSTest, FluentAssertions, integration tests
 
 **Validation**: See `VALIDATION.md` for detailed feature parity analysis
 
@@ -192,14 +192,14 @@ mission: |
 
 ### Coverage Targets
 
-- **Services/Handlers**: ≥80% (xUnit for business logic)
+- **Services/Handlers**: ≥80% (MSTest for business logic)
 - **Controllers/APIs**: ≥70% (Integration tests for endpoints)
 - **Domain Models**: ≥80% (Unit tests for domain logic)
 - **Overall Coverage**: ≥75% (measured via coverlet)
 
 ### Testing Patterns
 
-- **xUnit**: Primary testing framework for .NET
+- **MSTest**: Primary testing framework for .NET (xUnit and NUnit are not used)
 - **FluentAssertions**: Readable assertion syntax
 - **Testcontainers**: Integration testing with real dependencies
 - **WebApplicationFactory**: API integration testing

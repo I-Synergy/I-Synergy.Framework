@@ -23,7 +23,7 @@ Feature parity measured across 5 categories with weighted importance:
 2. **Architectural Patterns** (25% weight): CQRS, event sourcing, enterprise patterns
 3. **API Development** (20% weight): Controllers, minimal APIs, validation
 4. **Data Patterns** (15% weight): Document storage, event store, projections
-5. **Testing & Quality** (10% weight): xUnit, FluentAssertions, integration tests
+5. **Testing & Quality** (10% weight): MSTest, FluentAssertions, integration tests
 
 ---
 
@@ -117,7 +117,7 @@ Feature parity measured across 5 categories with weighted importance:
 
 | Feature | Original Agent | Skill Coverage | Status | Evidence |
 |---------|---------------|----------------|--------|----------|
-| **xUnit Framework** | ⚠️ Not Explicit | ✅ Complete | ✅ 100% | test.template.cs (460 lines), examples/README.md |
+| **MSTest Framework** | ⚠️ Not Explicit | ✅ Complete | ✅ 100% | test.template.cs (460 lines), examples/README.md |
 | **FluentAssertions** | ⚠️ Not Explicit | ✅ Complete | ✅ 100% | test.template.cs (all assertions use FluentAssertions) |
 | **Unit Tests** | ⚠️ Implicit | ✅ Complete | ✅ 100% | test.template.cs (entity, handler, aggregate tests) |
 | **Integration Tests** | ⚠️ Implicit | ✅ Complete | ✅ 100% | test.template.cs (Testcontainers example) |
@@ -201,7 +201,7 @@ The .NET skill provides **additional value** not explicitly present in the origi
 
 Features marked "⚠️ Not Explicit" in original agent but fully implemented in skill:
 - Authentication/Authorization (JWT, policies)
-- Testing frameworks (xUnit, FluentAssertions, Testcontainers)
+- Testing frameworks (MSTest, FluentAssertions, Testcontainers)
 - Data patterns (soft delete, audit fields, temporal queries)
 
 ---

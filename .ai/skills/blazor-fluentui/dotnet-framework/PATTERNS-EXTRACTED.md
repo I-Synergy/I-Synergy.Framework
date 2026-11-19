@@ -571,11 +571,12 @@ opts.Policies.AllMessagesOfType<IPaymentEvent>()
 
 **Key Patterns**:
 
-#### Unit Testing with xUnit
+#### Unit Testing with MSTest
 ```csharp
+[TestClass]
 public class CreateOrderHandlerTests
 {
-    [Fact]
+    [TestMethod]
     public async Task Handle_ValidCommand_CreatesOrder()
     {
         // Arrange
@@ -605,16 +606,37 @@ public class CreateOrderHandlerTests
 
 #### Integration Testing
 ```csharp
-public class OrdersApiTests : IClassFixture<WebApplicationFactory<Program>>
+[TestClass]
+public class OrdersApiTests
 {
-    private readonly HttpClient _client;
+    private static WebApplicationFactory<Program> _factory = null!;
+    private HttpClient _client = null!;
 
-    public OrdersApiTests(WebApplicationFactory<Program> factory)
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
-        _client = factory.CreateClient();
+        _factory = new WebApplicationFactory<Program>();
     }
 
-    [Fact]
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        _factory.Dispose();
+    }
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _client = _factory.CreateClient();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _client.Dispose();
+    }
+
+    [TestMethod]
     public async Task CreateOrder_ValidRequest_ReturnsCreated()
     {
         // Arrange
@@ -636,7 +658,7 @@ public class OrdersApiTests : IClassFixture<WebApplicationFactory<Program>>
 ## Quality Standards
 
 ### Testing Requirements
-- **Handlers**: ≥80% coverage (xUnit for business logic)
+- **Handlers**: ≥80% coverage (MSTest for business logic)
 - **Controllers**: ≥70% coverage (Integration tests)
 - **Domain Models**: ≥80% coverage (Unit tests)
 - **Overall**: ≥75% coverage (coverlet)
@@ -689,7 +711,7 @@ public class OrdersApiTests : IClassFixture<WebApplicationFactory<Program>>
 4. `handler.template.cs` - Wolverine command/query handler
 5. `event.template.cs` - Event sourcing event
 6. `projection.template.cs` - MartenDB projection
-7. `test.template.cs` - xUnit test
+7. `test.template.cs` - MSTest test
 
 ### Example System
 

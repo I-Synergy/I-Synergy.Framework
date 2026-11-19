@@ -261,7 +261,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Rows() || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>())).To<double[,]>();
         C = Dot(new Matrix<double>(new Jagged<double>(aArray).ToMatrix().To<double[,]>()), new Matrix<double>(bArray.To<double[,]>()), new Matrix<double>(C));
 #endif
         int K = aArray.Columns();
@@ -305,7 +305,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Length || resultArray.Length > aArray.Length || resultArray.Columns() > bArray.Columns())
             throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>())).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(new Jagged<double>(bArray).ToMatrix().To<double[,]>()), new Matrix<double>(C));
 #endif
         int N = resultArray.Length;
@@ -638,7 +638,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
             throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>())).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
         int n = bArray.Rows();
@@ -678,7 +678,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
             throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>())).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
         int n = aArray.Rows();
@@ -718,7 +718,7 @@ public static partial class Matrix
 #if DEBUG
         if (aArray.Columns() != bArray.Columns() || resultArray.Rows() > aArray.Rows() || resultArray.Columns() > bArray.Rows())
             throw new DimensionMismatchException("result", "Matrices must have compatible dimensions.");
-        var C = Matrix.CreateAs(new Matrix<double>(resultArray)).To<double[,]>();
+        var C = Matrix.CreateAs(new Matrix<double>(new Jagged<double>(resultArray).ToMatrix().To<double[,]>())).To<double[,]>();
         C = Dot(new Matrix<double>(aArray.To<double[,]>()), new Matrix<double>(bArray.Transpose().To<double[,]>()), new Matrix<double>(C));
 #endif
         for (var i = 0; i < aArray.Length; i++)

@@ -36,10 +36,10 @@
     },
     "clients": {
       "type": "array",
-      "description": "AI clients whose platform folders are generated: 'claude', 'copilot', 'reasonix'. New manifests default to ['claude']; a manifest without this field keeps every client for backward compatibility. Disabling a client removes only its junctions/generated instructions, never real directories or .github/workflows.",
+      "description": "AI clients whose platform folders are generated: 'claude', 'copilot', 'agents'. 'agents' is the shared adapter for skills-standard tools (Codex and others) and creates .agents/skills. New manifests default to ['claude']; a manifest without this field keeps every client for backward compatibility. Disabling a client removes only its links/generated instructions, never real directories or .github/workflows.",
       "uniqueItems": true,
       "items": {
-        "enum": ["claude", "copilot", "reasonix"]
+        "enum": ["claude", "copilot", "agents"]
       }
     },
     "sources": {

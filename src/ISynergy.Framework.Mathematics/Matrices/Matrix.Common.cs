@@ -768,7 +768,7 @@ public static partial class Matrix
                 }
 
 #if DEBUG
-            if (!expected.IsEqual(new Matrix<double>(matrix)))
+            if (!expected.IsEqual(new Matrix<double>(matrix.To<double[,]>())))
                 throw new InvalidOperationException("Debug assertion failed: transposed matrix does not match expected.");
 #endif
 

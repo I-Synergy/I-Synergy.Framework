@@ -1,4 +1,4 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using Moq;
 using Microsoft.Extensions.Logging;
@@ -15,9 +15,10 @@ namespace {{Namespace}}.Tests;
 // ENTITY TESTS (Domain Logic)
 // ============================================================================
 
+[TestClass]
 public class {{EntityName}}EntityTests
 {
-    [Fact]
+    [TestMethod]
     public void Create_WithValidData_ShouldCreateEntity()
     {
         // Arrange
@@ -37,11 +38,11 @@ public class {{EntityName}}EntityTests
         entity.IsDeleted.Should().BeFalse();
     }
 
-    [Theory]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData(null)]
-    public void Create_WithInvalid{{PropertyName}}_ShouldThrowException(string invalid{{PropertyName}})
+    [TestMethod]
+    [DataRow("")]
+    [DataRow(" ")]
+    [DataRow(null)]
+    public void Create_WithInvalid{{PropertyName}}_ShouldThrowException(string? invalid{{PropertyName}})
     {
         // Arrange
         var {{secondPropertyName}} = "Test {{SecondPropertyName}}";
@@ -55,7 +56,7 @@ public class {{EntityName}}EntityTests
             .WithMessage("*{{PropertyName}}*");
     }
 
-    [Fact]
+    [TestMethod]
     public void Update_WithValidData_ShouldUpdateEntity()
     {
         // Arrange
@@ -74,7 +75,7 @@ public class {{EntityName}}EntityTests
         entity.UpdatedAt.Should().NotBeNull();
     }
 
-    [Fact]
+    [TestMethod]
     public void Delete_ShouldSoftDeleteEntity()
     {
         // Arrange
@@ -90,7 +91,7 @@ public class {{EntityName}}EntityTests
         entity.DeletedAt.Should().NotBeNull();
     }
 
-    [Fact]
+    [TestMethod]
     public void IsValid_WithValidData_ShouldReturnTrue()
     {
         // Arrange
@@ -109,20 +110,22 @@ public class {{EntityName}}EntityTests
 // COMMAND HANDLER TESTS
 // ============================================================================
 
+[TestClass]
 public class Create{{EntityName}}HandlerTests
 {
-    private readonly Mock<IDocumentSession> _sessionMock;
-    private readonly Mock<ILogger<Create{{EntityName}}Handler>> _loggerMock;
-    private readonly Create{{EntityName}}Handler _handler;
+    private Mock<IDocumentSession> _sessionMock = null!;
+    private Mock<ILogger<Create{{EntityName}}Handler>> _loggerMock = null!;
+    private Create{{EntityName}}Handler _handler = null!;
 
-    public Create{{EntityName}}HandlerTests()
+    [TestInitialize]
+    public void Setup()
     {
         _sessionMock = new Mock<IDocumentSession>();
         _loggerMock = new Mock<ILogger<Create{{EntityName}}Handler>>();
         _handler = new Create{{EntityName}}Handler(_sessionMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Handle_WithValidCommand_ShouldCreateAndReturn{{EntityName}}()
     {
         // Arrange
@@ -143,7 +146,7 @@ public class Create{{EntityName}}HandlerTests
         _sessionMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Handle_WithEmpty{{PropertyName}}_ShouldThrowValidationException()
     {
         // Arrange
@@ -161,20 +164,22 @@ public class Create{{EntityName}}HandlerTests
     }
 }
 
+[TestClass]
 public class Update{{EntityName}}HandlerTests
 {
-    private readonly Mock<IDocumentSession> _sessionMock;
-    private readonly Mock<ILogger<Update{{EntityName}}Handler>> _loggerMock;
-    private readonly Update{{EntityName}}Handler _handler;
+    private Mock<IDocumentSession> _sessionMock = null!;
+    private Mock<ILogger<Update{{EntityName}}Handler>> _loggerMock = null!;
+    private Update{{EntityName}}Handler _handler = null!;
 
-    public Update{{EntityName}}HandlerTests()
+    [TestInitialize]
+    public void Setup()
     {
         _sessionMock = new Mock<IDocumentSession>();
         _loggerMock = new Mock<ILogger<Update{{EntityName}}Handler>>();
         _handler = new Update{{EntityName}}Handler(_sessionMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Handle_WithExistingEntity_ShouldUpdateAndReturn{{EntityName}}()
     {
         // Arrange
@@ -203,7 +208,7 @@ public class Update{{EntityName}}HandlerTests
         _sessionMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Handle_WithNonExistentEntity_ShouldReturnNull()
     {
         // Arrange
@@ -230,20 +235,22 @@ public class Update{{EntityName}}HandlerTests
 // QUERY HANDLER TESTS
 // ============================================================================
 
+[TestClass]
 public class Get{{EntityNamePlural}}HandlerTests
 {
-    private readonly Mock<IQuerySession> _sessionMock;
-    private readonly Mock<ILogger<Get{{EntityNamePlural}}Handler>> _loggerMock;
-    private readonly Get{{EntityNamePlural}}Handler _handler;
+    private Mock<IQuerySession> _sessionMock = null!;
+    private Mock<ILogger<Get{{EntityNamePlural}}Handler>> _loggerMock = null!;
+    private Get{{EntityNamePlural}}Handler _handler = null!;
 
-    public Get{{EntityNamePlural}}HandlerTests()
+    [TestInitialize]
+    public void Setup()
     {
         _sessionMock = new Mock<IQuerySession>();
         _loggerMock = new Mock<ILogger<Get{{EntityNamePlural}}Handler>>();
         _handler = new Get{{EntityNamePlural}}Handler(_sessionMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Handle_WithValidQuery_ShouldReturnPagedResults()
     {
         // Arrange
@@ -266,9 +273,10 @@ public class Get{{EntityNamePlural}}HandlerTests
 // EVENT SOURCING TESTS
 // ============================================================================
 
+[TestClass]
 public class {{EntityName}}AggregateTests
 {
-    [Fact]
+    [TestMethod]
     public void Create_ShouldGenerateCreatedEvent()
     {
         // Arrange
@@ -288,7 +296,7 @@ public class {{EntityName}}AggregateTests
         evt.TriggeredBy.Should().Be(triggeredBy);
     }
 
-    [Fact]
+    [TestMethod]
     public void Apply_{{EntityName}}Created_ShouldSetInitialState()
     {
         // Arrange
@@ -311,7 +319,7 @@ public class {{EntityName}}AggregateTests
         aggregate.Version.Should().Be(1);
     }
 
-    [Fact]
+    [TestMethod]
     public void Update_ShouldGenerateUpdatedEvent()
     {
         // Arrange
@@ -333,7 +341,7 @@ public class {{EntityName}}AggregateTests
         updateEvt.TriggeredBy.Should().Be("testuser2");
     }
 
-    [Fact]
+    [TestMethod]
     public void Delete_OnDeletedAggregate_ShouldThrowException()
     {
         // Arrange
@@ -365,16 +373,18 @@ public class {{EntityName}}AggregateTests
 // PROJECTION TESTS
 // ============================================================================
 
+[TestClass]
 public class {{EntityName}}ProjectionTests
 {
-    private readonly {{EntityName}}Projection _projection;
+    private {{EntityName}}Projection _projection = null!;
 
-    public {{EntityName}}ProjectionTests()
+    [TestInitialize]
+    public void Setup()
     {
         _projection = new {{EntityName}}Projection();
     }
 
-    [Fact]
+    [TestMethod]
     public void Create_From{{EntityName}}Created_ShouldCreateReadModel()
     {
         // Arrange
@@ -396,7 +406,7 @@ public class {{EntityName}}ProjectionTests
         readModel.EventCount.Should().Be(1);
     }
 
-    [Fact]
+    [TestMethod]
     public void Apply_{{EntityName}}Updated_ShouldUpdateReadModel()
     {
         // Arrange
@@ -432,7 +442,8 @@ public class {{EntityName}}ProjectionTests
 /*
  * Integration tests with real MartenDB (using Testcontainers):
  *
- * public class {{EntityName}}IntegrationTests : IAsyncLifetime
+ * [TestClass]
+ * public class {{EntityName}}IntegrationTests
  * {
  *     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()
  *         .WithImage("postgres:15")
@@ -440,6 +451,7 @@ public class {{EntityName}}ProjectionTests
  *
  *     private IDocumentStore _store = null!;
  *
+ *     [TestInitialize]
  *     public async Task InitializeAsync()
  *     {
  *         await _postgres.StartAsync();
@@ -452,13 +464,14 @@ public class {{EntityName}}ProjectionTests
  *         });
  *     }
  *
+ *     [TestCleanup]
  *     public async Task DisposeAsync()
  *     {
  *         _store.Dispose();
  *         await _postgres.DisposeAsync();
  *     }
  *
- *     [Fact]
+ *     [TestMethod]
  *     public async Task FullWorkflow_CreateUpdateDelete_ShouldWork()
  *     {
  *         await using var session = _store.LightweightSession();

@@ -917,12 +917,14 @@ opts.UseNodaTime();  // Better date/time handling
 ### Test Containers
 
 ```csharp
-public class OrdersApiTests : IAsyncLifetime
+[TestClass]
+public class OrdersApiTests
 {
     private PostgreSqlContainer? _postgres;
     private WebApplicationFactory<Program>? _factory;
     private HttpClient? _client;
 
+    [TestInitialize]
     public async Task InitializeAsync()
     {
         _postgres = new PostgreSqlBuilder()
@@ -947,6 +949,7 @@ public class OrdersApiTests : IAsyncLifetime
         _client = _factory.CreateClient();
     }
 
+    [TestCleanup]
     public async Task DisposeAsync()
     {
         _client?.Dispose();
@@ -954,7 +957,7 @@ public class OrdersApiTests : IAsyncLifetime
         await (_postgres?.StopAsync() ?? Task.CompletedTask);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task CreateOrder_ValidRequest_ReturnsCreated()
     {
         // Test implementation

@@ -6,11 +6,34 @@
   ],
   "files.encoding": "utf8",
   "files.autoGuessEncoding": false,
-  // Let the .NET MAUI extension use the committed launch.json configurations
-  // (Sample.Maui (Android|Mac Catalyst|Windows), .NET 11).
   "maui.configuration.useLaunchJsonConfigurations": true,
   "sonarlint.connectedMode.project": {
     "connectionId": "i-synergy-github",
     "projectKey": "I-Synergy_I-Synergy.Framework"
+  },
+  "python.terminal.useEnvFile": true,
+  "chat.useAgentsMdFile": false,
+  "github.copilot.chat.cli.customAgents.enabled": true,
+  "chat.useClaudeHooks": true,
+  "chat.useAgentSkills": true,
+  "chat.includeApplyingInstructions": true,
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "chat.defaultConfiguration": {
+    "approvals": "manual"
+  },
+  "terminal.integrated.env.windows": {
+    "MSBUILDDISABLENODEREUSE": "1",
+    "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+    "UseSharedCompilation": "false"
+  },
+  "terminal.integrated.env.linux": {
+    "MSBUILDDISABLENODEREUSE": "1",
+    "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+    "UseSharedCompilation": "false"
+  },
+  "terminal.integrated.env.osx": {
+    "MSBUILDDISABLENODEREUSE": "1",
+    "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+    "UseSharedCompilation": "false"
   }
 }

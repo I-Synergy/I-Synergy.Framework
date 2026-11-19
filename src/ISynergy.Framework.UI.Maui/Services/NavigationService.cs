@@ -6,6 +6,7 @@ using ISynergy.Framework.Mvvm.Abstractions;
 using ISynergy.Framework.Mvvm.Abstractions.Services;
 using ISynergy.Framework.Mvvm.Abstractions.ViewModels;
 using ISynergy.Framework.Mvvm.Extensions;
+using ISynergy.Framework.UI.Abstractions.Views;
 using ISynergy.Framework.UI.Extensions;
 using ISynergy.Framework.UI.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -181,13 +182,12 @@ public partial class NavigationService : BaseNavigationService
                 return;
             }
 
-            // Detach any existing handler so MAUI reinitializes the native view tree for
-            // recycled singleton pages.
-            page.Handler = null;
-
             await PresentModalPageAsync(page, scope);
 
-            await InitializeModalViewModelAsync(view);
+            // A shell is a root page, not a modal: PresentModalPageAsync has already installed it
+            // as the window root and the shell initializes itself from its Loaded handler.
+            if (page is not IShellView)
+                await InitializeModalViewModelAsync(view);
         });
     }
 
@@ -204,22 +204,144 @@ public partial class NavigationService : BaseNavigationService
             throw new InvalidOperationException(DefaultPageNotAvailable);
         }
 
-        if (mainPage is Shell or NavigationPage || GetNavigationFrame() is not null)
+        if (page is IShellView)
+        {
+            // MAUI's iOS/Mac Catalyst ShellFlyoutRenderer crashes while laying out a Shell that
+            // is pushed as a modal (LayoutSidebar NullReferenceException). A shell is a root
+            // surface, so install it as the window root instead of pushing it onto the modal
+            // stack; this is also the path the application uses when rebuilding after a language
+            // change.
+            var window = Application.Current!.Windows[0];
+            var oldPage = window.Page;
+
+            if (DecideRootReplacement(oldPage, page) is RootReplacement.Unchanged)
+            {
+                scope.Dispose();
+                return;
+            }
+
+            // Detach any existing handler so MAUI reinitializes the native view tree for
+            // recycled singleton pages.
+            page.Handler = null;
+
+            window.Page = page;
+            await ReapplyWindowContentAsync(window);
+
+            CleanupPageResources(oldPage);
+            scope.Dispose();
+        }
+        else if (mainPage is Shell or NavigationPage || GetNavigationFrame() is not null)
         {
             // The root owns a content host (or is a Shell/NavigationPage), so a modal can be
             // pushed on top of it and the shell stays alive underneath.
+            // Detach any existing handler so MAUI reinitializes the native view tree for
+            // recycled singleton pages.
+            page.Handler = null;
+
             await mainPage.Navigation.PushModalAsync(page, Animated);
             _modals.Push(new ModalPage(page, scope));
         }
         else
         {
             // Initial setup or bare-page root (e.g., LoadingView): replace the window root.
-            var oldPage = Application.Current!.Windows[0].Page;
-            Application.Current.Windows[0].Page = page;
+            var window = Application.Current!.Windows[0];
+            var oldPage = window.Page;
+
+            // Detach any existing handler so MAUI reinitializes the native view tree for
+            // recycled singleton pages.
+            page.Handler = null;
+
+            window.Page = page;
+            await ReapplyWindowContentAsync(window);
 
             CleanupPageResources(oldPage);
             scope.Dispose();
         }
+    }
+
+    /// <summary>
+    /// How the root page of a window should be changed when a page is presented.
+    /// </summary>
+    internal enum RootReplacement
+    {
+        /// <summary>The page is already the window root; nothing to do.</summary>
+        Unchanged,
+
+        /// <summary>Install the page as the window root and re-apply the content mapping.</summary>
+        Replace,
+    }
+
+    /// <summary>
+    /// Decides whether a page should replace the window root, given the current root.
+    /// </summary>
+    /// <remarks>
+    /// Extracted from <see cref="PresentModalPageAsync"/> so the decision can be tested without a
+    /// live MAUI window: a <see cref="Page"/> cannot be constructed in a unit test, but the
+    /// identity comparison that guards against re-installing the current root can.
+    /// </remarks>
+    /// <param name="currentRoot">The page currently installed as the window root.</param>
+    /// <param name="incoming">The page about to be installed.</param>
+    /// <returns><see cref="RootReplacement.Unchanged"/> when the page is already the root.</returns>
+    internal static RootReplacement DecideRootReplacement(object? currentRoot, object incoming) =>
+        ReferenceEquals(currentRoot, incoming) ? RootReplacement.Unchanged : RootReplacement.Replace;
+
+    /// <summary>
+    /// Re-applies <see cref="Microsoft.Maui.IWindow.Content"/> to a window whose root page was
+    /// just replaced, so the platform window hosts the new page.
+    /// </summary>
+    /// <remarks>
+    /// MAUI 11 maps a window's root page under the <c>Content</c> key and updates that mapping from
+    /// <c>Window.OnPropertyChanged("Page")</c>. On iOS and Mac Catalyst that automatic update does
+    /// not attach the replacement page when the root is swapped after the window is live: the
+    /// window keeps the previous page's view controller, and the new page stays detached (managed
+    /// size -1x-1, its native tree never added — nothing is painted). Re-applying the mapping after
+    /// the swap is what hands the new page's view controller to the window.
+    /// </remarks>
+    /// <param name="window">The window whose content mapping is re-applied.</param>
+    /// <returns>A task that completes once the mapping has been re-applied.</returns>
+    private static Task ReapplyWindowContentAsync(Microsoft.Maui.Controls.Window window) =>
+        ReapplyWindowContentAsync(
+            window.Handler is not null,
+            action => window.Dispatcher.DispatchDelayed(TimeSpan.Zero, action),
+            () => window.Handler?.UpdateValue(nameof(Microsoft.Maui.IWindow.Content)));
+
+    /// <summary>
+    /// Re-applies the window content mapping through the supplied dispatcher and updater.
+    /// </summary>
+    /// <remarks>
+    /// The window's handler and dispatcher are the only platform-bound inputs, so they are passed
+    /// in rather than read from a live <see cref="Microsoft.Maui.Controls.Window"/>. That keeps the
+    /// short-circuit, the deferred dispatch and the completion signalling testable.
+    /// </remarks>
+    /// <param name="hasHandler">Whether the window is attached to a platform handler.</param>
+    /// <param name="dispatchDelayed">Schedules <paramref name="action"/> on a later dispatcher turn.</param>
+    /// <param name="updateContent">Re-applies the content mapping.</param>
+    /// <returns>A task that completes once the mapping has been re-applied.</returns>
+    internal static Task ReapplyWindowContentAsync(
+        bool hasHandler,
+        Action<Action> dispatchDelayed,
+        Action updateContent)
+    {
+        if (!hasHandler)
+            return Task.CompletedTask;
+
+        // The re-apply has to run on a later dispatcher turn: applying it inline races the tear-down
+        // of the page that is being replaced, and the platform window keeps the old root.
+        var completion = new TaskCompletionSource();
+
+        dispatchDelayed(() =>
+        {
+            try
+            {
+                updateContent();
+            }
+            finally
+            {
+                completion.TrySetResult();
+            }
+        });
+
+        return completion.Task;
     }
 
     /// <summary>

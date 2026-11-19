@@ -368,3 +368,8 @@ CLAUDE.md.deepseek-backup
 .github/prompts/
 .claude/commands/
 .claude/instructions/
+
+# AI Workspace Manager: resolver cache and platform links
+.claude/rules/*.instructions.md
+.agents/skills/
+.github/hooks/

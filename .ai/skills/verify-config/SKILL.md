@@ -47,8 +47,10 @@ Audits project documentation against actual codebase conventions and enforces ha
    - Docs (`AGENTS.md`, `README.md`) hardcode no concrete model names — the `model:` tier alias in each agent's frontmatter names a tier slot (e.g., `sonnet` or `haiku`), and the concrete model bound to that tier is chosen by the backend runtime outside this repository
 
 #### 3c. Junctions to supported tools
-   - `.ai/skills/` and `.ai/agents/` are mirrored by junctions (Windows) / symlinks (Unix) into `.claude/`, `.reasonix/`, and `.github/`
-   - Junction targets (`.claude/skills/`, `.claude/agents/`, `.reasonix/skills/`, `.reasonix/agents/`, `.github/skills/`) exist and resolve correctly
+   - `.ai/skills/` and `.ai/agents/` are mirrored by links (Windows junctions / Unix symlinks) into `.claude/`, `.github/` and `.agents/`
+   - Adapter paths (`.claude/skills/`, `.claude/agents/`, `.github/skills/`, `.github/agents/`, `.agents/skills/`) exist and resolve to the canonical directory
+   - No adapter path is a real directory holding a second copy of the content
+   - No `.reasonix/` junction remains — the platform is no longer supported
    - Agent files have `runAs: subagent` when needed (check `.ai/agents/` source)
    - `.gitignore` excludes all junction targets
 
@@ -59,7 +61,7 @@ Audits project documentation against actual codebase conventions and enforces ha
      - "In this template repository the file stays the unfilled placeholder"
    - `.github/copilot-instructions.md` Section titled `## Session Memory` is identical to the `AGENTS.md` section (word-for-word, no divergence)
    - `.ai/reference/session-management.md` reconciles with `AGENTS.md` (contains same core rules, longer-form detail)
-   - `.ai/reference/templates/session-handoff.md.txt` includes all supported clients in pick-lists (Claude Code, GitHub Copilot, Reasonix Code)
+   - `.ai/reference/templates/session-handoff.md.txt` includes all supported clients in pick-lists (Claude Code, GitHub Copilot)
    - `.ai/session-context.md` is the unfilled placeholder (first line is `# Session Context Template`); in this template repo, it never contains project state
    - `.ai/reference/session-management.md` has generic `[assistant name]` Written By (not hardcoded to one assistant)
    - `.ai/reference/session-management.md` lists all assistants that share the session context
@@ -67,7 +69,7 @@ Audits project documentation against actual codebase conventions and enforces ha
 ### 4. Tool-specific configuration
    - `.claude/settings.json` exists with `plansDirectory` pointing to `.ai/plans`, `SessionStart` hook, and `PostToolUse` re-sync hooks
    - `.ai/progress/` and `.ai/plans/` folders exist
-   - Check that no project-specific config leaked to global `~/.claude/`, `~/.reasonix/`, etc.
+   - Check that no project-specific config leaked to global `~/.claude/`, etc.
 
 ### 5. Present findings
    - Show a summary table of all checks with their status

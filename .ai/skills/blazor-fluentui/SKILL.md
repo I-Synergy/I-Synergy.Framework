@@ -1112,25 +1112,35 @@ app.MapHub<NotificationHub>("/notificationhub");
 ```csharp
 using Bunit;
 using FluentAssertions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-public class CounterTests : TestContext
+[TestClass]
+public class CounterTests
 {
-    [Fact]
+    // MSTest owns the name TestContext, so bUnit's context is referenced as Bunit.TestContext
+    private Bunit.TestContext _ctx = null!;
+
+    [TestInitialize]
+    public void Setup() => _ctx = new Bunit.TestContext();
+
+    [TestCleanup]
+    public void Cleanup() => _ctx.Dispose();
+
+    [TestMethod]
     public void Counter_StartsAtZero()
     {
         // Arrange & Act
-        var cut = RenderComponent<Counter>();
+        var cut = _ctx.RenderComponent<Counter>();
 
         // Assert
         cut.Find("p").TextContent.Should().Contain("count: 0");
     }
 
-    [Fact]
+    [TestMethod]
     public void Counter_Increments_OnButtonClick()
     {
         // Arrange
-        var cut = RenderComponent<Counter>();
+        var cut = _ctx.RenderComponent<Counter>();
         var button = cut.Find("button");
 
         // Act
@@ -1147,11 +1157,11 @@ public class CounterTests : TestContext
 ### Testing with Parameters
 
 ```csharp
-[Fact]
+[TestMethod]
 public void Component_Renders_WithParameters()
 {
     // Arrange & Act
-    var cut = RenderComponent<MyComponent>(parameters => parameters
+    var cut = _ctx.RenderComponent<MyComponent>(parameters => parameters
         .Add(p => p.Title, "Test Title")
         .Add(p => p.Count, 5));
 
@@ -1166,12 +1176,12 @@ public void Component_Renders_WithParameters()
 ### Testing EventCallbacks
 
 ```csharp
-[Fact]
+[TestMethod]
 public void Component_Invokes_Callback()
 {
     // Arrange
     var callbackInvoked = false;
-    var cut = RenderComponent<MyComponent>(parameters => parameters
+    var cut = _ctx.RenderComponent<MyComponent>(parameters => parameters
         .Add(p => p.OnClick, () => callbackInvoked = true));
 
     // Act
@@ -1187,17 +1197,17 @@ public void Component_Invokes_Callback()
 ### Testing with Services
 
 ```csharp
-[Fact]
+[TestMethod]
 public void Component_Uses_InjectedService()
 {
     // Arrange
     var mockService = new Mock<IDataService>();
     mockService.Setup(s => s.GetData()).Returns(new List<Item> { new() { Name = "Test" } });
 
-    Services.AddSingleton(mockService.Object);
+    _ctx.Services.AddSingleton(mockService.Object);
 
     // Act
-    var cut = RenderComponent<DataComponent>();
+    var cut = _ctx.RenderComponent<DataComponent>();
 
     // Assert
     cut.FindAll("li").Should().HaveCount(1);

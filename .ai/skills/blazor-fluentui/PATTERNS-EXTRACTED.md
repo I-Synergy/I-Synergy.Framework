@@ -588,15 +588,25 @@ app.MapHub<NotificationHub>("/notificationhub");
 ```csharp
 using Bunit;
 using FluentAssertions;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-public class CounterTests : TestContext
+[TestClass]
+public class CounterTests
 {
-    [Fact]
+    // MSTest owns the name TestContext, so bUnit's context is referenced as Bunit.TestContext
+    private Bunit.TestContext _ctx = null!;
+
+    [TestInitialize]
+    public void Setup() => _ctx = new Bunit.TestContext();
+
+    [TestCleanup]
+    public void Cleanup() => _ctx.Dispose();
+
+    [TestMethod]
     public void Counter_Increments_OnButtonClick()
     {
         // Arrange
-        var cut = RenderComponent<Counter>();
+        var cut = _ctx.RenderComponent<Counter>();
         var button = cut.Find("button");
 
         // Act
@@ -606,12 +616,12 @@ public class CounterTests : TestContext
         cut.Find("p").TextContent.Should().Contain("count: 1");
     }
 
-    [Fact]
+    [TestMethod]
     public void Counter_Calls_Callback_OnIncrement()
     {
         // Arrange
         var callbackInvoked = false;
-        var cut = RenderComponent<Counter>(parameters => parameters
+        var cut = _ctx.RenderComponent<Counter>(parameters => parameters
             .Add(p => p.OnCountChanged, () => callbackInvoked = true));
 
         // Act

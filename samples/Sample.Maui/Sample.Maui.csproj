@@ -22,6 +22,11 @@
 		<SingleProject>true</SingleProject>
 		<IsPackable>false</IsPackable>
 		<WindowsPackageType>None</WindowsPackageType>
+		<!-- Match The Quran's working Apple heads: compile XAML with the source generator and keep
+		     ReadyToRun off for the Apple targets (.NET 11 defaults it on; the Apple heads have no
+		     ReadyToRun runtime pack). -->
+		<MauiXamlInflator>SourceGen</MauiXamlInflator>
+		<PublishReadyToRun>false</PublishReadyToRun>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 
 		<!-- Display name -->
