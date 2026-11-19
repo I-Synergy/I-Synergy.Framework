@@ -407,7 +407,7 @@ Load these files based on task type:
 
 This section tells GitHub Copilot how to carry out the protocol above. Copilot has no SessionStart hook and no Claude `Agent` tool, so these steps are explicit.
 
-**In VS Code, run the session in the `orchestrator` agent** (select it in the agent dropdown). It has the delegation tool and may run the specialist agents. If another agent or mode is active and no delegation tool is available, follow the fallback in section 2.
+**In VS Code, run the session in the `orchestrator` agent** (select it in the agent dropdown). It has the delegation tool and may run every specialist agent the project has. If another agent or mode is active and no delegation tool is available, follow the fallback in section 2.
 
 ### 1. Session start (every session, before any other work)
 

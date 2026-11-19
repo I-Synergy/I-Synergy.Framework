@@ -50,17 +50,57 @@ def _read(path: Path) -> str:
     return path.read_bytes().decode("utf-8", errors="replace").replace("\r\n", "\n")
 
 
+def _template_items(kind: str) -> set:
+    """Ids of the skills/agents this template ships, or an empty set when it cannot tell.
+
+    `.ai/agents/` and `.ai/skills/` hold two populations in a project: the items the template
+    ships, and the ones the project installed from another source or wrote itself. Only the
+    first may be held to a template rule — the update path rewrites the template's items but
+    never the project's, so a rule it cannot satisfy is a rule the project cannot fix.
+
+    The template ships no tracked inventory: its whole `.ai/agents/` and `.ai/skills/` tree is
+    the catalog. A project's `.ai/ai.json` selection is therefore the only record of which
+    items are the template's, and it is gitignored, so it exists only in a project checkout.
+    No selection — the template repository itself, or a project that never ran the resolver —
+    means every item is checked.
+    """
+    manifest = ROOT / ".ai" / "ai.json"
+    if not manifest.is_file():
+        return set()
+    try:
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return set()
+    selected = data.get(kind)
+    return {str(item) for item in selected} if isinstance(selected, list) and selected else set()
+
+
+def _is_template_item(kind: str, name: str, owned: set) -> bool:
+    """True when this item is the template's to enforce a rule on.
+
+    With no selection, every item is checked (the template repository itself). With a
+    selection, a listed item is the template's; an unlisted one is the project's.
+    """
+    return not owned or name in owned
+
+
 def test_no_prompt_variables() -> bool:
     print("TEST 1: No Copilot prompt variables in skills")
     print("-" * 40)
+    owned = _template_items("skills")
     bad = []
+    skipped = []
     for skill in sorted((ROOT / ".ai" / "skills").glob("*/SKILL.md")):
+        if not _is_template_item("skills", skill.parent.name, owned):
+            skipped.append(skill.parent.name)
+            continue
         if PROMPT_VAR in _read(skill):
             bad.append(skill.parent.name)
     if bad:
         print(f"  FAIL: prompt variable token found in: {bad}")
         return False
-    print(f"  PASS: no {PROMPT_VAR!r} token in any SKILL.md")
+    suffix = f" (skipped {len(skipped)} project-owned)" if skipped else ""
+    print(f"  PASS: no {PROMPT_VAR!r} token in any template SKILL.md{suffix}")
     return True
 
 
@@ -162,11 +202,16 @@ def test_agent_bodies() -> bool:
     print("\nTEST 4: Agent bodies reference their skills and critical rules")
     print("-" * 40)
     passed = True
+    owned = _template_items("agents")
     agents = sorted((ROOT / ".ai" / "agents").glob("*.md"))
     if not agents:
         print("  FAIL: no agents found")
         return False
+    skipped = []
     for agent in agents:
+        if not _is_template_item("agents", agent.stem, owned):
+            skipped.append(agent.name)
+            continue
         text = _read(agent)
         body = _body(text)
         missing = [f".ai/skills/{s}/SKILL.md" for s in _frontmatter_skills(text)
@@ -178,6 +223,8 @@ def test_agent_bodies() -> bool:
             passed = False
         else:
             print(f"  PASS: {agent.name}")
+    if skipped:
+        print(f"  SKIP: {len(skipped)} project-owned agent(s): {skipped}")
     return passed
 
 

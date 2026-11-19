@@ -28,6 +28,11 @@
       "origin": "bundled"
     },
     {
+      "path": ".ai/reference/copilot-runtime.md",
+      "sha256": "a7da48676a74b54cafe50d9aa5b27206f7f365838cb09fd9d3478e3cb9226ec7",
+      "origin": "template"
+    },
+    {
       "path": ".ai/scripts/catalog.py",
       "sha256": "ce949701658731242d10db1c6a2160f3dcb0d7651921cdb82db42f9c3a4a5b58",
       "origin": "bundled"
@@ -139,7 +144,7 @@
     },
     {
       "path": ".ai/tests/validate-adapters.py",
-      "sha256": "54915743ec248638ad59a62b1935eb203bd44d1eb9ca9ec5ec443459ce0959b7",
+      "sha256": "51f479e5206b6a76f498054c85306d44f200a99b2a35d865c386a03b8c122f4d",
       "origin": "template"
     },
     {
@@ -213,5 +218,5 @@
       "origin": "template"
     }
   ],
-  "ref": "2026.11119.11228"
+  "ref": "2026.11119.11416"
 }
