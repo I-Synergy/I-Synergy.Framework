@@ -214,7 +214,7 @@ public partial class NavigationService : BaseNavigationService
             var window = Application.Current!.Windows[0];
             var oldPage = window.Page;
 
-            if (ReferenceEquals(oldPage, page))
+            if (DecideRootReplacement(oldPage, page) is RootReplacement.Unchanged)
             {
                 scope.Dispose();
                 return;
@@ -260,6 +260,32 @@ public partial class NavigationService : BaseNavigationService
     }
 
     /// <summary>
+    /// How the root page of a window should be changed when a page is presented.
+    /// </summary>
+    internal enum RootReplacement
+    {
+        /// <summary>The page is already the window root; nothing to do.</summary>
+        Unchanged,
+
+        /// <summary>Install the page as the window root and re-apply the content mapping.</summary>
+        Replace,
+    }
+
+    /// <summary>
+    /// Decides whether a page should replace the window root, given the current root.
+    /// </summary>
+    /// <remarks>
+    /// Extracted from <see cref="PresentModalPageAsync"/> so the decision can be tested without a
+    /// live MAUI window: a <see cref="Page"/> cannot be constructed in a unit test, but the
+    /// identity comparison that guards against re-installing the current root can.
+    /// </remarks>
+    /// <param name="currentRoot">The page currently installed as the window root.</param>
+    /// <param name="incoming">The page about to be installed.</param>
+    /// <returns><see cref="RootReplacement.Unchanged"/> when the page is already the root.</returns>
+    internal static RootReplacement DecideRootReplacement(object? currentRoot, object incoming) =>
+        ReferenceEquals(currentRoot, incoming) ? RootReplacement.Unchanged : RootReplacement.Replace;
+
+    /// <summary>
     /// Re-applies <see cref="Microsoft.Maui.IWindow.Content"/> to a window whose root page was
     /// just replaced, so the platform window hosts the new page.
     /// </summary>
@@ -273,20 +299,41 @@ public partial class NavigationService : BaseNavigationService
     /// </remarks>
     /// <param name="window">The window whose content mapping is re-applied.</param>
     /// <returns>A task that completes once the mapping has been re-applied.</returns>
-    private static Task ReapplyWindowContentAsync(Microsoft.Maui.Controls.Window window)
+    private static Task ReapplyWindowContentAsync(Microsoft.Maui.Controls.Window window) =>
+        ReapplyWindowContentAsync(
+            window.Handler is not null,
+            action => window.Dispatcher.DispatchDelayed(TimeSpan.Zero, action),
+            () => window.Handler?.UpdateValue(nameof(Microsoft.Maui.IWindow.Content)));
+
+    /// <summary>
+    /// Re-applies the window content mapping through the supplied dispatcher and updater.
+    /// </summary>
+    /// <remarks>
+    /// The window's handler and dispatcher are the only platform-bound inputs, so they are passed
+    /// in rather than read from a live <see cref="Microsoft.Maui.Controls.Window"/>. That keeps the
+    /// short-circuit, the deferred dispatch and the completion signalling testable.
+    /// </remarks>
+    /// <param name="hasHandler">Whether the window is attached to a platform handler.</param>
+    /// <param name="dispatchDelayed">Schedules <paramref name="action"/> on a later dispatcher turn.</param>
+    /// <param name="updateContent">Re-applies the content mapping.</param>
+    /// <returns>A task that completes once the mapping has been re-applied.</returns>
+    internal static Task ReapplyWindowContentAsync(
+        bool hasHandler,
+        Action<Action> dispatchDelayed,
+        Action updateContent)
     {
-        if (window.Handler is null)
+        if (!hasHandler)
             return Task.CompletedTask;
 
         // The re-apply has to run on a later dispatcher turn: applying it inline races the tear-down
         // of the page that is being replaced, and the platform window keeps the old root.
         var completion = new TaskCompletionSource();
 
-        window.Dispatcher.DispatchDelayed(TimeSpan.Zero, () =>
+        dispatchDelayed(() =>
         {
             try
             {
-                window.Handler?.UpdateValue(nameof(Microsoft.Maui.IWindow.Content));
+                updateContent();
             }
             finally
             {
