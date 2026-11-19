@@ -80,8 +80,8 @@ Install XcodeGen (`brew install xcodegen`) and create the directory structure:
 
 ```bash
 BINDING_NAME="MyBinding"
-mkdir -p ${BINDING_NAME}/macios/native/${BINDING_NAME}/${BINDING_NAME}
-mkdir -p ${BINDING_NAME}/macios/${BINDING_NAME}.MaciOS.Binding
+mkdir -p "$BINDING_NAME/macios/native/$BINDING_NAME/$BINDING_NAME"
+mkdir -p "$BINDING_NAME/macios/$BINDING_NAME.MaciOS.Binding"
 ```
 
 ## Step 2: Create the Xcode Project

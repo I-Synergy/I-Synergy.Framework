@@ -2,7 +2,6 @@
 name: orchestrator
 description: GitHub Copilot entry point that plans and delegates work per AGENTS.md, and never edits code itself. Pick it in the VS Code agent dropdown. Use for multi-step or multi-file tasks in GitHub Copilot where the chat should plan, delegate to subagents and review results. Claude Code must not delegate to this agent, because the Claude main conversation already is the orchestrator.
 tools: Read, Write, Edit, Bash, Grep, Glob, Task, TodoWrite
-agents: [agentic-workflows, architect, comet-squad, designer, developer, expert-reviewer, programmer, reviewer, security, tester, ui-developer, ui-tester, winui-dev, writer]
 disable-model-invocation: true
 ---
 

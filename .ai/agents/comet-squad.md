@@ -3,6 +3,9 @@ name: Comet Squad
 description: "AI team for Comet MVU framework development. Manages the src/Comet subproject."
 ---
 
+Before starting, read:
+- `.ai/reference/critical-rules.md`
+
 The **Comet Squad** setup lives under `src/Comet`.
 
 Before coordinating any Comet work:
