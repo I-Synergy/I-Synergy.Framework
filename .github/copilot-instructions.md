@@ -1,7 +1,7 @@
 # GitHub Copilot Instructions
 
 <!-- ai-workspace-manager:generated-from-agents -->
-<!-- Generated from AGENTS.md. Edit AGENTS.md, not this file. Regenerate with `python .ai/scripts/sync-instructions.py`. -->
+<!-- Generated from AGENTS.md. Edit AGENTS.md, not this file. -->
 
 # .NET Development Template
 
@@ -296,6 +296,7 @@ These files contain detailed guidance. Load them when the task type matches — 
 - `designer` — Visual/graphical design — color palettes, typography, spacing, branding, iconography, accessibility contrast, and visual hierarchy. Use for visual design — color palettes, typography, branding, design tokens, and accessibility contrast.
 - `developer` — .NET/C# code implementation — writes CQRS handlers, API endpoints, Blazor components, EF Core data access. Use for all .NET code changes including refactoring, builds, and verification.
 - `expert-reviewer` — Expert .NET MAUI DevFlow code reviewer. Multi-model review with adversarial consensus.
+- `orchestrator` — GitHub Copilot entry point that plans and delegates work per AGENTS.md, and never edits code itself. Pick it in the VS Code agent dropdown. Use for multi-step or multi-file tasks in GitHub Copilot where the chat should plan, delegate to subagents and review results. Claude Code must not delegate to this agent, because the Claude main conversation already is the orchestrator.
 - `programmer` — Programming and code implementation — writes, edits, builds, and tests code. Use for hands-on implementation once the approach is decided, without architecture or planning work.
 - `reviewer` — Code quality and architecture review specialist — reviews for SOLID principles, CQRS patterns, security issues, and architecture compliance. Use for code quality, SOLID, CQRS compliance, security review, architecture audit, and ISO/IEC 25010 finding attribution.
 - `security` — Security reviewer and blast-radius analyst — reviews authentication, authorization, secrets handling, data exposure, and dependency risk, and reports severity-ranked findings without editing code. Use for blast-radius and exposure analysis, threat modelling, OWASP review, and dependency and secret audits.
@@ -400,46 +401,3 @@ Load these files based on task type:
 | Domain Modeling | `.ai/skills/ubiquitous-language/SKILL.md`, `.ai/skills/usecase-specification/SKILL.md`, `.ai/skills/user-story/SKILL.md` |
 | Skill Creation | `.ai/skills/skill-creator/SKILL.md` |
 <!-- ai-workspace-manager:copilot-reference:end -->
-
-<!-- ai-workspace-manager:copilot-runtime:start -->
-## GitHub Copilot Runtime
-
-This section tells GitHub Copilot how to carry out the protocol above. Copilot has no SessionStart hook and no Claude `Agent` tool, so these steps are explicit.
-
-**In VS Code, run the session in the `orchestrator` agent** (select it in the agent dropdown). It has the delegation tool and may run the specialist agents. If another agent or mode is active and no delegation tool is available, follow the fallback in section 2.
-
-### 1. Session start (every session, before any other work)
-
-1. Read `.ai/session-context.md`. Skip it if its first line starts with `# Session Context Template`, which is the unfilled placeholder.
-2. List `.ai/progress/` and resume any in-flight task.
-3. Skim the most recent files in `.ai/completed/`.
-4. If `.github/skills/` or `.github/agents/` is missing, run `python .ai/scripts/sync-platforms.py` first (use `python3` on macOS and Linux). Both are gitignored links to `.ai/`.
-
-### 2. Delegation
-
-The Subagent Delegation table above names agents defined in `.ai/agents/` and exposed through `.github/agents/`. Delegate by agent name:
-
-- **VS Code Local harness:** the `runSubagent` tool, with the agent name. Enable "Run Subagent" under Configure Tools.
-- **Copilot harness, Copilot CLI and cloud agent:** the `task` tool, with the agent name.
-- **No delegation tool in the current mode:** say so in one line, then read `.ai/agents/{name}.md` and every skill it lists, and follow them yourself. Never skip the rules because delegation is unavailable.
-
-Every delegated prompt includes the progress-file instruction block from the Subagent Delegation section above.
-
-### 3. Rules
-
-- The Critical Coding Rules above always apply.
-- Scoped files in `.ai/instructions/` attach by path match (`applyTo`). If one did not load for a file you are editing, read it yourself.
-- Before finishing, verify the work against `.ai/checklists/pre-submission.md`.
-
-### 4. Session end (only when project state changed)
-
-1. Build check: if a `*.sln` or `*.slnx` file exists at the repository root and files under `src/` or `tests/` changed in this session, run `dotnet build --nologo --verbosity minimal -nodeReuse:false` with `MSBUILDDISABLENODEREUSE=1` set before the final reply. Fix any failure first. (Claude Code runs this as a Stop hook; Copilot follows this instruction instead.)
-2. Mark completed steps in the progress file with Edit, one line at a time.
-3. Update `README.md` for the change, as the README rule above requires.
-4. Add `**Status:** DONE` to the progress file and move it to `.ai/completed/`.
-5. Write the handoff to `.ai/session-context.md` using `.ai/reference/templates/session-handoff.md.txt`, with Written By set to GitHub Copilot. Update sections in place and never overwrite another client's entries.
-
-### 5. Skills
-
-Reusable workflows, including the former prompt files, are skills in `.ai/skills/`. Invoke them by name, for example `/ef-core` or `/dotnet-best-practices`. Load a skill's `SKILL.md` when a task matches its description.
-<!-- ai-workspace-manager:copilot-runtime:end -->

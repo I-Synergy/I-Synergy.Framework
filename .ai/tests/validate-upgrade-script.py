@@ -14,6 +14,7 @@ Validates the upgrade-template.py script and its supporting infrastructure:
  10. Skill pipeline connectivity: design-interrogation dependency skills all exist
 11. Three-tier completeness of skills
 12. .vscode/settings.json and tasks.json are merged from fragments, not template-owned
+13. A project that installs extra agents keeps an identical orchestrator.md on upgrade
 """
 
 import importlib.util
@@ -511,6 +512,71 @@ def test_vscode_files_are_merged_not_owned() -> bool:
     return passed
 
 
+def test_project_agents_survive_upgrade() -> bool:
+    """Integration: a project that installs extra agents keeps an identical orchestrator.md.
+
+    The template ships orchestrator.md without an `agents:` inventory, so an upgrade finds it
+    unchanged and cannot write a template list back over the project's own agents (issue #53).
+    """
+    print("\nTEST 13: a project with extra agents keeps its orchestrator.md on upgrade")
+    print("-" * 40)
+
+    import subprocess
+
+    with tempfile.TemporaryDirectory() as source_tmp, \
+         tempfile.TemporaryDirectory() as target_tmp:
+
+        source = Path(source_tmp)
+        target = Path(target_tmp)
+
+        # Source: the template's own orchestrator and specialist agents.
+        src_agents = source / ".ai" / "agents"
+        src_agents.mkdir(parents=True)
+        (src_agents / "orchestrator.md").write_text(
+            "---\nname: orchestrator\ndescription: Coordinate work.\ntools: Task\n"
+            "disable-model-invocation: true\n---\n\nDelegate to the agents named in AGENTS.md.\n",
+            encoding="utf-8",
+        )
+        (src_agents / "developer.md").write_text(
+            "---\nname: developer\ndescription: Implement code.\n---\n\nImplement.\n",
+            encoding="utf-8",
+        )
+
+        # Target: the same files plus an agent installed from another source.
+        tgt_agents = target / ".ai" / "agents"
+        tgt_agents.mkdir(parents=True)
+        shutil.copy2(src_agents / "orchestrator.md", tgt_agents / "orchestrator.md")
+        shutil.copy2(src_agents / "developer.md", tgt_agents / "developer.md")
+        (tgt_agents / "maui-expert.md").write_text(
+            "---\nname: maui-expert\ndescription: MAUI specialist.\n---\n\nHelp with MAUI.\n",
+            encoding="utf-8",
+        )
+
+        result = subprocess.run(
+            [sys.executable, str(UPGRADE_SCRIPT),
+             "--source", str(source),
+             "--target", str(target),
+             "--non-interactive"],
+            capture_output=True, text=True,
+        )
+
+        orchestrator = tgt_agents / "orchestrator.md"
+        kept = orchestrator.read_text(encoding="utf-8")
+        if "agents:" in kept.split("---")[1]:
+            print("  FAIL: orchestrator.md pins an `agents:` inventory again")
+            return False
+        if "CHANGED" in result.stdout and "orchestrator.md" in result.stdout:
+            print("  FAIL: upgrade reports orchestrator.md as CHANGED for a project with extra agents")
+            print(f"  stdout: {result.stdout[:500]}")
+            return False
+        if not (tgt_agents / "maui-expert.md").exists():
+            print("  FAIL: the project's own agent was removed")
+            return False
+
+        print("  PASS: orchestrator.md unchanged and the project's extra agent kept")
+        return True
+
+
 def main() -> int:
     print("=" * 60)
     print("  Upgrade Script Validation")
@@ -536,6 +602,7 @@ def main() -> int:
         test_design_interrogation_pipeline,
         test_three_tier_completeness,
         test_vscode_files_are_merged_not_owned,
+        test_project_agents_survive_upgrade,
     ]
 
     results = []

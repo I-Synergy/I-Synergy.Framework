@@ -11,7 +11,7 @@ Validates the Copilot-parity adapter layout:
   7. Hook commands point at existing files; no .github/hooks/
   8. .vscode/tasks.json is tracked and not auto-run; Agents.md auto-load is off;
      Copilot custom agents, Claude hooks, agent skills and instruction files are pinned on
-  9. orchestrator.md is the Copilot coordinator: no delegation target, lists every other agent
+  9. orchestrator.md is the Copilot coordinator: no delegation target, no pinned agent inventory
  10. VS Code fragments (.ai/reference/templates/vscode/) are valid, free of template-only keys,
      contained in the template's own .vscode files, and consistent with merge-rules.json
 """
@@ -396,6 +396,7 @@ def test_orchestrator_agent() -> bool:
         return False
     block = _frontmatter(_read(path))
     passed = True
+    others = sorted(p.stem for p in (ROOT / ".ai" / "agents").glob("*.md") if p.stem != "orchestrator")
 
     if _frontmatter_value(block, "disable-model-invocation").lower() == "true":
         print("  PASS: disable-model-invocation: true")
@@ -403,14 +404,13 @@ def test_orchestrator_agent() -> bool:
         print("  FAIL: orchestrator.md must set disable-model-invocation: true")
         passed = False
 
-    others = sorted(p.stem for p in (ROOT / ".ai" / "agents").glob("*.md") if p.stem != "orchestrator")
+    # The inventory belongs to the project, not to this template-owned file: a pinned list is
+    # wrong for every project that installs extra agents and is reverted by an upgrade.
     listed = _frontmatter_list(block, "agents")
-    if sorted(listed) == others:
-        print(f"  PASS: agents lists exactly the {len(others)} other agents")
+    if listed in ([], ["*"]):
+        print(f"  PASS: no pinned agent inventory (the coordinator may use all {len(others)} other agents)")
     else:
-        missing = sorted(set(others) - set(listed))
-        extra = sorted(set(listed) - set(others))
-        print(f"  FAIL: agents mismatch — missing {missing}, unexpected {extra}")
+        print(f"  FAIL: agents must be omitted or ['*'] — a pinned list breaks projects with extra agents: {listed}")
         passed = False
 
     tools = _frontmatter_list(block, "tools")

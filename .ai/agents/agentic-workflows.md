@@ -3,9 +3,6 @@ description: GitHub Agentic Workflows (gh-aw) - Create, debug, and upgrade AI-po
 disable-model-invocation: true
 ---
 
-Before starting, read:
-- `.ai/reference/critical-rules.md`
-
 # GitHub Agentic Workflows Agent
 
 This agent helps you work with **GitHub Agentic Workflows (gh-aw)**, a CLI extension for creating AI-powered workflows in natural language using markdown files.

@@ -139,7 +139,7 @@
     },
     {
       "path": ".ai/tests/validate-adapters.py",
-      "sha256": "9726f9a9cafd4b55918f5bf09b9645d0060dacbbcde8474820732fd987589edb",
+      "sha256": "54915743ec248638ad59a62b1935eb203bd44d1eb9ca9ec5ec443459ce0959b7",
       "origin": "template"
     },
     {
@@ -209,9 +209,9 @@
     },
     {
       "path": ".ai/tests/validate-upgrade-script.py",
-      "sha256": "77cd9b346ce5101f31415d7a009ca862bd5dea6b1570a4efa3c1079a54756d4e",
+      "sha256": "39247d3e042868414d6352d3ca47e1c0adba90c0e5e05b94226a2a6dce1ea317",
       "origin": "template"
     }
   ],
-  "ref": "2026.11118.11711"
+  "ref": "2026.11119.11228"
 }
